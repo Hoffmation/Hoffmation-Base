@@ -38,7 +38,7 @@ export class TasterGroup {
         pValue && this._room.LampenGroup.switchAll(false, true);
       });
 
-      if (this._room.SonosGroup.SNDevices.length > 0) {
+      if (this._room.SonosGroup.ownSonosDevices.length > 0) {
         t.tasten.UntenRechts.addLongCallback(() => {
           this._room.SonosGroup.trigger(this._room.Einstellungen.radioUrl);
         });

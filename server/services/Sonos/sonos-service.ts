@@ -193,7 +193,7 @@ export class SonosService {
 
   private static initializeDevice(d: SonosDevice) {
     this.devicesDict[d.Name] = d;
-    this.ownDevices
+    this.ownDevices[d.Name].device = d;
     ServerLogService.writeLog(LogLevel.Debug, `Sonos ${d.Uuid} für ${d.Name} gefunden`);
   }
 }

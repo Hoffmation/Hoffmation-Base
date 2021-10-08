@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import { OwnSonosDevice, SonosService } from './Sonos/sonos-service';
 import { PollyService } from './Sonos/polly-service';
 import { Utils } from './utils/utils';
-import { SettingsService } from "/server/services/settings-service";
+import { SettingsService } from './settings-service';
 
 export class NewsService {
   public static oneDay: number = 1000 * 60 * 60 * 24;
