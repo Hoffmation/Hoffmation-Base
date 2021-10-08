@@ -22,6 +22,9 @@
     "noFallthroughCasesInSwitch": false,
 
     /* Module Resolution Options */
+    "paths": {
+      "/server/config/private/*": ["*"]
+    },
     "baseUrl": ".",
     "moduleResolution": "node",
     "resolveJsonModule": true,
