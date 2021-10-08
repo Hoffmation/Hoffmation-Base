@@ -1,7 +1,6 @@
 import { async, VEvent } from 'node-ical';
 import { ServerLogService } from '../log-service';
-import { SonosService } from '../Sonos/sonos-service';
-import { SNDevices } from '../Sonos/SonosDevices';
+import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
 import { TelegramService } from '../Telegram/telegram-service';
 import { TimeCallbackService } from '../time-callback-service';
 import { LogLevel } from '../../../models/logLevel';
@@ -14,7 +13,8 @@ export class MuellTonne {
   public nextDate: Date | undefined = undefined;
   public dates: Date[] = [];
 
-  public constructor(public name: string) {}
+  public constructor(public name: string, public ownSonosDevice?: OwnSonosDevice) {
+  }
 
   public sortDates(): void {
     this.dates = this.dates.sort((a, b) => a.getTime() - b.getTime());
@@ -61,7 +61,10 @@ export class MuellTonne {
     if (nextTimestamp >= tomorowMidnight) {
       const message = `Die Mülltonne mit dem Namen ${this.name} wird morgen abgeholt!`;
       TelegramService.inform(message);
-      SonosService.speakOnDevice(message, SNDevices.Buero, 30);
+
+      if (this.ownSonosDevice) {
+        SonosService.speakOnDevice(message, this.ownSonosDevice, 30);
+      }
       return;
     }
 
@@ -69,11 +72,15 @@ export class MuellTonne {
       if (new Date().getHours() > 10) {
         const message = `Die Mülltonne mit dem Namen ${this.name} wurde heute abgeholt, Mülltonne zurückstellen!`;
         TelegramService.inform(message);
-        SonosService.speakOnDevice(message, SNDevices.Buero, 30);
+        if (this.ownSonosDevice) {
+          SonosService.speakOnDevice(message, this.ownSonosDevice, 30);
+        }
       } else {
         const message = `Die Mülltonne mit dem Namen ${this.name} wird heute abgeholt!`;
         TelegramService.inform(message);
-        SonosService.speakOnDevice(message, SNDevices.Buero, 30);
+        if (this.ownSonosDevice) {
+          SonosService.speakOnDevice(message, this.ownSonosDevice, 30);
+        }
       }
       return;
     }
@@ -154,7 +161,7 @@ export class MuellService {
           continue;
         }
 
-        this.alleTonnen.push({ name: ev.summary, date: ev.start });
+        this.alleTonnen.push({name: ev.summary, date: ev.start});
         switch (ev.summary) {
           case this.gelbeTonne.name:
             this.gelbeTonne.dates.push(ev.start);

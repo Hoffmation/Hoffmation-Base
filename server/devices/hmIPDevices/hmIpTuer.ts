@@ -7,7 +7,6 @@ import { TuerPosition } from './TuerPosition';
 import { SonosService } from '/server/services/Sonos/sonos-service';
 import { TelegramService } from '/server/services/Telegram/telegram-service';
 import { Utils } from '/server/services/utils/utils';
-import { SNDevices } from '/server/services/Sonos/SonosDevices';
 
 export class HmIpTuer extends HmIPDevice {
   public position: TuerPosition = TuerPosition.geschlossen;
@@ -78,7 +77,6 @@ export class HmIpTuer extends HmIPDevice {
         ServerLogService.writeLog(LogLevel.Info, message);
 
         TelegramService.inform(message);
-        SonosService.speakOnDevice(message, SNDevices.Buero);
         this.minutesOpen = 0;
         this._iOpen = undefined;
       }

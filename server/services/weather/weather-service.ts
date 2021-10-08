@@ -1,8 +1,7 @@
 import { HTTPSService } from '../https-service';
 import { HTTPSOptions } from '../HTTPSOptions';
 import { ServerLogService } from '../log-service';
-import { SonosService } from '../Sonos/sonos-service';
-import { SNDevices } from '../Sonos/SonosDevices';
+import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
 import { WeatherAlert } from './weather-alert';
 import { WeatherCurrent } from './weather-current';
 import { WeatherDaily } from './weather-daily';
@@ -43,7 +42,7 @@ export class WeatherService {
   }
 
   public static playWeatherInfo(
-    sonosDevice: SNDevices,
+    sonosDevice: OwnSonosDevice,
     volume: number = 30,
     short: boolean = false,
     retries = 5,

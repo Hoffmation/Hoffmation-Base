@@ -3,8 +3,7 @@ import { HTTPSOptions } from './HTTPSOptions';
 import { ServerLogService } from './log-service';
 import { LogLevel } from '../../models/logLevel';
 import * as fs from 'fs';
-import { SonosService } from './Sonos/sonos-service';
-import { SNDevices } from './Sonos/SonosDevices';
+import { OwnSonosDevice, SonosService } from './Sonos/sonos-service';
 import { PollyService } from './Sonos/polly-service';
 import { Utils } from './utils/utils';
 import { SettingsService } from "/server/services/settings-service";
@@ -56,7 +55,7 @@ export class NewsService {
     );
   }
 
-  public static playLastNews(sonosDevice: SNDevices, volume: number = 30, retries: number = 5): void {
+  public static playLastNews(ownSonosDevice: OwnSonosDevice, volume: number = 30, retries: number = 5): void {
     if (!NewsService.lastNewsName) {
       if (retries > 0) {
         ServerLogService.writeLog(
@@ -64,7 +63,7 @@ export class NewsService {
           `Der NewsService ist noch nicht bereit --> warten, verbleibende Neuversuche ${retries - 1}`,
         );
         Utils.guardedTimeout(() => {
-          NewsService.playLastNews(sonosDevice, volume, retries - 1);
+          NewsService.playLastNews(ownSonosDevice, volume, retries - 1);
         }, 1000);
       } else {
         ServerLogService.writeLog(LogLevel.Error, `Der NewsService ist trotz Warten nicht bereit --> Abbruch`);
@@ -73,7 +72,7 @@ export class NewsService {
     }
 
     SonosService.playOnDevice(
-      sonosDevice,
+      ownSonosDevice,
       NewsService.lastNewsName,
       PollyService.getDuration(NewsService.lastNewsName),
       volume,

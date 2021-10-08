@@ -8,7 +8,6 @@ import { Rolladen } from '../../devices/Rollos';
 import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
 import { ZigbeeDeviceType } from '../../devices/zigbee/zigbeeDeviceType';
 import { RoomBase } from '../../../models/rooms/RoomBase';
-import { SNDevices } from '../Sonos/SonosDevices';
 import { SonosService } from '../Sonos/sonos-service';
 
 export class TelegramCommands {
@@ -204,13 +203,7 @@ export class TelegramCommands {
         /\/perform_sonos_test/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          SonosService.speakOnDevice(`Ich bin Küche!`, SNDevices.Kueche, 40);
-          SonosService.speakOnDevice(`Ich bin Schlafzimmer!`, SNDevices.Schlaf, 40);
-          SonosService.speakOnDevice(`Ich bin Wohnzimmer!`, SNDevices.Wohn, 40);
-          SonosService.speakOnDevice(`Ich bin Buero!`, SNDevices.Buero, 40);
-          SonosService.speakOnDevice(`Ich bin Fernsehzimmer!`, SNDevices.Fernseh, 40);
-          SonosService.speakOnDevice(`Ich bin Flur Erdgeschoss!`, SNDevices.EgFlur, 40);
-          SonosService.speakOnDevice(`Ich bin Hobbyraum!`, SNDevices.Hobbyraum, 40);
+          SonosService.speakTestMessageOnEachDevice();
           TelegramService.sendMessage([m.from.id], 'Testnachricht gesprochen --> Führe weiteren Test durch');
           SonosService.checkAll();
           return true;
