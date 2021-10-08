@@ -1,0 +1,45 @@
+{
+  "name": "hoffmation",
+  "private": true,
+  "scripts": {
+    "lint-fix-all": "eslint ./**/{*.ts,*.js} --fix --no-error-on-unmatched-pattern"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.15.4",
+    "@svrooij/sonos": "^2.4.1",
+    "aws-sdk": "2.999.0",
+    "bcrypt": "^5.0.1",
+    "get-mp3-duration": "^1.0.0",
+    "html-entities": "^2.3.2",
+    "https": "^1.0.0",
+    "iobroker.socketio": "^3.1.4",
+    "jquery": "^3.6.0",
+    "mocha": "^9.1.2",
+    "node-ical": "^0.13.0",
+    "node-telegram-bot-api": "^0.54.0",
+    "semantic-ui-react": "^2.0.4",
+    "socket.io-client": "2.4.x",
+    "sunrise-sunset-js": "^2.2.1",
+    "underscore": "^1.13.1",
+    "ws": "^7.5.5"
+  },
+  "devDependencies": {
+    "@types/meteor": "^1.4.78",
+    "@types/mocha": "^9.0.0",
+    "@types/node-telegram-bot-api": "^0.53.0",
+    "@types/iobroker": "^3.3.4",
+    "@types/node": "^16.10.2",
+    "@types/socket.io-client": "^1.4.36",
+    "@types/ws": "^7.4.7",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
+    "autoprefixer": "^10.3.6",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "postcss": "^8.3.8",
+    "postcss-load-config": "^3.1.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
+  }
+}
