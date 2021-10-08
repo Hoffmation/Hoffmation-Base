@@ -4,6 +4,7 @@ import { iRoomDefaultSettings } from '../../models/rooms/RoomSettings/iRoomDefau
 export interface iConfig {
   roomDefault: iRoomDefaultSettings;
   timeSettings: iTimeSettings;
+  ioBrokerUrl: string;
   telegram?: iTelegramSettings;
   polly?: iPollySettings;
   mp3Server?: iMp3Settings;
