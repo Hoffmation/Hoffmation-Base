@@ -1,0 +1,99 @@
+import { HmIPDevice } from './hmIpDevice';
+import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceInfo } from '../DeviceInfo';
+import { LogLevel } from '/models/logLevel';
+import { ServerLogService } from '/server/services/log-service';
+import { Persist } from '/server/services/dbo/persist';
+import { CountToday } from '../../../models/persistence/todaysCount';
+import { Utils } from '/server/services/utils/utils';
+
+export class HmIpPraezenz extends HmIPDevice {
+  public excludeFromNightAlarm: boolean = false;
+  public presenceDetected: boolean = false;
+  private _detectionsToday: number = 0;
+  private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
+  private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
+  private presenceStateID: string;
+  private initialized: boolean = false;
+
+  public get detectionsToday(): number {
+    return this._detectionsToday;
+  }
+
+  public set detectionsToday(pVal: number) {
+    const oldVal: number = this._detectionsToday;
+    this._detectionsToday = pVal;
+    Persist.persistTodayCount(this, pVal, oldVal);
+  }
+
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, HmIpDeviceType.HmIpPraezenz);
+    this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
+    Persist.getCount(this).then((todayCount: CountToday) => {
+      this.detectionsToday = todayCount.counter;
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Präsenzcounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
+      );
+      this.initialized = true;
+    });
+  }
+
+  public addPresenceCallback(pCallback: (pValue: boolean) => void): void {
+    this._presenceDetectedCallback.push(pCallback);
+  }
+
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
+    ServerLogService.writeLog(LogLevel.Trace, `Präzens Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
+    super.update(idSplit, state, initial, true);
+
+    if (idSplit[3] !== '1') {
+      // Nur die Infos in Kanal 1 sind relevant
+      return;
+    }
+
+    switch (idSplit[4]) {
+      case HmIpPraezenz.PRESENCE_DETECTION:
+        this.updatePresence(state.val as boolean);
+        break;
+    }
+  }
+
+  public updatePresence(pVal: boolean): void {
+    if (!this.initialized && pVal) {
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Präsenz für "${this.info.customName}" erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
+      );
+      Utils.guardedTimeout(
+        () => {
+          this.updatePresence(pVal);
+        },
+        1000,
+        this,
+      );
+      return;
+    }
+    if (pVal === this.presenceDetected) {
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Überspringe Präsenz für "${this.info.customName}" da bereits der Wert ${pVal} vorliegt`,
+      );
+      return;
+    }
+
+    this.presenceDetected = pVal;
+    ServerLogService.writeLog(LogLevel.Debug, `Neuer Präsenzstatus Wert für "${this.info.customName}": ${pVal}`);
+
+    if (pVal) {
+      this.detectionsToday++;
+      ServerLogService.writeLog(
+        LogLevel.Trace,
+        `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`,
+      );
+    }
+    for (const c of this._presenceDetectedCallback) {
+      c(pVal);
+    }
+  }
+}

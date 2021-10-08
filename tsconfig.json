@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2018",
+    "module": "esNext",
+    "lib": ["esnext", "dom"],
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react",
+    "incremental": true,
+    "noEmit": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+
+    /* Module Resolution Options */
+    "baseUrl": ".",
+    "paths": {
+      /* Support absolute /imports/* with a leading '/' */
+      "/*": ["*"]
+    },
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "types": [
+      "bson",
+      "connect",
+      "iobroker",
+      "meteor",
+      "meteor-roles",
+      "mocha",
+      "mongodb",
+      "node",
+      "node-telegram-bot-api",
+      "prop-types",
+      "react", 
+      "react-dom",
+      "react-router",
+      "react-router-dom",
+      "socket.io-client",
+      "underscore",
+      "ws",
+    ],
+    "esModuleInterop": true,
+    "preserveSymlinks": true
+  },
+  "exclude": [
+    "./.meteor/**",
+    "./packages/**"
+  ]
+}
