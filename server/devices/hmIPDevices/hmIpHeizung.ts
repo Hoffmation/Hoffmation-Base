@@ -1,8 +1,8 @@
+import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../../services/log-service';
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
 
 export class HmIpHeizung extends HmIPDevice {
   private _temperatur: number = 0;

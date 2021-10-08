@@ -23,10 +23,6 @@
 
     /* Module Resolution Options */
     "baseUrl": ".",
-    "paths": {
-      /* Support absolute /imports/* with a leading '/' */
-      "/*": ["*"]
-    },
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types", "./types"],
@@ -41,7 +37,7 @@
       "node",
       "node-telegram-bot-api",
       "prop-types",
-      "react", 
+      "react",
       "react-dom",
       "react-router",
       "react-router-dom",

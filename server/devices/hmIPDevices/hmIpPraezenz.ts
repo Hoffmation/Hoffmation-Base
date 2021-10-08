@@ -1,11 +1,11 @@
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { Persist } from '/server/services/dbo/persist';
+import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../../services/log-service';
+import { Persist } from '../../services/dbo/persist';
 import { CountToday } from '../../../models/persistence/todaysCount';
-import { Utils } from '/server/services/utils/utils';
+import { Utils } from '../../services/utils/utils';
 
 export class HmIpPraezenz extends HmIPDevice {
   public excludeFromNightAlarm: boolean = false;

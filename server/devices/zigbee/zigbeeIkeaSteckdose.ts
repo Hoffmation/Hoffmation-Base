@@ -1,8 +1,8 @@
+import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { ZigbeeActuator } from '/server/devices/zigbee/ZigbeeActuator';
+import { ServerLogService } from '../../services/log-service';
+import { ZigbeeActuator } from './ZigbeeActuator';
 
 export class ZigbeeIkeaSteckdose extends ZigbeeActuator {
   public get steckerOn(): boolean {

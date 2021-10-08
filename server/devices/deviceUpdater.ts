@@ -1,9 +1,9 @@
+import { LogLevel } from '../../models/logLevel';
 import { ServerLogService } from '../services/log-service';
 import { Devices } from './devices';
 import { HmIPDevice } from './hmIPDevices/hmIpDevice';
 import { IDeviceUpdater } from './iDeviceUpdater';
 import { ZigbeeDevice } from './zigbee/zigbeeDevice';
-import { LogLevel } from '/models/logLevel';
 
 export class DeviceUpdater implements IDeviceUpdater {
   private static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';

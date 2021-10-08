@@ -1,3 +1,4 @@
+import { LogLevel } from '../../../models/logLevel';
 import { HTTPSService } from '../https-service';
 import { HTTPSOptions } from '../HTTPSOptions';
 import { ServerLogService } from '../log-service';
@@ -7,7 +8,6 @@ import { WeatherCurrent } from './weather-current';
 import { WeatherDaily } from './weather-daily';
 import { WeatherHourly } from './weather-hourly';
 import { WeatherMinutes } from './weather-minutes';
-import { LogLevel } from '../../../models/logLevel';
 import { iWeatherSettings } from '../../config/iConfig';
 import { Utils } from '../utils/utils';
 

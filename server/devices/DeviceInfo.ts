@@ -1,4 +1,4 @@
-import { deviceConfig } from '/models/deviceConfig';
+import { deviceConfig } from '../../models/deviceConfig';
 
 export class DeviceInfo {
   public devID: string;

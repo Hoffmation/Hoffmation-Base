@@ -1,10 +1,10 @@
+import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
-import { LedSettings } from '/models/ledSettings';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { TimeOfDay } from '/server/services/time-callback-service';
+import { LedSettings } from '../../../models/ledSettings';
+import { TimeOfDay } from '../../services/time-callback-service';
 
 export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';

@@ -1,7 +1,7 @@
+import { LogLevel } from '../../models/logLevel';
+import { ServerLogService } from '../services/log-service';
 import { IOBrokerConnection } from '../ioBroker/connection';
 import { DeviceInfo } from './DeviceInfo';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
 
 export class WledDevice {
   public on: boolean = false;

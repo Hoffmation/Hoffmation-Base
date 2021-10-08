@@ -1,6 +1,6 @@
+import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
 import { HmIpDeviceType } from './hmIpDeviceType';
-import { LogLevel } from '../../../models/logLevel';
 import { HmIpAddDeviceItem, HmIpRoomSettings } from '../../../models/rooms/RoomSettings/hmIPRoomSettings';
 import { ServerLogService } from '../../services/log-service';
 import { ioBrokerBaseDevice } from '../iIoBrokerDevice';

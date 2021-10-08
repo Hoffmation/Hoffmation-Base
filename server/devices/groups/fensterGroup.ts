@@ -1,7 +1,7 @@
+import { LogLevel } from '../../../models/logLevel';
 import { Fenster } from '../hmIPDevices/Fenster';
 import { FensterPosition } from '../hmIPDevices/FensterPosition';
 import { ServerLogService } from '../../services/log-service';
-import { LogLevel } from '../../../models/logLevel';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';

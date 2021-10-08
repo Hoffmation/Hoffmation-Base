@@ -2,11 +2,11 @@ import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
 import { PlayNotificationOptions } from '@svrooij/sonos/lib/models';
 import { ServerLogService } from '../log-service';
 import { PollyService } from './polly-service';
-import { LogLevel } from '/models/logLevel';
-import { Utils } from '/server/services/utils/utils';
-import { TelegramService } from '/server/services/Telegram/telegram-service';
-import { TimeCallback, TimeCallbackType } from '/models/timeCallback';
-import { TimeCallbackService } from '/server/services/time-callback-service';
+import { LogLevel } from '../../../models/logLevel';
+import { Utils } from '../utils/utils';
+import { TelegramService } from '../Telegram/telegram-service';
+import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
+import { TimeCallbackService } from '../time-callback-service';
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;

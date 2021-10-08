@@ -1,8 +1,8 @@
+import { LogLevel } from '../../../models/logLevel';
 import { FensterPosition } from './FensterPosition';
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { TelegramService } from '../../services/Telegram/telegram-service';
 import { Utils } from '../../services/utils/utils';

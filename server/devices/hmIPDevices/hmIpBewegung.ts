@@ -1,7 +1,7 @@
+import { LogLevel } from '../../../models/logLevel';
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { Persist } from '../../services/dbo/persist';
 import { CountToday } from '../../../models/persistence/todaysCount';

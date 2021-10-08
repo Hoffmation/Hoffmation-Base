@@ -1,10 +1,10 @@
-import { ZigbeeDevice } from '/server/devices/zigbee/zigbeeDevice';
-import { DeviceInfo } from '/server/devices/DeviceInfo';
-import { ZigbeeDeviceType } from '/server/devices/zigbee/zigbeeDeviceType';
-import { ServerLogService } from '/server/services/log-service';
-import { LogLevel } from '/models/logLevel';
-import { Utils } from '/server/services/utils/utils';
-import { LampSettings } from '/models/lampSettings';
+import { LogLevel } from '../../../models/logLevel';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { DeviceInfo } from '../DeviceInfo';
+import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
+import { LampSettings } from '../../../models/lampSettings';
 
 export class ZigbeeActuator extends ZigbeeDevice {
   public settings: LampSettings = new LampSettings();

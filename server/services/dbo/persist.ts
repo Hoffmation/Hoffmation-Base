@@ -8,8 +8,8 @@ import { HmIPDevice } from '../../devices/hmIPDevices/hmIpDevice';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
 import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
-import { iTemperaturDataPoint } from '/imports/api/heizung';
 import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
+import { iTemperaturDataPoint } from "../../../models/iTemperaturDataPoint";
 
 export const TemperatureHistoryCollection = new Mongo.Collection<TemperaturDataPoint>('TemperaturData');
 export const HeatGroupCollection = new Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');

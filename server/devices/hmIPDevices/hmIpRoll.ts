@@ -1,11 +1,11 @@
+import { LogLevel } from '../../../models/logLevel';
 import { Fenster } from './Fenster';
 import { FensterPosition } from './FensterPosition';
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { Utils } from '/server/services/utils/utils';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
 
 export class HmIpRoll extends HmIPDevice {
   public get currentLevel(): number {

@@ -1,11 +1,11 @@
+import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
-import { DimmerSettings } from '/models/dimmerSettings';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { TimeOfDay } from '/server/services/time-callback-service';
-import { Utils } from '/server/services/utils/utils';
+import { DimmerSettings } from '../../../models/dimmerSettings';
+import { TimeOfDay } from '../../services/time-callback-service';
+import { Utils } from '../../services/utils/utils';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice {
   public on: boolean = false;

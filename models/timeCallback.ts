@@ -1,6 +1,6 @@
 import { LogLevel } from './logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { SunTimeOffsets, TimeCallbackService } from '/server/services/time-callback-service';
+import { ServerLogService } from '../server/services/log-service';
+import { SunTimeOffsets, TimeCallbackService } from '../server/services/time-callback-service';
 
 export class TimeCallback {
   public lastDone: Date = new Date(0);

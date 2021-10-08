@@ -1,10 +1,10 @@
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '/models/logLevel';
-import { ZigbeeAddDeviceItem, ZigbeeRoomSettings } from '/models/rooms/RoomSettings/zigbeeRoomSettings';
-import { ServerLogService } from '/server/services/log-service';
-import { ioBrokerBaseDevice } from '/server/devices/iIoBrokerDevice';
-import { RoomBase } from '/models/rooms/RoomBase';
+import { LogLevel } from '../../../models/logLevel';
+import { ZigbeeAddDeviceItem, ZigbeeRoomSettings } from '../../../models/rooms/RoomSettings/zigbeeRoomSettings';
+import { ServerLogService } from '../../services/log-service';
+import { ioBrokerBaseDevice } from '../iIoBrokerDevice';
+import { RoomBase } from '../../../models/rooms/RoomBase';
 
 export class ZigbeeDevice extends ioBrokerBaseDevice {
   private static roomSettings: { [id: string]: ZigbeeRoomSettings } = {};

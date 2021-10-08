@@ -1,3 +1,4 @@
+import { LogLevel } from '../../models/logLevel';
 import { HmIpDeviceType } from './hmIPDevices/hmIpDeviceType';
 import { ZigbeeDeviceType } from './zigbee/zigbeeDeviceType';
 import { IOBrokerConnection } from '../ioBroker/connection';
@@ -14,20 +15,19 @@ import { HmIpTaster } from './hmIPDevices/hmIpTaster';
 import { HmIpTherm } from './hmIPDevices/hmIpTherm';
 import { HmIpTuer } from './hmIPDevices/hmIpTuer';
 import { HmIpWippe } from './hmIPDevices/hmIpWippe';
-import { deviceConfig } from '/models/deviceConfig';
-import { LogLevel } from '/models/logLevel';
+import { deviceConfig } from '../../models/deviceConfig';
 import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 import { HmIpBewegung } from './hmIPDevices/hmIpBewegung';
 import { ZigbeeIkeaSteckdose } from './zigbee/zigbeeIkeaSteckdose';
 import { ZigbeeIlluLedRGBCCT } from './zigbee/zigbeeIlluLedRGBCCT';
 import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
 import { ZigbeeIlluDimmer } from './zigbee/zigbeeIlluDimmer';
-import { ZigbeeHeimanSmoke } from '/server/devices/zigbee/zigbeeHeimanSmoke';
-import { ZigbeeAquaraWater } from '/server/devices/zigbee/zigbeeAquaraWater';
-import { ZigbeeBlitzShp } from '/server/devices/zigbee/zigbeeBlitzShp';
-import { ZigbeeIlluLampe } from '/server/devices/zigbee/zigbeeIlluLampe';
-import { ZigbeeIlluActuator } from '/server/devices/zigbee/zigbeeIlluActuator';
-import { iRoomImportEnforcer } from '/models/rooms/iRoomImportEnforcer';
+import { ZigbeeHeimanSmoke } from './zigbee/zigbeeHeimanSmoke';
+import { ZigbeeAquaraWater } from './zigbee/zigbeeAquaraWater';
+import { ZigbeeBlitzShp } from './zigbee/zigbeeBlitzShp';
+import { ZigbeeIlluLampe } from './zigbee/zigbeeIlluLampe';
+import { ZigbeeIlluActuator } from './zigbee/zigbeeIlluActuator';
+import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
 
 export class Devices {
   public static hmIP: { [id: string]: HmIPDevice } = {};

@@ -1,10 +1,10 @@
+import { LogLevel } from '../../../models/logLevel';
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { LampSettings } from '/models/lampSettings';
-import { Utils } from '/server/services/utils/utils';
+import { ServerLogService } from '../../services/log-service';
+import { LampSettings } from '../../../models/lampSettings';
+import { Utils } from '../../services/utils/utils';
 
 export class HmIpLampe extends HmIPDevice {
   public lightOn: boolean | undefined = undefined;

@@ -1,14 +1,14 @@
+import { LogLevel } from '../../models/logLevel';
 import { Devices } from '../devices/devices';
 import { DeviceUpdater } from '../devices/deviceUpdater';
 import { IDeviceUpdater } from '../devices/iDeviceUpdater';
 import { ServerLogService } from '../services/log-service';
 import { TimeCallbackService } from '../services/time-callback-service';
 import { IOBrokerConnection } from './connection';
-import { ConnectionCallbacks } from '/models/connectionCallbacks';
-import { LogLevel } from '/models/logLevel';
-import { RoomBase } from '/models/rooms/RoomBase';
-import { Utils } from '/server/services/utils/utils';
-import { SettingsService } from "/server/services/settings-service";
+import { ConnectionCallbacks } from '../../models/connectionCallbacks';
+import { RoomBase } from '../../models/rooms/RoomBase';
+import { Utils } from '../services/utils/utils';
+import { SettingsService } from "../services/settings-service";
 
 export class ioBrokerMain {
   private static roomConstructors: { [roomName: string]: { new (): RoomBase } } = {};

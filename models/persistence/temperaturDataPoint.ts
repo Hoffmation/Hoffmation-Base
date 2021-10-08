@@ -1,4 +1,4 @@
-import { iTemperaturDataPoint } from '/imports/api/heizung';
+import { iTemperaturDataPoint } from "../iTemperaturDataPoint";
 
 export class TemperaturDataPoint implements iTemperaturDataPoint {
   constructor(

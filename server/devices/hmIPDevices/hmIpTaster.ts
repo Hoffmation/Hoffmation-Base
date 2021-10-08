@@ -2,8 +2,8 @@ import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { HmIPTaste } from './hmIpTaste';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
+import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../../services/log-service';
 
 export class HmIpTaster extends HmIPDevice {
   public tasten: {

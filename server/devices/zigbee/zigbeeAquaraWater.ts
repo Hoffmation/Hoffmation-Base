@@ -1,11 +1,11 @@
+import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
-import { LogLevel } from '/models/logLevel';
-import { ServerLogService } from '/server/services/log-service';
-import { SonosService } from '/server/services/Sonos/sonos-service';
-import { Utils } from '/server/services/utils/utils';
-import { PollyService } from '/server/services/Sonos/polly-service';
+import { ServerLogService } from '../../services/log-service';
+import { SonosService } from '../../services/Sonos/sonos-service';
+import { Utils } from '../../services/utils/utils';
+import { PollyService } from '../../services/Sonos/polly-service';
 
 export class ZigbeeAquaraWater extends ZigbeeDevice {
   public water: boolean = false;

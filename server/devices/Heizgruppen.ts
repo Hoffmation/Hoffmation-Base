@@ -3,7 +3,7 @@ import { Devices } from './devices';
 import { HmIpDeviceType } from './hmIPDevices/hmIpDeviceType';
 import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 import { HmIpHeizung } from './hmIPDevices/hmIpHeizung';
-import { TemperaturDataPoint } from '/models/persistence/temperaturDataPoint';
+import { TemperaturDataPoint } from '../../models/persistence/temperaturDataPoint';
 
 export class Heizgruppen {
   public static getInfo(): string {
