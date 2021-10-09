@@ -1,15 +1,14 @@
-import { OwnSonosDevice, SonosService } from "/server/config/private/server/services/Sonos/sonos-service";
-import { ServerLogService } from "/server/config/private/server/services/log-service";
-import { LogLevel } from "/server/config/private/models/logLevel";
-import { TelegramService } from "/server/config/private/server/services/Telegram/telegram-service";
+import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
+import { ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models/logLevel';
+import { TelegramService } from '../Telegram/telegram-service';
 
 export class MuellTonne {
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public nextDate: Date | undefined = undefined;
   public dates: Date[] = [];
 
-  public constructor(public name: string, public ownSonosDevice?: OwnSonosDevice) {
-  }
+  public constructor(public name: string, public ownSonosDevice?: OwnSonosDevice) {}
 
   public sortDates(): void {
     this.dates = this.dates.sort((a, b) => a.getTime() - b.getTime());

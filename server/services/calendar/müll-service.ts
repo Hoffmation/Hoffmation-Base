@@ -5,8 +5,8 @@ import { LogLevel } from '../../../models/logLevel';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { iMuellSettings } from '../../config/iConfig';
 import { Utils } from '../utils/utils';
-import { MuellTonne } from "./muell-tonne";
-import { OwnSonosDevice } from "/server/config/private/server/services/Sonos/sonos-service";
+import { MuellTonne } from './muell-tonne';
+import { OwnSonosDevice } from '../Sonos/sonos-service';
 
 export class MuellService {
   public static alleTonnen: Array<{ name: string; date: Date }> = [];
@@ -24,6 +24,7 @@ export class MuellService {
   public static months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   public static intialize(config: iMuellSettings, defaultSonosDevice: OwnSonosDevice | undefined): void {
+    this.defaultSonosDevice = defaultSonosDevice;
     this._active = true;
     this._calendarURL = config.calendarURL;
     this.updateTimeCallback = new TimeCallback(
@@ -83,7 +84,7 @@ export class MuellService {
           continue;
         }
 
-        this.alleTonnen.push({name: ev.summary, date: ev.start});
+        this.alleTonnen.push({ name: ev.summary, date: ev.start });
         switch (ev.summary) {
           case this.gelbeTonne.name:
             this.gelbeTonne.dates.push(ev.start);
