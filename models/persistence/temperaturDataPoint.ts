@@ -1,4 +1,4 @@
-import { iTemperaturDataPoint } from "../iTemperaturDataPoint";
+import { iTemperaturDataPoint } from '../iTemperaturDataPoint';
 
 export class TemperaturDataPoint implements iTemperaturDataPoint {
   constructor(

@@ -8,7 +8,7 @@ import { IOBrokerConnection } from './connection';
 import { ConnectionCallbacks } from '../../models/connectionCallbacks';
 import { RoomBase } from '../../models/rooms/RoomBase';
 import { Utils } from '../services/utils/utils';
-import { SettingsService } from "../services/settings-service";
+import { SettingsService } from '../services/settings-service';
 
 export class ioBrokerMain {
   private static roomConstructors: { [roomName: string]: { new (): RoomBase } } = {};

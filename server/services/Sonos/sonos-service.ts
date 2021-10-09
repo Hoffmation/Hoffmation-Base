@@ -13,11 +13,7 @@ export class OwnSonosDevice {
   public playTestMessage() {
     SonosService.speakOnDevice(`Ich bin ${this.name}`, this);
   }
-  public constructor(
-    public name: string,
-    public roomName: string,
-    public device: SonosDevice | undefined,
-  ) {};
+  public constructor(public name: string, public roomName: string, public device: SonosDevice | undefined) {}
 }
 
 export class SonosService {
@@ -32,7 +28,7 @@ export class SonosService {
 
   public static addOwnDevices(
     snDevices: { [name: string]: OwnSonosDevice },
-    reinitializationDevice?: OwnSonosDevice
+    reinitializationDevice?: OwnSonosDevice,
   ): void {
     this.ownDevices = snDevices;
     this.reinitializationDevice = reinitializationDevice;
@@ -71,7 +67,7 @@ export class SonosService {
           this.speakOnDevice(
             `Sonos System initialisiert und bereit für Sprachausgaben.`,
             this.reinitializationDevice,
-            30
+            30,
           );
         }
       })
@@ -83,18 +79,18 @@ export class SonosService {
     try {
       for (const deviceName in this.ownDevices) {
         currentDevice = this.ownDevices[deviceName];
-        if(currentDevice?.device === undefined) {
+        if (currentDevice?.device === undefined) {
           throw `${currentDevice?.name} is missing`;
         }
         await currentDevice.device.GetState();
       }
-      if(currentDevice !== undefined) {
+      if (currentDevice !== undefined) {
         ServerLogService.writeLog(LogLevel.Info, `Alle Geräte okay --> Last checked ${currentDevice.name}`);
       }
     } catch (e) {
       ServerLogService.writeLog(
         LogLevel.Error,
-        `Atleast one device failed --> Last checked ${(currentDevice?.name ?? "undefined")}`
+        `Atleast one device failed --> Last checked ${currentDevice?.name ?? 'undefined'}`,
       );
       TelegramService.inform(`Sonos device is failing --> Reinitialize whole system`);
       this.initialize(true);
@@ -107,14 +103,14 @@ export class SonosService {
     }
     PollyService.tts(pMessage, (networkPath: string, duration: number) => {
       const hours: number = new Date().getHours();
-      let volume: number = hours < 10 || hours > 22 ? 40 : 80;
+      const volume: number = hours < 10 || hours > 22 ? 40 : 80;
 
       for (const deviceName in this.ownDevices) {
         SonosService.playOnDevice(
           this.ownDevices[deviceName],
           networkPath,
           duration,
-          (volumeOverride > -1) ? volumeOverride : Math.min(volume, this.ownDevices[deviceName].maxPlayOnAllVolume)
+          volumeOverride > -1 ? volumeOverride : Math.min(volume, this.ownDevices[deviceName].maxPlayOnAllVolume),
         );
       }
     });
@@ -139,12 +135,14 @@ export class SonosService {
       notificationFired: (played) => {
         ServerLogService.writeLog(
           LogLevel.Trace,
-          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played in ${ownSnDevice.roomName} (duration: "${specificTimeout}")`,
+          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played in ${
+            ownSnDevice.roomName
+          } (duration: "${specificTimeout}")`,
         );
       },
     };
     try {
-      const device: SonosDevice| undefined = ownSnDevice.device;
+      const device: SonosDevice | undefined = ownSnDevice.device;
       if (device === undefined) {
         ServerLogService.writeLog(LogLevel.Alert, `Sonos Geräte ${ownSnDevice.name} ist nicht initialisiert`);
         Utils.guardedTimeout(
@@ -156,10 +154,7 @@ export class SonosService {
         );
         return;
       }
-      ServerLogService.writeLog(
-        LogLevel.Trace,
-        `Spiele nun die Ausgabe für "${mp3Name}" auf "${ownSnDevice.name}"`,
-      );
+      ServerLogService.writeLog(LogLevel.Trace, `Spiele nun die Ausgabe für "${mp3Name}" auf "${ownSnDevice.name}"`);
       device.PlayNotificationTwo(options).then((played) => {
         ServerLogService.writeLog(
           LogLevel.Debug,
