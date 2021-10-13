@@ -1,17 +1,17 @@
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { HmIPTaste } from './hmIpTaste';
+import { Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 
 export class HmIpWippe extends HmIPDevice {
   public tasten: {
-    Unten: HmIPTaste;
-    Oben: HmIPTaste;
+    Unten: Taste;
+    Oben: Taste;
   } = {
-    Unten: new HmIPTaste(1),
-    Oben: new HmIPTaste(2),
+    Unten: new Taste(1),
+    Oben: new Taste(2),
   };
 
   public constructor(pInfo: DeviceInfo) {
@@ -21,7 +21,7 @@ export class HmIpWippe extends HmIPDevice {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     ServerLogService.writeLog(LogLevel.Trace, `Wippe Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
-    let cTaste: HmIPTaste | undefined = undefined;
+    let cTaste: Taste | undefined = undefined;
     switch (idSplit[3]) {
       case '1':
         cTaste = this.tasten.Unten;

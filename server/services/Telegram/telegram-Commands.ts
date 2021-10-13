@@ -9,6 +9,8 @@ import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
 import { ZigbeeDeviceType } from '../../devices/zigbee/zigbeeDeviceType';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { SonosService } from '../Sonos/sonos-service';
+import { HmIpDeviceType } from "/server/config/private/server/devices/hmIPDevices/hmIpDeviceType";
+import { HmIpTaster } from "/server/config/private/server/devices/hmIPDevices/hmIpTaster";
 
 export class TelegramCommands {
   private static devices: Devices;
@@ -191,6 +193,26 @@ export class TelegramCommands {
             }
           }
           TelegramService.sendMessage([m.from.id], 'Abgeschlossen');
+          return true;
+        },
+        `Setzt alle Vibrationsensoren auf High`,
+      ),
+    );
+
+    TelegramService.addMessageCallback(
+      new TelegramMessageCallback(
+        'AllButtonAssignments',
+        /\/get_all_button_assignments/,
+        async (m: TelegramBot.Message): Promise<boolean> => {
+          if (m.from === undefined) return false;
+          const response: string[] = ['These are the assignments for all buttons'];
+          for (const id in Devices.hmIP) {
+            const d = Devices.hmIP[id];
+            if (d.deviceType === HmIpDeviceType.HmIpTaster) {
+              response.push((d as HmIpTaster).getTastenAssignment());
+            }
+          }
+          TelegramService.sendMessage([m.from.id], response.join('\n'));
           return true;
         },
         `Setzt alle Vibrationsensoren auf High`,

@@ -1,25 +1,19 @@
 import { HmIPDevice } from './hmIpDevice';
 import { HmIpDeviceType } from './hmIpDeviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { HmIPTaste } from './hmIpTaste';
+import { Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
+import { iTaster } from "/server/config/private/server/devices/iTaster";
 
-export class HmIpTaster extends HmIPDevice {
-  public tasten: {
-    ObenLinks: HmIPTaste;
-    ObenRechts: HmIPTaste;
-    MitteLinks: HmIPTaste;
-    MitteRechts: HmIPTaste;
-    UntenLinks: HmIPTaste;
-    UntenRechts: HmIPTaste;
-  } = {
-    ObenLinks: new HmIPTaste(1),
-    ObenRechts: new HmIPTaste(2),
-    MitteLinks: new HmIPTaste(3),
-    MitteRechts: new HmIPTaste(4),
-    UntenLinks: new HmIPTaste(5),
-    UntenRechts: new HmIPTaste(6),
+export class HmIpTaster extends HmIPDevice implements iTaster{
+  public tasten: { [id: string]: Taste} = {
+    ObenLinks: new Taste(1),
+    ObenRechts: new Taste(2),
+    MitteLinks: new Taste(3),
+    MitteRechts: new Taste(4),
+    UntenLinks: new Taste(5),
+    UntenRechts: new Taste(6),
   };
 
   public constructor(pInfo: DeviceInfo) {
@@ -29,7 +23,7 @@ export class HmIpTaster extends HmIPDevice {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     ServerLogService.writeLog(LogLevel.Trace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
-    let cTaste: HmIPTaste | undefined = undefined;
+    let cTaste: Taste | undefined = undefined;
     switch (idSplit[3]) {
       case '1':
         cTaste = this.tasten.ObenLinks;
@@ -69,5 +63,20 @@ export class HmIpTaster extends HmIPDevice {
         }
         break;
     }
+  }
+
+  public getTastenAssignment(): string {
+    const result: string[] = [`Button: ${this.info.customName}`];
+    for (const tastenName in this.tasten) {
+      const desc: string =  this.tasten[tastenName].getDescription();
+      if (desc === '') {
+        continue;
+      }
+      result.push(`Button "${tastenName}":`);
+      result.push(desc);
+      result.push('');
+    }
+    result.push('____________');
+    return result.join('\n');
   }
 }

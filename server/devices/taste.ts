@@ -1,21 +1,33 @@
-import { Utils } from '../../services/utils/utils';
+import { Utils } from '../services/utils/utils';
 
-export class HmIPTaste {
+export class Taste {
   public shortPressed: boolean = false;
   public longPressed: boolean = false;
-  private _shortCallback: Array<(pValue: boolean) => void> = [];
-  private _longCallback: Array<(pValue: boolean) => void> = [];
+  private _shortCallback: Array<{cb: (pValue: boolean) => void, description: string}> = [];
+  private _longCallback: Array<{cb: (pValue: boolean) => void, description: string}> = [];
   private _shortResetTimeout: null | NodeJS.Timeout = null;
   private _longResetTimeout: null | NodeJS.Timeout = null;
 
   public constructor(public updateIndex: number) {}
 
-  public addShortCallback(pCallback: (pValue: boolean) => void): void {
-    this._shortCallback.push(pCallback);
+  public addShortCallback(pCallback: (pValue: boolean) => void, description: string = "Not described") : void {
+    this._shortCallback.push({cb: pCallback, description: description});
   }
 
-  public addLongCallback(pCallback: (pValue: boolean) => void): void {
-    this._longCallback.push(pCallback);
+  public addLongCallback(pCallback: (pValue: boolean) => void, description: string = "Not described"): void {
+    this._longCallback.push({cb: pCallback, description: description});
+  }
+
+
+  public getDescription(): string {
+    const description: string[] = [];
+    for (const c of this._shortCallback) {
+      description.push(`Short Press: "${c.description}"`)
+    }
+    for (const c of this._longCallback) {
+      description.push(`Long Press: "${c.description}"`)
+    }
+    return description.join('\n');
   }
 
   public updateShort(pValue: boolean): void {
@@ -26,7 +38,7 @@ export class HmIPTaste {
     this.shortPressed = pValue;
 
     for (const c of this._shortCallback) {
-      c(pValue);
+      c.cb(pValue);
     }
 
     if (!pValue) {
@@ -52,7 +64,7 @@ export class HmIPTaste {
     this.longPressed = pValue;
 
     for (const c of this._longCallback) {
-      c(pValue);
+      c.cb(pValue);
     }
 
     if (!pValue) {
