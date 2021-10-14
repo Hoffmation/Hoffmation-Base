@@ -5,7 +5,7 @@ import { ZigbeeDeviceType } from './zigbeeDeviceType';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator {
-  public get lampOn(): boolean {
+  public get lightOn(): boolean {
     return super.actuatorOn;
   }
 

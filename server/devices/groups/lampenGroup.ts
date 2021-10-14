@@ -1,21 +1,39 @@
-import { HmIpLampe } from '../hmIPDevices/hmIpLampe';
 import { ZigbeeIkeaSteckdose } from '../zigbee/zigbeeIkeaSteckdose';
-import { ZigbeeIlluDimmer } from '../zigbee/zigbeeIlluDimmer';
 import { ZigbeeIlluLedRGBCCT } from '../zigbee/zigbeeIlluLedRGBCCT';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
 import { RoomBase } from '../../../models/rooms/RoomBase';
-import { ZigbeeIlluLampe } from '../zigbee/zigbeeIlluLampe';
+import { iLamp } from '../iLamp';
 
 export class LampenGroup {
   public constructor(
     private _room: RoomBase,
-    public Lampen: Array<HmIpLampe | ZigbeeIlluDimmer | ZigbeeIlluLampe>,
+    public Lampen: Array<iLamp>,
     public Stecker: Array<ZigbeeIkeaSteckdose>,
     public LED: Array<ZigbeeIlluLedRGBCCT> = [],
   ) {
     for (const lamp of [...Lampen, ...Stecker, ...LED]) {
       lamp.room = this._room;
     }
+  }
+
+  public anyLightsOwn(): boolean {
+    let i: number;
+    for(i=0; i<this.Lampen.length; i++) {
+      if(this.Lampen[i].lightOn) {
+        return true;
+      }
+    }
+    for(i=0; i<this.LED.length; i++) {
+      if(this.LED[i].on) {
+        return true;
+      }
+    }
+    for(i=0; i<this.Stecker.length; i++) {
+      if(this.Stecker[i].steckerOn) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public switchAll(target: boolean, force: boolean = false): void {

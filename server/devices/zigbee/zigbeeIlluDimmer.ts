@@ -6,9 +6,10 @@ import { ZigbeeDeviceType } from './zigbeeDeviceType';
 import { DimmerSettings } from '../../../models/dimmerSettings';
 import { TimeOfDay } from '../../services/time-callback-service';
 import { Utils } from '../../services/utils/utils';
+import { iLamp } from '../iLamp';
 
-export class ZigbeeIlluDimmer extends ZigbeeDevice {
-  public on: boolean = false;
+export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
+  public lightOn: boolean = false;
   public queuedValue: boolean | null = null;
   public brightness: number = 0;
   public transitionTime: number = 0;
@@ -36,7 +37,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice {
     switch (idSplit[3]) {
       case 'state':
         ServerLogService.writeLog(LogLevel.Trace, `Dimmer Update für ${this.info.customName} auf ${state.val}`);
-        this.on = state.val as boolean;
+        this.lightOn = state.val as boolean;
         break;
       case 'brightness':
         ServerLogService.writeLog(
@@ -153,7 +154,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice {
   }
 
   public toggleLight(time?: TimeOfDay, force: boolean = false): boolean {
-    const newVal = this.queuedValue !== null ? !this.queuedValue : !this.on;
+    const newVal = this.queuedValue !== null ? !this.queuedValue : !this.lightOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
     if (newVal && time !== undefined) {
       this.setTimeBased(time, timeout, force);

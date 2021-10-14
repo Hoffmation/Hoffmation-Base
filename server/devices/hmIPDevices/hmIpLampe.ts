@@ -5,9 +5,10 @@ import { DeviceInfo } from '../DeviceInfo';
 import { ServerLogService } from '../../services/log-service';
 import { LampSettings } from '../../../models/lampSettings';
 import { Utils } from '../../services/utils/utils';
+import { iLamp } from '../iLamp';
 
-export class HmIpLampe extends HmIPDevice {
-  public lightOn: boolean | undefined = undefined;
+export class HmIpLampe extends HmIPDevice implements iLamp {
+  public lightOn: boolean = false;
   public queuedLightValue: boolean | null = null;
   public isStromStoss: boolean = false;
   public settings: LampSettings = new LampSettings();
