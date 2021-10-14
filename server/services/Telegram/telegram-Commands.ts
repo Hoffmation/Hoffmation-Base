@@ -9,8 +9,8 @@ import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
 import { ZigbeeDeviceType } from '../../devices/zigbee/zigbeeDeviceType';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { SonosService } from '../Sonos/sonos-service';
-import { HmIpDeviceType } from "/server/config/private/server/devices/hmIPDevices/hmIpDeviceType";
-import { HmIpTaster } from "/server/config/private/server/devices/hmIPDevices/hmIpTaster";
+import { HmIpDeviceType } from '../../devices/hmIPDevices/hmIpDeviceType';
+import { HmIpTaster } from '../../devices/hmIPDevices/hmIpTaster';
 
 export class TelegramCommands {
   private static devices: Devices;
@@ -215,7 +215,7 @@ export class TelegramCommands {
           TelegramService.sendMessage([m.from.id], response.join('\n'));
           return true;
         },
-        `Setzt alle Vibrationsensoren auf High`,
+        `Retrieves the button assignments for all buttons in home`,
       ),
     );
 

@@ -3,6 +3,8 @@ import { ServerLogService } from '../log-service';
 import { TelegramMessageCallback } from './telegramMessageCalback';
 import { LogLevel } from '../../../models/logLevel';
 import { iTelegramSettings } from '../../config/iConfig';
+import { Utils } from '../utils/utils';
+
 export class TelegramService {
   public static subscribedIDs: number[];
 
@@ -46,7 +48,7 @@ export class TelegramService {
     }
 
     this.active = true;
-    this.bot = new TelegramBot(this.token, { polling: true, webHook: false });
+    this.bot = new TelegramBot(this.token, {polling: true, webHook: false});
     this.bot.on('polling_error', (e) => {
       /*
       if (!this.reinitiliazeWithTimeout()) {
@@ -89,7 +91,7 @@ export class TelegramService {
         .toString()
         .replace(/\//g, '')
         .replace(/\\/g, '');
-      commands.push({ command: commandIdentifier, description: telegramCb.helpMessage });
+      commands.push({command: commandIdentifier, description: telegramCb.helpMessage});
     }
 
     ServerLogService.writeLog(LogLevel.Debug, `New Telegram Commands: "${JSON.stringify(commands)}"`);
@@ -106,11 +108,15 @@ export class TelegramService {
       console.log(`Telegram message ${message} wasn't send as TelegramService is inactive`);
       return;
     }
-
-    for (const id of ids) {
-      this.bot.sendMessage(id, message).catch((r) => {
-        ServerLogService.writeLog(LogLevel.Warn, `Send Telegram Message to ${id} failed: ${r}`);
-      });
+    const chunksNeeded: number = Math.ceil(message.length/4095);
+    for (let i = 0; i < chunksNeeded; i++) {
+      for (const id of ids) {
+        Utils.guardedTimeout(() => {
+          this.bot.sendMessage(id, message.substring(i * 4095, i * 4095 + 4095)).catch((r) => {
+            ServerLogService.writeLog(LogLevel.Warn, `Send Telegram Message to ${id} failed: ${r}`);
+          });
+        }, 200 * i, this);
+      }
     }
   }
 
