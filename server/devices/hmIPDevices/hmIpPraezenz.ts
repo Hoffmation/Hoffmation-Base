@@ -15,7 +15,8 @@ export class HmIpPraezenz extends HmIPDevice  implements iIlluminationSensor {
   private _detectionsToday: number = 0;
   private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
-  private static CURRENT_ILLUMINATION: string = 'CURRENT_ILLUMINATION';
+  private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
+  private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   private presenceStateID: string;
   private initialized: boolean = false;
   private _currentIllumination: number = -1;

@@ -15,7 +15,8 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   private _detectionsToday: number = 0;
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private static MOVEMENT_DETECTION: string = 'MOTION';
-  private static CURRENT_ILLUMINATION: string = 'CURRENT_ILLUMINATION';
+  private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
+  private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   private initialized: boolean = false;
   private fallBackTimeout: NodeJS.Timeout | undefined;
   private _currentIllumination: number = -1;
