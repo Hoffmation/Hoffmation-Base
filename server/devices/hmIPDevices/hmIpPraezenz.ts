@@ -6,15 +6,19 @@ import { ServerLogService } from '../../services/log-service';
 import { Persist } from '../../services/dbo/persist';
 import { CountToday } from '../../../models/persistence/todaysCount';
 import { Utils } from '../../services/utils/utils';
+import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
+import { iIlluminationSensor } from '../iIlluminationSensor';
 
-export class HmIpPraezenz extends HmIPDevice {
+export class HmIpPraezenz extends HmIPDevice  implements iIlluminationSensor {
   public excludeFromNightAlarm: boolean = false;
   public presenceDetected: boolean = false;
   private _detectionsToday: number = 0;
   private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
+  private static CURRENT_ILLUMINATION: string = 'CURRENT_ILLUMINATION';
   private presenceStateID: string;
   private initialized: boolean = false;
+  private _currentIllumination: number = -1;
 
   public get detectionsToday(): number {
     return this._detectionsToday;
@@ -24,6 +28,16 @@ export class HmIpPraezenz extends HmIPDevice {
     const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
     Persist.persistTodayCount(this, pVal, oldVal);
+  }
+
+  public get currentIllumination(): number {
+    return this._currentIllumination;
+  }
+  private set currentIllumination(value: number) {
+    this._currentIllumination = value;
+    Persist.persistCurrentIllumination(
+      new CurrentIlluminationDataPoint(this.info.room, this.info.devID, value, new Date(), this.room?.LampenGroup.anyLightsOwn())
+    );
   }
 
   public constructor(pInfo: DeviceInfo) {
@@ -55,6 +69,9 @@ export class HmIpPraezenz extends HmIPDevice {
     switch (idSplit[4]) {
       case HmIpPraezenz.PRESENCE_DETECTION:
         this.updatePresence(state.val as boolean);
+        break;
+      case HmIpPraezenz.CURRENT_ILLUMINATION:
+        this.currentIllumination = state.val as number;
         break;
     }
   }

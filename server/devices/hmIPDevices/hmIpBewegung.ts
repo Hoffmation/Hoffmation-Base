@@ -6,15 +6,30 @@ import { ServerLogService } from '../../services/log-service';
 import { Persist } from '../../services/dbo/persist';
 import { CountToday } from '../../../models/persistence/todaysCount';
 import { Utils } from '../../services/utils/utils';
+import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
+import { iIlluminationSensor } from '../iIlluminationSensor';
 
-export class HmIpBewegung extends HmIPDevice {
+export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   public excludeFromNightAlarm: boolean = false;
   public movementDetected: boolean = false;
   private _detectionsToday: number = 0;
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private static MOVEMENT_DETECTION: string = 'MOTION';
+  private static CURRENT_ILLUMINATION: string = 'CURRENT_ILLUMINATION';
   private initialized: boolean = false;
   private fallBackTimeout: NodeJS.Timeout | undefined;
+  private _currentIllumination: number = -1;
+
+  public get currentIllumination(): number {
+    return this._currentIllumination;
+  }
+
+  private set currentIllumination(value: number) {
+    this._currentIllumination = value;
+    Persist.persistCurrentIllumination(
+      new CurrentIlluminationDataPoint(this.info.room, this.info.devID, value, new Date(), this.room?.LampenGroup.anyLightsOwn() ?? false)
+    );
+  }
 
   public get detectionsToday(): number {
     return this._detectionsToday;
@@ -50,13 +65,16 @@ export class HmIpBewegung extends HmIPDevice {
     super.update(idSplit, state, initial, true);
 
     if (idSplit[3] !== '3') {
-      // Nur die Infos in Kanal 1 sind relevant
+      // Nur die Infos in Kanal 3 sind relevant
       return;
     }
 
     switch (idSplit[4]) {
       case HmIpBewegung.MOVEMENT_DETECTION:
         this.updateMovement(state.val as boolean);
+        break;
+      case HmIpBewegung.CURRENT_ILLUMINATION:
+        this.currentIllumination = state.val as number;
         break;
     }
   }

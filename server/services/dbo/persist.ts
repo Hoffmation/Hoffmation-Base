@@ -10,12 +10,14 @@ import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
 import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
 import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
 import { iTemperaturDataPoint } from '../../../models/iTemperaturDataPoint';
+import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 
 export const TemperatureHistoryCollection = new Mongo.Collection<TemperaturDataPoint>('TemperaturData');
 export const HeatGroupCollection = new Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');
 export const BasicRoomCollection = new Mongo.Collection<BasicRoomInfo>('BasicRooms');
 export const RoomDetailsCollection = new Mongo.Collection<RoomDetailInfo>('RoomDetailsCollection');
 export const CountTodayCollection = new Mongo.Collection<CountToday>('PresenceToday');
+export const CurrentIlluminationCollection = new Mongo.Collection<CurrentIlluminationDataPoint>('CurrentIllumination');
 export const DailyMovementCountTodayCollection = new Mongo.Collection<DailyMovementCount>('DailyMovementCount');
 export class Persist {
   public static MeteorBound: (callback: any) => void;
@@ -102,6 +104,20 @@ export class Persist {
       ServerLogService.writeLog(
         LogLevel.Trace,
         `Persisting PresenceToday Data for ${device.info.customName} to ${count} resolved with "${result}"`,
+      );
+    });
+  }
+
+  public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
+    this.MeteorBound(() => {
+      const result = CurrentIlluminationCollection.update(
+        { deviceID: data.deviceID, date: data.date },
+        data,
+        { upsert: true },
+      );
+      ServerLogService.writeLog(
+        LogLevel.Trace,
+        `Persisting Illumination Data for ${data.deviceID} to ${data.currentIllumination} resolved with "${result}"`,
       );
     });
   }
