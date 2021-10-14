@@ -6,12 +6,16 @@ import { ServerLogService } from '../../services/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../../services/time-callback-service';
 import { Utils } from '../../services/utils/utils';
-import { iMotionSensor } from '../iMotionSensor';
+import { ZigbeeAquaraMotion } from '../zigbee/zigbeeAquaraMotion';
 
 export class PraesenzGroup {
   private _lastMovement: Date = new Date(0);
 
-  public constructor(private _room: RoomBase, public Prasenzen: HmIpPraezenz[], public Bewegungen: iMotionSensor[]) {
+  public constructor(
+    private _room: RoomBase,
+    public Prasenzen: HmIpPraezenz[],
+    public Bewegungen: HmIpBewegung[] | ZigbeeAquaraMotion[],
+  ) {
     for (const b of [...Prasenzen, ...Bewegungen]) {
       b.room = this._room;
     }
@@ -37,7 +41,7 @@ export class PraesenzGroup {
         if (RoomBase.awayModeActive || (RoomBase.nightAlarmActive && !b.excludeFromNightAlarm)) {
           RoomBase.startIntrusionAlarm(this._room, b);
         }
-        RoomBase.movementHistory.add(`${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${(b as ioBrokerBaseDevice).info.fullName}"`);
+        RoomBase.movementHistory.add(`${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${b.info.fullName}"`);
       });
     });
     if (this._room.Einstellungen.lichtSonnenAufgangAus && this._room.Einstellungen.lampOffset) {

@@ -5,9 +5,13 @@ import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { iIlluminationSensor } from '../iIlluminationSensor';
+import { RoomBase } from '../../../models/rooms/RoomBase';
 
-export class ZigbeeAquaraMotion extends ZigbeeDevice {
+export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSensor {
   public movementDetected: boolean = false;
+  public excludeFromNightAlarm: boolean = false;
+  public room: RoomBase | undefined = undefined;
 
   private _timeSinceLastMotion: number = 0;
   private _illuminance: number = 0;
@@ -21,7 +25,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice {
   private occupancyTimeoutID = `occupancy_timeout`;
 
   // Currently measured brightness in lux
-  public get illuminance(): number {
+  public get currentIllumination(): number {
     return this._illuminance;
   }
 

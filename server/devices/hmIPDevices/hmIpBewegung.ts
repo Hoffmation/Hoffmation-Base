@@ -8,9 +8,8 @@ import { CountToday } from '../../../models/persistence/todaysCount';
 import { Utils } from '../../services/utils/utils';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { iIlluminationSensor } from '../iIlluminationSensor';
-import { iMotionSensor } from '../iMotionSensor';
 
-export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
+export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   public excludeFromNightAlarm: boolean = false;
   public movementDetected: boolean = false;
   private _detectionsToday: number = 0;

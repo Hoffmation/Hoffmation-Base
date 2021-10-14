@@ -9,7 +9,7 @@ import { Utils } from '../../services/utils/utils';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { iIlluminationSensor } from '../iIlluminationSensor';
 
-export class HmIpPraezenz extends HmIPDevice  implements iIlluminationSensor {
+export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public excludeFromNightAlarm: boolean = false;
   public presenceDetected: boolean = false;
   private _detectionsToday: number = 0;
