@@ -18,6 +18,7 @@ import { Persist } from '../../server/services/dbo/persist';
 import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callback-service';
 import { SonosService } from '../../server/services/Sonos/sonos-service';
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
+import { iMotionSensor } from '../../server/devices/iMotionSensor';
 
 export class RoomBase {
   public static Rooms: { [name: string]: RoomBase } = {};
@@ -136,7 +137,7 @@ export class RoomBase {
     );
   }
 
-  public static startIntrusionAlarm(room: RoomBase, device: HmIPDevice): void {
+  public static startIntrusionAlarm(room: RoomBase, device: iMotionSensor): void {
     const message: string = `!Potenzieller Eindringling! Bewegung in ${room.roomName} von ${device.info.fullName} festgestellt`;
     ServerLogService.writeLog(LogLevel.Info, message);
     if (!this.awayModeActive && !this.nightAlarmActive) {

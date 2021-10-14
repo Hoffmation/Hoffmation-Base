@@ -10,4 +10,5 @@ export enum ZigbeeDeviceType {
   ZigbeeBlitzShp = 8,
   ZigbeeIlluLampe = 9,
   ZigbeeIlluActuator = 10,
+  ZigbeeAquaraMotion = 11,
 }

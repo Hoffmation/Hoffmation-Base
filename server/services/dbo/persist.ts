@@ -11,6 +11,7 @@ import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
 import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
 import { iTemperaturDataPoint } from '../../../models/iTemperaturDataPoint';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
+import { ioBrokerBaseDevice } from '../../devices/iIoBrokerDevice';
 
 export const TemperatureHistoryCollection = new Mongo.Collection<TemperaturDataPoint>('TemperaturData');
 export const HeatGroupCollection = new Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');
@@ -81,7 +82,7 @@ export class Persist {
     return result;
   }
 
-  public static persistTodayCount(device: HmIPDevice, count: number, oldCount: number): void {
+  public static persistTodayCount(device: ioBrokerBaseDevice, count: number, oldCount: number): void {
     this.MeteorBound(() => {
       const result = CountTodayCollection.update(
         { deviceID: device.info.fullID },
