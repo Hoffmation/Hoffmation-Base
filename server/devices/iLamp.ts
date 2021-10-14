@@ -1,8 +1,8 @@
 import { RoomBase } from '../../models/rooms/RoomBase';
-import { LampSettings } from '../../models/lampSettings';
+import { ActuatorSettings } from '../../models/actuatorSettings';
 
 export interface iLamp {
-  settings: LampSettings;
+  settings: ActuatorSettings;
   lightOn: boolean;
   room: RoomBase | undefined;
 

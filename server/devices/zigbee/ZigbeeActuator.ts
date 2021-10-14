@@ -4,10 +4,10 @@ import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
 import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
-import { LampSettings } from '../../../models/lampSettings';
+import { ActuatorSettings as ActuatorSettings } from '../../../models/actuatorSettings';
 
 export class ZigbeeActuator extends ZigbeeDevice {
-  public settings: LampSettings = new LampSettings();
+  public settings: ActuatorSettings = new ActuatorSettings();
   protected readonly actuatorOnSwitchID: string;
   protected queuedValue: boolean | null = null;
   protected actuatorOn: boolean = false;

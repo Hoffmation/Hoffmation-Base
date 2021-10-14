@@ -3,14 +3,14 @@ import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
-import { LampSettings } from '../../../models/lampSettings';
+import { ActuatorSettings } from '../../../models/actuatorSettings';
 
 export class ZigbeeBlitzShp extends ZigbeeDevice {
   public steckerOn: boolean = false;
   public current: number = 0;
   public energy: number = 0;
   public loadPower: number = 0;
-  public settings: LampSettings = new LampSettings();
+  public settings: ActuatorSettings = new ActuatorSettings();
   private steckerOnSwitchID: string = '';
 
   public constructor(pInfo: DeviceInfo) {
