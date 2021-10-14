@@ -28,6 +28,7 @@ import { ZigbeeBlitzShp } from './zigbee/zigbeeBlitzShp';
 import { ZigbeeIlluLampe } from './zigbee/zigbeeIlluLampe';
 import { ZigbeeIlluActuator } from './zigbee/zigbeeIlluActuator';
 import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
+import { ZigbeeAquaraMotion } from './zigbee/zigbeeAquaraMotion';
 
 export class Devices {
   public static hmIP: { [id: string]: HmIPDevice } = {};
@@ -105,6 +106,9 @@ export class Devices {
     switch (zigbeeInfo.deviceType) {
       case 'AquaraVibra':
         Devices.Zigbee[zigbeeInfo.devID] = new ZigbeeAquaraVibra(zigbeeInfo);
+        break;
+      case 'AquaraMotion':
+        Devices.Zigbee[zigbeeInfo.devID] = new ZigbeeAquaraMotion(zigbeeInfo);
         break;
       case 'IkeaStecker':
         Devices.Zigbee[zigbeeInfo.devID] = new ZigbeeIkeaSteckdose(zigbeeInfo);
