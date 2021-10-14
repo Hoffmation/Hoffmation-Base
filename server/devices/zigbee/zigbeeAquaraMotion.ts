@@ -7,6 +7,8 @@ import { ZigbeeDevice } from './zigbeeDevice';
 import { ZigbeeDeviceType } from './zigbeeDeviceType';
 import { iIlluminationSensor } from '../iIlluminationSensor';
 import { RoomBase } from '../../../models/rooms/RoomBase';
+import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
+import { CountToday } from '../../../models/persistence/todaysCount';
 
 export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSensor {
   public movementDetected: boolean = false;
@@ -27,6 +29,19 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
   // Currently measured brightness in lux
   public get currentIllumination(): number {
     return this._illuminance;
+  }
+
+  private set currentIllumination(value: number) {
+    this._illuminance = value;
+    Persist.persistCurrentIllumination(
+      new CurrentIlluminationDataPoint(
+        this.info.room,
+        this.info.devID,
+        value,
+        new Date(),
+        this.room?.LampenGroup.anyLightsOwn() ?? false,
+      ),
+    );
   }
 
   // Time since last motion in seconds
@@ -68,6 +83,15 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
     super(pInfo, ZigbeeDeviceType.ZigbeeAquaraMotion);
 
     this.occupancyTimeoutID = `${this.info.fullID}.${this.occupancyTimeoutID}`;
+
+    Persist.getCount(this).then((todayCount: CountToday) => {
+      this.detectionsToday = todayCount.counter;
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
+      );
+      this._initialized = true;
+    });
   }
 
   public addMovementCallback(pCallback: (pValue: boolean) => void): void {
@@ -148,7 +172,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
           LogLevel.Trace,
           `Motion sensor: Update for illuminance of ${this.info.customName}: ${state.val}`,
         );
-        this._illuminance = state.val as number;
+        this.currentIllumination = state.val as number;
         break;
       case 'occupancy_timeout':
         ServerLogService.writeLog(

@@ -57,7 +57,7 @@ export class Persist {
     });
   }
 
-  public static async getCount(device: HmIPDevice): Promise<CountToday> {
+  public static async getCount(device: ioBrokerBaseDevice): Promise<CountToday> {
     const result = new Promise<CountToday>((resolve) => {
       this.MeteorBound(() => {
         const options = {
