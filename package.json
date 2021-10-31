@@ -1,7 +1,7 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "0.1.15",
+  "version": "0.1.14",
   "main": "index.js",
   "repository": {
     "type": "git",
