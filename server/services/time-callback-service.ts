@@ -80,6 +80,9 @@ export class TimeCallbackService {
 
     let sunset: Date = new Date(TimeCallbackService._todaySunSet.getTime() + pOffset.sunset * 60 * 1000);
     const maximumSunset: Date = pOffset.getNextMaximumSunset();
+    if (maximumSunset.getDate() !== sunset.getDate()) {
+      maximumSunset.setDate(maximumSunset.getDate() - 1);
+    }
     if (maximumSunset < sunset && maximumSunset.getDate() === sunset.getDate()) {
       ServerLogService.writeLog(
         LogLevel.Trace,
@@ -92,6 +95,9 @@ export class TimeCallbackService {
     }
     const minimumSunrise: Date = pOffset.getNextMinimumSunrise();
     let sunrise: Date = new Date(TimeCallbackService._todaySunRise.getTime() + pOffset.sunset * 60 * 1000);
+    if (minimumSunrise.getDate() !== sunrise.getDate()) {
+      minimumSunrise.setDate(minimumSunrise.getDate() - 1);
+    }
     if (minimumSunrise > sunrise && minimumSunrise.getDate() === sunrise.getDate()) {
       ServerLogService.writeLog(
         LogLevel.Trace,
