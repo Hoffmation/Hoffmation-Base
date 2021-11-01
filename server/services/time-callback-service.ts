@@ -105,10 +105,10 @@ export class TimeCallbackService {
       );
       sunrise = minimumSunrise;
     }
-    if (now > sunrise) {
-      return TimeOfDay.Daylight;
+    if (now < sunrise && now.getDate() == sunrise.getDate()) {
+      return TimeOfDay.BeforeSunrise;
     }
-    return TimeOfDay.BeforeSunrise;
+    return TimeOfDay.Daylight;
   }
 
   public static darkOutsideOrNight(dayType: TimeOfDay): boolean {
