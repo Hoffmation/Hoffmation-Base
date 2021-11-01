@@ -26,7 +26,7 @@ export class NewsService {
       (response: string) => {
         try {
           const cutAfterDownload: string = response.split(`" title="Audio Download">`)[0];
-          const cutsPriorDownload: string[] = cutAfterDownload.split(`<a class="button download fsk0" href="`);
+          const cutsPriorDownload: string[] = cutAfterDownload.split(`<a class="button download " href="`);
           const target: string = 'https:' + cutsPriorDownload[cutsPriorDownload.length - 1];
           const splits: string[] = target.split('/');
           const fileName: string = splits[splits.length - 1];
