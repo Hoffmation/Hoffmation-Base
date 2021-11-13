@@ -1,9 +1,10 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "files": ["lib/**/*"],
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/theimo1221/Hoffmation-Base.git"
@@ -16,7 +17,8 @@
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
     "lint-fix-all": "eslint ./**/{*.ts,*.js} --fix --no-error-on-unmatched-pattern",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@types/debug": "^4.1.7",
