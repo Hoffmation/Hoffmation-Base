@@ -1,4 +1,3 @@
-import { Mongo } from 'meteor/mongo';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
@@ -11,16 +10,21 @@ import { DailyMovementCount } from '../../../models/persistence/DailyMovementCou
 import { iTemperaturDataPoint } from '../../../models/iTemperaturDataPoint';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { ioBrokerBaseDevice } from '../../devices/iIoBrokerDevice';
+import { Mongo } from 'meteor/mongo';
 
-export const TemperatureHistoryCollection = new Mongo.Collection<TemperaturDataPoint>('TemperaturData');
-export const HeatGroupCollection = new Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');
-export const BasicRoomCollection = new Mongo.Collection<BasicRoomInfo>('BasicRooms');
-export const RoomDetailsCollection = new Mongo.Collection<RoomDetailInfo>('RoomDetailsCollection');
-export const CountTodayCollection = new Mongo.Collection<CountToday>('PresenceToday');
-export const CurrentIlluminationCollection = new Mongo.Collection<CurrentIlluminationDataPoint>('CurrentIllumination');
-export const DailyMovementCountTodayCollection = new Mongo.Collection<DailyMovementCount>('DailyMovementCount');
 export class Persist {
+  private static TemperatureHistoryCollection = new Mongo.Collection<TemperaturDataPoint>('TemperaturData');
+  private static HeatGroupCollection = new Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');
+  private static BasicRoomCollection = new Mongo.Collection<BasicRoomInfo>('BasicRooms');
+  private static RoomDetailsCollection = new Mongo.Collection<RoomDetailInfo>('RoomDetailsCollection');
+  private static CountTodayCollection = new Mongo.Collection<CountToday>('PresenceToday');
+  private static CurrentIlluminationCollection = new Mongo.Collection<CurrentIlluminationDataPoint>(
+    'CurrentIllumination',
+  );
+  private static DailyMovementCountTodayCollection = new Mongo.Collection<DailyMovementCount>('DailyMovementCount');
   public static MeteorBound: (callback: any) => void;
+  private static Mongo: { Collection: Mongo.CollectionStatic };
+
   public static addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
     const dataPoint: iTemperaturDataPoint = new TemperaturDataPoint(
       hzGrp.info.customName,
@@ -32,27 +36,31 @@ export class Persist {
     );
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${hzGrp.info.customName}`);
     this.MeteorBound(() => {
-      TemperatureHistoryCollection.insert(dataPoint);
+      this.TemperatureHistoryCollection.insert(dataPoint);
     });
 
     this.MeteorBound(() => {
-      HeatGroupCollection.update({ name: dataPoint.name }, dataPoint, { upsert: true });
+      this.HeatGroupCollection.update({ name: dataPoint.name }, dataPoint, { upsert: true });
     });
   }
 
   public static addRoom(room: RoomBase): void {
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Room for ${room.roomName}`);
     this.MeteorBound(() => {
-      BasicRoomCollection.update({ roomName: room.roomName }, new BasicRoomInfo(room.roomName, room.Settings.etage), {
-        upsert: true,
-      });
+      this.BasicRoomCollection.update(
+        { roomName: room.roomName },
+        new BasicRoomInfo(room.roomName, room.Settings.etage),
+        {
+          upsert: true,
+        },
+      );
     });
     const detailed = new RoomDetailInfo(room.roomName, room.Settings.etage);
     for (const h of room.HeatGroup.heaters) {
       detailed.heaters.push(h.info.customName);
     }
     this.MeteorBound(() => {
-      RoomDetailsCollection.update({ roomName: room.roomName }, detailed, { upsert: true });
+      this.RoomDetailsCollection.update({ roomName: room.roomName }, detailed, { upsert: true });
     });
   }
 
@@ -62,7 +70,7 @@ export class Persist {
         const options = {
           limit: 1,
         };
-        const databaseValue: CountToday[] = CountTodayCollection.find(
+        const databaseValue: CountToday[] = this.CountTodayCollection.find(
           { deviceID: device.info.fullID },
           options,
         ).fetch();
@@ -81,9 +89,21 @@ export class Persist {
     return result;
   }
 
+  public static initialize(meteorBound: (callback: any) => void, mongo: { Collection: Mongo.CollectionStatic }): void {
+    this.MeteorBound = meteorBound;
+    this.Mongo = mongo;
+    this.TemperatureHistoryCollection = new this.Mongo.Collection<TemperaturDataPoint>('TemperaturData');
+    this.HeatGroupCollection = new this.Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');
+    this.BasicRoomCollection = new this.Mongo.Collection<BasicRoomInfo>('BasicRooms');
+    this.RoomDetailsCollection = new this.Mongo.Collection<RoomDetailInfo>('RoomDetailsCollection');
+    this.CountTodayCollection = new this.Mongo.Collection<CountToday>('PresenceToday');
+    this.CurrentIlluminationCollection = new this.Mongo.Collection<CurrentIlluminationDataPoint>('CurrentIllumination');
+    this.DailyMovementCountTodayCollection = new this.Mongo.Collection<DailyMovementCount>('DailyMovementCount');
+  }
+
   public static persistTodayCount(device: ioBrokerBaseDevice, count: number, oldCount: number): void {
     this.MeteorBound(() => {
-      const result = CountTodayCollection.update(
+      const result = this.CountTodayCollection.update(
         { deviceID: device.info.fullID },
         new CountToday(device.info.fullID, count),
         { upsert: true },
@@ -91,7 +111,7 @@ export class Persist {
       if (count === 0) {
         const date = new Date();
         date.setHours(-24, 0, 0, 0);
-        const result2 = DailyMovementCountTodayCollection.update(
+        const result2 = this.DailyMovementCountTodayCollection.update(
           { deviceID: device.info.fullID, date: date },
           new DailyMovementCount(device.info.fullID, oldCount, device.info.room, date),
           { upsert: true },
@@ -110,7 +130,7 @@ export class Persist {
 
   public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
     this.MeteorBound(() => {
-      const result = CurrentIlluminationCollection.update({ deviceID: data.deviceID, date: data.date }, data, {
+      const result = this.CurrentIlluminationCollection.update({ deviceID: data.deviceID, date: data.date }, data, {
         upsert: true,
       });
       ServerLogService.writeLog(
@@ -130,7 +150,7 @@ export class Persist {
           limit: limit > 0 ? limit : undefined,
           sort: { date: -1 },
         };
-        resolve(TemperatureHistoryCollection.find({ name: hzGrp.info.customName }, options).fetch());
+        resolve(this.TemperatureHistoryCollection.find({ name: hzGrp.info.customName }, options).fetch());
       });
     });
 
