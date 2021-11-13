@@ -1,4 +1,4 @@
-/* eslint-disable prefer-rest-params */
+/* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment */
 import { IncomingMessage } from 'http';
 import { SocketIOAuthInfo } from './socketIOAuthInfo';
 import { SocketIOConnectOpts } from './socketIOConnectOptions';
@@ -31,13 +31,16 @@ export class IOBrokerConnection {
     [groupName: string]: Record<string, ioBroker.Enum>;
   }; // used if _useStorage === true
   private _isAuthDone: boolean = false;
+  // @ts-ignore
   private _isAuthRequired: boolean = false;
   private _isConnected: boolean = false;
   private _isSecure: boolean = false;
   private _lastTimer?: Date;
   private _namespace: string = 'vis.0';
   private _objects?: Record<string, ioBroker.Object>; // used if _useStorage === true
+  // @ts-ignore
   private _onConnChange: unknown;
+  // @ts-ignore
   private _onUpdate: unknown;
   private _reconnectInterval: number = 10000; // reconnect interval
   private _reloadInterval: number = 30; // if connection was absent longer than 30 seconds
@@ -203,10 +206,13 @@ export class IOBrokerConnection {
     }
 
     if (typeof session !== 'undefined') {
+      // @ts-ignore
       const user = session.get('user');
       if (user) {
         this._authInfo.user = user;
+        // @ts-ignore
         this._authInfo.hash = session.get('hash');
+        // @ts-ignore
         this._authInfo.salt = session.get('salt');
       }
     }
@@ -311,7 +317,10 @@ export class IOBrokerConnection {
     this._socket.on('reauthenticate', () => {
       if (this._connCallbacks.onConnChange) {
         this._connCallbacks.onConnChange(false);
-        if (typeof app !== 'undefined') app.onConnChange(false);
+        if (typeof app !== 'undefined') {
+          // @ts-ignore
+          app.onConnChange(false);
+        }
       }
       SocketIoLogging.writeLog(SocketIoLogLevel.Warn, 'reauthenticate');
       if (this._isExecutedInBrowser) window.location.reload();
@@ -334,7 +343,10 @@ export class IOBrokerConnection {
             if (typeof this._connCallbacks.onConnChange !== 'undefined') {
               this._connCallbacks.onConnChange(this._isConnected);
             }
-            if (typeof app !== 'undefined') app.onConnChange(this._isConnected);
+            if (typeof app !== 'undefined') {
+              // @ts-ignore
+              app.onConnChange(this._isConnected);
+            }
           },
           5000,
           this,
@@ -361,6 +373,7 @@ export class IOBrokerConnection {
     this._socket.on('objectChange', (id: string, obj: ioBroker.Object) => {
       // If cache used
       if (this._useStorage && typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = this._objects || storage.get('objects');
         if (objects) {
           if (obj) {
@@ -368,6 +381,7 @@ export class IOBrokerConnection {
           } else {
             if (objects[id]) delete objects[id];
           }
+          // @ts-ignore
           storage.set('objects', objects);
         }
       }
@@ -399,6 +413,7 @@ export class IOBrokerConnection {
           }
         }
         // if command is an object {instance: 'iii', command: 'cmd', data: 'ddd'}
+        // @ts-ignore
         if (state.val && typeof state.val === 'object' && (state.val as unknown).instance) {
           // vis only:
           const visCommand: SocketIOVisCommand = new SocketIOVisCommand(state.val as unknown);
@@ -442,6 +457,7 @@ export class IOBrokerConnection {
       return false;
     }
 
+    // @ts-ignore
     if (this._queueCmdIfRequired(pFunc, pArguments)) {
       SocketIoLogging.writeLog(SocketIoLogLevel.Warn, 'Command queued');
       return false;
@@ -495,12 +511,16 @@ export class IOBrokerConnection {
     this._isConnected = true;
     if (this._connCallbacks.onConnChange) {
       Utils.guardedNewThread(() => {
+        // @ts-ignore
         this._socket.emit('authEnabled', (auth: unknown, user: string) => {
           this._user = user;
           if (typeof this._connCallbacks.onConnChange !== 'undefined') {
             this._connCallbacks.onConnChange(this._isConnected);
           }
-          if (typeof app !== 'undefined') app.onConnChange(this._isConnected);
+          if (typeof app !== 'undefined') {
+            // @ts-ignore
+            app.onConnChange(this._isConnected);
+          }
         });
       }, this);
     }
@@ -508,6 +528,7 @@ export class IOBrokerConnection {
 
   public reconnect(pConnOptions: unknown): void {
     // reconnect
+    // @ts-ignore
     if (this._connectInterval !== undefined || (pConnOptions.mayReconnect && !pConnOptions.mayReconnect())) {
       return;
     }
@@ -563,6 +584,7 @@ export class IOBrokerConnection {
       // FIXME: version Type
       (error: unknown, version: string) => {
         if (callback) {
+          // @ts-ignore
           callback(error, version);
         }
       },
@@ -586,6 +608,7 @@ export class IOBrokerConnection {
       (error: unknown, version: unknown) => {
         if (callback) {
           SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, '_checkAuth: socket.io getVersion Callback');
+          // @ts-ignore
           callback(error, version);
         }
       },
@@ -597,15 +620,19 @@ export class IOBrokerConnection {
 
     if (this._type === 'local') {
       try {
+        // @ts-ignore
         const data = storage.get(filename);
+        // @ts-ignore
         callback(null, data ? JSON.parse(storage.get(filename)) : null);
       } catch (err) {
+        // @ts-ignore
         callback(err, undefined);
       }
     } else {
       if (!this._checkConnection('readFile', arguments)) return;
 
       if (!isRemote && typeof app !== 'undefined') {
+        // @ts-ignore
         app.readLocalFile(filename.replace(/^\/vis\.0\//, ''), callback);
       } else {
         let adapter = this.namespace;
@@ -688,11 +715,14 @@ export class IOBrokerConnection {
 
     if (!isRemote && typeof app !== 'undefined') {
       // FIXME: data Type
+      // @ts-ignore
       app.readLocalFile(filename.replace(/^\/vis\.0\//, ''), (err: Error, data: string, mimeType: string) => {
         Utils.guardedNewThread(() => {
           if (data) {
+            // @ts-ignore
             callback(err, { mime: mimeType || this.getMimeType(filename), data: btoa(data) }, filename);
           } else {
+            // @ts-ignore
             callback(err, filename);
           }
         }, this);
@@ -714,8 +744,10 @@ export class IOBrokerConnection {
         (err: Error, data: unknown, mimeType: string) => {
           Utils.guardedNewThread(() => {
             if (data) {
+              // @ts-ignore
               callback(err, { mime: mimeType || this.getMimeType(filename), data: data }, filename);
             } else {
+              // @ts-ignore
               callback(err, { mime: mimeType || this.getMimeType(filename) }, filename);
             }
           }, this);
@@ -724,14 +756,17 @@ export class IOBrokerConnection {
     }
   }
 
+  // @ts-ignore
   public writeFile(
     filename: string,
     data: unknown | string,
     mode: number,
     callback: ioBroker.ErrnoCallback,
+    // @ts-ignore
     ...args: unknown[]
   ): void {
     if (this._type === 'local') {
+      // @ts-ignore
       storage.set(filename, JSON.stringify(data));
       if (callback) {
         callback();
@@ -742,6 +777,7 @@ export class IOBrokerConnection {
     if (!this._checkConnection('writeFile', arguments)) {
       return;
     }
+    // @ts-ignore
     const sData: string = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
 
     const parts = filename.split('/');
@@ -931,6 +967,7 @@ export class IOBrokerConnection {
     // If cache used
     if (this._useStorage && useCache) {
       if (typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = this._objects || storage.get('objects');
         if (objects) return callback(null, objects);
       } else if (this._objects) {
@@ -1032,8 +1069,11 @@ export class IOBrokerConnection {
                         this._enums = enums;
 
                         if (typeof storage !== 'undefined') {
+                          // @ts-ignore
                           storage.set('objects', data);
+                          // @ts-ignore
                           storage.set('enums', enums);
+                          // @ts-ignore
                           storage.set('timeSync', new Date().getTime());
                         }
                       }
@@ -1050,10 +1090,12 @@ export class IOBrokerConnection {
     });
   }
 
+  // @ts-ignore
   public getChildren(
     id: string,
     useCache: boolean,
     callback: (err?: Error | null, children?: string[]) => void,
+    // @ts-ignore
     ...args: unknown[]
   ): void {
     if (!this._checkConnection('getChildren', arguments)) return;
@@ -1064,12 +1106,17 @@ export class IOBrokerConnection {
 
     if (this._useStorage && useCache) {
       if (typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = storage.get('objects');
         if (objects && objects[id] && objects[id].children) {
           return callback(null, objects[id].children);
         }
-      } else if (this._objects && this._objects[id] && this._objects[id].children) {
-        return callback(null, this._objects[id].children);
+      } else {
+        // @ts-ignore
+        if (this._objects && this._objects[id] && this._objects[id].children) {
+          // @ts-ignore
+          return callback(null, this._objects[id].children);
+        }
       }
     }
 
@@ -1140,6 +1187,7 @@ export class IOBrokerConnection {
                 list.sort();
 
                 if (this._useStorage && typeof storage !== 'undefined') {
+                  // @ts-ignore
                   const objects = storage.get('objects') || {};
 
                   for (const id_ in data) {
@@ -1169,6 +1217,7 @@ export class IOBrokerConnection {
                     }
                   }
 
+                  // @ts-ignore
                   storage.set('objects', objects);
                 }
 
@@ -1187,6 +1236,7 @@ export class IOBrokerConnection {
     // If cache used
     if (this._useStorage && useCache && typeof storage !== 'undefined') {
       if (typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = this._objects || storage.get('objects');
         if (objects && objects[id]) return callback(null, objects[id]);
       } else if (this._enums) {
@@ -1200,8 +1250,10 @@ export class IOBrokerConnection {
         return;
       }
       if (this._useStorage && typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = storage.get('objects') || {};
         objects[id] = obj;
+        // @ts-ignore
         storage.set('objects', objects);
       }
       return callback(null, obj);
@@ -1212,6 +1264,7 @@ export class IOBrokerConnection {
     // If cache used
     if (this._useStorage && useCache) {
       if (typeof storage !== 'undefined') {
+        // @ts-ignore
         const enums: { [id: string]: ioBroker.Enum } = this._enums || storage.get('enums');
         if (enums) return callback(null, enums);
       } else if (this._enums) {
@@ -1244,6 +1297,7 @@ export class IOBrokerConnection {
         }
 
         if (this._useStorage && typeof storage !== 'undefined') {
+          // @ts-ignore
           storage.set('enums', enums);
         }
         callback(null, enums);
@@ -1254,6 +1308,7 @@ export class IOBrokerConnection {
   // return time when the objects were synchronized
   public getSyncTime(): Date {
     if (this._useStorage && typeof storage !== 'undefined') {
+      // @ts-ignore
       const timeSync = storage.get('timeSync');
       if (timeSync) return new Date(timeSync);
     }
@@ -1261,6 +1316,7 @@ export class IOBrokerConnection {
   }
 
   // FIXME finish implementation of this file
+  // @ts-ignore
   public addObject(objId: unknown, obj: unknown, callback: unknown): void {
     if (!this._isConnected) {
       SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
@@ -1315,6 +1371,7 @@ export class IOBrokerConnection {
     }
     SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: Auth is not yet done`);
     // Queue command
+    // @ts-ignore
     this._cmdQueue.push({ func: func, args: args });
     if (this._authRunning) {
       SocketIoLogging.writeLog(
@@ -1327,6 +1384,7 @@ export class IOBrokerConnection {
     SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: Starting Authentication Process`);
     this._authRunning = true;
     // Try to read version
+    // @ts-ignore
     this._checkAuth((error: unknown, version: string) => {
       SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: _checkAuth CB data: "${version}"`);
       // If we have got version string, so there is no authentication, or we are authenticated
@@ -1343,7 +1401,9 @@ export class IOBrokerConnection {
       // Trigger GC
       this._cmdQueue = undefined;
       this._cmdQueue = [];
+      // @ts-ignore
       for (let t = 0, len = __cmdQueue.length; t < len; t++) {
+        // @ts-ignore
         (this as unknown)[__cmdQueue[t].func].apply(this, __cmdQueue[t].args);
       }
     });
@@ -1375,6 +1435,7 @@ export class IOBrokerConnection {
   public getConfig(
     useCache: boolean,
     callback: (error: Error | null, conf?: Record<string, any>) => void,
+    // @ts-ignore
     ...args: unknown[]
   ): void {
     if (!this._checkConnection('getConfig', arguments)) return;
@@ -1385,6 +1446,7 @@ export class IOBrokerConnection {
     }
     if (this._useStorage && useCache) {
       if (typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = storage.get('objects');
         if (objects && objects['system.config']) {
           return callback(null, objects['system.config'].common);
@@ -1400,8 +1462,10 @@ export class IOBrokerConnection {
       }
 
       if (this._useStorage && typeof storage !== 'undefined') {
+        // @ts-ignore
         const objects = storage.get('objects') || {};
         objects['system.config'] = obj;
+        // @ts-ignore
         storage.set('objects', objects);
       }
 
@@ -1416,6 +1480,7 @@ export class IOBrokerConnection {
     ack: boolean = true,
   ): void {
     this.setState(this.namespace + '.control.instance', { val: instance || 'notdefined', ack: true });
+    // @ts-ignore
     this.setState(this.namespace + '.control.data', { val: data, ack: true });
     this.setState(this.namespace + '.control.command', { val: command, ack: ack });
   }
@@ -1502,13 +1567,17 @@ export class IOBrokerConnection {
       projectDir + '*',
       { mode: mode },
       (err: Error, data?: ioBroker.ChownFileResult[], id?: string) => {
-        if (callback) callback(err, data, id);
+        if (callback) {
+          // @ts-ignore
+          callback(err, data, id);
+        }
       },
     );
   }
 
   public clearCache(): void {
     if (typeof storage !== 'undefined') {
+      // @ts-ignore
       storage.empty();
     }
   }
@@ -1517,6 +1586,7 @@ export class IOBrokerConnection {
     id: string,
     options: ioBroker.GetHistoryOptions & { timeout?: number },
     callback: ioBroker.GetHistoryCallback,
+    // @ts-ignore
     ...args: unknown[]
   ): void {
     if (!this._checkConnection('getHistory', arguments)) return;
@@ -1578,6 +1648,7 @@ export class IOBrokerConnection {
     );
   }
 
+  // @ts-ignore
   private readDirAsZip(project: string, useConvert: boolean = false, callback: ioBroker.ReadDirCallback) {
     if (!this._isConnected) {
       SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
@@ -1610,13 +1681,18 @@ export class IOBrokerConnection {
         // (data: ioBroker.Message) => {
         // FIXME: ioBroker.Message has no attribute error
         (data: unknown) => {
+          // @ts-ignore
           if (data.error) SocketIoLogging.writeLog(SocketIoLogLevel.Error, data.error);
-          if (callback) callback(data.error, data.data);
+          if (callback) {
+            // @ts-ignore
+            callback(data.error, data.data);
+          }
         },
       );
     });
   }
 
+  // @ts-ignore
   private writeDirAsZip(project: string, base64: string, callback: ioBroker.ReadDirCallback): void {
     if (!this._isConnected) {
       SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
@@ -1643,11 +1719,13 @@ export class IOBrokerConnection {
           name: project || 'main',
           data: base64,
         },
-        // (data: ioBroker.Message) => {
-        // FIXME: ioBroker.Message has no attribute error
-        (data: unknown) => {
+        (data: ioBroker.Message) => {
+          // @ts-ignore
           if (data.error) SocketIoLogging.writeLog(SocketIoLogLevel.Error, data.error);
-          if (callback) callback(data.error, data.message);
+          if (callback) {
+            // @ts-ignore
+            callback(data.error, data.message);
+          }
         },
       );
     });

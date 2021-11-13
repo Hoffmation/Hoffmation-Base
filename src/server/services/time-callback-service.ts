@@ -47,7 +47,7 @@ export class TimeCallbackService {
   private static _nextSunRise: Date;
   private static _nextSunSet: Date;
   private static _callbacks: TimeCallback[] = [];
-  private static _iCheck: NodeJS.Timeout;
+  private static _iCheck: NodeJS.Timeout | undefined;
   private static _lastCheck: Date = new Date(0);
 
   public static dayType(pOffset: SunTimeOffsets): TimeOfDay {
@@ -119,6 +119,13 @@ export class TimeCallbackService {
         return true;
       default:
         return false;
+    }
+  }
+
+  public static stopInterval(): void {
+    if (this._iCheck !== undefined) {
+      clearInterval(this._iCheck);
+      this._iCheck = undefined;
     }
   }
 

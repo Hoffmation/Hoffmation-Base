@@ -17,7 +17,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   private brightnessID: string = 'brightness';
   private colorID: string = '';
   private colorTempID: string = '';
-  private effectID: string = '';
+  // private effectID: string = '';
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, ZigbeeDeviceType.ZigbeeIlluLedRGBCCT);
@@ -25,7 +25,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
     this.brightnessID = `${this.info.fullID}.brightness`;
     this.colorID = `${this.info.fullID}.color`;
     this.colorTempID = `${this.info.fullID}.colortemp`;
-    this.effectID = `${this.info.fullID}.effect`;
+    // this.effectID = `${this.info.fullID}.effect`;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

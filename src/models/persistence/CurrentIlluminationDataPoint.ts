@@ -4,6 +4,6 @@ export class CurrentIlluminationDataPoint {
     public deviceID: string,
     public currentIllumination: number,
     public date: Date,
-    public lightIsOn: boolean
+    public lightIsOn: boolean,
   ) {}
 }

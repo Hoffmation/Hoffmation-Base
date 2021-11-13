@@ -13,10 +13,12 @@ export class MuellTonne {
   public sortDates(): void {
     this.dates = this.dates.sort((a, b) => a.getTime() - b.getTime());
     this.removePassedDates();
-    ServerLogService.writeLog(
-      LogLevel.Info,
-      `Die "${this.name}" ist das nächste mal am ${this.nextDate.toLocaleDateString('de-DE')} zu leeren`,
-    );
+    if (this.nextDate !== undefined) {
+      ServerLogService.writeLog(
+        LogLevel.Info,
+        `Die "${this.name}" ist das nächste mal am ${this.nextDate.toLocaleDateString('de-DE')} zu leeren`,
+      );
+    }
   }
 
   public removePassedDates(): void {

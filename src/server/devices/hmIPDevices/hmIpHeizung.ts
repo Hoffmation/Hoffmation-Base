@@ -35,12 +35,12 @@ export class HmIpHeizung extends HmIPDevice {
 
     switch (idSplit[3]) {
       case '1':
-        this.updateBaseInformation(idSplit[4], state, initial);
+        this.updateBaseInformation(idSplit[4], state);
         break;
     }
   }
 
-  private updateBaseInformation(name: string, state: ioBroker.State, initial: boolean) {
+  private updateBaseInformation(name: string, state: ioBroker.State) {
     switch (name) {
       case 'ACTUAL_TEMPERATURE':
         this._temperatur = state.val as number;

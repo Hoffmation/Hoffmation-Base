@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import config from '/src/server/config/private/mainConfig.json';
 import { iConfig } from '../config/iConfig';

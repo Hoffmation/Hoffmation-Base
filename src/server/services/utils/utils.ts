@@ -10,7 +10,10 @@ export class Utils {
         func();
       }
     } catch (e) {
-      ServerLogService.writeLog(LogLevel.Error, `Guarded Function failed: ${e.message}\n Stack: ${e.stack}`);
+      ServerLogService.writeLog(
+        LogLevel.Error,
+        `Guarded Function failed: ${(e as Error).message}\n Stack: ${(e as Error).stack}`,
+      );
     }
   }
 
@@ -45,6 +48,7 @@ export class Utils {
       Utils.guardedFunction(func, thisContext);
     }, time);
   }
+
   public static nowString(): string {
     const d: Date = new Date();
     return `${d.toLocaleTimeString('de-DE')}.${d.getMilliseconds()}`;

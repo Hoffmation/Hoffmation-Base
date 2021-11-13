@@ -66,7 +66,9 @@ export class ZigbeeDevice extends ioBrokerBaseDevice {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     ServerLogService.writeLog(
       LogLevel.DeepTrace,
-      `Zigbee:Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
+      `Zigbee: ${initial ? 'Initiales ' : ''}Update für "${this.info.customName}": ID: ${idSplit.join(
+        '.',
+      )} JSON: ${JSON.stringify(state)}`,
     );
     if (!pOverride) {
       ServerLogService.writeLog(

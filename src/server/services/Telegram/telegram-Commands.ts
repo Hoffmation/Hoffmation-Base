@@ -13,10 +13,7 @@ import { HmIpDeviceType } from '../../devices/hmIPDevices/hmIpDeviceType';
 import { HmIpTaster } from '../../devices/hmIPDevices/hmIpTaster';
 
 export class TelegramCommands {
-  private static devices: Devices;
-
-  public static initialize(pDevices: Devices): void {
-    TelegramCommands.devices = pDevices;
+  public static initialize(): void {
     TelegramService.addMessageCallback(
       new TelegramMessageCallback(
         'AlarmStop',

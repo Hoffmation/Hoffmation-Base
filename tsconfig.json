@@ -2,13 +2,14 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "es2018",
-    "module": "esNext",
+    "module": "commonjs",
+    "outDir": "./lib",
+    "declaration": true,
     "lib": ["esnext", "dom"],
     "allowJs": true,
     "checkJs": false,
     "jsx": "react",
     "incremental": true,
-    "noEmit": true,
 
     /* Strict Type-Checking Options */
     "strict": true,
@@ -48,11 +49,8 @@
       "underscore",
       "ws",
     ],
-    "esModuleInterop": true,
-    "preserveSymlinks": true
+    "esModuleInterop": true
   },
-  "exclude": [
-    "./.meteor/**",
-    "./packages/**"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*"]
 }

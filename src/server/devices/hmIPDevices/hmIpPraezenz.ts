@@ -15,9 +15,9 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   private _detectionsToday: number = 0;
   private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
-  private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
+  // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
-  private presenceStateID: string;
+  // private presenceStateID: string;
   private initialized: boolean = false;
   private _currentIllumination: number = -1;
 
@@ -37,13 +37,19 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
     Persist.persistCurrentIllumination(
-      new CurrentIlluminationDataPoint(this.info.room, this.info.devID, value, new Date(), this.room?.LampenGroup.anyLightsOwn())
+      new CurrentIlluminationDataPoint(
+        this.info.room,
+        this.info.devID,
+        value,
+        new Date(),
+        this.room?.LampenGroup.anyLightsOwn() ?? false,
+      ),
     );
   }
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, HmIpDeviceType.HmIpPraezenz);
-    this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
+    // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
     Persist.getCount(this).then((todayCount: CountToday) => {
       this.detectionsToday = todayCount.counter;
       ServerLogService.writeLog(

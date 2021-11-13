@@ -26,6 +26,7 @@ export class HTTPSService {
       });
     });
     req.on('error', (e: any) => {
+      ServerLogService.writeLog(LogLevel.DeepTrace, `HTTPS Error: ${e}`);
       if (retryOnError > 0) {
         ServerLogService.writeLog(LogLevel.DeepTrace, `HTTPS request failed --> ${retryOnError} retries left`);
         Utils.guardedTimeout(() => {
@@ -44,7 +45,7 @@ export class HTTPSService {
   public static async downloadFile(url: string, filePath: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const file = fs.createWriteStream(filePath);
-      let fileInfo = null;
+      let fileInfo: { mime: string; size: number } | null = null;
 
       const request = HTTPS.get(url, (response: any) => {
         if (response.statusCode !== 200) {
@@ -57,6 +58,10 @@ export class HTTPSService {
           size: parseInt(response.headers['content-length'], 10),
         };
 
+        ServerLogService.writeLog(
+          LogLevel.DeepTrace,
+          `Downloaded File\tType: "${fileInfo.mime}"\tSize:${fileInfo.size}`,
+        );
         response.pipe(file);
       });
 
@@ -64,6 +69,7 @@ export class HTTPSService {
       file.on('finish', () => resolve(true));
 
       request.on('error', (err: any) => {
+        ServerLogService.writeLog(LogLevel.DeepTrace, `Error Downloading File: ${err}`);
         fs.unlink(filePath, () => resolve(false));
       });
     });

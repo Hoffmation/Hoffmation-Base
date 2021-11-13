@@ -18,18 +18,18 @@ export class LampenGroup {
 
   public anyLightsOwn(): boolean {
     let i: number;
-    for(i=0; i<this.Lampen.length; i++) {
-      if(this.Lampen[i].lightOn) {
+    for (i = 0; i < this.Lampen.length; i++) {
+      if (this.Lampen[i].lightOn) {
         return true;
       }
     }
-    for(i=0; i<this.LED.length; i++) {
-      if(this.LED[i].on) {
+    for (i = 0; i < this.LED.length; i++) {
+      if (this.LED[i].on) {
         return true;
       }
     }
-    for(i=0; i<this.Stecker.length; i++) {
-      if(this.Stecker[i].steckerOn) {
+    for (i = 0; i < this.Stecker.length; i++) {
+      if (this.Stecker[i].steckerOn) {
         return true;
       }
     }

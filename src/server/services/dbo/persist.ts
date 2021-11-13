@@ -4,7 +4,6 @@ import { LogLevel } from '../../../models/logLevel';
 import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
 import { CountToday } from '../../../models/persistence/todaysCount';
 import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
-import { HmIPDevice } from '../../devices/hmIPDevices/hmIpDevice';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
 import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
@@ -111,11 +110,9 @@ export class Persist {
 
   public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
     this.MeteorBound(() => {
-      const result = CurrentIlluminationCollection.update(
-        { deviceID: data.deviceID, date: data.date },
-        data,
-        { upsert: true },
-      );
+      const result = CurrentIlluminationCollection.update({ deviceID: data.deviceID, date: data.date }, data, {
+        upsert: true,
+      });
       ServerLogService.writeLog(
         LogLevel.Trace,
         `Persisting Illumination Data for ${data.deviceID} to ${data.currentIllumination} resolved with "${result}"`,

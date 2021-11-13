@@ -1,7 +1,8 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "0.1.15",
+  "version": "0.1.16",
+  "files": ["lib/**/*"],
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -14,9 +15,23 @@
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
-    "lint-fix-all": "eslint ./**/{*.ts,*.js} --fix --no-error-on-unmatched-pattern"
+    "lint-fix-all": "eslint ./**/{*.ts,*.js} --fix --no-error-on-unmatched-pattern",
+    "build": "tsc"
   },
   "dependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/meteor": "^1.4.78",
+    "@types/meteor-roles": "^1.2.33",
+    "@types/mocha": "^9.0.0",
+    "@types/node-telegram-bot-api": "^0.53.0",
+    "@types/iobroker": "^3.3.4",
+    "@types/node": "^16.10.2",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-router": "^5.1.17",
+    "@types/react-router-dom": "^5.3.2",
+    "@types/socket.io-client": "^1.4.36",
+    "@types/ws": "^7.4.7",
+    "@types/node-fetch": "^3.0.3",
     "@babel/runtime": "^7.15.4",
     "@svrooij/sonos": "^2.4.1",
     "aws-sdk": "2.999.0",
@@ -28,6 +43,7 @@
     "jquery": "^3.6.0",
     "mocha": "^9.1.2",
     "node-ical": "^0.13.0",
+    "node-fetch": "^3.1.0",
     "node-telegram-bot-api": "^0.54.0",
     "semantic-ui-react": "^2.0.4",
     "socket.io-client": "2.4.x",
@@ -36,13 +52,6 @@
     "ws": "^7.5.5"
   },
   "devDependencies": {
-    "@types/meteor": "^1.4.78",
-    "@types/mocha": "^9.0.0",
-    "@types/node-telegram-bot-api": "^0.53.0",
-    "@types/iobroker": "^3.3.4",
-    "@types/node": "^16.10.2",
-    "@types/socket.io-client": "^1.4.36",
-    "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "autoprefixer": "^10.3.6",

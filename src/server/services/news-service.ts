@@ -11,11 +11,17 @@ import { SettingsService } from './settings-service';
 export class NewsService {
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public static lastNewsName: string;
-  private static hourlyInterval: NodeJS.Timeout;
+  private static hourlyInterval: NodeJS.Timeout | undefined;
 
   public static initialize(): void {
     NewsService.hourlyInterval = Utils.guardedInterval(NewsService.getLastNews, 3600000);
     NewsService.getLastNews();
+  }
+  public static stopHourlyInterval(): void {
+    if (this.hourlyInterval !== undefined) {
+      clearInterval(this.hourlyInterval);
+      this.hourlyInterval = undefined;
+    }
   }
 
   public static getLastNews(): void {

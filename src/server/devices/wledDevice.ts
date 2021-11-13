@@ -67,7 +67,9 @@ export class WledDevice {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     ServerLogService.writeLog(
       LogLevel.DeepTrace,
-      `Wled:Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
+      `Wled: ${initial ? 'Initiales ' : ''}Update für "${this.info.customName}": ID: ${idSplit.join(
+        '.',
+      )} JSON: ${JSON.stringify(state)}`,
     );
     if (!pOverride) {
       ServerLogService.writeLog(

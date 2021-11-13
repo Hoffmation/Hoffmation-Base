@@ -11,7 +11,7 @@ import { Utils } from '../../services/utils/utils';
 
 export class HmIpHeizgruppe extends HmIPDevice {
   private _automaticMode: boolean = true;
-  private _iAutomaticInterval: NodeJS.Timeout;
+  private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _level: number = 0;
   private _temperatur: number = 0;
   private _humidity: number = 0;
@@ -115,12 +115,19 @@ export class HmIpHeizgruppe extends HmIPDevice {
 
     switch (idSplit[3]) {
       case '1':
-        this.updateBaseInformation(idSplit[4], state, initial);
+        this.updateBaseInformation(idSplit[4], state);
         break;
     }
   }
 
-  private updateBaseInformation(name: string, state: ioBroker.State, initial: boolean) {
+  public stopAutomaticCheck(): void {
+    if (this._iAutomaticInterval !== undefined) {
+      clearInterval(this._iAutomaticInterval);
+      this._iAutomaticInterval = undefined;
+    }
+  }
+
+  private updateBaseInformation(name: string, state: ioBroker.State) {
     switch (name) {
       case 'ACTUAL_TEMPERATURE':
         this._temperatur = state.val as number;
@@ -162,7 +169,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
           LogLevel.Debug,
           `Automatische Temperaturanpassung für ${this.info.customName} auf ${settings.temperatur}°C`,
         );
-        this.desiredTemperatur = settings.temperatur;
+        this.desiredTemperatur = settings.temperatur ?? this._automaticFallBackTemperatur;
       }
       break;
     }

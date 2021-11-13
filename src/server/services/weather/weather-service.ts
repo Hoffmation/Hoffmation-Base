@@ -27,7 +27,7 @@ export class WeatherService {
   public static active: boolean = false;
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public static lastResponse: WeatherResponse;
-  private static _refreshInterval: NodeJS.Timeout;
+  private static _refreshInterval: NodeJS.Timeout | undefined;
   private static latitude: string;
   private static longitude: string;
   private static appID: string;
@@ -39,6 +39,13 @@ export class WeatherService {
     this.appID = config.appid;
 
     this._refreshInterval = Utils.guardedInterval(WeatherService.getWeatherData, 10 * 60 * 1000, WeatherService, true);
+  }
+
+  public static stopInterval(): void {
+    if (this._refreshInterval !== undefined) {
+      clearInterval(this._refreshInterval);
+      this._refreshInterval = undefined;
+    }
   }
 
   public static playWeatherInfo(

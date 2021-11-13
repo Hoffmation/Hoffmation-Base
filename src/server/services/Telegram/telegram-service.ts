@@ -13,7 +13,7 @@ export class TelegramService {
   private static bot: TelegramBot;
   private static allowedIDs: number[];
   private static settings: iTelegramSettings | undefined = undefined;
-  private static restartTimeout: NodeJS.Timeout | undefined = undefined;
+  // private static restartTimeout: NodeJS.Timeout | undefined = undefined;
 
   private static callbacks: { [name: string]: TelegramMessageCallback } = {};
 
@@ -48,7 +48,7 @@ export class TelegramService {
     }
 
     this.active = true;
-    this.bot = new TelegramBot(this.token, {polling: true, webHook: false});
+    this.bot = new TelegramBot(this.token, { polling: true, webHook: false });
     this.bot.on('polling_error', (e) => {
       /*
       if (!this.reinitiliazeWithTimeout()) {
@@ -91,7 +91,7 @@ export class TelegramService {
         .toString()
         .replace(/\//g, '')
         .replace(/\\/g, '');
-      commands.push({command: commandIdentifier, description: telegramCb.helpMessage});
+      commands.push({ command: commandIdentifier, description: telegramCb.helpMessage });
     }
 
     ServerLogService.writeLog(LogLevel.Debug, `New Telegram Commands: "${JSON.stringify(commands)}"`);
@@ -108,14 +108,18 @@ export class TelegramService {
       console.log(`Telegram message ${message} wasn't send as TelegramService is inactive`);
       return;
     }
-    const chunksNeeded: number = Math.ceil(message.length/4095);
+    const chunksNeeded: number = Math.ceil(message.length / 4095);
     for (let i = 0; i < chunksNeeded; i++) {
       for (const id of ids) {
-        Utils.guardedTimeout(() => {
-          this.bot.sendMessage(id, message.substring(i * 4095, i * 4095 + 4095)).catch((r) => {
-            ServerLogService.writeLog(LogLevel.Warn, `Send Telegram Message to ${id} failed: ${r}`);
-          });
-        }, 200 * i, this);
+        Utils.guardedTimeout(
+          () => {
+            this.bot.sendMessage(id, message.substring(i * 4095, i * 4095 + 4095)).catch((r) => {
+              ServerLogService.writeLog(LogLevel.Warn, `Send Telegram Message to ${id} failed: ${r}`);
+            });
+          },
+          200 * i,
+          this,
+        );
       }
     }
   }

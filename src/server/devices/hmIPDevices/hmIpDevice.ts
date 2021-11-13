@@ -73,6 +73,11 @@ export class HmIPDevice extends ioBrokerBaseDevice {
       );
     }
 
+    ServerLogService.writeLog(
+      LogLevel.DeepTrace,
+      `Base-Device Update for ${this.info.customName}("${idSplit.join('.')}", ${state}, ${initial}, ${pOverride})`,
+    );
+
     if (idSplit[3] !== '0') {
       // Dies ist etwas Gerätespezifisches
       return;

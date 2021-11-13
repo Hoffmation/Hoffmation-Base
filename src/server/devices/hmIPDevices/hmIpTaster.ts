@@ -4,10 +4,10 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
-import { iTaster } from "/src/server/config/private/server/devices/iTaster";
+import { iTaster } from '../iTaster';
 
-export class HmIpTaster extends HmIPDevice implements iTaster{
-  public tasten: { [id: string]: Taste} = {
+export class HmIpTaster extends HmIPDevice implements iTaster {
+  public tasten: { [id: string]: Taste } = {
     ObenLinks: new Taste(1),
     ObenRechts: new Taste(2),
     MitteLinks: new Taste(3),
@@ -68,7 +68,7 @@ export class HmIpTaster extends HmIPDevice implements iTaster{
   public getTastenAssignment(): string {
     const result: string[] = [`Button: ${this.info.customName}`];
     for (const tastenName in this.tasten) {
-      const desc: string =  this.tasten[tastenName].getDescription();
+      const desc: string = this.tasten[tastenName].getDescription();
       if (desc === '') {
         continue;
       }
