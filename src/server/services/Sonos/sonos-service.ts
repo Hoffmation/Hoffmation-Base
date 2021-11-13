@@ -7,7 +7,6 @@ import { Utils } from '../utils/utils';
 import { TelegramService } from '../Telegram/telegram-service';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { TimeCallbackService } from '../time-callback-service';
-import Error = Meteor.Error;
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;
