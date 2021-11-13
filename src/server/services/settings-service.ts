@@ -1,5 +1,5 @@
 // @ts-ignore
-import config from '/server/config/private/mainConfig.json';
+import config from '/src/server/config/private/mainConfig.json';
 import { iConfig } from '../config/iConfig';
 
 export class SettingsService {

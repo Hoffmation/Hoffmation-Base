@@ -4,7 +4,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
-import { iTaster } from "/server/config/private/server/devices/iTaster";
+import { iTaster } from "/src/server/config/private/server/devices/iTaster";
 
 export class HmIpTaster extends HmIPDevice implements iTaster{
   public tasten: { [id: string]: Taste} = {
