@@ -189,6 +189,10 @@ export class SonosService {
 
   private static initializeDevice(d: SonosDevice) {
     this.devicesDict[d.Name] = d;
+    if (this.ownDevices[d.Name] === undefined) {
+      ServerLogService.writeLog(LogLevel.Alert, `Unbekanntes Sonos Gerät "${d.Name}"`);
+      return;
+    }
     this.ownDevices[d.Name].device = d;
     ServerLogService.writeLog(LogLevel.Debug, `Sonos ${d.Uuid} für ${d.Name} gefunden`);
   }
