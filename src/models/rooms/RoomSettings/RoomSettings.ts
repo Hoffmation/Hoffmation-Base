@@ -6,8 +6,10 @@ import { SunTimeOffsets } from '../../../server/services/time-callback-service';
 
 import { RoomBase } from '../RoomBase';
 import { iTimePair } from '../../../server/config/iConfig';
+import { iRoomInitializationSettings } from '/server/config/private/src/models/rooms/RoomSettings/iRoomInitializationSettings';
 
-export class RoomSettings implements iRoomDefaultSettings {
+export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
+  public shortName: string;
   public defaultSettings: iRoomDefaultSettings = SettingsService.settings.roomDefault;
   private _lampenBeiBewegung: boolean = this.defaultSettings.lampenBeiBewegung;
   private _lichtSonnenAufgangAus: boolean = this.defaultSettings.lichtSonnenAufgangAus;
@@ -21,16 +23,20 @@ export class RoomSettings implements iRoomDefaultSettings {
   private _sonnenAufgangRolloMinTime: iTimePair = this.defaultSettings.sonnenAufgangRolloMinTime;
   private _sonnenAufgangLampenDelay: number = this.defaultSettings.sonnenAufgangLampenDelay;
   private _lightIfNoWindows: boolean = this.defaultSettings.lightIfNoWindows;
-  public hmIpSettings?: HmIpRoomSettings;
-  public zigbeeSettings?: ZigbeeRoomSettings;
+  hmIpSettings?: HmIpRoomSettings;
+  zigbeeSettings?: ZigbeeRoomSettings;
   public radioUrl: string = 'https://hermes.bcs-systems.de/hitradio-rtl_top40_64k_aac'; // Radio RTL
-  public etage: number = -1;
+  etage: number = -1;
   public rolloOffset: SunTimeOffsets;
   public lampOffset: SunTimeOffsets;
   public room?: RoomBase;
   public rolloHeatReduction: boolean = this.defaultSettings.rolloHeatReduction;
 
-  public constructor(public shortName: string) {
+  public constructor(initSettings: iRoomInitializationSettings) {
+    this.shortName = initSettings.shortName;
+    this.etage = initSettings.etage;
+    this.hmIpSettings = initSettings.hmIpSettings;
+    this.zigbeeSettings = initSettings.zigbeeSettings;
     this.rolloOffset = new SunTimeOffsets(
       this.sonnenAufgangRolloDelay,
       this.sonnenUntergangRolloDelay,
