@@ -10,18 +10,18 @@ import { DailyMovementCount } from '../../../models/persistence/DailyMovementCou
 import { iTemperaturDataPoint } from '../../../models/iTemperaturDataPoint';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { ioBrokerBaseDevice } from '../../devices/iIoBrokerDevice';
-import { Mongo } from 'meteor/mongo';
 
 export class Persist {
-  private static TemperatureHistoryCollection = new Mongo.Collection<TemperaturDataPoint>('TemperaturData');
-  private static HeatGroupCollection = new Mongo.Collection<TemperaturDataPoint>('HeatGroupCollection');
-  private static BasicRoomCollection = new Mongo.Collection<BasicRoomInfo>('BasicRooms');
-  private static RoomDetailsCollection = new Mongo.Collection<RoomDetailInfo>('RoomDetailsCollection');
-  private static CountTodayCollection = new Mongo.Collection<CountToday>('PresenceToday');
-  private static CurrentIlluminationCollection = new Mongo.Collection<CurrentIlluminationDataPoint>(
-    'CurrentIllumination',
-  );
-  private static DailyMovementCountTodayCollection = new Mongo.Collection<DailyMovementCount>('DailyMovementCount');
+  private static TemperatureHistoryCollection: Mongo.Collection<TemperaturDataPoint, TemperaturDataPoint>;
+  private static HeatGroupCollection: Mongo.Collection<TemperaturDataPoint, TemperaturDataPoint>;
+  private static BasicRoomCollection: Mongo.Collection<BasicRoomInfo, BasicRoomInfo>;
+  private static RoomDetailsCollection: Mongo.Collection<RoomDetailInfo, RoomDetailInfo>;
+  private static CountTodayCollection: Mongo.Collection<CountToday, CountToday>;
+  private static CurrentIlluminationCollection: Mongo.Collection<
+    CurrentIlluminationDataPoint,
+    CurrentIlluminationDataPoint
+  >;
+  private static DailyMovementCountTodayCollection: Mongo.Collection<DailyMovementCount, DailyMovementCount>;
   public static MeteorBound: (callback: any) => void;
   private static Mongo: { Collection: Mongo.CollectionStatic };
 
