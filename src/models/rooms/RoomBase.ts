@@ -19,6 +19,7 @@ import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callb
 import { SonosService } from '../../server/services/Sonos/sonos-service';
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
 import { ioBrokerBaseDevice } from '../../server/devices/iIoBrokerDevice';
+import { RoomInitializationSettings } from './RoomSettings/RoomInitializationSettings';
 
 export class RoomBase {
   public static Rooms: { [name: string]: RoomBase } = {};
@@ -46,12 +47,12 @@ export class RoomBase {
   private static _intrusionAlarmLevel: number = 0;
   private static _intrusionAlarmTimeout: NodeJS.Timeout | undefined;
 
-  public static registerRoomForDevices(roomSettings: RoomSettings): void {
-    if (roomSettings.hmIpSettings !== undefined) {
-      HmIPDevice.addRoom(roomSettings.shortName, roomSettings.hmIpSettings);
+  public static registerRoomForDevices(roomInitializationSettings: RoomInitializationSettings): void {
+    if (roomInitializationSettings.hmIpSettings !== undefined) {
+      HmIPDevice.addRoom(roomInitializationSettings.shortName, roomInitializationSettings.hmIpSettings);
     }
-    if (roomSettings.zigbeeSettings !== undefined) {
-      ZigbeeDevice.addRoom(roomSettings.shortName, roomSettings.zigbeeSettings);
+    if (roomInitializationSettings.zigbeeSettings !== undefined) {
+      ZigbeeDevice.addRoom(roomInitializationSettings.shortName, roomInitializationSettings.zigbeeSettings);
     }
   }
 
