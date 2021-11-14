@@ -1,66 +1,11 @@
-import { HmIpLampe } from './hmIpLampe';
-import { HmIpPraezenz } from './hmIpPraezenz';
-import { HmIpTuer } from './hmIpTuer';
-import { HmIpWippe } from './hmIpWippe';
-import { HmIpHeizgruppe } from './hmIpHeizgruppe';
-import { HmIpHeizung } from './hmIpHeizung';
 import { LogLevel } from '../../../models/logLevel';
-import { HmIpBewegung } from './hmIpBewegung';
-import { HmIpGriff } from './hmIpGriff';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { DeviceType } from '../deviceType';
-import { HmIpTherm } from './hmIpTherm';
 import { ServerLogService } from '../../services/log-service';
-import { HmIpRoll } from './hmIpRoll';
 import { DeviceInfo } from '../DeviceInfo';
-import { HmIpTaster } from './hmIpTaster';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
-
-  public static createRespectiveDevice(hmIPInfo: DeviceInfo) {
-    let d: HmIPDevice;
-    switch (hmIPInfo.deviceType) {
-      case 'Lampe':
-        d = new HmIpLampe(hmIPInfo);
-        break;
-      case 'Roll':
-      case 'Broll':
-        d = new HmIpRoll(hmIPInfo);
-        break;
-      case 'Beweg':
-        d = new HmIpBewegung(hmIPInfo);
-        break;
-      case 'Taster':
-        d = new HmIpTaster(hmIPInfo);
-        break;
-      case 'Wippe':
-        d = new HmIpWippe(hmIPInfo);
-        break;
-      case 'Praezenz':
-        d = new HmIpPraezenz(hmIPInfo);
-        break;
-      case 'Griff':
-        d = new HmIpGriff(hmIPInfo);
-        break;
-      case 'Thermostat':
-        d = new HmIpTherm(hmIPInfo);
-        break;
-      case 'Heizung':
-        d = new HmIpHeizung(hmIPInfo);
-        break;
-      case 'Tuer':
-        d = new HmIpTuer(hmIPInfo);
-        break;
-      case 'HeizGr':
-        d = new HmIpHeizgruppe(hmIPInfo);
-        break;
-      default:
-        ServerLogService.writeLog(LogLevel.Warn, `No HmIP Device Type for ${hmIPInfo.deviceType} defined`);
-        d = new HmIPDevice(hmIPInfo, DeviceType.unknown);
-    }
-    return d;
-  }
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);

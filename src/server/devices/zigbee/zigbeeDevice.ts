@@ -1,18 +1,8 @@
 import { DeviceType } from '../deviceType';
-import { ZigbeeIlluDimmer } from './zigbeeIlluDimmer';
-import { ZigbeeHeimanSmoke } from './zigbeeHeimanSmoke';
-import { ZigbeeBlitzShp } from './zigbeeBlitzShp';
-import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 import { LogLevel } from '../../../models/logLevel';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { ServerLogService } from '../../services/log-service';
-import { ZigbeeAquaraMotion } from './zigbeeAquaraMotion';
 import { DeviceInfo } from '../DeviceInfo';
-import { ZigbeeAquaraVibra } from './zigbeeAquaraVibra';
-import { ZigbeeIlluLampe } from './zigbeeIlluLampe';
-import { ZigbeeIkeaSteckdose } from './zigbeeIkeaSteckdose';
-import { ZigbeeAquaraWater } from './zigbeeAquaraWater';
-import { ZigbeeIlluLedRGBCCT } from './zigbeeIlluLedRGBCCT';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;
@@ -74,45 +64,5 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
         this.voltage = state.val as string;
         break;
     }
-  }
-
-  public static createRespectiveDevice(zigbeeInfo: DeviceInfo) {
-    let d: ZigbeeDevice;
-    switch (zigbeeInfo.deviceType) {
-      case 'AquaraVibra':
-        d = new ZigbeeAquaraVibra(zigbeeInfo);
-        break;
-      case 'AquaraMotion':
-        d = new ZigbeeAquaraMotion(zigbeeInfo);
-        break;
-      case 'IkeaStecker':
-        d = new ZigbeeIkeaSteckdose(zigbeeInfo);
-        break;
-      case 'LedRGBCCT':
-        d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
-        break;
-      case 'IlluDimmer':
-        d = new ZigbeeIlluDimmer(zigbeeInfo);
-        break;
-      case 'HeimanSmoke':
-        d = new ZigbeeHeimanSmoke(zigbeeInfo);
-        break;
-      case 'AquaraWater':
-        d = new ZigbeeAquaraWater(zigbeeInfo);
-        break;
-      case 'BlitzShp':
-        d = new ZigbeeBlitzShp(zigbeeInfo);
-        break;
-      case 'IlluLampe':
-        d = new ZigbeeIlluLampe(zigbeeInfo);
-        break;
-      case 'IlluActuator':
-        d = new ZigbeeIlluActuator(zigbeeInfo);
-        break;
-      default:
-        ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);
-        d = new ZigbeeDevice(zigbeeInfo, DeviceType.unknown);
-    }
-    return d;
   }
 }

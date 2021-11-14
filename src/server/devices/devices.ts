@@ -1,15 +1,34 @@
 import { deviceConfig } from '../../models/deviceConfig';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { HmIPDevice } from './hmIPDevices/hmIpDevice';
+import { ZigbeeDevice } from './zigbee/zigbeeDevice';
 import { DeviceType } from './deviceType';
 import { HmIpPraezenz } from './hmIPDevices/hmIpPraezenz';
 import { ServerLogService } from '../services/log-service';
 import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
 import { DeviceInfo } from './DeviceInfo';
 import { IOBrokerConnection } from '../ioBroker/connection';
-import { ZigbeeDevice } from './zigbee/zigbeeDevice';
 import { LogLevel } from '../../models/logLevel';
 import { HmIpBewegung } from './hmIPDevices/hmIpBewegung';
+import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
+import { ZigbeeAquaraMotion } from './zigbee/zigbeeAquaraMotion';
+import { ZigbeeIkeaSteckdose } from './zigbee/zigbeeIkeaSteckdose';
+import { ZigbeeIlluLedRGBCCT } from './zigbee/zigbeeIlluLedRGBCCT';
+import { ZigbeeIlluDimmer } from './zigbee/zigbeeIlluDimmer';
+import { ZigbeeHeimanSmoke } from './zigbee/zigbeeHeimanSmoke';
+import { ZigbeeAquaraWater } from './zigbee/zigbeeAquaraWater';
+import { ZigbeeBlitzShp } from './zigbee/zigbeeBlitzShp';
+import { ZigbeeIlluLampe } from './zigbee/zigbeeIlluLampe';
+import { ZigbeeIlluActuator } from './zigbee/zigbeeIlluActuator';
+import { HmIpLampe } from './hmIPDevices/hmIpLampe';
+import { HmIpRoll } from './hmIPDevices/hmIpRoll';
+import { HmIpTaster } from './hmIPDevices/hmIpTaster';
+import { HmIpWippe } from './hmIPDevices/hmIpWippe';
+import { HmIpGriff } from './hmIPDevices/hmIpGriff';
+import { HmIpTherm } from './hmIPDevices/hmIpTherm';
+import { HmIpHeizung } from './hmIPDevices/hmIpHeizung';
+import { HmIpTuer } from './hmIPDevices/hmIpTuer';
+import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -81,8 +100,44 @@ export class Devices {
       LogLevel.Trace,
       `${zigbeeInfo.devID} with Type "${zigbeeInfo.deviceType}" doesn't exists --> create it`,
     );
-    Devices.alLDevices[fullName] = ZigbeeDevice.createRespectiveDevice(zigbeeInfo);
-    Devices.alLDevices[fullName].allDevicesKey = fullName;
+    let d: ZigbeeDevice;
+    switch (zigbeeInfo.deviceType) {
+      case 'AquaraVibra':
+        d = new ZigbeeAquaraVibra(zigbeeInfo);
+        break;
+      case 'AquaraMotion':
+        d = new ZigbeeAquaraMotion(zigbeeInfo);
+        break;
+      case 'IkeaStecker':
+        d = new ZigbeeIkeaSteckdose(zigbeeInfo);
+        break;
+      case 'LedRGBCCT':
+        d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
+        break;
+      case 'IlluDimmer':
+        d = new ZigbeeIlluDimmer(zigbeeInfo);
+        break;
+      case 'HeimanSmoke':
+        d = new ZigbeeHeimanSmoke(zigbeeInfo);
+        break;
+      case 'AquaraWater':
+        d = new ZigbeeAquaraWater(zigbeeInfo);
+        break;
+      case 'BlitzShp':
+        d = new ZigbeeBlitzShp(zigbeeInfo);
+        break;
+      case 'IlluLampe':
+        d = new ZigbeeIlluLampe(zigbeeInfo);
+        break;
+      case 'IlluActuator':
+        d = new ZigbeeIlluActuator(zigbeeInfo);
+        break;
+      default:
+        ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);
+        d = new ZigbeeDevice(zigbeeInfo, DeviceType.unknown);
+    }
+    d.allDevicesKey = fullName;
+    Devices.alLDevices[fullName] = d;
   }
 
   private processHMIPDevice(cDevConf: deviceConfig) {
@@ -96,8 +151,48 @@ export class Devices {
       LogLevel.Trace,
       `${hmIPInfo.devID} with Type "${hmIPInfo.deviceType}" doesn't exists --> create it`,
     );
-    const d: HmIPDevice = HmIPDevice.createRespectiveDevice(hmIPInfo);
+
+    let d: HmIPDevice;
+    switch (hmIPInfo.deviceType) {
+      case 'Lampe':
+        d = new HmIpLampe(hmIPInfo);
+        break;
+      case 'Roll':
+      case 'Broll':
+        d = new HmIpRoll(hmIPInfo);
+        break;
+      case 'Beweg':
+        d = new HmIpBewegung(hmIPInfo);
+        break;
+      case 'Taster':
+        d = new HmIpTaster(hmIPInfo);
+        break;
+      case 'Wippe':
+        d = new HmIpWippe(hmIPInfo);
+        break;
+      case 'Praezenz':
+        d = new HmIpPraezenz(hmIPInfo);
+        break;
+      case 'Griff':
+        d = new HmIpGriff(hmIPInfo);
+        break;
+      case 'Thermostat':
+        d = new HmIpTherm(hmIPInfo);
+        break;
+      case 'Heizung':
+        d = new HmIpHeizung(hmIPInfo);
+        break;
+      case 'Tuer':
+        d = new HmIpTuer(hmIPInfo);
+        break;
+      case 'HeizGr':
+        d = new HmIpHeizgruppe(hmIPInfo);
+        break;
+      default:
+        ServerLogService.writeLog(LogLevel.Warn, `No HmIP Device Type for ${hmIPInfo.deviceType} defined`);
+        d = new HmIPDevice(hmIPInfo, DeviceType.unknown);
+    }
+    d.allDevicesKey = fullName;
     Devices.alLDevices[fullName] = d;
-    Devices.alLDevices[fullName].allDevicesKey = fullName;
   }
 }
