@@ -67,7 +67,6 @@ export class HmIPDevice extends IoBrokerBaseDevice {
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
-    this.addToCorrectRoom();
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {

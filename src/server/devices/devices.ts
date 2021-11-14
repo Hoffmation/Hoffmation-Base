@@ -2,6 +2,7 @@ import { LogLevel } from '../../models/logLevel';
 import { DeviceType } from './deviceType';
 import { IOBrokerConnection } from '../ioBroker/connection';
 import { ServerLogService } from '../services/log-service';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { HmIPDevice } from './hmIPDevices/hmIpDevice';
 import { ZigbeeDevice } from './zigbee/zigbeeDevice';
 import { DeviceInfo } from './DeviceInfo';
@@ -9,7 +10,6 @@ import { HmIpPraezenz } from './hmIPDevices/hmIpPraezenz';
 import { deviceConfig } from '../../models/deviceConfig';
 import { HmIpBewegung } from './hmIPDevices/hmIpBewegung';
 import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -71,7 +71,7 @@ export class Devices {
 
   private processZigbeeDevice(cDevConf: deviceConfig) {
     const zigbeeInfo: DeviceInfo = new DeviceInfo(cDevConf);
-    const fullName: string = `${Devices.IDENTIFIER_HOMEMATIC}-${zigbeeInfo.devID}`;
+    const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${zigbeeInfo.devID}`;
 
     if (typeof Devices.alLDevices[fullName] !== 'undefined') {
       return;
