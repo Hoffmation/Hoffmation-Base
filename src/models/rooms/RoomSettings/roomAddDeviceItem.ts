@@ -1,6 +1,6 @@
-import { LogLevel } from 'index';
-import { ServerLogService } from 'index';
-import { RoomBase } from 'index';
+import { RoomBase } from '../RoomBase';
+import { ServerLogService } from '../../../server/services/log-service';
+import { LogLevel } from '../../logLevel';
 
 export class RoomAddDeviceItem {
   private _added: boolean = false;

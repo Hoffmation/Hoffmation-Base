@@ -1,20 +1,18 @@
-import { DeviceType } from 'index';
-import { DeviceInfo } from 'index';
-import { LogLevel } from 'index';
-import { ServerLogService } from 'index';
-import { IoBrokerBaseDevice } from 'index';
-import {
-  ZigbeeAquaraMotion,
-  ZigbeeAquaraVibra,
-  ZigbeeAquaraWater,
-  ZigbeeBlitzShp,
-  ZigbeeHeimanSmoke,
-  ZigbeeIkeaSteckdose,
-  ZigbeeIlluActuator,
-  ZigbeeIlluDimmer,
-  ZigbeeIlluLampe,
-  ZigbeeIlluLedRGBCCT,
-} from 'index';
+import { DeviceType } from '../deviceType';
+import { ZigbeeIlluDimmer } from './zigbeeIlluDimmer';
+import { ZigbeeHeimanSmoke } from './zigbeeHeimanSmoke';
+import { ZigbeeBlitzShp } from './zigbeeBlitzShp';
+import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
+import { LogLevel } from '../../../models/logLevel';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { ServerLogService } from '../../services/log-service';
+import { ZigbeeAquaraMotion } from './zigbeeAquaraMotion';
+import { DeviceInfo } from '../DeviceInfo';
+import { ZigbeeAquaraVibra } from './zigbeeAquaraVibra';
+import { ZigbeeIlluLampe } from './zigbeeIlluLampe';
+import { ZigbeeIkeaSteckdose } from './zigbeeIkeaSteckdose';
+import { ZigbeeAquaraWater } from './zigbeeAquaraWater';
+import { ZigbeeIlluLedRGBCCT } from './zigbeeIlluLedRGBCCT';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;

@@ -1,9 +1,9 @@
-import { Persist } from 'index';
-import { Devices } from 'index';
-import { DeviceType } from 'index';
-import { HmIpHeizgruppe } from 'index';
-import { HmIpHeizung } from 'index';
-import { TemperaturDataPoint } from 'index';
+import { DeviceType } from './deviceType';
+import { TemperaturDataPoint } from '../../models/persistence/temperaturDataPoint';
+import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
+import { Persist } from '../services/dbo/persist';
+import { Devices } from './devices';
+import { HmIpHeizung } from './hmIPDevices/hmIpHeizung';
 
 export class Heizgruppen {
   public static getInfo(): string {

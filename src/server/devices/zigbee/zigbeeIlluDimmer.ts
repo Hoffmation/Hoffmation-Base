@@ -1,12 +1,12 @@
-import { LogLevel } from 'index';
-import { ServerLogService } from 'index';
-import { DeviceInfo } from 'index';
-import { ZigbeeDevice } from 'index';
-import { DeviceType } from 'index';
-import { DimmerSettings } from 'index';
-import { TimeOfDay } from 'index';
-import { Utils } from 'index';
-import { iLamp } from 'index';
+import { DimmerSettings } from '../../../models/dimmerSettings';
+import { DeviceType } from '../deviceType';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
+import { DeviceInfo } from '../DeviceInfo';
+import { iLamp } from '../iLamp';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { LogLevel } from '../../../models/logLevel';
+import { TimeOfDay } from '../../services/time-callback-service';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   public lightOn: boolean = false;

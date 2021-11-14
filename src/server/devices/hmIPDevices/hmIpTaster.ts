@@ -1,10 +1,10 @@
-import { HmIPDevice } from 'index';
-import { DeviceType } from 'index';
-import { DeviceInfo } from 'index';
-import { Taste } from 'index';
-import { LogLevel } from 'index';
-import { ServerLogService } from 'index';
-import { iTaster } from 'index';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { ServerLogService } from '../../services/log-service';
+import { iTaster } from '../iTaster';
+import { DeviceInfo } from '../DeviceInfo';
+import { Taste } from '../taste';
+import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpTaster extends HmIPDevice implements iTaster {
   public tasten: { [id: string]: Taste } = {

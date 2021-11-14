@@ -1,10 +1,10 @@
-import { RoomDeviceAddingSettings } from 'index';
-import { SettingsService } from 'index';
-import { iRoomDefaultSettings } from 'index';
-import { SunTimeOffsets } from 'index';
-import { RoomBase } from 'index';
-import { iTimePair } from 'index';
-import { iRoomInitializationSettings } from 'index';
+import { RoomBase } from '../RoomBase';
+import { iRoomInitializationSettings } from './iRoomInitializationSettings';
+import { iRoomDefaultSettings } from './iRoomDefaultSettings';
+import { SunTimeOffsets } from '../../../server/services/time-callback-service';
+import { iTimePair } from '../../../server/config/iConfig';
+import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
+import { SettingsService } from '../../../server/services/settings-service';
 
 export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
   public shortName: string;

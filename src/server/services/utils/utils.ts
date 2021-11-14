@@ -1,5 +1,5 @@
-import { ServerLogService } from 'index';
-import { LogLevel } from 'index';
+import { ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models/logLevel';
 
 export class Utils {
   public static guardedFunction(func: (...args: unknown[]) => void, thisContext: unknown | undefined): void {

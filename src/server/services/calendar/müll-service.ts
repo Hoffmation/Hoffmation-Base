@@ -1,12 +1,12 @@
 import { async, VEvent } from 'node-ical';
-import { ServerLogService } from 'index';
-import { TimeCallbackService } from 'index';
-import { LogLevel } from 'index';
-import { TimeCallback, TimeCallbackType } from 'index';
-import { iMuellSettings } from 'index';
-import { Utils } from 'index';
-import { MuellTonne } from 'index';
-import { OwnSonosDevice } from 'index';
+import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
+import { iMuellSettings } from '../../config/iConfig';
+import { OwnSonosDevice } from '../Sonos/sonos-service';
+import { ServerLogService } from '../log-service';
+import { Utils } from '../utils/utils';
+import { MuellTonne } from './muell-tonne';
+import { TimeCallbackService } from '../time-callback-service';
+import { LogLevel } from '../../../models/logLevel';
 
 export class MuellService {
   public static alleTonnen: Array<{ name: string; date: Date }> = [];

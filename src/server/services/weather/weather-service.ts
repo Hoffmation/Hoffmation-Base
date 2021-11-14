@@ -1,15 +1,15 @@
-import { LogLevel } from 'index';
-import { HTTPSService } from 'index';
-import { HTTPSOptions } from 'index';
-import { ServerLogService } from 'index';
-import { OwnSonosDevice, SonosService } from 'index';
-import { WeatherAlert } from 'index';
-import { WeatherCurrent } from 'index';
-import { WeatherDaily } from 'index';
-import { WeatherHourly } from 'index';
-import { WeatherMinutes } from 'index';
-import { iWeatherSettings } from 'index';
-import { Utils } from 'index';
+import { WeatherHourly } from './weather-hourly';
+import { WeatherCurrent } from './weather-current';
+import { WeatherMinutes } from './weather-minutes';
+import { WeatherAlert } from './weather-alert';
+import { iWeatherSettings } from '../../config/iConfig';
+import { LogLevel } from '../../../models/logLevel';
+import { HTTPSOptions } from '../HTTPSOptions';
+import { HTTPSService } from '../https-service';
+import { Utils } from '../utils/utils';
+import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
+import { ServerLogService } from '../log-service';
+import { WeatherDaily } from './weather-daily';
 
 export interface WeatherResponse {
   lat: number;

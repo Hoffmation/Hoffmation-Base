@@ -1,15 +1,15 @@
-import { LogLevel } from 'index';
-import { DeviceType } from 'index';
-import { IOBrokerConnection } from 'index';
-import { ServerLogService } from 'index';
-import { IoBrokerBaseDevice } from 'index';
-import { HmIPDevice } from 'index';
-import { ZigbeeDevice } from 'index';
-import { DeviceInfo } from 'index';
-import { HmIpPraezenz } from 'index';
-import { deviceConfig } from 'index';
-import { HmIpBewegung } from 'index';
-import { iRoomImportEnforcer } from 'index';
+import { deviceConfig } from '../../models/deviceConfig';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { HmIPDevice } from './hmIPDevices/hmIpDevice';
+import { DeviceType } from './deviceType';
+import { HmIpPraezenz } from './hmIPDevices/hmIpPraezenz';
+import { ServerLogService } from '../services/log-service';
+import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
+import { DeviceInfo } from './DeviceInfo';
+import { IOBrokerConnection } from '../ioBroker/connection';
+import { ZigbeeDevice } from './zigbee/zigbeeDevice';
+import { LogLevel } from '../../models/logLevel';
+import { HmIpBewegung } from './hmIPDevices/hmIpBewegung';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';

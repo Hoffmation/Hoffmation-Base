@@ -1,23 +1,22 @@
-import { TimeCallback } from 'index';
-import { TasterGroup } from 'index';
-import { PraesenzGroup } from 'index';
-import { ringStorage } from 'index';
-import { TelegramService } from 'index';
-import { HeatGroup } from 'index';
-import { LogLevel } from 'index';
-import { WaterGroup } from 'index';
-import { ServerLogService } from 'index';
-import { Utils } from 'index';
-import { LampenGroup } from 'index';
-import { RoomSettings } from 'index';
-import { SmokeGroup } from 'index';
-import { FensterGroup } from 'index';
-import { Persist } from 'index';
-import { TimeCallbackService, TimeOfDay } from 'index';
-import { SonosService } from 'index';
-import { SonosGroup } from 'index';
-import { IoBrokerBaseDevice } from 'index';
-import { RoomInitializationSettings } from 'index';
+import { ringStorage } from '../../server/services/utils/ringstorage';
+import { TimeCallback } from '../timeCallback';
+import { TasterGroup } from '../../server/devices/groups/tasterGroup';
+import { PraesenzGroup } from '../../server/devices/groups/praesenzGroup';
+import { TelegramService } from '../../server/services/Telegram/telegram-service';
+import { HeatGroup } from '../../server/devices/groups/heatGroup';
+import { LogLevel } from '../logLevel';
+import { WaterGroup } from '../../server/devices/groups/waterGroup';
+import { IoBrokerBaseDevice } from '../../server/devices/IoBrokerBaseDevice';
+import { ServerLogService } from '../../server/services/log-service';
+import { Utils } from '../../server/services/utils/utils';
+import { LampenGroup } from '../../server/devices/groups/lampenGroup';
+import { RoomSettings } from './RoomSettings/RoomSettings';
+import { SmokeGroup } from '../../server/devices/groups/smokeGroup';
+import { FensterGroup } from '../../server/devices/groups/fensterGroup';
+import { Persist } from '../../server/services/dbo/persist';
+import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callback-service';
+import { SonosService } from '../../server/services/Sonos/sonos-service';
+import { SonosGroup } from '../../server/devices/groups/sonosGroup';
 
 export class RoomBase {
   public static Rooms: { [name: string]: RoomBase } = {};
@@ -44,15 +43,6 @@ export class RoomBase {
   private static _intrusionAlarmActive: boolean = false;
   private static _intrusionAlarmLevel: number = 0;
   private static _intrusionAlarmTimeout: NodeJS.Timeout | undefined;
-
-  public static registerRoomForDevices(roomInitializationSettings: RoomInitializationSettings): void {
-    if (roomInitializationSettings.deviceAddidngSettings !== undefined) {
-      IoBrokerBaseDevice.addRoom(
-        roomInitializationSettings.shortName,
-        roomInitializationSettings.deviceAddidngSettings,
-      );
-    }
-  }
 
   public static addToRoomList(room: RoomBase): void {
     RoomBase.Rooms[room.roomName] = room;

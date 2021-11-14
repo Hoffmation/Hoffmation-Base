@@ -1,4 +1,4 @@
-import { RoomDeviceAddingSettings } from 'index';
+import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 
 export interface iRoomInitializationSettings {
   deviceAddidngSettings?: RoomDeviceAddingSettings;

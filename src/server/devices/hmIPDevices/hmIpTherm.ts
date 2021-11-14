@@ -1,8 +1,8 @@
-import { HmIPDevice } from 'index';
-import { DeviceType } from 'index';
-import { DeviceInfo } from 'index';
-import { LogLevel } from 'index';
-import { ServerLogService } from 'index';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { ServerLogService } from '../../services/log-service';
+import { DeviceInfo } from '../DeviceInfo';
+import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpTherm extends HmIPDevice {
   public constructor(pInfo: DeviceInfo) {

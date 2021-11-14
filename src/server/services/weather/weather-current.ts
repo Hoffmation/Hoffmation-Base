@@ -1,4 +1,4 @@
-import { WeatherItem } from 'index';
+import { WeatherItem } from './weather-item';
 
 export interface WeatherCurrent {
   /**

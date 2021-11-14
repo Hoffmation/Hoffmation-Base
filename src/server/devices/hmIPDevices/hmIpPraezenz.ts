@@ -1,13 +1,13 @@
-import { HmIPDevice } from 'index';
-import { DeviceType } from 'index';
-import { DeviceInfo } from 'index';
-import { LogLevel } from 'index';
-import { ServerLogService } from 'index';
-import { Persist } from 'index';
-import { CountToday } from 'index';
-import { Utils } from 'index';
-import { CurrentIlluminationDataPoint } from 'index';
-import { iIlluminationSensor } from 'index';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { CountToday } from '../../../models/persistence/todaysCount';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
+import { DeviceInfo } from '../DeviceInfo';
+import { Persist } from '../../services/dbo/persist';
+import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
+import { LogLevel } from '../../../models/logLevel';
+import { iIlluminationSensor } from '../iIlluminationSensor';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public excludeFromNightAlarm: boolean = false;

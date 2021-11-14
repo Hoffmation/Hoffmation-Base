@@ -1,7 +1,8 @@
-import { LogLevel } from 'index';
-import { RoomAddDeviceItem } from 'index';
-import { DeviceType, ServerLogService } from 'index';
-import { RoomBase } from 'index';
+import { RoomBase } from '../RoomBase';
+import { ServerLogService } from '../../../server/services/log-service';
+import { RoomAddDeviceItem } from './roomAddDeviceItem';
+import { LogLevel } from '../../logLevel';
+import { DeviceType } from '../../../server/devices/deviceType';
 
 export class RoomDeviceAddingSettings {
   public devices: Array<Array<RoomAddDeviceItem>> = [];

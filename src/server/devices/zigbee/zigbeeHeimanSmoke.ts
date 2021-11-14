@@ -1,12 +1,12 @@
-import { LogLevel } from 'index';
-import { DeviceInfo } from 'index';
-import { ZigbeeDevice } from 'index';
-import { DeviceType } from 'index';
-import { ServerLogService } from 'index';
-import { SonosService } from 'index';
-import { RoomBase } from 'index';
-import { Utils } from 'index';
-import { PollyService } from 'index';
+import { DeviceType } from '../deviceType';
+import { RoomBase } from '../../../models/rooms/RoomBase';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
+import { DeviceInfo } from '../DeviceInfo';
+import { PollyService } from '../../services/Sonos/polly-service';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { LogLevel } from '../../../models/logLevel';
+import { SonosService } from '../../services/Sonos/sonos-service';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   public smoke: boolean = false;

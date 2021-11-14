@@ -1,14 +1,14 @@
-import { LogLevel } from 'index';
-import { Devices } from 'index';
-import { DeviceUpdater } from 'index';
-import { IDeviceUpdater } from 'index';
-import { ServerLogService } from 'index';
-import { TimeCallbackService } from 'index';
-import { IOBrokerConnection } from 'index';
-import { ConnectionCallbacks } from 'index';
-import { RoomBase } from 'index';
-import { Utils } from 'index';
-import { SettingsService } from 'index';
+import { RoomBase } from '../../models/rooms/RoomBase';
+import { IDeviceUpdater } from '../devices/iDeviceUpdater';
+import { ServerLogService } from '../services/log-service';
+import { Utils } from '../services/utils/utils';
+import { ConnectionCallbacks } from '../../models/connectionCallbacks';
+import { DeviceUpdater } from '../devices/deviceUpdater';
+import { IOBrokerConnection } from './connection';
+import { SettingsService } from '../services/settings-service';
+import { Devices } from '../devices/devices';
+import { LogLevel } from '../../models/logLevel';
+import { TimeCallbackService } from '../services/time-callback-service';
 
 export class ioBrokerMain {
   private static roomConstructors: { [roomName: string]: { new (): RoomBase } } = {};

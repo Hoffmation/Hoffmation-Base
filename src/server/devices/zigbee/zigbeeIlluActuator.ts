@@ -1,8 +1,8 @@
-import { LogLevel } from 'index';
-import { DeviceInfo } from 'index';
-import { DeviceType } from 'index';
-import { ServerLogService } from 'index';
-import { ZigbeeActuator } from 'index';
+import { ServerLogService } from '../../services/log-service';
+import { ZigbeeActuator } from './ZigbeeActuator';
+import { DeviceInfo } from '../DeviceInfo';
+import { LogLevel } from '../../../models/logLevel';
+import { DeviceType } from '../deviceType';
 
 export class ZigbeeIlluActuator extends ZigbeeActuator {
   public get isActuatorOn(): boolean {

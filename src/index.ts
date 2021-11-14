@@ -1,5 +1,6 @@
 import { LogLevel } from './models';
 import {
+  ServerLogService,
   Devices,
   DeviceUpdater,
   iConfig,
@@ -11,7 +12,6 @@ import {
   OwnSonosDevices,
   Persist,
   PollyService,
-  ServerLogService,
   SettingsService,
   SonosService,
   TelegramCommands,

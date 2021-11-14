@@ -1,10 +1,10 @@
-import { LogLevel } from 'index';
-import { ZigbeeDevice } from 'index';
-import { DeviceInfo } from 'index';
-import { DeviceType } from 'index';
-import { ServerLogService } from 'index';
-import { Utils } from 'index';
-import { ActuatorSettings as ActuatorSettings } from 'index';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
+import { ActuatorSettings } from '../../../models/actuatorSettings';
+import { DeviceInfo } from '../DeviceInfo';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { LogLevel } from '../../../models/logLevel';
+import { DeviceType } from '../deviceType';
 
 export class ZigbeeActuator extends ZigbeeDevice {
   public settings: ActuatorSettings = new ActuatorSettings();

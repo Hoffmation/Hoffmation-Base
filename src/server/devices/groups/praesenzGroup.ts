@@ -1,12 +1,12 @@
-import { HmIpPraezenz } from 'index';
-import { HmIpBewegung } from 'index';
-import { RoomBase } from 'index';
-import { TimeCallback, TimeCallbackType } from 'index';
-import { ServerLogService } from 'index';
-import { LogLevel } from 'index';
-import { TimeCallbackService } from 'index';
-import { Utils } from 'index';
-import { ZigbeeAquaraMotion } from 'index';
+import { RoomBase } from '../../../models/rooms/RoomBase';
+import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
+import { HmIpPraezenz } from '../hmIPDevices/hmIpPraezenz';
+import { Utils } from '../../services/utils/utils';
+import { ServerLogService } from '../../services/log-service';
+import { ZigbeeAquaraMotion } from '../zigbee/zigbeeAquaraMotion';
+import { LogLevel } from '../../../models/logLevel';
+import { TimeCallbackService } from '../../services/time-callback-service';
+import { HmIpBewegung } from '../hmIPDevices/hmIpBewegung';
 
 export class PraesenzGroup {
   private _lastMovement: Date = new Date(0);

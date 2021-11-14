@@ -1,13 +1,13 @@
-import { LogLevel } from 'index';
-import { FensterPosition } from 'index';
-import { HmIPDevice } from 'index';
-import { DeviceType } from 'index';
-import { DeviceInfo } from 'index';
-import { ServerLogService } from 'index';
-import { TelegramService } from 'index';
-import { Utils } from 'index';
-import { Fenster } from 'index';
-import { WeatherService } from 'index';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { ServerLogService } from '../../services/log-service';
+import { Utils } from '../../services/utils/utils';
+import { DeviceInfo } from '../DeviceInfo';
+import { WeatherService } from '../../services/weather/weather-service';
+import { TelegramService } from '../../services/Telegram/telegram-service';
+import { FensterPosition } from './FensterPosition';
+import { Fenster } from './Fenster';
+import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpGriff extends HmIPDevice {
   public position: FensterPosition = FensterPosition.geschlossen;

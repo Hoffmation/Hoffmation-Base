@@ -24,7 +24,7 @@
 
     /* Module Resolution Options */
     "paths": {
-      "/server/config/private/*": ["*"]
+      "": ["*"]
     },
     "baseUrl": "./src",
     "moduleResolution": "node",

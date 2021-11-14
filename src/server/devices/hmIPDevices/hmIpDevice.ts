@@ -1,22 +1,19 @@
-import { LogLevel } from 'index';
-import { DeviceInfo } from 'index';
-import { DeviceType } from 'index';
-import { ServerLogService } from 'index';
-import { IoBrokerBaseDevice } from 'index';
-
-import {
-  HmIpBewegung,
-  HmIpGriff,
-  HmIpHeizgruppe,
-  HmIpHeizung,
-  HmIpLampe,
-  HmIpPraezenz,
-  HmIpRoll,
-  HmIpTaster,
-  HmIpTherm,
-  HmIpTuer,
-  HmIpWippe,
-} from 'index';
+import { HmIpLampe } from './hmIpLampe';
+import { HmIpPraezenz } from './hmIpPraezenz';
+import { HmIpTuer } from './hmIpTuer';
+import { HmIpWippe } from './hmIpWippe';
+import { HmIpHeizgruppe } from './hmIpHeizgruppe';
+import { HmIpHeizung } from './hmIpHeizung';
+import { LogLevel } from '../../../models/logLevel';
+import { HmIpBewegung } from './hmIpBewegung';
+import { HmIpGriff } from './hmIpGriff';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { DeviceType } from '../deviceType';
+import { HmIpTherm } from './hmIpTherm';
+import { ServerLogService } from '../../services/log-service';
+import { HmIpRoll } from './hmIpRoll';
+import { DeviceInfo } from '../DeviceInfo';
+import { HmIpTaster } from './hmIpTaster';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
