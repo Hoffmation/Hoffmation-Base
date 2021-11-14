@@ -9,7 +9,7 @@ import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
 import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
 import { iTemperaturDataPoint } from '../../../models/iTemperaturDataPoint';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { ioBrokerBaseDevice } from '../../devices/iIoBrokerDevice';
+import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
 
 export class Persist {
   private static TemperatureHistoryCollection: Mongo.Collection<TemperaturDataPoint, TemperaturDataPoint>;
@@ -64,7 +64,7 @@ export class Persist {
     });
   }
 
-  public static async getCount(device: ioBrokerBaseDevice): Promise<CountToday> {
+  public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
     const result = new Promise<CountToday>((resolve) => {
       this.MeteorBound(() => {
         const options = {
@@ -101,7 +101,7 @@ export class Persist {
     this.DailyMovementCountTodayCollection = new this.Mongo.Collection<DailyMovementCount>('DailyMovementCount');
   }
 
-  public static persistTodayCount(device: ioBrokerBaseDevice, count: number, oldCount: number): void {
+  public static persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
     this.MeteorBound(() => {
       const result = this.CountTodayCollection.update(
         { deviceID: device.info.fullID },

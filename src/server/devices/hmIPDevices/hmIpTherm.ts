@@ -1,12 +1,12 @@
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 
 export class HmIpTherm extends HmIPDevice {
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpTherm);
+    super(pInfo, DeviceType.HmIpTherm);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

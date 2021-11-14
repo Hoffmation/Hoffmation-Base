@@ -1,6 +1,6 @@
 import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
 import { ZigbeeActuator } from './ZigbeeActuator';
 
@@ -8,7 +8,7 @@ export class ZigbeeIlluActuator extends ZigbeeActuator {
   public get isActuatorOn(): boolean {
     return this.actuatorOn;
   }
-  public constructor(pInfo: DeviceInfo, deviceType: ZigbeeDeviceType = ZigbeeDeviceType.ZigbeeIlluActuator) {
+  public constructor(pInfo: DeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeIlluActuator) {
     super(pInfo, deviceType, `${pInfo.fullID}.state`);
   }
 

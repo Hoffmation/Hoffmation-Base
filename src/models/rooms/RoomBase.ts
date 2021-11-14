@@ -1,5 +1,4 @@
 import { TimeCallback } from '../timeCallback';
-import { HmIPDevice } from '../../server/devices/hmIPDevices/hmIpDevice';
 import { TasterGroup } from '../../server/devices/groups/tasterGroup';
 import { PraesenzGroup } from '../../server/devices/groups/praesenzGroup';
 import { ringStorage } from '../../server/services/utils/ringstorage';
@@ -13,12 +12,11 @@ import { LampenGroup } from '../../server/devices/groups/lampenGroup';
 import { RoomSettings } from './RoomSettings/RoomSettings';
 import { SmokeGroup } from '../../server/devices/groups/smokeGroup';
 import { FensterGroup } from '../../server/devices/groups/fensterGroup';
-import { ZigbeeDevice } from '../../server/devices/zigbee/zigbeeDevice';
 import { Persist } from '../../server/services/dbo/persist';
 import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callback-service';
 import { SonosService } from '../../server/services/Sonos/sonos-service';
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
-import { ioBrokerBaseDevice } from '../../server/devices/iIoBrokerDevice';
+import { IoBrokerBaseDevice } from '../../server/devices/IoBrokerBaseDevice';
 import { RoomInitializationSettings } from './RoomSettings/RoomInitializationSettings';
 
 export class RoomBase {
@@ -48,11 +46,11 @@ export class RoomBase {
   private static _intrusionAlarmTimeout: NodeJS.Timeout | undefined;
 
   public static registerRoomForDevices(roomInitializationSettings: RoomInitializationSettings): void {
-    if (roomInitializationSettings.hmIpSettings !== undefined) {
-      HmIPDevice.addRoom(roomInitializationSettings.shortName, roomInitializationSettings.hmIpSettings);
-    }
-    if (roomInitializationSettings.zigbeeSettings !== undefined) {
-      ZigbeeDevice.addRoom(roomInitializationSettings.shortName, roomInitializationSettings.zigbeeSettings);
+    if (roomInitializationSettings.deviceAddidngSettings !== undefined) {
+      IoBrokerBaseDevice.addRoom(
+        roomInitializationSettings.shortName,
+        roomInitializationSettings.deviceAddidngSettings,
+      );
     }
   }
 
@@ -138,7 +136,7 @@ export class RoomBase {
     );
   }
 
-  public static startIntrusionAlarm(room: RoomBase, device: ioBrokerBaseDevice): void {
+  public static startIntrusionAlarm(room: RoomBase, device: IoBrokerBaseDevice): void {
     const message: string = `!Potenzieller Eindringling! Bewegung in ${room.roomName} von ${device.info.fullName} festgestellt`;
     ServerLogService.writeLog(LogLevel.Info, message);
     if (!this.awayModeActive && !this.nightAlarmActive) {

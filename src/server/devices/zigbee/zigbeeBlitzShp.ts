@@ -2,7 +2,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { ActuatorSettings } from '../../../models/actuatorSettings';
 
 export class ZigbeeBlitzShp extends ZigbeeDevice {
@@ -14,7 +14,7 @@ export class ZigbeeBlitzShp extends ZigbeeDevice {
   private steckerOnSwitchID: string = '';
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeBlitzShp);
+    super(pInfo, DeviceType.ZigbeeBlitzShp);
     this.steckerOnSwitchID = `${this.info.fullID}.state`;
   }
 

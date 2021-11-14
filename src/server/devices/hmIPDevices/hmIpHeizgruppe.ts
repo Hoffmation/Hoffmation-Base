@@ -1,6 +1,6 @@
 import { LogLevel } from '../../../models/logLevel';
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ServerLogService } from '../../services/log-service';
 import { TemperaturSettings } from '../../../models/temperaturSettings';
@@ -22,7 +22,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
   private _humidityCallbacks: Array<(pValue: number) => void> = [];
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpHeizgruppe);
+    super(pInfo, DeviceType.HmIpHeizgruppe);
     this._setPointTemperaturID = `${this.info.fullID}.1.SET_POINT_TEMPERATURE`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
   }
@@ -95,7 +95,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
     const result: HmIpHeizung[] = [];
     for (const dID in Devices.hmIP) {
       const d = Devices.hmIP[dID];
-      if (d.deviceType === HmIpDeviceType.HmIpHeizung && d.info.room === this.info.room) {
+      if (d.deviceType === DeviceType.HmIpHeizung && d.info.room === this.info.room) {
         result.push(d as HmIpHeizung);
       }
     }

@@ -1,6 +1,6 @@
 import { Persist } from '../services/dbo/persist';
 import { Devices } from './devices';
-import { HmIpDeviceType } from './hmIPDevices/hmIpDeviceType';
+import { DeviceType } from './deviceType';
 import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 import { HmIpHeizung } from './hmIPDevices/hmIpHeizung';
 import { TemperaturDataPoint } from '../../models/persistence/temperaturDataPoint';
@@ -71,7 +71,7 @@ export class Heizgruppen {
     const gruppen: HmIpHeizgruppe[] = [];
     for (const dID in Devices.hmIP) {
       const d = Devices.hmIP[dID];
-      if (d.deviceType === HmIpDeviceType.HmIpHeizgruppe) {
+      if (d.deviceType === DeviceType.HmIpHeizgruppe) {
         gruppen.push(d as HmIpHeizgruppe);
       }
     }
@@ -81,7 +81,7 @@ export class Heizgruppen {
   public static getSpecificGroup(name: string): HmIpHeizgruppe | undefined {
     for (const dID in Devices.hmIP) {
       const d = Devices.hmIP[dID];
-      if (d.deviceType === HmIpDeviceType.HmIpHeizgruppe && d.info.customName === name) {
+      if (d.deviceType === DeviceType.HmIpHeizgruppe && d.info.customName === name) {
         return d as HmIpHeizgruppe;
       }
     }

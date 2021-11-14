@@ -2,7 +2,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { LedSettings } from '../../../models/ledSettings';
 import { TimeOfDay } from '../../services/time-callback-service';
 
@@ -20,7 +20,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   // private effectID: string = '';
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeIlluLedRGBCCT);
+    super(pInfo, DeviceType.ZigbeeIlluLedRGBCCT);
     this.stateID = `${this.info.fullID}.state`;
     this.brightnessID = `${this.info.fullID}.brightness`;
     this.colorID = `${this.info.fullID}.color`;

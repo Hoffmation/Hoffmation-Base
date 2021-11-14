@@ -1,7 +1,7 @@
 import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
 import { SonosService } from '../../services/Sonos/sonos-service';
 import { Utils } from '../../services/utils/utils';
@@ -24,7 +24,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
   // TODO Set Sensitivity
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeAquaraVibra);
+    super(pInfo, DeviceType.ZigbeeAquaraVibra);
     this._alarmMessage = `Alarm bei ${this.info.customName}. Ich wiederhole: Alarm bei ${this.info.customName}`;
     PollyService.preloadTTS(this._alarmMessage);
     this._idSensitivity = `${this.info.fullID}.sensitivity`;

@@ -11,6 +11,6 @@ export * from './hmIpHeizung';
 export * from './hmIpBewegung';
 export * from './hmIpPraezenz';
 export * from './TuerPosition';
-export * from './hmIpDeviceType';
+export * from '../deviceType';
 export * from './hmIpHeizgruppe';
 export * from './FensterPosition';

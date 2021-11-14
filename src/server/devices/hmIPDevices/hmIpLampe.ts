@@ -1,6 +1,6 @@
 import { LogLevel } from '../../../models/logLevel';
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ServerLogService } from '../../services/log-service';
 import { ActuatorSettings } from '../../../models/actuatorSettings';
@@ -17,7 +17,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   private turnOffTime: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpLampe);
+    super(pInfo, DeviceType.HmIpLampe);
     this.lightOnSwitchID = `${this.info.fullID}.2.STATE`;
   }
 

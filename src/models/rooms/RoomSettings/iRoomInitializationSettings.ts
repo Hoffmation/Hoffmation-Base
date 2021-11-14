@@ -1,9 +1,7 @@
-import { HmIpRoomSettings, ZigbeeRoomSettings } from '../index';
+import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 
 export interface iRoomInitializationSettings {
-  hmIpSettings?: HmIpRoomSettings;
-  zigbeeSettings?: ZigbeeRoomSettings;
+  deviceAddidngSettings?: RoomDeviceAddingSettings;
   etage: number;
   shortName: string;
 }
-

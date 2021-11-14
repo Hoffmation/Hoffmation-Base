@@ -2,7 +2,6 @@ export * from './zigbeeDevice';
 export * from './ZigbeeActuator';
 export * from './zigbeeBlitzShp';
 export * from './zigbeeIlluLampe';
-export * from './zigbeeDeviceType';
 export * from './zigbeeIlluDimmer';
 export * from './zigbeeAquaraVibra';
 export * from './zigbeeAquaraWater';

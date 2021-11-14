@@ -1,7 +1,7 @@
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 
 export class HmIpHeizung extends HmIPDevice {
@@ -23,7 +23,7 @@ export class HmIpHeizung extends HmIPDevice {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpHeizung);
+    super(pInfo, DeviceType.HmIpHeizung);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

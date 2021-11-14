@@ -1,5 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
@@ -48,7 +48,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpPraezenz);
+    super(pInfo, DeviceType.HmIpPraezenz);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
     Persist.getCount(this).then((todayCount: CountToday) => {
       this.detectionsToday = todayCount.counter;

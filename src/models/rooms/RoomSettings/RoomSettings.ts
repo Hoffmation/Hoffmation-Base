@@ -1,9 +1,7 @@
-import { HmIpRoomSettings } from './hmIPRoomSettings';
-import { ZigbeeRoomSettings } from './zigbeeRoomSettings';
+import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import { SettingsService } from '../../../server/services/settings-service';
 import { iRoomDefaultSettings } from './iRoomDefaultSettings';
 import { SunTimeOffsets } from '../../../server/services/time-callback-service';
-
 import { RoomBase } from '../RoomBase';
 import { iTimePair } from '../../../server/config/iConfig';
 import { iRoomInitializationSettings } from '/server/config/private/src/models/rooms/RoomSettings/iRoomInitializationSettings';
@@ -23,8 +21,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   private _sonnenAufgangRolloMinTime: iTimePair = this.defaultSettings.sonnenAufgangRolloMinTime;
   private _sonnenAufgangLampenDelay: number = this.defaultSettings.sonnenAufgangLampenDelay;
   private _lightIfNoWindows: boolean = this.defaultSettings.lightIfNoWindows;
-  hmIpSettings?: HmIpRoomSettings;
-  zigbeeSettings?: ZigbeeRoomSettings;
+  deviceAddidngSettings?: RoomDeviceAddingSettings;
   public radioUrl: string = 'https://hermes.bcs-systems.de/hitradio-rtl_top40_64k_aac'; // Radio RTL
   etage: number = -1;
   public rolloOffset: SunTimeOffsets;
@@ -35,8 +32,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   public constructor(initSettings: iRoomInitializationSettings) {
     this.shortName = initSettings.shortName;
     this.etage = initSettings.etage;
-    this.hmIpSettings = initSettings.hmIpSettings;
-    this.zigbeeSettings = initSettings.zigbeeSettings;
+    this.deviceAddidngSettings = initSettings.deviceAddidngSettings;
     this.rolloOffset = new SunTimeOffsets(
       this.sonnenAufgangRolloDelay,
       this.sonnenUntergangRolloDelay,

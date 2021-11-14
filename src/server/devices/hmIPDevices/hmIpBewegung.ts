@@ -1,6 +1,6 @@
 import { LogLevel } from '../../../models/logLevel';
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ServerLogService } from '../../services/log-service';
 import { Persist } from '../../services/dbo/persist';
@@ -49,7 +49,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpBewegung);
+    super(pInfo, DeviceType.HmIpBewegung);
     Persist.getCount(this).then((todayCount: CountToday) => {
       this.detectionsToday = todayCount.counter;
       ServerLogService.writeLog(

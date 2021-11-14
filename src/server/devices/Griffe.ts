@@ -1,6 +1,6 @@
 import { Devices } from './devices';
 import { FensterPosition } from './hmIPDevices/FensterPosition';
-import { HmIpDeviceType } from './hmIPDevices/hmIpDeviceType';
+import { DeviceType } from './deviceType';
 import { HmIpGriff } from './hmIPDevices/hmIpGriff';
 
 export class Griffe {
@@ -22,7 +22,7 @@ export class Griffe {
     const griffe: HmIpGriff[] = [];
     for (const dID in Devices.hmIP) {
       const d = Devices.hmIP[dID];
-      if (d.deviceType === HmIpDeviceType.HmIpGriff) {
+      if (d.deviceType === DeviceType.HmIpGriff) {
         griffe.push(d as HmIpGriff);
       }
     }

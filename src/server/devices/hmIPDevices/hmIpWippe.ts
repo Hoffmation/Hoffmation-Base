@@ -1,5 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
@@ -15,7 +15,7 @@ export class HmIpWippe extends HmIPDevice {
   };
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpWippe);
+    super(pInfo, DeviceType.HmIpWippe);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

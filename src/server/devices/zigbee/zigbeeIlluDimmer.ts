@@ -2,7 +2,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { DimmerSettings } from '../../../models/dimmerSettings';
 import { TimeOfDay } from '../../services/time-callback-service';
 import { Utils } from '../../services/utils/utils';
@@ -21,7 +21,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   private turnOffTime: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeIlluDimmer);
+    super(pInfo, DeviceType.ZigbeeIlluDimmer);
     this.stateID = `${this.info.fullID}.state`;
     this.brightnessID = `${this.info.fullID}.brightness`;
     this.transitionID = `${this.info.fullID}.transition_time`;

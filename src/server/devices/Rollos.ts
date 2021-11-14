@@ -1,5 +1,5 @@
 import { Devices } from './devices';
-import { HmIpDeviceType } from './hmIPDevices/hmIpDeviceType';
+import { DeviceType } from './deviceType';
 import { HmIpRoll } from './hmIPDevices/hmIpRoll';
 import { RoomBase } from '../../models/rooms/RoomBase';
 
@@ -39,7 +39,7 @@ export class Rolladen {
     const rollos: HmIpRoll[] = [];
     for (const dID in Devices.hmIP) {
       const d = Devices.hmIP[dID];
-      if (d.deviceType === HmIpDeviceType.HmIpRoll) {
+      if (d.deviceType === DeviceType.HmIpRoll) {
         rollos.push(d as HmIpRoll);
       }
     }

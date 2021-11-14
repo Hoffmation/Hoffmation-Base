@@ -6,10 +6,9 @@ import { Griffe } from '../../devices/Griffe';
 import { Heizgruppen } from '../../devices/Heizgruppen';
 import { Rolladen } from '../../devices/Rollos';
 import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
-import { ZigbeeDeviceType } from '../../devices/zigbee/zigbeeDeviceType';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { SonosService } from '../Sonos/sonos-service';
-import { HmIpDeviceType } from '../../devices/hmIPDevices/hmIpDeviceType';
+import { DeviceType } from '../../devices/deviceType';
 import { HmIpTaster } from '../../devices/hmIPDevices/hmIpTaster';
 
 export class TelegramCommands {
@@ -185,7 +184,7 @@ export class TelegramCommands {
           if (m.from === undefined) return false;
           for (const id in Devices.Zigbee) {
             const d = Devices.Zigbee[id];
-            if (d.deviceType === ZigbeeDeviceType.ZigbeeAquaraVibra) {
+            if (d.deviceType === DeviceType.ZigbeeAquaraVibra) {
               (d as ZigbeeAquaraVibra).setSensitivity(2);
             }
           }
@@ -205,7 +204,7 @@ export class TelegramCommands {
           const response: string[] = ['These are the assignments for all buttons'];
           for (const id in Devices.hmIP) {
             const d = Devices.hmIP[id];
-            if (d.deviceType === HmIpDeviceType.HmIpTaster) {
+            if (d.deviceType === DeviceType.HmIpTaster) {
               response.push((d as HmIpTaster).getTastenAssignment());
             }
           }

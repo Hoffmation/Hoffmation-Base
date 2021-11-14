@@ -1,7 +1,7 @@
 import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
 import { SonosService } from '../../services/Sonos/sonos-service';
 import { RoomBase } from '../../../models/rooms/RoomBase';
@@ -27,7 +27,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeHeimanSmoke);
+    super(pInfo, DeviceType.ZigbeeHeimanSmoke);
     this._messageAlarmFirst = `Rauchmelder in ${this._roomName} ausgelöst. Möglicher Brand in ${this._roomName}`;
     this._messageAlarm = `Rauchmelder in ${this._roomName} aktiv. Möglicher Brand in ${this._roomName}`;
     this._messageAlarmEnd = `Rauchmelder Alarm Ende: Gefahr in ${this._roomName} zu Ende.`;

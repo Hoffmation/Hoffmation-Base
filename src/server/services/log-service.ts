@@ -1,5 +1,4 @@
-import { HmIpDeviceType } from '../devices/hmIPDevices/hmIpDeviceType';
-import { ZigbeeDeviceType } from '../devices/zigbee/zigbeeDeviceType';
+import { DeviceType } from '../devices/deviceType';
 import { TelegramService } from './Telegram/telegram-service';
 import { LogLevel } from '../../models/logLevel';
 
@@ -21,49 +20,28 @@ export class ServerLogService {
 
   public static addedDeviceToRoom(
     pRoomName: string,
-    pDeviceType: HmIpDeviceType,
+    pDeviceType: DeviceType,
     pRoomIndex: number,
     forceDebug: boolean = false,
   ): void {
     const logLevel = forceDebug ? LogLevel.Debug : LogLevel.Trace;
     ServerLogService.writeLog(
       logLevel,
-      `${HmIpDeviceType[pDeviceType]} (Raumindex: ${pRoomIndex}) zum Raum "${pRoomName}" hinzugefügt"`,
+      `${DeviceType[pDeviceType]} (Raumindex: ${pRoomIndex}) zum Raum "${pRoomName}" hinzugefügt"`,
     );
   }
 
-  public static missingRoomHandling(pRoomName: string, pDeviceType: HmIpDeviceType): void {
+  public static missingRoomHandling(pRoomName: string, pDeviceType: DeviceType): void {
     ServerLogService.writeLog(
       LogLevel.Warn,
-      `Raum "${pRoomName}" hat keine Definition für den Typ "${HmIpDeviceType[pDeviceType]}"`,
+      `Raum "${pRoomName}" hat keine Definition für den Typ "${DeviceType[pDeviceType]}"`,
     );
   }
 
-  public static missingRoomIndexHandling(pRoomName: string, pIndex: number, pDeviceType: HmIpDeviceType): void {
+  public static missingRoomIndexHandling(pRoomName: string, pIndex: number, pDeviceType: DeviceType): void {
     ServerLogService.writeLog(
       LogLevel.Warn,
-      `Raum "${pRoomName}" hat keine Definition für den Typ "${HmIpDeviceType[pDeviceType]} mit Index ${pIndex}"`,
-    );
-  }
-
-  public static addedZigbeeDeviceToRoom(pRoomName: string, pDeviceType: ZigbeeDeviceType, pRoomIndex: number): void {
-    ServerLogService.writeLog(
-      LogLevel.Trace,
-      `${ZigbeeDeviceType[pDeviceType]} (Raumindex: ${pRoomIndex}) zum Raum "${pRoomName}" hinzugefügt"`,
-    );
-  }
-
-  public static missingZigbeeRoomHandling(pRoomName: string, pDeviceType: ZigbeeDeviceType): void {
-    ServerLogService.writeLog(
-      LogLevel.Warn,
-      `Raum "${pRoomName}" hat keine Definition für den Zigbee Typ "${ZigbeeDeviceType[pDeviceType]}"`,
-    );
-  }
-
-  public static missingZigbeeRoomIndexHandling(pRoomName: string, pIndex: number, pDeviceType: ZigbeeDeviceType): void {
-    ServerLogService.writeLog(
-      LogLevel.Warn,
-      `Raum "${pRoomName}" hat keine Definition für den Typ "${ZigbeeDeviceType[pDeviceType]} mit Index ${pIndex}"`,
+      `Raum "${pRoomName}" hat keine Definition für den Typ "${DeviceType[pDeviceType]} mit Index ${pIndex}"`,
     );
   }
 }

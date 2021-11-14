@@ -2,7 +2,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { Fenster } from './Fenster';
 import { FensterPosition } from './FensterPosition';
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
@@ -46,7 +46,7 @@ export class HmIpRoll extends HmIPDevice {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpRoll);
+    super(pInfo, DeviceType.HmIpRoll);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
   }
 

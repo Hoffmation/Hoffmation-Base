@@ -1,7 +1,7 @@
 import { LogLevel } from '../../../models/logLevel';
 import { FensterPosition } from './FensterPosition';
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ServerLogService } from '../../services/log-service';
 import { TelegramService } from '../../services/Telegram/telegram-service';
@@ -20,7 +20,7 @@ export class HmIpGriff extends HmIPDevice {
   private _helpingRoomTemp: boolean = false;
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpGriff);
+    super(pInfo, DeviceType.HmIpGriff);
   }
 
   public addOffenCallback(pCallback: (pValue: boolean) => void): void {

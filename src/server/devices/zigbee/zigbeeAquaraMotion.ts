@@ -4,7 +4,7 @@ import { Persist } from '../../services/dbo/persist';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { iIlluminationSensor } from '../iIlluminationSensor';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
@@ -80,7 +80,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeAquaraMotion);
+    super(pInfo, DeviceType.ZigbeeAquaraMotion);
 
     this.occupancyTimeoutID = `${this.info.fullID}.${this.occupancyTimeoutID}`;
 

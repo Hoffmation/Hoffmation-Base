@@ -1,7 +1,7 @@
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator {
@@ -10,7 +10,7 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeIlluLampe);
+    super(pInfo, DeviceType.ZigbeeIlluLampe);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

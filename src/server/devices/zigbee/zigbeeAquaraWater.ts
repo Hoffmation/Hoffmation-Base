@@ -1,7 +1,7 @@
 import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { ZigbeeDeviceType } from './zigbeeDeviceType';
+import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
 import { SonosService } from '../../services/Sonos/sonos-service';
 import { Utils } from '../../services/utils/utils';
@@ -26,7 +26,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   }
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, ZigbeeDeviceType.ZigbeeAquaraWater);
+    super(pInfo, DeviceType.ZigbeeAquaraWater);
     this._messageAlarmFirst = `${this.info.customName} erkennt Wasser. Möglicher Rohrbruch in ${this._roomName}`;
     this._messageAlarm = `${this.info.customName} hat ausgelöst. Poolparty in ${this._roomName}`;
     this._messageAlarmEnd = `Wasser Alarm Ende: Überflutung in ${this._roomName} zu Ende.`;

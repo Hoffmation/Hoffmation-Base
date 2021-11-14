@@ -1,5 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
-import { HmIpDeviceType } from './hmIpDeviceType';
+import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
@@ -16,7 +16,7 @@ export class HmIpTuer extends HmIPDevice {
   private minutesOpen: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, HmIpDeviceType.HmIpTuer);
+    super(pInfo, DeviceType.HmIpTuer);
   }
 
   public addOffenCallback(pCallback: (pValue: boolean) => void): void {

@@ -1,66 +1,74 @@
 import { LogLevel } from '../../../models/logLevel';
 import { DeviceInfo } from '../DeviceInfo';
-import { HmIpDeviceType } from './hmIpDeviceType';
-import { HmIpAddDeviceItem, HmIpRoomSettings } from '../../../models/rooms/RoomSettings/hmIPRoomSettings';
+import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
-import { ioBrokerBaseDevice } from '../iIoBrokerDevice';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { RoomBase } from '../../../models/rooms/RoomBase';
+import {
+  HmIpBewegung,
+  HmIpGriff,
+  HmIpHeizgruppe,
+  HmIpHeizung,
+  HmIpLampe,
+  HmIpPraezenz,
+  HmIpRoll,
+  HmIpTaster,
+  HmIpTherm,
+  HmIpTuer,
+  HmIpWippe,
+} from './index';
 
-export class HmIPDevice extends ioBrokerBaseDevice {
-  public static roomSettings: { [id: string]: HmIpRoomSettings } = {};
+export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
-  public deviceType: HmIpDeviceType;
   public room: RoomBase | undefined = undefined;
 
-  public static addRoom(shortName: string, settings: HmIpRoomSettings): void {
-    if (this.roomSettings[shortName] !== undefined) {
-      ServerLogService.writeLog(
-        LogLevel.Alert,
-        `Es gibt bereits ein Registrat für HmIpRoomsettings für den Raumnamen "${shortName}"`,
-      );
-      return;
-    }
-    this.roomSettings[shortName] = settings;
-  }
-
-  public static checkMissing(): void {
-    for (const rName in this.roomSettings) {
-      this.roomSettings[rName].checkMissing();
-    }
-  }
-
-  public constructor(pInfo: DeviceInfo, pType: HmIpDeviceType) {
-    super(pInfo);
-    this.deviceType = pType;
-    this.addToCorrectRoom();
-  }
-
-  protected addToCorrectRoom(): void {
-    const settings: HmIpRoomSettings | undefined = HmIPDevice.roomSettings[this.info.room];
-    if (settings !== undefined) {
-      if (settings.devices[this.deviceType] === undefined) {
-        ServerLogService.missingRoomHandling(settings.RoomName, this.deviceType);
-        return;
-      }
-      const deviceSettings: HmIpAddDeviceItem | undefined =
-        settings.devices[this.deviceType][this.info.deviceRoomIndex];
-      if (deviceSettings === undefined) {
-        ServerLogService.missingRoomIndexHandling(settings.RoomName, this.info.deviceRoomIndex, this.deviceType);
-        return;
-      }
-
-      if (deviceSettings.customName !== undefined) {
-        this.info.customName = deviceSettings.customName;
-      }
-      deviceSettings.setID(this.info.devID);
-      deviceSettings.added = true;
-      ServerLogService.addedDeviceToRoom(settings.RoomName, this.deviceType, this.info.deviceRoomIndex);
-      return;
-    }
-    switch (this.info.room) {
+  public static createRespectiveDevice(hmIPInfo: DeviceInfo) {
+    let d: HmIPDevice;
+    switch (hmIPInfo.deviceType) {
+      case 'Lampe':
+        d = new HmIpLampe(hmIPInfo);
+        break;
+      case 'Roll':
+      case 'Broll':
+        d = new HmIpRoll(hmIPInfo);
+        break;
+      case 'Beweg':
+        d = new HmIpBewegung(hmIPInfo);
+        break;
+      case 'Taster':
+        d = new HmIpTaster(hmIPInfo);
+        break;
+      case 'Wippe':
+        d = new HmIpWippe(hmIPInfo);
+        break;
+      case 'Praezenz':
+        d = new HmIpPraezenz(hmIPInfo);
+        break;
+      case 'Griff':
+        d = new HmIpGriff(hmIPInfo);
+        break;
+      case 'Thermostat':
+        d = new HmIpTherm(hmIPInfo);
+        break;
+      case 'Heizung':
+        d = new HmIpHeizung(hmIPInfo);
+        break;
+      case 'Tuer':
+        d = new HmIpTuer(hmIPInfo);
+        break;
+      case 'HeizGr':
+        d = new HmIpHeizgruppe(hmIPInfo);
+        break;
       default:
-        ServerLogService.writeLog(LogLevel.Warn, `${this.info.room} is noch kein bekannter Raum`);
+        ServerLogService.writeLog(LogLevel.Warn, `No HmIP Device Type for ${hmIPInfo.deviceType} defined`);
+        d = new HmIPDevice(hmIPInfo, DeviceType.unknown);
     }
+    return d;
+  }
+
+  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+    super(pInfo, pType);
+    this.addToCorrectRoom();
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {

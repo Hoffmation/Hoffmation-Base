@@ -1,84 +1,37 @@
 import { LogLevel } from '../../models/logLevel';
 import { ServerLogService } from '../services/log-service';
-import { IOBrokerConnection } from '../ioBroker/connection';
 import { DeviceInfo } from './DeviceInfo';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { DeviceType } from './deviceType';
 
-export class WledDevice {
+export class WledDevice extends IoBrokerBaseDevice {
   public on: boolean = false;
   public brightness: number = -1;
   public linkQuality: number = 0;
   public battery: number = -1;
   public voltage: string = '';
-  private _info: DeviceInfo;
-  private _ioConnection?: IOBrokerConnection;
   private _onID: string;
   private _brightnessID: string;
 
   public constructor(pInfo: DeviceInfo) {
-    this._info = pInfo;
+    super(pInfo, DeviceType.Wled);
     this.addToCorrectRoom();
     this._onID = `${this.info.fullID}.on`;
     this._brightnessID = `${this.info.fullID}.bri`;
   }
 
-  /**
-   * Getter info
-   * @return {DeviceInfo}
-   */
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
-  /**
-   * Setter info
-   * @param {DeviceInfo} value
-   */
-  public set info(value: DeviceInfo) {
-    this._info = value;
-  }
-
-  /**
-   * Getter ioConn
-   * @return {IOBrokerConnection}
-   */
-  public get ioConn(): IOBrokerConnection | undefined {
-    return this._ioConnection;
-  }
-
-  /**
-   * Setter ioConn
-   * @param {IOBrokerConnection} value
-   */
-  public set ioConn(value: IOBrokerConnection | undefined) {
-    this._ioConnection = value;
-  }
-
-  private addToCorrectRoom(): void {
-    ServerLogService.writeLog(LogLevel.DeepTrace, `Neues Zigbee Gerät für ${this._info.room}`);
-    switch (this._info.room) {
-      case 'Wohnz':
-        // room1OGWohn.addWLED(this._info);
-        break;
-      default:
-        console.warn(`${this._info.room} ist noch kein bekannter Raum für WLED Geräte`);
-    }
-  }
-
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
+  public override update(
+    idSplit: string[],
+    state: ioBroker.State,
+    initial: boolean = false,
+    _pOverride: boolean = false,
+  ): void {
     ServerLogService.writeLog(
       LogLevel.DeepTrace,
       `Wled: ${initial ? 'Initiales ' : ''}Update für "${this.info.customName}": ID: ${idSplit.join(
         '.',
       )} JSON: ${JSON.stringify(state)}`,
     );
-    if (!pOverride) {
-      ServerLogService.writeLog(
-        LogLevel.Warn,
-        `Keine Update Überschreibung für "${this.info.customName}":\n\tID: ${idSplit.join(
-          '.',
-        )}\n\tData: ${JSON.stringify(state)}`,
-      );
-    }
 
     switch (idSplit[3]) {
       case 'on':
@@ -121,6 +74,17 @@ export class WledDevice {
           ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
         }
       });
+    }
+  }
+
+  protected override addToCorrectRoom(): void {
+    ServerLogService.writeLog(LogLevel.DeepTrace, `Neues Zigbee Gerät für ${this._info.room}`);
+    switch (this._info.room) {
+      case 'Wohnz':
+        // room1OGWohn.addWLED(this._info);
+        break;
+      default:
+        console.warn(`${this._info.room} ist noch kein bekannter Raum für WLED Geräte`);
     }
   }
 }
