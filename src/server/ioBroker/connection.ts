@@ -1,12 +1,12 @@
 /* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment */
 import { IncomingMessage } from 'http';
-import { SocketIOAuthInfo } from './socketIOAuthInfo';
-import { SocketIOConnectOpts } from './socketIOConnectOptions';
-import { SocketIoLogging, SocketIoLogLevel } from './socketIOLogging';
-import { SocketIOVisCommand } from './socketIOVisCommand';
-import { ConnectionCallbacks } from '../../models/connectionCallbacks';
+import { SocketIOAuthInfo } from 'index';
+import { SocketIOConnectOpts } from 'index';
+import { SocketIoLogging, SocketIoLogLevel } from 'index';
+import { SocketIOVisCommand } from 'index';
+import { ConnectionCallbacks } from 'index';
 import io from 'socket.io-client';
-import { Utils } from '../services/utils/utils';
+import { Utils } from 'index';
 
 let session: unknown;
 let app: unknown;

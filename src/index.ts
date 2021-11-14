@@ -18,8 +18,8 @@ import {
   TimeCallbackService,
   Utils,
   WeatherService,
-} from './server/';
-import { LogLevel } from './models';
+} from 'index';
+import { LogLevel } from 'index';
 
 export * from './models/index';
 export * from './server/index';

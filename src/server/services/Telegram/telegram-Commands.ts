@@ -1,15 +1,15 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { Devices } from '../../devices/devices';
-import { TelegramService } from './telegram-service';
-import { TelegramMessageCallback } from './telegramMessageCalback';
-import { Griffe } from '../../devices/Griffe';
-import { Heizgruppen } from '../../devices/Heizgruppen';
-import { Rolladen } from '../../devices/Rollos';
-import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { SonosService } from '../Sonos/sonos-service';
-import { DeviceType } from '../../devices/deviceType';
-import { HmIpTaster } from '../../devices/hmIPDevices/hmIpTaster';
+import { Devices } from 'index';
+import { TelegramService } from 'index';
+import { TelegramMessageCallback } from 'index';
+import { Griffe } from 'index';
+import { Heizgruppen } from 'index';
+import { Rolladen } from 'index';
+import { ZigbeeAquaraVibra } from 'index';
+import { RoomBase } from 'index';
+import { SonosService } from 'index';
+import { DeviceType } from 'index';
+import { HmIpTaster } from 'index';
 
 export class TelegramCommands {
   public static initialize(): void {

@@ -1,8 +1,8 @@
-import { LogLevel } from '../../../models/logLevel';
-import { DeviceInfo } from '../DeviceInfo';
-import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { LogLevel } from 'index';
+import { DeviceInfo } from 'index';
+import { DeviceType } from 'index';
+import { ServerLogService } from 'index';
+import { IoBrokerBaseDevice } from 'index';
 
 import {
   HmIpBewegung,
@@ -16,7 +16,7 @@ import {
   HmIpTherm,
   HmIpTuer,
   HmIpWippe,
-} from './index';
+} from 'index';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;

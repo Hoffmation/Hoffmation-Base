@@ -1,8 +1,8 @@
-import { LogLevel } from '../../models/logLevel';
-import { ServerLogService } from '../services/log-service';
-import { DeviceInfo } from './DeviceInfo';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { DeviceType } from './deviceType';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
+import { DeviceInfo } from 'index';
+import { IoBrokerBaseDevice } from 'index';
+import { DeviceType } from 'index';
 
 export class WledDevice extends IoBrokerBaseDevice {
   public on: boolean = false;

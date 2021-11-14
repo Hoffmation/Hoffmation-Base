@@ -1,12 +1,12 @@
-import { HTTPSService } from './https-service';
-import { HTTPSOptions } from './HTTPSOptions';
-import { ServerLogService } from './log-service';
-import { LogLevel } from '../../models/logLevel';
+import { HTTPSService } from 'index';
+import { HTTPSOptions } from 'index';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
 import * as fs from 'fs';
-import { OwnSonosDevice, SonosService } from './Sonos/sonos-service';
-import { PollyService } from './Sonos/polly-service';
-import { Utils } from './utils/utils';
-import { SettingsService } from './settings-service';
+import { OwnSonosDevice, SonosService } from 'index';
+import { PollyService } from 'index';
+import { Utils } from 'index';
+import { SettingsService } from 'index';
 
 export class NewsService {
   public static oneDay: number = 1000 * 60 * 60 * 24;

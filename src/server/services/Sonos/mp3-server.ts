@@ -1,9 +1,9 @@
 import * as http from 'http';
 import * as url from 'url';
 import * as fs from 'fs';
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models/logLevel';
-import { iMp3Settings } from '../../config/iConfig';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
+import { iMp3Settings } from 'index';
 
 export class MP3Server {
   public static active: boolean = false;

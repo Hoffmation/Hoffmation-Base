@@ -1,5 +1,5 @@
-import { LogLevel } from '../../models/logLevel';
-import { iRoomDefaultSettings } from '../../models/rooms/RoomSettings/iRoomDefaultSettings';
+import { LogLevel } from 'index';
+import { iRoomDefaultSettings } from 'index';
 
 export interface iConfig {
   roomDefault: iRoomDefaultSettings;

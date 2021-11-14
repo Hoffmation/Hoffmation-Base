@@ -1,12 +1,12 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
-import { ServerLogService } from '../../services/log-service';
-import { TuerPosition } from './TuerPosition';
-import { SonosService } from '../../services/Sonos/sonos-service';
-import { TelegramService } from '../../services/Telegram/telegram-service';
-import { Utils } from '../../services/utils/utils';
+import { HmIPDevice } from 'index';
+import { DeviceType } from 'index';
+import { DeviceInfo } from 'index';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
+import { TuerPosition } from 'index';
+import { SonosService } from 'index';
+import { TelegramService } from 'index';
+import { Utils } from 'index';
 
 export class HmIpTuer extends HmIPDevice {
   public position: TuerPosition = TuerPosition.geschlossen;

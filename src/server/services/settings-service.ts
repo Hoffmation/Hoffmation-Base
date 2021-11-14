@@ -1,4 +1,4 @@
-import { iConfig } from '../config/iConfig';
+import { iConfig } from 'index';
 
 export class SettingsService {
   public static settings: iConfig;

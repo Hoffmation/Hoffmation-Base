@@ -1,6 +1,6 @@
-import { WeatherFeelsLike } from './weather-feelsLike';
-import { WeatherItem } from './weather-item';
-import { WeatherTemp } from './weather-temp';
+import { WeatherFeelsLike } from 'index';
+import { WeatherItem } from 'index';
+import { WeatherTemp } from 'index';
 
 export interface WeatherDaily {
   dt: number;

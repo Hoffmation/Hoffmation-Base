@@ -1,6 +1,6 @@
-import { DeviceType } from '../devices/deviceType';
-import { TelegramService } from './Telegram/telegram-service';
-import { LogLevel } from '../../models/logLevel';
+import { DeviceType } from 'index';
+import { TelegramService } from 'index';
+import { LogLevel } from 'index';
 
 export class ServerLogService {
   public static logLevel: number = 4;

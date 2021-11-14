@@ -1,9 +1,9 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
-import { Taste } from '../taste';
-import { LogLevel } from '../../../models/logLevel';
-import { ServerLogService } from '../../services/log-service';
+import { HmIPDevice } from 'index';
+import { DeviceType } from 'index';
+import { DeviceInfo } from 'index';
+import { Taste } from 'index';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
 
 export class HmIpWippe extends HmIPDevice {
   public tasten: {

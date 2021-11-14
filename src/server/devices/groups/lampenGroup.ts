@@ -1,8 +1,8 @@
-import { ZigbeeIkeaSteckdose } from '../zigbee/zigbeeIkeaSteckdose';
-import { ZigbeeIlluLedRGBCCT } from '../zigbee/zigbeeIlluLedRGBCCT';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { iLamp } from '../iLamp';
+import { ZigbeeIkeaSteckdose } from 'index';
+import { ZigbeeIlluLedRGBCCT } from 'index';
+import { TimeCallbackService, TimeOfDay } from 'index';
+import { RoomBase } from 'index';
+import { iLamp } from 'index';
 
 export class LampenGroup {
   public constructor(

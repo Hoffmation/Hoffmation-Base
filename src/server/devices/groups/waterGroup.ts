@@ -1,5 +1,5 @@
-import { ZigbeeAquaraWater } from '../zigbee/zigbeeAquaraWater';
-import { RoomBase } from '../../../models/rooms/RoomBase';
+import { ZigbeeAquaraWater } from 'index';
+import { RoomBase } from 'index';
 
 export class WaterGroup {
   public constructor(private _room: RoomBase, public WaterDetectors: Array<ZigbeeAquaraWater>) {

@@ -1,5 +1,5 @@
-import { HmIpTaster } from '../hmIPDevices/hmIpTaster';
-import { RoomBase } from '../../../models/rooms/RoomBase';
+import { HmIpTaster } from 'index';
+import { RoomBase } from 'index';
 
 export class TasterGroup {
   public constructor(private _room: RoomBase, public Taster: HmIpTaster[]) {}

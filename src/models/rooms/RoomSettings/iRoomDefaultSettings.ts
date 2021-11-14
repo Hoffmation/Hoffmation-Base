@@ -1,4 +1,4 @@
-import { iTimePair } from '../../../server/config/iConfig';
+import { iTimePair } from 'index';
 
 export interface iRoomDefaultSettings {
   rolloHeatReduction: boolean;

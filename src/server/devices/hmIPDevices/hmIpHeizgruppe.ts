@@ -1,13 +1,13 @@
-import { LogLevel } from '../../../models/logLevel';
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
-import { ServerLogService } from '../../services/log-service';
-import { TemperaturSettings } from '../../../models/temperaturSettings';
-import { Persist } from '../../services/dbo/persist';
-import { HmIpHeizung } from './hmIpHeizung';
-import { Devices } from '../devices';
-import { Utils } from '../../services/utils/utils';
+import { LogLevel } from 'index';
+import { HmIPDevice } from 'index';
+import { DeviceType } from 'index';
+import { DeviceInfo } from 'index';
+import { ServerLogService } from 'index';
+import { TemperaturSettings } from 'index';
+import { Persist } from 'index';
+import { HmIpHeizung } from 'index';
+import { Devices } from 'index';
+import { Utils } from 'index';
 
 export class HmIpHeizgruppe extends HmIPDevice {
   private _automaticMode: boolean = true;

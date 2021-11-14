@@ -1,9 +1,9 @@
-import { HTTPSOptions } from './HTTPSOptions';
-import { ServerLogService } from './log-service';
-import { LogLevel } from '../../models/logLevel';
+import { HTTPSOptions } from 'index';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
 import * as fs from 'fs';
 import HTTPS from 'https';
-import { Utils } from './utils/utils';
+import { Utils } from 'index';
 
 export class HTTPSService {
   private static defaultCallback(data: string, statuscode: number): void {

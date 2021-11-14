@@ -1,15 +1,15 @@
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models/logLevel';
-import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
-import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
-import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
-import { iTemperaturDataPoint } from '../../../models/iTemperaturDataPoint';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
+import { TemperaturDataPoint } from 'index';
+import { CountToday } from 'index';
+import { HmIpHeizgruppe } from 'index';
+import { RoomBase } from 'index';
+import { BasicRoomInfo } from 'index';
+import { RoomDetailInfo } from 'index';
+import { DailyMovementCount } from 'index';
+import { iTemperaturDataPoint } from 'index';
+import { CurrentIlluminationDataPoint } from 'index';
+import { IoBrokerBaseDevice } from 'index';
 
 export class Persist {
   private static TemperatureHistoryCollection: Mongo.Collection<TemperaturDataPoint, TemperaturDataPoint>;

@@ -1,12 +1,12 @@
-import { LogLevel } from '../../../models/logLevel';
-import { Fenster } from '../hmIPDevices/Fenster';
-import { FensterPosition } from '../hmIPDevices/FensterPosition';
-import { ServerLogService } from '../../services/log-service';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { Utils } from '../../services/utils/utils';
-import { WeatherService } from '../../services/weather/weather-service';
+import { LogLevel } from 'index';
+import { Fenster } from 'index';
+import { FensterPosition } from 'index';
+import { ServerLogService } from 'index';
+import { RoomBase } from 'index';
+import { TimeCallback, TimeCallbackType } from 'index';
+import { TimeCallbackService, TimeOfDay } from 'index';
+import { Utils } from 'index';
+import { WeatherService } from 'index';
 
 export class FensterGroup {
   public constructor(private _room: RoomBase, public fenster: Fenster[]) {

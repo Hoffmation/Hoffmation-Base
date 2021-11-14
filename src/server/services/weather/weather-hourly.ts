@@ -1,4 +1,4 @@
-import { WeatherItem } from './weather-item';
+import { WeatherItem } from 'index';
 
 export interface WeatherHourly {
   dt: number;

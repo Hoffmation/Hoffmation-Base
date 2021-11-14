@@ -1,8 +1,8 @@
-import { LogLevel } from '../../models/logLevel';
-import { ServerLogService } from '../services/log-service';
-import { Devices } from './devices';
-import { IDeviceUpdater } from './iDeviceUpdater';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
+import { Devices } from 'index';
+import { IDeviceUpdater } from 'index';
+import { IoBrokerBaseDevice } from 'index';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;

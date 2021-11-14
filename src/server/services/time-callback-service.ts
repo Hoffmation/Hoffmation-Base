@@ -1,11 +1,11 @@
-import { TimeCallback, TimeCallbackType } from '../../models/timeCallback';
+import { TimeCallback, TimeCallbackType } from 'index';
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
-import { ServerLogService } from './log-service';
-import { LogLevel } from '../../models/logLevel';
-import { Devices } from '../devices/devices';
-import { Utils } from './utils/utils';
-import { SettingsService } from './settings-service';
-import { iTimePair } from '../config/iConfig';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
+import { Devices } from 'index';
+import { Utils } from 'index';
+import { SettingsService } from 'index';
+import { iTimePair } from 'index';
 
 export enum TimeOfDay {
   BeforeSunrise = 1,

@@ -1,4 +1,4 @@
-import { Daytime } from './daytime';
+import { Daytime } from 'index';
 
 export class TemperaturSettings {
   public constructor(

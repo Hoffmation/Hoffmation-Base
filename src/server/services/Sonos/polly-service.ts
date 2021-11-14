@@ -1,12 +1,12 @@
 import AWS from 'aws-sdk';
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
 import * as fs from 'fs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import getMP3Duration from 'get-mp3-duration';
 import crypto from 'crypto';
-import { iPollySettings } from '../../config/iConfig';
+import { iPollySettings } from 'index';
 
 export class PollyService {
   private static _mp3Path: string;

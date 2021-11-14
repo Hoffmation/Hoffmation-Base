@@ -1,4 +1,4 @@
-import { Taste } from './taste';
+import { Taste } from 'index';
 
 export interface iTaster {
   tasten: { [id: string]: Taste };

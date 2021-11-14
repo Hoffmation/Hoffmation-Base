@@ -1,8 +1,8 @@
-import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
-import { ServerLogService } from '../../services/log-service';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { DeviceType } from 'index';
+import { DeviceInfo } from 'index';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
+import { IoBrokerBaseDevice } from 'index';
 import {
   ZigbeeAquaraMotion,
   ZigbeeAquaraVibra,
@@ -14,7 +14,7 @@ import {
   ZigbeeIlluDimmer,
   ZigbeeIlluLampe,
   ZigbeeIlluLedRGBCCT,
-} from '../zigbee';
+} from 'index';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;

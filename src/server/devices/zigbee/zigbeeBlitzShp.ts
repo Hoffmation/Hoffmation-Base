@@ -1,9 +1,9 @@
-import { LogLevel } from '../../../models/logLevel';
-import { ServerLogService } from '../../services/log-service';
-import { DeviceInfo } from '../DeviceInfo';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceType } from '../deviceType';
-import { ActuatorSettings } from '../../../models/actuatorSettings';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
+import { DeviceInfo } from 'index';
+import { ZigbeeDevice } from 'index';
+import { DeviceType } from 'index';
+import { ActuatorSettings } from 'index';
 
 export class ZigbeeBlitzShp extends ZigbeeDevice {
   public steckerOn: boolean = false;

@@ -1,12 +1,12 @@
-import { LogLevel } from '../../../models/logLevel';
-import { ZigbeeAquaraVibra } from '../zigbee/zigbeeAquaraVibra';
-import { FensterPosition } from './FensterPosition';
-import { HmIpGriff } from './hmIpGriff';
-import { HmIpRoll } from './hmIpRoll';
-import { ServerLogService } from '../../services/log-service';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { Utils } from '../../services/utils/utils';
-import { RoomBase } from '../../../models/rooms/RoomBase';
+import { LogLevel } from 'index';
+import { ZigbeeAquaraVibra } from 'index';
+import { FensterPosition } from 'index';
+import { HmIpGriff } from 'index';
+import { HmIpRoll } from 'index';
+import { ServerLogService } from 'index';
+import { TimeCallbackService, TimeOfDay } from 'index';
+import { Utils } from 'index';
+import { RoomBase } from 'index';
 
 export class Fenster {
   public desiredPosition: number = 0;

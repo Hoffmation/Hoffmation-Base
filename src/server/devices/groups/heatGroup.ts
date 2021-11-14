@@ -1,5 +1,5 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { HmIpHeizgruppe } from '../hmIPDevices/hmIpHeizgruppe';
+import { RoomBase } from 'index';
+import { HmIpHeizgruppe } from 'index';
 
 export class HeatGroup {
   public get currentTemp(): number {

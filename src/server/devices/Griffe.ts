@@ -1,7 +1,7 @@
-import { Devices } from './devices';
-import { FensterPosition } from './hmIPDevices/FensterPosition';
-import { DeviceType } from './deviceType';
-import { HmIpGriff } from './hmIPDevices/hmIpGriff';
+import { Devices } from 'index';
+import { FensterPosition } from 'index';
+import { DeviceType } from 'index';
+import { HmIpGriff } from 'index';
 
 export class Griffe {
   public static getGriffPosition(): string {

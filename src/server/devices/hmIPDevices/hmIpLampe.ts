@@ -1,11 +1,11 @@
-import { LogLevel } from '../../../models/logLevel';
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
-import { ServerLogService } from '../../services/log-service';
-import { ActuatorSettings } from '../../../models/actuatorSettings';
-import { Utils } from '../../services/utils/utils';
-import { iLamp } from '../iLamp';
+import { LogLevel } from 'index';
+import { HmIPDevice } from 'index';
+import { DeviceType } from 'index';
+import { DeviceInfo } from 'index';
+import { ServerLogService } from 'index';
+import { ActuatorSettings } from 'index';
+import { Utils } from 'index';
+import { iLamp } from 'index';
 
 export class HmIpLampe extends HmIPDevice implements iLamp {
   public lightOn: boolean = false;

@@ -1,11 +1,11 @@
-import { DeviceInfo } from './DeviceInfo';
-import { DeviceType } from './deviceType';
-import { IOBrokerConnection } from '../ioBroker/connection';
-import { LogLevel } from '../../models/logLevel';
-import { RoomDeviceAddingSettings } from '../../models/rooms/RoomSettings/roomDeviceAddingSettings';
-import { RoomAddDeviceItem } from '../../models/rooms/RoomSettings/roomAddDeviceItem';
-import { ServerLogService } from '../services/log-service';
-import { RoomBase } from '../../models';
+import { DeviceInfo } from 'index';
+import { DeviceType } from 'index';
+import { IOBrokerConnection } from 'index';
+import { LogLevel } from 'index';
+import { RoomDeviceAddingSettings } from 'index';
+import { RoomAddDeviceItem } from 'index';
+import { ServerLogService } from 'index';
+import { RoomBase } from 'index';
 
 export abstract class IoBrokerBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};

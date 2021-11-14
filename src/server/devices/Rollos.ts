@@ -1,7 +1,7 @@
-import { Devices } from './devices';
-import { DeviceType } from './deviceType';
-import { HmIpRoll } from './hmIPDevices/hmIpRoll';
-import { RoomBase } from '../../models/rooms/RoomBase';
+import { Devices } from 'index';
+import { DeviceType } from 'index';
+import { HmIpRoll } from 'index';
+import { RoomBase } from 'index';
 
 export class Rolladen {
   public static getRolladenPosition(): string {

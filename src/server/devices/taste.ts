@@ -1,4 +1,4 @@
-import { Utils } from '../services/utils/utils';
+import { Utils } from 'index';
 
 export class Taste {
   public shortPressed: boolean = false;

@@ -1,14 +1,14 @@
-import { LogLevel } from '../../../models/logLevel';
-import { ServerLogService } from '../../services/log-service';
-import { Persist } from '../../services/dbo/persist';
-import { Utils } from '../../services/utils/utils';
-import { DeviceInfo } from '../DeviceInfo';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceType } from '../deviceType';
-import { iIlluminationSensor } from '../iIlluminationSensor';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { CountToday } from '../../../models/persistence/todaysCount';
+import { LogLevel } from 'index';
+import { ServerLogService } from 'index';
+import { Persist } from 'index';
+import { Utils } from 'index';
+import { DeviceInfo } from 'index';
+import { ZigbeeDevice } from 'index';
+import { DeviceType } from 'index';
+import { iIlluminationSensor } from 'index';
+import { RoomBase } from 'index';
+import { CurrentIlluminationDataPoint } from 'index';
+import { CountToday } from 'index';
 
 export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSensor {
   public movementDetected: boolean = false;

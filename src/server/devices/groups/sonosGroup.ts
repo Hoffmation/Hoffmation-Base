@@ -1,8 +1,8 @@
-import { OwnSonosDevice } from '../../services/Sonos/sonos-service';
-import { Utils } from '../../services/utils/utils';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { ServerLogService } from '../../services/log-service';
-import { LogLevel } from '../../../models/logLevel';
+import { OwnSonosDevice } from 'index';
+import { Utils } from 'index';
+import { RoomBase } from 'index';
+import { ServerLogService } from 'index';
+import { LogLevel } from 'index';
 
 export class SonosGroup {
   private _playing: boolean = false;
