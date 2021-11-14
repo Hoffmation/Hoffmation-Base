@@ -2,7 +2,6 @@ import { OwnSonosDevice } from 'index';
 import { LogLevel } from 'index';
 import { ServerLogService } from 'index';
 
-
 export class OwnSonosDevices {
   public static ownDevices: { [name: string]: OwnSonosDevice } = {};
 

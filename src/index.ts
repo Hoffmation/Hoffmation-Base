@@ -1,3 +1,4 @@
+import { LogLevel } from './models';
 import {
   Devices,
   DeviceUpdater,
@@ -18,8 +19,7 @@ import {
   TimeCallbackService,
   Utils,
   WeatherService,
-} from 'index';
-import { LogLevel } from 'index';
+} from './server';
 
 export * from './models/index';
 export * from './server/index';

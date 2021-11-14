@@ -22,5 +22,5 @@ export enum DeviceType {
   ZigbeeIlluLampe = 209,
   ZigbeeIlluActuator = 210,
   ZigbeeAquaraMotion = 211,
-  Wled= 1001,
+  Wled = 1001,
 }
