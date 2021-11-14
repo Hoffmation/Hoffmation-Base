@@ -1,14 +1,14 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { ZigbeeIkeaSteckdose } from '../zigbee/zigbeeIkeaSteckdose';
 import { iLamp } from '../iLamp';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
 import { ZigbeeIlluLedRGBCCT } from '../zigbee/zigbeeIlluLedRGBCCT';
+import { iRoomBase } from '../../../models/rooms/iRoomBase';
 
 export class LampenGroup {
   public constructor(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private _room: RoomBase,
+    private _room: iRoomBase,
     public Lampen: Array<iLamp>,
     public Stecker: Array<ZigbeeIkeaSteckdose>,
     public LED: Array<ZigbeeIlluLedRGBCCT> = [],

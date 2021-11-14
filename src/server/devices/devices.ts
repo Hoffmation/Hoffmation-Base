@@ -91,6 +91,7 @@ export class Devices {
   private processZigbeeDevice(cDevConf: deviceConfig) {
     const zigbeeInfo: DeviceInfo = new DeviceInfo(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${zigbeeInfo.devID}`;
+    zigbeeInfo.allDevicesKey = fullName;
 
     if (typeof Devices.alLDevices[fullName] !== 'undefined') {
       return;
@@ -136,13 +137,13 @@ export class Devices {
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);
         d = new ZigbeeDevice(zigbeeInfo, DeviceType.unknown);
     }
-    d.allDevicesKey = fullName;
     Devices.alLDevices[fullName] = d;
   }
 
   private processHMIPDevice(cDevConf: deviceConfig) {
     const hmIPInfo: DeviceInfo = new DeviceInfo(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_HOMEMATIC}-${hmIPInfo.devID}`;
+    hmIPInfo.allDevicesKey = fullName;
 
     if (typeof Devices.alLDevices[fullName] !== 'undefined') {
       return;
@@ -192,7 +193,6 @@ export class Devices {
         ServerLogService.writeLog(LogLevel.Warn, `No HmIP Device Type for ${hmIPInfo.deviceType} defined`);
         d = new HmIPDevice(hmIPInfo, DeviceType.unknown);
     }
-    d.allDevicesKey = fullName;
     Devices.alLDevices[fullName] = d;
   }
 }

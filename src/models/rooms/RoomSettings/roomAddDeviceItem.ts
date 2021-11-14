@@ -1,6 +1,6 @@
-import { RoomBase } from '../RoomBase';
 import { ServerLogService } from '../../../server/services/log-service';
 import { LogLevel } from '../../logLevel';
+import { RoomBase } from '../RoomBase';
 
 export class RoomAddDeviceItem {
   private _added: boolean = false;

@@ -1,4 +1,3 @@
-import { RoomBase } from '../../models/rooms/RoomBase';
 import { IDeviceUpdater } from '../devices/iDeviceUpdater';
 import { ServerLogService } from '../services/log-service';
 import { Utils } from '../services/utils/utils';
@@ -9,15 +8,16 @@ import { SettingsService } from '../services/settings-service';
 import { Devices } from '../devices/devices';
 import { LogLevel } from '../../models/logLevel';
 import { TimeCallbackService } from '../services/time-callback-service';
+import { iRoomBase } from '../../models/rooms/iRoomBase';
 
 export class ioBrokerMain {
-  private static roomConstructors: { [roomName: string]: { new (): RoomBase } } = {};
+  private static roomConstructors: { [roomName: string]: { new (): iRoomBase } } = {};
   private servConn: IOBrokerConnection;
   private deviceUpdater: IDeviceUpdater;
   private states: Record<string, ioBroker.State> = {};
   private connectionCallbacks: ConnectionCallbacks;
 
-  public static addRoomConstructor(roomName: string, constr: { new (): RoomBase }): void {
+  public static addRoomConstructor(roomName: string, constr: { new (): iRoomBase }): void {
     if (ioBrokerMain.roomConstructors[roomName] !== undefined) {
       ServerLogService.writeLog(LogLevel.Error, `Konstruktor für Raum mit Namen "${roomName}" bereits hinzugefügt`);
       return;

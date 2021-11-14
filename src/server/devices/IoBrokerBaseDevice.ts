@@ -1,4 +1,3 @@
-import { RoomBase } from '../../models/rooms/RoomBase';
 import { ServerLogService } from '../services/log-service';
 import { DeviceInfo } from './DeviceInfo';
 import { RoomDeviceAddingSettings } from '../../models/rooms/RoomSettings/roomDeviceAddingSettings';
@@ -6,6 +5,7 @@ import { RoomAddDeviceItem } from '../../models/rooms/RoomSettings/roomAddDevice
 import { IOBrokerConnection } from '../ioBroker/connection';
 import { LogLevel } from '../../models/logLevel';
 import { DeviceType } from './deviceType';
+import { RoomBase } from '../../models/rooms/RoomBase';
 
 export abstract class IoBrokerBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
@@ -28,7 +28,6 @@ export abstract class IoBrokerBaseDevice {
   }
 
   public room: RoomBase | undefined = undefined;
-  public allDevicesKey: string = '';
   protected _ioConnection?: IOBrokerConnection;
 
   protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {
@@ -86,7 +85,14 @@ export abstract class IoBrokerBaseDevice {
       if (deviceSettings.customName !== undefined) {
         this.info.customName = deviceSettings.customName;
       }
-      this.room = deviceSettings.setID(this.info.devID);
+      if (this.info.allDevicesKey === undefined) {
+        ServerLogService.writeLog(
+          LogLevel.Error,
+          `AllDevicesKey for Device "${this.info.fullName}"/"${this.info.fullID}" missing.`,
+        );
+        return;
+      }
+      this.room = deviceSettings.setID(this.info.allDevicesKey);
       deviceSettings.added = true;
       ServerLogService.addedDeviceToRoom(settings.RoomName, this.deviceType, this.info.deviceRoomIndex);
       return;

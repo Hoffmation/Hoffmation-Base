@@ -12,6 +12,7 @@ export class DeviceInfo {
   public channel?: number;
   public valueName?: string;
   public devConf: deviceConfig;
+  public allDevicesKey?: string;
 
   public constructor(pDevConf: deviceConfig) {
     this.devConf = pDevConf;

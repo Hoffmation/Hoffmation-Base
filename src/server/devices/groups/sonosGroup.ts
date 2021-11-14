@@ -1,12 +1,12 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { OwnSonosDevice } from '../../services/Sonos/sonos-service';
 import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
 import { LogLevel } from '../../../models/logLevel';
+import { iRoomBase } from '../../../models/rooms/iRoomBase';
 
 export class SonosGroup {
   private _playing: boolean = false;
-  public constructor(private _room: RoomBase, public ownSonosDevices: OwnSonosDevice[]) {
+  public constructor(private _room: iRoomBase, public ownSonosDevices: OwnSonosDevice[]) {
     ServerLogService.writeLog(LogLevel.DeepTrace, `Added Sonos Group to ${this._room.roomName}`);
   }
 

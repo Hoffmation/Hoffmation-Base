@@ -17,8 +17,9 @@ import { Persist } from '../../server/services/dbo/persist';
 import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callback-service';
 import { SonosService } from '../../server/services/Sonos/sonos-service';
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
+import { iRoomBase } from './iRoomBase';
 
-export class RoomBase {
+export class RoomBase implements iRoomBase {
   public static Rooms: { [name: string]: RoomBase } = {};
   public static allRooms: RoomBase[] = [];
   public static floors: { [level: number]: RoomBase[] } = {};
@@ -34,10 +35,10 @@ export class RoomBase {
   public WaterGroup: WaterGroup = new WaterGroup(this, []);
   public HeatGroup: HeatGroup = new HeatGroup(this, []);
   public Settings: RoomSettings;
-  public sonnenAufgangCallback: TimeCallback | undefined;
-  public sonnenUntergangCallback: TimeCallback | undefined;
-  public sonnenAufgangLichtCallback: TimeCallback | undefined;
-  public skipNextRolloUp: boolean = false;
+  sonnenAufgangCallback: TimeCallback | undefined;
+  sonnenUntergangCallback: TimeCallback | undefined;
+  sonnenAufgangLichtCallback: TimeCallback | undefined;
+  skipNextRolloUp: boolean = false;
   private static _awayModeTimer: NodeJS.Timeout | undefined;
   private static _nightModeTimer: NodeJS.Timeout | undefined;
   private static _intrusionAlarmActive: boolean = false;
@@ -126,7 +127,7 @@ export class RoomBase {
     );
   }
 
-  public static startIntrusionAlarm(room: RoomBase, device: IoBrokerBaseDevice): void {
+  public static startIntrusionAlarm(room: iRoomBase, device: IoBrokerBaseDevice): void {
     const message: string = `!Potenzieller Eindringling! Bewegung in ${room.roomName} von ${device.info.fullName} festgestellt`;
     ServerLogService.writeLog(LogLevel.Info, message);
     if (!this.awayModeActive && !this.nightAlarmActive) {
@@ -183,7 +184,7 @@ export class RoomBase {
     RoomBase.allRooms.push(this);
   }
 
-  public initializeBase(): void {
+  initializeBase(): void {
     ServerLogService.writeLog(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
     this.recalcTimeCallbacks();
     this.PraesenzGroup.initCallbacks();
@@ -191,11 +192,11 @@ export class RoomBase {
     this.TasterGroup.initCallbacks();
   }
 
-  public persist(): void {
+  persist(): void {
     Persist.addRoom(this);
   }
 
-  public recalcTimeCallbacks(): void {
+  recalcTimeCallbacks(): void {
     const now: Date = new Date();
     if (this.sonnenAufgangCallback && this.Einstellungen.rolloOffset) {
       this.sonnenAufgangCallback.minuteOffset = this.Einstellungen.rolloOffset.sunrise;
@@ -217,7 +218,7 @@ export class RoomBase {
    * Sets the light based on the current time, rollo Position and room Settings
    * @param movementDependant Only turn light on if there was a movement in the same room
    */
-  public setLightTimeBased(movementDependant: boolean = false): void {
+  setLightTimeBased(movementDependant: boolean = false): void {
     if (movementDependant && !this.PraesenzGroup.anyPresent()) {
       this.LampenGroup.switchAll(false);
       return;
@@ -248,7 +249,7 @@ export class RoomBase {
     this.LampenGroup.switchTimeConditional(timeOfDay);
   }
 
-  public isNowLightTime(): boolean {
+  isNowLightTime(): boolean {
     if (!this.Einstellungen.lampOffset) {
       ServerLogService.writeLog(
         LogLevel.Alert,

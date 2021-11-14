@@ -1,5 +1,5 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { HmIpHeizgruppe } from '../hmIPDevices/hmIpHeizgruppe';
+import { iRoomBase } from '../../../models/rooms/iRoomBase';
 
 export class HeatGroup {
   public get currentTemp(): number {
@@ -27,7 +27,7 @@ export class HeatGroup {
   public constructor(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private _room: RoomBase,
+    private _room: iRoomBase,
     public heaters: HmIpHeizgruppe[],
   ) {}
 }
