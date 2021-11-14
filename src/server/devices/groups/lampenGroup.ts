@@ -6,15 +6,13 @@ import { iLamp } from '../iLamp';
 
 export class LampenGroup {
   public constructor(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     private _room: RoomBase,
     public Lampen: Array<iLamp>,
     public Stecker: Array<ZigbeeIkeaSteckdose>,
     public LED: Array<ZigbeeIlluLedRGBCCT> = [],
-  ) {
-    for (const lamp of [...Lampen, ...Stecker, ...LED]) {
-      lamp.room = this._room;
-    }
-  }
+  ) {}
 
   public anyLightsOwn(): boolean {
     let i: number;

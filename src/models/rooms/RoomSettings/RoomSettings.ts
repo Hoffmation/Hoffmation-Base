@@ -4,7 +4,7 @@ import { iRoomDefaultSettings } from './iRoomDefaultSettings';
 import { SunTimeOffsets } from '../../../server/services/time-callback-service';
 import { RoomBase } from '../RoomBase';
 import { iTimePair } from '../../../server/config/iConfig';
-import { iRoomInitializationSettings } from '/server/config/private/src/models/rooms/RoomSettings/iRoomInitializationSettings';
+import { iRoomInitializationSettings } from './iRoomInitializationSettings';
 
 export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
   public shortName: string;

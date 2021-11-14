@@ -1,7 +1,7 @@
-import { ServerLogService } from '../../../server/services/log-service';
 import { LogLevel } from '../../logLevel';
 import { RoomAddDeviceItem } from './roomAddDeviceItem';
-import { DeviceType } from '../../../server/devices/deviceType';
+import { DeviceType, ServerLogService } from '../../../server';
+import { RoomBase } from '../RoomBase';
 
 export class RoomDeviceAddingSettings {
   public devices: Array<Array<RoomAddDeviceItem>> = [];
@@ -11,7 +11,7 @@ export class RoomDeviceAddingSettings {
   public addDevice(
     deviceType: DeviceType,
     deviceTypeName: string,
-    setID: (value: string) => void,
+    setID: (value: string) => RoomBase,
     index: number,
     customName: string | undefined = undefined,
   ): void {

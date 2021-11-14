@@ -2,11 +2,7 @@ import { HmIpTaster } from '../hmIPDevices/hmIpTaster';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 
 export class TasterGroup {
-  public constructor(private _room: RoomBase, public Taster: HmIpTaster[]) {
-    for (const t of [...Taster]) {
-      t.room = this._room;
-    }
-  }
+  public constructor(private _room: RoomBase, public Taster: HmIpTaster[]) {}
 
   public initCallbacks(): void {
     this.Taster.forEach((t) => {

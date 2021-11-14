@@ -24,9 +24,10 @@ export class HeatGroup {
     return Math.round((value / this.heaters.length) * 10) / 10;
   }
 
-  public constructor(private _room: RoomBase, public heaters: HmIpHeizgruppe[]) {
-    for (const h of [...heaters]) {
-      h.room = this._room;
-    }
-  }
+  public constructor(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    private _room: RoomBase,
+    public heaters: HmIpHeizgruppe[],
+  ) {}
 }

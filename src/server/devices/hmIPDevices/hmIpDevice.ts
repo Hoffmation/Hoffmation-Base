@@ -3,7 +3,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { RoomBase } from '../../../models/rooms/RoomBase';
+
 import {
   HmIpBewegung,
   HmIpGriff,
@@ -20,7 +20,6 @@ import {
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
-  public room: RoomBase | undefined = undefined;
 
   public static createRespectiveDevice(hmIPInfo: DeviceInfo) {
     let d: HmIPDevice;

@@ -3,16 +3,20 @@ import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { ServerLogService } from '../../services/log-service';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import {
   ZigbeeAquaraMotion,
-  ZigbeeAquaraVibra, ZigbeeAquaraWater, ZigbeeBlitzShp, ZigbeeHeimanSmoke,
-  ZigbeeIkeaSteckdose, ZigbeeIlluActuator, ZigbeeIlluDimmer, ZigbeeIlluLampe,
+  ZigbeeAquaraVibra,
+  ZigbeeAquaraWater,
+  ZigbeeBlitzShp,
+  ZigbeeHeimanSmoke,
+  ZigbeeIkeaSteckdose,
+  ZigbeeIlluActuator,
+  ZigbeeIlluDimmer,
+  ZigbeeIlluLampe,
   ZigbeeIlluLedRGBCCT,
-} from '/server/config/private/src';
+} from '../zigbee';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {
-  public room: RoomBase | undefined = undefined;
   public available: boolean = false;
   public linkQuality: number = 0;
   public battery: number = -1;
@@ -20,7 +24,6 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
-    this.addToCorrectRoom();
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {

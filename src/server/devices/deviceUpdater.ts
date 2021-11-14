@@ -2,7 +2,7 @@ import { LogLevel } from '../../models/logLevel';
 import { ServerLogService } from '../services/log-service';
 import { Devices } from './devices';
 import { IDeviceUpdater } from './iDeviceUpdater';
-import { IoBrokerBaseDevice } from '/server/config/private/src';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;

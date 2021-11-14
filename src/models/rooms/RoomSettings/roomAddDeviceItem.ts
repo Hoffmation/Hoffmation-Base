@@ -1,5 +1,6 @@
 import { LogLevel } from '../../logLevel';
 import { ServerLogService } from '../../../server/services/log-service';
+import { RoomBase } from '../RoomBase';
 
 export class RoomAddDeviceItem {
   private _added: boolean = false;
@@ -15,5 +16,5 @@ export class RoomAddDeviceItem {
     this._added = value;
   }
 
-  constructor(public setID: (value: string) => void, public index: number, public customName: string) {}
+  constructor(public setID: (value: string) => RoomBase, public index: number, public customName: string) {}
 }

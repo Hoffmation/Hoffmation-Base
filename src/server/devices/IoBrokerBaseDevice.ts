@@ -5,9 +5,11 @@ import { LogLevel } from '../../models/logLevel';
 import { RoomDeviceAddingSettings } from '../../models/rooms/RoomSettings/roomDeviceAddingSettings';
 import { RoomAddDeviceItem } from '../../models/rooms/RoomSettings/roomAddDeviceItem';
 import { ServerLogService } from '../services/log-service';
+import { RoomBase } from '../../models';
 
 export abstract class IoBrokerBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
+
   public static addRoom(shortName: string, settings: RoomDeviceAddingSettings): void {
     if (this.roomAddingSettings[shortName] !== undefined) {
       ServerLogService.writeLog(
@@ -25,9 +27,12 @@ export abstract class IoBrokerBaseDevice {
     }
   }
 
-  private _ioConnection?: IOBrokerConnection;
+  public room: RoomBase | undefined = undefined;
+  protected _ioConnection?: IOBrokerConnection;
 
-  protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {}
+  protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {
+    this.addToCorrectRoom();
+  }
 
   /**
    * Getter info
@@ -80,14 +85,12 @@ export abstract class IoBrokerBaseDevice {
       if (deviceSettings.customName !== undefined) {
         this.info.customName = deviceSettings.customName;
       }
-      deviceSettings.setID(this.info.devID);
+      this.room = deviceSettings.setID(this.info.devID);
       deviceSettings.added = true;
       ServerLogService.addedDeviceToRoom(settings.RoomName, this.deviceType, this.info.deviceRoomIndex);
       return;
     }
-    switch (this.info.room) {
-      default:
-        ServerLogService.writeLog(LogLevel.Warn, `${this.info.room} is noch kein bekannter Raum`);
-    }
+
+    ServerLogService.writeLog(LogLevel.Warn, `${this.info.room} is noch kein bekannter Raum`);
   }
 }
