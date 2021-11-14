@@ -20,8 +20,8 @@ export class Griffe {
 
   public static getAllGriffe(): HmIpGriff[] {
     const griffe: HmIpGriff[] = [];
-    for (const dID in Devices.hmIP) {
-      const d = Devices.hmIP[dID];
+    for (const dID in Devices.alLDevices) {
+      const d = Devices.alLDevices[dID];
       if (d.deviceType === DeviceType.HmIpGriff) {
         griffe.push(d as HmIpGriff);
       }

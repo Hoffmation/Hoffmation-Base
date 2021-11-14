@@ -182,8 +182,8 @@ export class TelegramCommands {
         /\/set_vibration_sensitivity/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          for (const id in Devices.Zigbee) {
-            const d = Devices.Zigbee[id];
+          for (const id in Devices.alLDevices) {
+            const d = Devices.alLDevices[id];
             if (d.deviceType === DeviceType.ZigbeeAquaraVibra) {
               (d as ZigbeeAquaraVibra).setSensitivity(2);
             }
@@ -202,8 +202,8 @@ export class TelegramCommands {
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           const response: string[] = ['These are the assignments for all buttons'];
-          for (const id in Devices.hmIP) {
-            const d = Devices.hmIP[id];
+          for (const id in Devices.alLDevices) {
+            const d = Devices.alLDevices[id];
             if (d.deviceType === DeviceType.HmIpTaster) {
               response.push((d as HmIpTaster).getTastenAssignment());
             }

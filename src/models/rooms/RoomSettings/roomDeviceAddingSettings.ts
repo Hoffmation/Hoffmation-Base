@@ -18,7 +18,7 @@ export class RoomDeviceAddingSettings {
       this.devices[deviceType] = [];
     }
     if (customName === undefined) {
-      customName = `${this.RoomName} ${deviceTypeName}`;
+      customName = `${this.RoomName} ${DeviceType[deviceType]}`;
     }
     this.devices[deviceType][index] = new RoomAddDeviceItem(setID, index, customName);
   }

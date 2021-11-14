@@ -93,8 +93,8 @@ export class HmIpHeizgruppe extends HmIPDevice {
 
   public getBelongingHeizungen(): HmIpHeizung[] {
     const result: HmIpHeizung[] = [];
-    for (const dID in Devices.hmIP) {
-      const d = Devices.hmIP[dID];
+    for (const dID in Devices.alLDevices) {
+      const d = Devices.alLDevices[dID];
       if (d.deviceType === DeviceType.HmIpHeizung && d.info.room === this.info.room) {
         result.push(d as HmIpHeizung);
       }

@@ -69,8 +69,8 @@ export class Heizgruppen {
 
   public static getAllGruppen(): HmIpHeizgruppe[] {
     const gruppen: HmIpHeizgruppe[] = [];
-    for (const dID in Devices.hmIP) {
-      const d = Devices.hmIP[dID];
+    for (const dID in Devices.alLDevices) {
+      const d = Devices.alLDevices[dID];
       if (d.deviceType === DeviceType.HmIpHeizgruppe) {
         gruppen.push(d as HmIpHeizgruppe);
       }
@@ -79,8 +79,8 @@ export class Heizgruppen {
   }
 
   public static getSpecificGroup(name: string): HmIpHeizgruppe | undefined {
-    for (const dID in Devices.hmIP) {
-      const d = Devices.hmIP[dID];
+    for (const dID in Devices.alLDevices) {
+      const d = Devices.alLDevices[dID];
       if (d.deviceType === DeviceType.HmIpHeizgruppe && d.info.customName === name) {
         return d as HmIpHeizgruppe;
       }

@@ -37,8 +37,8 @@ export class Rolladen {
 
   public static getAllRollos(): HmIpRoll[] {
     const rollos: HmIpRoll[] = [];
-    for (const dID in Devices.hmIP) {
-      const d = Devices.hmIP[dID];
+    for (const dID in Devices.alLDevices) {
+      const d = Devices.alLDevices[dID];
       if (d.deviceType === DeviceType.HmIpRoll) {
         rollos.push(d as HmIpRoll);
       }
