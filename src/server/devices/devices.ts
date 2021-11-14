@@ -14,8 +14,6 @@ import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
-  public static hmIP: { [id: string]: HmIPDevice } = {};
-  public static Zigbee: { [id: string]: ZigbeeDevice } = {};
   public static alLDevices: { [id: string]: IoBrokerBaseDevice } = {};
 
   public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer: iRoomImportEnforcer) {
@@ -59,8 +57,8 @@ export class Devices {
 
   public static resetPraesenzCount(): void {
     ServerLogService.writeLog(LogLevel.Info, `3 Uhr Reset der Präsenzmelder`);
-    for (const dID in Devices.hmIP) {
-      const d = Devices.hmIP[dID];
+    for (const dID in Devices.alLDevices) {
+      const d = Devices.alLDevices[dID];
       if (d.deviceType === DeviceType.HmIpPraezenz) {
         ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
         (d as HmIpPraezenz).detectionsToday = 0;
@@ -83,8 +81,8 @@ export class Devices {
       LogLevel.Trace,
       `${zigbeeInfo.devID} with Type "${zigbeeInfo.deviceType}" doesn't exists --> create it`,
     );
-    Devices.alLDevices[`${Devices.IDENTIFIER_ZIGBEE}-${zigbeeInfo.devID}`] =
-      ZigbeeDevice.createRespectiveDevice(zigbeeInfo);
+    Devices.alLDevices[fullName] = ZigbeeDevice.createRespectiveDevice(zigbeeInfo);
+    Devices.alLDevices[fullName].allDevicesKey = fullName;
   }
 
   private processHMIPDevice(cDevConf: deviceConfig) {
@@ -100,5 +98,6 @@ export class Devices {
     );
     const d: HmIPDevice = HmIPDevice.createRespectiveDevice(hmIPInfo);
     Devices.alLDevices[fullName] = d;
+    Devices.alLDevices[fullName].allDevicesKey = fullName;
   }
 }

@@ -10,7 +10,6 @@ export class RoomDeviceAddingSettings {
 
   public addDevice(
     deviceType: DeviceType,
-    deviceTypeName: string,
     setID: (value: string) => RoomBase,
     index: number,
     customName: string | undefined = undefined,
