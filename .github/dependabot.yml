@@ -10,16 +10,6 @@ updates:
     directory: "/" # Location of package manifests
     open-pull-requests-limit: 40
     schedule:
-      interval: "weekly"
-      # Check for npm updates on Sundays
-      day: "friday"
-      time: "21:30"
-    labels:
-      - "NPM - "
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    open-pull-requests-limit: 40
-    schedule:
       interval: "daily"
       time: "21:30"
     labels:
