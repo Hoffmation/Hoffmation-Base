@@ -32,7 +32,7 @@
     "@types/node": "^16.10.2",
     "@types/socket.io-client": "^1.4.36",
     "@types/lodash": "^4.14.177",
-    "@types/ws": "^7.4.7",
+    "@types/ws": "^8.2.1",
     "@types/node-fetch": "^3.0.3",
     "@babel/runtime": "^7.15.4",
     "@svrooij/sonos": "^2.4.1",
