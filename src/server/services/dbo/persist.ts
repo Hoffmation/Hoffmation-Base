@@ -35,23 +35,21 @@ export class Persist {
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${hzGrp.info.customName}`);
     this.TemperatureHistoryCollection.insertOne(dataPoint);
 
-    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, dataPoint, { upsert: true });
+    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, { $set: dataPoint }, { upsert: true });
   }
 
   public static addRoom(room: RoomBase): void {
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Room for ${room.roomName}`);
     this.BasicRoomCollection.updateOne(
       { roomName: room.roomName },
-      new BasicRoomInfo(room.roomName, room.Settings.etage),
-      {
-        upsert: true,
-      },
+      { $set: new BasicRoomInfo(room.roomName, room.Settings.etage) },
+      { upsert: true },
     );
     const detailed = new RoomDetailInfo(room.roomName, room.Settings.etage);
     for (const h of room.HeatGroup.heaters) {
       detailed.heaters.push(h.info.customName);
     }
-    this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, detailed, { upsert: true });
+    this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true });
   }
 
   public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
@@ -93,7 +91,7 @@ export class Persist {
   public static persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
     const result = this.CountTodayCollection.updateOne(
       { deviceID: device.info.fullID },
-      new CountToday(device.info.fullID, count),
+      { $set: new CountToday(device.info.fullID, count) },
       { upsert: true },
     );
     if (count === 0) {
@@ -101,7 +99,7 @@ export class Persist {
       date.setHours(-24, 0, 0, 0);
       const result2 = this.DailyMovementCountTodayCollection.updateOne(
         { deviceID: device.info.fullID, date: date },
-        new DailyMovementCount(device.info.fullID, oldCount, device.info.room, date),
+        { $set: new DailyMovementCount(device.info.fullID, oldCount, device.info.room, date) },
         { upsert: true },
       );
       ServerLogService.writeLog(
@@ -116,9 +114,11 @@ export class Persist {
   }
 
   public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
-    const result = this.CurrentIlluminationCollection.updateOne({ deviceID: data.deviceID, date: data.date }, data, {
-      upsert: true,
-    });
+    const result = this.CurrentIlluminationCollection.updateOne(
+      { deviceID: data.deviceID, date: data.date },
+      { $set: data },
+      { upsert: true },
+    );
     ServerLogService.writeLog(
       LogLevel.Trace,
       `Persisting Illumination Data for ${data.deviceID} to ${data.currentIllumination} resolved with "${result}"`,
