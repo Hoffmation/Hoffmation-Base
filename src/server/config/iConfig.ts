@@ -2,6 +2,7 @@ import { LogLevel } from '../../models/logLevel';
 import { iRoomDefaultSettings } from '../../models/rooms/RoomSettings/iRoomDefaultSettings';
 
 export interface iConfig {
+  expressPort?: number;
   roomDefault: iRoomDefaultSettings;
   timeSettings: iTimeSettings;
   ioBrokerUrl: string;

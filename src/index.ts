@@ -1,4 +1,5 @@
 import { LogLevel } from './models';
+import { Express } from 'express';
 import {
   ServerLogService,
   Devices,
@@ -25,15 +26,17 @@ export * from './models/index';
 export * from './server/index';
 
 export class HoffmationInitializationObject {
-  public constructor(public config: iConfig) {}
+  public constructor(public config: iConfig, public readonly app: Express) {}
 }
 
 export class HoffmationBase {
   public static ioMain: ioBrokerMain;
+  private static _app: Express;
   public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
     SettingsService.initialize(initObject.config);
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     await Persist.initialize(initObject.config.persistence);
+    this._app = initObject.app;
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);
       new MP3Server(SettingsService.settings.mp3Server);
@@ -72,6 +75,16 @@ export class HoffmationBase {
       }
     });
     if (SettingsService.TelegramActive) TelegramService.publishCommands();
+
+    if (SettingsService.settings.expressPort) {
+      this._app.get('/isAlive', (_req, res) => {
+        res.send(`Hoffmation-Base active ${new Date()}`);
+      });
+
+      this._app.listen(SettingsService.settings.expressPort, () => {
+        console.log(`Example app listening at http://localhost:${SettingsService.settings.expressPort}`);
+      });
+    }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations finished`);
   }
 
