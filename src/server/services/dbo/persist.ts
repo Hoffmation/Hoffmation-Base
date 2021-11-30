@@ -1,6 +1,6 @@
 import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
 import { RoomBase } from '../../../models/rooms/RoomBase';
-import { Db, MongoClient, Collection, FindOptions } from 'mongodb';
+import { Collection, Db, FindOptions, MongoClient } from 'mongodb';
 import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
 import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
 import { CountToday } from '../../../models/persistence/todaysCount';
@@ -33,9 +33,13 @@ export class Persist {
       new Date(),
     );
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${hzGrp.info.customName}`);
-    this.TemperatureHistoryCollection.insertOne(dataPoint);
+    this.TemperatureHistoryCollection.insertOne(dataPoint).catch((r) => {
+      this.handleReject(r, 'TemperatureHistoryCollection.insertOne');
+    });
 
-    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, { $set: dataPoint }, { upsert: true });
+    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, { $set: dataPoint }, { upsert: true }).catch((r) => {
+      this.handleReject(r, 'HeatGroupCollection.updateOne');
+    });
   }
 
   public static addRoom(room: RoomBase): void {
@@ -44,12 +48,18 @@ export class Persist {
       { roomName: room.roomName },
       { $set: new BasicRoomInfo(room.roomName, room.Settings.etage) },
       { upsert: true },
-    );
+    ).catch((r) => {
+      this.handleReject(r, 'BasicRoomCollection.updateOne');
+    });
     const detailed = new RoomDetailInfo(room.roomName, room.Settings.etage);
     for (const h of room.HeatGroup.heaters) {
       detailed.heaters.push(h.info.customName);
     }
-    this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true });
+    this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
+      (r) => {
+        this.handleReject(r, 'RoomDetailsCollection.updateOne');
+      },
+    );
   }
 
   public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
@@ -101,7 +111,9 @@ export class Persist {
         { deviceID: device.info.fullID, date: date },
         { $set: new DailyMovementCount(device.info.fullID, oldCount, device.info.room, date) },
         { upsert: true },
-      );
+      ).catch((r) => {
+        this.handleReject(r, 'DailyMovementCountTodayCollection.updateOne');
+      });
       ServerLogService.writeLog(
         LogLevel.Trace,
         `Persisting Daily Movement Count for ${device.info.customName} to ${oldCount} resolved with "${result2}"`,
@@ -118,7 +130,9 @@ export class Persist {
       { deviceID: data.deviceID, date: data.date },
       { $set: data },
       { upsert: true },
-    );
+    ).catch((r) => {
+      this.handleReject(r, 'persistCurrentIllumination');
+    });
     ServerLogService.writeLog(
       LogLevel.Trace,
       `Persisting Illumination Data for ${data.deviceID} to ${data.currentIllumination} resolved with "${result}"`,
@@ -142,5 +156,10 @@ export class Persist {
     });
 
     return result;
+  }
+
+  private static handleReject(reason: any, func: string) {
+    ServerLogService.writeLog(LogLevel.Warn, `Error persisting data for "${func}"`);
+    ServerLogService.writeLog(LogLevel.Debug, `Persisting Error reason: "${reason}"`);
   }
 }
