@@ -20,9 +20,7 @@ updates:
     directory: "/" # Location of package manifests
     open-pull-requests-limit: 40
     schedule:
-      interval: "weekly"
-      # Check for npm updates on Sundays
-      day: "tuesday"
+      interval: "daily"
       time: "21:30"
     labels:
       - "NPM - "
