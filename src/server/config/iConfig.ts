@@ -6,6 +6,7 @@ export interface iConfig {
   timeSettings: iTimeSettings;
   ioBrokerUrl: string;
   telegram?: iTelegramSettings;
+  persistence: iPersistenceSettings;
   polly?: iPollySettings;
   mp3Server?: iMp3Settings;
   weather?: iWeatherSettings;
@@ -27,6 +28,11 @@ export interface iTelegramSettings {
   telegramToken: string;
   allowedIDs: number[];
   subscribedIDs: number[];
+}
+
+export interface iPersistenceSettings {
+  mongoConnection: string;
+  mongoDbName: string;
 }
 
 export interface iPollySettings {

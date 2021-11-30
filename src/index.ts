@@ -25,19 +25,15 @@ export * from './models/index';
 export * from './server/index';
 
 export class HoffmationInitializationObject {
-  public constructor(
-    public config: iConfig,
-    public meteorBound: (callback: any) => void,
-    public mongo: { Collection: Mongo.CollectionStatic },
-  ) {}
+  public constructor(public config: iConfig) {}
 }
 
 export class HoffmationBase {
   public static ioMain: ioBrokerMain;
-  public static initializeBeforeIoBroker(initObject: HoffmationInitializationObject): void {
+  public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
     SettingsService.initialize(initObject.config);
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
-    Persist.initialize(initObject.meteorBound, initObject.mongo);
+    await Persist.initialize(initObject.config.persistence);
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);
       new MP3Server(SettingsService.settings.mp3Server);
