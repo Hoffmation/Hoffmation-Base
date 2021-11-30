@@ -37,9 +37,20 @@ export class Persist {
       this.handleReject(r, 'TemperatureHistoryCollection.insertOne');
     });
 
-    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, { $set: dataPoint }, { upsert: true }).catch((r) => {
-      this.handleReject(r, 'HeatGroupCollection.updateOne');
-    });
+    // Needs to be duplicated as the object "dataPoint" is an document now
+    const heatGroupDataPoint: TemperaturDataPoint = new TemperaturDataPoint(
+      hzGrp.info.customName,
+      hzGrp.iTemperatur,
+      hzGrp.desiredTemperatur,
+      hzGrp.iLevel,
+      hzGrp.humidity,
+      new Date(),
+    );
+    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, { $set: heatGroupDataPoint }, { upsert: true }).catch(
+      (r) => {
+        this.handleReject(r, 'HeatGroupCollection.updateOne');
+      },
+    );
   }
 
   public static addRoom(room: RoomBase): void {
