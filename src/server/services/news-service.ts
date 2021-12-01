@@ -43,6 +43,7 @@ export class NewsService {
             ServerLogService.writeLog(LogLevel.Debug, `Wir haben bereits die neuste WDR Nachrichten heruntergeladen.`);
             return;
           }
+          // Fixme Personal Path
           HTTPSService.downloadFile(target, `//HOMESERVER/Users/Public/Documents/ttsMP3/${fileName}`).then(
             (success: boolean) => {
               if (!success) {
