@@ -195,4 +195,25 @@ export class Devices {
     }
     Devices.alLDevices[fullName] = d;
   }
+
+  public static getBatteryInfo() {
+    const data: Array<{ name: string; amount: number }> = [];
+    const result: string[] = [
+      `These are the battery values for each device. Device dependandt some are in volts, some in %`,
+    ];
+    for (const key in this.alLDevices) {
+      const d: IoBrokerBaseDevice = this.alLDevices[key];
+      if (d.battery !== undefined) {
+        data.push({ name: d.info.customName, amount: d.battery });
+      }
+    }
+    data
+      .sort((a: { name: string; amount: number }, b: { name: string; amount: number }) => {
+        return a.amount - b.amount;
+      })
+      .forEach((e: { name: string; amount: number }) => {
+        result.push(`${e.amount}\t${e.name}`);
+      });
+    return result.join('\n');
+  }
 }

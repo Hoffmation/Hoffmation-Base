@@ -7,7 +7,6 @@ import { DeviceInfo } from '../DeviceInfo';
 export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;
   public linkQuality: number = 0;
-  public battery: number = -1;
   public voltage: string = '';
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {

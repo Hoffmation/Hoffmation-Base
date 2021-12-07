@@ -28,6 +28,7 @@ export abstract class IoBrokerBaseDevice {
   }
 
   public room: RoomBase | undefined = undefined;
+  public battery: number | undefined;
   protected _ioConnection?: IOBrokerConnection;
 
   protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {

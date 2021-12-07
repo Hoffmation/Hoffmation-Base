@@ -124,6 +124,19 @@ export class TelegramCommands {
 
     TelegramService.addMessageCallback(
       new TelegramMessageCallback(
+        'BatteryCheck',
+        /\/check_battery/,
+        async (m: TelegramBot.Message): Promise<boolean> => {
+          if (m.from === undefined) return false;
+          TelegramService.sendMessage([m.from.id], Devices.getBatteryInfo());
+          return true;
+        },
+        'Returns a list of all battery driven devices in ascending order.',
+      ),
+    );
+
+    TelegramService.addMessageCallback(
+      new TelegramMessageCallback(
         'HeizungCheck',
         /\/check_temperatur/,
         async (m: TelegramBot.Message): Promise<boolean> => {

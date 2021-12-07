@@ -32,6 +32,9 @@ export class HmIPDevice extends IoBrokerBaseDevice {
     }
 
     switch (idSplit[4]) {
+      case 'OPERATING_VOLTAGE':
+        this.battery = state.val as number;
+        break;
       case 'LOW_BAT':
         const newBatLowVal: boolean = state.val as boolean;
         if (newBatLowVal) {
