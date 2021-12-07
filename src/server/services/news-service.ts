@@ -54,7 +54,10 @@ export class NewsService {
               NewsService.lastNewsName = fileName.split('.mp3')[0];
             })
             .catch((reason: Error) => {
-              ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der WDR Antwort Error: ${e}`);
+              ServerLogService.writeLog(
+                LogLevel.Error,
+                `Fehler beim Herunterladen der WDR Antwort Error: ${reason.message}`,
+              );
             });
         } catch (e) {
           ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Parsen der WDR Antwort Error: ${e}`);
