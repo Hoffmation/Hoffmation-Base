@@ -57,8 +57,10 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations`);
     if (SettingsService.TelegramActive) TelegramCommands.initialize();
 
-    SonosService.addOwnDevices(OwnSonosDevices.ownDevices);
-    SonosService.initialize();
+    if (SettingsService.settings.sonos?.active) {
+      SonosService.addOwnDevices(OwnSonosDevices.ownDevices);
+      SonosService.initialize();
+    }
 
     Utils.guardedNewThread(() => {
       if (SettingsService.settings.muell) {

@@ -1,17 +1,22 @@
 import { LogLevel } from '../../models/logLevel';
 import { iRoomDefaultSettings } from '../../models/rooms/RoomSettings/iRoomDefaultSettings';
 
+interface iSonosSettings {
+  active: boolean;
+}
+
 export interface iConfig {
   expressPort?: number;
-  roomDefault: iRoomDefaultSettings;
-  timeSettings: iTimeSettings;
   ioBrokerUrl: string;
-  telegram?: iTelegramSettings;
+  mp3Server?: iMp3Settings;
+  muell?: iMuellSettings;
   persistence: iPersistenceSettings;
   polly?: iPollySettings;
-  mp3Server?: iMp3Settings;
+  roomDefault: iRoomDefaultSettings;
+  sonos?: iSonosSettings;
+  telegram?: iTelegramSettings;
+  timeSettings: iTimeSettings;
   weather?: iWeatherSettings;
-  muell?: iMuellSettings;
 }
 
 export interface iTimePair {
@@ -47,6 +52,7 @@ export interface iPollySettings {
 
 export interface iMp3Settings {
   path: string;
+  serverAddress: string;
 }
 
 export interface iWeatherSettings {

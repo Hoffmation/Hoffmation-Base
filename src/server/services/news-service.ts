@@ -17,6 +17,7 @@ export class NewsService {
     NewsService.hourlyInterval = Utils.guardedInterval(NewsService.getLastNews, 3600000);
     NewsService.getLastNews();
   }
+
   public static stopHourlyInterval(): void {
     if (this.hourlyInterval !== undefined) {
       clearInterval(this.hourlyInterval);
@@ -43,17 +44,14 @@ export class NewsService {
             ServerLogService.writeLog(LogLevel.Debug, `Wir haben bereits die neuste WDR Nachrichten heruntergeladen.`);
             return;
           }
-          // Fixme Personal Path
-          HTTPSService.downloadFile(target, `//HOMESERVER/Users/Public/Documents/ttsMP3/${fileName}`).then(
-            (success: boolean) => {
-              if (!success) {
-                ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der Nachrichten von WDR`);
-                return;
-              }
+          HTTPSService.downloadFile(target, filePath).then((success: boolean) => {
+            if (!success) {
+              ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der Nachrichten von WDR`);
+              return;
+            }
 
-              NewsService.lastNewsName = fileName.split('.mp3')[0];
-            },
-          );
+            NewsService.lastNewsName = fileName.split('.mp3')[0];
+          });
         } catch (e) {
           ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Parsen der WDR Antwort Error: ${e}`);
           return;

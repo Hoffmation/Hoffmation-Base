@@ -7,6 +7,7 @@ import { PollyService } from './polly-service';
 import { TelegramService } from '../Telegram/telegram-service';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../time-callback-service';
+import { SettingsService } from '../settings-service';
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;
@@ -35,6 +36,9 @@ export class SonosService {
   }
 
   public static initialize(reinitialize: boolean = false): void {
+    if (SettingsService.settings.mp3Server?.serverAddress === undefined) {
+      ServerLogService.writeLog(LogLevel.Alert, `SonosService needs properly configured mp3Server.`);
+    }
     ServerLogService.writeLog(LogLevel.Debug, `Initialisiere Sonos Service`);
     if (!reinitialize) {
       this.checkTimeCallback = new TimeCallback(
@@ -126,7 +130,10 @@ export class SonosService {
   ): void {
     const specificTimeout: number = Math.ceil(duration / 1000) + 5;
     const options: PlayNotificationOptions = {
-      trackUri: `http://192.168.178.13:8081/file.mp3?fname=${mp3Name}`,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      catchQueueErrors: true,
+      trackUri: `${SettingsService.settings.mp3Server}/file.mp3?fname=${mp3Name}`,
       delayMs: 750,
       onlyWhenPlaying: onlyWhenPlaying,
       resolveAfterRevert: resolveAfterRevert,
