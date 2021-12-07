@@ -197,7 +197,8 @@ export class Devices {
   }
 
   public static getBatteryInfo(): string {
-    const data: Array<{ name: string; amount: number }> = [];
+    ServerLogService.writeLog(LogLevel.Info, `Getting Battery Info`);
+    let data: Array<{ name: string; amount: number }> = [];
     const result: string[] = [
       `These are the battery values for each device. Device dependandt some are in volts, some in %`,
     ];
@@ -207,13 +208,12 @@ export class Devices {
         data.push({ name: d.info.customName, amount: d.battery });
       }
     }
-    data
-      .sort((a: { name: string; amount: number }, b: { name: string; amount: number }) => {
-        return a.amount - b.amount;
-      })
-      .forEach((e: { name: string; amount: number }) => {
-        result.push(`${e.amount}\t${e.name}`);
-      });
+    data = data.sort((a: { name: string; amount: number }, b: { name: string; amount: number }) => {
+      return a.amount - b.amount;
+    });
+    for (let i = 0; i < data.length; i++) {
+      result.push(`${data[i].amount}\t${data[i].name}`);
+    }
     return result.join('\n');
   }
 }
