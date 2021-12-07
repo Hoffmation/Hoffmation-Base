@@ -2,6 +2,12 @@ import { ServerLogService } from '../server/services/log-service';
 import { SunTimeOffsets, TimeCallbackService } from '../server/services/time-callback-service';
 import { LogLevel } from './logLevel';
 
+export enum TimeCallbackType {
+  TimeOfDay = 1,
+  Sunrise = 2,
+  SunSet = 3,
+}
+
 export class TimeCallback {
   public lastDone: Date = new Date(0);
   public nextToDo?: Date;
@@ -81,10 +87,4 @@ export class TimeCallback {
         break;
     }
   }
-}
-
-export enum TimeCallbackType {
-  TimeOfDay = 1,
-  Sunrise = 2,
-  SunSet = 3,
 }
