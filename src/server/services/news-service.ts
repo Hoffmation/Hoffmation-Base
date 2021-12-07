@@ -44,14 +44,18 @@ export class NewsService {
             ServerLogService.writeLog(LogLevel.Debug, `Wir haben bereits die neuste WDR Nachrichten heruntergeladen.`);
             return;
           }
-          HTTPSService.downloadFile(target, filePath).then((success: boolean) => {
-            if (!success) {
-              ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der Nachrichten von WDR`);
-              return;
-            }
+          HTTPSService.downloadFile(target, filePath)
+            .then((success: boolean) => {
+              if (!success) {
+                ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der Nachrichten von WDR`);
+                return;
+              }
 
-            NewsService.lastNewsName = fileName.split('.mp3')[0];
-          });
+              NewsService.lastNewsName = fileName.split('.mp3')[0];
+            })
+            .catch((reason: Error) => {
+              ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der WDR Antwort Error: ${e}`);
+            });
         } catch (e) {
           ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Parsen der WDR Antwort Error: ${e}`);
           return;

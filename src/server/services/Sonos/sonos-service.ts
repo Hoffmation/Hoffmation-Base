@@ -128,12 +128,16 @@ export class SonosService {
     onlyWhenPlaying: boolean | undefined = undefined,
     resolveAfterRevert: boolean | undefined = false,
   ): void {
+    if (SettingsService.settings.mp3Server?.serverAddress === undefined) {
+      ServerLogService.writeLog(LogLevel.Alert, `Sonos: Can't speak as we have no mp3Server`);
+      return;
+    }
     const specificTimeout: number = Math.ceil(duration / 1000) + 5;
     const options: PlayNotificationOptions = {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       catchQueueErrors: true,
-      trackUri: `${SettingsService.settings.mp3Server}/file.mp3?fname=${mp3Name}`,
+      trackUri: `${SettingsService.settings.mp3Server?.serverAddress}/file.mp3?fname=${mp3Name}`,
       delayMs: 750,
       onlyWhenPlaying: onlyWhenPlaying,
       resolveAfterRevert: resolveAfterRevert,

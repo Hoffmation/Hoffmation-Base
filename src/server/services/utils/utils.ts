@@ -2,6 +2,18 @@ import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models/logLevel';
 
 export class Utils {
+  public static async catchEm<T>(promise: Promise<T>): Promise<{ reason: Error | null; data: T | null }> {
+    return promise
+      .then((data: T) => ({
+        reason: null,
+        data,
+      }))
+      .catch((reason: Error) => ({
+        reason,
+        data: null,
+      }));
+  }
+
   public static guardedFunction(func: (...args: unknown[]) => void, thisContext: unknown | undefined): void {
     try {
       if (thisContext) {
