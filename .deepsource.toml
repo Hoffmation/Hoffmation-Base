@@ -1,0 +1,12 @@
+version = 1
+
+test_patterns = ["/src/*.ts"]
+
+exclude_patterns = [
+  "*.js",
+  "*.d.ts"
+]
+
+[[analyzers]]
+name = "javascript"
+enabled = true
