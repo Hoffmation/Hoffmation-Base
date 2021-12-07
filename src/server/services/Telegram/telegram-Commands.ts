@@ -127,9 +127,9 @@ export class TelegramCommands {
         'BatteryCheck',
         /\/check_battery/,
         async (m: TelegramBot.Message): Promise<boolean> => {
-          if (m.from === undefined) return false;
+          if (m.from === undefined) return Promise.resolve(false);
           TelegramService.sendMessage([m.from.id], Devices.getBatteryInfo());
-          return true;
+          return Promise.resolve(true);
         },
         'Returns a list of all battery driven devices in ascending order.',
       ),

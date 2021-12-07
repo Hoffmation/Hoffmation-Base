@@ -196,7 +196,7 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
-  public static getBatteryInfo() {
+  public static getBatteryInfo(): string {
     const data: Array<{ name: string; amount: number }> = [];
     const result: string[] = [
       `These are the battery values for each device. Device dependandt some are in volts, some in %`,
