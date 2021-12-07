@@ -15,7 +15,7 @@ export class Fenster {
    * sets the desired Pos and moves rollo to this level
    * @param {number} value
    */
-  public setDesiredPosition(value: number): void  {
+  public setDesiredPosition(value: number): void {
     this.desiredPosition = value;
     this.restoreDesiredPosition();
   }
@@ -108,7 +108,7 @@ export class Fenster {
     }
   }
 
-  public restoreDesiredPosition(): void  {
+  public restoreDesiredPosition(): void {
     this.rollo?.setLevel(this.desiredPosition);
   }
 }

@@ -50,14 +50,21 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpBewegung);
-    Persist.getCount(this).then((todayCount: CountToday) => {
-      this.detectionsToday = todayCount.counter;
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
-      );
-      this.initialized = true;
-    });
+    Persist.getCount(this)
+      .then((todayCount: CountToday) => {
+        this.detectionsToday = todayCount.counter;
+        ServerLogService.writeLog(
+          LogLevel.Debug,
+          `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
+        );
+        this.initialized = true;
+      })
+      .catch((err: Error) => {
+        ServerLogService.writeLog(
+          LogLevel.Warn,
+          `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
+        );
+      });
   }
 
   public addMovementCallback(pCallback: (pValue: boolean) => void): void {

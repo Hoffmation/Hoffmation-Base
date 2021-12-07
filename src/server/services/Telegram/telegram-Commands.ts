@@ -223,7 +223,7 @@ export class TelegramCommands {
           if (m.from === undefined) return false;
           SonosService.speakTestMessageOnEachDevice();
           TelegramService.sendMessage([m.from.id], 'Testnachricht gesprochen --> Führe weiteren Test durch');
-          SonosService.checkAll();
+          await SonosService.checkAll();
           return true;
         },
         `Spiele eine kurze Nachricht auf allen Sonos Geräten um diese zu identifizieren`,

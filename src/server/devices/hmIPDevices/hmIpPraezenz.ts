@@ -34,6 +34,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public get currentIllumination(): number {
     return this._currentIllumination;
   }
+
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
     Persist.persistCurrentIllumination(
@@ -50,14 +51,21 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
-    Persist.getCount(this).then((todayCount: CountToday) => {
-      this.detectionsToday = todayCount.counter;
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `Präsenzcounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
-      );
-      this.initialized = true;
-    });
+    Persist.getCount(this)
+      .then((todayCount: CountToday) => {
+        this.detectionsToday = todayCount.counter;
+        ServerLogService.writeLog(
+          LogLevel.Debug,
+          `Präsenzcounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
+        );
+        this.initialized = true;
+      })
+      .catch((err: Error) => {
+        ServerLogService.writeLog(
+          LogLevel.Warn,
+          `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
+        );
+      });
   }
 
   public addPresenceCallback(pCallback: (pValue: boolean) => void): void {

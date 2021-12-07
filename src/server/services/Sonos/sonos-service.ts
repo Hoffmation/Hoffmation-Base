@@ -11,7 +11,7 @@ import { SettingsService } from '../settings-service';
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;
-  public playTestMessage(): void  {
+  public playTestMessage(): void {
     SonosService.speakOnDevice(`Ich bin ${this.name}`, this);
   }
   public constructor(public name: string, public roomName: string, public device: SonosDevice | undefined) {}
@@ -45,7 +45,7 @@ export class SonosService {
         'SonosFunctionallityChecker',
         TimeCallbackType.TimeOfDay,
         () => {
-          this.checkAll();
+          void this.checkAll();
         },
         0,
         23,

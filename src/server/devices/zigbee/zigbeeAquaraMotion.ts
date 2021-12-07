@@ -84,14 +84,21 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
 
     this.occupancyTimeoutID = `${this.info.fullID}.${this.occupancyTimeoutID}`;
 
-    Persist.getCount(this).then((todayCount: CountToday) => {
-      this.detectionsToday = todayCount.counter;
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
-      );
-      this._initialized = true;
-    });
+    Persist.getCount(this)
+      .then((todayCount: CountToday) => {
+        this.detectionsToday = todayCount.counter;
+        ServerLogService.writeLog(
+          LogLevel.Debug,
+          `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
+        );
+        this._initialized = true;
+      })
+      .catch((err: Error) => {
+        ServerLogService.writeLog(
+          LogLevel.Warn,
+          `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
+        );
+      });
   }
 
   public addMovementCallback(pCallback: (pValue: boolean) => void): void {
