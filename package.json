@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
-    "lint-fix-all": "eslint ./**/{*.ts,*.js} --fix --no-error-on-unmatched-pattern",
+    "lint-check-all": "eslint ./**/{*.js,*.ts} --no-error-on-unmatched-pattern",
+    "lint-fix-all": "eslint ./**/{*.ts} --fix --no-error-on-unmatched-pattern",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "test": "npm run lint-check-all"
   },
   "dependencies": {
     "@types/debug": "^4.1.7",
