@@ -43,10 +43,6 @@ export class HmIpHeizgruppe extends HmIPDevice {
     return this._temperatur;
   }
 
-  public get desiredTemperatur(): number {
-    return this._desiredTemperatur;
-  }
-
   public get humidity(): number {
     return this._humidity;
   }
@@ -56,6 +52,10 @@ export class HmIpHeizgruppe extends HmIPDevice {
     for (const cb of this._humidityCallbacks) {
       cb(val);
     }
+  }
+
+  public get desiredTemperatur(): number {
+    return this._desiredTemperatur;
   }
 
   public set desiredTemperatur(val: number) {

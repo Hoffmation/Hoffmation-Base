@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
-    "lint-fix-all": "eslint ./**/{*.ts,*.js} --fix --no-error-on-unmatched-pattern",
+    "lint-check-all": "eslint ./**/{*.js,*.ts} --no-error-on-unmatched-pattern",
+    "lint-fix-all": "eslint ./**/{*.ts} --fix --no-error-on-unmatched-pattern",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "test": "npm run lint-check-all"
   },
   "dependencies": {
     "@types/debug": "^4.1.7",
@@ -33,14 +35,14 @@
     "@types/socket.io-client": "^1.4.36",
     "@babel/runtime": "^7.16.3",
     "@svrooij/sonos": "^2.4.1",
-    "aws-sdk": "2.1044.0",
+    "aws-sdk": "2.1046.0",
     "express": "^4.17.1",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
     "mongodb": "^4.2.1",
     "node-ical": "^0.14.1",
     "node-fetch": "3.1.0",
-    "node-telegram-bot-api": "^0.54.0",
+    "node-telegram-bot-api": "^0.55.0",
     "socket.io-client": "2.4.x",
     "sunrise-sunset-js": "^2.2.1"
   },

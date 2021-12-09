@@ -108,6 +108,7 @@ export class TelegramService {
       console.log(`Telegram message ${message} wasn't send as TelegramService is inactive`);
       return;
     }
+
     const chunksNeeded: number = Math.ceil(message.length / 4095);
     for (let i = 0; i < chunksNeeded; i++) {
       for (const id of ids) {
