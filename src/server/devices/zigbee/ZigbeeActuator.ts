@@ -58,7 +58,6 @@ export class ZigbeeActuator extends ZigbeeDevice {
       return;
     }
 
-
     if (!force && pValue === this.actuatorOn && this.queuedValue === null) {
       ServerLogService.writeLog(
         LogLevel.Debug,

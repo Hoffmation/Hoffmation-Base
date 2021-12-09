@@ -84,10 +84,7 @@ export class HmIpRoll extends HmIPDevice {
       return;
     }
     if (this._setLevelSwitchID === '') {
-      ServerLogService.writeLog(
-        LogLevel.Error,
-        `Keine Switch ID für "${this.info.customName}" bekannt.`,
-      );
+      ServerLogService.writeLog(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
