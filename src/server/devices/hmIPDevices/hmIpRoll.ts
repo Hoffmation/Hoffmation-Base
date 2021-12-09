@@ -84,12 +84,11 @@ export class HmIpRoll extends HmIPDevice {
       return;
     }
     if (this._setLevelSwitchID === '') {
-      console.error(`Keine Switch ID für "${this.info.customName}" bekannt.`);
+      ServerLogService.writeLog(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
-    if (!this.ioConn) {
-      console.error(`Keine Connection für "${this.info.customName}" bekannt.`);
+    if (!this.checkIoConnection(true)) {
       return;
     }
 
@@ -116,7 +115,7 @@ export class HmIpRoll extends HmIPDevice {
 
     this._setLevel = pPosition;
     ServerLogService.writeLog(LogLevel.Debug, `Fahre Rollo "${this.info.customName}" auf Position ${pPosition}`);
-    this.ioConn.setState(this._setLevelSwitchID, pPosition);
+    this.setState(this._setLevelSwitchID, pPosition);
   }
 
   public down(initial: boolean = false): void {

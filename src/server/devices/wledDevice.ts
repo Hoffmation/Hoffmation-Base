@@ -57,22 +57,19 @@ export class WledDevice extends IoBrokerBaseDevice {
     if (pValue && brightness === -1 && this.brightness < 10) {
       brightness = 10;
     }
+
     ServerLogService.writeLog(
       LogLevel.Debug,
       `WLED Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%`,
     );
 
-    this.ioConn.setState(this._onID, pValue, (err) => {
-      if (err) {
-        ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
-      }
+    this.setState(this._onID, pValue, undefined, (err) => {
+      ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
     });
 
     if (brightness > -1) {
-      this.ioConn.setState(this._brightnessID, brightness, (err) => {
-        if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
-        }
+      this.setState(this._brightnessID, brightness, undefined, (err) => {
+        ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
       });
     }
   }

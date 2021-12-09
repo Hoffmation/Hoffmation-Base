@@ -58,11 +58,6 @@ export class ZigbeeActuator extends ZigbeeDevice {
       return;
     }
 
-    if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
-      return;
-    }
-
     if (!force && pValue === this.actuatorOn && this.queuedValue === null) {
       ServerLogService.writeLog(
         LogLevel.Debug,
@@ -72,10 +67,8 @@ export class ZigbeeActuator extends ZigbeeDevice {
     }
 
     ServerLogService.writeLog(LogLevel.Debug, `Stecker schalten: "${this.info.customName}" Wert: ${pValue}`);
-    this.ioConn.setState(this.actuatorOnSwitchID, pValue, (err) => {
-      if (err) {
-        console.log(`Stecker schalten ergab Fehler: ${err}`);
-      }
+    this.setState(this.actuatorOnSwitchID, pValue, undefined, (err) => {
+      console.log(`Stecker schalten ergab Fehler: ${err}`);
     });
     this.queuedValue = pValue;
 
