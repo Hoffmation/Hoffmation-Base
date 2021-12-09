@@ -55,11 +55,6 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
       return;
     }
 
-    if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
-      return;
-    }
-
     if (!force && Utils.nowMS() < this.turnOffTime) {
       ServerLogService.writeLog(
         LogLevel.Debug,
@@ -71,10 +66,8 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     }
 
     ServerLogService.writeLog(LogLevel.Debug, `Lampe schalten: "${this.info.customName}" Wert: ${pValue}`);
-    this.ioConn.setState(this.lightOnSwitchID, pValue, (err) => {
-      if (err) {
-        ServerLogService.writeLog(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
-      }
+    this.setState(this.lightOnSwitchID, pValue, undefined, (err) => {
+      ServerLogService.writeLog(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
     this.queuedLightValue = pValue;
 

@@ -138,19 +138,12 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
       return;
     }
 
-    if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
-      return;
-    }
-
     ServerLogService.writeLog(
       LogLevel.Debug,
       `Vibration Sensitivität schalten: "${this.info.customName}" Wert: ${result}`,
     );
-    this.ioConn.setState(this._idSensitivity, result, (err) => {
-      if (err) {
-        console.log(`Stecker schalten ergab Fehler: ${err}`);
-      }
+    this.setState(this._idSensitivity, result, undefined, (err) => {
+      console.log(`Stecker schalten ergab Fehler: ${err}`);
     });
   }
 

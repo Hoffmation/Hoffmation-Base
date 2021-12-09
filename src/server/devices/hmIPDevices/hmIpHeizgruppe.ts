@@ -59,25 +59,19 @@ export class HmIpHeizgruppe extends HmIPDevice {
   }
 
   public set desiredTemperatur(val: number) {
-    if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
-      return;
-    }
-
-    ServerLogService.writeLog(LogLevel.Info, `Neue Temperatur (${val}) für "${this.info.customName}".`);
-    this.ioConn.setState(this._setPointTemperaturID, val, (err) => {
-      if (err) {
+    this.setState(
+      this._setPointTemperaturID,
+      val,
+      () => {
+        ServerLogService.writeLog(LogLevel.Info, `Changed temperature of "${this.info.customName}" to "${val}.`);
+      },
+      (err: Error) => {
         ServerLogService.writeLog(
           LogLevel.Error,
           `Temperaturänderung für "${this.info.customName}" ergab Fehler ${err}.`,
         );
-      } else {
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Temperaturänderung für "${this.info.customName}" auf ${val} erfolgreich`,
-        );
-      }
-    });
+      },
+    );
   }
 
   public addHumidityCallback(pCallback: (pValue: number) => void): void {

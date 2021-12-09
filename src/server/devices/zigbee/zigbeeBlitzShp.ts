@@ -56,16 +56,9 @@ export class ZigbeeBlitzShp extends ZigbeeDevice {
       return;
     }
 
-    if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
-      return;
-    }
-
     ServerLogService.writeLog(LogLevel.Debug, `Stecker schalten: "${this.info.customName}" Wert: ${pValue}`);
-    this.ioConn.setState(this.steckerOnSwitchID, pValue, (err) => {
-      if (err) {
-        console.log(`Stecker schalten ergab Fehler: ${err}`);
-      }
+    this.setState(this.steckerOnSwitchID, pValue, undefined, (err) => {
+      console.log(`Stecker schalten ergab Fehler: ${err}`);
     });
   }
 

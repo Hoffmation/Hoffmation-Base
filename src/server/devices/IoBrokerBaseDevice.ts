@@ -67,6 +67,18 @@ export abstract class IoBrokerBaseDevice {
     this._ioConnection = value;
   }
 
+  /**
+   * Returns whether a connection to ioBroker is established or not
+   * @param showError If true, an error message will be written to the log if the connection is not established
+   */
+  public checkIoConnection(showError: boolean = false): boolean {
+    if (!this.ioConn && showError) {
+      ServerLogService.writeLog(LogLevel.Error, `No connection active for "${this.info.customName}".`);
+    }
+
+    return this.ioConn !== undefined;
+  }
+
   public abstract update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean): void;
 
   protected addToCorrectRoom(): void {
@@ -100,5 +112,39 @@ export abstract class IoBrokerBaseDevice {
     }
 
     ServerLogService.writeLog(LogLevel.Warn, `${this.info.room} is noch kein bekannter Raum`);
+  }
+
+  /**
+   * Sets the state of a given data point and returns true if that was successful.
+   * @param pointId Data point to write to
+   * @param state Data to write
+   * @param onSuccess Callback to run on successfully written data
+   * @param onError Callback to run if an error has occurred during writing the data
+   */
+  protected setState(
+    pointId: string,
+    state: string | number | boolean | ioBroker.State | ioBroker.SettableState | null,
+    onSuccess: (() => void) | undefined = undefined,
+    onError: ((error: Error) => void) | undefined = undefined,
+  ): void {
+    if (!this.checkIoConnection(true)) {
+      return;
+    }
+
+    this.ioConn?.setState(pointId, state, (err) => {
+      if (err) {
+        if (onError) {
+          onError(err);
+        } else {
+          console.log(`Error occured while setting state "${pointId}" to "${state}": ${err}`);
+        }
+
+        return;
+      }
+
+      if (onSuccess) {
+        onSuccess();
+      }
+    });
   }
 }

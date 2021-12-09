@@ -55,18 +55,16 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
   }
 
   public set motionTimeout(value: number) {
-    if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `No connection active for "${this.info.customName}".`);
-      return;
-    }
-
-    this.ioConn.setState(this.occupancyTimeoutID, value, (err) => {
-      if (err) {
+    this.setState(
+      this.occupancyTimeoutID,
+      value,
+      () => {
+        this._motionTimeout = value;
+      },
+      (err) => {
         console.log(`Error occured while setting motion timeout: ${err}`);
-        return;
-      }
-      this._motionTimeout = value;
-    });
+      },
+    );
   }
 
   public get detectionsToday(): number {
