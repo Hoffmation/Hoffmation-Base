@@ -34,6 +34,7 @@
       "bson",
       "connect",
       "iobroker",
+      "jest",
       "mongodb",
       "node",
       "node-fetch",
@@ -43,5 +44,5 @@
     "esModuleInterop": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "exclude": ["node_modules"]
 }

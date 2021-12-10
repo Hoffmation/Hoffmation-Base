@@ -64,7 +64,7 @@ export class MuellService {
       this.alleTonnen = [];
       const todayMidnight: number = new Date().setHours(0, 0, 0, 0);
       for (const k in data) {
-        if (Object.prototype.hasOwnProperty.call(data, k)) {
+        if (!Object.prototype.hasOwnProperty.call(data, k)) {
           continue;
         }
 
