@@ -1,14 +1,14 @@
-import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
+import { LogLevel } from '../../../models/logLevel';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { iShutter } from '../iShutter';
 import { Fenster } from '../Fenster';
 import { FensterPosition } from '../FensterPosition';
-import { LogLevel } from '../../../models/logLevel';
-import { iShutter } from '../iShutter';
 
-export class HmIpRoll extends HmIPDevice implements iShutter {
+export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
       return this._setLevel;
@@ -43,31 +43,18 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this._fenster = value;
   }
 
-  private _currentLevel: number = -1;
-  private _setLevelSwitchID: string;
-  private _fenster?: Fenster;
-  private _firstCommandRecieved: boolean = false;
-  private _setLevel: number = -1;
-  private _setLevelTime: number = -1;
+  protected _currentLevel: number = -1;
+  protected _fenster?: Fenster;
+  protected _firstCommandRecieved: boolean = false;
+  protected _setLevel: number = -1;
+  protected _setLevelTime: number = -1;
 
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.HmIpRoll);
-    this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
+  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+    super(pInfo, pType);
   }
 
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
-      LogLevel.DeepTrace,
-      `Rollo Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
-    super.update(idSplit, state, initial, true);
-    switch (idSplit[3]) {
-      case '3':
-        if (idSplit[4] === 'LEVEL') {
-          this.currentLevel = state.val as number;
-        }
-        break;
-    }
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
+    super.update(idSplit, state, initial, pOverride);
   }
 
   public setLevel(pPosition: number, initial: boolean = false, skipOpenWarning: boolean = false): void {
@@ -86,14 +73,6 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
         LogLevel.Debug,
         `Skip Rollo command for "${this.info.customName}" to Position ${pPosition} as this is the current one`,
       );
-      return;
-    }
-    if (this._setLevelSwitchID === '') {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
-      return;
-    }
-
-    if (!this.checkIoConnection(true)) {
       return;
     }
 
@@ -119,7 +98,10 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     }
 
     this._setLevel = pPosition;
-    ServerLogService.writeLog(LogLevel.Debug, `Fahre Rollo "${this.info.customName}" auf Position ${pPosition}`);
-    this.setState(this._setLevelSwitchID, pPosition);
+    this.moveToPosition(pPosition);
+  }
+
+  protected moveToPosition(pPosition: number): void {
+    ServerLogService.writeLog(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
   }
 }

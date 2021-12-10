@@ -1,12 +1,13 @@
-import { HmIpGriff } from './hmIpGriff';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { ServerLogService } from '../../services/log-service';
-import { Utils } from '../../services/utils/utils';
-import { HmIpRoll } from './hmIpRoll';
-import { ZigbeeAquaraVibra } from '../zigbee/zigbeeAquaraVibra';
+import { HmIpGriff } from './hmIPDevices/hmIpGriff';
+import { RoomBase } from '../../models/rooms/RoomBase';
+import { ServerLogService } from '../services/log-service';
+import { Utils } from '../services/utils/utils';
+import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
 import { FensterPosition } from './FensterPosition';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { LogLevel } from '../../../models/logLevel';
+import { TimeCallbackService, TimeOfDay } from '../services/time-callback-service';
+import { LogLevel } from '../../models/logLevel';
+import { iShutter } from './iShutter';
+import { ShutterService } from '../services/ShutterService';
 
 export class Fenster {
   public desiredPosition: number = 0;
@@ -24,7 +25,7 @@ export class Fenster {
     public room: RoomBase,
     public griffe: HmIpGriff[],
     public vibration: ZigbeeAquaraVibra[],
-    public rollo: HmIpRoll | undefined = undefined,
+    public rollo: iShutter | undefined = undefined,
     public noRolloOnSunrise: boolean = false,
   ) {
     for (const griff of griffe) {
@@ -34,10 +35,12 @@ export class Fenster {
             element.vibrationBlocked = true;
           });
           const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.room.Einstellungen.rolloOffset);
-          if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
-            this.rollo?.setLevel(50);
-          } else {
-            this.rollo?.up();
+          if (this.rollo) {
+            if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
+              this.rollo?.setLevel(50);
+            } else {
+              ShutterService.up(this.rollo);
+            }
           }
         }
       });
@@ -47,7 +50,9 @@ export class Fenster {
           this.vibration.forEach((element) => {
             element.vibrationBlocked = true;
           });
-          this.rollo?.up();
+          if (this.rollo) {
+            ShutterService.up(this.rollo);
+          }
           return;
         }
       });
@@ -76,7 +81,7 @@ export class Fenster {
     }
     Utils.guardedTimeout(
       () => {
-        if (this.rollo) this.rollo.Fenster = this;
+        if (this.rollo) this.rollo.fenster = this;
         for (const g of this.griffe) {
           g.Fenster = this;
         }

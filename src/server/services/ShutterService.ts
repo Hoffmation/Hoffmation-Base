@@ -1,11 +1,11 @@
 import { RoomBase } from '../../models/rooms/RoomBase';
-import { DeviceType } from './deviceType';
-import { HmIpRoll } from './hmIPDevices/hmIpRoll';
-import { Devices } from './devices';
+import { DeviceType } from '../devices/deviceType';
+import { Devices } from '../devices/devices';
+import { iShutter } from '../devices/iShutter';
 
-export class Rolladen {
+export class ShutterService {
   public static getRolladenPosition(): string {
-    const rollos: HmIpRoll[] = Rolladen.getAllRollos();
+    const rollos: iShutter[] = ShutterService.getAllRollos();
     rollos.sort((a, b): number => {
       return b.currentLevel - a.currentLevel;
     });
@@ -35,14 +35,26 @@ export class Rolladen {
     return response.join('\n');
   }
 
-  public static getAllRollos(): HmIpRoll[] {
-    const rollos: HmIpRoll[] = [];
+  public static getAllRollos(): iShutter[] {
+    const rollos: iShutter[] = [];
     for (const dID in Devices.alLDevices) {
       const d = Devices.alLDevices[dID];
-      if (d.deviceType === DeviceType.HmIpRoll) {
-        rollos.push(d as HmIpRoll);
+      if (d.deviceType === DeviceType.HmIpRoll || d.deviceType === DeviceType.ZigbeeIlluShutter) {
+        rollos.push(d as iShutter);
       }
     }
     return rollos;
+  }
+
+  public static down(shutter: iShutter, initial: boolean = false): void {
+    shutter.setLevel(0, initial);
+  }
+
+  public static middle(shutter: iShutter): void {
+    shutter.setLevel(50);
+  }
+
+  public static up(shutter: iShutter, initial: boolean = false): void {
+    shutter.setLevel(100, initial);
   }
 }
