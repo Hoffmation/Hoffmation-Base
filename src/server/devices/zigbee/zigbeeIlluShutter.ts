@@ -35,18 +35,36 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     super.update(idSplit, state, initial, true);
   }
 
-  protected override moveToPosition(pPosition: number) {
+  protected override moveToPosition(targetPosition: number): void {
     this._movementStartPos = this.currentLevel;
-    if (pPosition === 100) {
+    if (targetPosition === 100) {
       this.changeMovementState(MovementState.Up);
-    } else if (pPosition === 0) {
+      return;
+    }
+    if (targetPosition === 0) {
       this.changeMovementState(MovementState.Down);
-    } else if (!this.isCalibrated()) {
+      return;
+    }
+    if (!this.isCalibrated()) {
       ServerLogService.writeLog(
         LogLevel.Alert,
-        `Can't move "${this.info.customName}" to position "${pPosition}" as it is not calibrated (Move it completly up, down, up first)`,
+        `Can't move "${this.info.customName}" to position "${targetPosition}" as it is not calibrated (Move it completly up, down, up first)`,
       );
+      return;
     }
+
+    const distance: number = Math.abs(this.currentLevel - targetPosition);
+    const direction: MovementState = this.currentLevel > targetPosition ? MovementState.Down : MovementState.Up;
+    const duration: number =
+      Math.round(distance / 100) * (this.currentLevel > targetPosition ? this._msTilBot : this._msTilTop);
+    this.changeMovementState(direction);
+    Utils.guardedTimeout(
+      () => {
+        this.changeMovementState(MovementState.Stop);
+      },
+      duration,
+      this,
+    );
   }
 
   private changeMovementState(direction: MovementState) {
