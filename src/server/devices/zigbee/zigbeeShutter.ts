@@ -101,7 +101,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this.moveToPosition(pPosition);
   }
 
-  protected moveToPosition(pPosition: number) {
+  protected moveToPosition(pPosition: number): void {
     ServerLogService.writeLog(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
   }
 }
