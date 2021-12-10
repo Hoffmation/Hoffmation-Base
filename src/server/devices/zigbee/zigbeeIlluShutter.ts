@@ -36,7 +36,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   protected override moveToPosition(targetPosition: number): void {
-    this._movementStartPos = this.currentLevel;
+    this._movementStartPos = this._currentLevel;
     if (targetPosition === 100) {
       this.changeMovementState(MovementState.Up);
       return;
@@ -53,10 +53,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       return;
     }
 
-    const distance: number = Math.abs(this.currentLevel - targetPosition);
-    const direction: MovementState = this.currentLevel > targetPosition ? MovementState.Down : MovementState.Up;
+    const distance: number = Math.abs(this._currentLevel - targetPosition);
+    const direction: MovementState = this._currentLevel > targetPosition ? MovementState.Down : MovementState.Up;
     const duration: number =
-      Math.round(distance / 100) * (this.currentLevel > targetPosition ? this._msTilBot : this._msTilTop);
+      Math.round(distance / 100) * (this._currentLevel > targetPosition ? this._msTilBot : this._msTilTop);
     this.changeMovementState(direction);
     Utils.guardedTimeout(
       () => {
@@ -68,10 +68,14 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   private changeMovementState(direction: MovementState) {
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Set new MovementState for "${this.info.customName}" to "${MovementState[direction]}"`,
+    );
     if (direction !== MovementState.Stop) {
       this._movementStartMs = Utils.nowMS();
     }
-    this.setState(this._movementStateId, MovementState[direction], () => {
+    this.setState(this._movementStateId, direction, () => {
       this._movementState = direction;
     });
   }
@@ -108,9 +112,9 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     }
 
     if (oldState === MovementState.Down) {
-      this.currentLevel = Math.min(this.currentLevel - Math.round((timePassed * 100) / this._msTilBot), 0);
+      this.currentLevel = Math.min(this._currentLevel - Math.round((timePassed * 100) / this._msTilBot), 0);
     } else if (oldState === MovementState.Up) {
-      this.currentLevel = Math.max(this.currentLevel + Math.round((timePassed * 100) / this._msTilBot), 100);
+      this.currentLevel = Math.max(this._currentLevel + Math.round((timePassed * 100) / this._msTilBot), 100);
     }
   }
 

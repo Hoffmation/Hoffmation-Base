@@ -60,8 +60,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public setLevel(pPosition: number, initial: boolean = false, skipOpenWarning: boolean = false): void {
     if (!this._firstCommandRecieved && !initial) {
       this._firstCommandRecieved = true;
-    }
-    if (this._firstCommandRecieved && initial) {
+    } else if (this._firstCommandRecieved && initial) {
       ServerLogService.writeLog(
         LogLevel.Debug,
         `Skipped initial Rollo "${this.info.customName}" to ${pPosition} as we recieved a command already`,
@@ -98,6 +97,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     }
 
     this._setLevel = pPosition;
+    ServerLogService.writeLog(LogLevel.Debug, `Move "${this.info.customName}" to position ${pPosition}`);
     this.moveToPosition(pPosition);
   }
 

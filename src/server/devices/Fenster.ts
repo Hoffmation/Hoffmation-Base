@@ -37,7 +37,7 @@ export class Fenster {
           const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.room.Einstellungen.rolloOffset);
           if (this.rollo) {
             if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
-              this.rollo?.setLevel(50);
+              this.rollo.setLevel(50, false);
             } else {
               ShutterService.up(this.rollo);
             }
@@ -114,6 +114,6 @@ export class Fenster {
   }
 
   public restoreDesiredPosition(): void {
-    this.rollo?.setLevel(this.desiredPosition);
+    this.rollo?.setLevel(this.desiredPosition, false);
   }
 }

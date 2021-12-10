@@ -51,7 +51,7 @@ export class ShutterService {
   }
 
   public static middle(shutter: iShutter): void {
-    shutter.setLevel(50);
+    shutter.setLevel(50, false);
   }
 
   public static up(shutter: iShutter, initial: boolean = false): void {

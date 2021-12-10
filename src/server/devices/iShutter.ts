@@ -5,5 +5,5 @@ export interface iShutter extends IoBrokerBaseDevice {
   currentLevel: number;
   desiredFensterLevel: number;
   fenster: Fenster | undefined;
-  setLevel(pPosition: number, initial?: boolean, skipOpenWarning?: boolean): void;
+  setLevel(pPosition: number, initial: boolean, skipOpenWarning?: boolean): void;
 }
