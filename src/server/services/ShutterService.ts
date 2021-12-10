@@ -1,7 +1,7 @@
 import { RoomBase } from '../../models/rooms/RoomBase';
-import { DeviceType } from './deviceType';
-import { Devices } from './devices';
-import { iShutter } from './iShutter';
+import { DeviceType } from '../devices/deviceType';
+import { Devices } from '../devices/devices';
+import { iShutter } from '../devices/iShutter';
 
 export class ShutterService {
   public static getRolladenPosition(): string {

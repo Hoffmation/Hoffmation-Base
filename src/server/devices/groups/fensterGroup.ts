@@ -7,7 +7,7 @@ import { Fenster } from '../Fenster';
 import { FensterPosition } from '../FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { ShutterService } from '../Rollos';
+import { ShutterService } from '../../services/ShutterService';
 
 export class FensterGroup {
   public constructor(private _room: RoomBase, public fenster: Fenster[]) {

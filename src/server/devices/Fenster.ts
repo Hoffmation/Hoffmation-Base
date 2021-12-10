@@ -7,7 +7,7 @@ import { FensterPosition } from './FensterPosition';
 import { TimeCallbackService, TimeOfDay } from '../services/time-callback-service';
 import { LogLevel } from '../../models/logLevel';
 import { iShutter } from './iShutter';
-import { ShutterService } from './Rollos';
+import { ShutterService } from '../services/ShutterService';
 
 export class Fenster {
   public desiredPosition: number = 0;

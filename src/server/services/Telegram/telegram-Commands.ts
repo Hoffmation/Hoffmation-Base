@@ -2,7 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { DeviceType } from '../../devices/deviceType';
 import { TelegramMessageCallback } from './telegramMessageCalback';
-import { ShutterService } from '../../devices/Rollos';
+import { ShutterService } from '../ShutterService';
 import { Griffe } from '../../devices/Griffe';
 import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
 import { Heizgruppen } from '../../devices/Heizgruppen';
