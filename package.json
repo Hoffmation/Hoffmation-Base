@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
-    "jest-all": "jest",
+    "jest-new": "jest --changedSince=main --coverageThreshold=`{\"global\":{\"statements\":\"50\",\"branches\":\"50\",\"functions\":\"50\",\"lines\":\"50\"}}`",
+    "jest-all": "jest --coverage",
     "lint-check-all": "eslint ./**/{*.js,*.ts,*.test.ts} --no-error-on-unmatched-pattern",
     "lint-fix-all": "eslint ./**/{*.ts,*.test.ts} --fix --no-error-on-unmatched-pattern",
     "build": "tsc",
     "prepare": "npm run build",
-    "test": "npm run lint-check-all && npm run jest-all"
+    "full-test": "npm run lint-check-all && npm run jest-all",
+    "test": "npm run lint-check-all && npm run jest-new"
   },
   "dependencies": {
     "@babel/runtime": "^7.16.3",
@@ -52,6 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "autoprefixer": "^10.4.0",
+    "coveralls": "^3.1.1",
     "eslint": "^8.4.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "4.0.0",

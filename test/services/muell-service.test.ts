@@ -1,7 +1,7 @@
 import { MuellService } from '../../src/server/services/calendar/müll-service';
 import { ServerLogService } from '../../src/server/services/log-service';
 
-describe('Test Muell Service', () => {
+describe('MuellService', () => {
   jest.setTimeout(10000);
   ServerLogService.logLevel = -1;
   it('Should download calendar and initialize objects', async () => {
