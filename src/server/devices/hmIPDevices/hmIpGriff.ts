@@ -5,8 +5,8 @@ import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { WeatherService } from '../../services/weather/weather-service';
 import { TelegramService } from '../../services/Telegram/telegram-service';
-import { FensterPosition } from './FensterPosition';
-import { Fenster } from './Fenster';
+import { FensterPosition } from '../FensterPosition';
+import { Fenster } from '../Fenster';
 import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpGriff extends HmIPDevice {

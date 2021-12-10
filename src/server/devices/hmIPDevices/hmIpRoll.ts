@@ -3,11 +3,12 @@ import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
-import { Fenster } from './Fenster';
-import { FensterPosition } from './FensterPosition';
+import { Fenster } from '../Fenster';
+import { FensterPosition } from '../FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
+import { iShutter } from '../iShutter';
 
-export class HmIpRoll extends HmIPDevice {
+export class HmIpRoll extends HmIPDevice implements iShutter {
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
       return this._setLevel;
@@ -34,16 +35,20 @@ export class HmIpRoll extends HmIPDevice {
     return this._fenster.desiredPosition;
   }
 
+  public get fenster(): Fenster | undefined {
+    return this._fenster;
+  }
+
+  public set fenster(value: Fenster | undefined) {
+    this._fenster = value;
+  }
+
   private _currentLevel: number = -1;
   private _setLevelSwitchID: string;
   private _fenster?: Fenster;
   private _firstCommandRecieved: boolean = false;
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;
-
-  public set Fenster(value: Fenster) {
-    this._fenster = value;
-  }
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpRoll);
@@ -116,17 +121,5 @@ export class HmIpRoll extends HmIPDevice {
     this._setLevel = pPosition;
     ServerLogService.writeLog(LogLevel.Debug, `Fahre Rollo "${this.info.customName}" auf Position ${pPosition}`);
     this.setState(this._setLevelSwitchID, pPosition);
-  }
-
-  public down(initial: boolean = false): void {
-    this.setLevel(0, initial);
-  }
-
-  public middle(): void {
-    this.setLevel(50);
-  }
-
-  public up(initial: boolean = false): void {
-    this.setLevel(100, initial);
   }
 }

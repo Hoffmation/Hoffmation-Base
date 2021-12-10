@@ -3,10 +3,11 @@ import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
 import { WeatherService } from '../../services/weather/weather-service';
-import { Fenster } from '../hmIPDevices/Fenster';
-import { FensterPosition } from '../hmIPDevices/FensterPosition';
+import { Fenster } from '../Fenster';
+import { FensterPosition } from '../FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
+import { ShutterService } from '../Rollos';
 
 export class FensterGroup {
   public constructor(private _room: RoomBase, public fenster: Fenster[]) {
@@ -25,7 +26,7 @@ export class FensterGroup {
             f.rollo.info.customName
           } runter`,
         );
-        f.rollo.down(initial);
+        ShutterService.down(f.rollo, initial);
       }
     });
   }
@@ -39,7 +40,8 @@ export class FensterGroup {
       if (savePosition) {
         f.desiredPosition = 100;
       }
-      f.rollo.up(false);
+
+      ShutterService.up(f.rollo, false);
     });
   }
 

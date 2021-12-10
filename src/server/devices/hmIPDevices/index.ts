@@ -1,4 +1,4 @@
-export * from './Fenster';
+export * from '../Fenster';
 export * from './hmIpRoll';
 export * from './hmIpTuer';
 export * from './hmIpGriff';
@@ -13,4 +13,4 @@ export * from './hmIpPraezenz';
 export * from './TuerPosition';
 export * from '../deviceType';
 export * from './hmIpHeizgruppe';
-export * from './FensterPosition';
+export * from '../FensterPosition';

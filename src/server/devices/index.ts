@@ -2,6 +2,7 @@ export * from './iLamp';
 export * from './taste';
 export * from './Griffe';
 export * from './Rollos';
+export * from './iShutter';
 export * from './devices';
 export * from './deviceType';
 export * from './iTaster';

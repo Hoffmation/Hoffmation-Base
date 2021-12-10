@@ -2,7 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { DeviceType } from '../../devices/deviceType';
 import { TelegramMessageCallback } from './telegramMessageCalback';
-import { Rolladen } from '../../devices/Rollos';
+import { ShutterService } from '../../devices/Rollos';
 import { Griffe } from '../../devices/Griffe';
 import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
 import { Heizgruppen } from '../../devices/Heizgruppen';
@@ -102,7 +102,7 @@ export class TelegramCommands {
         /\/check_rollo/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], Rolladen.getRolladenPosition());
+          TelegramService.sendMessage([m.from.id], ShutterService.getRolladenPosition());
           return true;
         },
         'Gibt die Positionen der Rollos aus, warnt über offene Rollos und nennt die nächsten Fahrten',
