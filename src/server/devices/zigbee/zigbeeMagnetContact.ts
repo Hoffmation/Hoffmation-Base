@@ -74,7 +74,8 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
       this._iOpen = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
-          const message = `Contact: "${this.info.customName}" is  ${MagnetPosition[this.position]} since ${this.minutesOpen
+          const message = `Contact: "${this.info.customName}" is  ${MagnetPosition[this.position]} since ${
+            this.minutesOpen
           } minutes`;
           switch (this.minutesOpen) {
             case 2:
