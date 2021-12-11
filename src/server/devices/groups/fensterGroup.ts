@@ -4,7 +4,7 @@ import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
 import { WeatherService } from '../../services/weather/weather-service';
 import { Fenster } from '../Fenster';
-import { FensterPosition } from '../FensterPosition';
+import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
 import { ShutterService } from '../../services/ShutterService';
@@ -40,7 +40,7 @@ export class FensterGroup {
       if (savePosition) {
         f.desiredPosition = 100;
       }
-
+      ServerLogService.writeLog(LogLevel.Debug, `Fenster.allRolloUp for ${f.rollo.info.customName}`);
       ShutterService.up(f.rollo, false);
     });
   }

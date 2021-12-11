@@ -14,4 +14,5 @@ export * from './IoBrokerBaseDevice';
 export * from './iIlluminationSensor';
 export * from './groups/index';
 export * from './hmIPDevices/index';
+export * from './models/index';
 export * from './zigbee/index';

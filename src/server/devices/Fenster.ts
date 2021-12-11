@@ -3,7 +3,7 @@ import { RoomBase } from '../../models/rooms/RoomBase';
 import { ServerLogService } from '../services/log-service';
 import { Utils } from '../services/utils/utils';
 import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
-import { FensterPosition } from './FensterPosition';
+import { FensterPosition } from './models/FensterPosition';
 import { TimeCallbackService, TimeOfDay } from '../services/time-callback-service';
 import { LogLevel } from '../../models/logLevel';
 import { iShutter } from './iShutter';

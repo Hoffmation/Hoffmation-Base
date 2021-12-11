@@ -6,7 +6,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../iShutter';
 import { Fenster } from '../Fenster';
-import { FensterPosition } from '../FensterPosition';
+import { FensterPosition } from '../models/FensterPosition';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public get currentLevel(): number {

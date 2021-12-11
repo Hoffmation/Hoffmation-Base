@@ -4,7 +4,7 @@ import { Utils } from '../../services/utils/utils';
 import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { Fenster } from '../Fenster';
-import { FensterPosition } from '../FensterPosition';
+import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { iShutter } from '../iShutter';
 
