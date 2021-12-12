@@ -20,6 +20,7 @@ Whether you use it with Hoffmation-Express or with your own controller code, mak
 ### Base requirements
 In order to get the library running correctly, the following requirements should be met:
 * You use ioBroker for all devices that you want to control or read from
+  Make sure you got the [socket.io](https://github.com/ioBroker/ioBroker.socketio) adapter installed
 * You use devices that are supported or are able to use one of the supported devices as base for yours.  
   (If you use a Zigbee or Homematic IP device that is not currently supported, don't hesitate to create a pull request and add it!)
 * You have a unix-based or windows device for the software you want to run this library with.
