@@ -37,6 +37,8 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
       await Persist.initialize(initObject.config.persistence);
+    } else {
+      Persist.turnOff();
     }
     this._app = initObject.app;
     if (SettingsService.settings.mp3Server) {

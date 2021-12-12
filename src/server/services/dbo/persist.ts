@@ -22,9 +22,11 @@ export class Persist {
   private static DailyMovementCountTodayCollection: Collection<DailyMovementCount>;
   private static Mongo: Db;
   private static MongoClient: MongoClient;
+  private static initialized: boolean = false;
+  private static turnedOff: boolean = false;
 
   public static addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
-    if (!this.MongoClient) {
+    if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
@@ -58,7 +60,7 @@ export class Persist {
   }
 
   public static addRoom(room: RoomBase): void {
-    if (!this.MongoClient) {
+    if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
@@ -83,8 +85,7 @@ export class Persist {
 
   public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
     const result = new Promise<CountToday>(async (resolve) => {
-      console.log(this.MongoClient);
-      if (!this.MongoClient) {
+      if (!this.isMongoAllowedAndReady()) {
         resolve(new CountToday(device.info.fullID, 0));
         return;
       }
@@ -121,10 +122,12 @@ export class Persist {
     this.CountTodayCollection = this.Mongo.collection<CountToday>('PresenceToday');
     this.CurrentIlluminationCollection = this.Mongo.collection<CurrentIlluminationDataPoint>('CurrentIllumination');
     this.DailyMovementCountTodayCollection = this.Mongo.collection<DailyMovementCount>('DailyMovementCount');
+
+    this.initialized = true;
   }
 
   public static persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
-    if (!this.MongoClient) {
+    if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
@@ -155,7 +158,7 @@ export class Persist {
   }
 
   public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
-    if (!this.MongoClient) {
+    if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
@@ -177,7 +180,7 @@ export class Persist {
     limit: number = -1,
   ): Promise<TemperaturDataPoint[]> {
     const result = new Promise<TemperaturDataPoint[]>(async (resolve) => {
-      if (!this.MongoClient) {
+      if (!this.isMongoAllowedAndReady()) {
         resolve([]);
         return;
       }
@@ -196,8 +199,31 @@ export class Persist {
     return result;
   }
 
+  public static turnOff(): void {
+    this.turnedOff = true;
+  }
+
   private static handleReject(reason: any, func: string) {
     ServerLogService.writeLog(LogLevel.Warn, `Error persisting data for "${func}"`);
     ServerLogService.writeLog(LogLevel.Debug, `Persisting Error reason: "${reason}"`);
+  }
+
+  private static isMongoAllowedAndReady(): boolean {
+    if (this.turnedOff) {
+      return false;
+    }
+    if (!this.initialized) {
+      ServerLogService.writeLog(LogLevel.Warn, `Db is not yet initialized`);
+      return false;
+    }
+    if (!this.MongoClient) {
+      ServerLogService.writeLog(LogLevel.Error, `Mongo client missing`);
+      return false;
+    }
+    if (!this.Mongo) {
+      ServerLogService.writeLog(LogLevel.Error, `MongoDb connection is missing`);
+      return false;
+    }
+    return true;
   }
 }
