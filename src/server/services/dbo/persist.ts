@@ -88,8 +88,7 @@ export class Persist {
   public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
     const result = new Promise<CountToday>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
-        resolve(new CountToday(device.info.fullID, 0));
-        return;
+        return resolve(new CountToday(device.info.fullID, 0));
       }
 
       const options: FindOptions<CountToday> = {
@@ -99,15 +98,15 @@ export class Persist {
         { deviceID: device.info.fullID },
         options,
       ).toArray()) as CountToday[];
-      if (databaseValue.length === 0) {
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Es gibt noch keinen persistierten Counter für ${device.info.fullName}`,
-        );
-        resolve(new CountToday(device.info.fullID, 0));
-      } else {
-        resolve(databaseValue[0]);
+      if (databaseValue.length !== 0) {
+        return resolve(databaseValue[0]);
       }
+
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Es gibt noch keinen persistierten Counter für ${device.info.fullName}`,
+      );
+      return resolve(new CountToday(device.info.fullID, 0));
     });
 
     return result;
@@ -116,8 +115,7 @@ export class Persist {
   public static async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
     const result = new Promise<ShutterCalibration>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
-        resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
-        return;
+        return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
       }
 
       const options: FindOptions<ShutterCalibration> = {
@@ -127,12 +125,11 @@ export class Persist {
         { deviceID: device.info.fullID },
         options,
       ).toArray()) as ShutterCalibration[];
-      if (databaseValue.length === 0) {
-        ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
-        resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
-      } else {
-        resolve(databaseValue[0]);
+      if (databaseValue.length !== 0) {
+        return resolve(databaseValue[0]);
       }
+      ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
+      return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
     });
 
     return result;
