@@ -11,18 +11,20 @@ import { CurrentIlluminationDataPoint } from '../../../models/persistence/Curren
 import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { iPersistenceSettings } from '../../config/iConfig';
+import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 
 export class Persist {
-  private static TemperatureHistoryCollection: Collection<TemperaturDataPoint>;
-  private static HeatGroupCollection: Collection<TemperaturDataPoint>;
   private static BasicRoomCollection: Collection<BasicRoomInfo>;
-  private static RoomDetailsCollection: Collection<RoomDetailInfo>;
   private static CountTodayCollection: Collection<CountToday>;
   private static CurrentIlluminationCollection: Collection<CurrentIlluminationDataPoint>;
   private static DailyMovementCountTodayCollection: Collection<DailyMovementCount>;
+  private static HeatGroupCollection: Collection<TemperaturDataPoint>;
+  private static RoomDetailsCollection: Collection<RoomDetailInfo>;
+  private static ShutterCalibrationCollection: Collection<ShutterCalibration>;
+  private static TemperatureHistoryCollection: Collection<TemperaturDataPoint>;
+  private static initialized: boolean = false;
   private static Mongo: Db;
   private static MongoClient: MongoClient;
-  private static initialized: boolean = false;
   private static turnedOff: boolean = false;
 
   public static addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
@@ -111,6 +113,31 @@ export class Persist {
     return result;
   }
 
+  public static async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
+    const result = new Promise<ShutterCalibration>(async (resolve) => {
+      if (!this.isMongoAllowedAndReady()) {
+        resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
+        return;
+      }
+
+      const options: FindOptions<ShutterCalibration> = {
+        limit: 1,
+      };
+      const databaseValue: ShutterCalibration[] = (await this.ShutterCalibrationCollection.find(
+        { deviceID: device.info.fullID },
+        options,
+      ).toArray()) as ShutterCalibration[];
+      if (databaseValue.length === 0) {
+        ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
+        resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
+      } else {
+        resolve(databaseValue[0]);
+      }
+    });
+
+    return result;
+  }
+
   public static async initialize(config: iPersistenceSettings): Promise<void> {
     this.MongoClient = new MongoClient(config.mongoConnection);
     await this.MongoClient.connect();
@@ -122,6 +149,7 @@ export class Persist {
     this.CountTodayCollection = this.Mongo.collection<CountToday>('PresenceToday');
     this.CurrentIlluminationCollection = this.Mongo.collection<CurrentIlluminationDataPoint>('CurrentIllumination');
     this.DailyMovementCountTodayCollection = this.Mongo.collection<DailyMovementCount>('DailyMovementCount');
+    this.ShutterCalibrationCollection = this.Mongo.collection<ShutterCalibration>('ShutterCalibration');
 
     this.initialized = true;
   }
@@ -154,6 +182,18 @@ export class Persist {
     ServerLogService.writeLog(
       LogLevel.Trace,
       `Persisting PresenceToday Data for ${device.info.customName} to ${count} resolved with "${result}"`,
+    );
+  }
+
+  public static persistShutterCalibration(data: ShutterCalibration): void {
+    if (!this.isMongoAllowedAndReady()) {
+      return;
+    }
+
+    const result = this.CountTodayCollection.updateOne({ deviceID: data.deviceID }, { $set: data }, { upsert: true });
+    ServerLogService.writeLog(
+      LogLevel.Trace,
+      `Persisting ShutterCalibration for ${data.deviceID} resolved with "${result}"`,
     );
   }
 

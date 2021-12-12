@@ -4,6 +4,8 @@ import { DeviceType } from '../deviceType';
 import { ServerLogService } from '../../services/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { Utils } from '../../services/utils/utils';
+import { Persist } from '../../services/dbo/persist';
+import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 
 enum MovementState {
   Down = 30,
@@ -18,10 +20,26 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   private _msTilTop: number = -1;
   private _msTilBot: number = -1;
   private _movementStartPos: number = -1;
+  private _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluShutter);
     this._movementStateId = `${this.info.fullID}.position`;
+    // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
+    Persist.getShutterCalibration(this)
+      .then((calibrationData: ShutterCalibration) => {
+        this._shutterCalibrationData = calibrationData;
+        ServerLogService.writeLog(
+          LogLevel.DeepTrace,
+          `IlluShutter "${this.info.customName}" initialized with calibration data`,
+        );
+      })
+      .catch((err: Error) => {
+        ServerLogService.writeLog(
+          LogLevel.Warn,
+          `Failed to initialize Calibration data for "${this.info.customName}", err ${err.message}`,
+        );
+      });
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -95,6 +113,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
         `New Time-Until-Top measurement for ${this.info.customName}: ${timePassed}ms`,
       );
       this.currentLevel = this._setLevel;
+      this._shutterCalibrationData.counterUp++;
+      this._shutterCalibrationData.averageUp +=
+        (this._msTilTop - this._shutterCalibrationData.averageUp) / this._shutterCalibrationData.counterUp;
+      this.persistCalibrationData();
       return;
     }
     if (this._movementStartPos === 100 && oldState === MovementState.Down && this._setLevel === 0) {
@@ -104,6 +126,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       );
       this._msTilBot = timePassed;
       this.currentLevel = this._setLevel;
+      this._shutterCalibrationData.counterDown++;
+      this._shutterCalibrationData.averageDown +=
+        (this._msTilBot - this._shutterCalibrationData.averageDown) / this._shutterCalibrationData.counterDown;
+      this.persistCalibrationData();
       return;
     }
 
@@ -119,6 +145,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   private isCalibrated(): boolean {
-    return this._msTilTop > 0 && this._msTilBot > 0;
+    return this._shutterCalibrationData.averageUp > 0 && this._shutterCalibrationData.averageDown > 0;
+  }
+
+  private persistCalibrationData() {
+    Persist.persistShutterCalibration(this._shutterCalibrationData);
   }
 }
