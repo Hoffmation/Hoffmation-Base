@@ -176,7 +176,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
         );
         this._timeSinceLastMotion = state.val as number;
         break;
-      case 'illumincance':
+      case 'illuminance':
         ServerLogService.writeLog(
           LogLevel.Trace,
           `Motion sensor: Update for illuminance of ${this.info.customName}: ${state.val}`,
