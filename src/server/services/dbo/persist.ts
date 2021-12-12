@@ -85,8 +85,8 @@ export class Persist {
     );
   }
 
-  public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
-    const result = await new Promise<CountToday>(async (resolve) => {
+  public static getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
+    return new Promise<CountToday>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
         return resolve(new CountToday(device.info.fullID, 0));
       }
@@ -108,12 +108,10 @@ export class Persist {
       );
       return resolve(new CountToday(device.info.fullID, 0));
     });
-
-    return result;
   }
 
-  public static async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
-    const result = await new Promise<ShutterCalibration>(async (resolve) => {
+  public static getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
+    return new Promise<ShutterCalibration>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
         return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
       }
@@ -131,8 +129,6 @@ export class Persist {
       ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
       return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
     });
-
-    return result;
   }
 
   public static async initialize(config: iPersistenceSettings): Promise<void> {
