@@ -88,7 +88,8 @@ export class Persist {
   public static getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
     return new Promise<CountToday>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
-        return resolve(new CountToday(device.info.fullID, 0));
+        resolve(new CountToday(device.info.fullID, 0));
+        return;
       }
 
       const options: FindOptions<CountToday> = {
@@ -99,21 +100,23 @@ export class Persist {
         options,
       ).toArray()) as CountToday[];
       if (databaseValue.length !== 0) {
-        return resolve(databaseValue[0]);
+        resolve(databaseValue[0]);
+        return;
       }
 
       ServerLogService.writeLog(
         LogLevel.Debug,
         `Es gibt noch keinen persistierten Counter für ${device.info.fullName}`,
       );
-      return resolve(new CountToday(device.info.fullID, 0));
+      resolve(new CountToday(device.info.fullID, 0));
     });
   }
 
   public static getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
     return new Promise<ShutterCalibration>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
-        return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
+        resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
+        return;
       }
 
       const options: FindOptions<ShutterCalibration> = {
@@ -124,7 +127,8 @@ export class Persist {
         options,
       ).toArray()) as ShutterCalibration[];
       if (databaseValue.length !== 0) {
-        return resolve(databaseValue[0]);
+        resolve(databaseValue[0]);
+        return;
       }
       ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
       return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
