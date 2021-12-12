@@ -85,54 +85,43 @@ export class Persist {
     );
   }
 
-  public static getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
-    return new Promise<CountToday>(async (resolve) => {
-      if (!this.isMongoAllowedAndReady()) {
-        resolve(new CountToday(device.info.fullID, 0));
-        return;
-      }
+  public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
+    if (!this.isMongoAllowedAndReady()) {
+      return new CountToday(device.info.fullID, 0);
+    }
 
-      const options: FindOptions<CountToday> = {
-        limit: 1,
-      };
-      const databaseValue: CountToday[] = (await this.CountTodayCollection.find(
-        { deviceID: device.info.fullID },
-        options,
-      ).toArray()) as CountToday[];
-      if (databaseValue.length !== 0) {
-        resolve(databaseValue[0]);
-        return;
-      }
+    const options: FindOptions<CountToday> = {
+      limit: 1,
+    };
+    const databaseValue: CountToday[] = (await this.CountTodayCollection.find(
+      { deviceID: device.info.fullID },
+      options,
+    ).toArray()) as CountToday[];
+    if (databaseValue.length !== 0) {
+      return databaseValue[0];
+    }
 
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `Es gibt noch keinen persistierten Counter für ${device.info.fullName}`,
-      );
-      resolve(new CountToday(device.info.fullID, 0));
-    });
+    ServerLogService.writeLog(LogLevel.Debug, `Es gibt noch keinen persistierten Counter für ${device.info.fullName}`);
+    return new CountToday(device.info.fullID, 0);
   }
 
-  public static getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
-    return new Promise<ShutterCalibration>(async (resolve) => {
-      if (!this.isMongoAllowedAndReady()) {
-        resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
-        return;
-      }
+  public static async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
+    if (!this.isMongoAllowedAndReady()) {
+      return new ShutterCalibration(device.info.fullID, 0, 0, 0, 0);
+    }
 
-      const options: FindOptions<ShutterCalibration> = {
-        limit: 1,
-      };
-      const databaseValue: ShutterCalibration[] = (await this.ShutterCalibrationCollection.find(
-        { deviceID: device.info.fullID },
-        options,
-      ).toArray()) as ShutterCalibration[];
-      if (databaseValue.length !== 0) {
-        resolve(databaseValue[0]);
-        return;
-      }
-      ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
-      return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
-    });
+    const options: FindOptions<ShutterCalibration> = {
+      limit: 1,
+    };
+    const databaseValue: ShutterCalibration[] = (await this.ShutterCalibrationCollection.find(
+      { deviceID: device.info.fullID },
+      options,
+    ).toArray()) as ShutterCalibration[];
+    if (databaseValue.length !== 0) {
+      return databaseValue[0];
+    }
+    ServerLogService.writeLog(LogLevel.Debug, `There is no persisted calibration data for ${device.info.fullName}`);
+    return new ShutterCalibration(device.info.fullID, 0, 0, 0, 0);
   }
 
   public static async initialize(config: iPersistenceSettings): Promise<void> {
