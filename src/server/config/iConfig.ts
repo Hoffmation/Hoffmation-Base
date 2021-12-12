@@ -8,6 +8,7 @@ interface iSonosSettings {
 export interface iConfig {
   expressPort?: number;
   ioBrokerUrl: string;
+  logSettings?: iLogSettings;
   mp3Server?: iMp3Settings;
   muell?: iMuellSettings;
   persistence?: iPersistenceSettings;
@@ -17,6 +18,11 @@ export interface iConfig {
   telegram?: iTelegramSettings;
   timeSettings: iTimeSettings;
   weather?: iWeatherSettings;
+}
+
+export interface iLogSettings {
+  logLevel: number;
+  useTimestamp: boolean;
 }
 
 export interface iTimePair {

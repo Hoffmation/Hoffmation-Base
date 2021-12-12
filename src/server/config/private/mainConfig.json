@@ -31,6 +31,10 @@
     "sonnenAufgangLampenDelay": 15,
     "lightIfNoWindows": false
   },
+  "logSettings": {
+    "logLevel": 4,
+    "useTimestamp": true
+  },
   "telegram": {
     "logLevel": 1,
     "telegramToken": "15xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXU",

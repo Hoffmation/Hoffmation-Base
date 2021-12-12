@@ -32,8 +32,12 @@ export class HoffmationInitializationObject {
 export class HoffmationBase {
   public static ioMain: ioBrokerMain;
   private static _app: Express;
+
   public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
     SettingsService.initialize(initObject.config);
+    if (initObject.config.logSettings) {
+      ServerLogService.initialize(initObject.config.logSettings);
+    }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
       await Persist.initialize(initObject.config.persistence);

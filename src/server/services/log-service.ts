@@ -1,16 +1,25 @@
 import { TelegramService } from './Telegram/telegram-service';
 import { LogLevel } from '../../models/logLevel';
 import { DeviceType } from '../devices/deviceType';
+import { iLogSettings } from '../config/iConfig';
 
 export class ServerLogService {
-  public static logLevel: number = 4;
   public static telegramLevel: number = -1; // Controlled from within Config File
+  public static settings: iLogSettings = {
+    logLevel: 4,
+    useTimestamp: false,
+  };
+
+  public static initialize(logSettings: iLogSettings): void {
+    this.settings = logSettings;
+  }
+
   public static writeLog(pLevel: LogLevel, pMessage: string): void {
-    if (pLevel > ServerLogService.logLevel) {
+    if (pLevel > ServerLogService.settings.logLevel) {
       return;
     }
 
-    console.log(pMessage);
+    console.log((this.settings.useTimestamp ? `[${Date.now()}] ` : '') + pMessage);
 
     if (pLevel <= ServerLogService.telegramLevel) {
       const title: string = LogLevel[pLevel];
