@@ -15,6 +15,8 @@ Those include, but are not limited to:
 ## How can I use it?
 This library *can* be used in conjunction with or as addition to own base projects, but it's intended to be used with the configuration project [Hoffmation-Express](https://github.com/theimo1221/Hoffmation-Express) which uses this library via a [npm package](https://www.npmjs.com/package/hoffmation-base).
 
+Whether you use it with Hoffmation-Express or with your own controller code, make sure you pass a valid config file (see [`src/server/config/private`](src/server/config/private) for an example) and a valid ioBroker device tree (you can find more information about that in the Hoffmation-Express project).
+
 ### Base requirements
 In order to get the library running correctly, the following requirements should be met:
 * You use ioBroker for all devices that you want to control or read from
@@ -28,4 +30,4 @@ Then, just run `npm run build`.
 
 ## Why would I use it?
 Even if it looks simple at first, automating your entire home with a user interface can sometimes be more difficult than just *coding* your home.  
-Especially if you have a lot of specialized requirements that you want to satisfy, it can simpler to just code your own rules and interfaces than to rely on user interfaces to do it for you.  
+Especially if you have a lot of specialized requirements that you want to satisfy, it can be simpler to just code your own rules and interfaces than to rely on user interfaces to do it for you.  

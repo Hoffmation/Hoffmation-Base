@@ -43,18 +43,26 @@
     ]
   },
   "mp3Server": {
-    "path": "//XXXXXXXXXX/XXXXX/XXXXXX/XXX/ttsMP3/"
+    "path": "//XXXXXXXXXX/XXXXX/XXXXXX/XXX/ttsMP3/",
+    "serverAddress": "http://xxx.xxx.xxx.xxx:8081"
   },
   "muell": {
     "calendarURL": "https://xxxxxxxxxxxxxxxxxxxxx.de/abfuhrkalender?format=ical&street=xxxxxxxx&number=xx"
   },
+  "persistance": {
+    "mongoConnection": "mongodb://localhost:2701",
+    "mongoDbName": "hoffmation"
+  },
   "polly": {
     "mp3Path": "//xxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxxx/ttsMP3/",
     "region": "eu-central-1",
-    "signatureVersion":  "v4",
+    "signatureVersion": "v4",
     "accessKeyId": "xxxxxxxxxxxxxxxxxxxx",
     "secretAccessKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "voiceID": "Vicki"
+  },
+  "sonos": {
+    "active": false
   },
   "weather": {
     "lattitude": "xx.xxxxxx",
