@@ -62,7 +62,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
         this._motionTimeout = value;
       },
       (err) => {
-        console.log(`Error occured while setting motion timeout: ${err}`);
+        console.log(`Error occurred while setting motion timeout: ${err}`);
       },
     );
   }
@@ -87,19 +87,23 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
         this.detectionsToday = todayCount.counter;
         ServerLogService.writeLog(
           LogLevel.Debug,
-          `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
+          `Preinitialized movement counter for "${this.info.customName}" with ${this.detectionsToday}`,
         );
         this._initialized = true;
       })
       .catch((err: Error) => {
         ServerLogService.writeLog(
           LogLevel.Warn,
-          `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
+          `Failed to initialize movement counter for "${this.info.customName}", err ${err.message}`,
         );
       });
   }
 
-  public addMovementCallback(pCallback: (pValue: boolean) => void): void {
+  /**
+   * Adds a callback for when a motion state has changed.
+   * @param pCallback Function that accepts the new state as parameter
+   */
+  public addMovementCallback(pCallback: (newState: boolean) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
@@ -107,7 +111,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
     if (!this._initialized && newState) {
       ServerLogService.writeLog(
         LogLevel.Trace,
-        `Bewegung für "${this.info.customName}" erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
+        `Movement recognized for "${this.info.customName}", but database initialization has not finished yet --> delay.`,
       );
       Utils.guardedTimeout(
         () => {
@@ -122,7 +126,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
     if (newState === this.movementDetected) {
       ServerLogService.writeLog(
         LogLevel.Debug,
-        `Überspringe Bewegung für "${this.info.customName}" da bereits der Wert ${newState} vorliegt`,
+        `Skip movement for "${this.info.customName}" because state is already ${newState}`,
       );
 
       if (newState) {
@@ -135,14 +139,14 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
 
     this.resetFallbackTimeout();
     this.movementDetected = newState;
-    ServerLogService.writeLog(LogLevel.Debug, `Neuer Bewegunsstatus Wert für "${this.info.customName}": ${newState}`);
+    ServerLogService.writeLog(LogLevel.Debug, `New movement state for "${this.info.customName}": ${newState}`);
 
     if (newState) {
       this.startFallbackTimeout();
       this.detectionsToday++;
       ServerLogService.writeLog(
         LogLevel.Trace,
-        `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`,
+        `This is movement no. ${this.detectionsToday} for "${this.info.customName}"`,
       );
     }
 
@@ -154,7 +158,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     ServerLogService.writeLog(
       LogLevel.DeepTrace,
-      `Stecker Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
+      `Motion update for "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
@@ -184,7 +188,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
           LogLevel.Trace,
           `Motion sensor: Update for motion timeout of ${this.info.customName}: ${state.val}`,
         );
-        this._illuminance = state.val as number;
+        this._motionTimeout = state.val as number;
         break;
     }
   }
