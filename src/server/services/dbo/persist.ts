@@ -86,7 +86,7 @@ export class Persist {
   }
 
   public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
-    const result = new Promise<CountToday>(async (resolve) => {
+    const result = await new Promise<CountToday>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
         return resolve(new CountToday(device.info.fullID, 0));
       }
@@ -113,7 +113,7 @@ export class Persist {
   }
 
   public static async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
-    const result = new Promise<ShutterCalibration>(async (resolve) => {
+    const result = await new Promise<ShutterCalibration>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
         return resolve(new ShutterCalibration(device.info.fullID, 0, 0, 0, 0));
       }
