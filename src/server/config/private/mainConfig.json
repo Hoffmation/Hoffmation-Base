@@ -11,6 +11,7 @@
     }
   },
   "roomDefault": {
+    "rolloHeatReduction": true,
     "lampenBeiBewegung": true,
     "lichtSonnenAufgangAus": true,
     "sonnenUntergangRollos": true,
@@ -49,7 +50,7 @@
   "muell": {
     "calendarURL": "https://xxxxxxxxxxxxxxxxxxxxx.de/abfuhrkalender?format=ical&street=xxxxxxxx&number=xx"
   },
-  "persistance": {
+  "persistence": {
     "mongoConnection": "mongodb://localhost:2701",
     "mongoDbName": "hoffmation"
   },

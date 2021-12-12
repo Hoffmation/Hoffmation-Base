@@ -10,7 +10,7 @@ export interface iConfig {
   ioBrokerUrl: string;
   mp3Server?: iMp3Settings;
   muell?: iMuellSettings;
-  persistence: iPersistenceSettings;
+  persistence?: iPersistenceSettings;
   polly?: iPollySettings;
   roomDefault: iRoomDefaultSettings;
   sonos?: iSonosSettings;

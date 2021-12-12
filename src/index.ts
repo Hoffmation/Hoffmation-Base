@@ -35,7 +35,9 @@ export class HoffmationBase {
   public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
     SettingsService.initialize(initObject.config);
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
-    await Persist.initialize(initObject.config.persistence);
+    if (initObject.config.persistence) {
+      await Persist.initialize(initObject.config.persistence);
+    }
     this._app = initObject.app;
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);

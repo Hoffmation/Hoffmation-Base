@@ -24,6 +24,10 @@ export class Persist {
   private static MongoClient: MongoClient;
 
   public static addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
+    if (!this.MongoClient) {
+      return;
+    }
+
     const dataPoint: TemperaturDataPoint = new TemperaturDataPoint(
       hzGrp.info.customName,
       hzGrp.iTemperatur,
@@ -54,6 +58,10 @@ export class Persist {
   }
 
   public static addRoom(room: RoomBase): void {
+    if (!this.MongoClient) {
+      return;
+    }
+
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Room for ${room.roomName}`);
     this.BasicRoomCollection.updateOne(
       { roomName: room.roomName },
@@ -75,6 +83,12 @@ export class Persist {
 
   public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
     const result = new Promise<CountToday>(async (resolve) => {
+      console.log(this.MongoClient);
+      if (!this.MongoClient) {
+        resolve(new CountToday(device.info.fullID, 0));
+        return;
+      }
+
       const options: FindOptions<CountToday> = {
         limit: 1,
       };
@@ -110,6 +124,10 @@ export class Persist {
   }
 
   public static persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
+    if (!this.MongoClient) {
+      return;
+    }
+
     const result = this.CountTodayCollection.updateOne(
       { deviceID: device.info.fullID },
       { $set: new CountToday(device.info.fullID, count) },
@@ -137,6 +155,10 @@ export class Persist {
   }
 
   public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
+    if (!this.MongoClient) {
+      return;
+    }
+
     const result = this.CurrentIlluminationCollection.updateOne(
       { deviceID: data.deviceID, date: data.date },
       { $set: data },
@@ -155,6 +177,11 @@ export class Persist {
     limit: number = -1,
   ): Promise<TemperaturDataPoint[]> {
     const result = new Promise<TemperaturDataPoint[]>(async (resolve) => {
+      if (!this.MongoClient) {
+        resolve([]);
+        return;
+      }
+
       const options: FindOptions<TemperaturDataPoint> = {
         limit: limit > 0 ? limit : undefined,
         sort: { date: -1 },
