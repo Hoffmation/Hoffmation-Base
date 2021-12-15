@@ -7,6 +7,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../../services/Sonos/sonos-service';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { MagnetPosition } from '../models/MagnetPosition';
+import { Res } from '../../services/Translation/res';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice {
   public position: MagnetPosition = MagnetPosition.closed;
@@ -54,9 +55,9 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
       if (this._iOpen !== undefined) {
         clearInterval(this._iOpen);
 
-        let message = `${this.info.customName} closed after ${this.minutesOpen} minutes!`;
+        let message = Res.closedAfterMinutes(this.info.customName, this.minutesOpen.toString(10));
         if (this.minutesOpen === 0) {
-          message = `"${this.info.customName}" just closed`;
+          message = Res.justClosed(this.info.customName);
         }
         // const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde nach ${this.minutesOpen} Minuten geschlossen!`;
         ServerLogService.writeLog(LogLevel.Info, message);
@@ -67,8 +68,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
       }
       return;
     } else if (this._iOpen === undefined) {
-      const message = `"${this.info.customName}" was opened`;
-      //const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde geöfnet!`
+      const message = Res.wasOpened(this.info.customName);
       TelegramService.inform(message);
       SonosService.speakOnAll(message, 40);
       this._iOpen = Utils.guardedInterval(

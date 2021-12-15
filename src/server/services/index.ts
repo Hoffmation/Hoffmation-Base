@@ -9,5 +9,6 @@ export * from './Sonos/index';
 export * from './settings-service';
 export * from './Telegram/index';
 export * from './time-callback-service';
+export * from './Translation/index';
 export * from './utils/index';
 export * from './weather/index';

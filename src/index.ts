@@ -20,6 +20,7 @@ import {
   TimeCallbackService,
   Utils,
   WeatherService,
+  Res,
 } from './server';
 
 export * from './models/index';
@@ -35,6 +36,7 @@ export class HoffmationBase {
 
   public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
     SettingsService.initialize(initObject.config);
+    Res.initialize(initObject.config.translationSettings);
     if (initObject.config.logSettings) {
       ServerLogService.initialize(initObject.config.logSettings);
     }

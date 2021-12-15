@@ -9,6 +9,7 @@ export interface iConfig {
   expressPort?: number;
   ioBrokerUrl: string;
   logSettings?: iLogSettings;
+  translationSettings: iTranslationSettings;
   mp3Server?: iMp3Settings;
   muell?: iMuellSettings;
   persistence?: iPersistenceSettings;
@@ -72,4 +73,8 @@ export interface iWeatherSettings {
 
 export interface iMuellSettings {
   calendarURL: string;
+}
+
+export interface iTranslationSettings {
+  language: 'en' | 'de';
 }

@@ -1,0 +1,14 @@
+{
+  "closedAfterMinutes": {
+    "en": "\"@P0\" closed after @P1 minutes!.",
+    "de": "\"@P0\" ist nun nach @P1 Minuten wieder zu."
+  },
+  "justClosed": {
+    "en": "\"@P0\" just closed.",
+    "de": "\"@P0\" ist direkt wieder zu."
+  },
+  "wasOpened": {
+    "en": "\"@P0\" was opened.",
+    "de": "\"@P0\" wurde geöffnet."
+  }
+}
