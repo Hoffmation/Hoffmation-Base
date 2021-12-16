@@ -76,5 +76,5 @@ export interface iMuellSettings {
 }
 
 export interface iTranslationSettings {
-  language: 'en' | 'de';
+  language: string;
 }
