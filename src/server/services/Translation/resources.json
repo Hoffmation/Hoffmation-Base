@@ -1,14 +1,78 @@
 {
+  "alarmArmed": {
+    "en": "Alarm system arming.",
+    "de": "Alarmanlage wird scharfgeschaltet."
+  },
+  "alarmNightModeArmed": {
+    "en": "Alarm system will be armed in night mode. Sweet Dreams!",
+    "de": "Alarmanlage wird für die Nacht scharfgeschaltet. Süße Träume!`"
+  },
   "closedAfterMinutes": {
     "en": "\"@P0\" closed after @P1 minutes!.",
     "de": "\"@P0\" ist nun nach @P1 Minuten wieder zu."
+  },
+  "fireAlarmEnd": {
+    "en": "No more smoke: Danger in \"@P0\" resolved.",
+    "de": "Rauchmelder Alarm Ende: Gefahr in  \"@P0\" zu Ende."
+  },
+  "fireAlarmRepeat": {
+    "en": "Smoke detector \"@P0\" active. Possible fire in \"@P1\".",
+    "de": "Rauchmelder \"@P0\" aktiv. Möglicher Brand in \"@P1\"."
+  },
+  "fireAlarmStart": {
+    "en": "Smoke detector \"@P0\" triggered. Possible fire in \"@P1\".",
+    "de": "Rauchmelder \"@P0\" ausgelöst. Möglicher Brand in \"@P1\"."
+  },
+  "goodMorning": {
+    "en": "Good Morning!",
+    "de": "Guten Morgen!"
+  },
+  "intruderAlarm": {
+    "en": "Alarm. Intruder detected",
+    "de": "Alarm. Einbrecher erkannt."
+  },
+  "intruderAdditionalDefenseWarning": {
+    "en": "Additional defense protocol initiated.",
+    "de": "Weitere Abwehrmaßnahmen werden eingeleitet"
+  },
+  "intruderGreeting": {
+    "en": "Hello potential intruder! You're beeing recorded and the alarm protocol is initiated please leave the building immediately!",
+    "de": "Hallo potenzieller Eindringling! Sie werden aufgezeichnet und das Alarmprotokoll ist initiiert bitte verlassen Sie umgehend das Gebäude!"
+  },
+  "intruderLeaveAndOwnerInformed": {
+    "en": "Leave now! The owners and additional emergency contacts are informed!",
+    "de": "Verlassen Sie sofort das Gebäude! Die Besitzer und Notfallkontakte sind informiert!"
+  },
+  "intruderShutterUpPleaseLeave": {
+    "en": "All shutter are opening, please leave immediatly.",
+    "de": "Alle Rollos fahren hoch, bitte begeben Sie sich zum nächsten Ausgang."
   },
   "justClosed": {
     "en": "\"@P0\" just closed.",
     "de": "\"@P0\" ist direkt wieder zu."
   },
+  "vibrationAlarm": {
+    "en": "Vibration Alert from \"@P0\". I repeat: Alarm at \"@P0\"",
+    "de": "Vibrationsalarm bei \"@P0\". Ich wiederhole: Alarm bei \"@P0\""
+  },
   "wasOpened": {
     "en": "\"@P0\" was opened.",
     "de": "\"@P0\" wurde geöffnet."
+  },
+  "waterAlarmEnd": {
+    "en": "Water alarm end: Flooding in \"@P0\" over.",
+    "de": "Wasser Alarm Ende: Überflutung in \"@P0\" zu Ende."
+  },
+  "waterAlarmRepeat": {
+    "en": "\"@P0\" has triggered. Pool party in \"@P1\".",
+    "de": "\"@P0\" hat ausgelöst. Poolparty in \"@P1\"."
+  },
+  "waterAlarmStart": {
+    "en": "\"@P0\" detects water. Possible pipe burst in \"@P1\".",
+    "de": "\"@P0\" erkennt Wasser. Möglicher Rohrbruch in \"@P1\"."
+  },
+  "welcomeHome": {
+    "en": "Welcome home!",
+    "de": "Willkommen Zuhause!"
   }
 }

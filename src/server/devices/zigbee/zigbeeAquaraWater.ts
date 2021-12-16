@@ -6,6 +6,7 @@ import { PollyService } from '../../services/Sonos/polly-service';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../../services/Sonos/sonos-service';
+import { Res } from '../../services/Translation/res';
 
 export class ZigbeeAquaraWater extends ZigbeeDevice {
   public water: boolean = false;
@@ -17,9 +18,9 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
 
   public set roomName(val: string) {
     this._roomName = val;
-    this._messageAlarmFirst = `${this.info.customName} erkennt Wasser. Möglicher Rohrbruch in ${this._roomName}`;
-    this._messageAlarm = `${this.info.customName} hat ausgelöst. Poolparty in ${this._roomName}`;
-    this._messageAlarmEnd = `Wasser Alarm Ende: Überflutung in ${this._roomName} zu Ende.`;
+    this._messageAlarmFirst = Res.waterAlarmStart(this.info.customName, this._roomName);
+    this._messageAlarm = Res.waterAlarmRepeat(this.info.customName, this._roomName);
+    this._messageAlarmEnd = Res.waterAlarmEnd(this._roomName);
     PollyService.preloadTTS(this._messageAlarmFirst);
     PollyService.preloadTTS(this._messageAlarm);
     PollyService.preloadTTS(this._messageAlarmEnd);
@@ -27,9 +28,9 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraWater);
-    this._messageAlarmFirst = `${this.info.customName} erkennt Wasser. Möglicher Rohrbruch in ${this._roomName}`;
-    this._messageAlarm = `${this.info.customName} hat ausgelöst. Poolparty in ${this._roomName}`;
-    this._messageAlarmEnd = `Wasser Alarm Ende: Überflutung in ${this._roomName} zu Ende.`;
+    this._messageAlarmFirst = Res.waterAlarmStart(this.info.customName, this._roomName);
+    this._messageAlarm = Res.waterAlarmRepeat(this.info.customName, this._roomName);
+    this._messageAlarmEnd = Res.waterAlarmEnd(this._roomName);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

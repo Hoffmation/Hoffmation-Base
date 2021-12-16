@@ -6,6 +6,7 @@ import { PollyService } from '../../services/Sonos/polly-service';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../../services/Sonos/sonos-service';
+import { Res } from '../../services/Translation/res';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice {
   public sensitivity: string = '';
@@ -25,7 +26,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
-    this._alarmMessage = `Alarm bei ${this.info.customName}. Ich wiederhole: Alarm bei ${this.info.customName}`;
+    this._alarmMessage = Res.vibrationAlarm(this.info.customName);
     PollyService.preloadTTS(this._alarmMessage);
     this._idSensitivity = `${this.info.fullID}.sensitivity`;
   }

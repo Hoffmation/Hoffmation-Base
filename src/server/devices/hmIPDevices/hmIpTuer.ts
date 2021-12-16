@@ -7,6 +7,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { TelegramService } from '../../services/Telegram/telegram-service';
 import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../../services/Sonos/sonos-service';
+import { Res } from '../../services/Translation/res';
 
 export class HmIpTuer extends HmIPDevice {
   public position: MagnetPosition = MagnetPosition.closed;
@@ -82,7 +83,7 @@ export class HmIpTuer extends HmIPDevice {
       }
       return;
     } else if (this._iOpen === undefined) {
-      const message = `"${this.info.customName}" was opened`;
+      const message = Res.wasOpened(this.info.customName);
       //const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde geöfnet!`
       TelegramService.inform(message);
       SonosService.speakOnAll(message, 40);

@@ -18,6 +18,7 @@ import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callb
 import { SonosService } from '../../server/services/Sonos/sonos-service';
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
 import { iRoomBase } from './iRoomBase';
+import { Res } from '../../server/services/Translation/res';
 
 export class RoomBase implements iRoomBase {
   public static Rooms: { [name: string]: RoomBase } = {};
@@ -97,7 +98,7 @@ export class RoomBase implements iRoomBase {
   }
 
   public static startAwayMode(): void {
-    SonosService.speakOnAll(`Alarmanlage wird scharfgeschaltet.`, 40);
+    SonosService.speakOnAll(Res.alarmArmed(), 40);
     if (this._awayModeTimer) {
       clearTimeout(this._awayModeTimer);
     }
@@ -112,7 +113,7 @@ export class RoomBase implements iRoomBase {
     );
   }
   public static startNightAlarmMode(): void {
-    SonosService.speakOnAll(`Alarmanlage wird für die Nacht scharfgeschaltet. Gute Nacht!`, 30);
+    SonosService.speakOnAll(Res.alarmNightModeArmed(), 30);
     if (this._nightModeTimer) {
       clearTimeout(this._nightModeTimer);
     }
@@ -149,11 +150,11 @@ export class RoomBase implements iRoomBase {
   public static endAlarmModes(): void {
     if (this.awayModeActive) {
       TelegramService.sendMessage(TelegramService.subscribedIDs, `Alarmanalage entschärft`);
-      SonosService.speakOnAll(`Willkommen Zuhause!`, 35);
+      SonosService.speakOnAll(Res.welcomeHome(), 35);
     }
     if (this.nightAlarmActive) {
       TelegramService.sendMessage(TelegramService.subscribedIDs, `Nachtmodus der Alarmanlage entschärft`);
-      SonosService.speakOnAll(`Guten Morgen!`, 30);
+      SonosService.speakOnAll(Res.goodMorning(), 30);
     }
     if (this._nightModeTimer) {
       clearTimeout(this._nightModeTimer);
@@ -295,26 +296,26 @@ export class RoomBase implements iRoomBase {
     let newTimeout: number = 20000;
     const alarmAutomaticEnd: number = 15;
     if (this._intrusionAlarmLevel === 1) {
-      speakMessage = `Hallo potenzieller Eindringling! Das Alarmprotokoll ist initiiert bitte verlassen Sie umgehend das Gebäude!`;
+      speakMessage = Res.intruderGreeting();
       volume = 40;
     } else if (this._intrusionAlarmLevel === 2) {
-      speakMessage = `Alle Rollos fahren hoch, bitte begeben Sie sich zum nächsten Ausgang`;
+      speakMessage = Res.intruderShutterUpPleaseLeave();
       Utils.guardedNewThread(() => {
         this.setAllRolloOfFloor(-1, 100);
         this.setAllLampsOfFloor(-1, true);
       }, this);
     } else if (this._intrusionAlarmLevel === 3) {
       volume = 70;
-      speakMessage = `Verlassen Sie sofort das Gebäude! Die Behörden sind informiert`;
+      speakMessage = Res.intruderLeaveAndOwnerInformed();
     } else if (this._intrusionAlarmLevel <= 5) {
       volume = 80;
-      speakMessage = `Weitere Abwehrmaßnahmen werden eingeleitet`;
+      speakMessage = Res.intruderAdditionalDefenseWarning();
     } else if (this._intrusionAlarmLevel >= alarmAutomaticEnd) {
       this.stopIntrusionAlarm();
       return;
     } else {
       volume = 90;
-      speakMessage = `Alarm. Einbrecher erkannt.`;
+      speakMessage = Res.intruderAlarm();
       newTimeout = 10000;
     }
     this._intrusionAlarmTimeout = Utils.guardedTimeout(

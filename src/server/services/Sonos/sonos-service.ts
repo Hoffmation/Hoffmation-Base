@@ -1,5 +1,4 @@
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
-import { PlayNotificationOptions } from '@svrooij/sonos/lib/models';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { ServerLogService } from '../log-service';
 import { Utils } from '../utils/utils';

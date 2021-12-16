@@ -7,6 +7,7 @@ import { PollyService } from '../../services/Sonos/polly-service';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../../services/Sonos/sonos-service';
+import { Res } from '../../services/Translation/res';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   public smoke: boolean = false;
@@ -18,9 +19,9 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
 
   public set roomName(val: string) {
     this._roomName = val;
-    this._messageAlarmFirst = `Rauchmelder in ${this._roomName} ausgelöst. Möglicher Brand in ${this._roomName}`;
-    this._messageAlarm = `Rauchmelder in ${this._roomName} aktiv. Möglicher Brand in ${this._roomName}`;
-    this._messageAlarmEnd = `Rauchmelder Alarm Ende: Gefahr in ${this._roomName} zu Ende.`;
+    this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
+    this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
+    this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
     PollyService.preloadTTS(this._messageAlarmFirst);
     PollyService.preloadTTS(this._messageAlarm);
     PollyService.preloadTTS(this._messageAlarmEnd);
@@ -28,9 +29,9 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeHeimanSmoke);
-    this._messageAlarmFirst = `Rauchmelder in ${this._roomName} ausgelöst. Möglicher Brand in ${this._roomName}`;
-    this._messageAlarm = `Rauchmelder in ${this._roomName} aktiv. Möglicher Brand in ${this._roomName}`;
-    this._messageAlarmEnd = `Rauchmelder Alarm Ende: Gefahr in ${this._roomName} zu Ende.`;
+    this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
+    this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
+    this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
