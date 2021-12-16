@@ -8,6 +8,7 @@ import { TelegramService } from '../Telegram/telegram-service';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../time-callback-service';
 import { SettingsService } from '../settings-service';
+import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;
@@ -133,9 +134,7 @@ export class SonosService {
       return;
     }
     const specificTimeout: number = Math.ceil(duration / 1000) + 5;
-    const options: PlayNotificationOptions = {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+    const options: PlayNotificationTwoOptions = {
       catchQueueErrors: true,
       trackUri: `${SettingsService.settings.mp3Server?.serverAddress}/file.mp3?fname=${mp3Name}`,
       delayMs: 750,
