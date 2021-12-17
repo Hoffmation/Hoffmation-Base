@@ -6,7 +6,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
-import { TimeOfDay } from '../../services/time-callback-service';
+import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   public lightOn: boolean = false;
@@ -155,9 +155,12 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     );
   }
 
-  public toggleLight(time?: TimeOfDay, force: boolean = false): boolean {
+  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
     const newVal = this.queuedValue !== null ? !this.queuedValue : !this.lightOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
+    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
+      time = TimeCallbackService.dayType(this.room?.Einstellungen.lampOffset);
+    }
     if (newVal && time !== undefined) {
       this.setTimeBased(time, timeout, force);
       return true;
