@@ -59,14 +59,16 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
     switch (time) {
       case TimeOfDay.Night:
-        this.setLight(true, timeout, force, 50);
+        this.setLight(true, timeout, force, this.settings.nightBrightness);
         break;
       case TimeOfDay.AfterSunset:
+        this.setLight(true, timeout, force, this.settings.dawnBrightness);
+        break;
       case TimeOfDay.BeforeSunrise:
-        this.setLight(true, timeout, force, 75);
+        this.setLight(true, timeout, force, this.settings.duskBrightness);
         break;
       case TimeOfDay.Daylight:
-        this.setLight(true, timeout, force, 100);
+        this.setLight(true, timeout, force, this.settings.dayBrightness);
         break;
     }
   }
