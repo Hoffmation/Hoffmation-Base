@@ -122,7 +122,14 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     if (brightness > -1) {
       if (brightness < this.settings.turnOnThreshhold) {
         this.setState(this.brightnessID, this.settings.turnOnThreshhold, () => {
-          this.setState(this.brightnessID, brightness);
+          Utils.guardedTimeout(
+            () => {
+              ServerLogService.writeLog(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
+              this.setState(this.brightnessID, brightness);
+            },
+            1000,
+            this,
+          );
         });
       } else {
         this.setState(this.brightnessID, brightness);
