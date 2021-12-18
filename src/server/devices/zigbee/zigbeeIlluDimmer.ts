@@ -116,19 +116,17 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
       `Dimmer Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%`,
     );
 
-    this.ioConn.setState(this.stateID, pValue, (err) => {
-      if (err) {
-        ServerLogService.writeLog(LogLevel.Error, `Dimmer schalten ergab Fehler: ${err}`);
-      }
-    });
+    this.setState(this.stateID, pValue);
     this.queuedValue = pValue;
 
     if (brightness > -1) {
-      this.ioConn.setState(this.brightnessID, brightness, (err) => {
-        if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
-        }
-      });
+      if (brightness < this.settings.turnOnThreshhold) {
+        this.setState(this.brightnessID, this.settings.turnOnThreshhold, () => {
+          this.setState(this.brightnessID, brightness);
+        });
+      } else {
+        this.setState(this.brightnessID, brightness);
+      }
     }
     if (this.turnOffTimeout !== undefined) {
       clearTimeout(this.turnOffTimeout);

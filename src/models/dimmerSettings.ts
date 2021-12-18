@@ -5,4 +5,5 @@ export class DimmerSettings extends ActuatorSettings {
   public dawnBrightness: number = 75;
   public duskBrightness: number = 75;
   public dayBrightness: number = 100;
+  public turnOnThreshhold: number = -1;
 }
