@@ -6,6 +6,7 @@ import { ActuatorSettings } from '../../../models/actuatorSettings';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
 import { LogLevel } from '../../../models/logLevel';
+import { TimeOfDay } from '../../services/time-callback-service';
 
 export class HmIpLampe extends HmIPDevice implements iLamp {
   public lightOn: boolean = false;
@@ -109,5 +110,15 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
     this.setLight(newVal, timeout, force);
     return newVal;
+  }
+
+  public setTimeBased(time: TimeOfDay): void {
+    if (
+      (time === TimeOfDay.Night && this.settings.nightOn) ||
+      (time === TimeOfDay.BeforeSunrise && this.settings.dawnOn) ||
+      (time === TimeOfDay.AfterSunset && this.settings.duskOn)
+    ) {
+      this.setLight(true);
+    }
   }
 }

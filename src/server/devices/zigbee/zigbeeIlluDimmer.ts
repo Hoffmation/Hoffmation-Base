@@ -113,7 +113,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     }
     ServerLogService.writeLog(
       LogLevel.Debug,
-      `Dimmer Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%`,
+      `Dimmer Schalten: "${this.info.customName}" An: ${pValue} \t Helligkeit: ${brightness}%`,
     );
 
     this.setState(this.stateID, pValue);

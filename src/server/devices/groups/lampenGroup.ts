@@ -73,7 +73,12 @@ export class LampenGroup {
           (time === TimeOfDay.AfterSunset && s.settings.duskOn)
         ) {
           const timeout: number = pValue && force ? 30 * 60 * 1000 : -1;
-          s.setLight(pValue, timeout, force);
+
+          if (pValue && time !== undefined) {
+            s.setTimeBased(time);
+          } else {
+            s.setLight(pValue, timeout, force);
+          }
         }
       });
     }
