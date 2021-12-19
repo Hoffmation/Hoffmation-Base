@@ -3,8 +3,10 @@ import { ServerLogService } from '../../services/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 import { LogLevel } from '../../../models/logLevel';
+import { iLamp } from '../iLamp';
+import { TimeOfDay } from '../../services/time-callback-service';
 
-export class ZigbeeIlluLampe extends ZigbeeIlluActuator {
+export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   public get lightOn(): boolean {
     return super.actuatorOn;
   }
@@ -29,5 +31,15 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator {
 
   public toggleLight(force: boolean = false): boolean {
     return super.toggleActuator(force);
+  }
+
+  public setTimeBased(time: TimeOfDay): void {
+    if (
+      (time === TimeOfDay.Night && this.settings.nightOn) ||
+      (time === TimeOfDay.BeforeSunrise && this.settings.dawnOn) ||
+      (time === TimeOfDay.AfterSunset && this.settings.duskOn)
+    ) {
+      this.setLight(true);
+    }
   }
 }
