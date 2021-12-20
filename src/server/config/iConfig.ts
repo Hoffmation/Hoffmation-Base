@@ -5,8 +5,12 @@ interface iSonosSettings {
   active: boolean;
 }
 
-export interface iConfig {
+export interface iRestSettings {
+  active: boolean;
   expressPort?: number;
+}
+
+export interface iConfig {
   ioBrokerUrl: string;
   logSettings?: iLogSettings;
   translationSettings: iTranslationSettings;
@@ -14,6 +18,7 @@ export interface iConfig {
   muell?: iMuellSettings;
   persistence?: iPersistenceSettings;
   polly?: iPollySettings;
+  restServer?: iRestSettings;
   roomDefault: iRoomDefaultSettings;
   sonos?: iSonosSettings;
   telegram?: iTelegramSettings;

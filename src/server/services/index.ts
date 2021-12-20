@@ -4,6 +4,7 @@ export * from './https-service';
 export * from './HTTPSOptions';
 export * from './log-service';
 export * from './news-service';
+export * from './rest';
 export * from './ShutterService';
 export * from './Sonos/index';
 export * from './settings-service';

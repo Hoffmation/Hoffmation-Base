@@ -22,6 +22,7 @@ import {
   WeatherService,
   Res,
 } from './server';
+import { RestService } from './server/services/rest/rest-service';
 
 export * from './models/index';
 export * from './server/index';
@@ -88,14 +89,8 @@ export class HoffmationBase {
     });
     if (SettingsService.TelegramActive) TelegramService.publishCommands();
 
-    if (SettingsService.settings.expressPort) {
-      this._app.get('/isAlive', (_req, res) => {
-        res.send(`Hoffmation-Base active ${new Date()}`);
-      });
-
-      this._app.listen(SettingsService.settings.expressPort, () => {
-        console.log(`Example app listening at http://localhost:${SettingsService.settings.expressPort}`);
-      });
+    if (SettingsService.settings.restServer?.active) {
+      RestService.initialize(this._app, SettingsService.settings.restServer);
     }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations finished`);
   }
