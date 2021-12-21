@@ -1,17 +1,24 @@
 import { OwnSonosDevice } from '../../services/Sonos/sonos-service';
-import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
-import { LogLevel } from '../../../models/logLevel';
-import { iRoomBase } from '../../../models/rooms/iRoomBase';
+import { BaseGroup } from './base-group';
+import { DeviceClusterType } from '../device-cluster-type';
+import { GroupType } from './group-type';
+import { DeviceList } from '../device-list';
 
-export class SonosGroup {
+export class SonosGroup extends BaseGroup {
   private _playing: boolean = false;
-  public constructor(private _room: iRoomBase, public ownSonosDevices: OwnSonosDevice[]) {
-    ServerLogService.writeLog(LogLevel.DeepTrace, `Added Sonos Group to ${this._room.roomName}`);
+
+  public constructor(roomName: string, speakerIds: string[]) {
+    super(roomName, GroupType.Smoke);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds));
+  }
+
+  public getOwnSonosDevices(): OwnSonosDevice[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Speaker) as OwnSonosDevice[];
   }
 
   public playRadio(radioUrl: string): void {
-    this.ownSonosDevices.forEach((s) => {
+    this.getOwnSonosDevices().forEach((s) => {
       Utils.guardedTimeout(() => {
         s.device?.SetAVTransportURI(radioUrl);
       }, 1500);
@@ -20,7 +27,7 @@ export class SonosGroup {
   }
 
   public turnOff(): void {
-    this.ownSonosDevices.forEach((s) => {
+    this.getOwnSonosDevices().forEach((s) => {
       s.device?.Stop();
     });
     this._playing = false;

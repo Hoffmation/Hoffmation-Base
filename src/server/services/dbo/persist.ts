@@ -76,7 +76,7 @@ export class Persist {
     });
     const detailed = new RoomDetailInfo(room.roomName, room.Settings.etage);
     if (room.HeatGroup) {
-      for (const h of room.HeatGroup.heaters) {
+      for (const h of room.HeatGroup?.getHeater()) {
         detailed.heaters.push(h.info.customName);
       }
     }

@@ -1,17 +1,28 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { HmIpTaster } from '../hmIPDevices/hmIpTaster';
+import { BaseGroup } from './base-group';
+import { DeviceClusterType } from '../device-cluster-type';
+import { GroupType } from './group-type';
+import { DeviceList } from '../device-list';
+import { SonosGroup } from './sonosGroup';
 
-export class TasterGroup {
-  public constructor(private _room: RoomBase, public Taster: HmIpTaster[]) {}
+export class TasterGroup extends BaseGroup {
+  public getButtons(): HmIpTaster[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Buttons) as HmIpTaster[];
+  }
+
+  public constructor(roomName: string, buttonIds: string[]) {
+    super(roomName, GroupType.Buttons);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Buttons, new DeviceList(buttonIds));
+  }
 
   public initCallbacks(): void {
-    this.Taster.forEach((t) => {
+    this.getButtons().forEach((t) => {
       t.tasten.ObenLinks.addLongCallback((pValue) => {
-        pValue && this._room.FensterGroup?.allRolloDown(false, true);
+        pValue && this.getRoom().FensterGroup?.allRolloDown(false, true);
       }, `Close all Rollos in this room`);
 
       t.tasten.ObenLinks.addShortCallback((pValue) => {
-        pValue && this._room.FensterGroup?.allRolloToLevel(25, true);
+        pValue && this.getRoom().FensterGroup?.allRolloToLevel(25, true);
       }, `Nearly closes all Rollos in this room`);
 
       t.tasten.ObenRechts.addLongCallback((pValue) => {
@@ -19,24 +30,25 @@ export class TasterGroup {
           return;
         }
 
-        this._room.FensterGroup?.allRolloUp(true);
+        this.getRoom().FensterGroup?.allRolloUp(true);
       }, `Open all Rollos in this room`);
 
       t.tasten.ObenRechts.addShortCallback((pValue) => {
-        pValue && this._room.FensterGroup?.allRolloToLevel(50, true);
+        pValue && this.getRoom().FensterGroup?.allRolloToLevel(50, true);
       }, `All Rollos in this room to middle`);
 
       t.tasten.MitteLinks.addLongCallback((pValue) => {
-        pValue && this._room.LampenGroup?.switchAll(true, true);
+        pValue && this.getRoom().LampenGroup?.switchAll(true, true);
       }, `Turn all Lights in this room on`);
 
       t.tasten.MitteRechts.addLongCallback((pValue) => {
-        pValue && this._room.LampenGroup?.switchAll(false, true);
+        pValue && this.getRoom().LampenGroup?.switchAll(false, true);
       }, `Turn all Lights in this room off`);
 
-      if (this._room.SonosGroup && this._room.SonosGroup.ownSonosDevices.length > 0) {
+      const sonosGroup: SonosGroup | undefined = this.getRoom().SonosGroup;
+      if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
         t.tasten.UntenRechts.addLongCallback(() => {
-          this._room.SonosGroup?.trigger(this._room.Einstellungen.radioUrl);
+          sonosGroup.trigger(this.getRoom().Einstellungen.radioUrl);
         });
       }
     });

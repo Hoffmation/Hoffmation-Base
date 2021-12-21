@@ -67,11 +67,7 @@ export class RoomBase implements iRoomBase {
     return this.info.etage;
   }
 
-  public constructor(
-    roomName: string,
-    public Einstellungen: RoomSettings,
-    public groups: Map<GroupType, BaseGroup>,
-  ) {
+  public constructor(roomName: string, public Einstellungen: RoomSettings, public groups: Map<GroupType, BaseGroup>) {
     this.info = new RoomInfo(roomName, Einstellungen);
     Einstellungen.room = this;
     this.Settings = Einstellungen;
@@ -134,10 +130,12 @@ export class RoomBase implements iRoomBase {
       timeOfDay === TimeOfDay.Daylight &&
       ((this.Einstellungen.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
         this.FensterGroup?.fenster.some((f) => {
-          const rolloDown: boolean = f.rollo?.currentLevel === 0;
+          const rolloDown: boolean = f.getShutter()[0].currentLevel === 0;
           ServerLogService.writeLog(
             LogLevel.Debug,
-            `Rollo ${f.rollo?.info.customName} for light in ${this.roomName} is ${rolloDown ? '' : 'not '}down`,
+            `Rollo ${f.getShutter()[0].info.customName} for light in ${this.roomName} is ${
+              rolloDown ? '' : 'not '
+            }down`,
           );
           return rolloDown;
         }))
@@ -159,7 +157,7 @@ export class RoomBase implements iRoomBase {
     if (
       timeOfDay === TimeOfDay.Daylight &&
       this.FensterGroup?.fenster.some((f) => {
-        return f.rollo?.currentLevel === 0;
+        return f.getShutter()[0].currentLevel === 0;
       })
     ) {
       timeOfDay = TimeOfDay.AfterSunset;

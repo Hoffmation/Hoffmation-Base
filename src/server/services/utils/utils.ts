@@ -65,4 +65,14 @@ export class Utils {
     const d: Date = new Date();
     return `${d.toLocaleTimeString('de-DE')}.${d.getMilliseconds()}`;
   }
+
+  static guard<T>(object: T | undefined | null) {
+    if (object === undefined) {
+      throw new Error('Guarded Value is undefined');
+    }
+    if (object === null) {
+      throw new Error('Guarded Value is null');
+    }
+    return object;
+  }
 }

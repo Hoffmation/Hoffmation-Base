@@ -1,15 +1,21 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { ZigbeeHeimanSmoke } from '../zigbee/zigbeeHeimanSmoke';
+import { BaseGroup } from './base-group';
+import { DeviceClusterType } from '../device-cluster-type';
+import { GroupType } from './group-type';
+import { DeviceList } from '../device-list';
 
-export class SmokeGroup {
-  public constructor(private _room: RoomBase, public Rauchmelder: Array<ZigbeeHeimanSmoke>) {
-    for (const s of [...this.Rauchmelder]) {
-      s.room = this._room;
-    }
+export class SmokeGroup extends BaseGroup {
+  public getSmokeDetectors(): ZigbeeHeimanSmoke[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.SmokeDetector) as ZigbeeHeimanSmoke[];
+  }
+
+  public constructor(roomName: string, smokeDetectorIds: string[]) {
+    super(roomName, GroupType.Smoke);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.SmokeDetector, new DeviceList(smokeDetectorIds));
   }
 
   public stopAlarm(): void {
-    for (const d of this.Rauchmelder) {
+    for (const d of this.getSmokeDetectors()) {
       d.stopAlarm(true);
     }
   }

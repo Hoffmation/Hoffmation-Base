@@ -8,6 +8,7 @@ import { TelegramService } from '../../services/Telegram/telegram-service';
 import { FensterPosition } from '../models/FensterPosition';
 import { Fenster } from '../Fenster';
 import { LogLevel } from '../../../models/logLevel';
+import { HeatGroup } from '../groups/heatGroup';
 
 export class HmIpGriff extends HmIPDevice {
   public position: FensterPosition = FensterPosition.geschlossen;
@@ -92,9 +93,10 @@ export class HmIpGriff extends HmIPDevice {
       this._iOpen = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
-          if (this._fenster?.room.HeatGroup !== undefined) {
-            const desiredTemp: number = this._fenster.room.HeatGroup.desiredTemp;
-            const currentTemp: number = this._fenster.room.HeatGroup.currentTemp;
+          const heatgroup: HeatGroup | undefined = this._fenster?.getRoom().HeatGroup;
+          if (heatgroup !== undefined) {
+            const desiredTemp: number = heatgroup.desiredTemp;
+            const currentTemp: number = heatgroup.currentTemp;
             const outSideTemp: number = WeatherService.getCurrentTemp();
 
             // Check if any of these values are unavailable

@@ -1,5 +1,4 @@
 import { HmIpGriff } from './hmIPDevices/hmIpGriff';
-import { RoomBase } from '../../models/rooms/RoomBase';
 import { ServerLogService } from '../services/log-service';
 import { Utils } from '../services/utils/utils';
 import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
@@ -8,8 +7,12 @@ import { TimeCallbackService, TimeOfDay } from '../services/time-callback-servic
 import { LogLevel } from '../../models/logLevel';
 import { iShutter } from './iShutter';
 import { ShutterService } from '../services/ShutterService';
+import { BaseGroup } from './groups/base-group';
+import { GroupType } from './groups/group-type';
+import { DeviceClusterType } from './device-cluster-type';
+import { DeviceList } from './device-list';
 
-export class Fenster {
+export class Fenster extends BaseGroup {
   public desiredPosition: number = 0;
 
   /**
@@ -22,37 +25,42 @@ export class Fenster {
   }
 
   public constructor(
-    public room: RoomBase,
-    public griffe: HmIpGriff[],
-    public vibration: ZigbeeAquaraVibra[],
-    public rollo: iShutter | undefined = undefined,
+    roomName: string,
+    handleIds: string[] = [],
+    vibrationIds: string[] = [],
+    shutterIds: string[] = [],
     public noRolloOnSunrise: boolean = false,
   ) {
-    for (const griff of griffe) {
+    super(roomName, GroupType.Window);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
+    for (const griff of this.getHandle()) {
       griff.addKippCallback((kipp: boolean) => {
-        if (kipp && this.griffeInPosition(FensterPosition.offen) === 0) {
-          this.vibration.forEach((element) => {
-            element.vibrationBlocked = true;
-          });
-          const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.room.Einstellungen.rolloOffset);
-          if (this.rollo) {
-            if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
-              this.rollo.setLevel(50, false);
-            } else {
-              ShutterService.up(this.rollo);
-            }
-          }
+        if (!(kipp && this.griffeInPosition(FensterPosition.offen) === 0)) {
+          return;
         }
+        this.getVibration().forEach((element) => {
+          element.vibrationBlocked = true;
+        });
+        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().Einstellungen.rolloOffset);
+        this.getShutter().forEach((shutter) => {
+          if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
+            shutter.setLevel(50, false);
+          } else {
+            ShutterService.up(shutter);
+          }
+        });
       });
 
       griff.addOffenCallback((offen: boolean) => {
         if (offen) {
-          this.vibration.forEach((element) => {
+          this.getVibration().forEach((element) => {
             element.vibrationBlocked = true;
           });
-          if (this.rollo) {
-            ShutterService.up(this.rollo);
-          }
+          this.getShutter().forEach((shutter) => {
+            ShutterService.up(shutter);
+          });
           return;
         }
       });
@@ -64,7 +72,7 @@ export class Fenster {
           this.griffeInPosition(FensterPosition.kipp) === 0
         ) {
           const now = new Date().getTime();
-          this.vibration.forEach((element) => {
+          this.getVibration().forEach((element) => {
             ServerLogService.writeLog(
               LogLevel.Debug,
               `Starte Timeout für Vibrationsdeaktivierung für ${element.info.customName}`,
@@ -81,8 +89,10 @@ export class Fenster {
     }
     Utils.guardedTimeout(
       () => {
-        if (this.rollo) this.rollo.fenster = this;
-        for (const g of this.griffe) {
+        this.getShutter().forEach((shutter) => {
+          shutter.fenster = this;
+        });
+        for (const g of this.getHandle()) {
           g.Fenster = this;
         }
       },
@@ -91,9 +101,21 @@ export class Fenster {
     );
   }
 
+  public getHandle(): HmIpGriff[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
+  }
+
+  public getShutter(): iShutter[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Shutter) as iShutter[];
+  }
+
+  public getVibration(): ZigbeeAquaraVibra[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Vibration) as ZigbeeAquaraVibra[];
+  }
+
   public griffeInPosition(pPosition: FensterPosition): number {
     let count = 0;
-    for (const griff of this.griffe) {
+    for (const griff of this.getHandle()) {
       if (griff.position === pPosition) {
         count++;
       }
@@ -102,18 +124,16 @@ export class Fenster {
   }
 
   public rolloPositionChange(pValue: number): void {
-    if (!this.room) {
-      ServerLogService.writeLog(LogLevel.Error, `Fenster Rollo Update, but this one is not connected to any room!`);
-      return;
-    }
-    ServerLogService.writeLog(LogLevel.Debug, `Rollo Position Change in ${this.room.roomName} to ${pValue}`);
+    ServerLogService.writeLog(LogLevel.Debug, `Rollo Position Change in ${this.roomName} to ${pValue}`);
 
     if (pValue === 0 || pValue === 100) {
-      this.room.setLightTimeBased(true);
+      this.getRoom().setLightTimeBased(true);
     }
   }
 
   public restoreDesiredPosition(): void {
-    this.rollo?.setLevel(this.desiredPosition, false);
+    this.getShutter().forEach((shutter) => {
+      shutter.setLevel(this.desiredPosition, false);
+    });
   }
 }

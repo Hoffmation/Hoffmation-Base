@@ -1,4 +1,3 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { HmIpPraezenz } from '../hmIPDevices/hmIpPraezenz';
 import { Utils } from '../../services/utils/utils';
@@ -8,87 +7,91 @@ import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../../services/time-callback-service';
 import { HmIpBewegung } from '../hmIPDevices/hmIpBewegung';
 import { RoomService } from '../../services/room-service/room-service';
+import { BaseGroup } from './base-group';
+import { DeviceClusterType } from '../device-cluster-type';
+import { GroupType } from './group-type';
+import { DeviceList } from '../device-list';
 
-export class PraesenzGroup {
+export class PraesenzGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
 
-  public constructor(
-    private _room: RoomBase,
-    public Prasenzen: HmIpPraezenz[],
-    public Bewegungen: HmIpBewegung[] | ZigbeeAquaraMotion[],
-  ) {
-    for (const b of [...Prasenzen, ...Bewegungen]) {
-      b.room = this._room;
-    }
+  public getMotionDetector(): Array<HmIpBewegung | ZigbeeAquaraMotion> {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MotionDetection) as Array<
+      HmIpBewegung | ZigbeeAquaraMotion
+    >;
+  }
+
+  public getPresenseSensors(): HmIpPraezenz[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.PresenceDetection) as HmIpPraezenz[];
+  }
+
+  public constructor(roomName: string, presenceDetectorIds: string[], motionSensorIds: string[]) {
+    super(roomName, GroupType.Presence);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.PresenceDetection, new DeviceList(presenceDetectorIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.MotionDetection, new DeviceList(motionSensorIds));
   }
 
   public initCallbacks(): void {
-    this.Prasenzen.forEach((p) => {
+    this.getPresenseSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
         if (!val) {
           return;
         }
         if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !p.excludeFromNightAlarm)) {
-          RoomService.startIntrusionAlarm(this._room, p);
+          RoomService.startIntrusionAlarm(this.getRoom(), p);
         }
-        RoomService.movementHistory.add(
-          `${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${p.info.fullName}"`,
-        );
+        RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${p.info.fullName}"`);
       });
     });
-    this.Bewegungen.forEach((b) => {
+    this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((val) => {
         if (!val) {
           return;
         }
         if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !b.excludeFromNightAlarm)) {
-          RoomService.startIntrusionAlarm(this._room, b);
+          RoomService.startIntrusionAlarm(this.getRoom(), b);
         }
-        RoomService.movementHistory.add(
-          `${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${b.info.fullName}"`,
-        );
+        RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${b.info.fullName}"`);
       });
     });
-    if (this._room.Einstellungen.lichtSonnenAufgangAus && this._room.Einstellungen.lampOffset) {
-      this._room.sonnenAufgangLichtCallback = new TimeCallback(
-        `${this._room.roomName} Morgens Lampe aus`,
+    if (this.getRoom().Einstellungen.lichtSonnenAufgangAus && this.getRoom().Einstellungen.lampOffset) {
+      const cb: TimeCallback = new TimeCallback(
+        `${this.roomName} Morgens Lampe aus`,
         TimeCallbackType.Sunrise,
         () => {
-          ServerLogService.writeLog(
-            LogLevel.Info,
-            `Es ist hell genug --> Schalte Lampen im ${this._room.roomName} aus`,
-          );
-          this._room.LampenGroup?.switchAll(false);
+          ServerLogService.writeLog(LogLevel.Info, `Es ist hell genug --> Schalte Lampen im ${this.roomName} aus`);
+          this.getRoom().LampenGroup?.switchAll(false);
         },
-        this._room.Einstellungen.lampOffset.sunrise,
+        this.getRoom().Einstellungen.lampOffset.sunrise,
       );
-      TimeCallbackService.addCallback(this._room.sonnenAufgangLichtCallback);
+      this.getRoom().sonnenAufgangLichtCallback = cb;
+      TimeCallbackService.addCallback(cb);
     }
 
     this.addLastLeftCallback(() => {
-      this._room.LampenGroup?.switchAll(false);
+      this.getRoom().LampenGroup?.switchAll(false);
     });
 
-    if (this._room.Einstellungen.lampenBeiBewegung) {
+    if (this.getRoom().Einstellungen.lampenBeiBewegung) {
       this.addFirstEnterCallback(() => {
         ServerLogService.writeLog(
           LogLevel.DeepTrace,
-          `Bewegung im Raum ${this._room.roomName} festgestellt --> Licht einschalten`,
+          `Bewegung im Raum ${this.roomName} festgestellt --> Licht einschalten`,
         );
-        this._room.setLightTimeBased();
+        this.getRoom().setLightTimeBased();
       });
     }
   }
 
   public presentAmount(): number {
     let count = 0;
-    for (let i = 0; i < this.Prasenzen.length; i++) {
-      if (this.Prasenzen[i].presenceDetected) {
+    for (let i = 0; i < this.getPresenseSensors().length; i++) {
+      if (this.getPresenseSensors()[i].presenceDetected) {
         count++;
       }
     }
-    for (let i = 0; i < this.Bewegungen.length; i++) {
-      if (this.Bewegungen[i].movementDetected) {
+    for (let i = 0; i < this.getMotionDetector().length; i++) {
+      if (this.getMotionDetector()[i].movementDetected) {
         count++;
       }
     }
@@ -97,13 +100,13 @@ export class PraesenzGroup {
   }
 
   public anyPresent(): boolean {
-    for (let i = 0; i < this.Prasenzen.length; i++) {
-      if (this.Prasenzen[i].presenceDetected) {
+    for (let i = 0; i < this.getPresenseSensors().length; i++) {
+      if (this.getPresenseSensors()[i].presenceDetected) {
         return true;
       }
     }
-    for (let i = 0; i < this.Bewegungen.length; i++) {
-      if (this.Bewegungen[i].movementDetected) {
+    for (let i = 0; i < this.getMotionDetector().length; i++) {
+      if (this.getMotionDetector()[i].movementDetected) {
         return true;
       }
     }
@@ -121,26 +124,26 @@ export class PraesenzGroup {
     }
 
     let timeAfterReset: number =
-      Utils.nowMS() - this._lastMovement.getTime() - this._room.Einstellungen.movementResetTimer * 1000;
+      Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().Einstellungen.movementResetTimer * 1000;
     if (timeAfterReset > 0) {
       ServerLogService.writeLog(
         LogLevel.Debug,
         `Movement reset in ${
-          this._room.roomName
+          this.roomName
         }.\nActive Motions: ${this.presentAmount()}\nTime after Last Movement including Reset: ${timeAfterReset}`,
       );
       cb();
       return;
     }
-    ServerLogService.writeLog(LogLevel.Debug, `Movement reset in ${this._room.roomName} delayed.`);
+    ServerLogService.writeLog(LogLevel.Debug, `Movement reset in ${this.roomName} delayed.`);
     Utils.guardedTimeout(
       () => {
         timeAfterReset =
-          Utils.nowMS() - this._lastMovement.getTime() - this._room.Einstellungen.movementResetTimer * 1000;
+          Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().Einstellungen.movementResetTimer * 1000;
         ServerLogService.writeLog(
           LogLevel.Debug,
           `Delayed Movement reset in ${
-            this._room.roomName
+            this.roomName
           }.\nActive Motions: ${this.presentAmount()}\nTime after Last Movement including Reset: ${timeAfterReset}`,
         );
         if (!this.anyPresent() && timeAfterReset > 0) {
@@ -153,12 +156,12 @@ export class PraesenzGroup {
   }
 
   public addLastLeftCallback(cb: () => void): void {
-    this.Prasenzen.forEach((p) => {
+    this.getPresenseSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
         this.lastLeftCB(val, cb);
       });
     });
-    this.Bewegungen.forEach((b) => {
+    this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((val) => {
         this.lastLeftCB(val, cb);
       });
@@ -178,12 +181,12 @@ export class PraesenzGroup {
   }
 
   public addFirstEnterCallback(cb: () => void): void {
-    this.Prasenzen.forEach((p) => {
+    this.getPresenseSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
         this.firstEnterCallback(val, cb);
       });
     });
-    this.Bewegungen.forEach((b) => {
+    this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((val) => {
         this.firstEnterCallback(val, cb);
       });

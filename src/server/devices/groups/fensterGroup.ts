@@ -1,4 +1,3 @@
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
@@ -8,40 +7,39 @@ import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
 import { ShutterService } from '../../services/ShutterService';
+import { BaseGroup } from './base-group';
+import { GroupType } from './group-type';
+import { RoomBase } from '../../../models/rooms/RoomBase';
 
-export class FensterGroup {
-  public constructor(private _room: RoomBase, public fenster: Fenster[]) {
-    for (const f of [...fenster]) {
-      f.room = this._room;
-    }
+export class FensterGroup extends BaseGroup {
+  public constructor(roomName: string, public fenster: Fenster[]) {
+    super(roomName, GroupType.WindowGroup);
   }
 
   public allRolloDown(initial: boolean = false, savePosition: boolean = false): void {
     this.fenster.forEach((f) => {
       if (savePosition) f.desiredPosition = 0;
-      if (f.rollo !== undefined) {
+      f.getShutter().forEach((shutter) => {
         ServerLogService.writeLog(
           LogLevel.Debug,
           `Fahre das Rollo zum Sonnenuntergang ${initial ? '(ggf. nachträglich) ' : ''}für ${
-            f.rollo.info.customName
+            shutter.info.customName
           } runter`,
         );
-        ShutterService.down(f.rollo, initial);
-      }
+        ShutterService.down(shutter, initial);
+      });
     });
   }
 
   public allRolloUp(savePosition: boolean = false): void {
     this.fenster.forEach((f) => {
-      if (f.rollo === undefined) {
-        return;
-      }
-
       if (savePosition) {
         f.desiredPosition = 100;
       }
-      ServerLogService.writeLog(LogLevel.Debug, `Fenster.allRolloUp for ${f.rollo.info.customName}`);
-      ShutterService.up(f.rollo, false);
+      f.getShutter().forEach((shutter) => {
+        ServerLogService.writeLog(LogLevel.Debug, `Fenster.allRolloUp for ${shutter.info.customName}`);
+        ShutterService.up(shutter, false);
+      });
     });
   }
 
@@ -50,46 +48,47 @@ export class FensterGroup {
       if (savePosition) {
         f.desiredPosition = level;
       }
-      if (f.rollo !== undefined) {
-        f.rollo.setLevel(level, false);
-      }
+      f.getShutter().forEach((shutter) => {
+        shutter.setLevel(level, false);
+      });
     });
   }
 
   public initCallbacks(): void {
-    if (this._room.Einstellungen.sonnenAufgangRollos && this._room.Einstellungen.rolloOffset) {
-      ServerLogService.writeLog(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this._room.roomName} hinzufügen`);
-      this._room.sonnenAufgangCallback = new TimeCallback(
-        `${this._room.roomName} Sonnenaufgang Rollos`,
+    const room: RoomBase = this.getRoom();
+    if (room.Einstellungen.sonnenAufgangRollos && room.Einstellungen.rolloOffset) {
+      ServerLogService.writeLog(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this.roomName} hinzufügen`);
+      room.sonnenAufgangCallback = new TimeCallback(
+        `${this.roomName} Sonnenaufgang Rollos`,
         TimeCallbackType.Sunrise,
         () => {
-          if (this._room.skipNextRolloUp) {
-            this._room.skipNextRolloUp = false;
+          if (room.skipNextRolloUp) {
+            room.skipNextRolloUp = false;
             return;
           }
           this.sunriseUp();
         },
-        this._room.Einstellungen.rolloOffset.sunrise,
+        room.Einstellungen.rolloOffset.sunrise,
         undefined,
         undefined,
-        this._room.Einstellungen.rolloOffset,
+        room.Einstellungen.rolloOffset,
       );
-      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this._room.Einstellungen.rolloOffset))) {
+      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.Einstellungen.rolloOffset))) {
         this.sunriseUp(true);
       }
-      TimeCallbackService.addCallback(this._room.sonnenAufgangCallback);
+      TimeCallbackService.addCallback(room.sonnenAufgangCallback);
     }
 
-    if (this._room.Einstellungen.sonnenUntergangRollos && this._room.Einstellungen.rolloOffset) {
-      this._room.sonnenUntergangCallback = new TimeCallback(
-        `${this._room.roomName} Sonnenuntergang Rollo`,
+    if (room.Einstellungen.sonnenUntergangRollos && room.Einstellungen.rolloOffset) {
+      room.sonnenUntergangCallback = new TimeCallback(
+        `${this.roomName} Sonnenuntergang Rollo`,
         TimeCallbackType.SunSet,
         () => {
           this.sunsetDown();
         },
-        this._room.Einstellungen.rolloOffset.sunset,
+        room.Einstellungen.rolloOffset.sunset,
       );
-      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this._room.Einstellungen.rolloOffset))) {
+      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.Einstellungen.rolloOffset))) {
         Utils.guardedTimeout(
           () => {
             this.allRolloDown(true, true);
@@ -98,10 +97,10 @@ export class FensterGroup {
           this,
         );
       }
-      TimeCallbackService.addCallback(this._room.sonnenUntergangCallback);
+      TimeCallbackService.addCallback(room.sonnenUntergangCallback);
     }
 
-    if (this._room.Einstellungen.rolloHeatReduction) {
+    if (room.Einstellungen.rolloHeatReduction) {
       Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, true);
       Utils.guardedTimeout(this.setRolloByWeatherStatus, 2 * 60 * 1000, this);
     }
@@ -109,16 +108,18 @@ export class FensterGroup {
 
   private sunsetDown(): void {
     this.allRolloToLevel(0, true);
-    if (this._room.PraesenzGroup?.anyPresent() && this._room.Einstellungen.lampOffset) {
-      this._room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(this._room.Einstellungen.lampOffset));
+    const room: RoomBase = this.getRoom();
+    if (room.PraesenzGroup?.anyPresent() && room.Einstellungen.lampOffset) {
+      room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.Einstellungen.lampOffset));
     }
   }
 
   public setRolloByWeatherStatus(): void {
-    const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this._room.Einstellungen.rolloOffset);
+    const room: RoomBase = this.getRoom();
+    const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.Einstellungen.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
     this.fenster.forEach((f) => {
-      if (!f.rollo) {
+      if (f.getShutter().length === 0) {
         return;
       }
       if (darkOutside) {
@@ -129,8 +130,8 @@ export class FensterGroup {
       if (desiredPos > 0) {
         WeatherService.weatherRolloPosition(
           desiredPos,
-          this._room.HeatGroup?.desiredTemp ?? -99,
-          this._room.HeatGroup?.currentTemp ?? -99,
+          room.HeatGroup?.desiredTemp ?? -99,
+          room.HeatGroup?.currentTemp ?? -99,
         );
       }
       if (f.griffeInPosition(FensterPosition.offen) > 0 && desiredPos < 100) {
@@ -139,25 +140,26 @@ export class FensterGroup {
       if (f.griffeInPosition(FensterPosition.kipp) > 0) {
         desiredPos = Math.max(30, desiredPos);
       }
-      if (f.rollo.currentLevel === desiredPos) {
-        // Rollo ist bereits auf der Zielposition
-        return;
-      }
-      f.rollo.setLevel(desiredPos, false, true);
+      f.getShutter().forEach((shutter) => {
+        if (shutter.currentLevel === desiredPos) {
+          // Rollo ist bereits auf der Zielposition
+          return;
+        }
+        shutter.setLevel(desiredPos, false, true);
+      });
     });
   }
 
   public sunriseUp(initial: boolean = false): void {
     this.fenster.forEach((f) => {
-      if (!f.noRolloOnSunrise && f.rollo) {
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Fahre das Rollo zum Sonnenaufgang ${initial ? '(ggf. nachträglich)' : ''}für ${
-            f.rollo.info.customName
-          } hoch`,
-        );
-        f.setDesiredPosition(100);
+      if (f.noRolloOnSunrise || f.getShutter().length === 0) {
+        return;
       }
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Fahre das Rollo zum Sonnenaufgang ${initial ? '(ggf. nachträglich)' : ''} hoch`,
+      );
+      f.setDesiredPosition(100);
     });
   }
 
@@ -168,7 +170,9 @@ export class FensterGroup {
       });
       return;
     }
-    if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this._room.Einstellungen.rolloOffset))) {
+    if (
+      !TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this.getRoom().Einstellungen.rolloOffset))
+    ) {
       this.sunriseUp(true);
     } else {
       this.sunsetDown();

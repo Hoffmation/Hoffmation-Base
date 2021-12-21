@@ -21,16 +21,16 @@ export class ShutterService {
         continue;
       }
       for (const f of r.FensterGroup.fenster) {
-        if (f.rollo) {
+        f.getShutter().forEach((shutter) => {
           response.push(
-            `Rollo: "${f.rollo.info.customName}"\t${
+            `Rollo: "${shutter.info.customName}"\t${
               f.noRolloOnSunrise ? 'Hochfahren inaktiv' : r.sonnenAufgangCallback?.nextToDo?.toLocaleTimeString()
             }`,
           );
           down.push(
-            `Rollo: "${f.rollo.info.customName}"\t${r.sonnenUntergangCallback?.nextToDo?.toLocaleTimeString()}`,
+            `Rollo: "${shutter.info.customName}"\t${r.sonnenUntergangCallback?.nextToDo?.toLocaleTimeString()}`,
           );
-        }
+        });
       }
     }
     response.push(down.join('\n'));

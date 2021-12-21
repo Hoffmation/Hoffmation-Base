@@ -10,4 +10,7 @@ export enum DeviceClusterType {
   SmokeDetector,
   WaterDetectors,
   Windows,
+  Handle,
+  Vibration,
+  Shutter,
 }
