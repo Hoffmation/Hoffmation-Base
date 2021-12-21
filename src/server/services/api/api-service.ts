@@ -1,6 +1,7 @@
 import { Devices } from '../../devices/devices';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
+import { RoomService } from '../room-service/room-service';
 
 export class API {
   public static getDevices(): { [id: string]: IoBrokerBaseDevice } {
@@ -11,11 +12,11 @@ export class API {
     return Devices.alLDevices[id];
   }
 
-  public static getRooms(): { [name: string]: RoomBase } {
-    return RoomBase.Rooms;
+  public static getRooms(): Map<string, RoomBase> {
+    return RoomService.Rooms;
   }
 
-  public static getRoom(id: string): RoomBase {
-    return RoomBase.Rooms[id];
+  public static getRoom(id: string): RoomBase | undefined {
+    return RoomService.Rooms.get(id);
   }
 }

@@ -1,7 +1,7 @@
-import { RoomBase } from '../../models/rooms/RoomBase';
 import { DeviceType } from '../devices/deviceType';
 import { Devices } from '../devices/devices';
 import { iShutter } from '../devices/iShutter';
+import { API } from './api/api-service';
 
 export class ShutterService {
   public static getRolladenPosition(): string {
@@ -16,8 +16,7 @@ export class ShutterService {
     }
     response.push(`\nDie nächsten Zeiten zum Hochfahren:`);
     const down: string[] = [`\nDie nächsten Zeiten zum Runterfahren:`];
-    const rooms: RoomBase[] = RoomBase.allRooms;
-    for (const r of rooms) {
+    for (const r of API.getRooms().values()) {
       for (const f of r.FensterGroup.fenster) {
         if (f.rollo) {
           response.push(

@@ -1,5 +1,4 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { DeviceType } from '../../devices/deviceType';
 import { TelegramMessageCallback } from './telegramMessageCalback';
 import { ShutterService } from '../ShutterService';
@@ -10,6 +9,7 @@ import { HmIpTaster } from '../../devices/hmIPDevices/hmIpTaster';
 import { TelegramService } from './telegram-service';
 import { Devices } from '../../devices/devices';
 import { SonosService } from '../Sonos/sonos-service';
+import { RoomService } from '../room-service/room-service';
 
 export class TelegramCommands {
   public static initialize(): void {
@@ -19,7 +19,7 @@ export class TelegramCommands {
         /\/stop_alarm/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          RoomBase.clearAllAlarms();
+          RoomService.clearAllAlarms();
           TelegramService.sendMessage(
             [m.from.id],
             'Alle ausgelösten Wasser-/Rauchmelder und Eindringlingsalarme wurden gestoppt.',
@@ -35,7 +35,7 @@ export class TelegramCommands {
         /\/away_mode_start/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          RoomBase.startAwayMode();
+          RoomService.startAwayMode();
           TelegramService.inform('Der Abwesenheitsmodus ist initiiert');
           return true;
         },
@@ -48,7 +48,7 @@ export class TelegramCommands {
         /\/nightalarm_mode_start/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          RoomBase.startNightAlarmMode();
+          RoomService.startNightAlarmMode();
           TelegramService.inform('Der Nachtmodus ist initiiert');
           return true;
         },
@@ -61,7 +61,7 @@ export class TelegramCommands {
         /\/alarm_modes_end/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          RoomBase.endAlarmModes();
+          RoomService.endAlarmModes();
           TelegramService.sendMessage([m.from.id], 'Der Abwesenheitsmodus ist deaktiviert.');
           return true;
         },
@@ -76,7 +76,7 @@ export class TelegramCommands {
           if (m.from === undefined) return false;
           TelegramService.sendMessage(
             [m.from.id],
-            `Im Folgenden sind die letzten Bewegungen\n${RoomBase.getLastMovements()}`,
+            `Im Folgenden sind die letzten Bewegungen\n${RoomService.getLastMovements()}`,
           );
           return true;
         },
@@ -181,7 +181,7 @@ export class TelegramCommands {
         /\/all_rollo_down/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          RoomBase.setAllRolloOfFloor(-1, 0);
+          RoomService.setAllRolloOfFloor(-1, 0);
           TelegramService.sendMessage([m.from.id], `Es werden alle Rollos heruntergefahren`);
           return true;
         },

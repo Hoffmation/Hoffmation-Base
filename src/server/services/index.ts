@@ -13,3 +13,4 @@ export * from './time-callback-service';
 export * from './Translation/index';
 export * from './utils/index';
 export * from './weather/index';
+export * from './room-service/room-service';

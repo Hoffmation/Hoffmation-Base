@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { ServerLogService } from '../../services/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
@@ -8,6 +7,7 @@ import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../../services/Sonos/sonos-service';
 import { Res } from '../../services/Translation/res';
+import { RoomService } from '../../services/room-service/room-service';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   public smoke: boolean = false;
@@ -94,7 +94,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
     });
     Utils.guardedNewThread(() => {
       // Roll all Rollos up, to ensure free sight for firefighters
-      RoomBase.setAllRolloOfFloor(-1, 100);
+      RoomService.setAllRolloOfFloor(-1, 100);
     });
   }
 }

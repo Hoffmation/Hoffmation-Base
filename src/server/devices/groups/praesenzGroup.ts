@@ -7,6 +7,7 @@ import { ZigbeeAquaraMotion } from '../zigbee/zigbeeAquaraMotion';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../../services/time-callback-service';
 import { HmIpBewegung } from '../hmIPDevices/hmIpBewegung';
+import { RoomService } from '../../services/room-service/room-service';
 
 export class PraesenzGroup {
   private _lastMovement: Date = new Date(0);
@@ -27,10 +28,12 @@ export class PraesenzGroup {
         if (!val) {
           return;
         }
-        if (RoomBase.awayModeActive || (RoomBase.nightAlarmActive && !p.excludeFromNightAlarm)) {
-          RoomBase.startIntrusionAlarm(this._room, p);
+        if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !p.excludeFromNightAlarm)) {
+          RoomService.startIntrusionAlarm(this._room, p);
         }
-        RoomBase.movementHistory.add(`${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${p.info.fullName}"`);
+        RoomService.movementHistory.add(
+          `${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${p.info.fullName}"`,
+        );
       });
     });
     this.Bewegungen.forEach((b) => {
@@ -38,10 +41,12 @@ export class PraesenzGroup {
         if (!val) {
           return;
         }
-        if (RoomBase.awayModeActive || (RoomBase.nightAlarmActive && !b.excludeFromNightAlarm)) {
-          RoomBase.startIntrusionAlarm(this._room, b);
+        if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !b.excludeFromNightAlarm)) {
+          RoomService.startIntrusionAlarm(this._room, b);
         }
-        RoomBase.movementHistory.add(`${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${b.info.fullName}"`);
+        RoomService.movementHistory.add(
+          `${Utils.nowString()}: Raum "${this._room.roomName}" Gerät "${b.info.fullName}"`,
+        );
       });
     });
     if (this._room.Einstellungen.lichtSonnenAufgangAus && this._room.Einstellungen.lampOffset) {
