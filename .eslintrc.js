@@ -15,6 +15,14 @@ module.exports = {
     'linebreak-style': 'off',
     '@typescript-eslint/no-inferrable-types': [0],
     '@typescript-eslint/adjacent-overload-signatures': [0],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
   },
   overrides: [
     {

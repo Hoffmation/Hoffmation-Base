@@ -75,8 +75,10 @@ export class Persist {
       this.handleReject(r, 'BasicRoomCollection.updateOne');
     });
     const detailed = new RoomDetailInfo(room.roomName, room.Settings.etage);
-    for (const h of room.HeatGroup.heaters) {
-      detailed.heaters.push(h.info.customName);
+    if (room.HeatGroup) {
+      for (const h of room.HeatGroup.heaters) {
+        detailed.heaters.push(h.info.customName);
+      }
     }
     this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
       (r) => {

@@ -109,8 +109,8 @@ export class FensterGroup {
 
   private sunsetDown(): void {
     this.allRolloToLevel(0, true);
-    if (this._room.PraesenzGroup.anyPresent() && this._room.Einstellungen.lampOffset) {
-      this._room.LampenGroup.switchTimeConditional(TimeCallbackService.dayType(this._room.Einstellungen.lampOffset));
+    if (this._room.PraesenzGroup?.anyPresent() && this._room.Einstellungen.lampOffset) {
+      this._room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(this._room.Einstellungen.lampOffset));
     }
   }
 
@@ -129,8 +129,8 @@ export class FensterGroup {
       if (desiredPos > 0) {
         WeatherService.weatherRolloPosition(
           desiredPos,
-          this._room.HeatGroup.desiredTemp,
-          this._room.HeatGroup.currentTemp,
+          this._room.HeatGroup?.desiredTemp ?? -99,
+          this._room.HeatGroup?.currentTemp ?? -99,
         );
       }
       if (f.griffeInPosition(FensterPosition.offen) > 0 && desiredPos < 100) {

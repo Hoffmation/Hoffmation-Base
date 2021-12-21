@@ -14,25 +14,65 @@ import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callb
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
 import { iRoomBase } from './iRoomBase';
 import { RoomService } from '../../server/services/room-service/room-service';
+import { RoomInfo } from './roomInfo';
+import { BaseGroup } from '../../server/devices/groups/base-group';
+import { GroupType } from '../../server/devices/groups/group-type';
 
 export class RoomBase implements iRoomBase {
-  public etage: number | undefined;
-  public FensterGroup: FensterGroup = new FensterGroup(this, []);
-  public PraesenzGroup: PraesenzGroup = new PraesenzGroup(this, [], []);
-  public LampenGroup: LampenGroup = new LampenGroup(this, [], [], []);
-  public TasterGroup: TasterGroup = new TasterGroup(this, []);
-  public SonosGroup: SonosGroup = new SonosGroup(this, []);
-  public SmokeGroup: SmokeGroup = new SmokeGroup(this, []);
-  public WaterGroup: WaterGroup = new WaterGroup(this, []);
-  public HeatGroup: HeatGroup = new HeatGroup(this, []);
+  public info: RoomInfo;
+
+  public get FensterGroup(): FensterGroup | undefined {
+    return this.groups.get(GroupType.Window) as FensterGroup | undefined;
+  }
+
+  public get PraesenzGroup(): PraesenzGroup | undefined {
+    return this.groups.get(GroupType.Presence) as PraesenzGroup | undefined;
+  }
+
+  public get LampenGroup(): LampenGroup | undefined {
+    return this.groups.get(GroupType.Light) as LampenGroup | undefined;
+  }
+
+  public get TasterGroup(): TasterGroup | undefined {
+    return this.groups.get(GroupType.Buttons) as TasterGroup | undefined;
+  }
+
+  public get SonosGroup(): SonosGroup | undefined {
+    return this.groups.get(GroupType.Speaker) as SonosGroup | undefined;
+  }
+
+  public get SmokeGroup(): SmokeGroup | undefined {
+    return this.groups.get(GroupType.Smoke) as SmokeGroup | undefined;
+  }
+
+  public get WaterGroup(): WaterGroup | undefined {
+    return this.groups.get(GroupType.Water) as WaterGroup | undefined;
+  }
+
+  public get HeatGroup(): HeatGroup | undefined {
+    return this.groups.get(GroupType.Heating) as HeatGroup | undefined;
+  }
+
   public Settings: RoomSettings;
   public sonnenAufgangCallback: TimeCallback | undefined;
   public sonnenUntergangCallback: TimeCallback | undefined;
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
   public skipNextRolloUp: boolean = false;
 
-  public constructor(public roomName: string, public Einstellungen: RoomSettings) {
-    this.etage = Einstellungen.etage;
+  public get roomName(): string {
+    return this.info.roomName;
+  }
+
+  public get etage(): number | undefined {
+    return this.info.etage;
+  }
+
+  public constructor(
+    roomName: string,
+    public Einstellungen: RoomSettings,
+    public groups: Map<GroupType, BaseGroup>,
+  ) {
+    this.info = new RoomInfo(roomName, Einstellungen);
     Einstellungen.room = this;
     this.Settings = Einstellungen;
     RoomService.addToRoomList(this);
@@ -41,9 +81,9 @@ export class RoomBase implements iRoomBase {
   public initializeBase(): void {
     ServerLogService.writeLog(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
     this.recalcTimeCallbacks();
-    this.PraesenzGroup.initCallbacks();
-    this.FensterGroup.initCallbacks();
-    this.TasterGroup.initCallbacks();
+    this.PraesenzGroup?.initCallbacks();
+    this.FensterGroup?.initCallbacks();
+    this.TasterGroup?.initCallbacks();
   }
 
   public persist(): void {
@@ -73,7 +113,11 @@ export class RoomBase implements iRoomBase {
    * @param movementDependant Only turn light on if there was a movement in the same room
    */
   public setLightTimeBased(movementDependant: boolean = false): void {
-    if (movementDependant && !this.PraesenzGroup.anyPresent()) {
+    if (!this.LampenGroup) {
+      return;
+    }
+
+    if (movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
       this.LampenGroup.switchAll(false);
       return;
     }
@@ -88,8 +132,8 @@ export class RoomBase implements iRoomBase {
     let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.Einstellungen.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
-      ((this.Einstellungen.lightIfNoWindows && this.FensterGroup.fenster.length === 0) ||
-        this.FensterGroup.fenster.some((f) => {
+      ((this.Einstellungen.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
+        this.FensterGroup?.fenster.some((f) => {
           const rolloDown: boolean = f.rollo?.currentLevel === 0;
           ServerLogService.writeLog(
             LogLevel.Debug,
@@ -114,7 +158,7 @@ export class RoomBase implements iRoomBase {
     let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.Einstellungen.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
-      this.FensterGroup.fenster.some((f) => {
+      this.FensterGroup?.fenster.some((f) => {
         return f.rollo?.currentLevel === 0;
       })
     ) {

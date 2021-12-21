@@ -58,7 +58,7 @@ export class PraesenzGroup {
             LogLevel.Info,
             `Es ist hell genug --> Schalte Lampen im ${this._room.roomName} aus`,
           );
-          this._room.LampenGroup.switchAll(false);
+          this._room.LampenGroup?.switchAll(false);
         },
         this._room.Einstellungen.lampOffset.sunrise,
       );
@@ -66,7 +66,7 @@ export class PraesenzGroup {
     }
 
     this.addLastLeftCallback(() => {
-      this._room.LampenGroup.switchAll(false);
+      this._room.LampenGroup?.switchAll(false);
     });
 
     if (this._room.Einstellungen.lampenBeiBewegung) {

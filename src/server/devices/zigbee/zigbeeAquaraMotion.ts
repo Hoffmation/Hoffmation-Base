@@ -39,7 +39,7 @@ export class ZigbeeAquaraMotion extends ZigbeeDevice implements iIlluminationSen
         this.info.devID,
         value,
         new Date(),
-        this.room?.LampenGroup.anyLightsOwn() ?? false,
+        this.room?.LampenGroup?.anyLightsOwn() ?? false,
       ),
     );
   }

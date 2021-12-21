@@ -1,3 +1,6 @@
+export * from './device-cluster';
+export * from './device-cluster-type';
+export * from './device-list';
 export * from './iLamp';
 export * from './taste';
 export * from './Griffe';

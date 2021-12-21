@@ -38,7 +38,7 @@ export class RoomService {
     const rooms: IterableIterator<[string, RoomBase]> =
       floor > -1 ? this.getAllRoomsOfFloor(floor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
-      room.FensterGroup.allRolloToLevel(position, true);
+      room.FensterGroup?.allRolloToLevel(position, true);
     }
   }
 
@@ -53,9 +53,9 @@ export class RoomService {
     const rooms: IterableIterator<[string, RoomBase]> =
       floor > -1 ? this.getAllRoomsOfFloor(floor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
-      room.LampenGroup.setAllLampen(status, -1, true);
-      room.LampenGroup.setAllLED(status);
-      room.LampenGroup.setAllStecker(status, -1, true);
+      room.LampenGroup?.setAllLampen(status, -1, true);
+      room.LampenGroup?.setAllLED(status);
+      room.LampenGroup?.setAllStecker(status, -1, true);
     }
   }
 
@@ -214,7 +214,7 @@ export class RoomService {
 
   private static restoreRolloPosition(): void {
     for (const room of this.Rooms.values()) {
-      room.FensterGroup.restoreRolloPosition();
+      room.FensterGroup?.restoreRolloPosition();
     }
   }
 

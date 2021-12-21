@@ -92,7 +92,7 @@ export class HmIpGriff extends HmIPDevice {
       this._iOpen = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
-          if (this._fenster !== undefined && this._fenster.room !== undefined) {
+          if (this._fenster?.room.HeatGroup !== undefined) {
             const desiredTemp: number = this._fenster.room.HeatGroup.desiredTemp;
             const currentTemp: number = this._fenster.room.HeatGroup.currentTemp;
             const outSideTemp: number = WeatherService.getCurrentTemp();

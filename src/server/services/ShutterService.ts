@@ -17,6 +17,9 @@ export class ShutterService {
     response.push(`\nDie nächsten Zeiten zum Hochfahren:`);
     const down: string[] = [`\nDie nächsten Zeiten zum Runterfahren:`];
     for (const r of API.getRooms().values()) {
+      if (!r.FensterGroup) {
+        continue;
+      }
       for (const f of r.FensterGroup.fenster) {
         if (f.rollo) {
           response.push(

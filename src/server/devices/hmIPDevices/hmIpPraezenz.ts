@@ -43,7 +43,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
         this.info.devID,
         value,
         new Date(),
-        this.room?.LampenGroup.anyLightsOwn() ?? false,
+        this.room?.LampenGroup?.anyLightsOwn() ?? false,
       ),
     );
   }
