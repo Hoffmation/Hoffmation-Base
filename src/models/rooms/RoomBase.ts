@@ -36,10 +36,10 @@ export class RoomBase implements iRoomBase {
   public WaterGroup: WaterGroup = new WaterGroup(this, []);
   public HeatGroup: HeatGroup = new HeatGroup(this, []);
   public Settings: RoomSettings;
-  sonnenAufgangCallback: TimeCallback | undefined;
-  sonnenUntergangCallback: TimeCallback | undefined;
-  sonnenAufgangLichtCallback: TimeCallback | undefined;
-  skipNextRolloUp: boolean = false;
+  public sonnenAufgangCallback: TimeCallback | undefined;
+  public sonnenUntergangCallback: TimeCallback | undefined;
+  public sonnenAufgangLichtCallback: TimeCallback | undefined;
+  public skipNextRolloUp: boolean = false;
   private static _awayModeTimer: NodeJS.Timeout | undefined;
   private static _nightModeTimer: NodeJS.Timeout | undefined;
   private static _intrusionAlarmActive: boolean = false;
@@ -185,7 +185,7 @@ export class RoomBase implements iRoomBase {
     RoomBase.allRooms.push(this);
   }
 
-  initializeBase(): void {
+  public initializeBase(): void {
     ServerLogService.writeLog(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
     this.recalcTimeCallbacks();
     this.PraesenzGroup.initCallbacks();
@@ -193,11 +193,11 @@ export class RoomBase implements iRoomBase {
     this.TasterGroup.initCallbacks();
   }
 
-  persist(): void {
+  public persist(): void {
     Persist.addRoom(this);
   }
 
-  recalcTimeCallbacks(): void {
+  public recalcTimeCallbacks(): void {
     const now: Date = new Date();
     if (this.sonnenAufgangCallback && this.Einstellungen.rolloOffset) {
       this.sonnenAufgangCallback.minuteOffset = this.Einstellungen.rolloOffset.sunrise;
@@ -219,7 +219,7 @@ export class RoomBase implements iRoomBase {
    * Sets the light based on the current time, rollo Position and room Settings
    * @param movementDependant Only turn light on if there was a movement in the same room
    */
-  setLightTimeBased(movementDependant: boolean = false): void {
+  public setLightTimeBased(movementDependant: boolean = false): void {
     if (movementDependant && !this.PraesenzGroup.anyPresent()) {
       this.LampenGroup.switchAll(false);
       return;
@@ -250,7 +250,7 @@ export class RoomBase implements iRoomBase {
     this.LampenGroup.switchTimeConditional(timeOfDay);
   }
 
-  isNowLightTime(): boolean {
+  public isNowLightTime(): boolean {
     if (!this.Einstellungen.lampOffset) {
       ServerLogService.writeLog(
         LogLevel.Alert,

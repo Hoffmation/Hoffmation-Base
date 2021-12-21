@@ -1,5 +1,4 @@
 import { LogLevel } from './models';
-import { Express } from 'express';
 import {
   ServerLogService,
   Devices,
@@ -22,18 +21,16 @@ import {
   WeatherService,
   Res,
 } from './server';
-import { RestService } from './server/services/rest/rest-service';
 
 export * from './models/index';
 export * from './server/index';
 
 export class HoffmationInitializationObject {
-  public constructor(public config: iConfig, public readonly app: Express) {}
+  public constructor(public config: iConfig) {}
 }
 
 export class HoffmationBase {
   public static ioMain: ioBrokerMain;
-  private static _app: Express;
 
   public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
     SettingsService.initialize(initObject.config);
@@ -47,7 +44,6 @@ export class HoffmationBase {
     } else {
       Persist.turnOff();
     }
-    this._app = initObject.app;
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);
       new MP3Server(SettingsService.settings.mp3Server);
@@ -88,10 +84,6 @@ export class HoffmationBase {
       }
     });
     if (SettingsService.TelegramActive) TelegramService.publishCommands();
-
-    if (SettingsService.settings.restServer?.active) {
-      RestService.initialize(this._app, SettingsService.settings.restServer);
-    }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations finished`);
   }
 

@@ -7,7 +7,7 @@ interface iSonosSettings {
 
 export interface iRestSettings {
   active: boolean;
-  expressPort?: number;
+  port?: number;
 }
 
 export interface iConfig {
