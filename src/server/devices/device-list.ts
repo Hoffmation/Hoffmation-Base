@@ -7,16 +7,24 @@ export class DeviceList {
   public get ids(): string[] {
     return this._ids;
   }
-  public constructor(private _ids: string[] = []) {}
+
+  public constructor(private _ids: string[] = []) {
+  }
 
   public getDevices(): Array<IoBrokerBaseDevice | OwnSonosDevice> {
     const result: Array<IoBrokerBaseDevice | OwnSonosDevice> = [];
 
     for (const dID in this._ids) {
-      result.push(API.getDevice(dID));
+      const d = API.getDevice(dID);
+      if (d !== undefined) {
+        result.push(d);
+      }
     }
     for (const name in this._ids) {
-      result.push(OwnSonosDevices.ownDevices[name]);
+      const s = OwnSonosDevices.ownDevices[name];
+      if (s !== undefined) {
+        result.push(OwnSonosDevices.ownDevices[name]);
+      }
     }
     return result;
   }
