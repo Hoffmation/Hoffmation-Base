@@ -2,8 +2,18 @@ import { DeviceType } from '../devices/deviceType';
 import { Devices } from '../devices/devices';
 import { iShutter } from '../devices/iShutter';
 import { API } from './api/api-service';
+import { Fenster } from '../devices/Fenster';
 
 export class ShutterService {
+  public static anyRolloDown(rollo: iShutter[]): boolean {
+    for (let i: number = 0; i < rollo.length; i++) {
+      if (rollo[i].currentLevel === 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public static getRolladenPosition(): string {
     const rollos: iShutter[] = ShutterService.getAllRollos();
     rollos.sort((a, b): number => {
@@ -58,5 +68,34 @@ export class ShutterService {
 
   public static up(shutter: iShutter, initial: boolean = false): void {
     shutter.setLevel(100, initial);
+  }
+
+  public static windowAllDown(f: Fenster, initial: boolean = false): void {
+    f.getShutter().forEach((s) => {
+      s.setLevel(0, initial);
+    });
+  }
+
+  public static windowAllMiddle(f: Fenster, initial: boolean = false): void {
+    f.getShutter().forEach((s) => {
+      s.setLevel(50, initial);
+    });
+  }
+
+  public static windowAllUp(f: Fenster, initial: boolean = false): void {
+    f.getShutter().forEach((s) => {
+      s.setLevel(100, initial);
+    });
+  }
+
+  public static windowAllToPosition(
+    f: Fenster,
+    position: number,
+    initial: boolean = false,
+    skipOpenWarning: boolean = false,
+  ): void {
+    f.getShutter().forEach((s) => {
+      s.setLevel(position, initial, skipOpenWarning);
+    });
   }
 }

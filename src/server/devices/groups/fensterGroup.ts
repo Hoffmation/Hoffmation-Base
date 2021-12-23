@@ -19,15 +19,7 @@ export class FensterGroup extends BaseGroup {
   public allRolloDown(initial: boolean = false, savePosition: boolean = false): void {
     this.fenster.forEach((f) => {
       if (savePosition) f.desiredPosition = 0;
-      f.getShutter().forEach((shutter) => {
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Fahre das Rollo zum Sonnenuntergang ${initial ? '(ggf. nachträglich) ' : ''}für ${
-            shutter.info.customName
-          } runter`,
-        );
-        ShutterService.down(shutter, initial);
-      });
+      ShutterService.windowAllDown(f, initial);
     });
   }
 
@@ -36,10 +28,7 @@ export class FensterGroup extends BaseGroup {
       if (savePosition) {
         f.desiredPosition = 100;
       }
-      f.getShutter().forEach((shutter) => {
-        ServerLogService.writeLog(LogLevel.Debug, `Fenster.allRolloUp for ${shutter.info.customName}`);
-        ShutterService.up(shutter, false);
-      });
+      ShutterService.windowAllUp(f);
     });
   }
 
@@ -48,9 +37,7 @@ export class FensterGroup extends BaseGroup {
       if (savePosition) {
         f.desiredPosition = level;
       }
-      f.getShutter().forEach((shutter) => {
-        shutter.setLevel(level, false);
-      });
+      ShutterService.windowAllToPosition(f, level, false);
     });
   }
 
@@ -140,13 +127,7 @@ export class FensterGroup extends BaseGroup {
       if (f.griffeInPosition(FensterPosition.kipp) > 0) {
         desiredPos = Math.max(30, desiredPos);
       }
-      f.getShutter().forEach((shutter) => {
-        if (shutter.currentLevel === desiredPos) {
-          // Rollo ist bereits auf der Zielposition
-          return;
-        }
-        shutter.setLevel(desiredPos, false, true);
-      });
+      ShutterService.windowAllToPosition(f, desiredPos, false, true);
     });
   }
 

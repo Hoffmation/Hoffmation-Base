@@ -44,13 +44,11 @@ export class Fenster extends BaseGroup {
           element.vibrationBlocked = true;
         });
         const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().Einstellungen.rolloOffset);
-        this.getShutter().forEach((shutter) => {
-          if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
-            shutter.setLevel(50, false);
-          } else {
-            ShutterService.up(shutter);
-          }
-        });
+        if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
+          ShutterService.windowAllMiddle(this);
+        } else {
+          ShutterService.windowAllUp(this);
+        }
       });
 
       griff.addOffenCallback((offen: boolean) => {
@@ -58,9 +56,7 @@ export class Fenster extends BaseGroup {
           this.getVibration().forEach((element) => {
             element.vibrationBlocked = true;
           });
-          this.getShutter().forEach((shutter) => {
-            ShutterService.up(shutter);
-          });
+          ShutterService.windowAllUp(this);
           return;
         }
       });
@@ -132,8 +128,6 @@ export class Fenster extends BaseGroup {
   }
 
   public restoreDesiredPosition(): void {
-    this.getShutter().forEach((shutter) => {
-      shutter.setLevel(this.desiredPosition, false);
-    });
+    ShutterService.windowAllToPosition(this, this.desiredPosition, false);
   }
 }

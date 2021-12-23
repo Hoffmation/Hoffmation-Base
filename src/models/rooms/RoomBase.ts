@@ -17,6 +17,7 @@ import { RoomService } from '../../server/services/room-service/room-service';
 import { RoomInfo } from './roomInfo';
 import { BaseGroup } from '../../server/devices/groups/base-group';
 import { GroupType } from '../../server/devices/groups/group-type';
+import { ShutterService } from '../../server/services/ShutterService';
 
 export class RoomBase implements iRoomBase {
   public info: RoomInfo;
@@ -130,14 +131,7 @@ export class RoomBase implements iRoomBase {
       timeOfDay === TimeOfDay.Daylight &&
       ((this.Einstellungen.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
         this.FensterGroup?.fenster.some((f) => {
-          const rolloDown: boolean = f.getShutter()[0].currentLevel === 0;
-          ServerLogService.writeLog(
-            LogLevel.Debug,
-            `Rollo ${f.getShutter()[0].info.customName} for light in ${this.roomName} is ${
-              rolloDown ? '' : 'not '
-            }down`,
-          );
-          return rolloDown;
+          return ShutterService.anyRolloDown(f.getShutter());
         }))
     ) {
       timeOfDay = TimeOfDay.AfterSunset;
@@ -157,7 +151,7 @@ export class RoomBase implements iRoomBase {
     if (
       timeOfDay === TimeOfDay.Daylight &&
       this.FensterGroup?.fenster.some((f) => {
-        return f.getShutter()[0].currentLevel === 0;
+        return ShutterService.anyRolloDown(f.getShutter());
       })
     ) {
       timeOfDay = TimeOfDay.AfterSunset;

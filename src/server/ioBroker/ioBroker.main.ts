@@ -11,6 +11,7 @@ import { TimeCallbackService } from '../services/time-callback-service';
 import { iRoomBase } from '../../models/rooms/iRoomBase';
 
 export class ioBrokerMain {
+  public static iOConnection: IOBrokerConnection | undefined;
   private static roomConstructors: { [roomName: string]: { new (): iRoomBase } } = {};
   private servConn: IOBrokerConnection;
   private deviceUpdater: IDeviceUpdater;
@@ -39,7 +40,7 @@ export class ioBrokerMain {
       this.connectionCallbacks,
     );
 
-    Devices.addIoConnection(this.servConn);
+    ioBrokerMain.iOConnection = this.servConn;
     ioBrokerMain.initRooms();
   }
 

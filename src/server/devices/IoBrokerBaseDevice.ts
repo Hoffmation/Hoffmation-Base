@@ -6,6 +6,7 @@ import { IOBrokerConnection } from '../ioBroker/connection';
 import { LogLevel } from '../../models/logLevel';
 import { DeviceType } from './deviceType';
 import { RoomBase } from '../../models/rooms/RoomBase';
+import { ioBrokerMain } from '../ioBroker/ioBroker.main';
 
 export abstract class IoBrokerBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
@@ -60,15 +61,7 @@ export abstract class IoBrokerBaseDevice {
    * @return {IOBrokerConnection}
    */
   public get ioConn(): IOBrokerConnection | undefined {
-    return this._ioConnection;
-  }
-
-  /**
-   * Setter ioConn
-   * @param {IOBrokerConnection} value
-   */
-  public set ioConn(value: IOBrokerConnection | undefined) {
-    this._ioConnection = value;
+    return ioBrokerMain.iOConnection;
   }
 
   /**

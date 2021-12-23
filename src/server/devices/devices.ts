@@ -7,7 +7,6 @@ import { HmIpPraezenz } from './hmIPDevices/hmIpPraezenz';
 import { ServerLogService } from '../services/log-service';
 import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
 import { DeviceInfo } from './DeviceInfo';
-import { IOBrokerConnection } from '../ioBroker/connection';
 import { LogLevel } from '../../models/logLevel';
 import { HmIpBewegung } from './hmIPDevices/hmIpBewegung';
 import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
@@ -64,12 +63,6 @@ export class Devices {
 
     HmIPDevice.checkMissing();
     ZigbeeDevice.checkMissing();
-  }
-
-  public static addIoConnection(pIoConnection: IOBrokerConnection): void {
-    for (const id in Devices.alLDevices) {
-      Devices.alLDevices[id].ioConn = pIoConnection;
-    }
   }
 
   public static midnightReset(): void {
