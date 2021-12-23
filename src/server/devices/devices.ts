@@ -40,6 +40,7 @@ export class Devices {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.
     pRoomImportEnforcer.addRoomConstructor();
 
+    ServerLogService.writeLog(LogLevel.Info, `Constructing devices now`);
     for (const cID in pDeviceData) {
       const cDevConf: deviceConfig = pDeviceData[cID];
       if (
