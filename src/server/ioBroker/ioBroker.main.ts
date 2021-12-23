@@ -5,7 +5,6 @@ import { ConnectionCallbacks } from '../../models/connectionCallbacks';
 import { DeviceUpdater } from '../devices/deviceUpdater';
 import { IOBrokerConnection } from './connection';
 import { SettingsService } from '../services/settings-service';
-import { Devices } from '../devices/devices';
 import { LogLevel } from '../../models/logLevel';
 import { TimeCallbackService } from '../services/time-callback-service';
 import { iRoomBase } from '../../models/rooms/iRoomBase';
