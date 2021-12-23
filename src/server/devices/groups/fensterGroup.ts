@@ -41,7 +41,7 @@ export class FensterGroup extends BaseGroup {
     });
   }
 
-  public initCallbacks(): void {
+  public initialize(): void {
     const room: RoomBase = this.getRoom();
     if (room.Einstellungen.sonnenAufgangRollos && room.Einstellungen.rolloOffset) {
       ServerLogService.writeLog(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this.roomName} hinzufügen`);
@@ -91,6 +91,10 @@ export class FensterGroup extends BaseGroup {
       Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, true);
       Utils.guardedTimeout(this.setRolloByWeatherStatus, 2 * 60 * 1000, this);
     }
+
+    this.fenster.forEach((f) => {
+      f.initialize();
+    });
   }
 
   private sunsetDown(): void {

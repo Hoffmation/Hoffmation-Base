@@ -79,7 +79,7 @@ export class RoomBase implements iRoomBase {
     ServerLogService.writeLog(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
     this.recalcTimeCallbacks();
     this.PraesenzGroup?.initCallbacks();
-    this.FensterGroup?.initCallbacks();
+    this.FensterGroup?.initialize();
     this.TasterGroup?.initCallbacks();
   }
 

@@ -35,6 +35,31 @@ export class Fenster extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
+  }
+
+  public getHandle(): HmIpGriff[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
+  }
+
+  public getShutter(): iShutter[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Shutter) as iShutter[];
+  }
+
+  public getVibration(): ZigbeeAquaraVibra[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Vibration) as ZigbeeAquaraVibra[];
+  }
+
+  public griffeInPosition(pPosition: FensterPosition): number {
+    let count = 0;
+    for (const griff of this.getHandle()) {
+      if (griff.position === pPosition) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public initialize(): void {
     this.getHandle().forEach((griff) => {
       griff.addKippCallback((kipp: boolean) => {
         if (!(kipp && this.griffeInPosition(FensterPosition.offen) === 0)) {
@@ -88,35 +113,13 @@ export class Fenster extends BaseGroup {
         this.getShutter().forEach((shutter) => {
           shutter.fenster = this;
         });
-        for (const g of this.getHandle()) {
+        this.getHandle().forEach((g) => {
           g.Fenster = this;
-        }
+        });
       },
       5,
       this,
     );
-  }
-
-  public getHandle(): HmIpGriff[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
-  }
-
-  public getShutter(): iShutter[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Shutter) as iShutter[];
-  }
-
-  public getVibration(): ZigbeeAquaraVibra[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Vibration) as ZigbeeAquaraVibra[];
-  }
-
-  public griffeInPosition(pPosition: FensterPosition): number {
-    let count = 0;
-    for (const griff of this.getHandle()) {
-      if (griff.position === pPosition) {
-        count++;
-      }
-    }
-    return count;
   }
 
   public rolloPositionChange(pValue: number): void {
