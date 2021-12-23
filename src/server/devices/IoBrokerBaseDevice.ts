@@ -33,9 +33,15 @@ export abstract class IoBrokerBaseDevice {
   public battery: number | undefined;
 
   public get id(): string {
-    return Utils.guard(this.info.allDevicesKey);
+    const result: string = Utils.guard(this.info.allDevicesKey);
+    if (result === '0' || result === '1') {
+      ServerLogService.writeLog(
+        LogLevel.Warn,
+        `Device "${this.info.fullName}" has an akward allDevicesKey of "${result}"`,
+      );
+    }
+    return result;
   }
-  protected _ioConnection?: IOBrokerConnection;
 
   protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {
     this.addToCorrectRoom();
