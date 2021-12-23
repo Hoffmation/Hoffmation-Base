@@ -35,7 +35,7 @@ export class Fenster extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
-    for (const griff of this.getHandle()) {
+    this.getHandle().forEach((griff) => {
       griff.addKippCallback((kipp: boolean) => {
         if (!(kipp && this.griffeInPosition(FensterPosition.offen) === 0)) {
           return;
@@ -82,7 +82,7 @@ export class Fenster extends BaseGroup {
           this.restoreDesiredPosition();
         }
       });
-    }
+    });
     Utils.guardedTimeout(
       () => {
         this.getShutter().forEach((shutter) => {
