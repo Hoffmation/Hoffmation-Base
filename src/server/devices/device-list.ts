@@ -8,8 +8,7 @@ export class DeviceList {
     return this._ids;
   }
 
-  public constructor(private _ids: string[] = []) {
-  }
+  public constructor(private _ids: string[] = []) {}
 
   public getDevices(): Array<IoBrokerBaseDevice | OwnSonosDevice> {
     const result: Array<IoBrokerBaseDevice | OwnSonosDevice> = [];
