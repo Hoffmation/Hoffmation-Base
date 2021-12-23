@@ -21,7 +21,7 @@ export class PraesenzGroup extends BaseGroup {
     >;
   }
 
-  public getPresenseSensors(): HmIpPraezenz[] {
+  public getPresenceSensors(): HmIpPraezenz[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.PresenceDetection) as HmIpPraezenz[];
   }
 
@@ -32,7 +32,7 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public initCallbacks(): void {
-    this.getPresenseSensors().forEach((p) => {
+    this.getPresenceSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
         if (!val) {
           return;
@@ -85,8 +85,8 @@ export class PraesenzGroup extends BaseGroup {
 
   public presentAmount(): number {
     let count = 0;
-    for (let i = 0; i < this.getPresenseSensors().length; i++) {
-      if (this.getPresenseSensors()[i].presenceDetected) {
+    for (let i = 0; i < this.getPresenceSensors().length; i++) {
+      if (this.getPresenceSensors()[i].presenceDetected) {
         count++;
       }
     }
@@ -100,8 +100,8 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public anyPresent(): boolean {
-    for (let i = 0; i < this.getPresenseSensors().length; i++) {
-      if (this.getPresenseSensors()[i].presenceDetected) {
+    for (let i = 0; i < this.getPresenceSensors().length; i++) {
+      if (this.getPresenceSensors()[i].presenceDetected) {
         return true;
       }
     }
@@ -156,7 +156,7 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public addLastLeftCallback(cb: () => void): void {
-    this.getPresenseSensors().forEach((p) => {
+    this.getPresenceSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
         this.lastLeftCB(val, cb);
       });
@@ -181,7 +181,7 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public addFirstEnterCallback(cb: () => void): void {
-    this.getPresenseSensors().forEach((p) => {
+    this.getPresenceSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
         this.firstEnterCallback(val, cb);
       });

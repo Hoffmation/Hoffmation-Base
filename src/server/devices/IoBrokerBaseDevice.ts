@@ -7,6 +7,7 @@ import { LogLevel } from '../../models/logLevel';
 import { DeviceType } from './deviceType';
 import { RoomBase } from '../../models/rooms/RoomBase';
 import { ioBrokerMain } from '../ioBroker/ioBroker.main';
+import { Utils } from '../services/utils/utils';
 
 export abstract class IoBrokerBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
@@ -32,7 +33,7 @@ export abstract class IoBrokerBaseDevice {
   public battery: number | undefined;
 
   public get id(): string {
-    return this.info.devID;
+    return Utils.guard(this.info.allDevicesKey);
   }
   protected _ioConnection?: IOBrokerConnection;
 

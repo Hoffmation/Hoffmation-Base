@@ -44,6 +44,7 @@ export class ioBrokerMain {
   }
 
   private static initRooms(): void {
+    ServerLogService.writeLog(LogLevel.Info, `Recieved ioConnection initializing rooms now.`);
     for (const key in ioBrokerMain.roomConstructors) {
       new ioBrokerMain.roomConstructors[key]();
     }
