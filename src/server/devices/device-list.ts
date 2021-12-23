@@ -13,13 +13,13 @@ export class DeviceList {
   public getDevices(): Array<IoBrokerBaseDevice | OwnSonosDevice> {
     const result: Array<IoBrokerBaseDevice | OwnSonosDevice> = [];
 
-    for (const dID in this._ids) {
+    for (const dID of this._ids) {
       const d = API.getDevice(dID);
       if (d !== undefined) {
         result.push(d);
       }
     }
-    for (const name in this._ids) {
+    for (const name of this._ids) {
       const s = OwnSonosDevices.ownDevices[name];
       if (s !== undefined) {
         result.push(OwnSonosDevices.ownDevices[name]);
