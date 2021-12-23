@@ -16,6 +16,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
 
   protected _initialized: boolean = false;
   protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+  protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
 
   // Time since last motion in seconds
@@ -140,6 +141,9 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
   }
 
   private startFallbackTimeout(): void {
+    if (!this._needsMovementResetFallback) {
+      return;
+    }
     this._fallBackTimeout = Utils.guardedTimeout(
       () => {
         ServerLogService.writeLog(LogLevel.Debug, `Benötige Fallback Bewegungs Reset für "${this.info.customName}"`);

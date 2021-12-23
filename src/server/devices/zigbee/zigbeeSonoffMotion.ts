@@ -7,6 +7,7 @@ import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
 export class ZigbeeSonoffMotion extends ZigbeeMotionSensor {
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSonoffMotion);
+    this._needsMovementResetFallback = false;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
