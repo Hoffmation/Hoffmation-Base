@@ -2,7 +2,6 @@ import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { HmIpPraezenz } from '../hmIPDevices/hmIpPraezenz';
 import { Utils } from '../../services/utils/utils';
 import { ServerLogService } from '../../services/log-service';
-import { ZigbeeAquaraMotion } from '../zigbee/zigbeeAquaraMotion';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../../services/time-callback-service';
 import { HmIpBewegung } from '../hmIPDevices/hmIpBewegung';
@@ -11,13 +10,14 @@ import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
+import { ZigbeeMotionSensor } from '../zigbee/zigbeeMotionSensor';
 
 export class PraesenzGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
 
-  public getMotionDetector(): Array<HmIpBewegung | ZigbeeAquaraMotion> {
+  public getMotionDetector(): Array<HmIpBewegung | ZigbeeMotionSensor> {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MotionDetection) as Array<
-      HmIpBewegung | ZigbeeAquaraMotion
+      HmIpBewegung | ZigbeeMotionSensor
     >;
   }
 

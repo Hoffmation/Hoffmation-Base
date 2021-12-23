@@ -30,6 +30,7 @@ import { HmIpTuer } from './hmIPDevices/hmIpTuer';
 import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 import { ZigbeeIlluShutter } from './zigbee/zigbeeIlluShutter';
 import { ZigbeeSMaBiTMagnetContact } from './zigbee/zigbeeSMaBiTMagnetContact';
+import { ZigbeeSonoffMotion } from './zigbee/zigbeeSonoffMotion';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -134,6 +135,9 @@ export class Devices {
         break;
       case 'SMaBiTMagnet':
         d = new ZigbeeSMaBiTMagnetContact(zigbeeInfo);
+        break;
+      case 'SonoffMotion':
+        d = new ZigbeeSonoffMotion(zigbeeInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);

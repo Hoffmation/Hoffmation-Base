@@ -23,6 +23,7 @@ export enum DeviceType {
   ZigbeeIlluActuator = 210,
   ZigbeeAquaraMotion = 211,
   ZigbeeIlluShutter = 212,
-  ZigbeeSMaBiTMagnetContact = 212,
+  ZigbeeSMaBiTMagnetContact = 213,
+  ZigbeeSonoffMotion = 214,
   Wled = 1001,
 }
