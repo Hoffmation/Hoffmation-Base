@@ -95,7 +95,7 @@ export class Utils {
     );
   }
 
-  public static testInitializeServices() {
+  public static testInitializeServices(): void {
     ServerLogService.settings.logLevel = -1;
     Res.initialize({ language: 'en' });
   }

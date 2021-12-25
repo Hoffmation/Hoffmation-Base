@@ -164,7 +164,7 @@ export class TimeCallbackService {
     TimeCallbackService.recalcSunTimes();
     TimeCallbackService.addCallback(dailyRecalc);
     TimeCallbackService.addCallback(daily3oClockRecalc);
-    this._iCheckTimeout = Utils.guardedInterval(TimeCallbackService.performCheck, 60000);
+    this._iCheckTimeout = Utils.guardedInterval(TimeCallbackService.performCheck.bind(this), 60000);
   }
 
   public static addCallback(pCallback: TimeCallback): void {

@@ -10,7 +10,7 @@ describe('Devices', () => {
     [id: string]: deviceConfig;
   };
   new Devices(deviceJSON);
-  it('Should be able to create device JSON', async () => {
+  it('Should be able to create device JSON', () => {
     const json: string = JSON.stringify(Devices.alLDevices);
     expect(json !== '').toBeTruthy();
     const newObject: string = JSON.parse(json);
