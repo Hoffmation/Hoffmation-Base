@@ -10,6 +10,7 @@ import { Fenster } from '../Fenster';
 import { LogLevel } from '../../../models/logLevel';
 import { HeatGroup } from '../groups/heatGroup';
 import _ from 'lodash';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 
 export class HmIpGriff extends HmIPDevice {
   public position: FensterPosition = FensterPosition.geschlossen;
@@ -144,7 +145,7 @@ export class HmIpGriff extends HmIPDevice {
     }
   }
 
-  public toJSON(): Partial<HmIpGriff> {
-    return _.omit(this, ['_fenster']);
+  public toJSON(): Partial<IoBrokerBaseDevice> {
+    return _.omit(super.toJSON(), ['_fenster']);
   }
 }

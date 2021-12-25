@@ -8,6 +8,7 @@ import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { iShutter } from '../iShutter';
 import _ from 'lodash';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   public get currentLevel(): number {
@@ -124,7 +125,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this.setState(this._setLevelSwitchID, pPosition);
   }
 
-  public toJSON(): Partial<HmIpRoll> {
-    return _.omit(this, ['_fenster']);
+  public toJSON(): Partial<IoBrokerBaseDevice> {
+    return _.omit(super.toJSON(), ['_fenster']);
   }
 }
