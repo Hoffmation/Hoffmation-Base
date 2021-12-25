@@ -86,6 +86,10 @@ export class Utils {
           // Exclude timeout Variables.
           return true;
         }
+        if (key.includes('Callback')) {
+          // Exclude Callback Variables.
+          return true;
+        }
         return false;
       }),
     );
