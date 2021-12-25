@@ -8,7 +8,6 @@ import { DeviceType } from './deviceType';
 import { RoomBase } from '../../models/rooms/RoomBase';
 import { ioBrokerMain } from '../ioBroker/ioBroker.main';
 import { Utils } from '../services/utils/utils';
-import _ from 'lodash';
 
 export abstract class IoBrokerBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
@@ -155,7 +154,6 @@ export abstract class IoBrokerBaseDevice {
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
     const result: Partial<IoBrokerBaseDevice> = Utils.jsonFilter(this);
-    result.info = this._info;
     return result;
   }
 }

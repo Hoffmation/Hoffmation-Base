@@ -1,4 +1,5 @@
 import { deviceConfig } from '../../models/deviceConfig';
+import _ from 'lodash';
 
 export class DeviceInfo {
   public devID: string;
@@ -63,5 +64,9 @@ export class DeviceInfo {
     }
 
     return this.fullName;
+  }
+
+  public toJSON(): Partial<DeviceInfo> {
+    return _.omit(this, ['devConf']);
   }
 }
