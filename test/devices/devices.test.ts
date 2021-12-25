@@ -12,7 +12,9 @@ describe('Devices', () => {
   };
   new Devices(deviceJSON);
   it('Should be able to create device JSON', async () => {
-    console.log(JSON.stringify(Devices.alLDevices));
-    expect(JSON.stringify(Devices.alLDevices) !== '').toBeTruthy();
+    const json: string = JSON.stringify(Devices.alLDevices);
+    expect(json !== '').toBeTruthy();
+    const newObject: string = JSON.parse(json);
+    expect(Object.keys(newObject).length > 0).toBeTruthy();
   });
 });
