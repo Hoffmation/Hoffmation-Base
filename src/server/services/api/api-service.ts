@@ -8,7 +8,7 @@ import { inspect } from 'util';
 
 export class API {
   public static getDevices(): { [id: string]: IoBrokerBaseDevice } {
-    console.log(inspect(Devices.alLDevices));
+    console.log(inspect(Devices.alLDevices, false, 3));
     return Devices.alLDevices;
   }
 
