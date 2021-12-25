@@ -9,6 +9,7 @@ import { FensterPosition } from '../models/FensterPosition';
 import { Fenster } from '../Fenster';
 import { LogLevel } from '../../../models/logLevel';
 import { HeatGroup } from '../groups/heatGroup';
+import _ from 'lodash';
 
 export class HmIpGriff extends HmIPDevice {
   public position: FensterPosition = FensterPosition.geschlossen;
@@ -141,5 +142,9 @@ export class HmIpGriff extends HmIPDevice {
         this,
       );
     }
+  }
+
+  public toJSON(): Partial<HmIpGriff> {
+    return _.omit(this, ['_fenster']);
   }
 }

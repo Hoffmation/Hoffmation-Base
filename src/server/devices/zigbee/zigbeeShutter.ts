@@ -7,6 +7,7 @@ import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../iShutter';
 import { Fenster } from '../Fenster';
 import { FensterPosition } from '../models/FensterPosition';
+import _ from 'lodash';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public get currentLevel(): number {
@@ -103,5 +104,9 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   protected moveToPosition(pPosition: number): void {
     ServerLogService.writeLog(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
+  }
+
+  public toJSON(): Partial<ZigbeeShutter> {
+    return _.omit(this, ['_fenster']);
   }
 }

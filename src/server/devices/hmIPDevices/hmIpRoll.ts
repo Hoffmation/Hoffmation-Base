@@ -7,6 +7,7 @@ import { Fenster } from '../Fenster';
 import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { iShutter } from '../iShutter';
+import _ from 'lodash';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   public get currentLevel(): number {
@@ -121,5 +122,9 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this._setLevel = pPosition;
     ServerLogService.writeLog(LogLevel.Debug, `Fahre Rollo "${this.info.customName}" auf Position ${pPosition}`);
     this.setState(this._setLevelSwitchID, pPosition);
+  }
+
+  public toJSON(): Partial<HmIpRoll> {
+    return _.omit(this, ['_fenster']);
   }
 }
