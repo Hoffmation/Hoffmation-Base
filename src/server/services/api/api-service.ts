@@ -4,9 +4,11 @@ import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
 import { RoomService } from '../room-service/room-service';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models/logLevel';
+import { inspect } from 'util';
 
 export class API {
   public static getDevices(): { [id: string]: IoBrokerBaseDevice } {
+    console.log(inspect(Devices.alLDevices));
     return Devices.alLDevices;
   }
 
@@ -19,6 +21,7 @@ export class API {
   }
 
   public static getRooms(): Map<string, RoomBase> {
+    console.log(inspect(Object.fromEntries(RoomService.Rooms)));
     return RoomService.Rooms;
   }
 
