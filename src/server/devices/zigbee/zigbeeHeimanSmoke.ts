@@ -12,7 +12,7 @@ import { RoomService } from '../../services/room-service/room-service';
 export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   public smoke: boolean = false;
   private _roomName: string = '';
-  public iAlarm: NodeJS.Timeout | undefined = undefined;
+  public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
   private _messageAlarm: string = '';
   private _messageAlarmEnd: string = '';
@@ -55,10 +55,10 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   }
 
   private startAlarm(): void {
-    if (this.iAlarm !== undefined) {
-      clearInterval(this.iAlarm);
+    if (this.iAlarmTimeout !== undefined) {
+      clearInterval(this.iAlarmTimeout);
     }
-    this.iAlarm = Utils.guardedInterval(
+    this.iAlarmTimeout = Utils.guardedInterval(
       () => {
         this.alarm();
       },
@@ -69,8 +69,8 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   }
 
   public stopAlarm(quiet: boolean = false): void {
-    if (this.iAlarm) {
-      clearInterval(this.iAlarm);
+    if (this.iAlarmTimeout) {
+      clearInterval(this.iAlarmTimeout);
     }
     if (quiet) {
       return;

@@ -14,7 +14,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   public isStromStoss: boolean = false;
   public settings: ActuatorSettings = new ActuatorSettings();
   private lightOnSwitchID: string = '';
-  private turnOffTimeout: NodeJS.Timeout | undefined = undefined;
+  private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
@@ -76,9 +76,9 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
       timeout = 5000;
     }
 
-    if (this.turnOffTimeout !== undefined) {
-      clearTimeout(this.turnOffTimeout);
-      this.turnOffTimeout = undefined;
+    if (this._turnOffTimeout !== undefined) {
+      clearTimeout(this._turnOffTimeout);
+      this._turnOffTimeout = undefined;
     }
 
     if (timeout < 0 || !pValue) {
@@ -86,10 +86,10 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     }
 
     this.turnOffTime = Utils.nowMS() + timeout;
-    this.turnOffTimeout = Utils.guardedTimeout(
+    this._turnOffTimeout = Utils.guardedTimeout(
       () => {
         ServerLogService.writeLog(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
-        this.turnOffTimeout = undefined;
+        this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setLight(false, -1, true);
         } else {

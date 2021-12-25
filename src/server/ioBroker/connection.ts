@@ -46,7 +46,7 @@ export class IOBrokerConnection {
   private _reloadInterval: number = 30; // if connection was absent longer than 30 seconds
   private _socket: SocketIOClient.Socket;
   private _type: string = 'socket.io'; // [SignalR | socket.io | local]
-  private _timer?: NodeJS.Timeout;
+  private _timerTimeout?: NodeJS.Timeout;
   private _timeout: number = 0; // 0 - use transport default timeout to detect disconnect
   private _user: string = '';
   private _useStorage: boolean = false;
@@ -472,7 +472,7 @@ export class IOBrokerConnection {
   }
 
   private _monitor(): void {
-    if (this._timer !== undefined) return;
+    if (this._timerTimeout !== undefined) return;
     const ts: number = new Date().getTime();
     const lastTimerTime: number = this._lastTimer === undefined ? 0 : this._lastTimer.getTime();
     if (this._reloadInterval && ts - lastTimerTime > this._reloadInterval * 1000) {
@@ -481,9 +481,9 @@ export class IOBrokerConnection {
     } else {
       this._lastTimer = new Date(ts);
     }
-    this._timer = Utils.guardedTimeout(
+    this._timerTimeout = Utils.guardedTimeout(
       () => {
-        this._timer = undefined;
+        this._timerTimeout = undefined;
         this._monitor();
       },
       10000,

@@ -11,7 +11,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
   protected readonly actuatorOnSwitchID: string;
   protected queuedValue: boolean | null = null;
   protected actuatorOn: boolean = false;
-  private turnOffTimeout: NodeJS.Timeout | undefined = undefined;
+  private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
   public constructor(pInfo: DeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
@@ -72,9 +72,9 @@ export class ZigbeeActuator extends ZigbeeDevice {
     });
     this.queuedValue = pValue;
 
-    if (this.turnOffTimeout !== undefined) {
-      clearTimeout(this.turnOffTimeout);
-      this.turnOffTimeout = undefined;
+    if (this._turnOffTimeout !== undefined) {
+      clearTimeout(this._turnOffTimeout);
+      this._turnOffTimeout = undefined;
     }
 
     if (timeout < 0 || !pValue) {
@@ -82,10 +82,10 @@ export class ZigbeeActuator extends ZigbeeDevice {
     }
 
     this.turnOffTime = Utils.nowMS() + timeout;
-    this.turnOffTimeout = Utils.guardedTimeout(
+    this._turnOffTimeout = Utils.guardedTimeout(
       () => {
         ServerLogService.writeLog(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
-        this.turnOffTimeout = undefined;
+        this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setActuator(false, -1, true);
         } else {

@@ -17,7 +17,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   private stateID: string = 'state';
   private brightnessID: string = 'brightness';
   private transitionID: string = 'transition_time';
-  private turnOffTimeout: NodeJS.Timeout | undefined = undefined;
+  private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
@@ -135,9 +135,9 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
         this.setState(this.brightnessID, brightness);
       }
     }
-    if (this.turnOffTimeout !== undefined) {
-      clearTimeout(this.turnOffTimeout);
-      this.turnOffTimeout = undefined;
+    if (this._turnOffTimeout !== undefined) {
+      clearTimeout(this._turnOffTimeout);
+      this._turnOffTimeout = undefined;
     }
 
     if (timeout < 0 || !pValue) {
@@ -145,10 +145,10 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     }
 
     this.turnOffTime = Utils.nowMS() + timeout;
-    this.turnOffTimeout = Utils.guardedTimeout(
+    this._turnOffTimeout = Utils.guardedTimeout(
       () => {
         ServerLogService.writeLog(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
-        this.turnOffTimeout = undefined;
+        this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setLight(false, -1, true);
         } else {

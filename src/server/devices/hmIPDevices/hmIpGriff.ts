@@ -15,7 +15,7 @@ export class HmIpGriff extends HmIPDevice {
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _offenCallback: Array<(pValue: boolean) => void> = [];
-  private _iOpen: NodeJS.Timeout | undefined;
+  private _iOpenTimeout: NodeJS.Timeout | undefined;
   private minutesOpen: number = 0;
   private _fenster: Fenster | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
@@ -79,18 +79,18 @@ export class HmIpGriff extends HmIPDevice {
     }
 
     if (pValue === FensterPosition.geschlossen) {
-      if (this._iOpen !== undefined) {
-        clearInterval(this._iOpen);
+      if (this._iOpenTimeout !== undefined) {
+        clearInterval(this._iOpenTimeout);
         ServerLogService.writeLog(
           LogLevel.Info,
           `Fenster: "${this.info.customName}" nach ${this.minutesOpen} Minuten geschlossen`,
         );
         this.minutesOpen = 0;
-        this._iOpen = undefined;
+        this._iOpenTimeout = undefined;
       }
       return;
-    } else if (this._iOpen === undefined) {
-      this._iOpen = Utils.guardedInterval(
+    } else if (this._iOpenTimeout === undefined) {
+      this._iOpenTimeout = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
           const heatgroup: HeatGroup | undefined = this._fenster?.getRoom().HeatGroup;

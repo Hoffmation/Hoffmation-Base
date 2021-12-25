@@ -13,7 +13,7 @@ export class HmIpTuer extends HmIPDevice {
   public position: MagnetPosition = MagnetPosition.closed;
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _openCallback: Array<(pValue: boolean) => void> = [];
-  private _iOpen: NodeJS.Timeout | undefined;
+  private _iOpenTimeout: NodeJS.Timeout | undefined;
   private minutesOpen: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
@@ -67,8 +67,8 @@ export class HmIpTuer extends HmIPDevice {
     }
 
     if (pValue === MagnetPosition.closed) {
-      if (this._iOpen !== undefined) {
-        clearInterval(this._iOpen);
+      if (this._iOpenTimeout !== undefined) {
+        clearInterval(this._iOpenTimeout);
 
         let message = `${this.info.customName} closed after ${this.minutesOpen} minutes!`;
         if (this.minutesOpen === 0) {
@@ -79,15 +79,15 @@ export class HmIpTuer extends HmIPDevice {
 
         TelegramService.inform(message);
         this.minutesOpen = 0;
-        this._iOpen = undefined;
+        this._iOpenTimeout = undefined;
       }
       return;
-    } else if (this._iOpen === undefined) {
+    } else if (this._iOpenTimeout === undefined) {
       const message = Res.wasOpened(this.info.customName);
       //const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde geöfnet!`
       TelegramService.inform(message);
       SonosService.speakOnAll(message, 40);
-      this._iOpen = Utils.guardedInterval(
+      this._iOpenTimeout = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
           const message = `Contact: "${this.info.customName}" is  ${MagnetPosition[this.position]} since ${

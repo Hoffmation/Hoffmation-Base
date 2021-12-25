@@ -18,7 +18,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   private initialized: boolean = false;
-  private fallBackTimeout: NodeJS.Timeout | undefined;
+  private _fallBackTimeout: NodeJS.Timeout | undefined;
   private _currentIllumination: number = -1;
 
   public get currentIllumination(): number {
@@ -138,17 +138,17 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   }
 
   private resetFallbackTimeout(): void {
-    if (this.fallBackTimeout) {
+    if (this._fallBackTimeout) {
       ServerLogService.writeLog(LogLevel.Trace, `Fallback Timeout für "${this.info.customName}" zurücksetzen`);
-      clearTimeout(this.fallBackTimeout);
+      clearTimeout(this._fallBackTimeout);
     }
   }
 
   private startFallbackTimeout(): void {
-    this.fallBackTimeout = Utils.guardedTimeout(
+    this._fallBackTimeout = Utils.guardedTimeout(
       () => {
         ServerLogService.writeLog(LogLevel.Debug, `Benötige Fallback Bewegungs Reset für "${this.info.customName}"`);
-        this.fallBackTimeout = undefined;
+        this._fallBackTimeout = undefined;
         this.updateMovement(false);
       },
       270000,

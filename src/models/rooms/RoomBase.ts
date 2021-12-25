@@ -18,6 +18,7 @@ import { RoomInfo } from './roomInfo';
 import { BaseGroup } from '../../server/devices/groups/base-group';
 import { GroupType } from '../../server/devices/groups/group-type';
 import { ShutterService } from '../../server/services/ShutterService';
+import { Utils } from '../../server/services/utils/utils';
 
 export class RoomBase implements iRoomBase {
   public info: RoomInfo;
@@ -157,5 +158,10 @@ export class RoomBase implements iRoomBase {
       timeOfDay = TimeOfDay.AfterSunset;
     }
     return TimeCallbackService.darkOutsideOrNight(timeOfDay);
+  }
+
+  public toJSON(): Partial<RoomBase> {
+    const result: Partial<RoomBase> = Utils.jsonFilter(this);
+    return result;
   }
 }

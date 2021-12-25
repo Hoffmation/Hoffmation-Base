@@ -14,8 +14,8 @@ export class RoomService {
   public static awayModeActive: boolean = false;
   public static nightAlarmActive: boolean = false;
   public static movementHistory: ringStorage = new ringStorage(15);
-  private static _awayModeTimer: NodeJS.Timeout | undefined;
-  private static _nightModeTimer: NodeJS.Timeout | undefined;
+  private static _awayModeTimeout: NodeJS.Timeout | undefined;
+  private static _nightModeTimeout: NodeJS.Timeout | undefined;
   private static _intrusionAlarmActive: boolean = false;
   private static _intrusionAlarmLevel: number = 0;
   private static _intrusionAlarmTimeout: NodeJS.Timeout | undefined;
@@ -75,13 +75,13 @@ export class RoomService {
 
   public static startAwayMode(): void {
     SonosService.speakOnAll(Res.alarmArmed(), 40);
-    if (this._awayModeTimer) {
-      clearTimeout(this._awayModeTimer);
+    if (this._awayModeTimeout) {
+      clearTimeout(this._awayModeTimeout);
     }
-    this._awayModeTimer = Utils.guardedTimeout(
+    this._awayModeTimeout = Utils.guardedTimeout(
       () => {
         this.awayModeActive = true;
-        this._awayModeTimer = undefined;
+        this._awayModeTimeout = undefined;
         TelegramService.inform(`Alarm ist nun scharf. Gute Reise!`);
       },
       60000,
@@ -91,13 +91,13 @@ export class RoomService {
 
   public static startNightAlarmMode(): void {
     SonosService.speakOnAll(Res.alarmNightModeArmed(), 30);
-    if (this._nightModeTimer) {
-      clearTimeout(this._nightModeTimer);
+    if (this._nightModeTimeout) {
+      clearTimeout(this._nightModeTimeout);
     }
-    this._nightModeTimer = Utils.guardedTimeout(
+    this._nightModeTimeout = Utils.guardedTimeout(
       () => {
         this.nightAlarmActive = true;
-        this._nightModeTimer = undefined;
+        this._nightModeTimeout = undefined;
         TelegramService.inform(`Alarm ist nun scharf. Süße Träume!`);
       },
       60000,
@@ -133,11 +133,11 @@ export class RoomService {
       TelegramService.sendMessage(TelegramService.subscribedIDs, `Nachtmodus der Alarmanlage entschärft`);
       SonosService.speakOnAll(Res.goodMorning(), 30);
     }
-    if (this._nightModeTimer) {
-      clearTimeout(this._nightModeTimer);
+    if (this._nightModeTimeout) {
+      clearTimeout(this._nightModeTimeout);
     }
-    if (this._awayModeTimer) {
-      clearTimeout(this._awayModeTimer);
+    if (this._awayModeTimeout) {
+      clearTimeout(this._awayModeTimeout);
     }
     this.awayModeActive = false;
     this.nightAlarmActive = false;
