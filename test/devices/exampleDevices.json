@@ -1,0 +1,114 @@
+{
+  "hm-rpc.1.0007DA49A781DF": {
+    "_id": "hm-rpc.1.0007DA49A781DF",
+    "type": "device",
+    "common": {
+      "name": "00-HmIP-EGWohnz-Griff-3",
+      "icon": "/icons/130_hmip-srh_thumb.png"
+    },
+    "native": {
+      "TYPE": "HmIP-SRH",
+      "SUBTYPE": "SRH",
+      "ADDRESS": "0007DA49A781DF",
+      "RF_ADDRESS": 7847215,
+      "CHILDREN": [
+        "0007DA49A781DF:0",
+        "0007DA49A781DF:1",
+        "0007DA49A781DF:2"
+      ],
+      "PARENT": "",
+      "PARENT_TYPE": "",
+      "INDEX": 0,
+      "AES_ACTIVE": 1,
+      "PARAMSETS": [
+        "MASTER",
+        "SERVICE"
+      ],
+      "FIRMWARE": "1.2.10",
+      "AVAILABLE_FIRMWARE": "0.0.0",
+      "UPDATABLE": true,
+      "FIRMWARE_UPDATE_STATE": "UP_TO_DATE",
+      "VERSION": 2,
+      "FLAGS": 1,
+      "LINK_SOURCE_ROLES": "",
+      "LINK_TARGET_ROLES": "",
+      "DIRECTION": 0,
+      "GROUP": "",
+      "TEAM": "",
+      "TEAM_TAG": "",
+      "TEAM_CHANNELS": [],
+      "INTERFACE": "",
+      "ROAMING": 0,
+      "RX_MODE": 4
+    },
+    "from": "system.adapter.hm-rega.0",
+    "user": "system.user.admin",
+    "ts": 1634652074474,
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "file": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  },
+  "hm-rpc.1.00089BE9946FE3": {
+    "_id": "hm-rpc.1.00089BE9946FE3",
+    "type": "device",
+    "common": {
+      "name": "00-HmIP-Schlaf-Lampe-1",
+      "icon": "/icons/134_hmip-fsm_thumb.png"
+    },
+    "native": {
+      "TYPE": "HmIP-FSM",
+      "SUBTYPE": "FSM",
+      "ADDRESS": "00089BE9946FE3",
+      "RF_ADDRESS": 5006838,
+      "CHILDREN": [
+        "00089BE9946FE3:0",
+        "00089BE9946FE3:1",
+        "00089BE9946FE3:2",
+        "00089BE9946FE3:3",
+        "00089BE9946FE3:4",
+        "00089BE9946FE3:5",
+        "00089BE9946FE3:6",
+        "00089BE9946FE3:7"
+      ],
+      "PARENT": "",
+      "PARENT_TYPE": "",
+      "INDEX": 0,
+      "AES_ACTIVE": 1,
+      "PARAMSETS": [
+        "MASTER",
+        "SERVICE"
+      ],
+      "FIRMWARE": "1.18.22",
+      "AVAILABLE_FIRMWARE": "1.18.22",
+      "UPDATABLE": true,
+      "FIRMWARE_UPDATE_STATE": "UP_TO_DATE",
+      "VERSION": 4,
+      "FLAGS": 1,
+      "LINK_SOURCE_ROLES": "",
+      "LINK_TARGET_ROLES": "",
+      "DIRECTION": 0,
+      "GROUP": "",
+      "TEAM": "",
+      "TEAM_TAG": "",
+      "TEAM_CHANNELS": [],
+      "INTERFACE": "",
+      "ROAMING": 0,
+      "RX_MODE": 0
+    },
+    "from": "system.adapter.hm-rega.0",
+    "user": "system.user.admin",
+    "ts": 1634652075275,
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "file": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  }
+}
+

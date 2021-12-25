@@ -1,6 +1,7 @@
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models/logLevel';
 import _ from 'lodash';
+import { Res } from '../Translation/res';
 
 export class Utils {
   public static async catchEm<T>(promise: Promise<T>): Promise<{ reason: Error | null; data: T | null }> {
@@ -88,5 +89,10 @@ export class Utils {
         return false;
       }),
     );
+  }
+
+  public static testInitializeServices() {
+    ServerLogService.settings.logLevel = -1;
+    Res.initialize({ language: 'en' });
   }
 }

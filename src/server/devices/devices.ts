@@ -37,9 +37,9 @@ export class Devices {
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
   public static alLDevices: { [id: string]: IoBrokerBaseDevice } = {};
 
-  public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer: iRoomImportEnforcer) {
+  public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.
-    pRoomImportEnforcer.addRoomConstructor();
+    pRoomImportEnforcer?.addRoomConstructor();
 
     ServerLogService.writeLog(LogLevel.Info, `Constructing devices now`);
     for (const cID in pDeviceData) {

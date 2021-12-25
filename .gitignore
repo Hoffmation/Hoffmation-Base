@@ -1,6 +1,9 @@
 # Lib
 /lib
 
+# Private Test Data
+/test/devices/ownDevices.json
+
 # Logs
 logs
 *.log
