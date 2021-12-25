@@ -55,7 +55,6 @@ export class RoomBase implements iRoomBase {
     return this.groups.get(GroupType.Heating) as HeatGroup | undefined;
   }
 
-  public Settings: RoomSettings;
   public sonnenAufgangCallback: TimeCallback | undefined;
   public sonnenUntergangCallback: TimeCallback | undefined;
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
@@ -69,10 +68,10 @@ export class RoomBase implements iRoomBase {
     return this.info.etage;
   }
 
-  public constructor(roomName: string, public Einstellungen: RoomSettings, public groups: Map<GroupType, BaseGroup>) {
-    this.info = new RoomInfo(roomName, Einstellungen);
-    Einstellungen.room = this;
-    this.Settings = Einstellungen;
+  public constructor(roomName: string, public settings: RoomSettings, public groups: Map<GroupType, BaseGroup>) {
+    this.info = new RoomInfo(roomName, settings);
+    settings.roomName = roomName;
+    this.settings = settings;
     RoomService.addToRoomList(this);
   }
 
@@ -90,18 +89,18 @@ export class RoomBase implements iRoomBase {
 
   public recalcTimeCallbacks(): void {
     const now: Date = new Date();
-    if (this.sonnenAufgangCallback && this.Einstellungen.rolloOffset) {
-      this.sonnenAufgangCallback.minuteOffset = this.Einstellungen.rolloOffset.sunrise;
-      this.sonnenAufgangCallback.sunTimeOffset = this.Einstellungen.rolloOffset;
+    if (this.sonnenAufgangCallback && this.settings.rolloOffset) {
+      this.sonnenAufgangCallback.minuteOffset = this.settings.rolloOffset.sunrise;
+      this.sonnenAufgangCallback.sunTimeOffset = this.settings.rolloOffset;
       this.sonnenAufgangCallback.recalcNextToDo(now);
     }
-    if (this.sonnenUntergangCallback && this.Einstellungen.rolloOffset) {
-      this.sonnenUntergangCallback.minuteOffset = this.Einstellungen.rolloOffset.sunset;
-      this.sonnenUntergangCallback.sunTimeOffset = this.Einstellungen.rolloOffset;
+    if (this.sonnenUntergangCallback && this.settings.rolloOffset) {
+      this.sonnenUntergangCallback.minuteOffset = this.settings.rolloOffset.sunset;
+      this.sonnenUntergangCallback.sunTimeOffset = this.settings.rolloOffset;
       this.sonnenUntergangCallback.recalcNextToDo(now);
     }
-    if (this.sonnenAufgangLichtCallback && this.Einstellungen.lampOffset) {
-      this.sonnenAufgangLichtCallback.minuteOffset = this.Einstellungen.lampOffset.sunrise;
+    if (this.sonnenAufgangLichtCallback && this.settings.lampOffset) {
+      this.sonnenAufgangLichtCallback.minuteOffset = this.settings.lampOffset.sunrise;
       this.sonnenAufgangLichtCallback.recalcNextToDo(now);
     }
   }
@@ -120,17 +119,17 @@ export class RoomBase implements iRoomBase {
       return;
     }
 
-    if (!this.Einstellungen.lampOffset) {
+    if (!this.settings.lampOffset) {
       ServerLogService.writeLog(
         LogLevel.Alert,
         `Beim Aufruf von "setLightTimeBased" im Raum ${this.roomName} liegt kein Lampen Offset vor`,
       );
       return;
     }
-    let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.Einstellungen.lampOffset);
+    let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.settings.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
-      ((this.Einstellungen.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
+      ((this.settings.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
         this.FensterGroup?.fenster.some((f) => {
           return ShutterService.anyRolloDown(f.getShutter());
         }))
@@ -141,14 +140,14 @@ export class RoomBase implements iRoomBase {
   }
 
   public isNowLightTime(): boolean {
-    if (!this.Einstellungen.lampOffset) {
+    if (!this.settings.lampOffset) {
       ServerLogService.writeLog(
         LogLevel.Alert,
         `Beim Aufruf von "setLightTimeBased" im Raum ${this.roomName} liegt kein Lampen Offset vor`,
       );
       return false;
     }
-    let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.Einstellungen.lampOffset);
+    let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.settings.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
       this.FensterGroup?.fenster.some((f) => {

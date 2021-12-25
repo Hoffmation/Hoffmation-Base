@@ -43,7 +43,7 @@ export class FensterGroup extends BaseGroup {
 
   public initialize(): void {
     const room: RoomBase = this.getRoom();
-    if (room.Einstellungen.sonnenAufgangRollos && room.Einstellungen.rolloOffset) {
+    if (room.settings.sonnenAufgangRollos && room.settings.rolloOffset) {
       ServerLogService.writeLog(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this.roomName} hinzufügen`);
       room.sonnenAufgangCallback = new TimeCallback(
         `${this.roomName} Sonnenaufgang Rollos`,
@@ -55,27 +55,27 @@ export class FensterGroup extends BaseGroup {
           }
           this.sunriseUp();
         },
-        room.Einstellungen.rolloOffset.sunrise,
+        room.settings.rolloOffset.sunrise,
         undefined,
         undefined,
-        room.Einstellungen.rolloOffset,
+        room.settings.rolloOffset,
       );
-      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.Einstellungen.rolloOffset))) {
+      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
         this.sunriseUp(true);
       }
       TimeCallbackService.addCallback(room.sonnenAufgangCallback);
     }
 
-    if (room.Einstellungen.sonnenUntergangRollos && room.Einstellungen.rolloOffset) {
+    if (room.settings.sonnenUntergangRollos && room.settings.rolloOffset) {
       room.sonnenUntergangCallback = new TimeCallback(
         `${this.roomName} Sonnenuntergang Rollo`,
         TimeCallbackType.SunSet,
         () => {
           this.sunsetDown();
         },
-        room.Einstellungen.rolloOffset.sunset,
+        room.settings.rolloOffset.sunset,
       );
-      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.Einstellungen.rolloOffset))) {
+      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
         Utils.guardedTimeout(
           () => {
             this.allRolloDown(true, true);
@@ -87,7 +87,7 @@ export class FensterGroup extends BaseGroup {
       TimeCallbackService.addCallback(room.sonnenUntergangCallback);
     }
 
-    if (room.Einstellungen.rolloHeatReduction) {
+    if (room.settings.rolloHeatReduction) {
       Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, true);
       Utils.guardedTimeout(this.setRolloByWeatherStatus, 2 * 60 * 1000, this);
     }
@@ -100,14 +100,14 @@ export class FensterGroup extends BaseGroup {
   private sunsetDown(): void {
     this.allRolloToLevel(0, true);
     const room: RoomBase = this.getRoom();
-    if (room.PraesenzGroup?.anyPresent() && room.Einstellungen.lampOffset) {
-      room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.Einstellungen.lampOffset));
+    if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
+      room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
     }
   }
 
   public setRolloByWeatherStatus(): void {
     const room: RoomBase = this.getRoom();
-    const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.Einstellungen.rolloOffset);
+    const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
     this.fenster.forEach((f) => {
       if (f.getShutter().length === 0) {
@@ -155,9 +155,7 @@ export class FensterGroup extends BaseGroup {
       });
       return;
     }
-    if (
-      !TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this.getRoom().Einstellungen.rolloOffset))
-    ) {
+    if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this.getRoom().settings.rolloOffset))) {
       this.sunriseUp(true);
     } else {
       this.sunsetDown();

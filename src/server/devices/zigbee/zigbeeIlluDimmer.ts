@@ -164,7 +164,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     const newVal = this.queuedValue !== null ? !this.queuedValue : !this.lightOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
     if (newVal && time === undefined && calculateTime && this.room !== undefined) {
-      time = TimeCallbackService.dayType(this.room?.Einstellungen.lampOffset);
+      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
     }
     if (newVal && time !== undefined) {
       this.setTimeBased(time, timeout, force);

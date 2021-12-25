@@ -48,7 +48,7 @@ export class TasterGroup extends BaseGroup {
       const sonosGroup: SonosGroup | undefined = this.getRoom().SonosGroup;
       if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
         t.tasten.UntenRechts.addLongCallback(() => {
-          sonosGroup.trigger(this.getRoom().Einstellungen.radioUrl);
+          sonosGroup.trigger(this.getRoom().settings.radioUrl);
         });
       }
     });

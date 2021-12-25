@@ -68,7 +68,7 @@ export class Fenster extends BaseGroup {
         this.getVibration().forEach((element) => {
           element.vibrationBlocked = true;
         });
-        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().Einstellungen.rolloOffset);
+        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().settings.rolloOffset);
         if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
           ShutterService.windowAllMiddle(this);
         } else {

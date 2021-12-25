@@ -5,10 +5,18 @@ import { SunTimeOffsets } from '../../../server/services/time-callback-service';
 import { iTimePair } from '../../../server/config/iConfig';
 import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import { SettingsService } from '../../../server/services/settings-service';
+import { API } from '../../../server/services/api/api-service';
 
 export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
   public shortName: string;
   public defaultSettings: iRoomDefaultSettings = SettingsService.settings.roomDefault;
+  public deviceAddidngSettings?: RoomDeviceAddingSettings;
+  public radioUrl: string = 'https://hermes.bcs-systems.de/hitradio-rtl_top40_64k_aac'; // Radio RTL
+  public etage: number = -1;
+  public rolloOffset: SunTimeOffsets;
+  public lampOffset: SunTimeOffsets;
+  public roomName?: string;
+  public rolloHeatReduction: boolean = this.defaultSettings.rolloHeatReduction;
   private _lampenBeiBewegung: boolean = this.defaultSettings.lampenBeiBewegung;
   private _lichtSonnenAufgangAus: boolean = this.defaultSettings.lichtSonnenAufgangAus;
   private _sonnenUntergangRollos: boolean = this.defaultSettings.sonnenUntergangRollos;
@@ -21,13 +29,6 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   private _sonnenAufgangRolloMinTime: iTimePair = this.defaultSettings.sonnenAufgangRolloMinTime;
   private _sonnenAufgangLampenDelay: number = this.defaultSettings.sonnenAufgangLampenDelay;
   private _lightIfNoWindows: boolean = this.defaultSettings.lightIfNoWindows;
-  deviceAddidngSettings?: RoomDeviceAddingSettings;
-  public radioUrl: string = 'https://hermes.bcs-systems.de/hitradio-rtl_top40_64k_aac'; // Radio RTL
-  etage: number = -1;
-  public rolloOffset: SunTimeOffsets;
-  public lampOffset: SunTimeOffsets;
-  public room?: RoomBase;
-  public rolloHeatReduction: boolean = this.defaultSettings.rolloHeatReduction;
 
   public constructor(initSettings: iRoomInitializationSettings) {
     this.shortName = initSettings.shortName;
@@ -53,16 +54,13 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
       this.sonnenUntergangRolloMaxTime.hours,
       this.sonnenUntergangRolloMaxTime.minutes,
     );
-    if (this.room) {
-      this.room.recalcTimeCallbacks();
-    }
+
+    this.room?.recalcTimeCallbacks();
   }
 
   private recalcLampOffset(): void {
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenAufgangRolloDelay);
-    if (this.room) {
-      this.room.recalcTimeCallbacks();
-    }
+    this.room?.recalcTimeCallbacks();
   }
 
   get sonnenAufgangLampenDelay(): number {
@@ -73,6 +71,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this._sonnenAufgangLampenDelay = value;
     this.recalcLampOffset();
   }
+
   get sonnenAufgangRolloDelay(): number {
     return this._sonnenAufgangRolloDelay;
   }
@@ -81,6 +80,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this._sonnenAufgangRolloDelay = value;
     this.recalcRolloOffset();
   }
+
   get sonnenUntergangLampenDelay(): number {
     return this._sonnenUntergangLampenDelay;
   }
@@ -89,6 +89,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this._sonnenUntergangLampenDelay = value;
     this.recalcLampOffset();
   }
+
   get sonnenUntergangRolloDelay(): number {
     return this._sonnenUntergangRolloDelay;
   }
@@ -96,6 +97,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   set sonnenUntergangRolloDelay(value: number) {
     this._sonnenUntergangRolloDelay = value;
   }
+
   get movementResetTimer(): number {
     return this._movementResetTimer;
   }
@@ -103,9 +105,11 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   set movementResetTimer(value: number) {
     this._movementResetTimer = value;
   }
+
   get lichtSonnenAufgangAus(): boolean {
     return this._lichtSonnenAufgangAus;
   }
+
   get sonnenAufgangRollos(): boolean {
     return this._sonnenAufgangRollos;
   }
@@ -114,6 +118,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this._sonnenAufgangRollos = value;
     this.recalcRolloOffset();
   }
+
   get sonnenUntergangRollos(): boolean {
     return this._sonnenUntergangRollos;
   }
@@ -122,9 +127,11 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this._sonnenUntergangRollos = value;
     this.recalcRolloOffset();
   }
+
   set lichtSonnenAufgangAus(value: boolean) {
     this._lichtSonnenAufgangAus = value;
   }
+
   get lampenBeiBewegung(): boolean {
     return this._lampenBeiBewegung;
   }
@@ -157,5 +164,12 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
 
   set lightIfNoWindows(value: boolean) {
     this._lightIfNoWindows = value;
+  }
+
+  public get room(): RoomBase | undefined {
+    if (!this.roomName) {
+      return undefined;
+    }
+    return API.getRoom(this.roomName);
   }
 }

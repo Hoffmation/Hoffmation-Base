@@ -54,7 +54,7 @@ export class PraesenzGroup extends BaseGroup {
         RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${b.info.fullName}"`);
       });
     });
-    if (this.getRoom().Einstellungen.lichtSonnenAufgangAus && this.getRoom().Einstellungen.lampOffset) {
+    if (this.getRoom().settings.lichtSonnenAufgangAus && this.getRoom().settings.lampOffset) {
       const cb: TimeCallback = new TimeCallback(
         `${this.roomName} Morgens Lampe aus`,
         TimeCallbackType.Sunrise,
@@ -62,7 +62,7 @@ export class PraesenzGroup extends BaseGroup {
           ServerLogService.writeLog(LogLevel.Info, `Es ist hell genug --> Schalte Lampen im ${this.roomName} aus`);
           this.getRoom().LampenGroup?.switchAll(false);
         },
-        this.getRoom().Einstellungen.lampOffset.sunrise,
+        this.getRoom().settings.lampOffset.sunrise,
       );
       this.getRoom().sonnenAufgangLichtCallback = cb;
       TimeCallbackService.addCallback(cb);
@@ -72,7 +72,7 @@ export class PraesenzGroup extends BaseGroup {
       this.getRoom().LampenGroup?.switchAll(false);
     });
 
-    if (this.getRoom().Einstellungen.lampenBeiBewegung) {
+    if (this.getRoom().settings.lampenBeiBewegung) {
       this.addFirstEnterCallback(() => {
         ServerLogService.writeLog(
           LogLevel.DeepTrace,
@@ -124,7 +124,7 @@ export class PraesenzGroup extends BaseGroup {
     }
 
     let timeAfterReset: number =
-      Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().Einstellungen.movementResetTimer * 1000;
+      Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
     if (timeAfterReset > 0) {
       ServerLogService.writeLog(
         LogLevel.Debug,
@@ -139,7 +139,7 @@ export class PraesenzGroup extends BaseGroup {
     Utils.guardedTimeout(
       () => {
         timeAfterReset =
-          Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().Einstellungen.movementResetTimer * 1000;
+          Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
         ServerLogService.writeLog(
           LogLevel.Debug,
           `Delayed Movement reset in ${

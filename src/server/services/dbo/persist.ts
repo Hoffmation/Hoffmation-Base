@@ -69,12 +69,12 @@ export class Persist {
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Room for ${room.roomName}`);
     this.BasicRoomCollection.updateOne(
       { roomName: room.roomName },
-      { $set: new BasicRoomInfo(room.roomName, room.Settings.etage) },
+      { $set: new BasicRoomInfo(room.roomName, room.settings.etage) },
       { upsert: true },
     ).catch((r) => {
       this.handleReject(r, 'BasicRoomCollection.updateOne');
     });
-    const detailed = new RoomDetailInfo(room.roomName, room.Settings.etage);
+    const detailed = new RoomDetailInfo(room.roomName, room.settings.etage);
     if (room.HeatGroup) {
       for (const h of room.HeatGroup?.getHeater()) {
         detailed.heaters.push(h.info.customName);
