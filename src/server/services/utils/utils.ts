@@ -1,5 +1,6 @@
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models/logLevel';
+import _ from 'lodash';
 
 export class Utils {
   public static async catchEm<T>(promise: Promise<T>): Promise<{ reason: Error | null; data: T | null }> {
@@ -66,7 +67,7 @@ export class Utils {
     return `${d.toLocaleTimeString('de-DE')}.${d.getMilliseconds()}`;
   }
 
-  static guard<T>(object: T | undefined | null) {
+  public static guard<T>(object: T | undefined | null) {
     if (object === undefined) {
       throw new Error('Guarded Value is undefined');
     }
@@ -74,5 +75,18 @@ export class Utils {
       throw new Error('Guarded Value is null');
     }
     return object;
+  }
+
+  public static jsonFilter(object: object): Partial<object> {
+    return _.omit(
+      object,
+      Object.keys(object).filter((key): boolean => {
+        if (key.includes('Timeout') || key.includes('Interval')) {
+          // Exclude timeout Variables.
+          return true;
+        }
+        return false;
+      }),
+    );
   }
 }
