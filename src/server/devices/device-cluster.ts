@@ -2,6 +2,8 @@ import { DeviceClusterType } from './device-cluster-type';
 import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { OwnSonosDevice } from '../services/Sonos/sonos-service';
+import { Utils } from '../services/utils/utils';
+import _ from 'lodash';
 
 export class DeviceCluster {
   public constructor(public deviceMap: Map<DeviceClusterType, DeviceList> = new Map<DeviceClusterType, DeviceList>()) {}
@@ -15,5 +17,11 @@ export class DeviceCluster {
 
   public getDevicesByType(type: DeviceClusterType): Array<IoBrokerBaseDevice | OwnSonosDevice> {
     return this.deviceMap.get(type)?.getDevices() ?? [];
+  }
+
+  public toJSON(): Partial<DeviceCluster & { deviceDict?: { [p: string]: DeviceList } }> {
+    const result: Partial<DeviceCluster & { deviceDict?: { [p: string]: DeviceList } }> = Utils.jsonFilter(this);
+    result.deviceDict = Object.fromEntries(this.deviceMap);
+    return _.omit(result, [`deviceMap`]);
   }
 }

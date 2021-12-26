@@ -19,6 +19,7 @@ import { BaseGroup } from '../../server/devices/groups/base-group';
 import { GroupType } from '../../server/devices/groups/group-type';
 import { ShutterService } from '../../server/services/ShutterService';
 import { Utils } from '../../server/services/utils/utils';
+import _ from 'lodash';
 
 export class RoomBase implements iRoomBase {
   public info: RoomInfo;
@@ -162,6 +163,6 @@ export class RoomBase implements iRoomBase {
   public toJSON(): Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> {
     const result: Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> = Utils.jsonFilter(this);
     result.groupDict = Object.fromEntries(this.groups);
-    return result;
+    return _.omit(result, 'groups');
   }
 }
