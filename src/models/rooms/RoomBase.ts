@@ -159,8 +159,9 @@ export class RoomBase implements iRoomBase {
     return TimeCallbackService.darkOutsideOrNight(timeOfDay);
   }
 
-  public toJSON(): Partial<RoomBase> {
-    const result: Partial<RoomBase> = Utils.jsonFilter(this);
+  public toJSON(): Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> {
+    const result: Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> = Utils.jsonFilter(this);
+    result.groupDict = Object.fromEntries(this.groups);
     return result;
   }
 }

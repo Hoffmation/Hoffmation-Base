@@ -6,6 +6,8 @@ import { iTimePair } from '../../../server/config/iConfig';
 import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import { SettingsService } from '../../../server/services/settings-service';
 import { API } from '../../../server/services/api/api-service';
+import { Utils } from '../../../server/services/utils/utils';
+import _ from 'lodash';
 
 export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
   public shortName: string;
@@ -171,5 +173,10 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
       return undefined;
     }
     return API.getRoom(this.roomName);
+  }
+
+  public toJSON(): Partial<RoomSettings> {
+    const result: Partial<RoomSettings> = Utils.jsonFilter(this);
+    return _.omit(result, [`defaultSettings`, 'deviceAddidngSettings']);
   }
 }
