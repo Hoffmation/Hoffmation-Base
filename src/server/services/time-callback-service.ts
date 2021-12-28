@@ -94,7 +94,7 @@ export class TimeCallbackService {
       return TimeOfDay.AfterSunset;
     }
     const minimumSunrise: Date = pOffset.getNextMinimumSunrise();
-    let sunrise: Date = new Date(TimeCallbackService._todaySunRise.getTime() + pOffset.sunset * 60 * 1000);
+    let sunrise: Date = new Date(TimeCallbackService._todaySunRise.getTime() + pOffset.sunrise * 60 * 1000);
     if (minimumSunrise.getDate() !== sunrise.getDate()) {
       minimumSunrise.setDate(minimumSunrise.getDate() - 1);
     }
