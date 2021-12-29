@@ -31,6 +31,7 @@ import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 import { ZigbeeIlluShutter } from './zigbee/zigbeeIlluShutter';
 import { ZigbeeSMaBiTMagnetContact } from './zigbee/zigbeeSMaBiTMagnetContact';
 import { ZigbeeSonoffMotion } from './zigbee/zigbeeSonoffMotion';
+import { ZigbeeMotionSensor } from './zigbee/zigbeeMotionSensor';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -81,6 +82,9 @@ export class Devices {
       } else if (d.deviceType === DeviceType.HmIpBewegung) {
         ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
         (d as HmIpBewegung).detectionsToday = 0;
+      } else if (d.deviceType === DeviceType.ZigbeeSonoffMotion || d.deviceType === DeviceType.ZigbeeAquaraMotion) {
+        ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
+        (d as ZigbeeMotionSensor).detectionsToday = 0;
       }
     }
   }
