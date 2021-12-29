@@ -21,6 +21,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   private _msTilBot: number = -1;
   private _movementStartPos: number = -1;
   private _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
+  private _iMovementTimeout: NodeJS.Timeout | undefined;
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluShutter);
@@ -54,6 +55,26 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   protected override moveToPosition(targetPosition: number): void {
+    if (this._movementState !== MovementState.Stop) {
+      ServerLogService.writeLog(
+        LogLevel.Info,
+        `Delaying movement command for ${this.info.customName} as it is moving to prevent actuator damage`,
+      );
+      this.changeMovementState(MovementState.Stop);
+      if (this._iMovementTimeout !== undefined) {
+        clearTimeout(this._iMovementTimeout);
+      }
+      this._iMovementTimeout = Utils.guardedTimeout(
+        () => {
+          this._iMovementTimeout = undefined;
+          this.moveToPosition(targetPosition);
+        },
+        2000,
+        this,
+      );
+      return;
+    }
+
     this._movementStartPos = this._currentLevel;
     if (targetPosition === 100) {
       this.changeMovementState(MovementState.Up);
