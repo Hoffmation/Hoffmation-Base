@@ -112,10 +112,12 @@ export class RoomBase implements iRoomBase {
    */
   public setLightTimeBased(movementDependant: boolean = false): void {
     if (!this.LampenGroup) {
+      this.log(LogLevel.Trace, 'Ignore "setLightTimeBased" as we have no lamps');
       return;
     }
 
     if (movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
+      this.log(LogLevel.Trace, 'Turn off lights as noone is present.');
       this.LampenGroup.switchAll(false);
       return;
     }

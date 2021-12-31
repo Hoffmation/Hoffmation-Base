@@ -6,6 +6,7 @@ import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iLamp } from '../iLamp';
+import { LogLevel } from '../../../models/logLevel';
 
 export class LampenGroup extends BaseGroup {
   public constructor(roomName: string, lampenIds: string[] = [], steckerIds: string[] = [], ledIds: string[] = []) {
@@ -62,12 +63,15 @@ export class LampenGroup extends BaseGroup {
     let resultLampen = false;
     let resultSteckdosen = false;
     if (this.getLED().length > 0) {
+      this.log(LogLevel.Trace, `Set LEDs time based for time "${TimeOfDay[time]}"`);
       this.getLED().forEach((s) => {
         s.setTimeBased(time);
       });
     } else if (this.getStecker().length > 0) {
+      this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[time]}"`);
       resultSteckdosen = darkOutside;
     } else {
+      this.log(LogLevel.Trace, `Set Lamps time based for time "${TimeOfDay[time]}"`);
       resultLampen = darkOutside;
     }
 

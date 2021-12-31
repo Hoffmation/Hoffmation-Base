@@ -29,11 +29,10 @@ export class ServerLogService {
       return;
     }
     let message: string = this.settings.useTimestamp ? `[${now}] ` : '';
-    if (additionalLogInfo?.room) {
-      message += ` ${additionalLogInfo.room}`;
-    }
     if (additionalLogInfo?.deviceName) {
-      message += ` ${additionalLogInfo.deviceName}`;
+      message += `"${additionalLogInfo.deviceName}": `;
+    } else if (additionalLogInfo?.room) {
+      message += `"${additionalLogInfo.room}": `;
     }
     if (pLevel <= this.storageLevel) {
       this.storage.add(new LogObject(now, pLevel, message, additionalLogInfo));
