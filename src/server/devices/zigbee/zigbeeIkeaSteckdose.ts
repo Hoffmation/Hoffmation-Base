@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { ZigbeeActuator } from './ZigbeeActuator';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
@@ -14,7 +13,7 @@ export class ZigbeeIkeaSteckdose extends ZigbeeActuator {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Stecker Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );

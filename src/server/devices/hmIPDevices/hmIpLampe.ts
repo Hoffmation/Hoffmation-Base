@@ -1,6 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { ActuatorSettings } from '../../../models/actuatorSettings';
 import { DeviceInfo } from '../DeviceInfo';
@@ -23,7 +22,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Lampen Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
@@ -45,19 +44,16 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
    */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     if (!force && pValue === this.lightOn && this.queuedLightValue === null) {
-      ServerLogService.writeLog(
-        LogLevel.DeepTrace,
-        `Skip light command for "${this.info.customName}" as it is already ${pValue}`,
-      );
+      this.log(LogLevel.DeepTrace, `Skip light command for "${this.info.customName}" as it is already ${pValue}`);
       return;
     }
     if (this.lightOnSwitchID === '') {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
     if (!force && Utils.nowMS() < this.turnOffTime) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Skip automatic command for "${this.info.customName}" to ${pValue} as it is locked until ${new Date(
           this.turnOffTime,
@@ -66,9 +62,9 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
       return;
     }
 
-    ServerLogService.writeLog(LogLevel.Debug, `Lampe schalten: "${this.info.customName}" Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Lampe schalten: "${this.info.customName}" Wert: ${pValue}`);
     this.setState(this.lightOnSwitchID, pValue, undefined, (err) => {
-      ServerLogService.writeLog(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
+      this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
     this.queuedLightValue = pValue;
 
@@ -88,7 +84,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     this.turnOffTime = Utils.nowMS() + timeout;
     this._turnOffTimeout = Utils.guardedTimeout(
       () => {
-        ServerLogService.writeLog(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
+        this.log(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
         this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setLight(false, -1, true);

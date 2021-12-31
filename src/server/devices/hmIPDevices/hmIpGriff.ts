@@ -1,6 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { WeatherService } from '../../services/weather/weather-service';
@@ -43,10 +42,7 @@ export class HmIpGriff extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
-      LogLevel.DeepTrace,
-      `Griff Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`,
-    );
+    this.log(LogLevel.DeepTrace, `Griff Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case '1':
@@ -62,7 +58,7 @@ export class HmIpGriff extends HmIPDevice {
       return;
     }
 
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.Trace,
       `Update Fenstergriff "${this.info.customName}"\nauf Position "${FensterPosition[pValue]}"`,
     );
@@ -83,10 +79,7 @@ export class HmIpGriff extends HmIPDevice {
     if (pValue === FensterPosition.geschlossen) {
       if (this._iOpenTimeout !== undefined) {
         clearInterval(this._iOpenTimeout);
-        ServerLogService.writeLog(
-          LogLevel.Info,
-          `Fenster: "${this.info.customName}" nach ${this.minutesOpen} Minuten geschlossen`,
-        );
+        this.log(LogLevel.Info, `Fenster: "${this.info.customName}" nach ${this.minutesOpen} Minuten geschlossen`);
         this.minutesOpen = 0;
         this._iOpenTimeout = undefined;
       }
@@ -108,13 +101,13 @@ export class HmIpGriff extends HmIPDevice {
                 (desiredTemp > currentTemp && outSideTemp > currentTemp);
               if (!wouldHelp && this._helpingRoomTemp) {
                 const info: string = `Das Fenster "${this.info.customName}" sollte geschlossen werden, es hilft dem Raum nicht mehr`;
-                ServerLogService.writeLog(LogLevel.Info, info);
+                this.log(LogLevel.Info, info);
                 TelegramService.inform(info);
                 this._helpingRoomTemp = false;
               } else if (wouldHelp && !this._helpingRoomTemp) {
                 this._helpingRoomTemp = true;
                 const info: string = `Das Fenster "${this.info.customName}" hilft der Innentemperatur ihr Ziel von ${desiredTemp} zu erreichen. Draußen sind es ${outSideTemp}. Du wirst informiert wenn es nicht mehr hilft.`;
-                ServerLogService.writeLog(LogLevel.Info, info);
+                this.log(LogLevel.Info, info);
                 TelegramService.inform(info);
                 return;
               } else if (wouldHelp && this._helpingRoomTemp) {
@@ -131,11 +124,11 @@ export class HmIpGriff extends HmIPDevice {
             case 60:
             case 120:
             case 240:
-              ServerLogService.writeLog(LogLevel.Info, message);
+              this.log(LogLevel.Info, message);
               TelegramService.inform(message);
               break;
             default:
-              ServerLogService.writeLog(LogLevel.Trace, message);
+              this.log(LogLevel.Trace, message);
               break;
           }
         },

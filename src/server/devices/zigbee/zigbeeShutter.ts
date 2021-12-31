@@ -1,6 +1,5 @@
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { ZigbeeDevice } from './zigbeeDevice';
@@ -63,14 +62,14 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (!this._firstCommandRecieved && !initial) {
       this._firstCommandRecieved = true;
     } else if (this._firstCommandRecieved && initial) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Skipped initial Rollo "${this.info.customName}" to ${pPosition} as we recieved a command already`,
       );
       return;
     }
     if (this.currentLevel === pPosition) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Skip Rollo command for "${this.info.customName}" to Position ${pPosition} as this is the current one`,
       );
@@ -80,17 +79,14 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (this._fenster !== undefined) {
       if (this._fenster.griffeInPosition(FensterPosition.offen) > 0 && pPosition < 100) {
         if (!skipOpenWarning) {
-          ServerLogService.writeLog(
-            LogLevel.Alert,
-            `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster offen ist!`,
-          );
+          this.log(LogLevel.Alert, `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster offen ist!`);
         }
         return;
       }
       if (this._fenster.griffeInPosition(FensterPosition.kipp) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!skipOpenWarning) {
-          ServerLogService.writeLog(
+          this.log(
             LogLevel.Alert,
             `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster auf Kipp ist!`,
           );
@@ -99,12 +95,12 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     }
 
     this._setLevel = pPosition;
-    ServerLogService.writeLog(LogLevel.Debug, `Move "${this.info.customName}" to position ${pPosition}`);
+    this.log(LogLevel.Debug, `Move "${this.info.customName}" to position ${pPosition}`);
     this.moveToPosition(pPosition);
   }
 
   protected moveToPosition(pPosition: number): void {
-    ServerLogService.writeLog(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
+    this.log(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {

@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { LedSettings } from '../../../models/ledSettings';
 import { ZigbeeDevice } from './zigbeeDevice';
@@ -29,26 +28,26 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `LED Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
-        ServerLogService.writeLog(LogLevel.Trace, `LED Update für ${this.info.customName} auf ${state.val}`);
+        this.log(LogLevel.Trace, `LED Update für ${this.info.customName} auf ${state.val}`);
         this.on = state.val as boolean;
         break;
       case 'brightness':
-        ServerLogService.writeLog(LogLevel.Trace, `LED Helligkeit Update für ${this.info.customName} auf ${state.val}`);
+        this.log(LogLevel.Trace, `LED Helligkeit Update für ${this.info.customName} auf ${state.val}`);
         this.brightness = state.val as number;
         break;
       case 'color':
-        ServerLogService.writeLog(LogLevel.Trace, `LED Color Update für ${this.info.customName} auf ${state.val}`);
+        this.log(LogLevel.Trace, `LED Color Update für ${this.info.customName} auf ${state.val}`);
         this.color = state.val as string;
         break;
       case 'colortemp':
-        ServerLogService.writeLog(LogLevel.Trace, `LED Color Update für ${this.info.customName} auf ${state.val}`);
+        this.log(LogLevel.Trace, `LED Color Update für ${this.info.customName} auf ${state.val}`);
         this.colortemp = state.val as number;
         break;
     }
@@ -81,19 +80,19 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
 
   public setLight(pValue: boolean, brightness: number = -1, color: string = '', colortemp: number = -1): void {
     if (this.stateID === '') {
-      ServerLogService.writeLog(LogLevel.Error, `Keine State ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine State ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
     if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
       return;
     }
 
     if (pValue && brightness === -1 && this.brightness < 10) {
       brightness = 10;
     }
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.Debug,
       `LED Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colortemp}`,
     );
@@ -101,7 +100,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
     if (color !== '') {
       this.ioConn.setState(this.colorID, color, (err) => {
         if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `LED Farbe schalten ergab Fehler: ${err}`);
+          this.log(LogLevel.Error, `LED Farbe schalten ergab Fehler: ${err}`);
         }
       });
     }
@@ -109,21 +108,21 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
     if (colortemp > -1) {
       this.ioConn.setState(this.colorTempID, colortemp, (err) => {
         if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `LED Farbwärme schalten ergab Fehler: ${err}`);
+          this.log(LogLevel.Error, `LED Farbwärme schalten ergab Fehler: ${err}`);
         }
       });
     }
 
     this.ioConn.setState(this.stateID, pValue, (err) => {
       if (err) {
-        ServerLogService.writeLog(LogLevel.Error, `LED schalten ergab Fehler: ${err}`);
+        this.log(LogLevel.Error, `LED schalten ergab Fehler: ${err}`);
       }
     });
 
     if (brightness > -1) {
       this.ioConn.setState(this.brightnessID, brightness, (err) => {
         if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `LED Helligkeit schalten ergab Fehler: ${err}`);
+          this.log(LogLevel.Error, `LED Helligkeit schalten ergab Fehler: ${err}`);
         }
       });
     }

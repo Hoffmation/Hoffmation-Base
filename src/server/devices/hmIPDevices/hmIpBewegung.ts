@@ -1,7 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { CountToday } from '../../../models/persistence/todaysCount';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { Persist } from '../../services/dbo/persist';
@@ -53,14 +52,14 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
     Persist.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Debug,
           `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
         );
         this.initialized = true;
       })
       .catch((err: Error) => {
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Warn,
           `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
         );
@@ -72,10 +71,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
-      LogLevel.Trace,
-      `Bewegungs Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`,
-    );
+    this.log(LogLevel.Trace, `Bewegungs Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
 
     if (idSplit[3] !== '3') {
@@ -95,7 +91,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
   public updateMovement(pVal: boolean): void {
     if (!this.initialized && pVal) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Trace,
         `Bewegung für "${this.info.customName}" erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
       );
@@ -109,7 +105,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
       return;
     }
     if (pVal === this.movementDetected) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Überspringe Bewegung für "${this.info.customName}" da bereits der Wert ${pVal} vorliegt`,
       );
@@ -122,14 +118,11 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
     this.resetFallbackTimeout();
     this.movementDetected = pVal;
-    ServerLogService.writeLog(LogLevel.Debug, `Neuer Bewegunsstatus Wert für "${this.info.customName}": ${pVal}`);
+    this.log(LogLevel.Debug, `Neuer Bewegunsstatus Wert für "${this.info.customName}": ${pVal}`);
     if (pVal) {
       this.startFallbackTimeout();
       this.detectionsToday++;
-      ServerLogService.writeLog(
-        LogLevel.Trace,
-        `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`,
-      );
+      this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`);
     }
 
     for (const c of this._movementDetectedCallback) {
@@ -139,7 +132,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
   private resetFallbackTimeout(): void {
     if (this._fallBackTimeout) {
-      ServerLogService.writeLog(LogLevel.Trace, `Fallback Timeout für "${this.info.customName}" zurücksetzen`);
+      this.log(LogLevel.Trace, `Fallback Timeout für "${this.info.customName}" zurücksetzen`);
       clearTimeout(this._fallBackTimeout);
     }
   }
@@ -147,7 +140,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   private startFallbackTimeout(): void {
     this._fallBackTimeout = Utils.guardedTimeout(
       () => {
-        ServerLogService.writeLog(LogLevel.Debug, `Benötige Fallback Bewegungs Reset für "${this.info.customName}"`);
+        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset für "${this.info.customName}"`);
         this._fallBackTimeout = undefined;
         this.updateMovement(false);
       },

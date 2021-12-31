@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { Persist } from '../../services/dbo/persist';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
@@ -55,24 +54,18 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Motion update for "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'illuminance':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Motion sensor: Update for illuminance of ${this.info.customName}: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Motion sensor: Update for illuminance of ${this.info.customName}: ${state.val}`);
         this.currentIllumination = state.val as number;
         break;
       case 'occupancy_timeout':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Motion sensor: Update for motion timeout of ${this.info.customName}: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Motion sensor: Update for motion timeout of ${this.info.customName}: ${state.val}`);
         this._motionTimeout = state.val as number;
         break;
     }

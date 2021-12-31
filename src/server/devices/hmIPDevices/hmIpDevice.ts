@@ -1,7 +1,6 @@
 import { LogLevel } from '../../../models/logLevel';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
@@ -13,7 +12,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     if (!pOverride) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Trace,
         `Keine Update Überschreibung für "${this.info.customName}":\n\tID: ${idSplit.join(
           '.',
@@ -21,7 +20,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
       );
     }
 
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Base-Device Update for ${this.info.customName}("${idSplit.join('.')}", ${state}, ${initial}, ${pOverride})`,
     );
@@ -38,7 +37,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
       case 'LOW_BAT':
         const newBatLowVal: boolean = state.val as boolean;
         if (newBatLowVal) {
-          ServerLogService.writeLog(LogLevel.Alert, `!!BATTERIE FAST LEER!! "${this.info.customName}"`);
+          this.log(LogLevel.Alert, `!!BATTERIE FAST LEER!! "${this.info.customName}"`);
         }
         break;
     }

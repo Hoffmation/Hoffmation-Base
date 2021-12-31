@@ -1,5 +1,4 @@
 import { ZigbeeMagnetContact } from './zigbeeMagnetContact';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { MagnetPosition } from '../models/MagnetPosition';
 import { DeviceInfo } from '../DeviceInfo';
@@ -11,10 +10,7 @@ export class ZigbeeSMaBiTMagnetContact extends ZigbeeMagnetContact {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
-      LogLevel.DeepTrace,
-      `Magnet Contact Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`,
-    );
+    this.log(LogLevel.DeepTrace, `Magnet Contact Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'opened':

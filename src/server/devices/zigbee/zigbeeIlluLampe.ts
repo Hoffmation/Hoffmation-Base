@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 import { LogLevel } from '../../../models/logLevel';
@@ -19,13 +18,13 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
-        ServerLogService.writeLog(LogLevel.Trace, `Lampen Update für ${this.info.customName} auf ${state.val}`);
+        this.log(LogLevel.Trace, `Lampen Update für ${this.info.customName} auf ${state.val}`);
         break;
     }
   }
 
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
-    ServerLogService.writeLog(LogLevel.Debug, `Lampenaktor schalten: "${this.info.customName}" Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Lampenaktor schalten: "${this.info.customName}" Wert: ${pValue}`);
     super.setActuator(pValue, timeout, force);
   }
 

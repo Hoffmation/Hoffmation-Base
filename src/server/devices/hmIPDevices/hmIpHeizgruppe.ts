@@ -1,7 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { TemperaturSettings } from '../../../models/temperaturSettings';
 import { Devices } from '../devices';
@@ -63,13 +62,10 @@ export class HmIpHeizgruppe extends HmIPDevice {
       this._setPointTemperaturID,
       val,
       () => {
-        ServerLogService.writeLog(LogLevel.Info, `Changed temperature of "${this.info.customName}" to "${val}.`);
+        this.log(LogLevel.Info, `Changed temperature of "${this.info.customName}" to "${val}.`);
       },
       (err: Error) => {
-        ServerLogService.writeLog(
-          LogLevel.Error,
-          `Temperaturänderung für "${this.info.customName}" ergab Fehler ${err}.`,
-        );
+        this.log(LogLevel.Error, `Temperaturänderung für "${this.info.customName}" ergab Fehler ${err}.`);
       },
     );
   }
@@ -101,7 +97,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.Trace,
       `Heizgruppe "${this.info.customName}" Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
@@ -133,7 +129,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
         this.humidity = state.val as number;
         break;
       case 'SET_POINT_TEMPERATURE':
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Trace,
           `Heizgruppe "${this.info.customName}" Update Soll-Temperatur JSON: ${JSON.stringify(state)}`,
         );
@@ -159,7 +155,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
       }
 
       if (this._desiredTemperatur !== settings.temperatur) {
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Debug,
           `Automatische Temperaturanpassung für ${this.info.customName} auf ${settings.temperatur}°C`,
         );

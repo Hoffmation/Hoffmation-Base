@@ -1,6 +1,5 @@
 import { DimmerSettings } from '../../../models/dimmerSettings';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
@@ -29,28 +28,22 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.queuedValue = null;
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Dimmer Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
-        ServerLogService.writeLog(LogLevel.Trace, `Dimmer Update für ${this.info.customName} auf ${state.val}`);
+        this.log(LogLevel.Trace, `Dimmer Update für ${this.info.customName} auf ${state.val}`);
         this.lightOn = state.val as boolean;
         break;
       case 'brightness':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Dimmer Helligkeit Update für ${this.info.customName} auf ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Dimmer Helligkeit Update für ${this.info.customName} auf ${state.val}`);
         this.brightness = state.val as number;
         break;
       case 'transition_time':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Dimmer Transition Time Update für ${this.info.customName} auf ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Dimmer Transition Time Update für ${this.info.customName} auf ${state.val}`);
         this.transitionTime = state.val as number;
         break;
     }
@@ -81,25 +74,25 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     transitionTime: number = -1,
   ): void {
     if (this.stateID === '') {
-      ServerLogService.writeLog(LogLevel.Error, `Keine State ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine State ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
     if (!this.ioConn) {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
       return;
     }
 
     if (transitionTime > -1) {
       this.ioConn.setState(this.transitionID, transitionTime, (err) => {
         if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `Dimmer TransitionTime schalten ergab Fehler: ${err}`);
+          this.log(LogLevel.Error, `Dimmer TransitionTime schalten ergab Fehler: ${err}`);
         }
       });
     }
 
     if (!force && Utils.nowMS() < this.turnOffTime) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Skip automatic command for "${this.info.customName}" to ${pValue} as it is locked until ${new Date(
           this.turnOffTime,
@@ -111,10 +104,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     if (pValue && brightness === -1 && this.brightness < 10) {
       brightness = 10;
     }
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `Dimmer Schalten: "${this.info.customName}" An: ${pValue} \t Helligkeit: ${brightness}%`,
-    );
+    this.log(LogLevel.Debug, `Dimmer Schalten: "${this.info.customName}" An: ${pValue} \t Helligkeit: ${brightness}%`);
 
     this.setState(this.stateID, pValue);
     this.queuedValue = pValue;
@@ -124,7 +114,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
         this.setState(this.brightnessID, this.settings.turnOnThreshhold, () => {
           Utils.guardedTimeout(
             () => {
-              ServerLogService.writeLog(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
+              this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
               this.setState(this.brightnessID, brightness);
             },
             1000,
@@ -147,7 +137,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     this.turnOffTime = Utils.nowMS() + timeout;
     this._turnOffTimeout = Utils.guardedTimeout(
       () => {
-        ServerLogService.writeLog(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
+        this.log(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
         this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setLight(false, -1, true);

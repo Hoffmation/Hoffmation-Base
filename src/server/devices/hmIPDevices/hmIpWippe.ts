@@ -1,6 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
@@ -19,7 +18,7 @@ export class HmIpWippe extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(LogLevel.Trace, `Wippe Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
+    this.log(LogLevel.Trace, `Wippe Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     let cTaste: Taste | undefined = undefined;
     switch (idSplit[3]) {
@@ -39,14 +38,14 @@ export class HmIpWippe extends HmIPDevice {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          ServerLogService.writeLog(LogLevel.Debug, `Tasten Update initial für "${this.info.customName}" ignoriert`);
+          this.log(LogLevel.Debug, `Tasten Update initial für "${this.info.customName}" ignoriert`);
           cTaste.updateShort(state.val as boolean);
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          ServerLogService.writeLog(LogLevel.Debug, `Tasten Update initial für "${this.info.customName}" ignoriert`);
+          this.log(LogLevel.Debug, `Tasten Update initial für "${this.info.customName}" ignoriert`);
           cTaste.updateLong(state.val as boolean);
         }
         break;

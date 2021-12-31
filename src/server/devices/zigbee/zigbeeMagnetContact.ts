@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { TelegramService } from '../../services/Telegram/telegram-service';
@@ -38,10 +37,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
       return;
     }
 
-    ServerLogService.writeLog(
-      LogLevel.Trace,
-      `Update for Contact "${this.info.customName}" to position "${MagnetPosition[pValue]}"`,
-    );
+    this.log(LogLevel.Trace, `Update for Contact "${this.info.customName}" to position "${MagnetPosition[pValue]}"`);
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -61,7 +57,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
           message = Res.justClosed(this.info.customName);
         }
         // const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde nach ${this.minutesOpen} Minuten geschlossen!`;
-        ServerLogService.writeLog(LogLevel.Info, message);
+        this.log(LogLevel.Info, message);
 
         TelegramService.inform(message);
         this.minutesOpen = 0;
@@ -85,11 +81,11 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
             case 20:
             case 45:
             case 60:
-              ServerLogService.writeLog(LogLevel.Info, message);
+              this.log(LogLevel.Info, message);
               TelegramService.inform(message);
               break;
             default:
-              ServerLogService.writeLog(LogLevel.Trace, message);
+              this.log(LogLevel.Trace, message);
               break;
           }
         },

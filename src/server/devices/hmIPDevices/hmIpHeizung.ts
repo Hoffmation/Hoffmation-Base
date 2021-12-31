@@ -1,6 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 
@@ -27,7 +26,7 @@ export class HmIpHeizung extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.Trace,
       `Heizung "${this.info.customName}" Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
@@ -51,14 +50,14 @@ export class HmIpHeizung extends HmIPDevice {
       case 'VALVE_STATE':
         this._adaptionState = state.val as number;
         if (this._adaptionState !== 4) {
-          ServerLogService.writeLog(
+          this.log(
             LogLevel.Alert,
             `Adaption State für Heizung "${this.info.customName}" ungewöhnlich: ${this._adaptionState}`,
           );
         }
         break;
       case 'SET_POINT_TEMPERATURE':
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Trace,
           `Heizung "${this.info.customName}" Update Soll-Temperatur JSON: ${JSON.stringify(state)}`,
         );

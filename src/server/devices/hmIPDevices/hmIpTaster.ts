@@ -1,6 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { iTaster } from '../iTaster';
 import { DeviceInfo } from '../DeviceInfo';
 import { Taste } from '../taste';
@@ -21,7 +20,7 @@ export class HmIpTaster extends HmIPDevice implements iTaster {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(LogLevel.Trace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
+    this.log(LogLevel.Trace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     let cTaste: Taste | undefined = undefined;
     switch (idSplit[3]) {

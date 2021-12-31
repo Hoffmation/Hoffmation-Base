@@ -1,4 +1,3 @@
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { ActuatorSettings } from '../../../models/actuatorSettings';
 import { DeviceInfo } from '../DeviceInfo';
@@ -26,7 +25,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
     handledByChildObject: boolean = false,
   ): void {
     if (!handledByChildObject) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.DeepTrace,
         `Aktuator Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
       );
@@ -35,8 +34,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
-        !handledByChildObject &&
-          ServerLogService.writeLog(LogLevel.Trace, `Aktor Update für ${this.info.customName} auf ${state.val}`);
+        !handledByChildObject && this.log(LogLevel.Trace, `Aktor Update für ${this.info.customName} auf ${state.val}`);
         this.actuatorOn = state.val as boolean;
         break;
     }
@@ -44,12 +42,12 @@ export class ZigbeeActuator extends ZigbeeDevice {
 
   public setActuator(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     if (this.actuatorOnSwitchID === '') {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
     if (!force && Utils.nowMS() < this.turnOffTime) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Skip automatic command for "${this.info.customName}" to ${pValue} as it is locked until ${new Date(
           this.turnOffTime,
@@ -59,14 +57,11 @@ export class ZigbeeActuator extends ZigbeeDevice {
     }
 
     if (!force && pValue === this.actuatorOn && this.queuedValue === null) {
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `Skip actuator command for "${this.info.customName}" as it is already ${pValue}`,
-      );
+      this.log(LogLevel.Debug, `Skip actuator command for "${this.info.customName}" as it is already ${pValue}`);
       return;
     }
 
-    ServerLogService.writeLog(LogLevel.Debug, `Stecker schalten: "${this.info.customName}" Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Stecker schalten: "${this.info.customName}" Wert: ${pValue}`);
     this.setState(this.actuatorOnSwitchID, pValue, undefined, (err) => {
       console.log(`Stecker schalten ergab Fehler: ${err}`);
     });
@@ -84,7 +79,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
     this.turnOffTime = Utils.nowMS() + timeout;
     this._turnOffTimeout = Utils.guardedTimeout(
       () => {
-        ServerLogService.writeLog(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
+        this.log(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
         this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setActuator(false, -1, true);

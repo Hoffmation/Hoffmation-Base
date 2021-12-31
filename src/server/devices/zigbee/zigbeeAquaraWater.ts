@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { PollyService } from '../../services/Sonos/polly-service';
@@ -34,14 +33,14 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Water Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'detected':
-        ServerLogService.writeLog(LogLevel.Debug, `Wasser Update für ${this.info.customName} auf Wasser: ${state.val}`);
+        this.log(LogLevel.Debug, `Wasser Update für ${this.info.customName} auf Wasser: ${state.val}`);
         const newVal: boolean = state.val === true;
         if (this.water === true && !newVal) {
           this.stopAlarm();
@@ -76,7 +75,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
     }
     const message = this._messageAlarmEnd;
     Utils.guardedNewThread(() => {
-      ServerLogService.writeLog(LogLevel.Alert, message);
+      this.log(LogLevel.Alert, message);
     });
     Utils.guardedNewThread(() => {
       SonosService.speakOnAll(message);
@@ -86,7 +85,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   private alarm(first: boolean = false): void {
     const message = first ? this._messageAlarmFirst : this._messageAlarm;
     Utils.guardedNewThread(() => {
-      ServerLogService.writeLog(LogLevel.Alert, message);
+      this.log(LogLevel.Alert, message);
     });
     Utils.guardedNewThread(() => {
       SonosService.speakOnAll(message, 80);

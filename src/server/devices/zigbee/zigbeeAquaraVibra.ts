@@ -1,5 +1,4 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { PollyService } from '../../services/Sonos/polly-service';
@@ -32,10 +31,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
   }
 
   public set vibrationBlocked(pVal: boolean) {
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName}`,
-    );
+    this.log(LogLevel.Debug, `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName}`);
     if (pVal) {
       this.vibrationBlockedTimeStamp = new Date().getTime();
     }
@@ -43,42 +39,30 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
+    this.log(
       LogLevel.DeepTrace,
       `Stecker Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'sensitivity':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Vibrationssensor Update für ${this.info.customName} auf Sensitivity: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Sensitivity: ${state.val}`);
         this.tiltAngleZ = state.val as number;
         break;
       case 'tilt_angle_z':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Vibrationssensor Update für ${this.info.customName} auf Winkel Z: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel Z: ${state.val}`);
         this.tiltAngleZ = state.val as number;
         break;
       case 'tilt_angle_y':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Vibrationssensor Update für ${this.info.customName} auf Winkel Y: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel Y: ${state.val}`);
         this.tiltAngleY = state.val as number;
         break;
       case 'tilt_angle_x':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Vibrationssensor Update für ${this.info.customName} auf Winkel X: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel X: ${state.val}`);
         this.tiltAngleX = state.val as number;
         break;
       case 'vibration':
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf Vibration erkannt: ${state.val}`,
         );
@@ -94,31 +78,25 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
         }
         break;
       case 'tilt_angle_y_abs':
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf absoluten Winkel Y: ${state.val}`,
         );
         this.tiltAngleYAbs = state.val as number;
         break;
       case 'tilt_angle_X_abs':
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf absoluten Winkel X: ${state.val}`,
         );
         this.tiltAngleXAbs = state.val as number;
         break;
       case 'tilt_angle':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`);
         this.tiltAngle = state.val as number;
         break;
       case 'tilt':
-        ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`,
-        );
+        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`);
         this.tilt = state.val as boolean;
         break;
     }
@@ -135,31 +113,25 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
         break;
     }
     if (this._idSensitivity === '') {
-      ServerLogService.writeLog(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
       return;
     }
 
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `Vibration Sensitivität schalten: "${this.info.customName}" Wert: ${result}`,
-    );
+    this.log(LogLevel.Debug, `Vibration Sensitivität schalten: "${this.info.customName}" Wert: ${result}`);
     this.setState(this._idSensitivity, result, undefined, (err) => {
       console.log(`Stecker schalten ergab Fehler: ${err}`);
     });
   }
 
   private alarmCheck(): void {
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlocked}`,
-    );
+    this.log(LogLevel.Debug, `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlocked}`);
     if (this._vibrationBlocked) {
-      ServerLogService.writeLog(LogLevel.Debug, `Fenster offen, ignoriere Vibrationsalarm bei ${this.info.customName}`);
+      this.log(LogLevel.Debug, `Fenster offen, ignoriere Vibrationsalarm bei ${this.info.customName}`);
       return;
     }
 
     const message = this._alarmMessage;
     SonosService.speakOnAll(message);
-    ServerLogService.writeLog(LogLevel.Alert, message);
+    this.log(LogLevel.Alert, message);
   }
 }

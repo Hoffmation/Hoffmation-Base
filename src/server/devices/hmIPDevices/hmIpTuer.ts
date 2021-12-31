@@ -1,6 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { MagnetPosition } from '../models/MagnetPosition';
 import { DeviceInfo } from '../DeviceInfo';
@@ -29,10 +28,7 @@ export class HmIpTuer extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(
-      LogLevel.DeepTrace,
-      `Tuer Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`,
-    );
+    this.log(LogLevel.DeepTrace, `Tuer Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case '1':
@@ -52,10 +48,7 @@ export class HmIpTuer extends HmIPDevice {
       return;
     }
 
-    ServerLogService.writeLog(
-      LogLevel.Trace,
-      `Update for Contact "${this.info.customName}" to position "${MagnetPosition[pValue]}"`,
-    );
+    this.log(LogLevel.Trace, `Update for Contact "${this.info.customName}" to position "${MagnetPosition[pValue]}"`);
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -75,7 +68,7 @@ export class HmIpTuer extends HmIPDevice {
           message = `"${this.info.customName}" just closed`;
         }
         // const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde nach ${this.minutesOpen} Minuten geschlossen!`;
-        ServerLogService.writeLog(LogLevel.Info, message);
+        this.log(LogLevel.Info, message);
 
         TelegramService.inform(message);
         this.minutesOpen = 0;
@@ -100,11 +93,11 @@ export class HmIpTuer extends HmIPDevice {
             case 20:
             case 45:
             case 60:
-              ServerLogService.writeLog(LogLevel.Info, message);
+              this.log(LogLevel.Info, message);
               TelegramService.inform(message);
               break;
             default:
-              ServerLogService.writeLog(LogLevel.Trace, message);
+              this.log(LogLevel.Trace, message);
               break;
           }
         },

@@ -1,7 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { CountToday } from '../../../models/persistence/todaysCount';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { Persist } from '../../services/dbo/persist';
@@ -54,14 +53,14 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
     Persist.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Debug,
           `Präsenzcounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
         );
         this.initialized = true;
       })
       .catch((err: Error) => {
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Warn,
           `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
         );
@@ -73,7 +72,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    ServerLogService.writeLog(LogLevel.Trace, `Präzens Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
+    this.log(LogLevel.Trace, `Präzens Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
 
     if (idSplit[3] !== '1') {
@@ -93,7 +92,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
 
   public updatePresence(pVal: boolean): void {
     if (!this.initialized && pVal) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Präsenz für "${this.info.customName}" erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
       );
@@ -107,7 +106,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
       return;
     }
     if (pVal === this.presenceDetected) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Debug,
         `Überspringe Präsenz für "${this.info.customName}" da bereits der Wert ${pVal} vorliegt`,
       );
@@ -115,14 +114,11 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
     }
 
     this.presenceDetected = pVal;
-    ServerLogService.writeLog(LogLevel.Debug, `Neuer Präsenzstatus Wert für "${this.info.customName}": ${pVal}`);
+    this.log(LogLevel.Debug, `Neuer Präsenzstatus Wert für "${this.info.customName}": ${pVal}`);
 
     if (pVal) {
       this.detectionsToday++;
-      ServerLogService.writeLog(
-        LogLevel.Trace,
-        `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`,
-      );
+      this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`);
     }
     for (const c of this._presenceDetectedCallback) {
       c(pVal);

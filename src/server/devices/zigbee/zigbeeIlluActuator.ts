@@ -1,4 +1,3 @@
-import { ServerLogService } from '../../services/log-service/log-service';
 import { ZigbeeActuator } from './ZigbeeActuator';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
@@ -19,7 +18,7 @@ export class ZigbeeIlluActuator extends ZigbeeActuator {
     handledByChildObject: boolean = false,
   ): void {
     if (!handledByChildObject) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.DeepTrace,
         `Aktuator Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
       );

@@ -1,7 +1,6 @@
 import { ZigbeeShutter } from './zigbeeShutter';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { Utils } from '../../services/utils/utils';
 import { Persist } from '../../services/dbo/persist';
@@ -30,13 +29,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     Persist.getShutterCalibration(this)
       .then((calibrationData: ShutterCalibration) => {
         this._shutterCalibrationData = calibrationData;
-        ServerLogService.writeLog(
-          LogLevel.DeepTrace,
-          `IlluShutter "${this.info.customName}" initialized with calibration data`,
-        );
+        this.log(LogLevel.DeepTrace, `IlluShutter "${this.info.customName}" initialized with calibration data`);
       })
       .catch((err: Error) => {
-        ServerLogService.writeLog(
+        this.log(
           LogLevel.Warn,
           `Failed to initialize Calibration data for "${this.info.customName}", err ${err.message}`,
         );
@@ -46,7 +42,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     switch (idSplit[3]) {
       case 'position':
-        ServerLogService.writeLog(LogLevel.Trace, `Shutter Update for ${this.info.customName} to "${state.val}"`);
+        this.log(LogLevel.Trace, `Shutter Update for ${this.info.customName} to "${state.val}"`);
         this.processNewMovementState(state.val as number);
         break;
     }
@@ -56,7 +52,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
 
   protected override moveToPosition(targetPosition: number): void {
     if (this._movementState !== MovementState.Stop) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Info,
         `Delaying movement command for ${this.info.customName} as it is moving to prevent actuator damage`,
       );
@@ -85,7 +81,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       return;
     }
     if (!this.isCalibrated()) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Alert,
         `Can't move "${this.info.customName}" to position "${targetPosition}" as it is not calibrated (Move it completly up, down, up first)`,
       );
@@ -107,10 +103,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   private changeMovementState(direction: MovementState) {
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `Set new MovementState for "${this.info.customName}" to "${MovementState[direction]}"`,
-    );
+    this.log(LogLevel.Debug, `Set new MovementState for "${this.info.customName}" to "${MovementState[direction]}"`);
     if (direction !== MovementState.Stop) {
       this._movementStartMs = Utils.nowMS();
     }
@@ -129,10 +122,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     const oldState: MovementState = this._movementState;
     if (this._movementStartPos === 0 && oldState === MovementState.Up && this._setLevel === 100) {
       this._msTilTop = timePassed;
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `New Time-Until-Top measurement for ${this.info.customName}: ${timePassed}ms`,
-      );
+      this.log(LogLevel.Debug, `New Time-Until-Top measurement for ${this.info.customName}: ${timePassed}ms`);
       this.currentLevel = this._setLevel;
       this._shutterCalibrationData.counterUp++;
       this._shutterCalibrationData.averageUp +=
@@ -141,10 +131,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       return;
     }
     if (this._movementStartPos === 100 && oldState === MovementState.Down && this._setLevel === 0) {
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `New Time-Until-Bottom measurement for ${this.info.customName}: ${timePassed}ms`,
-      );
+      this.log(LogLevel.Debug, `New Time-Until-Bottom measurement for ${this.info.customName}: ${timePassed}ms`);
       this._msTilBot = timePassed;
       this.currentLevel = this._setLevel;
       this._shutterCalibrationData.counterDown++;
