@@ -1,5 +1,4 @@
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { WeatherService } from '../../services/weather/weather-service';
 import { Fenster } from './Fenster';
@@ -44,7 +43,7 @@ export class FensterGroup extends BaseGroup {
   public initialize(): void {
     const room: RoomBase = this.getRoom();
     if (room.settings.sonnenAufgangRollos && room.settings.rolloOffset) {
-      ServerLogService.writeLog(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this.roomName} hinzufügen`);
+      this.log(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this.roomName} hinzufügen`);
       room.sonnenAufgangCallback = new TimeCallback(
         `${this.roomName} Sonnenaufgang Rollos`,
         TimeCallbackType.Sunrise,
@@ -140,10 +139,7 @@ export class FensterGroup extends BaseGroup {
       if (f.noRolloOnSunrise || f.getShutter().length === 0) {
         return;
       }
-      ServerLogService.writeLog(
-        LogLevel.Debug,
-        `Fahre das Rollo zum Sonnenaufgang ${initial ? '(ggf. nachträglich)' : ''} hoch`,
-      );
+      this.log(LogLevel.Debug, `Fahre das Rollo zum Sonnenaufgang ${initial ? '(ggf. nachträglich)' : ''} hoch`);
       f.setDesiredPosition(100);
     });
   }

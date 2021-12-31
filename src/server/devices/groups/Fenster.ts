@@ -1,5 +1,4 @@
 import { HmIpGriff } from '../hmIPDevices/hmIpGriff';
-import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { ZigbeeAquaraVibra } from '../zigbee/zigbeeAquaraVibra';
 import { FensterPosition } from '../models/FensterPosition';
@@ -94,10 +93,7 @@ export class Fenster extends BaseGroup {
         ) {
           const now = new Date().getTime();
           this.getVibration().forEach((element) => {
-            ServerLogService.writeLog(
-              LogLevel.Debug,
-              `Starte Timeout für Vibrationsdeaktivierung für ${element.info.customName}`,
-            );
+            this.log(LogLevel.Debug, `Starte Timeout für Vibrationsdeaktivierung für ${element.info.customName}`);
             Utils.guardedTimeout(() => {
               if (element.vibrationBlockedTimeStamp < now) {
                 element.vibrationBlocked = false;
@@ -123,7 +119,7 @@ export class Fenster extends BaseGroup {
   }
 
   public rolloPositionChange(pValue: number): void {
-    ServerLogService.writeLog(LogLevel.Debug, `Rollo Position Change in ${this.roomName} to ${pValue}`);
+    this.log(LogLevel.Debug, `Rollo Position Change in ${this.roomName} to ${pValue}`);
 
     if (pValue === 0 || pValue === 100) {
       this.getRoom().setLightTimeBased(true);
