@@ -2,7 +2,7 @@ import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { WeatherService } from '../../services/weather/weather-service';
-import { Fenster } from '../Fenster';
+import { Fenster } from './Fenster';
 import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';

@@ -9,7 +9,6 @@ export * from './DeviceInfo';
 export * from './devices';
 export * from './deviceType';
 export * from './deviceUpdater';
-export * from './Fenster';
 export * from './Griffe';
 export * from './Heizgruppen';
 export * from './iDeviceUpdater';

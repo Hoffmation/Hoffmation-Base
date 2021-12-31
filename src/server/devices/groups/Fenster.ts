@@ -1,16 +1,16 @@
-import { HmIpGriff } from './hmIPDevices/hmIpGriff';
-import { ServerLogService } from '../services/log-service/log-service';
-import { Utils } from '../services/utils/utils';
-import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
-import { FensterPosition } from './models/FensterPosition';
-import { TimeCallbackService, TimeOfDay } from '../services/time-callback-service';
-import { LogLevel } from '../../models/logLevel';
-import { iShutter } from './iShutter';
-import { ShutterService } from '../services/ShutterService';
-import { BaseGroup } from './groups/base-group';
-import { GroupType } from './groups/group-type';
-import { DeviceClusterType } from './device-cluster-type';
-import { DeviceList } from './device-list';
+import { HmIpGriff } from '../hmIPDevices/hmIpGriff';
+import { ServerLogService } from '../../services/log-service/log-service';
+import { Utils } from '../../services/utils/utils';
+import { ZigbeeAquaraVibra } from '../zigbee/zigbeeAquaraVibra';
+import { FensterPosition } from '../models/FensterPosition';
+import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
+import { LogLevel } from '../../../models/logLevel';
+import { iShutter } from '../iShutter';
+import { ShutterService } from '../../services/ShutterService';
+import { BaseGroup } from './base-group';
+import { GroupType } from './group-type';
+import { DeviceClusterType } from '../device-cluster-type';
+import { DeviceList } from '../device-list';
 
 export class Fenster extends BaseGroup {
   public desiredPosition: number = 0;

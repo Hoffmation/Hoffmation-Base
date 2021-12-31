@@ -1,4 +1,5 @@
 export * from './base-group';
+export * from './Fenster';
 export * from './fensterGroup';
 export * from './group-type';
 export * from './heatGroup';

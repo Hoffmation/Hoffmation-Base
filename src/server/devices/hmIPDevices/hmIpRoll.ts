@@ -2,7 +2,7 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
-import { Fenster } from '../Fenster';
+import { Fenster } from '../groups/Fenster';
 import { FensterPosition } from '../models/FensterPosition';
 import { LogLevel } from '../../../models/logLevel';
 import { iShutter } from '../iShutter';

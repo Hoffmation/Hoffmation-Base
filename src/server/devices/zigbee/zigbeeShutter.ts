@@ -4,7 +4,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../iShutter';
-import { Fenster } from '../Fenster';
+import { Fenster } from '../groups/Fenster';
 import { FensterPosition } from '../models/FensterPosition';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';

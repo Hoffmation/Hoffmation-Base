@@ -1,4 +1,4 @@
-import { Fenster } from './Fenster';
+import { Fenster } from './groups/Fenster';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 
 export interface iShutter extends IoBrokerBaseDevice {

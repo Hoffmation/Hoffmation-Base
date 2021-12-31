@@ -5,7 +5,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { WeatherService } from '../../services/weather/weather-service';
 import { TelegramService } from '../../services/Telegram/telegram-service';
 import { FensterPosition } from '../models/FensterPosition';
-import { Fenster } from '../Fenster';
+import { Fenster } from '../groups/Fenster';
 import { LogLevel } from '../../../models/logLevel';
 import { HeatGroup } from '../groups/heatGroup';
 import _ from 'lodash';

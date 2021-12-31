@@ -2,7 +2,7 @@ import { DeviceType } from '../devices/deviceType';
 import { Devices } from '../devices/devices';
 import { iShutter } from '../devices/iShutter';
 import { API } from './api/api-service';
-import { Fenster } from '../devices/Fenster';
+import { Fenster } from '../devices/groups/Fenster';
 
 export class ShutterService {
   public static anyRolloDown(rollo: iShutter[]): boolean {
