@@ -77,7 +77,7 @@ export class RoomBase implements iRoomBase {
   }
 
   public initializeBase(): void {
-    ServerLogService.writeLog(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
+    this.log(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
     this.recalcTimeCallbacks();
     this.PraesenzGroup?.initCallbacks();
     this.FensterGroup?.initialize();
@@ -121,7 +121,7 @@ export class RoomBase implements iRoomBase {
     }
 
     if (!this.settings.lampOffset) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Alert,
         `Beim Aufruf von "setLightTimeBased" im Raum ${this.roomName} liegt kein Lampen Offset vor`,
       );
@@ -142,7 +142,7 @@ export class RoomBase implements iRoomBase {
 
   public isNowLightTime(): boolean {
     if (!this.settings.lampOffset) {
-      ServerLogService.writeLog(
+      this.log(
         LogLevel.Alert,
         `Beim Aufruf von "setLightTimeBased" im Raum ${this.roomName} liegt kein Lampen Offset vor`,
       );
@@ -164,5 +164,11 @@ export class RoomBase implements iRoomBase {
     const result: Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> = Utils.jsonFilter(this);
     result.groupDict = Object.fromEntries(this.groups);
     return _.omit(result, 'groups');
+  }
+
+  private log(level: LogLevel, message: string): void {
+    ServerLogService.writeLog(level, message, {
+      room: this.roomName,
+    });
   }
 }
