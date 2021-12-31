@@ -20,7 +20,7 @@ export class HmIpTaster extends HmIPDevice implements iTaster {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(LogLevel.Trace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
+    this.log(LogLevel.DeepTrace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     let cTaste: Taste | undefined = undefined;
     switch (idSplit[3]) {

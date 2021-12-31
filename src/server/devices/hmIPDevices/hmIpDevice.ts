@@ -12,10 +12,8 @@ export class HmIPDevice extends IoBrokerBaseDevice {
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     if (!pOverride) {
-      this.log(
-        LogLevel.Trace,
-        `Keine Update Überschreibung :\n\tID: ${idSplit.join('.')}\n\tData: ${JSON.stringify(state)}`,
-      );
+      this.log(LogLevel.Trace, `Keine Update Überschreibung :\n\tID: ${idSplit.join('.')}`);
+      this.log(LogLevel.DeepTrace, `Data: ${JSON.stringify(state)}`);
     }
 
     this.log(

@@ -97,7 +97,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(LogLevel.Trace, `Heizgruppe Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
+    this.log(LogLevel.DeepTrace, `Heizgruppe Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
 
     switch (idSplit[3]) {
@@ -126,7 +126,7 @@ export class HmIpHeizgruppe extends HmIPDevice {
         this.humidity = state.val as number;
         break;
       case 'SET_POINT_TEMPERATURE':
-        this.log(LogLevel.Trace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
+        this.log(LogLevel.DeepTrace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
         this._desiredTemperatur = state.val as number;
         break;
     }

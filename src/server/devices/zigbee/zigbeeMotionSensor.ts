@@ -103,7 +103,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
         break;
       case 'no_motion':
         this.log(
-          LogLevel.Trace,
+          (state.val as number) < 100 ? LogLevel.Trace : LogLevel.DeepTrace,
           `Motion sensor: Update for time since last motion of ${this.info.customName}: ${state.val}`,
         );
         this._timeSinceLastMotion = state.val as number;
