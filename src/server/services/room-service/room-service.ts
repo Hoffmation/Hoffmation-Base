@@ -13,7 +13,7 @@ export class RoomService {
   public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
   public static awayModeActive: boolean = false;
   public static nightAlarmActive: boolean = false;
-  public static movementHistory: ringStorage = new ringStorage(15);
+  public static movementHistory: ringStorage<string> = new ringStorage<string>(15);
   private static _awayModeTimeout: NodeJS.Timeout | undefined;
   private static _nightModeTimeout: NodeJS.Timeout | undefined;
   private static _intrusionAlarmActive: boolean = false;
