@@ -1,4 +1,4 @@
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { ActuatorSettings } from '../../../models/actuatorSettings';
 import { DeviceInfo } from '../DeviceInfo';

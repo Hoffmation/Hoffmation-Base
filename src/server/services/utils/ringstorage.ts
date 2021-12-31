@@ -1,16 +1,16 @@
-export class ringStorage {
-  private storage: string[] = [];
+export class ringStorage<T> {
+  private storage: T[] = [];
   private pointer: number = 0;
 
   public constructor(private maxSize: number = 10) {}
 
-  public add(text: string): void {
+  public add(object: T): void {
     this.pointer = (this.pointer + 1) % this.maxSize;
-    this.storage[this.pointer] = text;
+    this.storage[this.pointer] = object;
   }
 
-  public readAmount(amount: number): string[] {
-    const result: string[] = [];
+  public readAmount(amount: number): T[] {
+    const result: T[] = [];
     amount = Math.max(amount, this.maxSize);
     let pos = this.pointer;
     while (amount > 0) {

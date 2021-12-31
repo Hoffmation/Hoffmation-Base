@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { PollyService } from '../../services/Sonos/polly-service';

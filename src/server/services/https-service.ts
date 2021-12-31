@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import HTTPS from 'https';
-import { ServerLogService } from './log-service';
+import { ServerLogService } from './log-service/log-service';
 import { Utils } from './utils/utils';
 import { LogLevel } from '../../models/logLevel';
 import { HTTPSOptions } from './HTTPSOptions';

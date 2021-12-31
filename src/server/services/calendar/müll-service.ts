@@ -2,7 +2,7 @@ import { async, VEvent } from 'node-ical';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { iMuellSettings } from '../../config/iConfig';
 import { OwnSonosDevice } from '../Sonos/sonos-service';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { Utils } from '../utils/utils';
 import { MuellTonne } from './muell-tonne';
 import { TimeCallbackService } from '../time-callback-service';

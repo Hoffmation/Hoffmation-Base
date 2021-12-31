@@ -1,4 +1,4 @@
-import { ServerLogService } from '../../../server/services/log-service';
+import { ServerLogService } from '../../../server/services/log-service/log-service';
 import { LogLevel } from '../../logLevel';
 import { RoomBase } from '../RoomBase';
 

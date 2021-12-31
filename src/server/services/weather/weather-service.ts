@@ -8,7 +8,7 @@ import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
 import { Utils } from '../utils/utils';
 import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { WeatherDaily } from './weather-daily';
 
 export interface WeatherResponse {

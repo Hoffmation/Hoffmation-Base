@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 

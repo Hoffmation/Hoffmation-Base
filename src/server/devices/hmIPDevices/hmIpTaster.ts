@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { iTaster } from '../iTaster';
 import { DeviceInfo } from '../DeviceInfo';
 import { Taste } from '../taste';

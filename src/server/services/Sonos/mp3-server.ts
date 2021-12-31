@@ -1,7 +1,7 @@
 import * as http from 'http';
 import * as url from 'url';
 import * as fs from 'fs';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { iMp3Settings } from '../../config/iConfig';
 import { LogLevel } from '../../../models/logLevel';
 

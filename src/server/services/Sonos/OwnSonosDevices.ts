@@ -1,5 +1,5 @@
 import { OwnSonosDevice } from './sonos-service';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 
 export class OwnSonosDevices {

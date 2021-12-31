@@ -1,4 +1,4 @@
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import _ from 'lodash';
 import { Res } from '../Translation/res';

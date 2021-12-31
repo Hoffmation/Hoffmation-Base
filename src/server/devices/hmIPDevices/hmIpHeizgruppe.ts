@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 import { TemperaturSettings } from '../../../models/temperaturSettings';
 import { Devices } from '../devices';

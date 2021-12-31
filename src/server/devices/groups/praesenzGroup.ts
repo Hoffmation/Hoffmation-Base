@@ -1,7 +1,7 @@
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
 import { HmIpPraezenz } from '../hmIPDevices/hmIpPraezenz';
 import { Utils } from '../../services/utils/utils';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeCallbackService } from '../../services/time-callback-service';
 import { HmIpBewegung } from '../hmIPDevices/hmIpBewegung';

@@ -1,4 +1,4 @@
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { ZigbeeActuator } from './ZigbeeActuator';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';

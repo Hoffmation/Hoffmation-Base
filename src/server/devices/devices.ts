@@ -4,7 +4,7 @@ import { HmIPDevice } from './hmIPDevices/hmIpDevice';
 import { ZigbeeDevice } from './zigbee/zigbeeDevice';
 import { DeviceType } from './deviceType';
 import { HmIpPraezenz } from './hmIPDevices/hmIpPraezenz';
-import { ServerLogService } from '../services/log-service';
+import { ServerLogService } from '../services/log-service/log-service';
 import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
 import { DeviceInfo } from './DeviceInfo';
 import { LogLevel } from '../../models/logLevel';

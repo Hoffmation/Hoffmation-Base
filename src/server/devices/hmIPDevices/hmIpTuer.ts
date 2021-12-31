@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { MagnetPosition } from '../models/MagnetPosition';
 import { DeviceInfo } from '../DeviceInfo';

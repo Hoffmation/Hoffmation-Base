@@ -4,7 +4,7 @@ import { PraesenzGroup } from '../../server/devices/groups/praesenzGroup';
 import { HeatGroup } from '../../server/devices/groups/heatGroup';
 import { LogLevel } from '../logLevel';
 import { WaterGroup } from '../../server/devices/groups/waterGroup';
-import { ServerLogService } from '../../server/services/log-service';
+import { ServerLogService } from '../../server/services/log-service/log-service';
 import { LampenGroup } from '../../server/devices/groups/lampenGroup';
 import { RoomSettings } from './RoomSettings/RoomSettings';
 import { SmokeGroup } from '../../server/devices/groups/smokeGroup';

@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { CountToday } from '../../../models/persistence/todaysCount';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { Persist } from '../../services/dbo/persist';

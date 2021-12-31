@@ -1,6 +1,6 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { IDeviceUpdater } from './iDeviceUpdater';
-import { ServerLogService } from '../services/log-service';
+import { ServerLogService } from '../services/log-service/log-service';
 import { LogLevel } from '../../models/logLevel';
 import { Devices } from './devices';
 

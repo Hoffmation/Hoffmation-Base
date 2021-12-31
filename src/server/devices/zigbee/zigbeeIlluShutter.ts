@@ -1,7 +1,7 @@
 import { ZigbeeShutter } from './zigbeeShutter';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { Utils } from '../../services/utils/utils';
 import { Persist } from '../../services/dbo/persist';

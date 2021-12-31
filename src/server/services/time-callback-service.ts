@@ -1,6 +1,6 @@
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
 import { TimeCallback, TimeCallbackType } from '../../models/timeCallback';
-import { ServerLogService } from './log-service';
+import { ServerLogService } from './log-service/log-service';
 import { Utils } from './utils/utils';
 import { iTimePair } from '../config/iConfig';
 import { SettingsService } from './settings-service';

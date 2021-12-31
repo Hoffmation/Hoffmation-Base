@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models/logLevel';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { DeviceInfo } from '../DeviceInfo';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {

@@ -1,6 +1,6 @@
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { Utils } from '../utils/utils';
 import { PollyService } from './polly-service';
 import { TelegramService } from '../Telegram/telegram-service';

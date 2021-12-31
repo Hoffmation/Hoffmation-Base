@@ -1,5 +1,5 @@
 import { IDeviceUpdater } from '../devices/iDeviceUpdater';
-import { ServerLogService } from '../services/log-service';
+import { ServerLogService } from '../services/log-service/log-service';
 import { Utils } from '../services/utils/utils';
 import { ConnectionCallbacks } from '../../models/connectionCallbacks';
 import { DeviceUpdater } from '../devices/deviceUpdater';

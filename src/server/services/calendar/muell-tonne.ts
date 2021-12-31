@@ -1,5 +1,5 @@
 import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { TelegramService } from '../Telegram/telegram-service';
 import { LogLevel } from '../../../models/logLevel';
 

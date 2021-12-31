@@ -2,8 +2,9 @@ import { Devices } from '../../devices/devices';
 import { RoomBase } from '../../../models/rooms/RoomBase';
 import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
 import { RoomService } from '../room-service/room-service';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
+import { LogObject } from '../log-service/log-object';
 
 export class API {
   public static getDevices(): { [id: string]: IoBrokerBaseDevice } {
@@ -26,5 +27,9 @@ export class API {
 
   public static getRoom(id: string): RoomBase | undefined {
     return RoomService.Rooms.get(id);
+  }
+
+  public static getLog(): LogObject[] {
+    return ServerLogService.getLog();
   }
 }

@@ -1,5 +1,5 @@
 import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { WeatherService } from '../../services/weather/weather-service';
 import { Fenster } from '../Fenster';

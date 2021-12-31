@@ -1,6 +1,6 @@
 import { DeviceType } from '../deviceType';
 import { CountToday } from '../../../models/persistence/todaysCount';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';

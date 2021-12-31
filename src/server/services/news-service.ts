@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { HTTPSService } from './https-service';
 import { Utils } from './utils/utils';
-import { ServerLogService } from './log-service';
+import { ServerLogService } from './log-service/log-service';
 import { OwnSonosDevice, SonosService } from './Sonos/sonos-service';
 import { PollyService } from './Sonos/polly-service';
 import { SettingsService } from './settings-service';

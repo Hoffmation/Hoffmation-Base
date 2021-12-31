@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { TelegramMessageCallback } from './telegramMessageCalback';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { Utils } from '../utils/utils';
 import { iTelegramSettings } from '../../config/iConfig';
 import { LogLevel } from '../../../models/logLevel';

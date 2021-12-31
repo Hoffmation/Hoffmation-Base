@@ -4,7 +4,7 @@ import * as fs from 'fs';
 // @ts-ignore
 import getMP3Duration from 'get-mp3-duration';
 import crypto from 'crypto';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { iPollySettings } from '../../config/iConfig';
 import { LogLevel } from '../../../models/logLevel';
 

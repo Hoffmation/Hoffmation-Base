@@ -1,5 +1,5 @@
 import { HmIpGriff } from './hmIPDevices/hmIpGriff';
-import { ServerLogService } from '../services/log-service';
+import { ServerLogService } from '../services/log-service/log-service';
 import { Utils } from '../services/utils/utils';
 import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
 import { FensterPosition } from './models/FensterPosition';

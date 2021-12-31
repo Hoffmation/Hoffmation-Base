@@ -5,7 +5,7 @@ import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
 import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
 import { CountToday } from '../../../models/persistence/todaysCount';
 import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';

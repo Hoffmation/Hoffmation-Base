@@ -1,6 +1,6 @@
 import { DimmerSettings } from '../../../models/dimmerSettings';
 import { DeviceType } from '../deviceType';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';

@@ -1,5 +1,5 @@
 import { ZigbeeMagnetContact } from './zigbeeMagnetContact';
-import { ServerLogService } from '../../services/log-service';
+import { ServerLogService } from '../../services/log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { MagnetPosition } from '../models/MagnetPosition';
 import { DeviceInfo } from '../DeviceInfo';

@@ -1,4 +1,4 @@
-import { ServerLogService } from '../services/log-service';
+import { ServerLogService } from '../services/log-service/log-service';
 import { DeviceInfo } from './DeviceInfo';
 import { RoomDeviceAddingSettings } from '../../models/rooms/RoomSettings/roomDeviceAddingSettings';
 import { RoomAddDeviceItem } from '../../models/rooms/RoomSettings/roomAddDeviceItem';

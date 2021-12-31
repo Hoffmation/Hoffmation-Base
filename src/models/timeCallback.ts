@@ -1,4 +1,4 @@
-import { ServerLogService } from '../server/services/log-service';
+import { ServerLogService } from '../server/services/log-service/log-service';
 import { SunTimeOffsets, TimeCallbackService } from '../server/services/time-callback-service';
 import { LogLevel } from './logLevel';
 

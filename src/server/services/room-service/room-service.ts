@@ -1,6 +1,6 @@
 import { ringStorage } from '../utils/ringstorage';
 import { RoomBase } from '../../../models/rooms/RoomBase';
-import { ServerLogService } from '../log-service';
+import { ServerLogService } from '../log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { SonosService } from '../Sonos/sonos-service';
 import { Res } from '../Translation/res';
