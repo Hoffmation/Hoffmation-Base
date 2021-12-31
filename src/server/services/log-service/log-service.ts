@@ -34,6 +34,7 @@ export class ServerLogService {
     } else if (additionalLogInfo?.room) {
       message += `"${additionalLogInfo.room}": `;
     }
+    message += pMessage;
     if (pLevel <= this.storageLevel) {
       this.storage.add(new LogObject(now, pLevel, message, additionalLogInfo));
     }
