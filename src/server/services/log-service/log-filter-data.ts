@@ -1,5 +1,6 @@
 export class LogFilterData {
   room?: string;
-  device?: string;
+  deviceId?: string;
+  deviceName?: string;
   group?: string;
 }

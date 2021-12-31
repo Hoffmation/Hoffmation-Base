@@ -118,6 +118,14 @@ export abstract class IoBrokerBaseDevice {
     ServerLogService.writeLog(LogLevel.Warn, `${this.info.room} is noch kein bekannter Raum`);
   }
 
+  protected log(level: LogLevel, message: string): void {
+    ServerLogService.writeLog(level, message, {
+      room: this.info.room,
+      deviceId: this.id,
+      deviceName: this.info.customName,
+    });
+  }
+
   /**
    * Sets the state of a given data point and returns true if that was successful.
    * @param pointId Data point to write to
