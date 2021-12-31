@@ -28,23 +28,22 @@ export class ServerLogService {
     if (pLevel > this.storageLevel && pLevel > ServerLogService.settings.logLevel) {
       return;
     }
-    let message: string = this.settings.useTimestamp ? `[${now}] ` : '';
-    if (additionalLogInfo?.deviceName) {
-      message += `"${additionalLogInfo.deviceName}": `;
-    } else if (additionalLogInfo?.room) {
-      message += `"${additionalLogInfo.room}": `;
-    }
-    message += pMessage;
     if (pLevel <= this.storageLevel) {
-      this.storage.add(new LogObject(now, pLevel, message, additionalLogInfo));
+      this.storage.add(new LogObject(now, pLevel, pMessage, additionalLogInfo));
     }
     if (pLevel <= ServerLogService.settings.logLevel) {
+      let message: string = this.settings.useTimestamp ? `[${now}] ` : '';
+      if (additionalLogInfo?.deviceName) {
+        message += `"${additionalLogInfo.deviceName}": `;
+      } else if (additionalLogInfo?.room) {
+        message += `"${additionalLogInfo.room}": `;
+      }
+      message += pMessage;
       console.log(message);
-    }
-
-    if (pLevel <= ServerLogService.telegramLevel) {
-      const title: string = LogLevel[pLevel];
-      TelegramService.sendMessage(TelegramService.subscribedIDs, `${title}: ${pMessage}`);
+      if (pLevel <= ServerLogService.telegramLevel) {
+        const title: string = LogLevel[pLevel];
+        TelegramService.sendMessage(TelegramService.subscribedIDs, `${title}: ${message}`);
+      }
     }
   }
 
