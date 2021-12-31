@@ -8,6 +8,7 @@ import { LogFilterData } from './log-filter-data';
 
 export class ServerLogService {
   public static telegramLevel: number = -1; // Controlled from within Config File
+  public static storageLevel: number = 5; // Controlled from within Config File
   public static storage: ringStorage<LogObject> = new ringStorage<LogObject>(10000);
   public static settings: iLogSettings = {
     logLevel: 4,
@@ -24,7 +25,9 @@ export class ServerLogService {
 
   public static writeLog(pLevel: LogLevel, pMessage: string, additionalLogInfo?: LogFilterData): void {
     const now: number = Date.now();
-    this.storage.add(new LogObject(now, pLevel, pMessage, additionalLogInfo));
+    if (pLevel <= this.storageLevel) {
+      this.storage.add(new LogObject(now, pLevel, pMessage, additionalLogInfo));
+    }
     if (pLevel > ServerLogService.settings.logLevel) {
       return;
     }
