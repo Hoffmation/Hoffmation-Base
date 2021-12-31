@@ -53,17 +53,11 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
     Persist.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
-        this.log(
-          LogLevel.Debug,
-          `Präsenzcounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
-        );
+        this.log(LogLevel.Debug, `Präsenzcounter vorinitialisiert mit ${this.detectionsToday}`);
         this.initialized = true;
       })
       .catch((err: Error) => {
-        this.log(
-          LogLevel.Warn,
-          `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
-        );
+        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err.message}`);
       });
   }
 
@@ -94,7 +88,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
     if (!this.initialized && pVal) {
       this.log(
         LogLevel.Debug,
-        `Präsenz für "${this.info.customName}" erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
+        `Präsenz erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
       );
       Utils.guardedTimeout(
         () => {
@@ -106,19 +100,16 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
       return;
     }
     if (pVal === this.presenceDetected) {
-      this.log(
-        LogLevel.Debug,
-        `Überspringe Präsenz für "${this.info.customName}" da bereits der Wert ${pVal} vorliegt`,
-      );
+      this.log(LogLevel.Debug, `Überspringe Präsenz da bereits der Wert ${pVal} vorliegt`);
       return;
     }
 
     this.presenceDetected = pVal;
-    this.log(LogLevel.Debug, `Neuer Präsenzstatus Wert für "${this.info.customName}": ${pVal}`);
+    this.log(LogLevel.Debug, `Neuer Präsenzstatus Wert : ${pVal}`);
 
     if (pVal) {
       this.detectionsToday++;
-      this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`);
+      this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung `);
     }
     for (const c of this._presenceDetectedCallback) {
       c(pVal);

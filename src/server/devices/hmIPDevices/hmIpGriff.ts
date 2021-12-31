@@ -58,10 +58,7 @@ export class HmIpGriff extends HmIPDevice {
       return;
     }
 
-    this.log(
-      LogLevel.Trace,
-      `Update Fenstergriff "${this.info.customName}"\nauf Position "${FensterPosition[pValue]}"`,
-    );
+    this.log(LogLevel.Trace, `Update Fenstergriff auf Position "${FensterPosition[pValue]}"`);
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -79,7 +76,7 @@ export class HmIpGriff extends HmIPDevice {
     if (pValue === FensterPosition.geschlossen) {
       if (this._iOpenTimeout !== undefined) {
         clearInterval(this._iOpenTimeout);
-        this.log(LogLevel.Info, `Fenster: "${this.info.customName}" nach ${this.minutesOpen} Minuten geschlossen`);
+        this.log(LogLevel.Info, `Fenster nach ${this.minutesOpen} Minuten geschlossen`);
         this.minutesOpen = 0;
         this._iOpenTimeout = undefined;
       }
@@ -100,13 +97,13 @@ export class HmIpGriff extends HmIPDevice {
                 (desiredTemp < currentTemp && outSideTemp < currentTemp) ||
                 (desiredTemp > currentTemp && outSideTemp > currentTemp);
               if (!wouldHelp && this._helpingRoomTemp) {
-                const info: string = `Das Fenster "${this.info.customName}" sollte geschlossen werden, es hilft dem Raum nicht mehr`;
+                const info: string = `Das Fenster sollte geschlossen werden, es hilft dem Raum nicht mehr`;
                 this.log(LogLevel.Info, info);
                 TelegramService.inform(info);
                 this._helpingRoomTemp = false;
               } else if (wouldHelp && !this._helpingRoomTemp) {
                 this._helpingRoomTemp = true;
-                const info: string = `Das Fenster "${this.info.customName}" hilft der Innentemperatur ihr Ziel von ${desiredTemp} zu erreichen. Draußen sind es ${outSideTemp}. Du wirst informiert wenn es nicht mehr hilft.`;
+                const info: string = `Das Fenster hilft der Innentemperatur ihr Ziel von ${desiredTemp} zu erreichen. Draußen sind es ${outSideTemp}. Du wirst informiert wenn es nicht mehr hilft.`;
                 this.log(LogLevel.Info, info);
                 TelegramService.inform(info);
                 return;
@@ -115,9 +112,7 @@ export class HmIpGriff extends HmIPDevice {
               }
             }
           }
-          const message = `Fenster: "${this.info.customName}" seit ${this.minutesOpen} Minuten auf Position ${
-            FensterPosition[this.position]
-          }`;
+          const message = `Fenster seit ${this.minutesOpen} Minuten auf Position ${FensterPosition[this.position]}`;
           switch (this.minutesOpen) {
             case 15:
             case 30:

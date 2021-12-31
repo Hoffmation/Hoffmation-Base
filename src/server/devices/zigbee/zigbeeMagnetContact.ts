@@ -37,7 +37,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
       return;
     }
 
-    this.log(LogLevel.Trace, `Update for Contact "${this.info.customName}" to position "${MagnetPosition[pValue]}"`);
+    this.log(LogLevel.Trace, `Update for Contact  to position "${MagnetPosition[pValue]}"`);
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -56,7 +56,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
         if (this.minutesOpen === 0) {
           message = Res.justClosed(this.info.customName);
         }
-        // const message: string = `Die Tür mit dem Namen "${this.info.customName}" wurde nach ${this.minutesOpen} Minuten geschlossen!`;
+        // const message: string = `Die Tür wurde nach ${this.minutesOpen} Minuten geschlossen!`;
         this.log(LogLevel.Info, message);
 
         TelegramService.inform(message);
@@ -71,9 +71,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
       this._iOpenTimeout = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
-          const message = `Contact: "${this.info.customName}" is  ${MagnetPosition[this.position]} since ${
-            this.minutesOpen
-          } minutes`;
+          const message = `Contact is  ${MagnetPosition[this.position]} since ${this.minutesOpen} minutes`;
           switch (this.minutesOpen) {
             case 2:
             case 5:

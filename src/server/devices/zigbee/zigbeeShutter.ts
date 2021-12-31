@@ -62,40 +62,31 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (!this._firstCommandRecieved && !initial) {
       this._firstCommandRecieved = true;
     } else if (this._firstCommandRecieved && initial) {
-      this.log(
-        LogLevel.Debug,
-        `Skipped initial Rollo "${this.info.customName}" to ${pPosition} as we recieved a command already`,
-      );
+      this.log(LogLevel.Debug, `Skipped initial Rollo  to ${pPosition} as we recieved a command already`);
       return;
     }
     if (this.currentLevel === pPosition) {
-      this.log(
-        LogLevel.Debug,
-        `Skip Rollo command for "${this.info.customName}" to Position ${pPosition} as this is the current one`,
-      );
+      this.log(LogLevel.Debug, `Skip Rollo command to Position ${pPosition} as this is the current one`);
       return;
     }
 
     if (this._fenster !== undefined) {
       if (this._fenster.griffeInPosition(FensterPosition.offen) > 0 && pPosition < 100) {
         if (!skipOpenWarning) {
-          this.log(LogLevel.Alert, `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster offen ist!`);
+          this.log(LogLevel.Alert, `Fahre Rollo  nicht runter, weil das Fenster offen ist!`);
         }
         return;
       }
       if (this._fenster.griffeInPosition(FensterPosition.kipp) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!skipOpenWarning) {
-          this.log(
-            LogLevel.Alert,
-            `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster auf Kipp ist!`,
-          );
+          this.log(LogLevel.Alert, `Fahre Rollo  nicht runter, weil das Fenster auf Kipp ist!`);
         }
       }
     }
 
     this._setLevel = pPosition;
-    this.log(LogLevel.Debug, `Move "${this.info.customName}" to position ${pPosition}`);
+    this.log(LogLevel.Debug, `Move  to position ${pPosition}`);
     this.moveToPosition(pPosition);
   }
 

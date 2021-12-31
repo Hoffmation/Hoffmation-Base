@@ -33,10 +33,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(
-      LogLevel.DeepTrace,
-      `Water Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.DeepTrace, `Water Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'detected':

@@ -52,17 +52,11 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
     Persist.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
-        this.log(
-          LogLevel.Debug,
-          `Bewegungscounter "${this.info.customName}" vorinitialisiert mit ${this.detectionsToday}`,
-        );
+        this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
         this.initialized = true;
       })
       .catch((err: Error) => {
-        this.log(
-          LogLevel.Warn,
-          `Failed to initialize Movement Counter for "${this.info.customName}", err ${err.message}`,
-        );
+        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err.message}`);
       });
   }
 
@@ -93,7 +87,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
     if (!this.initialized && pVal) {
       this.log(
         LogLevel.Trace,
-        `Bewegung für "${this.info.customName}" erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
+        `Bewegung erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
       );
       Utils.guardedTimeout(
         () => {
@@ -105,10 +99,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
       return;
     }
     if (pVal === this.movementDetected) {
-      this.log(
-        LogLevel.Debug,
-        `Überspringe Bewegung für "${this.info.customName}" da bereits der Wert ${pVal} vorliegt`,
-      );
+      this.log(LogLevel.Debug, `Überspringe Bewegung da bereits der Wert ${pVal} vorliegt`);
       if (pVal) {
         this.resetFallbackTimeout();
         this.startFallbackTimeout();
@@ -118,11 +109,11 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
     this.resetFallbackTimeout();
     this.movementDetected = pVal;
-    this.log(LogLevel.Debug, `Neuer Bewegunsstatus Wert für "${this.info.customName}": ${pVal}`);
+    this.log(LogLevel.Debug, `Neuer Bewegunsstatus Wert : ${pVal}`);
     if (pVal) {
       this.startFallbackTimeout();
       this.detectionsToday++;
-      this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung für "${this.info.customName}"`);
+      this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung `);
     }
 
     for (const c of this._movementDetectedCallback) {
@@ -132,7 +123,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
   private resetFallbackTimeout(): void {
     if (this._fallBackTimeout) {
-      this.log(LogLevel.Trace, `Fallback Timeout für "${this.info.customName}" zurücksetzen`);
+      this.log(LogLevel.Trace, `Fallback Timeout zurücksetzen`);
       clearTimeout(this._fallBackTimeout);
     }
   }
@@ -140,7 +131,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
   private startFallbackTimeout(): void {
     this._fallBackTimeout = Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset für "${this.info.customName}"`);
+        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset `);
         this._fallBackTimeout = undefined;
         this.updateMovement(false);
       },

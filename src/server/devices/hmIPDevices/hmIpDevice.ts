@@ -14,9 +14,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
     if (!pOverride) {
       this.log(
         LogLevel.Trace,
-        `Keine Update Überschreibung für "${this.info.customName}":\n\tID: ${idSplit.join(
-          '.',
-        )}\n\tData: ${JSON.stringify(state)}`,
+        `Keine Update Überschreibung :\n\tID: ${idSplit.join('.')}\n\tData: ${JSON.stringify(state)}`,
       );
     }
 
@@ -37,7 +35,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
       case 'LOW_BAT':
         const newBatLowVal: boolean = state.val as boolean;
         if (newBatLowVal) {
-          this.log(LogLevel.Alert, `!!BATTERIE FAST LEER!! "${this.info.customName}"`);
+          this.log(LogLevel.Alert, `!!BATTERIE FAST LEER!!`);
         }
         break;
     }

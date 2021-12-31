@@ -13,10 +13,7 @@ export class ZigbeeIkeaSteckdose extends ZigbeeActuator {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(
-      LogLevel.DeepTrace,
-      `Stecker Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
   }
 

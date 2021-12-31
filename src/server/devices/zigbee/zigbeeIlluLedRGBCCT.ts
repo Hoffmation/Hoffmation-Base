@@ -28,10 +28,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(
-      LogLevel.DeepTrace,
-      `LED Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.DeepTrace, `LED Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
@@ -80,12 +77,12 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
 
   public setLight(pValue: boolean, brightness: number = -1, color: string = '', colortemp: number = -1): void {
     if (this.stateID === '') {
-      this.log(LogLevel.Error, `Keine State ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine State ID bekannt.`);
       return;
     }
 
     if (!this.ioConn) {
-      this.log(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Connection bekannt.`);
       return;
     }
 
@@ -94,7 +91,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
     }
     this.log(
       LogLevel.Debug,
-      `LED Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colortemp}`,
+      `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colortemp}`,
     );
 
     if (color !== '') {

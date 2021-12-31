@@ -18,10 +18,7 @@ export class ZigbeeIlluActuator extends ZigbeeActuator {
     handledByChildObject: boolean = false,
   ): void {
     if (!handledByChildObject) {
-      this.log(
-        LogLevel.DeepTrace,
-        `Aktuator Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-      );
+      this.log(LogLevel.DeepTrace, `Aktuator Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     }
     super.update(idSplit, state, initial, true);
   }

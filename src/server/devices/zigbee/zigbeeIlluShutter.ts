@@ -29,13 +29,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     Persist.getShutterCalibration(this)
       .then((calibrationData: ShutterCalibration) => {
         this._shutterCalibrationData = calibrationData;
-        this.log(LogLevel.DeepTrace, `IlluShutter "${this.info.customName}" initialized with calibration data`);
+        this.log(LogLevel.DeepTrace, `IlluShutter  initialized with calibration data`);
       })
       .catch((err: Error) => {
-        this.log(
-          LogLevel.Warn,
-          `Failed to initialize Calibration data for "${this.info.customName}", err ${err.message}`,
-        );
+        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err.message}`);
       });
   }
 
@@ -83,7 +80,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     if (!this.isCalibrated()) {
       this.log(
         LogLevel.Alert,
-        `Can't move "${this.info.customName}" to position "${targetPosition}" as it is not calibrated (Move it completly up, down, up first)`,
+        `Can't move  to position "${targetPosition}" as it is not calibrated (Move it completly up, down, up first)`,
       );
       return;
     }
@@ -103,7 +100,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   private changeMovementState(direction: MovementState) {
-    this.log(LogLevel.Debug, `Set new MovementState for "${this.info.customName}" to "${MovementState[direction]}"`);
+    this.log(LogLevel.Debug, `Set new MovementState to "${MovementState[direction]}"`);
     if (direction !== MovementState.Stop) {
       this._movementStartMs = Utils.nowMS();
     }

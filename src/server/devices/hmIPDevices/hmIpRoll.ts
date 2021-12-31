@@ -57,10 +57,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(
-      LogLevel.DeepTrace,
-      `Rollo Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.DeepTrace, `Rollo Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case '3':
@@ -76,21 +73,15 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       this._firstCommandRecieved = true;
     }
     if (this._firstCommandRecieved && initial) {
-      this.log(
-        LogLevel.Debug,
-        `Skipped initial Rollo "${this.info.customName}" to ${pPosition} as we recieved a command already`,
-      );
+      this.log(LogLevel.Debug, `Skipped initial Rollo to ${pPosition} as we recieved a command already`);
       return;
     }
     if (this.currentLevel === pPosition) {
-      this.log(
-        LogLevel.Debug,
-        `Skip Rollo command for "${this.info.customName}" to Position ${pPosition} as this is the current one`,
-      );
+      this.log(LogLevel.Debug, `Skip Rollo command to Position ${pPosition} as this is the current one`);
       return;
     }
     if (this._setLevelSwitchID === '') {
-      this.log(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
       return;
     }
 
@@ -101,23 +92,20 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     if (this._fenster !== undefined) {
       if (this._fenster.griffeInPosition(FensterPosition.offen) > 0 && pPosition < 100) {
         if (!skipOpenWarning) {
-          this.log(LogLevel.Alert, `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster offen ist!`);
+          this.log(LogLevel.Alert, `Fahre Rollo nicht runter, weil das Fenster offen ist!`);
         }
         return;
       }
       if (this._fenster.griffeInPosition(FensterPosition.kipp) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!skipOpenWarning) {
-          this.log(
-            LogLevel.Alert,
-            `Fahre Rollo "${this.info.customName}" nicht runter, weil das Fenster auf Kipp ist!`,
-          );
+          this.log(LogLevel.Alert, `Fahre Rollo nicht runter, weil das Fenster auf Kipp ist!`);
         }
       }
     }
 
     this._setLevel = pPosition;
-    this.log(LogLevel.Debug, `Fahre Rollo "${this.info.customName}" auf Position ${pPosition}`);
+    this.log(LogLevel.Debug, `Fahre Rollo auf Position ${pPosition}`);
     this.setState(this._setLevelSwitchID, pPosition);
   }
 

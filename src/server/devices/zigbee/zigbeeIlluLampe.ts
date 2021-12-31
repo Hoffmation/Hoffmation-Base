@@ -24,7 +24,7 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   }
 
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
-    this.log(LogLevel.Debug, `Lampenaktor schalten: "${this.info.customName}" Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Lampenaktor schalten Wert: ${pValue}`);
     super.setActuator(pValue, timeout, force);
   }
 

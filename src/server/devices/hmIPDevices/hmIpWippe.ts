@@ -38,14 +38,14 @@ export class HmIpWippe extends HmIPDevice {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          this.log(LogLevel.Debug, `Tasten Update initial für "${this.info.customName}" ignoriert`);
+          this.log(LogLevel.Debug, `Tasten Update initial ignoriert`);
           cTaste.updateShort(state.val as boolean);
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          this.log(LogLevel.Debug, `Tasten Update initial für "${this.info.customName}" ignoriert`);
+          this.log(LogLevel.Debug, `Tasten Update initial ignoriert`);
           cTaste.updateLong(state.val as boolean);
         }
         break;

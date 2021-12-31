@@ -25,10 +25,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
     handledByChildObject: boolean = false,
   ): void {
     if (!handledByChildObject) {
-      this.log(
-        LogLevel.DeepTrace,
-        `Aktuator Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-      );
+      this.log(LogLevel.DeepTrace, `Aktuator Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     }
     this.queuedValue = null;
     super.update(idSplit, state, initial, true);
@@ -42,26 +39,24 @@ export class ZigbeeActuator extends ZigbeeDevice {
 
   public setActuator(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     if (this.actuatorOnSwitchID === '') {
-      this.log(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
       return;
     }
 
     if (!force && Utils.nowMS() < this.turnOffTime) {
       this.log(
         LogLevel.Debug,
-        `Skip automatic command for "${this.info.customName}" to ${pValue} as it is locked until ${new Date(
-          this.turnOffTime,
-        ).toLocaleTimeString()}`,
+        `Skip automatic command to ${pValue} as it is locked until ${new Date(this.turnOffTime).toLocaleTimeString()}`,
       );
       return;
     }
 
     if (!force && pValue === this.actuatorOn && this.queuedValue === null) {
-      this.log(LogLevel.Debug, `Skip actuator command for "${this.info.customName}" as it is already ${pValue}`);
+      this.log(LogLevel.Debug, `Skip actuator command as it is already ${pValue}`);
       return;
     }
 
-    this.log(LogLevel.Debug, `Stecker schalten: "${this.info.customName}" Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Stecker schalten Wert: ${pValue}`);
     this.setState(this.actuatorOnSwitchID, pValue, undefined, (err) => {
       console.log(`Stecker schalten ergab Fehler: ${err}`);
     });
@@ -79,7 +74,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
     this.turnOffTime = Utils.nowMS() + timeout;
     this._turnOffTimeout = Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
+        this.log(LogLevel.Debug, `Delayed Turnoff initiated`);
         this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setActuator(false, -1, true);

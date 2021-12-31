@@ -38,17 +38,11 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
     Persist.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
-        this.log(
-          LogLevel.Debug,
-          `Preinitialized movement counter for "${this.info.customName}" with ${this.detectionsToday}`,
-        );
+        this.log(LogLevel.Debug, `Preinitialized movement counter with ${this.detectionsToday}`);
         this._initialized = true;
       })
       .catch((err: Error) => {
-        this.log(
-          LogLevel.Warn,
-          `Failed to initialize movement counter for "${this.info.customName}", err ${err.message}`,
-        );
+        this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err.message}`);
       });
   }
 
@@ -62,10 +56,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
 
   public updateMovement(newState: boolean): void {
     if (!this._initialized && newState) {
-      this.log(
-        LogLevel.Trace,
-        `Movement recognized for "${this.info.customName}", but database initialization has not finished yet --> delay.`,
-      );
+      this.log(LogLevel.Trace, `Movement recognized, but database initialization has not finished yet --> delay.`);
       Utils.guardedTimeout(
         () => {
           this.updateMovement(newState);
@@ -77,7 +68,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
     }
 
     if (newState === this.movementDetected) {
-      this.log(LogLevel.Debug, `Skip movement for "${this.info.customName}" because state is already ${newState}`);
+      this.log(LogLevel.Debug, `Skip movement because state is already ${newState}`);
 
       if (newState) {
         // Wenn ein Sensor sich nicht von alleine zurücksetzt, hier erzwingen.
@@ -89,12 +80,12 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
 
     this.resetFallbackTimeout();
     this.movementDetected = newState;
-    this.log(LogLevel.Debug, `New movement state for "${this.info.customName}": ${newState}`);
+    this.log(LogLevel.Debug, `New movement state: ${newState}`);
 
     if (newState) {
       this.startFallbackTimeout();
       this.detectionsToday++;
-      this.log(LogLevel.Trace, `This is movement no. ${this.detectionsToday} for "${this.info.customName}"`);
+      this.log(LogLevel.Trace, `This is movement no. ${this.detectionsToday}`);
     }
 
     for (const c of this._movementDetectedCallback) {
@@ -103,10 +94,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
-    this.log(
-      LogLevel.DeepTrace,
-      `Motion update for "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.DeepTrace, `Motion update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, pOverride);
     switch (idSplit[3]) {
       case 'occupancy':
@@ -125,7 +113,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
 
   private resetFallbackTimeout(): void {
     if (this._fallBackTimeout) {
-      this.log(LogLevel.Trace, `Fallback Timeout für "${this.info.customName}" zurücksetzen`);
+      this.log(LogLevel.Trace, `Fallback Timeout zurücksetzen`);
       clearTimeout(this._fallBackTimeout);
     }
   }
@@ -136,7 +124,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
     }
     this._fallBackTimeout = Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset für "${this.info.customName}"`);
+        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset`);
         this._fallBackTimeout = undefined;
         this.updateMovement(false);
       },

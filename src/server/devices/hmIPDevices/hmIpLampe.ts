@@ -22,10 +22,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(
-      LogLevel.DeepTrace,
-      `Lampen Update für "${this.info.customName}": ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.DeepTrace, `Lampen Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     this.queuedLightValue = null;
     switch (idSplit[3]) {
@@ -44,25 +41,23 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
    */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     if (!force && pValue === this.lightOn && this.queuedLightValue === null) {
-      this.log(LogLevel.DeepTrace, `Skip light command for "${this.info.customName}" as it is already ${pValue}`);
+      this.log(LogLevel.DeepTrace, `Skip light command as it is already ${pValue}`);
       return;
     }
     if (this.lightOnSwitchID === '') {
-      this.log(LogLevel.Error, `Keine Switch ID für "${this.info.customName}" bekannt.`);
+      this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
       return;
     }
 
     if (!force && Utils.nowMS() < this.turnOffTime) {
       this.log(
         LogLevel.Debug,
-        `Skip automatic command for "${this.info.customName}" to ${pValue} as it is locked until ${new Date(
-          this.turnOffTime,
-        ).toLocaleString()}`,
+        `Skip automatic command to ${pValue} as it is locked until ${new Date(this.turnOffTime).toLocaleString()}`,
       );
       return;
     }
 
-    this.log(LogLevel.Debug, `Lampe schalten: "${this.info.customName}" Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Lampe schalten Wert: ${pValue}`);
     this.setState(this.lightOnSwitchID, pValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
@@ -84,7 +79,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     this.turnOffTime = Utils.nowMS() + timeout;
     this._turnOffTimeout = Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Debug, `Delayed Turnoff for "${this.info.customName}" initiated`);
+        this.log(LogLevel.Debug, `Delayed Turnoff initiated`);
         this._turnOffTimeout = undefined;
         if (!this.room) {
           this.setLight(false, -1, true);

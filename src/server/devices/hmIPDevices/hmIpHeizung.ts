@@ -26,10 +26,7 @@ export class HmIpHeizung extends HmIPDevice {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(
-      LogLevel.Trace,
-      `Heizung "${this.info.customName}" Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
-    );
+    this.log(LogLevel.Trace, `Heizung Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
 
     switch (idSplit[3]) {
@@ -50,17 +47,11 @@ export class HmIpHeizung extends HmIPDevice {
       case 'VALVE_STATE':
         this._adaptionState = state.val as number;
         if (this._adaptionState !== 4) {
-          this.log(
-            LogLevel.Alert,
-            `Adaption State für Heizung "${this.info.customName}" ungewöhnlich: ${this._adaptionState}`,
-          );
+          this.log(LogLevel.Alert, `Adaption State für Heizung ungewöhnlich: ${this._adaptionState}`);
         }
         break;
       case 'SET_POINT_TEMPERATURE':
-        this.log(
-          LogLevel.Trace,
-          `Heizung "${this.info.customName}" Update Soll-Temperatur JSON: ${JSON.stringify(state)}`,
-        );
+        this.log(LogLevel.Trace, `Heizung Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
         this._desiredTemperatur = state.val as number;
         break;
     }

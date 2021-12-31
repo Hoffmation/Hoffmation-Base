@@ -25,14 +25,22 @@ export class ServerLogService {
 
   public static writeLog(pLevel: LogLevel, pMessage: string, additionalLogInfo?: LogFilterData): void {
     const now: number = Date.now();
-    if (pLevel <= this.storageLevel) {
-      this.storage.add(new LogObject(now, pLevel, pMessage, additionalLogInfo));
-    }
-    if (pLevel > ServerLogService.settings.logLevel) {
+    if (pLevel > this.storageLevel && pLevel > ServerLogService.settings.logLevel) {
       return;
     }
-
-    console.log((this.settings.useTimestamp ? `[${now}] ` : '') + pMessage);
+    let message: string = this.settings.useTimestamp ? `[${now}] ` : '';
+    if (additionalLogInfo?.room) {
+      message += ` ${additionalLogInfo.room}`;
+    }
+    if (additionalLogInfo?.deviceName) {
+      message += ` ${additionalLogInfo.deviceName}`;
+    }
+    if (pLevel <= this.storageLevel) {
+      this.storage.add(new LogObject(now, pLevel, message, additionalLogInfo));
+    }
+    if (pLevel <= ServerLogService.settings.logLevel) {
+      console.log(message);
+    }
 
     if (pLevel <= ServerLogService.telegramLevel) {
       const title: string = LogLevel[pLevel];
