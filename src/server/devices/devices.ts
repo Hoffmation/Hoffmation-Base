@@ -32,6 +32,7 @@ import { ZigbeeIlluShutter } from './zigbee/zigbeeIlluShutter';
 import { ZigbeeSMaBiTMagnetContact } from './zigbee/zigbeeSMaBiTMagnetContact';
 import { ZigbeeSonoffMotion } from './zigbee/zigbeeSonoffMotion';
 import { ZigbeeMotionSensor } from './zigbee/zigbeeMotionSensor';
+import { HmIpAccessPoint } from './hmIPDevices/hmIpAccessPoint';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -198,6 +199,9 @@ export class Devices {
         break;
       case 'HeizGr':
         d = new HmIpHeizgruppe(hmIPInfo);
+        break;
+      case 'AccessPoint':
+        d = new HmIpAccessPoint(hmIPInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No HmIP Device Type for ${hmIPInfo.deviceType} defined`);

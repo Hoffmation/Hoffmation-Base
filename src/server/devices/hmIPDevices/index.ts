@@ -1,3 +1,4 @@
+export * from './hmIpAccessPoint';
 export * from './hmIpBewegung';
 export * from './hmIpDevice';
 export * from './hmIpGriff';

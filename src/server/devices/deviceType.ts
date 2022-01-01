@@ -11,6 +11,7 @@ export enum DeviceType {
   HmIpTuer = 109,
   HmIpHeizgruppe = 110,
   HmIpBewegung = 111,
+  HmIpAccessPoint = 112,
   ZigbeeIkeaFernbedienung = 201,
   ZigbeeIkeaSteckdose = 202,
   ZigbeeIlluLedRGBCCT = 203,
