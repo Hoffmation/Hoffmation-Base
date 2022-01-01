@@ -33,6 +33,7 @@ import { ZigbeeSMaBiTMagnetContact } from './zigbee/zigbeeSMaBiTMagnetContact';
 import { ZigbeeSonoffMotion } from './zigbee/zigbeeSonoffMotion';
 import { ZigbeeMotionSensor } from './zigbee/zigbeeMotionSensor';
 import { HmIpAccessPoint } from './hmIPDevices/hmIpAccessPoint';
+import { ZigbeeAqaraMagnetContact } from './zigbee/zigbeeAqaraMagnetContact';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -105,23 +106,14 @@ export class Devices {
     );
     let d: ZigbeeDevice;
     switch (zigbeeInfo.deviceType) {
-      case 'AquaraVibra':
-        d = new ZigbeeAquaraVibra(zigbeeInfo);
+      case 'AqaraMagnetContact':
+        d = new ZigbeeAqaraMagnetContact(zigbeeInfo);
         break;
       case 'AquaraMotion':
         d = new ZigbeeAquaraMotion(zigbeeInfo);
         break;
-      case 'IkeaStecker':
-        d = new ZigbeeIkeaSteckdose(zigbeeInfo);
-        break;
-      case 'LedRGBCCT':
-        d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
-        break;
-      case 'IlluDimmer':
-        d = new ZigbeeIlluDimmer(zigbeeInfo);
-        break;
-      case 'HeimanSmoke':
-        d = new ZigbeeHeimanSmoke(zigbeeInfo);
+      case 'AquaraVibra':
+        d = new ZigbeeAquaraVibra(zigbeeInfo);
         break;
       case 'AquaraWater':
         d = new ZigbeeAquaraWater(zigbeeInfo);
@@ -129,14 +121,26 @@ export class Devices {
       case 'BlitzShp':
         d = new ZigbeeBlitzShp(zigbeeInfo);
         break;
-      case 'IlluLampe':
-        d = new ZigbeeIlluLampe(zigbeeInfo);
+      case 'HeimanSmoke':
+        d = new ZigbeeHeimanSmoke(zigbeeInfo);
+        break;
+      case 'IkeaStecker':
+        d = new ZigbeeIkeaSteckdose(zigbeeInfo);
         break;
       case 'IlluActuator':
         d = new ZigbeeIlluActuator(zigbeeInfo);
         break;
+      case 'IlluDimmer':
+        d = new ZigbeeIlluDimmer(zigbeeInfo);
+        break;
+      case 'IlluLampe':
+        d = new ZigbeeIlluLampe(zigbeeInfo);
+        break;
       case 'IlluShutter':
         d = new ZigbeeIlluShutter(zigbeeInfo);
+        break;
+      case 'LedRGBCCT':
+        d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
         break;
       case 'SMaBiTMagnet':
         d = new ZigbeeSMaBiTMagnetContact(zigbeeInfo);
