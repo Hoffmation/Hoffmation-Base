@@ -70,6 +70,10 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     return this._roomIsAlwaysDark;
   }
 
+  set roomIsAlwaysDark(value: boolean) {
+    this._roomIsAlwaysDark = value;
+  }
+
   get sonnenAufgangLampenDelay(): number {
     return this._sonnenAufgangLampenDelay;
   }
