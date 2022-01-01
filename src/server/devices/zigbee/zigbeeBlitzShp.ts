@@ -22,20 +22,36 @@ export class ZigbeeBlitzShp extends ZigbeeDevice {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
-        this.log(LogLevel.Trace, `Stecker Update für ${this.info.customName} auf ${state.val}`);
-        this.steckerOn = state.val as boolean;
+        const newSteckerOn: boolean = state.val as boolean;
+        this.log(
+          newSteckerOn !== this.steckerOn ? LogLevel.Trace : LogLevel.DeepTrace,
+          `Outlet Update to ${state.val}`,
+        );
+        this.steckerOn = newSteckerOn;
         break;
       case 'energy':
-        this.log(LogLevel.Trace, `Stecker Update für ${this.info.customName} auf Energie: ${state.val}`);
-        this.energy = state.val as number;
+        const newEnergy: number = state.val as number;
+        this.log(
+          newEnergy !== this.energy ? LogLevel.Trace : LogLevel.DeepTrace,
+          `Outlet update, new total consumption: ${state.val}`,
+        );
+        this.energy = newEnergy;
         break;
       case 'current':
-        this.log(LogLevel.Trace, `Stecker Update für ${this.info.customName} auf Strom: ${state.val}`);
-        this.current = state.val as number;
+        const newCurrent: number = state.val as number;
+        this.log(
+          newCurrent !== this.current ? LogLevel.Trace : LogLevel.DeepTrace,
+          `Outlet update, new current: ${state.val}`,
+        );
+        this.current = newCurrent;
         break;
       case 'load_power':
-        this.log(LogLevel.Trace, `Stecker Update für ${this.info.customName} auf Leistungsaufnahme: ${state.val}`);
-        this.loadPower = state.val as number;
+        const newLoadPower: number = state.val as number;
+        this.log(
+          newLoadPower !== this.loadPower ? LogLevel.Trace : LogLevel.DeepTrace,
+          `Outlet update, new current load power: ${state.val}`,
+        );
+        this.loadPower = newLoadPower;
         break;
     }
   }
@@ -46,9 +62,9 @@ export class ZigbeeBlitzShp extends ZigbeeDevice {
       return;
     }
 
-    this.log(LogLevel.Debug, `Stecker schalten Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Switch outlet, target Value: ${pValue}`);
     this.setState(this.steckerOnSwitchID, pValue, undefined, (err) => {
-      console.log(`Stecker schalten ergab Fehler: ${err}`);
+      this.log(LogLevel.Error, `Switching outlet resulted in error: ${err}`);
     });
   }
 
