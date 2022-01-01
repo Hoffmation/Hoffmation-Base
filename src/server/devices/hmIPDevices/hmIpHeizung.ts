@@ -3,10 +3,22 @@ import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
 
+enum HmIpHeizungAdaptionStates {
+  StateNotAvailable = 0,
+  RunToStart = 1,
+  WaitForAdaption = 2,
+  AdaptionInProgress = 3,
+  AdaptionDone = 4,
+  TooTight = 5,
+  AdjustmentTooBig = 6,
+  AdjustmentTooSmall = 7,
+  ErrorPosition = 8,
+}
+
 export class HmIpHeizung extends HmIPDevice {
   private _temperatur: number = 0;
   private _level: number = 0;
-  private _adaptionState: number | undefined;
+  private _adaptionState: HmIpHeizungAdaptionStates | undefined;
   private _desiredTemperatur: number = 0;
 
   public get desiredTemperatur(): number {
@@ -45,9 +57,12 @@ export class HmIpHeizung extends HmIPDevice {
         this._level = state.val as number;
         break;
       case 'VALVE_STATE':
-        this._adaptionState = state.val as number;
-        if (this._adaptionState !== 4) {
-          this.log(LogLevel.Alert, `Adaption State für Heizung ungewöhnlich: ${this._adaptionState}`);
+        this._adaptionState = state.val as HmIpHeizungAdaptionStates;
+        if (
+          this._adaptionState !== HmIpHeizungAdaptionStates.AdaptionInProgress &&
+          this._adaptionState !== HmIpHeizungAdaptionStates.AdaptionDone
+        ) {
+          this.log(LogLevel.Alert, `Akward adaption state: ${HmIpHeizungAdaptionStates[this._adaptionState]}`);
         }
         break;
       case 'SET_POINT_TEMPERATURE':
