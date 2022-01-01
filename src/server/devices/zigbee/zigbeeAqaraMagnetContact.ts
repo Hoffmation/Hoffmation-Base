@@ -6,7 +6,7 @@ import { DeviceType } from '../deviceType';
 
 export class ZigbeeAqaraMagnetContact extends ZigbeeMagnetContact {
   public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.ZigbeeSMaBiTMagnetContact);
+    super(pInfo, DeviceType.ZigbeeAqaraMagnetContact);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
