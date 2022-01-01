@@ -122,14 +122,16 @@ export class RoomBase implements iRoomBase {
       return;
     }
 
-    if (!this.settings.lampOffset) {
+    if (!this.settings.lampOffset && !this.settings.roomIsAlwaysDark) {
       this.log(
         LogLevel.Alert,
         `Beim Aufruf von "setLightTimeBased" im Raum ${this.roomName} liegt kein Lampen Offset vor`,
       );
       return;
     }
-    let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.settings.lampOffset);
+    let timeOfDay: TimeOfDay = this.settings.roomIsAlwaysDark
+      ? TimeOfDay.Night
+      : TimeCallbackService.dayType(this.settings.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
       ((this.settings.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
@@ -143,14 +145,16 @@ export class RoomBase implements iRoomBase {
   }
 
   public isNowLightTime(): boolean {
-    if (!this.settings.lampOffset) {
+    if (!this.settings.lampOffset && !this.settings.roomIsAlwaysDark) {
       this.log(
         LogLevel.Alert,
         `Beim Aufruf von "setLightTimeBased" im Raum ${this.roomName} liegt kein Lampen Offset vor`,
       );
       return false;
     }
-    let timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.settings.lampOffset);
+    let timeOfDay: TimeOfDay = this.settings.roomIsAlwaysDark
+      ? TimeOfDay.Night
+      : TimeCallbackService.dayType(this.settings.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
       this.FensterGroup?.fenster.some((f) => {

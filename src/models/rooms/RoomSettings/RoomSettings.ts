@@ -31,6 +31,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   private _sonnenAufgangRolloMinTime: iTimePair = this.defaultSettings.sonnenAufgangRolloMinTime;
   private _sonnenAufgangLampenDelay: number = this.defaultSettings.sonnenAufgangLampenDelay;
   private _lightIfNoWindows: boolean = this.defaultSettings.lightIfNoWindows;
+  private _roomIsAlwaysDark: boolean = this.defaultSettings.roomIsAlwaysDark;
 
   public constructor(initSettings: iRoomInitializationSettings) {
     this.shortName = initSettings.shortName;
@@ -63,6 +64,10 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   private recalcLampOffset(): void {
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenAufgangRolloDelay);
     this.room?.recalcTimeCallbacks();
+  }
+
+  get roomIsAlwaysDark(): boolean {
+    return this._roomIsAlwaysDark;
   }
 
   get sonnenAufgangLampenDelay(): number {

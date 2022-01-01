@@ -5,6 +5,12 @@ export interface iRoomDefaultSettings {
   // Use shutter to reduce warming of rooms on hot days (detected by weather service)
   rolloHeatReduction: boolean;
 
+  /**
+   * Indicates rooms, which are time independent always dark (like basement).
+   * This results in lamps beeing turned on on motion regardless of windows and time.
+   */
+  roomIsAlwaysDark: boolean;
+
   // Should lamps be turned on on Movement
   lampenBeiBewegung: boolean;
 
