@@ -124,9 +124,7 @@ export class PraesenzGroup extends BaseGroup {
     if (timeAfterReset > 0) {
       this.log(
         LogLevel.Debug,
-        `Movement reset in ${
-          this.roomName
-        }.\nActive Motions: ${this.presentAmount()}\nTime after Last Movement including Reset: ${timeAfterReset}`,
+        `Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
       );
       cb();
       return;
@@ -138,9 +136,7 @@ export class PraesenzGroup extends BaseGroup {
           Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
         this.log(
           LogLevel.Debug,
-          `Delayed Movement reset in ${
-            this.roomName
-          }.\nActive Motions: ${this.presentAmount()}\nTime after Last Movement including Reset: ${timeAfterReset}`,
+          `Delayed Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
         );
         if (!this.anyPresent() && timeAfterReset > 0) {
           cb();
