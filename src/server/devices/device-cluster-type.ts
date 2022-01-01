@@ -13,4 +13,5 @@ export enum DeviceClusterType {
   Handle,
   Vibration,
   Shutter,
+  MagnetContact,
 }

@@ -10,6 +10,7 @@ import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
+import { ZigbeeMagnetContact } from '../zigbee/zigbeeMagnetContact';
 
 export class Fenster extends BaseGroup {
   public desiredPosition: number = 0;
@@ -28,16 +29,22 @@ export class Fenster extends BaseGroup {
     handleIds: string[] = [],
     vibrationIds: string[] = [],
     shutterIds: string[] = [],
+    magnetIds: string[] = [],
     public noRolloOnSunrise: boolean = false,
   ) {
     super(roomName, GroupType.Window);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.MagnetContact, new DeviceList(magnetIds));
   }
 
   public getHandle(): HmIpGriff[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
+  }
+
+  public getMagnetContact(): ZigbeeMagnetContact[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MagnetContact) as ZigbeeMagnetContact[];
   }
 
   public getShutter(): iShutter[] {

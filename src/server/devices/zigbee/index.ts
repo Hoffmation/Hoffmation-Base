@@ -1,4 +1,5 @@
 export * from './ZigbeeActuator';
+export * from './zigbeeAqaraMagnetContact';
 export * from './zigbeeAquaraMotion';
 export * from './zigbeeAquaraVibra';
 export * from './zigbeeAquaraWater';
