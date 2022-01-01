@@ -11,6 +11,8 @@ import _ from 'lodash';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice {
   public position: MagnetPosition = MagnetPosition.closed;
+  public telegramOnOpen: boolean = false;
+  public speakOnOpen: boolean = false;
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _openCallback: Array<(pValue: boolean) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
@@ -59,15 +61,21 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
         // const message: string = `Die Tür wurde nach ${this.minutesOpen} Minuten geschlossen!`;
         this.log(LogLevel.Info, message);
 
-        TelegramService.inform(message);
+        if (this.telegramOnOpen) {
+          TelegramService.inform(message);
+        }
         this.minutesOpen = 0;
         this._iOpenTimeout = undefined;
       }
       return;
     } else if (this._iOpenTimeout === undefined) {
       const message = Res.wasOpened(this.info.customName);
-      TelegramService.inform(message);
-      SonosService.speakOnAll(message, 40);
+      if (this.telegramOnOpen) {
+        TelegramService.inform(message);
+      }
+      if (this.speakOnOpen) {
+        SonosService.speakOnAll(message, 40);
+      }
       this._iOpenTimeout = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
