@@ -43,24 +43,36 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'sensitivity':
-        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Sensitivity: ${state.val}`);
+        this.log(
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
+          `Vibrationssensor Update für ${this.info.customName} auf Sensitivity: ${state.val}`,
+        );
         this.tiltAngleZ = state.val as number;
         break;
       case 'tilt_angle_z':
-        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel Z: ${state.val}`);
+        this.log(
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
+          `Vibrationssensor Update für ${this.info.customName} auf Winkel Z: ${state.val}`,
+        );
         this.tiltAngleZ = state.val as number;
         break;
       case 'tilt_angle_y':
-        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel Y: ${state.val}`);
+        this.log(
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
+          `Vibrationssensor Update für ${this.info.customName} auf Winkel Y: ${state.val}`,
+        );
         this.tiltAngleY = state.val as number;
         break;
       case 'tilt_angle_x':
-        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel X: ${state.val}`);
+        this.log(
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
+          `Vibrationssensor Update für ${this.info.customName} auf Winkel X: ${state.val}`,
+        );
         this.tiltAngleX = state.val as number;
         break;
       case 'vibration':
         this.log(
-          LogLevel.Trace,
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf Vibration erkannt: ${state.val}`,
         );
         this.vibration = state.val as boolean;
@@ -76,24 +88,30 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
         break;
       case 'tilt_angle_y_abs':
         this.log(
-          LogLevel.Trace,
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf absoluten Winkel Y: ${state.val}`,
         );
         this.tiltAngleYAbs = state.val as number;
         break;
       case 'tilt_angle_X_abs':
         this.log(
-          LogLevel.Trace,
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf absoluten Winkel X: ${state.val}`,
         );
         this.tiltAngleXAbs = state.val as number;
         break;
       case 'tilt_angle':
-        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`);
+        this.log(
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
+          `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`,
+        );
         this.tiltAngle = state.val as number;
         break;
       case 'tilt':
-        this.log(LogLevel.Trace, `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`);
+        this.log(
+          initial ? LogLevel.DeepTrace : LogLevel.Trace,
+          `Vibrationssensor Update für ${this.info.customName} auf Winkel: ${state.val}`,
+        );
         this.tilt = state.val as boolean;
         break;
     }
