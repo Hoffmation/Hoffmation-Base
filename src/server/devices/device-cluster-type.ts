@@ -14,4 +14,6 @@ export enum DeviceClusterType {
   Vibration,
   Shutter,
   MagnetContact,
+  TemperaturSensor,
+  HumiditySensor,
 }

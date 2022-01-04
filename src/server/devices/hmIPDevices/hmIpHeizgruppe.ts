@@ -7,8 +7,10 @@ import { Devices } from '../devices';
 import { Persist } from '../../services/dbo/persist';
 import { HmIpHeizung } from './hmIpHeizung';
 import { LogLevel } from '../../../models/logLevel';
+import { iTemperaturSensor } from '../iTemperaturSensor';
+import { iHumiditySensor } from '../iHumiditySensor';
 
-export class HmIpHeizgruppe extends HmIPDevice {
+export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor {
   private _automaticMode: boolean = true;
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _level: number = 0;

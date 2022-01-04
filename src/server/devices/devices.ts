@@ -34,6 +34,7 @@ import { ZigbeeSonoffMotion } from './zigbee/zigbeeSonoffMotion';
 import { ZigbeeMotionSensor } from './zigbee/zigbeeMotionSensor';
 import { HmIpAccessPoint } from './hmIPDevices/hmIpAccessPoint';
 import { ZigbeeAqaraMagnetContact } from './zigbee/zigbeeAqaraMagnetContact';
+import { ZigbeeSonoffTemp } from './zigbee/zigbeeSonoffTemp';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -147,6 +148,9 @@ export class Devices {
         break;
       case 'SonoffMotion':
         d = new ZigbeeSonoffMotion(zigbeeInfo);
+        break;
+      case 'SonoffTemp':
+        d = new ZigbeeSonoffTemp(zigbeeInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);

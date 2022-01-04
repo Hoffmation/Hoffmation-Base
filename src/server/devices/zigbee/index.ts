@@ -17,3 +17,4 @@ export * from './zigbeeMotionSensor';
 export * from './zigbeeShutter';
 export * from './zigbeeSMaBiTMagnetContact';
 export * from './zigbeeSonoffMotion';
+export * from './zigbeeSonoffTemp';
