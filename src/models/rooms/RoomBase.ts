@@ -20,9 +20,15 @@ import { GroupType } from '../../server/devices/groups/group-type';
 import { ShutterService } from '../../server/services/ShutterService';
 import { Utils } from '../../server/services/utils/utils';
 import _ from 'lodash';
+import { DeviceCluster } from '../../server/devices/device-cluster';
 
 export class RoomBase implements iRoomBase {
   public info: RoomInfo;
+  protected _deviceCluster: DeviceCluster = new DeviceCluster();
+
+  public get deviceCluster(): DeviceCluster {
+    return this._deviceCluster;
+  }
 
   public get FensterGroup(): FensterGroup | undefined {
     return this.groups.get(GroupType.Window) as FensterGroup | undefined;
@@ -169,7 +175,7 @@ export class RoomBase implements iRoomBase {
   public toJSON(): Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> {
     const result: Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> = Utils.jsonFilter(this);
     result.groupDict = Object.fromEntries(this.groups);
-    return _.omit(result, 'groups');
+    return _.omit(result, ['groups', '_deviceCluster']);
   }
 
   private log(level: LogLevel, message: string): void {

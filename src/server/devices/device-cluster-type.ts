@@ -1,4 +1,5 @@
 export enum DeviceClusterType {
+  all,
   Buttons,
   Heater,
   LED,
