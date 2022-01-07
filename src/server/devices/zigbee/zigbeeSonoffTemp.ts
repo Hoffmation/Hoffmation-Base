@@ -12,8 +12,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
   }
 
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
-    super.update(idSplit, state, initial, pOverride);
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
+    super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'humidity':
         this._humidity = state.val as number;
