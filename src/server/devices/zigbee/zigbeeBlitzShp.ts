@@ -40,7 +40,7 @@ export class ZigbeeBlitzShp extends ZigbeeDevice {
       case 'current':
         const newCurrent: number = state.val as number;
         this.log(
-          newCurrent !== this.current ? LogLevel.Trace : LogLevel.DeepTrace,
+          Math.abs(newCurrent - this.current) > 0.25 ? LogLevel.Trace : LogLevel.DeepTrace,
           `Outlet update, new current: ${state.val}`,
         );
         this.current = newCurrent;
@@ -48,7 +48,7 @@ export class ZigbeeBlitzShp extends ZigbeeDevice {
       case 'load_power':
         const newLoadPower: number = state.val as number;
         this.log(
-          newLoadPower !== this.loadPower ? LogLevel.Trace : LogLevel.DeepTrace,
+          Math.abs(newLoadPower - this.loadPower) > 0.25 ? LogLevel.Trace : LogLevel.DeepTrace,
           `Outlet update, new current load power: ${state.val}`,
         );
         this.loadPower = newLoadPower;
