@@ -3,14 +3,14 @@ import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { TemperaturSettings } from '../../../models/temperaturSettings';
-import { Devices } from '../devices';
 import { Persist } from '../../services/dbo/persist';
-import { HmIpHeizung } from './hmIpHeizung';
 import { LogLevel } from '../../../models/logLevel';
 import { iTemperaturSensor } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
+import { iHeater } from '../iHeater';
+import { DeviceClusterType } from '../device-cluster-type';
 
-export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor {
+export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {
   private _automaticMode: boolean = true;
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _level: number = 0;
@@ -83,14 +83,11 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     if (this._automaticPoints[name] !== undefined) delete this._automaticPoints[name];
   }
 
-  public getBelongingHeizungen(): HmIpHeizung[] {
-    const result: HmIpHeizung[] = [];
-    for (const dID in Devices.alLDevices) {
-      const d = Devices.alLDevices[dID];
-      if (d.deviceType === DeviceType.HmIpHeizung && d.info.room === this.info.room) {
-        result.push(d as HmIpHeizung);
-      }
+  public getBelongingHeizungen(): iHeater[] {
+    if (!this.room) {
+      return [];
     }
+    const result: iHeater[] = this.room.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
     return result;
   }
 
@@ -134,7 +131,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     }
   }
 
-  private checkAutomaticChange(): void {
+  public checkAutomaticChange(): void {
     if (!this._automaticMode) {
       Persist.addTemperaturDataPoint(this);
       return;

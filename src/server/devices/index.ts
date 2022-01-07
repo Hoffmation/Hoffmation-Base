@@ -14,6 +14,7 @@ export * from './Heizgruppen';
 export * from './iDeviceUpdater';
 export * from './iHumiditySensor';
 export * from './iIlluminationSensor';
+export * from './iHeater';
 export * from './iLamp';
 export * from './IoBrokerBaseDevice';
 export * from './iShutter';

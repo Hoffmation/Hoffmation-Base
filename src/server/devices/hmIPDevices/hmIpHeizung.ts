@@ -1,7 +1,7 @@
-import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
+import { HmIPDevice } from './hmIpDevice';
 
 enum HmIpHeizungAdaptionStates {
   StateNotAvailable = 0,
@@ -21,15 +21,15 @@ export class HmIpHeizung extends HmIPDevice {
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
   private _desiredTemperatur: number = 0;
 
-  public get desiredTemperatur(): number {
+  get desiredTemperatur(): number {
     return this._desiredTemperatur;
   }
 
-  public get iLevel(): number {
+  get iLevel(): number {
     return this._level;
   }
 
-  public get iTemperatur(): number {
+  get iTemperatur(): number {
     return this._temperatur;
   }
 

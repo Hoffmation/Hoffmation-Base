@@ -3,7 +3,7 @@ import { TemperaturDataPoint } from '../../models/persistence/temperaturDataPoin
 import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
 import { Persist } from '../services/dbo/persist';
 import { Devices } from './devices';
-import { HmIpHeizung } from './hmIPDevices/hmIpHeizung';
+import { iHeater } from './iHeater';
 
 export class Heizgruppen {
   public static getInfo(): string {
@@ -50,7 +50,7 @@ export class Heizgruppen {
     const response: string[] = [`Dies sind die bestehenden Differenzen:`];
     response.push(`Raumname\t\tIst-Temperatur\t\tGerät`);
     for (const g of groups) {
-      const heizungen: HmIpHeizung[] = g.getBelongingHeizungen();
+      const heizungen: iHeater[] = g.getBelongingHeizungen();
       const tempProblem: string[] = [`${g.info.room}\t\t${g.iTemperatur}°C\t\t${g.info.customName}`];
       let print = false;
       for (const h of heizungen) {

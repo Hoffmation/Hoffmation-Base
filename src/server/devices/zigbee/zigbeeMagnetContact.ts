@@ -7,7 +7,6 @@ import { SonosService } from '../../services/Sonos/sonos-service';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { MagnetPosition } from '../models/MagnetPosition';
 import { Res } from '../../services/Translation/res';
-import _ from 'lodash';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice {
   public position: MagnetPosition = MagnetPosition.closed;
