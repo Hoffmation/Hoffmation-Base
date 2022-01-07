@@ -10,7 +10,7 @@ module.exports = {
     // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
     'plugin:prettier/recommended',
   ],
-  plugins: [],
+  plugins: ["unused-imports"],
   rules: {
     'linebreak-style': 'off',
     '@typescript-eslint/no-inferrable-types': [0],
@@ -23,6 +23,7 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
+    "unused-imports/no-unused-imports": "error",
   },
   overrides: [
     {
