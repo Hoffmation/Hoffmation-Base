@@ -1,4 +1,6 @@
-export class LedSettings {
+import { DeviceSettings } from './deviceSettings';
+
+export class LedSettings extends DeviceSettings {
   public defaultColor: string = '#fbbc32';
   public dayOn: boolean = false;
   public dayBrightness: number = 100;

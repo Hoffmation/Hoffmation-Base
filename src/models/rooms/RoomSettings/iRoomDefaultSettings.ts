@@ -1,6 +1,6 @@
 import { iTimePair } from '../../../server/config/iConfig';
 
-// These default settings can be overidden within every room
+// These default settings can be overridden within every room
 export interface iRoomDefaultSettings {
   // Use shutter to reduce warming of rooms on hot days (detected by weather service)
   rolloHeatReduction: boolean;
