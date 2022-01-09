@@ -54,7 +54,7 @@ export class NewsService {
     }
 
     NewsService.interval = Utils.guardedInterval(
-      this.getLatestNews,
+      NewsService.getLatestNews,
       (NewsService.requestInterval ?? 30) * 60 * 1000,
       undefined,
       true,
@@ -75,6 +75,7 @@ export class NewsService {
 
   /**
    * Checks if there are newer news than the one currently available on disk and downloads the file for playing.
+   * @this: void
    */
   public static getLatestNews(): void {
     if (SettingsService.settings.mp3Server === undefined) {
