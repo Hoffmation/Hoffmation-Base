@@ -4,6 +4,7 @@ import { ServerLogService } from './log-service/log-service';
 import { Utils } from './utils/utils';
 import { LogLevel } from '../../models/logLevel';
 import { HTTPSOptions } from './HTTPSOptions';
+import path from 'path';
 
 export class HTTPSService {
   private static defaultCallback(data: string, statuscode: number): void {
@@ -42,8 +43,20 @@ export class HTTPSService {
     req.end();
   }
 
+  /**
+   * Downloads a file from a given url to the given location.
+   * If the location doesn't exist, it will be created quietly.
+   * @param url URL to download file from
+   * @param filePath Path to save file to
+   */
   public static async downloadFile(url: string, filePath: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      // if directory structure doesn't exist yet, create it
+      const fileDir = path.dirname(filePath);
+      if (!fs.existsSync(fileDir)) {
+        fs.mkdirSync(fileDir, { recursive: true });
+      }
+
       const file = fs.createWriteStream(filePath);
       let fileInfo: { mime: string; size: number } | null = null;
 

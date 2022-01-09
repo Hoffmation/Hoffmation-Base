@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import { ServerLogService } from '../log-service/log-service';
 import { iPollySettings } from '../../config/iConfig';
 import { LogLevel } from '../../../models/logLevel';
+import path from 'path';
 
 export class PollyService {
   private static _mp3Path: string;
@@ -28,8 +29,8 @@ export class PollyService {
     this.voice = config.voiceID;
   }
 
-  public static getDuration(name: string): number {
-    const fPath: string = this._mp3Path + name + '.mp3';
+  public static getDuration(filename: string): number {
+    const fPath: string = path.join(this._mp3Path, filename);
     try {
       if (fs.existsSync(fPath)) {
         const duration: number = getMP3Duration(fs.readFileSync(fPath));

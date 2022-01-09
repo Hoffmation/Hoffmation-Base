@@ -11,11 +11,13 @@ export interface iRestSettings {
 }
 
 export interface iConfig {
+  cacheDir?: string;
   ioBrokerUrl: string;
   logSettings?: iLogSettings;
   translationSettings: iTranslationSettings;
   mp3Server?: iMp3Settings;
   muell?: iMuellSettings;
+  news?: iNewsSettings;
   persistence?: iPersistenceSettings;
   polly?: iPollySettings;
   restServer?: iRestSettings;
@@ -78,6 +80,15 @@ export interface iWeatherSettings {
 
 export interface iMuellSettings {
   calendarURL: string;
+}
+
+export interface iNewsSettings {
+  // rss feed url that contains the news information and audio file
+  rssUrl?: string;
+  // request interval in minutes
+  requestInterval?: number;
+  // maximum age in minutes of files cached for playback before they get deleted
+  keepMaxAge?: number;
 }
 
 export interface iTranslationSettings {

@@ -75,7 +75,11 @@ export class HoffmationBase {
         MuellService.intialize(SettingsService.settings.muell, defaultMuellSonos);
       }
     });
-    Utils.guardedNewThread(NewsService.initialize);
+
+    Utils.guardedNewThread(() => {
+      ServerLogService.writeLog(LogLevel.Info, `News settings detected --> initializing`);
+      NewsService.initialize(SettingsService.settings.news);
+    });
 
     Utils.guardedNewThread(() => {
       if (SettingsService.settings.weather) {

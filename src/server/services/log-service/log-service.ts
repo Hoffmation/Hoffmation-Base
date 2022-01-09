@@ -5,6 +5,7 @@ import { iLogSettings } from '../../config/iConfig';
 import { ringStorage } from '../utils/ringstorage';
 import { LogObject } from './log-object';
 import { LogFilterData } from './log-filter-data';
+import { LogSource } from '../../../models/logSource';
 
 export class ServerLogService {
   public static telegramLevel: number = -1; // Controlled from within Config File
@@ -38,8 +39,14 @@ export class ServerLogService {
       } else if (additionalLogInfo?.room) {
         message += `"${additionalLogInfo.room}": `;
       }
+      const logSource: LogSource = additionalLogInfo?.source ?? 0;
+      if (logSource > 0) {
+        message += `${LogSource[logSource]}: `;
+      }
+
       message += pMessage;
       console.log(message);
+
       if (pLevel <= ServerLogService.telegramLevel) {
         const title: string = LogLevel[pLevel];
         TelegramService.sendMessage(TelegramService.subscribedIDs, `${title}: ${message}`);

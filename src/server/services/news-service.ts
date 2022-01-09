@@ -1,92 +1,213 @@
 import * as fs from 'fs';
+import { Stats } from 'fs';
 import { HTTPSService } from './https-service';
 import { Utils } from './utils/utils';
 import { ServerLogService } from './log-service/log-service';
 import { OwnSonosDevice, SonosService } from './Sonos/sonos-service';
 import { PollyService } from './Sonos/polly-service';
 import { SettingsService } from './settings-service';
-import { HTTPSOptions } from './HTTPSOptions';
 import { LogLevel } from '../../models/logLevel';
+import { iNewsSettings } from '../config/iConfig';
+import path from 'path';
+import Parser from 'rss-parser';
+import { LogSource } from '../../models/logSource';
+import ErrnoException = NodeJS.ErrnoException;
 
 export class NewsService {
-  public static oneDay: number = 1000 * 60 * 60 * 24;
-  public static lastNewsName: string;
-  private static hourlyInterval: NodeJS.Timeout | undefined;
+  // most recently downloaded news audio file
+  public static lastNewsAudioFile: string;
 
-  public static initialize(): void {
-    NewsService.hourlyInterval = Utils.guardedInterval(NewsService.getLastNews, 3600000);
-    NewsService.getLastNews();
-  }
+  // node interval that contains the ongoing fetch cycle
+  private static interval: NodeJS.Timeout | undefined;
+  // interval in which rss feed is to be fetched in minutes
+  private static requestInterval: number;
+  // maximum file age in minutes
+  private static keepMaxAge: number;
+  // rss feed url that contains the news information and audio file
+  private static rssUrl: string | undefined;
+  // last feed item that was successfully downloaded
+  private static lastFetchedPubDate: string | undefined;
 
-  public static stopHourlyInterval(): void {
-    if (this.hourlyInterval !== undefined) {
-      clearInterval(this.hourlyInterval);
-      this.hourlyInterval = undefined;
+  public static initialize(config?: Partial<iNewsSettings>): void {
+    if (config === undefined) {
+      ServerLogService.writeLog(LogLevel.Warn, `Service disabled.`, { source: LogSource.News });
+      return;
     }
+
+    NewsService.keepMaxAge = config.keepMaxAge ?? 120;
+    NewsService.requestInterval = config.requestInterval ?? 30;
+    NewsService.rssUrl = config.rssUrl;
+    NewsService.startInterval();
   }
 
-  public static getLastNews(): void {
-    HTTPSService.request(
-      new HTTPSOptions('www1.wdr.de', '/mediathek/audio/wdr-aktuell-news/index.html', {}, 'GET', 443),
-      '',
-      5,
-      (response: string) => {
-        try {
-          const cutAfterDownload: string = response.split(`" title="Audio Download">`)[0];
-          const cutsPriorDownload: string[] = cutAfterDownload.split(`<a class="button download " href="`);
-          const target: string = 'https:' + cutsPriorDownload[cutsPriorDownload.length - 1];
-          const splits: string[] = target.split('/');
-          const fileName: string = splits[splits.length - 1];
-          const filePath = `${SettingsService.settings.mp3Server?.path}${fileName}`;
-          ServerLogService.writeLog(LogLevel.Debug, `NewsService: Die aktuelle News ist "${target}"`);
-          if (fs.existsSync(filePath)) {
-            NewsService.lastNewsName = fileName.split('.mp3')[0];
-            ServerLogService.writeLog(LogLevel.Debug, `Wir haben bereits die neuste WDR Nachrichten heruntergeladen.`);
-            return;
-          }
-          HTTPSService.downloadFile(target, filePath)
-            .then((success: boolean) => {
-              if (!success) {
-                ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Herunterladen der Nachrichten von WDR`);
-                return;
-              }
+  /**
+   * Stops the regular check for new news feed items.
+   * @deprecated Use stopInterval instead
+   */
+  public static stopHourlyInterval(): void {
+    NewsService.stopInterval();
+  }
 
-              NewsService.lastNewsName = fileName.split('.mp3')[0];
-            })
-            .catch((reason: Error) => {
-              ServerLogService.writeLog(
-                LogLevel.Error,
-                `Fehler beim Herunterladen der WDR Antwort Error: ${reason.message}`,
-              );
-            });
-        } catch (e) {
-          ServerLogService.writeLog(LogLevel.Debug, `Fehler beim Parsen der WDR Antwort Error: ${e}`);
-          return;
-        }
-      },
+  public static startInterval(): void {
+    if (NewsService.interval !== undefined) {
+      clearInterval(NewsService.interval);
+    }
+
+    NewsService.interval = Utils.guardedInterval(
+      NewsService.getLatestNews,
+      (NewsService.requestInterval ?? 30) * 60 * 1000,
+      undefined,
+      true,
     );
   }
 
+  /**
+   * Stops the regular check for new news feed items.
+   */
+  public static stopInterval(): void {
+    if (NewsService.interval === undefined) {
+      return;
+    }
+
+    clearInterval(NewsService.interval);
+    NewsService.interval = undefined;
+  }
+
+  /**
+   * Checks if there are newer news than the one currently available on disk and downloads the file for playing.
+   */
+  public static getLatestNews(): void {
+    if (SettingsService.settings.mp3Server === undefined) {
+      ServerLogService.writeLog(LogLevel.Warn, `Not checking for newest news file, no download directory defined.`, {
+        source: LogSource.News,
+      });
+      return;
+    }
+
+    NewsService.cleanOldFiles(SettingsService.settings.mp3Server.path, NewsService.keepMaxAge);
+
+    if (NewsService.rssUrl === undefined) {
+      ServerLogService.writeLog(LogLevel.Warn, `No rss feed set, not searching for new news.`, {
+        source: LogSource.News,
+      });
+      return;
+    }
+
+    NewsService.downloadLatestFileFromFeed(NewsService.rssUrl, SettingsService.settings.mp3Server.path);
+  }
+
+  private static downloadLatestFileFromFeed(rssUrl: string, targetDir: string) {
+    const parser = new Parser();
+
+    parser.parseURL(rssUrl).then((feed) => {
+      try {
+        const currentFeedItem = feed.items[0];
+
+        ServerLogService.writeLog(LogLevel.Debug, `Most recent news on ${feed.title} is "${currentFeedItem.title}"`);
+
+        if (currentFeedItem.enclosure === undefined) {
+          ServerLogService.writeLog(LogLevel.Warn, `Couldn't find audio in last item of the rss feed.`, {
+            source: LogSource.News,
+          });
+          return;
+        }
+
+        const filePath = path.join(targetDir, path.basename(currentFeedItem.enclosure.url));
+
+        // check for both path and pubdate in case the file name is always the same one
+        if (fs.existsSync(filePath) && NewsService.lastFetchedPubDate == currentFeedItem.pubDate) {
+          NewsService.lastNewsAudioFile = path.basename(filePath);
+          ServerLogService.writeLog(LogLevel.Debug, `Newest file already downloaded.`, { source: LogSource.News });
+          return;
+        }
+
+        HTTPSService.downloadFile(currentFeedItem.enclosure.url, filePath)
+          .then((success: boolean) => {
+            if (!success) {
+              ServerLogService.writeLog(LogLevel.Debug, `Error while downloading audio file.`, {
+                source: LogSource.News,
+              });
+              return;
+            }
+
+            NewsService.lastNewsAudioFile = path.basename(filePath);
+          })
+          .catch((reason: Error) => {
+            ServerLogService.writeLog(LogLevel.Error, `Error while downloading feed audio: ${reason.message}`, {
+              source: LogSource.News,
+            });
+          });
+      } catch (e) {
+        ServerLogService.writeLog(LogLevel.Debug, `Error while parsing feed: ${e}`, { source: LogSource.News });
+      }
+    });
+  }
+
+  /**
+   * Deletes all files in the given directory that are older than the given age.
+   * @param rootDir Directory to search in
+   * @param keepMaxAge Maximum age in minutes until a file gets deleted
+   * @private
+   */
+  private static cleanOldFiles(rootDir: string, keepMaxAge: number): void {
+    let deleteCount: number = 0;
+
+    fs.readdir(rootDir, (err, files) => {
+      if (err) return;
+
+      files.forEach((file: string) => {
+        fs.stat(path.join(rootDir, file), (err: ErrnoException | null, stat: Stats) => {
+          if (err) return;
+
+          const now = new Date().getTime();
+          const maxSurvivingTime = new Date(stat.ctime).getTime() + keepMaxAge * 60 * 1000;
+          if (now <= maxSurvivingTime) {
+            return;
+          }
+
+          fs.unlink(path.join(rootDir, file), (err) => {
+            if (err) {
+              return console.error(err);
+            }
+
+            deleteCount++;
+          });
+        });
+      });
+    });
+
+    if (deleteCount > 0) {
+      ServerLogService.writeLog(LogLevel.Info, `Deleted ${deleteCount} old file/s.`, { source: LogSource.News });
+    }
+  }
+
+  /**
+   * Plays the latest news on a sonos device
+   * @param ownSonosDevice Sonos device to play from
+   * @param volume volume to play at
+   * @param retries Number of times playing should be tried if there is currently no audio file available
+   */
   public static playLastNews(ownSonosDevice: OwnSonosDevice, volume: number = 30, retries: number = 5): void {
-    if (!NewsService.lastNewsName) {
+    if (!NewsService.lastNewsAudioFile) {
       if (retries > 0) {
-        ServerLogService.writeLog(
-          LogLevel.Warn,
-          `Der NewsService ist noch nicht bereit --> warten, verbleibende Neuversuche ${retries - 1}`,
-        );
+        ServerLogService.writeLog(LogLevel.Warn, `Service not ready yet --> waiting, remaining tries: ${retries - 1}`, {
+          source: LogSource.News,
+        });
         Utils.guardedTimeout(() => {
           NewsService.playLastNews(ownSonosDevice, volume, retries - 1);
         }, 1000);
       } else {
-        ServerLogService.writeLog(LogLevel.Error, `Der NewsService ist trotz Warten nicht bereit --> Abbruch`);
+        ServerLogService.writeLog(LogLevel.Error, `Service not ready despite waiting --> Abort.`, {
+          source: LogSource.News,
+        });
       }
       return;
     }
 
     SonosService.playOnDevice(
       ownSonosDevice,
-      NewsService.lastNewsName,
-      PollyService.getDuration(NewsService.lastNewsName),
+      path.basename(NewsService.lastNewsAudioFile, path.extname(NewsService.lastNewsAudioFile)),
+      PollyService.getDuration(NewsService.lastNewsAudioFile),
       volume,
     );
   }
