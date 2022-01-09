@@ -17,6 +17,9 @@ export class NewsService {
   // most recently downloaded news audio file
   public static lastNewsAudioFile: string;
 
+  // prefix for all downloaded files of the news service
+  private static readonly newsFilePrefix: string = `news$`;
+
   // node interval that contains the ongoing fetch cycle
   private static interval: NodeJS.Timeout | undefined;
   // interval in which rss feed is to be fetched in minutes
@@ -114,7 +117,10 @@ export class NewsService {
           return;
         }
 
-        const filePath = path.join(targetDir, path.basename(currentFeedItem.enclosure.url));
+        const filePath = path.join(
+          targetDir,
+          `${NewsService.newsFilePrefix}${path.basename(currentFeedItem.enclosure.url)}`,
+        );
 
         // check for both path and pubdate in case the file name is always the same one
         if (fs.existsSync(filePath) && NewsService.lastFetchedPubDate == currentFeedItem.pubDate) {
@@ -158,6 +164,10 @@ export class NewsService {
       if (err) return;
 
       files.forEach((file: string) => {
+        // only delete files from this service
+        if (!file.startsWith(NewsService.newsFilePrefix)) {
+          return;
+        }
         fs.stat(path.join(rootDir, file), (err: ErrnoException | null, stat: Stats) => {
           if (err) return;
 
