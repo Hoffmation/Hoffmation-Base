@@ -54,7 +54,7 @@ export class NewsService {
     }
 
     NewsService.interval = Utils.guardedInterval(
-      NewsService.getLatestNews,
+      this.getLatestNews,
       (NewsService.requestInterval ?? 30) * 60 * 1000,
       undefined,
       true,

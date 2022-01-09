@@ -54,6 +54,11 @@
   "muell": {
     "calendarURL": "https://xxxxxxxxxxxxxxxxxxxxx.de/abfuhrkalender?format=ical&street=xxxxxxxx&number=xx"
   },
+  "news": {
+    "rssUrl": "https://www1.wdr.de/mediathek/audio/wdr-aktuell-news/wdr-aktuell-152.podcast",
+    "requestInterval": 30,
+    "keepMaxAge": 120
+  },
   "persistence": {
     "mongoConnection": "mongodb://localhost:2701",
     "mongoDbName": "hoffmation"
@@ -68,6 +73,9 @@
   },
   "sonos": {
     "active": false
+  },
+  "translationSettings": {
+    "language": "en"
   },
   "weather": {
     "lattitude": "xx.xxxxxx",
