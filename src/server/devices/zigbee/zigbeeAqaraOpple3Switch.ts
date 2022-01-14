@@ -90,7 +90,14 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
 
   public getButtonAssignment(): string {
     const result: string[] = [`Button: ${this.info.customName}`];
-    for (const taste of [this.buttonTopLeft, this.buttonTopRight, this.buttonMidLeft, this.buttonMidRight, this.buttonBotLeft, this.buttonBotRight]) {
+    for (const taste of [
+      this.buttonTopLeft,
+      this.buttonTopRight,
+      this.buttonMidLeft,
+      this.buttonMidRight,
+      this.buttonBotLeft,
+      this.buttonBotRight,
+    ]) {
       const desc: string = taste.getDescription();
       if (desc === '') {
         continue;
