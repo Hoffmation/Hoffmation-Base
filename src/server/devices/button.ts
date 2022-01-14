@@ -16,7 +16,7 @@ export enum ButtonPressType {
   triple,
 }
 
-export class Taste {
+export class Button {
   private _state: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();
   private _callbacks: Map<ButtonPressType, Array<{ cb: (pValue: boolean) => void; description: string }>> = new Map<
     ButtonPressType,

@@ -1,24 +1,24 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { iTaster } from '../iTaster';
+import { iButton } from '../iButton';
 import { DeviceInfo } from '../DeviceInfo';
-import { ButtonCapabilities, ButtonPressType, Taste } from '../taste';
+import { ButtonCapabilities, ButtonPressType, Button } from '../button';
 import { LogLevel } from '../../../models/logLevel';
 
-export class HmIpTaster extends HmIPDevice implements iTaster {
+export class HmIpTaster extends HmIPDevice implements iButton {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
     shortPress: true,
     longPress: true,
     doublePress: false,
     triplePress: false,
   };
-  public tasten: { [id: string]: Taste } = {
-    ObenLinks: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
-    ObenRechts: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
-    MitteLinks: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
-    MitteRechts: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
-    UntenLinks: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
-    UntenRechts: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
+  public tasten: { [id: string]: Button } = {
+    ObenLinks: new Button(HmIpTaster.BUTTON_CAPABILLITIES),
+    ObenRechts: new Button(HmIpTaster.BUTTON_CAPABILLITIES),
+    MitteLinks: new Button(HmIpTaster.BUTTON_CAPABILLITIES),
+    MitteRechts: new Button(HmIpTaster.BUTTON_CAPABILLITIES),
+    UntenLinks: new Button(HmIpTaster.BUTTON_CAPABILLITIES),
+    UntenRechts: new Button(HmIpTaster.BUTTON_CAPABILLITIES),
   };
 
   public constructor(pInfo: DeviceInfo) {
@@ -28,7 +28,7 @@ export class HmIpTaster extends HmIPDevice implements iTaster {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
-    let cTaste: Taste | undefined = undefined;
+    let cTaste: Button | undefined = undefined;
     switch (idSplit[3]) {
       case '1':
         cTaste = this.tasten.ObenLinks;

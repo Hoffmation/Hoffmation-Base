@@ -4,7 +4,7 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { SonosGroup } from './sonosGroup';
-import { ButtonPressType } from '../taste';
+import { ButtonPressType } from '../button';
 
 export class TasterGroup extends BaseGroup {
   public getButtons(): HmIpTaster[] {

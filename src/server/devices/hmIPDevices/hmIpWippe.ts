@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { ButtonCapabilities, ButtonPressType, Taste } from '../taste';
+import { ButtonCapabilities, ButtonPressType, Button } from '../button';
 import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpWippe extends HmIPDevice {
@@ -12,11 +12,11 @@ export class HmIpWippe extends HmIPDevice {
     triplePress: false,
   };
   public tasten: {
-    Unten: Taste;
-    Oben: Taste;
+    Unten: Button;
+    Oben: Button;
   } = {
-    Unten: new Taste(HmIpWippe.BUTTON_CAPABILLITIES),
-    Oben: new Taste(HmIpWippe.BUTTON_CAPABILLITIES),
+    Unten: new Button(HmIpWippe.BUTTON_CAPABILLITIES),
+    Oben: new Button(HmIpWippe.BUTTON_CAPABILLITIES),
   };
 
   public constructor(pInfo: DeviceInfo) {
@@ -26,7 +26,7 @@ export class HmIpWippe extends HmIPDevice {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Wippe Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
-    let cTaste: Taste | undefined = undefined;
+    let cTaste: Button | undefined = undefined;
     switch (idSplit[3]) {
       case '1':
         cTaste = this.tasten.Unten;
