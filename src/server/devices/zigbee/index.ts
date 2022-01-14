@@ -1,5 +1,6 @@
 export * from './ZigbeeActuator';
 export * from './zigbeeAqaraMagnetContact';
+export * from './zigbeeAqaraOpple3Switch';
 export * from './zigbeeAquaraMotion';
 export * from './zigbeeAquaraVibra';
 export * from './zigbeeAquaraWater';
@@ -18,3 +19,4 @@ export * from './zigbeeShutter';
 export * from './zigbeeSMaBiTMagnetContact';
 export * from './zigbeeSonoffMotion';
 export * from './zigbeeSonoffTemp';
+export * from './zigbeeSwitch';

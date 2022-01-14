@@ -28,7 +28,7 @@ export class Button {
     return this._state.get(type) ?? false;
   }
 
-  public constructor(public buttonCapabilities: ButtonCapabilities) {
+  public constructor(public name: string, public buttonCapabilities: ButtonCapabilities) {
     if (buttonCapabilities.shortPress) {
       this._callbacks.set(ButtonPressType.short, []);
       this._timeouts.set(ButtonPressType.short, null);

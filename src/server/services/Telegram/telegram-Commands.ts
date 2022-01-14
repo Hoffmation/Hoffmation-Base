@@ -218,7 +218,7 @@ export class TelegramCommands {
           for (const id in Devices.alLDevices) {
             const d = Devices.alLDevices[id];
             if (d.deviceType === DeviceType.HmIpTaster) {
-              response.push((d as HmIpTaster).getTastenAssignment());
+              response.push((d as HmIpTaster).getButtonAssignment());
             }
           }
           TelegramService.sendMessage([m.from.id], response.join('\n'));

@@ -12,7 +12,7 @@ export * from './deviceType';
 export * from './deviceUpdater';
 export * from './Griffe';
 export * from './Heizgruppen';
-export * from './iButton';
+export * from './iButtonSwitch';
 export * from './iDeviceUpdater';
 export * from './iHumiditySensor';
 export * from './iIlluminationSensor';

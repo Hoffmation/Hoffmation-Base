@@ -3,21 +3,24 @@ import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ButtonCapabilities, ButtonPressType, Button } from '../button';
 import { LogLevel } from '../../../models/logLevel';
+import { iButtonSwitch } from '../iButtonSwitch';
 
-export class HmIpWippe extends HmIPDevice {
+export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
     shortPress: true,
     longPress: true,
     doublePress: false,
     triplePress: false,
   };
-  public tasten: {
-    Unten: Button;
-    Oben: Button;
-  } = {
-    Unten: new Button(HmIpWippe.BUTTON_CAPABILLITIES),
-    Oben: new Button(HmIpWippe.BUTTON_CAPABILLITIES),
-  };
+
+  public buttonTopLeft: undefined;
+  public buttonMidLeft: undefined;
+  public buttonBotLeft: undefined;
+  public buttonTopRight: undefined;
+  public buttonMidRight: undefined;
+  public buttonBotRight: undefined;
+  public buttonBot: Button = new Button('Bottom', HmIpWippe.BUTTON_CAPABILLITIES);
+  public buttonTop: Button = new Button('Top', HmIpWippe.BUTTON_CAPABILLITIES);
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpWippe);
@@ -29,10 +32,10 @@ export class HmIpWippe extends HmIPDevice {
     let cTaste: Button | undefined = undefined;
     switch (idSplit[3]) {
       case '1':
-        cTaste = this.tasten.Unten;
+        cTaste = this.buttonBot;
         break;
       case '2':
-        cTaste = this.tasten.Oben;
+        cTaste = this.buttonTop;
         break;
     }
 
@@ -56,5 +59,19 @@ export class HmIpWippe extends HmIPDevice {
         }
         break;
     }
+  }
+  public getButtonAssignment(): string {
+    const result: string[] = [`Button: ${this.info.customName}`];
+    for (const taste of [this.buttonTop, this.buttonBot]) {
+      const desc: string = taste.getDescription();
+      if (desc === '') {
+        continue;
+      }
+      result.push(`Button "${taste.name}":`);
+      result.push(desc);
+      result.push('');
+    }
+    result.push('____________');
+    return result.join('\n');
   }
 }
