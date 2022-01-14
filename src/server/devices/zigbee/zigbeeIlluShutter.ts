@@ -111,6 +111,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
 
   private processNewMovementState(val: number) {
     const newState: MovementState = val <= 30 ? MovementState.Down : val >= 70 ? MovementState.Up : MovementState.Stop;
+    this.log(LogLevel.Trace, `New Movementstate "${MovementState[val]}"`);
     if (newState !== MovementState.Stop) {
       this._movementState = newState;
       return;
@@ -125,6 +126,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       this._shutterCalibrationData.averageUp +=
         (this._msTilTop - this._shutterCalibrationData.averageUp) / this._shutterCalibrationData.counterUp;
       this.persistCalibrationData();
+      this.log(
+        LogLevel.Trace,
+        `New Measurment for shutter up (${this._msTilTop}ms), new Average: ${this._shutterCalibrationData.averageUp}`,
+      );
       return;
     }
     if (this._movementStartPos === 100 && oldState === MovementState.Down && this._setLevel === 0) {
@@ -135,6 +140,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       this._shutterCalibrationData.averageDown +=
         (this._msTilBot - this._shutterCalibrationData.averageDown) / this._shutterCalibrationData.counterDown;
       this.persistCalibrationData();
+      this.log(
+        LogLevel.Trace,
+        `New Measurment for shutter down (${this._msTilBot}ms), new Average: ${this._shutterCalibrationData.averageDown}`,
+      );
       return;
     }
 
@@ -154,6 +163,10 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   }
 
   private persistCalibrationData() {
+    this.log(
+      LogLevel.Trace,
+      `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
+    );
     Persist.persistShutterCalibration(this._shutterCalibrationData);
   }
 }
