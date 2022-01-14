@@ -35,6 +35,7 @@ import { ZigbeeMotionSensor } from './zigbee/zigbeeMotionSensor';
 import { HmIpAccessPoint } from './hmIPDevices/hmIpAccessPoint';
 import { ZigbeeAqaraMagnetContact } from './zigbee/zigbeeAqaraMagnetContact';
 import { ZigbeeSonoffTemp } from './zigbee/zigbeeSonoffTemp';
+import { ZigbeeAqaraOpple3Switch } from './zigbee/zigbeeAqaraOpple3Switch';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -109,6 +110,9 @@ export class Devices {
     switch (zigbeeInfo.deviceType) {
       case 'AqaraMagnetContact':
         d = new ZigbeeAqaraMagnetContact(zigbeeInfo);
+        break;
+      case 'AqaraOpple3Switch':
+        d = new ZigbeeAqaraOpple3Switch(zigbeeInfo);
         break;
       case 'AquaraMotion':
         d = new ZigbeeAquaraMotion(zigbeeInfo);

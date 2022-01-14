@@ -28,5 +28,6 @@ export enum DeviceType {
   ZigbeeSonoffMotion = 214,
   ZigbeeAqaraMagnetContact = 215,
   ZigbeeSonoffTemp = 216,
+  ZigbeeAqaraOpple3Switch = 217,
   Wled = 1001,
 }
