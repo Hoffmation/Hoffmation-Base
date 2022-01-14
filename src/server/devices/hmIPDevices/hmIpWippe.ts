@@ -1,16 +1,22 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { Taste } from '../taste';
+import { ButtonCapabilities, ButtonPressType, Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpWippe extends HmIPDevice {
+  private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
+    shortPress: true,
+    longPress: true,
+    doublePress: false,
+    triplePress: false,
+  };
   public tasten: {
     Unten: Taste;
     Oben: Taste;
   } = {
-    Unten: new Taste(1),
-    Oben: new Taste(2),
+    Unten: new Taste(HmIpWippe.BUTTON_CAPABILLITIES),
+    Oben: new Taste(HmIpWippe.BUTTON_CAPABILLITIES),
   };
 
   public constructor(pInfo: DeviceInfo) {
@@ -39,14 +45,14 @@ export class HmIpWippe extends HmIPDevice {
         if (!initial) {
           // Tasten beim Starten ignorieren
           this.log(LogLevel.Debug, `Tasten Update initial ignoriert`);
-          cTaste.updateShort(state.val as boolean);
+          cTaste.updateState(ButtonPressType.short, state.val as boolean);
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
           this.log(LogLevel.Debug, `Tasten Update initial ignoriert`);
-          cTaste.updateLong(state.val as boolean);
+          cTaste.updateState(ButtonPressType.long, state.val as boolean);
         }
         break;
     }

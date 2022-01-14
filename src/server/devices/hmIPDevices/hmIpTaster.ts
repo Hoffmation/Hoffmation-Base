@@ -2,17 +2,23 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iTaster } from '../iTaster';
 import { DeviceInfo } from '../DeviceInfo';
-import { Taste } from '../taste';
+import { ButtonCapabilities, ButtonPressType, Taste } from '../taste';
 import { LogLevel } from '../../../models/logLevel';
 
 export class HmIpTaster extends HmIPDevice implements iTaster {
+  private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
+    shortPress: true,
+    longPress: true,
+    doublePress: false,
+    triplePress: false,
+  };
   public tasten: { [id: string]: Taste } = {
-    ObenLinks: new Taste(1),
-    ObenRechts: new Taste(2),
-    MitteLinks: new Taste(3),
-    MitteRechts: new Taste(4),
-    UntenLinks: new Taste(5),
-    UntenRechts: new Taste(6),
+    ObenLinks: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
+    ObenRechts: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
+    MitteLinks: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
+    MitteRechts: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
+    UntenLinks: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
+    UntenRechts: new Taste(HmIpTaster.BUTTON_CAPABILLITIES),
   };
 
   public constructor(pInfo: DeviceInfo) {
@@ -52,13 +58,13 @@ export class HmIpTaster extends HmIPDevice implements iTaster {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          cTaste.updateShort(state.val as boolean);
+          cTaste.updateState(ButtonPressType.short, state.val as boolean);
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          cTaste.updateLong(state.val as boolean);
+          cTaste.updateState(ButtonPressType.long, state.val as boolean);
         }
         break;
     }
