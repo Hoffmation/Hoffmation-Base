@@ -11,7 +11,6 @@ export interface iRestSettings {
 }
 
 export interface iConfig {
-  cacheDir?: string;
   ioBrokerUrl: string;
   logSettings?: iLogSettings;
   translationSettings: iTranslationSettings;
