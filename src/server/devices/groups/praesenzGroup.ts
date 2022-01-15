@@ -13,6 +13,7 @@ import { ZigbeeMotionSensor } from '../zigbee/zigbeeMotionSensor';
 
 export class PraesenzGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
+  private _lastLeftTimeout: NodeJS.Timeout | null = null;
 
   public getMotionDetector(): Array<HmIpBewegung | ZigbeeMotionSensor> {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MotionDetection) as Array<
@@ -111,11 +112,8 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public lastLeftCB(val: boolean, cb: () => void): void {
-    if (val) {
-      return;
-    }
-
-    if (this.anyPresent()) {
+    if (val || this.anyPresent()) {
+      this.resetLastLeftTimeout();
       return;
     }
 
@@ -130,7 +128,8 @@ export class PraesenzGroup extends BaseGroup {
       return;
     }
     this.log(LogLevel.Debug, `Movement reset in ${this.roomName} delayed.`);
-    Utils.guardedTimeout(
+    this.resetLastLeftTimeout();
+    this._lastLeftTimeout = Utils.guardedTimeout(
       () => {
         timeAfterReset =
           Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
@@ -145,6 +144,12 @@ export class PraesenzGroup extends BaseGroup {
       Math.abs(timeAfterReset) + 500,
       this,
     );
+  }
+
+  private resetLastLeftTimeout() {
+    if (this._lastLeftTimeout !== null) {
+      clearTimeout(this._lastLeftTimeout);
+    }
   }
 
   public addLastLeftCallback(cb: () => void): void {
