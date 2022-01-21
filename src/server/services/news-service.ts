@@ -104,51 +104,56 @@ export class NewsService {
   private static downloadLatestFileFromFeed(rssUrl: string, targetDir: string) {
     const parser = new Parser();
 
-    parser.parseURL(rssUrl).then((feed) => {
-      try {
-        const currentFeedItem = feed.items[0];
+    parser
+      .parseURL(rssUrl)
+      .then((feed) => {
+        try {
+          const currentFeedItem = feed.items[0];
 
-        ServerLogService.writeLog(LogLevel.Debug, `Most recent news on ${feed.title} is "${currentFeedItem.title}"`);
+          ServerLogService.writeLog(LogLevel.Debug, `Most recent news on ${feed.title} is "${currentFeedItem.title}"`);
 
-        if (currentFeedItem.enclosure === undefined) {
-          ServerLogService.writeLog(LogLevel.Warn, `Couldn't find audio in last item of the rss feed.`, {
-            source: LogSource.News,
-          });
-          return;
-        }
-
-        const filePath = path.join(
-          targetDir,
-          `${NewsService.newsFilePrefix}${path.basename(currentFeedItem.enclosure.url)}`,
-        );
-
-        // check for both path and pubdate in case the file name is always the same one
-        if (fs.existsSync(filePath) && NewsService.lastFetchedPubDate == currentFeedItem.pubDate) {
-          NewsService.lastNewsAudioFile = path.basename(filePath);
-          ServerLogService.writeLog(LogLevel.Debug, `Newest file already downloaded.`, { source: LogSource.News });
-          return;
-        }
-
-        HTTPSService.downloadFile(currentFeedItem.enclosure.url, filePath)
-          .then((success: boolean) => {
-            if (!success) {
-              ServerLogService.writeLog(LogLevel.Debug, `Error while downloading audio file.`, {
-                source: LogSource.News,
-              });
-              return;
-            }
-
-            NewsService.lastNewsAudioFile = path.basename(filePath);
-          })
-          .catch((reason: Error) => {
-            ServerLogService.writeLog(LogLevel.Error, `Error while downloading feed audio: ${reason.message}`, {
+          if (currentFeedItem.enclosure === undefined) {
+            ServerLogService.writeLog(LogLevel.Warn, `Couldn't find audio in last item of the rss feed.`, {
               source: LogSource.News,
             });
-          });
-      } catch (e) {
-        ServerLogService.writeLog(LogLevel.Debug, `Error while parsing feed: ${e}`, { source: LogSource.News });
-      }
-    });
+            return;
+          }
+
+          const filePath = path.join(
+            targetDir,
+            `${NewsService.newsFilePrefix}${path.basename(currentFeedItem.enclosure.url)}`,
+          );
+
+          // check for both path and pubdate in case the file name is always the same one
+          if (fs.existsSync(filePath) && NewsService.lastFetchedPubDate == currentFeedItem.pubDate) {
+            NewsService.lastNewsAudioFile = path.basename(filePath);
+            ServerLogService.writeLog(LogLevel.Debug, `Newest file already downloaded.`, { source: LogSource.News });
+            return;
+          }
+
+          HTTPSService.downloadFile(currentFeedItem.enclosure.url, filePath)
+            .then((success: boolean) => {
+              if (!success) {
+                ServerLogService.writeLog(LogLevel.Debug, `Error while downloading audio file.`, {
+                  source: LogSource.News,
+                });
+                return;
+              }
+
+              NewsService.lastNewsAudioFile = path.basename(filePath);
+            })
+            .catch((reason: Error) => {
+              ServerLogService.writeLog(LogLevel.Error, `Error while downloading feed audio: ${reason.message}`, {
+                source: LogSource.News,
+              });
+            });
+        } catch (e) {
+          ServerLogService.writeLog(LogLevel.Debug, `Error while parsing feed: ${e}`, { source: LogSource.News });
+        }
+      })
+      .catch((e) => {
+        ServerLogService.writeLog(LogLevel.Debug, `Error while getting feed: ${e}`, { source: LogSource.News });
+      });
   }
 
   /**
@@ -160,7 +165,7 @@ export class NewsService {
   private static cleanOldFiles(rootDir: string, keepMaxAge: number): void {
     let deleteCount: number = 0;
 
-    fs.readdir(rootDir, (err, files) => {
+    fs.readdir(rootDir, (err: ErrnoException | null, files: string[]) => {
       if (err) return;
 
       files.forEach((file: string) => {
