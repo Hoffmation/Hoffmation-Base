@@ -56,9 +56,9 @@ export class ZigbeeActuator extends ZigbeeDevice {
       return;
     }
 
-    this.log(LogLevel.Debug, `Stecker schalten Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Switch actuator to: ${pValue}`);
     this.setState(this.actuatorOnSwitchID, pValue, undefined, (err) => {
-      console.log(`Stecker schalten ergab Fehler: ${err}`);
+      this.log(LogLevel.Error, `Switching actuator resulted in error: ${err}`);
     });
     this.queuedValue = pValue;
 
