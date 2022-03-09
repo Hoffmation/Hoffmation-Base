@@ -6,6 +6,7 @@ export * from './connectionCallbacks';
 export * from './daytime';
 export * from './deviceConfig';
 export * from './dimmerSettings';
+export * from './excessEnergyConsumerSettings';
 export * from './iTemperaturDataPoint';
 export * from './ledSettings';
 export * from './logLevel';

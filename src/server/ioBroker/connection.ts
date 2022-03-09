@@ -988,7 +988,7 @@ export class IOBrokerConnection {
         'system',
         'enum',
         { startkey: 'enum.', endkey: 'enum.\u9999' },
-        (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+        (err: Error, res: { rows: ioBroker.GetObjectViewItem<ioBroker.Object>[] }) => {
           if (err) {
             callback(err);
             return;
@@ -1008,7 +1008,7 @@ export class IOBrokerConnection {
             'system',
             'instance',
             { startkey: 'system.adapter.', endkey: 'system.adapter.\u9999' },
-            (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+            (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
               if (err) {
                 callback(err);
                 return;
@@ -1033,7 +1033,7 @@ export class IOBrokerConnection {
                 'system',
                 'channel',
                 { startkey: '', endkey: '\u9999' },
-                (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+                (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
                   if (err) {
                     callback(err);
                     return;
@@ -1051,7 +1051,7 @@ export class IOBrokerConnection {
                     'system',
                     'device',
                     { startkey: '', endkey: '\u9999' },
-                    (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+                    (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
                       if (err) {
                         callback(err);
                         return;
@@ -1126,7 +1126,7 @@ export class IOBrokerConnection {
       'system',
       'device',
       { startkey: id + '.', endkey: id + '.\u9999' },
-      (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+      (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
         if (err) {
           callback(err);
           return;
@@ -1143,7 +1143,7 @@ export class IOBrokerConnection {
           'system',
           'channel',
           { startkey: id + '.', endkey: id + '.\u9999' },
-          (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+          (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
             if (err) {
               callback(err);
               return;
@@ -1161,7 +1161,7 @@ export class IOBrokerConnection {
               'system',
               'state',
               { startkey: id + '.', endkey: id + '.\u9999' },
-              (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+              (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
                 if (err) {
                   callback(err);
                   return;
@@ -1284,7 +1284,7 @@ export class IOBrokerConnection {
       'system',
       'enum',
       { startkey: 'enum.' + enumName, endkey: 'enum.' + enumName + '\u9999' },
-      (err: Error, res: { rows: ioBroker.GetObjectViewItem[] }) => {
+      (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
         if (err) {
           callback(err);
           return;
@@ -1620,7 +1620,7 @@ export class IOBrokerConnection {
       'system',
       'host',
       { startkey: 'system.host.', endkey: 'system.host.\u9999' },
-      (err?: Error, res?: { rows: ioBroker.GetObjectViewItem[] }) => {
+      (err?: Error, res?: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
         if (err || res === undefined || res.rows.length === 0) {
           callback('');
           return;

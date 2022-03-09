@@ -36,11 +36,15 @@ import { HmIpAccessPoint } from './hmIPDevices/hmIpAccessPoint';
 import { ZigbeeAqaraMagnetContact } from './zigbee/zigbeeAqaraMagnetContact';
 import { ZigbeeSonoffTemp } from './zigbee/zigbeeSonoffTemp';
 import { ZigbeeAqaraOpple3Switch } from './zigbee/zigbeeAqaraOpple3Switch';
+import { iEnergyManager } from './iEnergyManager';
+import { JsObjectEnergyManager } from './jsObject/jsObjectEnergyManager';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
+  public static IDENTIFIER_JSEnergyManager: string = 'jsEnergyManager';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
   public static alLDevices: { [id: string]: IoBrokerBaseDevice } = {};
+  public static energymanager?: iEnergyManager = undefined;
 
   public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.
@@ -65,6 +69,8 @@ export class Devices {
         this.processHMIPDevice(cDevConf);
       } else if (cName.indexOf('00-Zigbee') === 0) {
         this.processZigbeeDevice(cDevConf);
+      } else if (cName.indexOf('00-EnergyManager') === 0) {
+        this.createEnergyManager(cDevConf);
       }
     }
 
@@ -241,5 +247,13 @@ export class Devices {
       result.push(`${data[i].amount}\t${data[i].name}`);
     }
     return result.join('\n');
+  }
+
+  private createEnergyManager(cDevConf: deviceConfig) {
+    const devInfo: DeviceInfo = new DeviceInfo(cDevConf);
+    const fullName: string = `${Devices.IDENTIFIER_JSEnergyManager}-${devInfo.devID}`;
+    devInfo.allDevicesKey = fullName;
+    Devices.energymanager = new JsObjectEnergyManager(devInfo);
+    Devices.alLDevices[fullName] = Devices.energymanager;
   }
 }
