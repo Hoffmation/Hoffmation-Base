@@ -3,8 +3,6 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models/logLevel';
 import { Utils } from '../../services/utils/utils';
-import { Persist } from '../../services/dbo/persist';
-import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 
 enum MovementState {
   Down = 30,
@@ -19,21 +17,12 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   private _msTilTop: number = -1;
   private _msTilBot: number = -1;
   private _movementStartPos: number = -1;
-  private _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
   private _iMovementTimeout: NodeJS.Timeout | undefined;
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluShutter);
     this._movementStateId = `${this.info.fullID}.position`;
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
-    Persist.getShutterCalibration(this)
-      .then((calibrationData: ShutterCalibration) => {
-        this._shutterCalibrationData = calibrationData;
-        this.log(LogLevel.DeepTrace, `IlluShutter  initialized with calibration data`);
-      })
-      .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err.message}`);
-      });
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -156,17 +145,5 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     } else if (oldState === MovementState.Up) {
       this.currentLevel = Math.max(this._currentLevel + Math.round((timePassed * 100) / this._msTilBot), 100);
     }
-  }
-
-  private isCalibrated(): boolean {
-    return this._shutterCalibrationData.averageUp > 0 && this._shutterCalibrationData.averageDown > 0;
-  }
-
-  private persistCalibrationData() {
-    this.log(
-      LogLevel.Trace,
-      `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
-    );
-    Persist.persistShutterCalibration(this._shutterCalibrationData);
   }
 }

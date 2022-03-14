@@ -8,8 +8,13 @@ import { Fenster } from '../groups/Fenster';
 import { FensterPosition } from '../models/FensterPosition';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { ShutterSettings } from '../../../models/deviceSettings/shutterSettings';
+import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
+import { Persist } from '../../services/dbo/persist';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
+  public settings: ShutterSettings = new ShutterSettings();
+
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
       return this._setLevel;
@@ -49,9 +54,18 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   protected _firstCommandRecieved: boolean = false;
   protected _setLevel: number = -1;
   protected _setLevelTime: number = -1;
+  protected _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
+    Persist.getShutterCalibration(this)
+      .then((calibrationData: ShutterCalibration) => {
+        this._shutterCalibrationData = calibrationData;
+        this.log(LogLevel.DeepTrace, `ZigbeeShutter  initialized with calibration data`);
+      })
+      .catch((err: Error) => {
+        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err.message}`);
+      });
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
@@ -92,6 +106,38 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   protected moveToPosition(pPosition: number): void {
     this.log(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
+  }
+
+  protected getAverageUp(): number {
+    if (this._shutterCalibrationData.averageUp > 0) {
+      return this._shutterCalibrationData.averageUp;
+    }
+    if (this.settings.msTilTop > 0) {
+      return this.settings.msTilTop;
+    }
+    return 0;
+  }
+
+  protected getAverageDown(): number {
+    if (this._shutterCalibrationData.averageDown > 0) {
+      return this._shutterCalibrationData.averageDown;
+    }
+    if (this.settings.msTilBot > 0) {
+      return this.settings.msTilBot;
+    }
+    return 0;
+  }
+
+  protected isCalibrated(): boolean {
+    return this.getAverageDown() > 0 && this.getAverageUp() > 0;
+  }
+
+  protected persistCalibrationData() {
+    this.log(
+      LogLevel.Trace,
+      `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
+    );
+    Persist.persistShutterCalibration(this._shutterCalibrationData);
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
