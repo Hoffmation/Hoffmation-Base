@@ -1,4 +1,4 @@
-import { ActuatorSettings } from '../../models/actuatorSettings';
+import { ActuatorSettings } from '../../models/deviceSettings/actuatorSettings';
 import { RoomBase } from '../../models/rooms/RoomBase';
 import { TimeOfDay } from '../services/time-callback-service';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';

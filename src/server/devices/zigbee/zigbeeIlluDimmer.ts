@@ -1,4 +1,4 @@
-import { DimmerSettings } from '../../../models/dimmerSettings';
+import { DimmerSettings } from '../../../models/deviceSettings/dimmerSettings';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';

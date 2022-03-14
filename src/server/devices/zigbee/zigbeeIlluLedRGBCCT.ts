@@ -1,6 +1,6 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LedSettings } from '../../../models/ledSettings';
+import { LedSettings } from '../../../models/deviceSettings/ledSettings';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
 import { TimeOfDay } from '../../services/time-callback-service';

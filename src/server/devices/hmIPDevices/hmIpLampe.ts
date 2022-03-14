@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
-import { ActuatorSettings } from '../../../models/actuatorSettings';
+import { ActuatorSettings } from '../../../models/deviceSettings/actuatorSettings';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
 import { LogLevel } from '../../../models/logLevel';

@@ -1,5 +1,5 @@
 import { Utils } from '../../services/utils/utils';
-import { ActuatorSettings } from '../../../models/actuatorSettings';
+import { ActuatorSettings } from '../../../models/deviceSettings/actuatorSettings';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { LogLevel } from '../../../models/logLevel';
