@@ -3,8 +3,8 @@ import { CountToday } from '../../../models/persistence/todaysCount';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { Persist } from '../../services/dbo/persist';
 import { LogLevel } from '../../../models/logLevel';
+import { dbo } from '../../../index';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice {
   public movementDetected: boolean = false;
@@ -30,12 +30,12 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
   public set detectionsToday(pVal: number) {
     const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    Persist.persistTodayCount(this, pVal, oldVal);
+    dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   public constructor(pInfo: DeviceInfo, type: DeviceType) {
     super(pInfo, type);
-    Persist.getCount(this)
+    dbo?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
         this.log(LogLevel.Debug, `Preinitialized movement counter with ${this.detectionsToday}`);

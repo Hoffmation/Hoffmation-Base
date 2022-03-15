@@ -1,10 +1,10 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { Persist } from '../../services/dbo/persist';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { LogLevel } from '../../../models/logLevel';
 import { iIlluminationSensor } from '../iIlluminationSensor';
 import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
+import { dbo } from '../../../index';
 
 export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminationSensor {
   private _illuminance: number = 0;
@@ -18,7 +18,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
 
   private set currentIllumination(value: number) {
     this._illuminance = value;
-    Persist.persistCurrentIllumination(
+    dbo?.persistCurrentIllumination(
       new CurrentIlluminationDataPoint(
         this.info.room,
         this.info.devID,

@@ -1,9 +1,9 @@
 import { DeviceType } from './deviceType';
 import { TemperaturDataPoint } from '../../models/persistence/temperaturDataPoint';
 import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
-import { Persist } from '../services/dbo/persist';
 import { Devices } from './devices';
 import { iHeater } from './iHeater';
+import { dbo } from '../../index';
 
 export class Heizgruppen {
   public static getInfo(): string {
@@ -33,7 +33,7 @@ export class Heizgruppen {
       return `"${searchText}" ist keine gültige Heizgruppe, im Folgenden ist eine Liste aller gültigen Heizgruppen:\n${this.getInfo()}`;
     }
 
-    const results: TemperaturDataPoint[] = await Persist.readTemperaturDataPoint(group, 20);
+    const results: TemperaturDataPoint[] = await dbo?.readTemperaturDataPoint(group, 20);
     const response: string[] = [`Dies sind die letzten 20 Messpunkte der Heizgruppe:`];
     response.push(`Zeitpunkt\t\tIst-Temperatur\t\tSoll-Temperatur\t\tVentilstellung`);
     for (const r of results) {

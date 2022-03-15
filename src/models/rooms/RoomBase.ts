@@ -9,7 +9,6 @@ import { LampenGroup } from '../../server/devices/groups/lampenGroup';
 import { RoomSettings } from './RoomSettings/RoomSettings';
 import { SmokeGroup } from '../../server/devices/groups/smokeGroup';
 import { FensterGroup } from '../../server/devices/groups/fensterGroup';
-import { Persist } from '../../server/services/dbo/persist';
 import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callback-service';
 import { SonosGroup } from '../../server/devices/groups/sonosGroup';
 import { iRoomBase } from './iRoomBase';
@@ -21,6 +20,7 @@ import { ShutterService } from '../../server/services/ShutterService';
 import { Utils } from '../../server/services/utils/utils';
 import _ from 'lodash';
 import { DeviceCluster } from '../../server/devices/device-cluster';
+import { dbo } from '../../index';
 
 export class RoomBase implements iRoomBase {
   public info: RoomInfo;
@@ -91,7 +91,7 @@ export class RoomBase implements iRoomBase {
   }
 
   public persist(): void {
-    Persist.addRoom(this);
+    dbo?.addRoom(this);
   }
 
   public recalcTimeCallbacks(): void {

@@ -3,12 +3,12 @@ import { DeviceType } from '../deviceType';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
 import { TemperaturSettings } from '../../../models/temperaturSettings';
-import { Persist } from '../../services/dbo/persist';
 import { LogLevel } from '../../../models/logLevel';
 import { iTemperaturSensor } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
 import { iHeater } from '../iHeater';
 import { DeviceClusterType } from '../device-cluster-type';
+import { dbo } from '../../../index';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {
   private _automaticMode: boolean = true;
@@ -133,7 +133,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
 
   public checkAutomaticChange(): void {
     if (!this._automaticMode) {
-      Persist.addTemperaturDataPoint(this);
+      dbo?.addTemperaturDataPoint(this);
       return;
     }
 
@@ -157,6 +157,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
       break;
     }
 
-    Persist.addTemperaturDataPoint(this);
+    dbo?.addTemperaturDataPoint(this);
   }
 }

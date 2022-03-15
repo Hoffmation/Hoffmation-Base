@@ -10,7 +10,7 @@ import {
   NewsService,
   OwnSonosDevice,
   OwnSonosDevices,
-  Persist,
+  MongoPersistance,
   PollyService,
   SettingsService,
   SonosService,
@@ -20,6 +20,7 @@ import {
   Utils,
   WeatherService,
   Res,
+  iPersist,
 } from './server';
 
 export * from './models/index';
@@ -28,6 +29,8 @@ export * from './server/index';
 export class HoffmationInitializationObject {
   public constructor(public config: iConfig) {}
 }
+
+export let dbo: iPersist | undefined;
 
 export class HoffmationBase {
   public static ioMain: ioBrokerMain;
@@ -40,9 +43,8 @@ export class HoffmationBase {
     }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
-      await Persist.initialize(initObject.config.persistence);
-    } else {
-      Persist.turnOff();
+      dbo = new MongoPersistance(initObject.config.persistence);
+      await dbo.initialize(initObject.config.persistence);
     }
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);

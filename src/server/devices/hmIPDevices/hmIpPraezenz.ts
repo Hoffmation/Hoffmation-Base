@@ -3,10 +3,10 @@ import { DeviceType } from '../deviceType';
 import { CountToday } from '../../../models/persistence/todaysCount';
 import { Utils } from '../../services/utils/utils';
 import { DeviceInfo } from '../DeviceInfo';
-import { Persist } from '../../services/dbo/persist';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { LogLevel } from '../../../models/logLevel';
 import { iIlluminationSensor } from '../iIlluminationSensor';
+import { dbo } from '../../../index';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public excludeFromNightAlarm: boolean = false;
@@ -27,7 +27,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public set detectionsToday(pVal: number) {
     const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    Persist.persistTodayCount(this, pVal, oldVal);
+    dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   public get currentIllumination(): number {
@@ -36,7 +36,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
 
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
-    Persist.persistCurrentIllumination(
+    dbo?.persistCurrentIllumination(
       new CurrentIlluminationDataPoint(
         this.info.room,
         this.info.devID,
@@ -50,7 +50,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
-    Persist.getCount(this)
+    dbo?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
         this.log(LogLevel.Debug, `Präsenzcounter vorinitialisiert mit ${this.detectionsToday}`);

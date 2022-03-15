@@ -1,1 +1,2 @@
-export * from './persist';
+export * from './mongoPersistance';
+export * from './iPersist';

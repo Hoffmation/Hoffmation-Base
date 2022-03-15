@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { ShutterSettings } from '../../../models/deviceSettings/shutterSettings';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
-import { Persist } from '../../services/dbo/persist';
+import { dbo } from '../../../index';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public settings: ShutterSettings = new ShutterSettings();
@@ -58,7 +58,8 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
-    Persist.getShutterCalibration(this)
+    dbo
+      ?.getShutterCalibration(this)
       .then((calibrationData: ShutterCalibration) => {
         this._shutterCalibrationData = calibrationData;
         this.log(LogLevel.DeepTrace, `ZigbeeShutter  initialized with calibration data`);
@@ -137,7 +138,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       LogLevel.Trace,
       `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
     );
-    Persist.persistShutterCalibration(this._shutterCalibrationData);
+    dbo?.persistShutterCalibration(this._shutterCalibrationData);
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {

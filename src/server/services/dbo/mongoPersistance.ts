@@ -12,22 +12,23 @@ import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
 import { LogLevel } from '../../../models/logLevel';
 import { iPersistenceSettings } from '../../config/iConfig';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
+import { iPersist } from './iPersist';
 
-export class Persist {
-  private static BasicRoomCollection: Collection<BasicRoomInfo>;
-  private static CountTodayCollection: Collection<CountToday>;
-  private static CurrentIlluminationCollection: Collection<CurrentIlluminationDataPoint>;
-  private static DailyMovementCountTodayCollection: Collection<DailyMovementCount>;
-  private static HeatGroupCollection: Collection<TemperaturDataPoint>;
-  private static RoomDetailsCollection: Collection<RoomDetailInfo>;
-  private static ShutterCalibrationCollection: Collection<ShutterCalibration>;
-  private static TemperatureHistoryCollection: Collection<TemperaturDataPoint>;
-  private static initialized: boolean = false;
-  private static Mongo: Db;
-  private static MongoClient: MongoClient;
-  private static turnedOff: boolean = false;
+export class MongoPersistance implements iPersist {
+  private BasicRoomCollection?: Collection<BasicRoomInfo>;
+  private CountTodayCollection?: Collection<CountToday>;
+  private CurrentIlluminationCollection?: Collection<CurrentIlluminationDataPoint>;
+  private DailyMovementCountTodayCollection?: Collection<DailyMovementCount>;
+  private HeatGroupCollection?: Collection<TemperaturDataPoint>;
+  private RoomDetailsCollection?: Collection<RoomDetailInfo>;
+  private ShutterCalibrationCollection?: Collection<ShutterCalibration>;
+  private TemperatureHistoryCollection?: Collection<TemperaturDataPoint>;
+  initialized: boolean = false;
+  private Mongo?: Db;
+  private MongoClient: MongoClient;
+  turnedOff: boolean = false;
 
-  public static addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
+  addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
     if (!this.isMongoAllowedAndReady()) {
       return;
     }
@@ -41,7 +42,7 @@ export class Persist {
       new Date(),
     );
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${hzGrp.info.customName}`);
-    this.TemperatureHistoryCollection.insertOne(dataPoint).catch((r) => {
+    this.TemperatureHistoryCollection?.insertOne(dataPoint).catch((r) => {
       this.handleReject(r, 'TemperatureHistoryCollection.insertOne');
     });
 
@@ -54,20 +55,20 @@ export class Persist {
       hzGrp.humidity,
       new Date(),
     );
-    this.HeatGroupCollection.updateOne({ name: dataPoint.name }, { $set: heatGroupDataPoint }, { upsert: true }).catch(
+    this.HeatGroupCollection?.updateOne({ name: dataPoint.name }, { $set: heatGroupDataPoint }, { upsert: true }).catch(
       (r) => {
         this.handleReject(r, 'HeatGroupCollection.updateOne');
       },
     );
   }
 
-  public static addRoom(room: RoomBase): void {
+  addRoom(room: RoomBase): void {
     if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Room for ${room.roomName}`);
-    this.BasicRoomCollection.updateOne(
+    this.BasicRoomCollection?.updateOne(
       { roomName: room.roomName },
       { $set: new BasicRoomInfo(room.roomName, room.settings.etage) },
       { upsert: true },
@@ -80,14 +81,14 @@ export class Persist {
         detailed.heaters.push(h.info.customName);
       }
     }
-    this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
+    this.RoomDetailsCollection?.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
       (r) => {
         this.handleReject(r, 'RoomDetailsCollection.updateOne');
       },
     );
   }
 
-  public static async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
+  async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
     if (!this.isMongoAllowedAndReady()) {
       return new CountToday(device.info.fullID, 0);
     }
@@ -95,7 +96,7 @@ export class Persist {
     const options: FindOptions<CountToday> = {
       limit: 1,
     };
-    const databaseValue: CountToday[] = (await this.CountTodayCollection.find(
+    const databaseValue: CountToday[] = (await this.CountTodayCollection?.find(
       { deviceID: device.info.fullID },
       options,
     ).toArray()) as CountToday[];
@@ -107,7 +108,7 @@ export class Persist {
     return new CountToday(device.info.fullID, 0);
   }
 
-  public static async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
+  async getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
     if (!this.isMongoAllowedAndReady()) {
       return new ShutterCalibration(device.info.fullID, 0, 0, 0, 0);
     }
@@ -115,7 +116,7 @@ export class Persist {
     const options: FindOptions<ShutterCalibration> = {
       limit: 1,
     };
-    const databaseValue: ShutterCalibration[] = (await this.ShutterCalibrationCollection.find(
+    const databaseValue: ShutterCalibration[] = (await this.ShutterCalibrationCollection?.find(
       { deviceID: device.info.fullID },
       options,
     ).toArray()) as ShutterCalibration[];
@@ -126,8 +127,11 @@ export class Persist {
     return new ShutterCalibration(device.info.fullID, 0, 0, 0, 0);
   }
 
-  public static async initialize(config: iPersistenceSettings): Promise<void> {
+  public constructor(config: iPersistenceSettings) {
     this.MongoClient = new MongoClient(config.mongoConnection);
+  }
+
+  async initialize(config: iPersistenceSettings): Promise<void> {
     await this.MongoClient.connect();
     this.Mongo = this.MongoClient.db(config.mongoDbName);
     this.TemperatureHistoryCollection = this.Mongo.collection<TemperaturDataPoint>('TemperaturData');
@@ -142,12 +146,12 @@ export class Persist {
     this.initialized = true;
   }
 
-  public static persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
+  persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
     if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
-    const result = this.CountTodayCollection.updateOne(
+    const result = this.CountTodayCollection?.updateOne(
       { deviceID: device.info.fullID },
       { $set: new CountToday(device.info.fullID, count) },
       { upsert: true },
@@ -155,7 +159,7 @@ export class Persist {
     if (count === 0) {
       const date = new Date();
       date.setHours(-24, 0, 0, 0);
-      const result2 = this.DailyMovementCountTodayCollection.updateOne(
+      const result2 = this.DailyMovementCountTodayCollection?.updateOne(
         { deviceID: device.info.fullID, date: date },
         { $set: new DailyMovementCount(device.info.fullID, oldCount, device.info.room, date) },
         { upsert: true },
@@ -173,24 +177,24 @@ export class Persist {
     );
   }
 
-  public static persistShutterCalibration(data: ShutterCalibration): void {
+  persistShutterCalibration(data: ShutterCalibration): void {
     if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
-    const result = this.CountTodayCollection.updateOne({ deviceID: data.deviceID }, { $set: data }, { upsert: true });
+    const result = this.CountTodayCollection?.updateOne({ deviceID: data.deviceID }, { $set: data }, { upsert: true });
     ServerLogService.writeLog(
       LogLevel.Trace,
       `Persisting ShutterCalibration for ${data.deviceID} resolved with "${result}"`,
     );
   }
 
-  public static persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
+  persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
     if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
-    const result = this.CurrentIlluminationCollection.updateOne(
+    const result = this.CurrentIlluminationCollection?.updateOne(
       { deviceID: data.deviceID, date: data.date },
       { $set: data },
       { upsert: true },
@@ -203,11 +207,8 @@ export class Persist {
     );
   }
 
-  public static async readTemperaturDataPoint(
-    hzGrp: HmIpHeizgruppe,
-    limit: number = -1,
-  ): Promise<TemperaturDataPoint[]> {
-    const result = new Promise<TemperaturDataPoint[]>(async (resolve) => {
+  async readTemperaturDataPoint(hzGrp: HmIpHeizgruppe, limit: number = -1): Promise<TemperaturDataPoint[]> {
+    return new Promise<TemperaturDataPoint[]>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
         resolve([]);
         return;
@@ -217,26 +218,20 @@ export class Persist {
         limit: limit > 0 ? limit : undefined,
         sort: { date: -1 },
       };
-      const data = (await this.TemperatureHistoryCollection.find(
+      const data = (await this.TemperatureHistoryCollection?.find(
         { name: hzGrp.info.customName },
         options,
       ).toArray()) as TemperaturDataPoint[];
       resolve(data);
     });
-
-    return result;
   }
 
-  public static turnOff(): void {
-    this.turnedOff = true;
-  }
-
-  private static handleReject(reason: any, func: string) {
+  private handleReject(reason: any, func: string) {
     ServerLogService.writeLog(LogLevel.Warn, `Error persisting data for "${func}"`);
     ServerLogService.writeLog(LogLevel.Debug, `Persisting Error reason: "${reason}"`);
   }
 
-  private static isMongoAllowedAndReady(): boolean {
+  private isMongoAllowedAndReady(): boolean {
     if (this.turnedOff) {
       return false;
     }
