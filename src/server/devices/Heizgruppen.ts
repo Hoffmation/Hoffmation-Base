@@ -33,7 +33,7 @@ export class Heizgruppen {
       return `"${searchText}" ist keine gültige Heizgruppe, im Folgenden ist eine Liste aller gültigen Heizgruppen:\n${this.getInfo()}`;
     }
 
-    const results: TemperaturDataPoint[] = await dbo?.readTemperaturDataPoint(group, 20);
+    const results: TemperaturDataPoint[] = (await dbo?.readTemperaturDataPoint(group, 20)) ?? [];
     const response: string[] = [`Dies sind die letzten 20 Messpunkte der Heizgruppe:`];
     response.push(`Zeitpunkt\t\tIst-Temperatur\t\tSoll-Temperatur\t\tVentilstellung`);
     for (const r of results) {
