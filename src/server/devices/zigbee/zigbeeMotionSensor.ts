@@ -35,7 +35,8 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
 
   public constructor(pInfo: DeviceInfo, type: DeviceType) {
     super(pInfo, type);
-    dbo?.getCount(this)
+    dbo
+      ?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
         this.log(LogLevel.Debug, `Preinitialized movement counter with ${this.detectionsToday}`);

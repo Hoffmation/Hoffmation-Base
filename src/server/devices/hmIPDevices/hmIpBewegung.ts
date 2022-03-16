@@ -49,7 +49,8 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpBewegung);
-    dbo?.getCount(this)
+    dbo
+      ?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
         this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
