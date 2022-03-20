@@ -3,13 +3,11 @@ import { RoomBase } from '../../../models/rooms/RoomBase';
 import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
 import { CountToday } from '../../../models/persistence/todaysCount';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
-import { iPersistenceSettings } from '../../config/iConfig';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
 
 export interface iPersist {
   initialized: boolean;
-  turnedOff: boolean;
 
   addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void;
 
@@ -19,7 +17,7 @@ export interface iPersist {
 
   getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration>;
 
-  initialize(config: iPersistenceSettings): Promise<void>;
+  initialize(): Promise<void>;
 
   persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void;
 

@@ -1,5 +1,6 @@
 import { LogLevel } from '../../models/logLevel';
 import { iRoomDefaultSettings } from '../../models/rooms/RoomSettings/iRoomDefaultSettings';
+import { PoolConfig } from 'pg';
 
 interface iSonosSettings {
   active: boolean;
@@ -50,6 +51,11 @@ export interface iTelegramSettings {
 }
 
 export interface iPersistenceSettings {
+  mongo?: iMongoSettings;
+  postgreSql?: PoolConfig;
+}
+
+export interface iMongoSettings {
   mongoConnection: string;
   mongoDbName: string;
 }

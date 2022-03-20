@@ -38,6 +38,7 @@
     "@types/node": "17.0.21",
     "@types/node-fetch": "^3.0.3",
     "@types/node-telegram-bot-api": "^0.56.0",
+    "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.9",
     "aws-sdk": "2.1095.0",
@@ -48,6 +49,7 @@
     "node-fetch": "3.2.3",
     "node-ical": "^0.14.1",
     "node-telegram-bot-api": "^0.56.0",
+    "pg": "^8.7.3",
     "rss-parser": "^3.12.0",
     "socket.io-client": "2.4.x",
     "sunrise-sunset-js": "^2.2.1"

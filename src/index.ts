@@ -21,6 +21,7 @@ import {
   WeatherService,
   Res,
   iPersist,
+  PostgreSqlPersist,
 } from './server';
 
 export * from './models/index';
@@ -43,8 +44,12 @@ export class HoffmationBase {
     }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
-      dbo = new MongoPersistance(initObject.config.persistence);
-      await dbo.initialize(initObject.config.persistence);
+      if (initObject.config.persistence.mongo) {
+        dbo = new MongoPersistance(initObject.config.persistence);
+      } else if (initObject.config.persistence.postgreSql) {
+        dbo = new PostgreSqlPersist(initObject.config.persistence);
+      }
+      await dbo?.initialize();
     }
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);

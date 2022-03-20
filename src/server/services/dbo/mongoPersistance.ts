@@ -10,7 +10,7 @@ import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
 import { LogLevel } from '../../../models/logLevel';
-import { iPersistenceSettings } from '../../config/iConfig';
+import { iMongoSettings, iPersistenceSettings } from '../../config/iConfig';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 import { iPersist } from './iPersist';
 
@@ -26,7 +26,7 @@ export class MongoPersistance implements iPersist {
   initialized: boolean = false;
   private Mongo?: Db;
   private MongoClient: MongoClient;
-  turnedOff: boolean = false;
+  private mongoConf: iMongoSettings;
 
   addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
     if (!this.isMongoAllowedAndReady()) {
@@ -128,12 +128,13 @@ export class MongoPersistance implements iPersist {
   }
 
   public constructor(config: iPersistenceSettings) {
-    this.MongoClient = new MongoClient(config.mongoConnection);
+    this.mongoConf = config.mongo!;
+    this.MongoClient = new MongoClient(this.mongoConf.mongoConnection);
   }
 
-  async initialize(config: iPersistenceSettings): Promise<void> {
+  async initialize(): Promise<void> {
     await this.MongoClient.connect();
-    this.Mongo = this.MongoClient.db(config.mongoDbName);
+    this.Mongo = this.MongoClient.db(this.mongoConf.mongoDbName);
     this.TemperatureHistoryCollection = this.Mongo.collection<TemperaturDataPoint>('TemperaturData');
     this.HeatGroupCollection = this.Mongo.collection<TemperaturDataPoint>('HeatGroupCollection');
     this.BasicRoomCollection = this.Mongo.collection<BasicRoomInfo>('BasicRooms');
@@ -232,9 +233,6 @@ export class MongoPersistance implements iPersist {
   }
 
   private isMongoAllowedAndReady(): boolean {
-    if (this.turnedOff) {
-      return false;
-    }
     if (!this.initialized) {
       ServerLogService.writeLog(LogLevel.Warn, `Db is not yet initialized`);
       return false;
