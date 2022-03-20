@@ -5,6 +5,7 @@ import { Utils } from './utils/utils';
 import { LogLevel } from '../../models/logLevel';
 import { HTTPSOptions } from './HTTPSOptions';
 import path from 'path';
+import { IncomingMessage } from 'http';
 
 export class HTTPSService {
   private static defaultCallback(data: string, statuscode: number): void {
@@ -18,15 +19,15 @@ export class HTTPSService {
     responseCallback: (data: string, statuscode: number) => void = HTTPSService.defaultCallback,
   ): void {
     const responseData: string[] = [];
-    const req = HTTPS.request(options, (res: any) => {
+    const req = HTTPS.request(options, (res: IncomingMessage) => {
       res.on('data', (data: Buffer) => {
         responseData.push(data.toString());
       });
       res.on('end', () => {
-        responseCallback(responseData.join(''), res.statusCode);
+        responseCallback(responseData.join(''), res.statusCode ?? 0);
       });
     });
-    req.on('error', (e: any) => {
+    req.on('error', (e: Error) => {
       ServerLogService.writeLog(LogLevel.DeepTrace, `HTTPS Error: ${e}`);
       if (retryOnError > 0) {
         ServerLogService.writeLog(LogLevel.DeepTrace, `HTTPS request failed --> ${retryOnError} retries left`);
@@ -60,15 +61,15 @@ export class HTTPSService {
       const file = fs.createWriteStream(filePath);
       let fileInfo: { mime: string; size: number } | null = null;
 
-      const request = HTTPS.get(url, (response: any) => {
+      const request = HTTPS.get(url, (response: IncomingMessage) => {
         if (response.statusCode !== 200) {
           reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
           return;
         }
 
         fileInfo = {
-          mime: response.headers['content-type'],
-          size: parseInt(response.headers['content-length'], 10),
+          mime: response.headers['content-type'] ?? '',
+          size: parseInt(response.headers['content-length'] ?? '0', 10),
         };
 
         ServerLogService.writeLog(
@@ -81,7 +82,7 @@ export class HTTPSService {
       // The destination stream is ended by the time it's called
       file.on('finish', () => resolve(true));
 
-      request.on('error', (err: any) => {
+      request.on('error', (err: Error) => {
         ServerLogService.writeLog(LogLevel.DeepTrace, `Error Downloading File: ${err}`);
         fs.unlink(filePath, () => resolve(false));
       });

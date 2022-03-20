@@ -100,11 +100,11 @@ export class Utils {
     Res.initialize({ language: 'en' });
   }
 
-  public static kWh(wattage: number, durationInMs: number) {
+  public static kWh(wattage: number, durationInMs: number): number {
     return (wattage * durationInMs) / 3600000000.0;
   }
 
-  public static round(number: number, digits: number) {
+  public static round(number: number, digits: number): number {
     const factor: number = Math.pow(10, digits);
     return Math.round(number * factor) / factor;
   }

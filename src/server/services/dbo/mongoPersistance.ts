@@ -129,6 +129,7 @@ export class MongoPersistance implements iPersist {
   }
 
   public constructor(config: iPersistenceSettings) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.mongoConf = config.mongo!;
     this.MongoClient = new MongoClient(this.mongoConf.mongoConnection);
   }

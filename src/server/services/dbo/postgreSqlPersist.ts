@@ -18,6 +18,7 @@ export class PostgreSqlPersist implements iPersist {
   initialized: boolean = false;
 
   public constructor(config: iPersistenceSettings) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.psql = new Pool(config.postgreSql!);
   }
 
