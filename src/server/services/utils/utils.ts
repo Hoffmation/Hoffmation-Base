@@ -99,4 +99,8 @@ export class Utils {
     ServerLogService.settings.logLevel = -1;
     Res.initialize({ language: 'en' });
   }
+
+  public static kWh(wattage: number, durationInMs: number) {
+    return (wattage * durationInMs) / 3600000000.0;
+  }
 }

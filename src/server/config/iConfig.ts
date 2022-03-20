@@ -12,6 +12,10 @@ export interface iRestSettings {
 }
 
 export interface iConfig {
+  // Price per kWh from the grid
+  wattagePrice: number;
+  // Earnigs per kWh injecting into the grid
+  injectWattagePrice?: number;
   ioBrokerUrl: string;
   logSettings?: iLogSettings;
   translationSettings: iTranslationSettings;

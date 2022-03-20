@@ -4,16 +4,54 @@ import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models/logLevel';
+import { Utils } from '../../services/utils/utils';
+import { dbo, EnergyCalculation, SettingsService } from '../../../index';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
-  public baseConsumption: number = -1;
-  public currentProduction: number = -1;
-  public excessEnergy: number = -1;
-  public excessEnergyConsumerConsumption: number = -1;
+  public get excessEnergyConsumerConsumption(): number {
+    return this._excessEnergyConsumerConsumption;
+  }
+
+  public get excessEnergy(): number {
+    return this._excessEnergy;
+  }
+  public get baseConsumption(): number {
+    return this.totalConsumption - this._excessEnergyConsumerConsumption;
+  }
+
+  public get totalConsumption(): number {
+    return this._currentProduction - this._excessEnergy;
+  }
+
+  public get currentProduction(): number {
+    return this._currentProduction;
+  }
+
+  private _currentProduction: number = -1;
+  private _excessEnergy: number = -1;
+  private _excessEnergyConsumerConsumption: number = 0;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
+  private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
+  private _nextPersistEntry: EnergyCalculation;
+  private _lastPersistenceCalculation: number = Utils.nowMS();
 
   public constructor(info: DeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
+    this._iDatabaseLoggerInterval = Utils.guardedInterval(
+      () => {
+        this.persist();
+      },
+      5 * 60 * 1000,
+      this,
+    );
+    this._nextPersistEntry = new EnergyCalculation(Utils.nowMS());
+  }
+
+  public cleanup(): void {
+    if (this._iDatabaseLoggerInterval !== null) {
+      clearInterval(this._iDatabaseLoggerInterval);
+      this._iDatabaseLoggerInterval = null;
+    }
   }
 
   public addExcessConsumer(device: iExcessEnergyConsumer): void {
@@ -38,13 +76,39 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
         break;
       case 'CurrentProduction':
         this.log(LogLevel.Trace, `Current Production Update to ${state.val}`);
-        this.currentProduction = state.val as number;
+        this._currentProduction = state.val as number;
         break;
     }
   }
 
   private setExcessEnergy(val: number) {
-    this.excessEnergy = val;
+    this._excessEnergy = val;
+    this.calculatePersistenceValues();
     this.recalculatePowerSharing();
+  }
+
+  private calculatePersistenceValues(): void {
+    const now = Utils.nowMS();
+    const duration = now - this._lastPersistenceCalculation;
+    if (this.excessEnergy < 0) {
+      this._nextPersistEntry.drawnWattage += Utils.kWh(this.excessEnergy * -1, duration);
+    } else {
+      this._nextPersistEntry.injectedWattage += Utils.kWh(this.excessEnergy, duration);
+      this._nextPersistEntry.selfConsumedWattage += Utils.kWh(this.totalConsumption, duration);
+    }
+    this._lastPersistenceCalculation = now;
+  }
+
+  private persist() {
+    const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
+    if (obj.drawnWattage === 0 && obj.injectedWattage === 0 && obj.selfConsumedWattage === 0) {
+      return;
+    }
+    this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
+    obj.endMs = this._lastPersistenceCalculation;
+    obj.earnedInjected = obj.injectedWattage * (SettingsService.settings.injectWattagePrice ?? 0.06);
+    obj.savedSelfConsume = obj.selfConsumedWattage * SettingsService.settings.wattagePrice;
+    obj.costDrawn = obj.selfConsumedWattage * SettingsService.settings.wattagePrice;
+    dbo?.persistEnergyManager(obj);
   }
 }

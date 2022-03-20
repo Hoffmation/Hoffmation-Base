@@ -11,6 +11,7 @@ import { Pool } from 'pg';
 import * as fs from 'fs';
 import { ServerLogService } from '../log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
+import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
 
 export class PostgreSqlPersist implements iPersist {
   private psql: Pool;
@@ -156,5 +157,16 @@ LIMIT ${limit}
       return false;
     }
     return true;
+  }
+
+  persistEnergyManager(calc: EnergyCalculation): void {
+    this.query(`
+insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedWattage", "injectedWattage",
+                                                   "drawnWattage", "costDrawn", "earnedInjected", "savedSelfConsume")
+values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.startMs).toISOString()}',
+        ${calc.selfConsumedWattage}, ${calc.injectedWattage}, ${calc.drawnWattage}, ${calc.costDrawn}, ${
+      calc.earnedInjected
+    }, ${calc.savedSelfConsume});
+    `);
   }
 }

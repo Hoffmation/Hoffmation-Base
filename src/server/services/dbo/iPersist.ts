@@ -5,6 +5,7 @@ import { CountToday } from '../../../models/persistence/todaysCount';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
 import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
+import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
 
 export interface iPersist {
   initialized: boolean;
@@ -24,6 +25,8 @@ export interface iPersist {
   persistShutterCalibration(data: ShutterCalibration): void;
 
   persistCurrentIllumination(data: CurrentIlluminationDataPoint): void;
+
+  persistEnergyManager(energyData: EnergyCalculation): void;
 
   readTemperaturDataPoint(hzGrp: HmIpHeizgruppe, limit: number): Promise<TemperaturDataPoint[]>;
 }

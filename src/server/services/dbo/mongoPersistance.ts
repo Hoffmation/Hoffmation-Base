@@ -13,6 +13,7 @@ import { LogLevel } from '../../../models/logLevel';
 import { iMongoSettings, iPersistenceSettings } from '../../config/iConfig';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 import { iPersist } from './iPersist';
+import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
 
 export class MongoPersistance implements iPersist {
   private BasicRoomCollection?: Collection<BasicRoomInfo>;
@@ -246,5 +247,9 @@ export class MongoPersistance implements iPersist {
       return false;
     }
     return true;
+  }
+
+  persistEnergyManager(_energyData: EnergyCalculation): void {
+    ServerLogService.writeLog(LogLevel.Warn, `MongoDb doesn't support EnergyCalculation yet.`);
   }
 }
