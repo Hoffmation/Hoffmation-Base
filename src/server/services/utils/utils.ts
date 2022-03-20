@@ -103,4 +103,9 @@ export class Utils {
   public static kWh(wattage: number, durationInMs: number) {
     return (wattage * durationInMs) / 3600000000.0;
   }
+
+  public static round(number: number, digits: number) {
+    const factor: number = Math.pow(10, digits);
+    return Math.round(number * factor) / factor;
+  }
 }

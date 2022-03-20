@@ -41,7 +41,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
       () => {
         this.persist();
       },
-      5 * 60 * 1000,
+      15 * 60 * 1000,
       this,
     );
     this._nextPersistEntry = new EnergyCalculation(Utils.nowMS());
@@ -106,9 +106,12 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     }
     this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
     obj.endMs = this._lastPersistenceCalculation;
-    obj.earnedInjected = obj.injectedWattage * (SettingsService.settings.injectWattagePrice ?? 0.06);
-    obj.savedSelfConsume = obj.selfConsumedWattage * SettingsService.settings.wattagePrice;
-    obj.costDrawn = obj.selfConsumedWattage * SettingsService.settings.wattagePrice;
+    obj.earnedInjected = Utils.round(obj.injectedWattage * (SettingsService.settings.injectWattagePrice ?? 0.06), 4);
+    obj.savedSelfConsume = Utils.round(obj.selfConsumedWattage * SettingsService.settings.wattagePrice, 4);
+    obj.costDrawn = Utils.round(obj.selfConsumedWattage * SettingsService.settings.wattagePrice, 4);
+    obj.injectedWattage = Utils.round(obj.injectedWattage, 4);
+    obj.selfConsumedWattage = Utils.round(obj.selfConsumedWattage, 4);
+    obj.drawnWattage = Utils.round(obj.drawnWattage, 4);
     dbo?.persistEnergyManager(obj);
   }
 }
