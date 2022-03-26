@@ -41,7 +41,7 @@ import { JsObjectEnergyManager } from './jsObject/jsObjectEnergyManager';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
-  public static IDENTIFIER_JSEnergyManager: string = 'jsEnergyManager';
+  public static IDENTIFIER_JS: string = 'javascript';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
   public static alLDevices: { [id: string]: IoBrokerBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
@@ -252,7 +252,7 @@ export class Devices {
 
   private createEnergyManager(cDevConf: deviceConfig) {
     const devInfo: DeviceInfo = new DeviceInfo(cDevConf, true);
-    const fullName: string = `${Devices.IDENTIFIER_JSEnergyManager}-${devInfo.devID}`;
+    const fullName: string = `${Devices.IDENTIFIER_JS}-${devInfo.devID}`;
     devInfo.allDevicesKey = fullName;
     Devices.energymanager = new JsObjectEnergyManager(devInfo);
     Devices.alLDevices[fullName] = Devices.energymanager;
