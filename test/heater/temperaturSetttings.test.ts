@@ -10,23 +10,23 @@ describe('TemperaturSettings', () => {
   };
 
   it('00:00:00.001 should be in range', () => {
-    expect(setting.isNowInRange(new Date(1648249200001))).toBeTruthy();
+    expect(setting.isNowInRange(new Date('2022-03-21 00:00:00.001+0100'))).toBeTruthy();
   });
   it('05:59:59.999 should be in range', () => {
-    expect(setting.isNowInRange(new Date(1648270799999))).toBeTruthy();
+    expect(setting.isNowInRange(new Date('2022-03-21 05:59:59.999+0100'))).toBeTruthy();
   });
   it('06:00:00.001 should not be in range', () => {
-    expect(setting.isNowInRange(new Date(1648270700001))).toBeTruthy();
+    expect(setting.isNowInRange(new Date('2022-03-21 06:00:00.001+0100'))).toBeFalsy();
   });
   it('23:59:59.999 should be in range of setting2', () => {
-    expect(setting2.isNowInRange(new Date(1648335599999))).toBeTruthy();
+    expect(setting2.isNowInRange(new Date('2022-03-21 23:59:59.999+0100'))).toBeTruthy();
   });
 
   it('23:59:59.999 should give last range', () => {
-    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date(1648335599999))?.temperatur).toBe(20);
+    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 23:59:59.999+0100'))?.temperatur).toBe(20);
   });
 
   it('06:04:41 should give first range', () => {
-    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 06:04:41'))?.temperatur).toBe(18);
+    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 06:04:41+0100'))?.temperatur).toBe(18);
   });
 });
