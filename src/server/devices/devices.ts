@@ -251,7 +251,7 @@ export class Devices {
   }
 
   private createEnergyManager(cDevConf: deviceConfig) {
-    const devInfo: DeviceInfo = new DeviceInfo(cDevConf);
+    const devInfo: DeviceInfo = new DeviceInfo(cDevConf, true);
     const fullName: string = `${Devices.IDENTIFIER_JSEnergyManager}-${devInfo.devID}`;
     devInfo.allDevicesKey = fullName;
     Devices.energymanager = new JsObjectEnergyManager(devInfo);

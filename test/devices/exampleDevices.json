@@ -109,6 +109,27 @@
       "owner": "system.user.admin",
       "ownerGroup": "system.group.administrator"
     }
+  },
+  "javascript.0.00-EnergyManager.CurrentProduction": {
+    "common": {
+      "name": "00-EnergyManager.CurrentProduction",
+      "unit": "W",
+      "min": 0,
+      "type": "number",
+      "role": "value.energy"
+    },
+    "native": {},
+    "type": "state",
+    "from": "system.adapter.javascript.0",
+    "user": "system.user.admin",
+    "ts": 1646850507882,
+    "_id": "javascript.0.00-EnergyManager.CurrentProduction",
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
   }
 }
 
