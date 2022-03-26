@@ -8,7 +8,6 @@ import { CurrentIlluminationDataPoint } from '../../../models/persistence/Curren
 import { iPersistenceSettings } from '../../config/iConfig';
 import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
 import { Pool } from 'pg';
-import * as fs from 'fs';
 import { ServerLogService } from '../log-service/log-service';
 import { LogLevel } from '../../../models/logLevel';
 import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
@@ -79,7 +78,136 @@ values ('${new Date().toISOString()}',${hzGrp.humidity},${hzGrp.iTemperatur},${h
   async initialize(): Promise<void> {
     await this.psql.connect();
     // Execute BasicRoomsDDL
-    await this.psql.query(fs.readFileSync('./postgres/ddlBasicRooms.sql').toString());
+    await this.psql.query(
+      `
+DO $$
+BEGIN
+    IF (SELECT to_regclass('hoffmation_schema."BasicRooms"') IS NULL) Then
+create table "BasicRooms"
+(
+    name  varchar(30) not null
+        constraint table_name_pk
+            primary key,
+    etage integer
+);
+
+alter table "BasicRooms"
+    owner to postgres;
+
+create unique index table_name_name_uindex
+    on "BasicRooms" (name);
+
+    END IF;
+    IF (SELECT to_regclass('hoffmation_schema."CurrentIllumination"') IS NULL) Then
+create table "CurrentIllumination"
+(
+    "roomName"            varchar(30)
+        constraint currentillumination_basicrooms_name_fk
+            references hoffmation_schema."BasicRooms",
+    "deviceID"            integer not null,
+    "currentIllumination" double precision,
+    date                  timestamp with time zone,
+    "lightIsOn"           boolean
+);
+
+alter table "CurrentIllumination"
+    owner to postgres;
+    END IF;
+    IF (SELECT to_regclass('hoffmation_schema."DailyMovementCount"') IS NULL) Then
+-- auto-generated definition
+create table "DailyMovementCount"
+(
+    counter    integer,
+    date       timestamp   not null,
+    "deviceID" varchar(60) not null,
+    "roomName" varchar(30) not null
+        constraint dailymovementcount_basicrooms_name_fk
+            references hoffmation_schema."BasicRooms",
+    constraint dailymovementcount_pk
+        primary key (date, "deviceID")
+);
+
+alter table "DailyMovementCount"
+    owner to postgres;
+
+
+    END IF;
+    IF (SELECT to_regclass('hoffmation_schema."EnergyCalculation"') IS NULL) Then
+create table "EnergyCalculation"
+(
+    "startDate"           timestamp not null
+        constraint energycalculation_pk
+            primary key,
+    "endDate"             timestamp,
+    "selfConsumedWattage" double precision,
+    "injectedWattage"     double precision,
+    "drawnWattage"        double precision,
+    "costDrawn"           double precision,
+    "earnedInjected"      double precision,
+    "savedSelfConsume"    double precision
+);
+
+alter table "EnergyCalculation"
+    owner to postgres;
+
+create unique index energycalculation_startdate_uindex
+    on "EnergyCalculation" ("startDate");
+
+    END IF;
+    IF (SELECT to_regclass('hoffmation_schema."HeatGroupCollection"') IS NULL) Then
+create table "HeatGroupCollection"
+(
+    date             timestamp,
+    humidity         integer,
+    "istTemperatur"  double precision,
+    level            integer,
+    name             varchar(60) not null
+        constraint heatgroupcollection_pk
+            primary key,
+    "sollTemperatur" double precision
+);
+
+alter table "HeatGroupCollection"
+    owner to postgres;
+
+create unique index heatgroupcollection_name_uindex
+    on "HeatGroupCollection" (name);
+
+    END IF;
+    IF (SELECT to_regclass('hoffmation_schema."PresenceToday"') IS NULL) Then
+create table "PresenceToday"
+(
+    counter    integer,
+    "deviceID" varchar(60) not null
+        constraint presencetoday_pk
+            primary key
+);
+
+alter table "PresenceToday"
+    owner to postgres;
+
+create unique index presencetoday_deviceid_uindex
+    on "PresenceToday" ("deviceID");
+    END IF;
+    IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
+create table "TemperaturData"
+(
+    date             timestamp,
+    humidity         integer,
+    "istTemperatur"  double precision,
+    level            integer,
+    name             text,
+    "sollTemperatur" double precision,
+    constraint temperaturdata_pk
+        unique (date, name)
+);
+
+alter table "TemperaturData"
+    owner to postgres;
+    END IF;
+END
+$$;`,
+    );
   }
 
   persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
