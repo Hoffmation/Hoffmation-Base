@@ -16,4 +16,7 @@ describe('Devices', () => {
     const newObject: string = JSON.parse(json);
     expect(Object.keys(newObject).length > 0).toBeTruthy();
   });
+  afterAll(() => {
+    Devices.energymanager?.cleanup();
+  });
 });

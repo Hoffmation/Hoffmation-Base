@@ -15,4 +15,6 @@ export interface iEnergyManager extends IoBrokerBaseDevice {
 
   addExcessConsumer(device: iExcessEnergyConsumer): void;
   recalculatePowerSharing(): void;
+
+  cleanup(): void;
 }
