@@ -65,7 +65,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
         this.log(LogLevel.DeepTrace, `ZigbeeShutter  initialized with calibration data`);
       })
       .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err.message}`);
+        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err?.message ?? err}`);
       });
   }
 

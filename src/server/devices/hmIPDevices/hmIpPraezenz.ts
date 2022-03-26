@@ -58,7 +58,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
         this.initialized = true;
       })
       .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err.message}`);
+        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
       });
   }
 

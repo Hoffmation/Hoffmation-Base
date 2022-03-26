@@ -43,7 +43,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
         this._initialized = true;
       })
       .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err.message}`);
+        this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err?.message ?? err}`);
       });
   }
 

@@ -71,7 +71,7 @@ values ('${new Date().toISOString()}',${hzGrp.humidity},${hzGrp.iTemperatur},${h
   getShutterCalibration(_device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
     return new Promise<ShutterCalibration>((_res, reject) => {
-      reject();
+      reject('Not Implemented');
     });
   }
 

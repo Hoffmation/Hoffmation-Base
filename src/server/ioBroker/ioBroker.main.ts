@@ -66,7 +66,7 @@ export class ioBrokerMain {
       console.log('connected');
       this.servConn.getStates(null, (err, _states) => {
         if (err !== null && err !== undefined) {
-          ServerLogService.writeLog(LogLevel.Info, `Iobroker Error: ${err.message}\n${err.stack}`);
+          ServerLogService.writeLog(LogLevel.Info, `Iobroker Error: ${err?.message ?? err}\n${err.stack}`);
         }
         if (_states === undefined) {
           return;
