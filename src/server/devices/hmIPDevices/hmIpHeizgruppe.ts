@@ -137,24 +137,20 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
       return;
     }
 
-    for (const name in this._automaticPoints) {
-      if (this._automaticPoints[name] === undefined) {
-        continue;
-      }
+    const setting: TemperaturSettings | undefined = TemperaturSettings.getActiveSetting(this._automaticPoints, new Date());
 
-      const settings: TemperaturSettings = this._automaticPoints[name];
-      if (!settings.isNowInRange()) {
-        continue;
-      }
+    if (setting === undefined) {
+      this.log(LogLevel.Warn, `Undefined Heating Timestamp.`);
+      this.desiredTemperatur = this._automaticFallBackTemperatur;
+      return;
+    }
 
-      if (this._desiredTemperatur !== settings.temperatur) {
-        this.log(
-          LogLevel.Debug,
-          `Automatische Temperaturanpassung für ${this.info.customName} auf ${settings.temperatur}°C`,
-        );
-        this.desiredTemperatur = settings.temperatur ?? this._automaticFallBackTemperatur;
-      }
-      break;
+    if (this._desiredTemperatur !== setting.temperatur) {
+      this.log(
+        LogLevel.Debug,
+        `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperatur}°C`,
+      );
+      this.desiredTemperatur = setting.temperatur ?? this._automaticFallBackTemperatur;
     }
 
     dbo?.addTemperaturDataPoint(this);
