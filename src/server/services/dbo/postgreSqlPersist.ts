@@ -208,6 +208,8 @@ alter table "TemperaturData"
 END
 $$;`,
     );
+    this.initialized = true;
+    ServerLogService.writeLog(LogLevel.Info, `Postgres DB initialized`);
   }
 
   persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
