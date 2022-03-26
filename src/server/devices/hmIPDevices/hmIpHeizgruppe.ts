@@ -137,7 +137,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
       return;
     }
 
-    const setting: TemperaturSettings | undefined = TemperaturSettings.getActiveSetting(this._automaticPoints, new Date());
+    const setting: TemperaturSettings | undefined = TemperaturSettings.getActiveSetting(
+      this._automaticPoints,
+      new Date(),
+    );
 
     if (setting === undefined) {
       this.log(LogLevel.Warn, `Undefined Heating Timestamp.`);
