@@ -37,6 +37,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
 
   public constructor(info: DeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
+    this.log(LogLevel.Info, `Creating Energy Manager Device`);
     this._iDatabaseLoggerInterval = Utils.guardedInterval(
       () => {
         this.persist();
@@ -102,6 +103,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   private persist() {
     const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
     if (obj.drawnWattage === 0 && obj.injectedWattage === 0 && obj.selfConsumedWattage === 0) {
+      this.log(LogLevel.Warn, `Not persisting energy Data, as all values are 0.`);
       return;
     }
     this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
@@ -113,5 +115,6 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     obj.selfConsumedWattage = Utils.round(obj.selfConsumedWattage, 4);
     obj.drawnWattage = Utils.round(obj.drawnWattage, 4);
     dbo?.persistEnergyManager(obj);
+    this.log(LogLevel.Info, `Persisting energy Manager Data.`);
   }
 }

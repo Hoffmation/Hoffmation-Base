@@ -70,6 +70,7 @@ export class Devices {
       } else if (cName.indexOf('00-Zigbee') === 0) {
         this.processZigbeeDevice(cDevConf);
       } else if (cName.indexOf('00-EnergyManager') === 0) {
+        ServerLogService.writeLog(LogLevel.Info, `Found Energy-Manager in Device json.`);
         this.createEnergyManager(cDevConf);
       }
     }
