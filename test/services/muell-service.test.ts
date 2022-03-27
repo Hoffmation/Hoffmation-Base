@@ -16,5 +16,6 @@ describe('MuellService', () => {
     expect(MuellService.brauneTonne.nextDate).toBeDefined();
     expect(MuellService.blaueTonne.nextDate).toBeDefined();
     expect(MuellService.gelbeTonne.nextDate).toBeDefined();
+    console.log('Next Graue Tonne for manual test: ', MuellService.graueTonne.nextDate);
   });
 });

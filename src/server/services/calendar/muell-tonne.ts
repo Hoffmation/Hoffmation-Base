@@ -36,8 +36,9 @@ export class MuellTonne {
       return;
     }
     const todayMidnight: number = new Date().setHours(0, 0, 0, 0);
-    const tomorowMidnight: number = todayMidnight + MuellTonne.oneDay;
-    const tomorowAfterMidnight: number = tomorowMidnight + MuellTonne.oneDay;
+    const todayMidnightDate: Date = new Date(todayMidnight);
+    const tomorowMidnight: number = new Date(todayMidnight).setDate(todayMidnightDate.getDate() + 1);
+    const tomorowAfterMidnight: number = new Date(todayMidnight).setDate(todayMidnightDate.getDate() + 2);
     const nextTimestamp: number = this.nextDate.getTime();
 
     const daysTilNextEvent: number = (nextTimestamp - todayMidnight) / MuellTonne.oneDay;
