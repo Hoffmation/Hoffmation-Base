@@ -141,7 +141,7 @@ create table "EnergyCalculation"
     "endDate"             timestamp,
     "selfConsumedKwH" double precision,
     "injectedKwH"     double precision,
-    "drawnKwH"        double precision,
+    "drawnKwH"        double precision
 );
 
 alter table "EnergyCalculation"
