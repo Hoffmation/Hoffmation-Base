@@ -292,12 +292,12 @@ LIMIT ${limit}
 
   persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
-insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedWattage", "injectedWattage",
-                                                   "drawnWattage", "costDrawn", "earnedInjected", "savedSelfConsume")
+insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
+                                                   "drawnKwH", "costDrawn", "earnedInjected", "savedSelfConsume")
 values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.startMs).toISOString()}',
-        ${calc.selfConsumedWattage}, ${calc.injectedWattage}, ${calc.drawnWattage}, ${calc.costDrawn}, ${
-      calc.earnedInjected
-    }, ${calc.savedSelfConsume});
+        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.costDrawn}, ${calc.earnedInjected}, ${
+      calc.savedSelfConsume
+    });
     `);
   }
 }

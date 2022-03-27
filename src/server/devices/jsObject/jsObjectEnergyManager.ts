@@ -92,28 +92,28 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     const now = Utils.nowMS();
     const duration = now - this._lastPersistenceCalculation;
     if (this.excessEnergy < 0) {
-      this._nextPersistEntry.drawnWattage += Utils.kWh(this.excessEnergy * -1, duration);
+      this._nextPersistEntry.drawnKwH += Utils.kWh(this.excessEnergy * -1, duration);
     } else {
-      this._nextPersistEntry.injectedWattage += Utils.kWh(this.excessEnergy, duration);
-      this._nextPersistEntry.selfConsumedWattage += Utils.kWh(this.totalConsumption, duration);
+      this._nextPersistEntry.injectedKwH += Utils.kWh(this.excessEnergy, duration);
+      this._nextPersistEntry.selfConsumedKwH += Utils.kWh(this.totalConsumption, duration);
     }
     this._lastPersistenceCalculation = now;
   }
 
   private persist() {
     const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
-    if (obj.drawnWattage === 0 && obj.injectedWattage === 0 && obj.selfConsumedWattage === 0) {
+    if (obj.drawnKwH === 0 && obj.injectedKwH === 0 && obj.selfConsumedKwH === 0) {
       this.log(LogLevel.Warn, `Not persisting energy Data, as all values are 0.`);
       return;
     }
     this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
     obj.endMs = this._lastPersistenceCalculation;
-    obj.earnedInjected = Utils.round(obj.injectedWattage * (SettingsService.settings.injectWattagePrice ?? 0.06), 4);
-    obj.savedSelfConsume = Utils.round(obj.selfConsumedWattage * SettingsService.settings.wattagePrice, 4);
-    obj.costDrawn = Utils.round(obj.selfConsumedWattage * SettingsService.settings.wattagePrice, 4);
-    obj.injectedWattage = Utils.round(obj.injectedWattage, 4);
-    obj.selfConsumedWattage = Utils.round(obj.selfConsumedWattage, 4);
-    obj.drawnWattage = Utils.round(obj.drawnWattage, 4);
+    obj.earnedInjected = Utils.round(obj.injectedKwH * (SettingsService.settings.injectWattagePrice ?? 0.06), 4);
+    obj.savedSelfConsume = Utils.round(obj.selfConsumedKwH * SettingsService.settings.wattagePrice, 4);
+    obj.costDrawn = Utils.round(obj.selfConsumedKwH * SettingsService.settings.wattagePrice, 4);
+    obj.injectedKwH = Utils.round(obj.injectedKwH, 4);
+    obj.selfConsumedKwH = Utils.round(obj.selfConsumedKwH, 4);
+    obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
     dbo?.persistEnergyManager(obj);
     this.log(LogLevel.Info, `Persisting energy Manager Data.`);
   }

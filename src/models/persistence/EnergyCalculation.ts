@@ -1,7 +1,7 @@
 export class EnergyCalculation {
-  public drawnWattage: number = 0;
-  public injectedWattage: number = 0;
-  public selfConsumedWattage: number = 0;
+  public drawnKwH: number = 0;
+  public injectedKwH: number = 0;
+  public selfConsumedKwH: number = 0;
   public costDrawn: number = 0;
   public earnedInjected: number = 0;
   public savedSelfConsume: number = 0;
