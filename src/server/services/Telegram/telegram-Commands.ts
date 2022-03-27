@@ -228,6 +228,25 @@ export class TelegramCommands {
       ),
     );
 
+    if (Devices.energymanager !== undefined) {
+      TelegramService.addMessageCallback(
+        new TelegramMessageCallback(
+          'EnergyManager',
+          /\/get_energy_values/,
+          async (m: TelegramBot.Message): Promise<boolean> => {
+            if (m.from === undefined) return false;
+            const response: string[] = ['Current Energy Manager values:'];
+            response.push(`Production: ${Devices.energymanager?.currentProduction}W`);
+            response.push(`Total Consumption: ${Devices.energymanager?.totalConsumption}W`);
+            response.push(`Base Consumption: ${Devices.energymanager?.excessEnergyConsumerConsumption}W`);
+            TelegramService.sendMessage([m.from.id], response.join('\n'));
+            return true;
+          },
+          `Retrieves the current energy manager values`,
+        ),
+      );
+    }
+
     TelegramService.addMessageCallback(
       new TelegramMessageCallback(
         'SonosTest',
