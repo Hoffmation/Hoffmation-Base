@@ -139,12 +139,9 @@ create table "EnergyCalculation"
         constraint energycalculation_pk
             primary key,
     "endDate"             timestamp,
-    "selfConsumedWattage" double precision,
-    "injectedWattage"     double precision,
-    "drawnWattage"        double precision,
-    "costDrawn"           double precision,
-    "earnedInjected"      double precision,
-    "savedSelfConsume"    double precision
+    "selfConsumedKwH" double precision,
+    "injectedKwH"     double precision,
+    "drawnKwH"        double precision,
 );
 
 alter table "EnergyCalculation"
@@ -293,11 +290,9 @@ LIMIT ${limit}
   persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
 insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
-                                                   "drawnKwH", "costDrawn", "earnedInjected", "savedSelfConsume")
+                                                   "drawnKwH")
 values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.startMs).toISOString()}',
-        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.costDrawn}, ${calc.earnedInjected}, ${
-      calc.savedSelfConsume
-    });
+        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH});
     `);
   }
 }
