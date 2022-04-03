@@ -63,6 +63,11 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     }
   }
 
+  /**
+   * @inheritDoc
+   * @param {number} brightness The desired brightness in percent
+   * @param {number} transitionTime The transition time for the brightness, to switch smoothly
+   */
   public setLight(
     pValue: boolean,
     timeout: number = -1,
