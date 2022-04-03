@@ -1,9 +1,10 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 import { iLamp } from '../iLamp';
-import { TimeOfDay } from '../../services/time-callback-service';
+import { TimeCallbackService, TimeOfDay } from '../../services';
+import { Utils } from '../../services';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   public get lightOn(): boolean {
@@ -23,22 +24,45 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     }
   }
 
+  /** @inheritdoc */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     this.log(LogLevel.Debug, `Lampenaktor schalten Wert: ${pValue}`);
+    if (this.settings.isStromStoss) {
+      timeout = 3000;
+      Utils.guardedTimeout(
+        () => {
+          if (this.room && this.room.PraesenzGroup?.anyPresent()) {
+            this.setLight(true, -1, true);
+          }
+        },
+        this.settings.stromStossResendTime * 1000,
+        this,
+      );
+    }
     super.setActuator(pValue, timeout, force);
   }
 
-  public toggleLight(force: boolean = false): boolean {
-    return super.toggleActuator(force);
+  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
+    const newVal = this.queuedValue !== null ? !this.queuedValue : !this.lightOn;
+    const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
+    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
+      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
+    }
+    if (newVal && time !== undefined) {
+      this.setTimeBased(time, timeout, force);
+      return true;
+    }
+    this.setLight(newVal, timeout, force);
+    return newVal;
   }
 
-  public setTimeBased(time: TimeOfDay): void {
+  public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
     if (
       (time === TimeOfDay.Night && this.settings.nightOn) ||
       (time === TimeOfDay.BeforeSunrise && this.settings.dawnOn) ||
       (time === TimeOfDay.AfterSunset && this.settings.duskOn)
     ) {
-      this.setLight(true);
+      this.setLight(true, timeout, force);
     }
   }
 }

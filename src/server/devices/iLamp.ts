@@ -1,6 +1,6 @@
-import { ActuatorSettings } from '../../models/deviceSettings/actuatorSettings';
-import { RoomBase } from '../../models/rooms/RoomBase';
-import { TimeOfDay } from '../services/time-callback-service';
+import { ActuatorSettings } from '../../models';
+import { RoomBase } from '../../models';
+import { TimeOfDay } from '../services';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 
 export interface iLamp extends IoBrokerBaseDevice {
@@ -8,6 +8,13 @@ export interface iLamp extends IoBrokerBaseDevice {
   lightOn: boolean;
   room: RoomBase | undefined;
 
-  setTimeBased(time: TimeOfDay): void;
+  setTimeBased(time: TimeOfDay, timeout: number, force: boolean): void;
+  toggleLight(time: TimeOfDay, force: boolean, calculateTime: boolean): void;
+  /**
+   * This function sets the light to a specific value
+   * @param pValue The desired value
+   * @param timeout A chosen Timeout after which the light should be reset
+   * @param force Wether it is a action based on a user action, to override certain rules
+   */
   setLight(pValue: boolean, timeout: number, force: boolean): void;
 }

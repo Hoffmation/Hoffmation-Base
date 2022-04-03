@@ -1,12 +1,12 @@
-import { ZigbeeIkeaSteckdose } from '../zigbee/zigbeeIkeaSteckdose';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { ZigbeeIlluLedRGBCCT } from '../zigbee/zigbeeIlluLedRGBCCT';
+import { ZigbeeIkeaSteckdose } from '../zigbee';
+import { TimeCallbackService, TimeOfDay } from '../../services';
+import { ZigbeeIlluLedRGBCCT } from '../zigbee';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iLamp } from '../iLamp';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 
 export class LampenGroup extends BaseGroup {
   public constructor(roomName: string, lampenIds: string[] = [], steckerIds: string[] = [], ledIds: string[] = []) {
@@ -91,7 +91,7 @@ export class LampenGroup extends BaseGroup {
         const timeout: number = pValue && force ? 30 * 60 * 1000 : -1;
 
         if (pValue && time !== undefined) {
-          s.setTimeBased(time);
+          s.setTimeBased(time, timeout, force);
         } else {
           s.setLight(pValue, timeout, force);
         }

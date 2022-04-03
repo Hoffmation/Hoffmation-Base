@@ -1,16 +1,15 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
-import { ActuatorSettings } from '../../../models/deviceSettings/actuatorSettings';
+import { Utils } from '../../services';
+import { ActuatorSettings } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
-import { LogLevel } from '../../../models/logLevel';
-import { TimeOfDay } from '../../services/time-callback-service';
+import { LogLevel } from '../../../models';
+import { TimeCallbackService, TimeOfDay } from '../../services';
 
 export class HmIpLampe extends HmIPDevice implements iLamp {
   public lightOn: boolean = false;
   public queuedLightValue: boolean | null = null;
-  public isStromStoss: boolean = false;
   public settings: ActuatorSettings = new ActuatorSettings();
   private lightOnSwitchID: string = '';
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
@@ -34,11 +33,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     }
   }
 
-  /**
-   * This function thats the light to a specific value
-   * @param pValue The desired value
-   * @param timeout A chosen Timeout after which the light should be reset
-   */
+  /** @inheritdoc */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     if (!force && pValue === this.lightOn && this.queuedLightValue === null) {
       this.log(LogLevel.DeepTrace, `Skip light command as it is already ${pValue}`);
@@ -63,8 +58,17 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     });
     this.queuedLightValue = pValue;
 
-    if (this.isStromStoss) {
-      timeout = 5000;
+    if (this.settings.isStromStoss) {
+      timeout = 3000;
+      Utils.guardedTimeout(
+        () => {
+          if (this.room && this.room.PraesenzGroup?.anyPresent()) {
+            this.setLight(true, -1, true);
+          }
+        },
+        this.settings.stromStossResendTime * 1000,
+        this,
+      );
     }
 
     if (this._turnOffTimeout !== undefined) {
@@ -92,24 +96,27 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     );
   }
 
-  /**
-   * Switch the current condition of the light
-   * @param force Whether this is a forcing action skipping delays and locks
-   */
-  public toggleLight(force: boolean = false): boolean {
+  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
     const newVal = this.queuedLightValue !== null ? !this.queuedLightValue : !this.lightOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
+    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
+      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
+    }
+    if (newVal && time !== undefined) {
+      this.setTimeBased(time, timeout, force);
+      return true;
+    }
     this.setLight(newVal, timeout, force);
     return newVal;
   }
 
-  public setTimeBased(time: TimeOfDay): void {
+  public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
     if (
       (time === TimeOfDay.Night && this.settings.nightOn) ||
       (time === TimeOfDay.BeforeSunrise && this.settings.dawnOn) ||
       (time === TimeOfDay.AfterSunset && this.settings.duskOn)
     ) {
-      this.setLight(true);
+      this.setLight(true, timeout, force);
     }
   }
 }
