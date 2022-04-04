@@ -3,11 +3,24 @@ import { iEnergyManager } from '../iEnergyManager';
 import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
-import { Utils } from '../../services/utils/utils';
+import { LogLevel } from '../../../models';
+import { Utils } from '../../services';
 import { dbo, EnergyCalculation, SettingsService } from '../../../index';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
+  /**
+   * Example:
+   * ________________________________________
+   * | ExcessEnergy | 500W  | -500W | -500W |
+   * | Production   | 1500W | 500W  | 0W    |
+   * _______________________________________
+   * | Consumption  | 1000W | 1000W | 500W  |
+   * | Injecting    | 500W  | 0W    | 0W    |
+   * | drawing      |    0W | 500W  | 500W  |
+   * | selfConsume  | 1000W | 500W  | 0W    |
+   * ________________________________________
+   **/
+
   public get excessEnergyConsumerConsumption(): number {
     return this._excessEnergyConsumerConsumption;
   }
@@ -21,6 +34,18 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
 
   public get totalConsumption(): number {
     return this._currentProduction - this._excessEnergy;
+  }
+
+  public get injectingWattage(): number {
+    return Math.max(this._excessEnergy, 0);
+  }
+
+  public get drawingWattage(): number {
+    return Math.min(this._excessEnergy, 0) * -1;
+  }
+
+  public get selfConsumingWattage(): number {
+    return Math.min(this.totalConsumption, this._currentProduction);
   }
 
   public get currentProduction(): number {
@@ -91,12 +116,9 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   private calculatePersistenceValues(): void {
     const now = Utils.nowMS();
     const duration = now - this._lastPersistenceCalculation;
-    if (this.excessEnergy < 0) {
-      this._nextPersistEntry.drawnKwH += Utils.kWh(this.excessEnergy * -1, duration);
-    } else {
-      this._nextPersistEntry.injectedKwH += Utils.kWh(this.excessEnergy, duration);
-      this._nextPersistEntry.selfConsumedKwH += Utils.kWh(this.totalConsumption, duration);
-    }
+    this._nextPersistEntry.drawnKwH += Utils.kWh(this.drawingWattage, duration);
+    this._nextPersistEntry.injectedKwH += Utils.kWh(this.injectingWattage, duration);
+    this._nextPersistEntry.selfConsumedKwH += Utils.kWh(this.selfConsumingWattage, duration);
     this._lastPersistenceCalculation = now;
   }
 

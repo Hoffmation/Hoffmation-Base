@@ -1,15 +1,15 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { DeviceType } from '../../devices/deviceType';
+import { DeviceType } from '../../devices';
 import { TelegramMessageCallback } from './telegramMessageCalback';
 import { ShutterService } from '../ShutterService';
-import { Griffe } from '../../devices/Griffe';
-import { ZigbeeAquaraVibra } from '../../devices/zigbee/zigbeeAquaraVibra';
-import { Heizgruppen } from '../../devices/Heizgruppen';
-import { HmIpTaster } from '../../devices/hmIPDevices/hmIpTaster';
+import { Griffe } from '../../devices';
+import { ZigbeeAquaraVibra } from '../../devices';
+import { Heizgruppen } from '../../devices';
+import { HmIpTaster } from '../../devices';
 import { TelegramService } from './telegram-service';
-import { Devices } from '../../devices/devices';
-import { SonosService } from '../Sonos/sonos-service';
-import { RoomService } from '../room-service/room-service';
+import { Devices } from '../../devices';
+import { SonosService } from '../Sonos';
+import { RoomService } from '../room-service';
 
 export class TelegramCommands {
   public static initialize(): void {
@@ -238,7 +238,10 @@ export class TelegramCommands {
             const response: string[] = ['Current Energy Manager values:'];
             response.push(`Production: ${Devices.energymanager?.currentProduction}W`);
             response.push(`Total Consumption: ${Devices.energymanager?.totalConsumption}W`);
-            response.push(`Base Consumption: ${Devices.energymanager?.excessEnergyConsumerConsumption}W`);
+            response.push(`Excess Consumption: ${Devices.energymanager?.excessEnergyConsumerConsumption}W`);
+            response.push(`Drawing Wattage: ${Devices.energymanager?.drawingWattage}W`);
+            response.push(`Self Consuming Wattage: ${Devices.energymanager?.selfConsumingWattage}W`);
+            response.push(`Injecting Wattage: ${Devices.energymanager?.injectingWattage}W`);
             TelegramService.sendMessage([m.from.id], response.join('\n'));
             return true;
           },
