@@ -130,12 +130,12 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
         this._powerValuePhaseA = state.val as number;
         break;
       case 'CurrentExcessEnergyPhaseB':
-        this.log(LogLevel.Trace, `Current excess energyA update to ${state.val}`);
-        this._powerValuePhaseA = state.val as number;
+        this.log(LogLevel.Trace, `Current excess energyB update to ${state.val}`);
+        this._powerValuePhaseB = state.val as number;
         break;
       case 'CurrentExcessEnergyPhaseC':
-        this.log(LogLevel.Trace, `Current excess energyA update to ${state.val}`);
-        this._powerValuePhaseA = state.val as number;
+        this.log(LogLevel.Trace, `Current excess energyC update to ${state.val}`);
+        this._powerValuePhaseC = state.val as number;
         break;
       case 'CurrentProduction':
         this.log(LogLevel.Trace, `Current Production Update to ${state.val}`);
