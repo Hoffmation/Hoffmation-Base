@@ -1,43 +1,43 @@
-import { deviceConfig } from '../../models/deviceConfig';
+import { deviceConfig } from '../../models';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { HmIPDevice } from './hmIPDevices/hmIpDevice';
-import { ZigbeeDevice } from './zigbee/zigbeeDevice';
+import { HmIPDevice } from './hmIPDevices';
+import { ZigbeeDevice } from './zigbee';
 import { DeviceType } from './deviceType';
-import { HmIpPraezenz } from './hmIPDevices/hmIpPraezenz';
-import { ServerLogService } from '../services/log-service/log-service';
-import { iRoomImportEnforcer } from '../../models/rooms/iRoomImportEnforcer';
+import { HmIpPraezenz } from './hmIPDevices';
+import { ServerLogService } from '../services';
+import { iRoomImportEnforcer } from '../../models';
 import { DeviceInfo } from './DeviceInfo';
-import { LogLevel } from '../../models/logLevel';
-import { HmIpBewegung } from './hmIPDevices/hmIpBewegung';
-import { ZigbeeAquaraVibra } from './zigbee/zigbeeAquaraVibra';
-import { ZigbeeAquaraMotion } from './zigbee/zigbeeAquaraMotion';
-import { ZigbeeIkeaSteckdose } from './zigbee/zigbeeIkeaSteckdose';
-import { ZigbeeIlluLedRGBCCT } from './zigbee/zigbeeIlluLedRGBCCT';
-import { ZigbeeIlluDimmer } from './zigbee/zigbeeIlluDimmer';
-import { ZigbeeHeimanSmoke } from './zigbee/zigbeeHeimanSmoke';
-import { ZigbeeAquaraWater } from './zigbee/zigbeeAquaraWater';
-import { ZigbeeBlitzShp } from './zigbee/zigbeeBlitzShp';
-import { ZigbeeIlluLampe } from './zigbee/zigbeeIlluLampe';
-import { ZigbeeIlluActuator } from './zigbee/zigbeeIlluActuator';
-import { HmIpLampe } from './hmIPDevices/hmIpLampe';
-import { HmIpRoll } from './hmIPDevices/hmIpRoll';
-import { HmIpTaster } from './hmIPDevices/hmIpTaster';
-import { HmIpWippe } from './hmIPDevices/hmIpWippe';
-import { HmIpGriff } from './hmIPDevices/hmIpGriff';
-import { HmIpTherm } from './hmIPDevices/hmIpTherm';
-import { HmIpHeizung } from './hmIPDevices/hmIpHeizung';
-import { HmIpTuer } from './hmIPDevices/hmIpTuer';
-import { HmIpHeizgruppe } from './hmIPDevices/hmIpHeizgruppe';
-import { ZigbeeIlluShutter } from './zigbee/zigbeeIlluShutter';
-import { ZigbeeSMaBiTMagnetContact } from './zigbee/zigbeeSMaBiTMagnetContact';
-import { ZigbeeSonoffMotion } from './zigbee/zigbeeSonoffMotion';
-import { ZigbeeMotionSensor } from './zigbee/zigbeeMotionSensor';
-import { HmIpAccessPoint } from './hmIPDevices/hmIpAccessPoint';
-import { ZigbeeAqaraMagnetContact } from './zigbee/zigbeeAqaraMagnetContact';
-import { ZigbeeSonoffTemp } from './zigbee/zigbeeSonoffTemp';
-import { ZigbeeAqaraOpple3Switch } from './zigbee/zigbeeAqaraOpple3Switch';
+import { LogLevel } from '../../models';
+import { HmIpBewegung } from './hmIPDevices';
+import { ZigbeeAquaraVibra } from './zigbee';
+import { ZigbeeAquaraMotion } from './zigbee';
+import { ZigbeeIkeaSteckdose } from './zigbee';
+import { ZigbeeIlluLedRGBCCT } from './zigbee';
+import { ZigbeeIlluDimmer } from './zigbee';
+import { ZigbeeHeimanSmoke } from './zigbee';
+import { ZigbeeAquaraWater } from './zigbee';
+import { ZigbeeBlitzShp } from './zigbee';
+import { ZigbeeIlluLampe } from './zigbee';
+import { ZigbeeIlluActuator } from './zigbee';
+import { HmIpLampe } from './hmIPDevices';
+import { HmIpRoll } from './hmIPDevices';
+import { HmIpTaster } from './hmIPDevices';
+import { HmIpWippe } from './hmIPDevices';
+import { HmIpGriff } from './hmIPDevices';
+import { HmIpTherm } from './hmIPDevices';
+import { HmIpHeizung } from './hmIPDevices';
+import { HmIpTuer } from './hmIPDevices';
+import { HmIpHeizgruppe } from './hmIPDevices';
+import { ZigbeeIlluShutter } from './zigbee';
+import { ZigbeeSMaBiTMagnetContact } from './zigbee';
+import { ZigbeeSonoffMotion } from './zigbee';
+import { ZigbeeMotionSensor } from './zigbee';
+import { HmIpAccessPoint } from './hmIPDevices';
+import { ZigbeeAqaraMagnetContact } from './zigbee';
+import { ZigbeeSonoffTemp } from './zigbee';
+import { ZigbeeAqaraOpple3Switch } from './zigbee';
 import { iEnergyManager } from './iEnergyManager';
-import { JsObjectEnergyManager } from './jsObject/jsObjectEnergyManager';
+import { JsObjectEnergyManager } from './jsObject';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -66,12 +66,12 @@ export class Devices {
       const cName: string = cDevConf.common.name;
 
       if (cName.indexOf('00-HmIP') === 0) {
-        this.processHMIPDevice(cDevConf);
+        Devices.processHMIPDevice(cDevConf);
       } else if (cName.indexOf('00-Zigbee') === 0) {
-        this.processZigbeeDevice(cDevConf);
+        Devices.processZigbeeDevice(cDevConf);
       } else if (cName.indexOf('00-EnergyManager') === 0) {
         ServerLogService.writeLog(LogLevel.Info, `Found Energy-Manager in Device json.`);
-        this.createEnergyManager(cDevConf);
+        Devices.createEnergyManager(cDevConf);
       }
     }
 
@@ -100,7 +100,7 @@ export class Devices {
     }
   }
 
-  private processZigbeeDevice(cDevConf: deviceConfig) {
+  private static processZigbeeDevice(cDevConf: deviceConfig) {
     const zigbeeInfo: DeviceInfo = new DeviceInfo(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${zigbeeInfo.devID}`;
     zigbeeInfo.allDevicesKey = fullName;
@@ -170,7 +170,7 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
-  private processHMIPDevice(cDevConf: deviceConfig) {
+  private static processHMIPDevice(cDevConf: deviceConfig) {
     const hmIPInfo: DeviceInfo = new DeviceInfo(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_HOMEMATIC}-${hmIPInfo.devID}`;
     hmIPInfo.allDevicesKey = fullName;
@@ -250,7 +250,7 @@ export class Devices {
     return result.join('\n');
   }
 
-  private createEnergyManager(cDevConf: deviceConfig) {
+  private static createEnergyManager(cDevConf: deviceConfig) {
     const devInfo: DeviceInfo = new DeviceInfo(cDevConf, true);
     const fullName: string = `${Devices.IDENTIFIER_JS}-${devInfo.devID}`;
     devInfo.allDevicesKey = fullName;

@@ -1,5 +1,4 @@
-import { MuellService } from '../../src/server/services/calendar/müll-service';
-import { ServerLogService } from '../../src/server/services/log-service/log-service';
+import { MuellService, ServerLogService } from '../../src';
 
 describe('MuellService', () => {
   jest.setTimeout(10000);

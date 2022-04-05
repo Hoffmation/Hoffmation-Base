@@ -1,5 +1,5 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { iEnergyManager } from '../iEnergyManager';
+import { iEnergyManager, PhaseState } from '../iEnergyManager';
 import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
@@ -11,13 +11,16 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   /**
    * Example:
    * ________________________________________
-   * | ExcessEnergy | 500W  | -500W | -500W |
-   * | Production   | 1500W | 500W  | 0W    |
-   * _______________________________________
-   * | Consumption  | 1000W | 1000W | 500W  |
-   * | Injecting    | 500W  | 0W    | 0W    |
-   * | drawing      |    0W | 500W  | 500W  |
-   * | selfConsume  | 1000W | 500W  | 0W    |
+   * | ExcessEnergyA | 200W  |  200W | -500W |
+   * | ExcessEnergyB | 300W  |  300W | -200W |
+   * | ExcessEnergyC | 100W  | -100W | -300W |
+   * | Production P  |  500W |  500W |    0W |
+   * | Production    | 1500W | 1500W |    0W |
+   * ________________________________________
+   * | Consumption   |  900W | 1100W | 1000W |
+   * | Injecting     |  600W |  500W |    0W |
+   * | drawing       |    0W |  100W | 1000W |
+   * | selfConsume   |  900W | 1000W |    0W |
    * ________________________________________
    **/
 
@@ -26,26 +29,47 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   }
 
   public get excessEnergy(): number {
-    return this._excessEnergy;
+    return Math.min(this._powerValuePhaseA, this._powerValuePhaseB, this._powerValuePhaseC);
   }
+
   public get baseConsumption(): number {
     return this.totalConsumption - this._excessEnergyConsumerConsumption;
   }
 
+  public get phaseCState(): PhaseState {
+    return this._phaseCState;
+  }
+
+  public get phaseBState(): PhaseState {
+    return this._phaseBState;
+  }
+
+  public get phaseAState(): PhaseState {
+    return this._phaseAState;
+  }
+
   public get totalConsumption(): number {
-    return this._currentProduction - this._excessEnergy;
+    return (
+      this.phaseAState.totalConsumptionWattage +
+      this.phaseBState.totalConsumptionWattage +
+      this.phaseCState.totalConsumptionWattage
+    );
   }
 
   public get injectingWattage(): number {
-    return Math.max(this._excessEnergy, 0);
+    return this.phaseAState.injectingWattage + this.phaseBState.injectingWattage + this.phaseCState.injectingWattage;
   }
 
   public get drawingWattage(): number {
-    return Math.min(this._excessEnergy, 0) * -1;
+    return this.phaseAState.drawingWattage + this.phaseBState.drawingWattage + this.phaseCState.drawingWattage;
   }
 
   public get selfConsumingWattage(): number {
-    return Math.min(this.totalConsumption, this._currentProduction);
+    return (
+      this.phaseAState.selfConsumingWattage +
+      this.phaseBState.selfConsumingWattage +
+      this.phaseCState.selfConsumingWattage
+    );
   }
 
   public get currentProduction(): number {
@@ -53,12 +77,17 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   }
 
   private _currentProduction: number = -1;
-  private _excessEnergy: number = -1;
   private _excessEnergyConsumerConsumption: number = 0;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
-  private _nextPersistEntry: EnergyCalculation;
   private _lastPersistenceCalculation: number = Utils.nowMS();
+  private _nextPersistEntry: EnergyCalculation;
+  private _powerValuePhaseA: number = -1;
+  private _powerValuePhaseB: number = -1;
+  private _powerValuePhaseC: number = -1;
+  private _phaseAState: PhaseState = new PhaseState(0, 0);
+  private _phaseBState: PhaseState = new PhaseState(0, 0);
+  private _phaseCState: PhaseState = new PhaseState(0, 0);
 
   public constructor(info: DeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
@@ -96,19 +125,31 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
       )}, override: ${pOverride}`,
     );
     switch (idSplit[3]) {
-      case 'CurrentExcessEnergy':
-        this.log(LogLevel.Trace, `Current excess energy update to ${state.val}`);
-        this.setExcessEnergy(state.val as number);
+      case 'CurrentExcessEnergyPhaseA':
+        this.log(LogLevel.Trace, `Current excess energyA update to ${state.val}`);
+        this._powerValuePhaseA = state.val as number;
+        break;
+      case 'CurrentExcessEnergyPhaseB':
+        this.log(LogLevel.Trace, `Current excess energyA update to ${state.val}`);
+        this._powerValuePhaseA = state.val as number;
+        break;
+      case 'CurrentExcessEnergyPhaseC':
+        this.log(LogLevel.Trace, `Current excess energyA update to ${state.val}`);
+        this._powerValuePhaseA = state.val as number;
         break;
       case 'CurrentProduction':
         this.log(LogLevel.Trace, `Current Production Update to ${state.val}`);
         this._currentProduction = state.val as number;
+        this.calculateExcessEnergy();
         break;
     }
   }
 
-  private setExcessEnergy(val: number) {
-    this._excessEnergy = val;
+  private calculateExcessEnergy() {
+    const phaseProduction: number = this._currentProduction / 3.0;
+    this._phaseAState = new PhaseState(this._powerValuePhaseA, phaseProduction);
+    this._phaseBState = new PhaseState(this._powerValuePhaseB, phaseProduction);
+    this._phaseCState = new PhaseState(this._powerValuePhaseC, phaseProduction);
     this.calculatePersistenceValues();
     this.recalculatePowerSharing();
   }
