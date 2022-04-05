@@ -79,6 +79,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   private _currentProduction: number = -1;
   private _excessEnergyConsumerConsumption: number = 0;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
+  private _iCalculationInterval: NodeJS.Timeout | null = null;
   private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
   private _lastPersistenceCalculation: number = Utils.nowMS();
   private _nextPersistEntry: EnergyCalculation;
@@ -92,6 +93,13 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   public constructor(info: DeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
     this.log(LogLevel.Info, `Creating Energy Manager Device`);
+    this._iCalculationInterval = Utils.guardedInterval(
+      () => {
+        this.calculateExcessEnergy();
+      },
+      5 * 1000,
+      this,
+    );
     this._iDatabaseLoggerInterval = Utils.guardedInterval(
       () => {
         this.persist();
@@ -106,6 +114,10 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     if (this._iDatabaseLoggerInterval !== null) {
       clearInterval(this._iDatabaseLoggerInterval);
       this._iDatabaseLoggerInterval = null;
+    }
+    if (this._iCalculationInterval !== null) {
+      clearInterval(this._iCalculationInterval);
+      this._iCalculationInterval = null;
     }
   }
 
@@ -140,7 +152,6 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
       case 'CurrentProduction':
         this.log(LogLevel.Trace, `Current Production Update to ${state.val}`);
         this._currentProduction = state.val as number;
-        this.calculateExcessEnergy();
         break;
     }
   }
