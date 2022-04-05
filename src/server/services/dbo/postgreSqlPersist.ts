@@ -1,16 +1,16 @@
 import { iPersist } from './iPersist';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
-import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { iPersistenceSettings } from '../../config/iConfig';
-import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
+import { RoomBase } from '../../../models';
+import { IoBrokerBaseDevice } from '../../devices';
+import { CountToday } from '../../../models';
+import { TemperaturDataPoint } from '../../../models';
+import { HmIpHeizgruppe } from '../../devices';
+import { CurrentIlluminationDataPoint } from '../../../models';
+import { iPersistenceSettings } from '../../config';
+import { ShutterCalibration } from '../../../models';
 import { Pool } from 'pg';
-import { ServerLogService } from '../log-service/log-service';
-import { LogLevel } from '../../../models/logLevel';
-import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
+import { ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models';
+import { EnergyCalculation } from '../../../models';
 
 export class PostgreSqlPersist implements iPersist {
   private psql: Pool;
@@ -291,7 +291,7 @@ LIMIT ${limit}
     this.query(`
 insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
                                                    "drawnKwH")
-values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.startMs).toISOString()}',
+values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOString()}',
         ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH});
     `);
   }
