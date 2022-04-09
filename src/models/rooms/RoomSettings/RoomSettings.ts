@@ -107,6 +107,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
 
   set sonnenUntergangRolloDelay(value: number) {
     this._sonnenUntergangRolloDelay = value;
+    this.recalcRolloOffset();
   }
 
   get movementResetTimer(): number {
