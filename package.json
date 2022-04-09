@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
-    "jest": "TZ=UTC jest",
+    "jest": "jest",
     "jest-coverage": "jest --coverage",
     "lint-check-all": "eslint ./**/{*.js,*.ts,*.test.ts} --no-error-on-unmatched-pattern",
     "lint-fix-all": "eslint ./**/{*.ts,*.test.ts} --fix --no-error-on-unmatched-pattern",

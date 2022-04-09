@@ -3,26 +3,34 @@ import { SunTimeOffsets, TimeCallback, TimeCallbackService, TimeCallbackType } f
 describe('TimeCallbackService', () => {
   it('next Maximum Time is Today and correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
-    const maximumOffset = offset.getNextMaximumSunset(new Date(1649529000000));
-    expect(maximumOffset.getTime()).toBe(1649536200000);
+    const expectedDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const sunRiseCalcDate: Date = new Date('4/9/2022, 8:30:00 AM');
+    const minimumOffset = offset.getNextMaximumSunset(sunRiseCalcDate);
+    expect(minimumOffset.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('next Maximum Time is Tomorrow and correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
-    const maximumOffset = offset.getNextMaximumSunset(new Date(1649539800000));
-    expect(maximumOffset.getTime()).toBe(1649622600000);
+    const expectedDate: Date = new Date('4/10/2022, 10:30:00 PM');
+    const sunRiseCalcDate: Date = new Date('4/9/2022, 11:30:00 PM');
+    const minimumOffset = offset.getNextMaximumSunset(sunRiseCalcDate);
+    expect(minimumOffset.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('next Minimum Time is today and correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
-    const minimumOffset = offset.getNextMinimumSunrise(new Date(1649557800000));
-    expect(minimumOffset.getTime()).toBe(1649565000000);
+    const expectedDate: Date = new Date('4/9/2022, 6:30:00 AM');
+    const sunRiseCalcDate: Date = new Date('4/9/2022, 00:30:00 AM');
+    const minimumOffset = offset.getNextMinimumSunrise(sunRiseCalcDate);
+    expect(minimumOffset.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('next Minimum Time is next Day and correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
-    const minimumOffset = offset.getNextMinimumSunrise(new Date(1649529000000));
-    expect(minimumOffset.getTime()).toBe(1649565000000);
+    const expectedDate: Date = new Date('4/10/2022, 6:30:00 AM');
+    const sunRiseCalcDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const minimumOffset = offset.getNextMinimumSunrise(sunRiseCalcDate);
+    expect(minimumOffset.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('Time Callback for Rollo Sunrise is calculated correct', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 4, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
@@ -34,12 +42,16 @@ describe('TimeCallbackService', () => {
       undefined,
       offset,
     );
-    TimeCallbackService.updateSunRise(new Date(1649543400000));
-    cb.recalcNextToDo(new Date(1649529000000));
-    expect(cb.nextToDo?.getTime()).toBe(1649566197828);
+    const sunRiseCalcDate: Date = new Date('4/10/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('4/10/2022, 5:10:08 AM');
+    TimeCallbackService.updateSunRise(sunRiseCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('Time Callback for Rollo Sunrise respects offset', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(10, 0, 6, 30, 22, 30);
+    const offset: SunTimeOffsets = new SunTimeOffsets(10, 0, 4, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
@@ -51,46 +63,37 @@ describe('TimeCallbackService', () => {
       undefined,
       offset,
     );
-    TimeCallbackService.updateSunRise(new Date(1649543400000));
-    cb.recalcNextToDo(new Date(1649529000000));
-    expect(cb.nextToDo?.getTime()).toBe(1649566797828);
+    const sunRiseCalcDate: Date = new Date('4/10/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('4/10/2022, 5:20:08 AM');
+    TimeCallbackService.updateSunRise(sunRiseCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('Time Callback for Rollo Sunrise respects min hours', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 7, 30, 22, 30);
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
       () => {
         /*Nothing*/
       },
-      0,
+      offset.sunrise,
       undefined,
       undefined,
       offset,
     );
-    TimeCallbackService.updateSunRise(new Date(1649543400000));
-    cb.recalcNextToDo(new Date(1649529000000));
-    expect(cb.nextToDo?.getTime()).toBe(1649568600000);
+    const sunRiseCalcDate: Date = new Date('4/10/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('4/10/2022, 5:30:00 AM');
+    TimeCallbackService.updateSunRise(sunRiseCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('Time Callback for Rollo Sunset is calculated correct', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
-      '',
-      TimeCallbackType.SunSet,
-      () => {
-        /*Nothing*/
-      },
-      0,
-      undefined,
-      undefined,
-      offset,
-    );
-    TimeCallbackService.updateSunSet(new Date(1649543400000));
-    cb.recalcNextToDo(new Date(1649529000000));
-    expect(cb.nextToDo?.getTime()).toBe(1649614660829);
-  });
-  it('Time Callback for Rollo Sunset respects offset', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(0, -10, 6, 30, 22, 30);
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(
       '',
       TimeCallbackType.SunSet,
@@ -102,25 +105,54 @@ describe('TimeCallbackService', () => {
       undefined,
       offset,
     );
-    TimeCallbackService.updateSunSet(new Date(1649543400000));
-    cb.recalcNextToDo(new Date(1649529000000));
-    expect(cb.nextToDo?.getTime()).toBe(1649614060829);
+    const sunSetCalcDate: Date = new Date('4/10/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('4/10/2022, 6:53:51 PM');
+    TimeCallbackService.updateSunSet(sunSetCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
-  it('Time Callback for Rollo Sunset respects maximum Hours', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 20, 0);
+  it('Time Callback for Rollo Sunset respects offset', async () => {
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, -20, 5, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(
       '',
       TimeCallbackType.SunSet,
       () => {
         /*Nothing*/
       },
-      0,
+      offset.sunset,
       undefined,
       undefined,
       offset,
     );
-    TimeCallbackService.updateSunSet(new Date(1649602800000));
-    cb.recalcNextToDo(new Date(1649602800000));
-    expect(cb.nextToDo?.getTime()).toBe(1649613600000);
+    const sunSetCalcDate: Date = new Date('4/10/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('4/10/2022, 6:33:51 PM');
+    TimeCallbackService.updateSunSet(sunSetCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
+  });
+  it('Time Callback for Rollo Sunset respects maximum Hours', async () => {
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 18, 30);
+    const cb: TimeCallback = new TimeCallback(
+      '',
+      TimeCallbackType.SunSet,
+      () => {
+        /*Nothing*/
+      },
+      offset.sunset,
+      undefined,
+      undefined,
+      offset,
+    );
+    const sunSetCalcDate: Date = new Date('4/10/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('4/9/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('4/10/2022, 6:30:00 PM');
+    TimeCallbackService.updateSunSet(sunSetCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
 });

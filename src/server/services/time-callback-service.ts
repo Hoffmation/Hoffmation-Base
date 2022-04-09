@@ -228,11 +228,19 @@ Nächster Sonnenuntergang um ${TimeCallbackService._nextSunSet.toLocaleTimeStrin
     }
   }
 
-  public static updateSunRise(pDay: Date = new Date()): void {
-    TimeCallbackService._nextSunRise = getSunrise(51.529556852253826, 7.097266042276687, pDay);
+  public static updateSunRise(
+    pDay: Date = new Date(),
+    lat: number = 51.529556852253826,
+    long: number = 7.097266042276687,
+  ): void {
+    TimeCallbackService._nextSunRise = getSunrise(lat, long, pDay);
   }
 
-  public static updateSunSet(pDay: Date = new Date()): void {
-    TimeCallbackService._nextSunSet = getSunset(51.529556852253826, 7.097266042276687, pDay);
+  public static updateSunSet(
+    pDay: Date = new Date(),
+    lat: number = 51.529556852253826,
+    long: number = 7.097266042276687,
+  ): void {
+    TimeCallbackService._nextSunSet = getSunset(lat, long, pDay);
   }
 }
