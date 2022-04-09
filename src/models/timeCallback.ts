@@ -52,7 +52,7 @@ export class TimeCallback {
       case TimeCallbackType.Sunrise:
         let fixedSRDate: Date = new Date(TimeCallbackService.nextSunRise.getTime() + this.minuteOffset * 60 * 1000);
         if (this.sunTimeOffset) {
-          const nextMinSR: Date = this.sunTimeOffset.getNextMinimumSunrise();
+          const nextMinSR: Date = this.sunTimeOffset.getNextMinimumSunrise(now);
           if (nextMinSR > fixedSRDate && fixedSRDate.getDate() === nextMinSR.getDate()) {
             fixedSRDate = nextMinSR;
           }
@@ -70,7 +70,7 @@ export class TimeCallback {
       case TimeCallbackType.SunSet:
         let fixedSSDate: Date = new Date(TimeCallbackService.nextSunSet.getTime() + this.minuteOffset * 60 * 1000);
         if (this.sunTimeOffset) {
-          const nextMaxSS: Date = this.sunTimeOffset.getNextMaximumSunset();
+          const nextMaxSS: Date = this.sunTimeOffset.getNextMaximumSunset(now);
           if (nextMaxSS < fixedSSDate && fixedSSDate.getDate() === nextMaxSS.getDate()) {
             fixedSSDate = nextMaxSS;
           }

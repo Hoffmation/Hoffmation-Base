@@ -24,20 +24,22 @@ export class SunTimeOffsets {
     public maximumMinutes: number = 30,
   ) {}
 
-  public getNextMinimumSunrise(): Date {
-    const today: Date = new Date(new Date().setHours(this.minimumHours, this.minimumMinutes));
-    if (today > new Date()) {
+  public getNextMinimumSunrise(date: Date = new Date()): Date {
+    const dateCopy: Date = new Date(date);
+    const today: Date = new Date(dateCopy.setHours(this.minimumHours, this.minimumMinutes, 0, 0));
+    if (today > date) {
       return today;
     }
-    return new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    return new Date(today.setDate(today.getDate() + 1));
   }
 
-  public getNextMaximumSunset(): Date {
-    const today = new Date(new Date().setHours(this.maximumHours, this.maximumMinutes));
-    if (today > new Date()) {
+  public getNextMaximumSunset(date: Date = new Date()): Date {
+    const dateCopy: Date = new Date(date);
+    const today = new Date(dateCopy.setHours(this.maximumHours, this.maximumMinutes, 0, 0));
+    if (today > date) {
       return today;
     }
-    return new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    return new Date(today.setDate(today.getDate() + 1));
   }
 }
 
