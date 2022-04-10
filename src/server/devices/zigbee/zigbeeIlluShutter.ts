@@ -1,8 +1,8 @@
 import { ZigbeeShutter } from './zigbeeShutter';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models/logLevel';
-import { Utils } from '../../services/utils/utils';
+import { LogLevel } from '../../../models';
+import { Utils } from '../../services';
 
 enum MovementState {
   Down = 30,
@@ -14,8 +14,6 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   private _movementStateId: string;
   private _movementState: MovementState = MovementState.Stop;
   private _movementStartMs: number = -1;
-  private _msTilTop: number = -1;
-  private _msTilBot: number = -1;
   private _movementStartPos: number = -1;
   private _iMovementTimeout: NodeJS.Timeout | undefined;
 
@@ -60,10 +58,19 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     this._movementStartPos = this._currentLevel;
     if (targetPosition === 100) {
       this.changeMovementState(MovementState.Up);
+      this.initializeMovementFinishTimeout(this.getAverageUp(), 100);
       return;
     }
     if (targetPosition === 0) {
       this.changeMovementState(MovementState.Down);
+      this.initializeMovementFinishTimeout(this.getAverageUp(), 0);
+      Utils.guardedTimeout(
+        () => {
+          this.changeMovementState(MovementState.Stop);
+        },
+        this.getAverageDown() + 1000,
+        this,
+      );
       return;
     }
     if (!this.isCalibrated()) {
@@ -77,8 +84,9 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     const distance: number = Math.abs(this._currentLevel - targetPosition);
     const direction: MovementState = this._currentLevel > targetPosition ? MovementState.Down : MovementState.Up;
     const duration: number =
-      Math.round(distance / 100) * (this._currentLevel > targetPosition ? this._msTilBot : this._msTilTop);
+      Math.round(distance / 100) * (this._currentLevel > targetPosition ? this.getAverageDown() : this.getAverageUp());
     this.changeMovementState(direction);
+    this.initializeMovementFinishTimeout(duration, targetPosition);
     Utils.guardedTimeout(
       () => {
         this.changeMovementState(MovementState.Stop);
@@ -108,30 +116,32 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     const timePassed: number = Utils.nowMS() - this._movementStartMs;
     const oldState: MovementState = this._movementState;
     if (this._movementStartPos === 0 && oldState === MovementState.Up && this._setLevel === 100) {
-      this._msTilTop = timePassed;
       this.log(LogLevel.Debug, `New Time-Until-Top measurement for ${this.info.customName}: ${timePassed}ms`);
       this.currentLevel = this._setLevel;
       this._shutterCalibrationData.counterUp++;
       this._shutterCalibrationData.averageUp +=
-        (this._msTilTop - this._shutterCalibrationData.averageUp) / this._shutterCalibrationData.counterUp;
+        (timePassed - this._shutterCalibrationData.averageUp) / this._shutterCalibrationData.counterUp;
       this.persistCalibrationData();
       this.log(
         LogLevel.Trace,
-        `New Measurment for shutter up (${this._msTilTop}ms), new Average: ${this._shutterCalibrationData.averageUp}`,
+        `New Measurment for shutter up (${this.getAverageUp()}ms), new Average: ${
+          this._shutterCalibrationData.averageUp
+        }`,
       );
       return;
     }
     if (this._movementStartPos === 100 && oldState === MovementState.Down && this._setLevel === 0) {
       this.log(LogLevel.Debug, `New Time-Until-Bottom measurement for ${this.info.customName}: ${timePassed}ms`);
-      this._msTilBot = timePassed;
       this.currentLevel = this._setLevel;
       this._shutterCalibrationData.counterDown++;
       this._shutterCalibrationData.averageDown +=
-        (this._msTilBot - this._shutterCalibrationData.averageDown) / this._shutterCalibrationData.counterDown;
+        (timePassed - this._shutterCalibrationData.averageDown) / this._shutterCalibrationData.counterDown;
       this.persistCalibrationData();
       this.log(
         LogLevel.Trace,
-        `New Measurment for shutter down (${this._msTilBot}ms), new Average: ${this._shutterCalibrationData.averageDown}`,
+        `New Measurment for shutter down (${this.getAverageDown()}ms), new Average: ${
+          this._shutterCalibrationData.averageDown
+        }`,
       );
       return;
     }
@@ -141,9 +151,9 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     }
 
     if (oldState === MovementState.Down) {
-      this.currentLevel = Math.min(this._currentLevel - Math.round((timePassed * 100) / this._msTilBot), 0);
+      this.currentLevel = Math.min(this._currentLevel - Math.round((timePassed * 100) / this.getAverageDown()), 0);
     } else if (oldState === MovementState.Up) {
-      this.currentLevel = Math.max(this._currentLevel + Math.round((timePassed * 100) / this._msTilBot), 100);
+      this.currentLevel = Math.max(this._currentLevel + Math.round((timePassed * 100) / this.getAverageUp()), 100);
     }
   }
 }

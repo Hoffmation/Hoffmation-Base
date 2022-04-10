@@ -13,6 +13,7 @@ module.exports = {
   plugins: ["unused-imports"],
   rules: {
     'linebreak-style': 'off',
+    "no-duplicate-imports": [2],
     '@typescript-eslint/no-inferrable-types': [0],
     '@typescript-eslint/adjacent-overload-signatures': [0],
     '@typescript-eslint/no-unused-vars': [

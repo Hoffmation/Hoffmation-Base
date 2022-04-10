@@ -1,19 +1,20 @@
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
+import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../iShutter';
-import { Fenster } from '../groups/Fenster';
-import { FensterPosition } from '../models/FensterPosition';
+import { Fenster } from '../groups';
+import { FensterPosition } from '../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { ShutterSettings } from '../../../models/deviceSettings/shutterSettings';
-import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
+import { ShutterSettings } from '../../../models';
+import { ShutterCalibration } from '../../../models';
 import { dbo } from '../../../index';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public settings: ShutterSettings = new ShutterSettings();
+  protected _iMovementFinishTimeout: NodeJS.Timeout | null = null;
 
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
@@ -116,7 +117,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (this.settings.msTilTop > 0) {
       return this.settings.msTilTop;
     }
-    return 0;
+    return 30000;
   }
 
   protected getAverageDown(): number {
@@ -126,7 +127,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (this.settings.msTilBot > 0) {
       return this.settings.msTilBot;
     }
-    return 0;
+    return 30000;
   }
 
   protected isCalibrated(): boolean {
@@ -139,6 +140,20 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
     );
     dbo?.persistShutterCalibration(this._shutterCalibrationData);
+  }
+
+  protected initializeMovementFinishTimeout(duration: number, endPosition: number): void {
+    if (this._iMovementFinishTimeout !== null) {
+      clearTimeout(this._iMovementFinishTimeout);
+    }
+    this._iMovementFinishTimeout = Utils.guardedTimeout(
+      () => {
+        this.currentLevel = endPosition;
+        this._iMovementFinishTimeout = null;
+      },
+      duration,
+      this,
+    );
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
