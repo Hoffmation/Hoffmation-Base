@@ -1,6 +1,5 @@
-import { ZigbeeIkeaSteckdose } from '../zigbee';
+import { ZigbeeIkeaSteckdose, ZigbeeIlluLedRGBCCT } from '../zigbee';
 import { TimeCallbackService, TimeOfDay } from '../../services';
-import { ZigbeeIlluLedRGBCCT } from '../zigbee';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
@@ -79,7 +78,7 @@ export class LampenGroup extends BaseGroup {
     this.setAllStecker(resultSteckdosen, time);
   }
 
-  public setAllLampen(pValue: boolean, time?: TimeOfDay, force: boolean = false): void {
+  public setAllLampen(pValue: boolean, time?: TimeOfDay, force: boolean = false, timeout?: number): void {
     this.getLampen().forEach((s) => {
       if (
         !pValue ||
@@ -88,7 +87,7 @@ export class LampenGroup extends BaseGroup {
         (time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
         (time === TimeOfDay.AfterSunset && s.settings.duskOn)
       ) {
-        const timeout: number = pValue && force ? 30 * 60 * 1000 : -1;
+        timeout ??= pValue && force ? 30 * 60 * 1000 : -1;
 
         if (pValue && time !== undefined) {
           s.setTimeBased(time, timeout, force);

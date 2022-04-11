@@ -1,13 +1,10 @@
-import { ringStorage } from '../utils/ringstorage';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { ServerLogService } from '../log-service/log-service';
-import { LogLevel } from '../../../models/logLevel';
-import { SonosService } from '../Sonos/sonos-service';
-import { Res } from '../Translation/res';
-import { Utils } from '../utils/utils';
-import { TelegramService } from '../Telegram/telegram-service';
-import { iRoomBase } from '../../../models/rooms/iRoomBase';
-import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
+import { ringStorage, Utils } from '../utils';
+import { iRoomBase, LogLevel, RoomBase } from '../../../models';
+import { ServerLogService } from '../log-service';
+import { SonosService } from '../Sonos';
+import { Res } from '../Translation';
+import { TelegramService } from '../Telegram';
+import { IoBrokerBaseDevice } from '../../devices';
 
 export class RoomService {
   public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
@@ -48,12 +45,12 @@ export class RoomService {
    * @param floor the level on which all lamps shall be changed -1 equals all rooms
    * @param status
    */
-  public static setAllLampsOfFloor(floor: number, status: boolean = false): void {
+  public static setAllLampsOfFloor(floor: number, status: boolean = false, timeout?: number): void {
     ServerLogService.writeLog(LogLevel.Info, `Schalte alle Lampen in Etage ${floor} auf den Wert ${status}`);
     const rooms: IterableIterator<[string, RoomBase]> =
       floor > -1 ? this.getAllRoomsOfFloor(floor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
-      room.LampenGroup?.setAllLampen(status, -1, true);
+      room.LampenGroup?.setAllLampen(status, -1, true, timeout);
       room.LampenGroup?.setAllLED(status);
       room.LampenGroup?.setAllStecker(status, -1, true);
     }
