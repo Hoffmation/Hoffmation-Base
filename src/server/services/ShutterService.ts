@@ -1,8 +1,5 @@
-import { DeviceType } from '../devices/deviceType';
-import { Devices } from '../devices/devices';
-import { iShutter } from '../devices/iShutter';
-import { API } from './api/api-service';
-import { Fenster } from '../devices/groups/Fenster';
+import { Devices, DeviceType, Fenster, iShutter } from '../devices';
+import { API } from './api';
 
 export class ShutterService {
   public static anyRolloDown(rollo: iShutter[]): boolean {
@@ -51,7 +48,11 @@ export class ShutterService {
     const rollos: iShutter[] = [];
     for (const dID in Devices.alLDevices) {
       const d = Devices.alLDevices[dID];
-      if (d.deviceType === DeviceType.HmIpRoll || d.deviceType === DeviceType.ZigbeeIlluShutter) {
+      if (
+        d.deviceType === DeviceType.HmIpRoll ||
+        d.deviceType === DeviceType.ZigbeeIlluShutter ||
+        d.deviceType === DeviceType.ZigbeeUbisysShutter
+      ) {
         rollos.push(d as iShutter);
       }
     }

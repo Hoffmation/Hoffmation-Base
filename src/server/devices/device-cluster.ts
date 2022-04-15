@@ -1,8 +1,7 @@
 import { DeviceClusterType } from './device-cluster-type';
 import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { OwnSonosDevice } from '../services/Sonos/sonos-service';
-import { Utils } from '../services/utils/utils';
+import { OwnSonosDevice, Utils } from '../services';
 import _ from 'lodash';
 import { DeviceType } from './deviceType';
 
@@ -36,6 +35,7 @@ export class DeviceCluster {
         break;
       case DeviceType.HmIpRoll:
       case DeviceType.ZigbeeIlluShutter:
+      case DeviceType.ZigbeeUbisysShutter:
         clusterTypes.push(DeviceClusterType.Shutter);
         break;
       case DeviceType.ZigbeeSonoffTemp:

@@ -1,43 +1,46 @@
-import { deviceConfig } from '../../models';
+import { deviceConfig, iRoomImportEnforcer, LogLevel } from '../../models';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { HmIPDevice } from './hmIPDevices';
-import { ZigbeeDevice } from './zigbee';
+import {
+  HmIpAccessPoint,
+  HmIpBewegung,
+  HmIPDevice,
+  HmIpGriff,
+  HmIpHeizgruppe,
+  HmIpHeizung,
+  HmIpLampe,
+  HmIpPraezenz,
+  HmIpRoll,
+  HmIpTaster,
+  HmIpTherm,
+  HmIpTuer,
+  HmIpWippe,
+} from './hmIPDevices';
+import {
+  ZigbeeAqaraMagnetContact,
+  ZigbeeAqaraOpple3Switch,
+  ZigbeeAquaraMotion,
+  ZigbeeAquaraVibra,
+  ZigbeeAquaraWater,
+  ZigbeeBlitzShp,
+  ZigbeeDevice,
+  ZigbeeHeimanSmoke,
+  ZigbeeIkeaSteckdose,
+  ZigbeeIlluActuator,
+  ZigbeeIlluDimmer,
+  ZigbeeIlluLampe,
+  ZigbeeIlluLedRGBCCT,
+  ZigbeeIlluShutter,
+  ZigbeeMotionSensor,
+  ZigbeeSMaBiTMagnetContact,
+  ZigbeeSonoffMotion,
+  ZigbeeSonoffTemp,
+} from './zigbee';
 import { DeviceType } from './deviceType';
-import { HmIpPraezenz } from './hmIPDevices';
 import { ServerLogService } from '../services';
-import { iRoomImportEnforcer } from '../../models';
 import { DeviceInfo } from './DeviceInfo';
-import { LogLevel } from '../../models';
-import { HmIpBewegung } from './hmIPDevices';
-import { ZigbeeAquaraVibra } from './zigbee';
-import { ZigbeeAquaraMotion } from './zigbee';
-import { ZigbeeIkeaSteckdose } from './zigbee';
-import { ZigbeeIlluLedRGBCCT } from './zigbee';
-import { ZigbeeIlluDimmer } from './zigbee';
-import { ZigbeeHeimanSmoke } from './zigbee';
-import { ZigbeeAquaraWater } from './zigbee';
-import { ZigbeeBlitzShp } from './zigbee';
-import { ZigbeeIlluLampe } from './zigbee';
-import { ZigbeeIlluActuator } from './zigbee';
-import { HmIpLampe } from './hmIPDevices';
-import { HmIpRoll } from './hmIPDevices';
-import { HmIpTaster } from './hmIPDevices';
-import { HmIpWippe } from './hmIPDevices';
-import { HmIpGriff } from './hmIPDevices';
-import { HmIpTherm } from './hmIPDevices';
-import { HmIpHeizung } from './hmIPDevices';
-import { HmIpTuer } from './hmIPDevices';
-import { HmIpHeizgruppe } from './hmIPDevices';
-import { ZigbeeIlluShutter } from './zigbee';
-import { ZigbeeSMaBiTMagnetContact } from './zigbee';
-import { ZigbeeSonoffMotion } from './zigbee';
-import { ZigbeeMotionSensor } from './zigbee';
-import { HmIpAccessPoint } from './hmIPDevices';
-import { ZigbeeAqaraMagnetContact } from './zigbee';
-import { ZigbeeSonoffTemp } from './zigbee';
-import { ZigbeeAqaraOpple3Switch } from './zigbee';
 import { iEnergyManager } from './iEnergyManager';
 import { JsObjectEnergyManager } from './jsObject';
+import { ZigbeeUbisysShutter } from './zigbee/zigbeeUbisysShutter';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -98,6 +101,27 @@ export class Devices {
         (d as ZigbeeMotionSensor).detectionsToday = 0;
       }
     }
+  }
+
+  public static getBatteryInfo(): string {
+    ServerLogService.writeLog(LogLevel.Info, `Getting Battery Info`);
+    let data: Array<{ name: string; amount: number }> = [];
+    const result: string[] = [
+      `These are the battery values for each device. Device dependandt some are in volts, some in %`,
+    ];
+    for (const key in this.alLDevices) {
+      const d: IoBrokerBaseDevice = this.alLDevices[key];
+      if (d.battery !== undefined) {
+        data.push({ name: d.info.customName, amount: d.battery });
+      }
+    }
+    data = data.sort((a: { name: string; amount: number }, b: { name: string; amount: number }) => {
+      return a.amount - b.amount;
+    });
+    for (let i = 0; i < data.length; i++) {
+      result.push(`${data[i].amount}\t${data[i].name}`);
+    }
+    return result.join('\n');
   }
 
   private static processZigbeeDevice(cDevConf: deviceConfig) {
@@ -163,6 +187,9 @@ export class Devices {
       case 'SonoffTemp':
         d = new ZigbeeSonoffTemp(zigbeeInfo);
         break;
+      case 'UbisysShutter':
+        d = new ZigbeeUbisysShutter(zigbeeInfo);
+        break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);
         d = new ZigbeeDevice(zigbeeInfo, DeviceType.unknown);
@@ -227,27 +254,6 @@ export class Devices {
         d = new HmIPDevice(hmIPInfo, DeviceType.unknown);
     }
     Devices.alLDevices[fullName] = d;
-  }
-
-  public static getBatteryInfo(): string {
-    ServerLogService.writeLog(LogLevel.Info, `Getting Battery Info`);
-    let data: Array<{ name: string; amount: number }> = [];
-    const result: string[] = [
-      `These are the battery values for each device. Device dependandt some are in volts, some in %`,
-    ];
-    for (const key in this.alLDevices) {
-      const d: IoBrokerBaseDevice = this.alLDevices[key];
-      if (d.battery !== undefined) {
-        data.push({ name: d.info.customName, amount: d.battery });
-      }
-    }
-    data = data.sort((a: { name: string; amount: number }, b: { name: string; amount: number }) => {
-      return a.amount - b.amount;
-    });
-    for (let i = 0; i < data.length; i++) {
-      result.push(`${data[i].amount}\t${data[i].name}`);
-    }
-    return result.join('\n');
   }
 
   private static createEnergyManager(cDevConf: deviceConfig) {
