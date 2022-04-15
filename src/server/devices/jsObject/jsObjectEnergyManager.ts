@@ -8,44 +8,43 @@ import { Utils } from '../../services';
 import { dbo, EnergyCalculation, SettingsService } from '../../../index';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
-  /**
-   * Example:
-   * ________________________________________
-   * | ExcessEnergyA | 200W  |  200W | -500W |
-   * | ExcessEnergyB | 300W  |  300W | -200W |
-   * | ExcessEnergyC | 100W  | -100W | -300W |
-   * | Production P  |  500W |  500W |    0W |
-   * | Production    | 1500W | 1500W |    0W |
-   * ________________________________________
-   * | Consumption   |  900W | 1100W | 1000W |
-   * | Injecting     |  600W |  500W |    0W |
-   * | drawing       |    0W |  100W | 1000W |
-   * | selfConsume   |  900W | 1000W |    0W |
-   * ________________________________________
-   **/
+  private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
+  private _iCalculationInterval: NodeJS.Timeout | null = null;
+  private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
+  private _lastPersistenceCalculation: number = Utils.nowMS();
+  private _nextPersistEntry: EnergyCalculation;
+  private _powerValuePhaseA: number = -1;
+  private _powerValuePhaseB: number = -1;
+  private _powerValuePhaseC: number = -1;
 
-  public get excessEnergyConsumerConsumption(): number {
-    return this._excessEnergyConsumerConsumption;
+  public constructor(info: DeviceInfo) {
+    super(info, DeviceType.JsEnergyManager);
+    this.log(LogLevel.Info, `Creating Energy Manager Device`);
+    this._iCalculationInterval = Utils.guardedInterval(
+      () => {
+        this.calculateExcessEnergy();
+      },
+      5 * 1000,
+      this,
+    );
+    this._iDatabaseLoggerInterval = Utils.guardedInterval(
+      () => {
+        this.persist();
+      },
+      15 * 60 * 1000,
+      this,
+    );
+    this._nextPersistEntry = new EnergyCalculation(Utils.nowMS());
   }
 
-  public get excessEnergy(): number {
-    return Math.min(this._powerValuePhaseA, this._powerValuePhaseB, this._powerValuePhaseC);
+  private _currentProduction: number = -1;
+
+  public get currentProduction(): number {
+    return this._currentProduction;
   }
 
   public get baseConsumption(): number {
     return this.totalConsumption - this._excessEnergyConsumerConsumption;
-  }
-
-  public get phaseCState(): PhaseState {
-    return this._phaseCState;
-  }
-
-  public get phaseBState(): PhaseState {
-    return this._phaseBState;
-  }
-
-  public get phaseAState(): PhaseState {
-    return this._phaseAState;
   }
 
   public get totalConsumption(): number {
@@ -72,42 +71,48 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     );
   }
 
-  public get currentProduction(): number {
-    return this._currentProduction;
+  public get excessEnergy(): number {
+    return this._powerValuePhaseA + this._powerValuePhaseB + this._powerValuePhaseC;
   }
 
-  private _currentProduction: number = -1;
   private _excessEnergyConsumerConsumption: number = 0;
-  private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
-  private _iCalculationInterval: NodeJS.Timeout | null = null;
-  private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
-  private _lastPersistenceCalculation: number = Utils.nowMS();
-  private _nextPersistEntry: EnergyCalculation;
-  private _powerValuePhaseA: number = -1;
-  private _powerValuePhaseB: number = -1;
-  private _powerValuePhaseC: number = -1;
+
+  /**
+   * Example:
+   * ________________________________________
+   * | ExcessEnergyA | 200W  |  200W | -500W |
+   * | ExcessEnergyB | 300W  |  300W | -200W |
+   * | ExcessEnergyC | 100W  | -100W | -300W |
+   * | Production P  |  500W |  500W |    0W |
+   * | Production    | 1500W | 1500W |    0W |
+   * ________________________________________
+   * | Consumption   |  900W | 1100W | 1000W |
+   * | Injecting     |  600W |  500W |    0W |
+   * | drawing       |    0W |  100W | 1000W |
+   * | selfConsume   |  900W | 1000W |    0W |
+   * ________________________________________
+   **/
+
+  public get excessEnergyConsumerConsumption(): number {
+    return this._excessEnergyConsumerConsumption;
+  }
+
   private _phaseAState: PhaseState = new PhaseState(0, 0);
+
+  public get phaseAState(): PhaseState {
+    return this._phaseAState;
+  }
+
   private _phaseBState: PhaseState = new PhaseState(0, 0);
+
+  public get phaseBState(): PhaseState {
+    return this._phaseBState;
+  }
+
   private _phaseCState: PhaseState = new PhaseState(0, 0);
 
-  public constructor(info: DeviceInfo) {
-    super(info, DeviceType.JsEnergyManager);
-    this.log(LogLevel.Info, `Creating Energy Manager Device`);
-    this._iCalculationInterval = Utils.guardedInterval(
-      () => {
-        this.calculateExcessEnergy();
-      },
-      5 * 1000,
-      this,
-    );
-    this._iDatabaseLoggerInterval = Utils.guardedInterval(
-      () => {
-        this.persist();
-      },
-      15 * 60 * 1000,
-      this,
-    );
-    this._nextPersistEntry = new EnergyCalculation(Utils.nowMS());
+  public get phaseCState(): PhaseState {
+    return this._phaseCState;
   }
 
   public cleanup(): void {

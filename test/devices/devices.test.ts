@@ -1,7 +1,5 @@
 import ExampleDevices from './exampleDevices.json';
-import { deviceConfig } from '../../src/models/deviceConfig';
-import { Devices } from '../../src/server/devices/devices';
-import { Utils } from '../../src/server/services/utils/utils';
+import { deviceConfig, Devices, Utils } from '../../src';
 
 describe('Devices', () => {
   Utils.testInitializeServices();

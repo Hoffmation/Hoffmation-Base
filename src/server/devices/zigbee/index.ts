@@ -20,3 +20,4 @@ export * from './zigbeeSMaBiTMagnetContact';
 export * from './zigbeeSonoffMotion';
 export * from './zigbeeSonoffTemp';
 export * from './zigbeeSwitch';
+export * from './zigbeeUbisysShutter';
