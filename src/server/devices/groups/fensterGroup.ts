@@ -145,7 +145,7 @@ export class FensterGroup extends BaseGroup {
     }
   }
 
-  public changeVibrationMotionBlock(block: boolean) {
+  public changeVibrationMotionBlock(block: boolean): void  {
     this.fenster.forEach((f) => {
       if (f.getVibration().length === 0) {
         return;
