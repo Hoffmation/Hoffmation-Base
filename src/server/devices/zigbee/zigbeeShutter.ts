@@ -136,7 +136,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     return this.getAverageDown() > 0 && this.getAverageUp() > 0;
   }
 
-  protected persistCalibrationData() {
+  protected persistCalibrationData(): void  {
     this.log(
       LogLevel.Trace,
       `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
