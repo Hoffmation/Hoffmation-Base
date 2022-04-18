@@ -77,7 +77,7 @@ export class Button {
     return description.join('\n');
   }
 
-  public updateState(type: ButtonPressType, pValue: boolean) {
+  public updateState(type: ButtonPressType, pValue: boolean): void  {
     if (pValue === this._state.get(type)) {
       return;
     }
