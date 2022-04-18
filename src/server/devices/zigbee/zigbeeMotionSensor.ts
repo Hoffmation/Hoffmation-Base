@@ -8,7 +8,6 @@ import { iMotionSensor } from '../iMotionSensor';
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   public settings: MotionSensorSettings = new MotionSensorSettings();
   public movementDetected: boolean = false;
-  public excludeFromNightAlarm: boolean = false;
   protected _initialized: boolean = false;
   protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
