@@ -30,7 +30,7 @@ export class DeviceUpdater implements IDeviceUpdater {
     if (idSplit.length < 2) return;
 
     const device: undefined | IBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
-    if (typeof device === 'undefined' && (device as IoBrokerBaseDevice).update !== undefined) {
+    if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
       return;
     }
     try {

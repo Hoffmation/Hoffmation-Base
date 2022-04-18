@@ -1,9 +1,9 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { TelegramMessageCallback } from './telegramMessageCalback';
-import { ServerLogService } from '../log-service/log-service';
-import { Utils } from '../utils/utils';
-import { iTelegramSettings } from '../../config/iConfig';
-import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../log-service';
+import { Utils } from '../utils';
+import { iTelegramSettings } from '../../config';
+import { LogLevel } from '../../../models';
 
 export class TelegramService {
   public static subscribedIDs: number[];
@@ -95,7 +95,9 @@ export class TelegramService {
     }
 
     ServerLogService.writeLog(LogLevel.Debug, `New Telegram Commands: "${JSON.stringify(commands)}"`);
-    TelegramService.bot.setMyCommands(commands);
+    TelegramService.bot.setMyCommands(commands).catch((e) => {
+      ServerLogService.writeLog(LogLevel.Error, `Setting Telegram Commands failed with error: ${e}`);
+    });
   }
 
   public static inform(message: string): void {
