@@ -1,6 +1,5 @@
-import { Utils } from '../services/utils/utils';
-import { ServerLogService } from '../services/log-service/log-service';
-import { LogLevel } from '../../models/logLevel';
+import { ServerLogService, Utils } from '../services';
+import { LogLevel } from '../../models';
 
 export class ButtonCapabilities {
   shortPress: boolean = true;
@@ -24,10 +23,6 @@ export class Button {
   >();
   private _timeouts: Map<ButtonPressType, null | NodeJS.Timeout> = new Map<ButtonPressType, NodeJS.Timeout | null>();
 
-  public getState(type: ButtonPressType): boolean {
-    return this._state.get(type) ?? false;
-  }
-
   public constructor(public name: string, public buttonCapabilities: ButtonCapabilities) {
     if (buttonCapabilities.shortPress) {
       this._callbacks.set(ButtonPressType.short, []);
@@ -50,6 +45,11 @@ export class Button {
       this._state.set(ButtonPressType.triple, false);
     }
   }
+
+  public getState(type: ButtonPressType): boolean {
+    return this._state.get(type) ?? false;
+  }
+
   public addCb(
     buttonType: ButtonPressType,
     pCallback: (pValue: boolean) => void,
