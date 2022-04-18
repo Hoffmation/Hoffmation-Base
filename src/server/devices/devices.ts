@@ -1,5 +1,4 @@
 import { deviceConfig, iRoomImportEnforcer, LogLevel } from '../../models';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import {
   HmIpAccessPoint,
   HmIpBewegung,
@@ -30,23 +29,24 @@ import {
   ZigbeeIlluLampe,
   ZigbeeIlluLedRGBCCT,
   ZigbeeIlluShutter,
-  ZigbeeMotionSensor,
   ZigbeeSMaBiTMagnetContact,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
+  ZigbeeUbisysShutter,
 } from './zigbee';
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
 import { DeviceInfo } from './DeviceInfo';
 import { iEnergyManager } from './iEnergyManager';
 import { JsObjectEnergyManager } from './jsObject';
-import { ZigbeeUbisysShutter } from './zigbee/zigbeeUbisysShutter';
+import { iMotionSensor } from './iMotionSensor';
+import { IBaseDevice } from './iBaseDevice';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
   public static IDENTIFIER_JS: string = 'javascript';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
-  public static alLDevices: { [id: string]: IoBrokerBaseDevice } = {};
+  public static alLDevices: { [id: string]: IBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
 
   public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {
@@ -90,15 +90,14 @@ export class Devices {
     ServerLogService.writeLog(LogLevel.Info, `3 Uhr Reset der Präsenzmelder`);
     for (const dID in Devices.alLDevices) {
       const d = Devices.alLDevices[dID];
-      if (d.deviceType === DeviceType.HmIpPraezenz) {
+      if (
+        d.deviceType === DeviceType.HmIpPraezenz ||
+        d.deviceType === DeviceType.HmIpBewegung ||
+        d.deviceType === DeviceType.ZigbeeSonoffMotion ||
+        d.deviceType === DeviceType.ZigbeeAquaraMotion
+      ) {
         ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
-        (d as HmIpPraezenz).detectionsToday = 0;
-      } else if (d.deviceType === DeviceType.HmIpBewegung) {
-        ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
-        (d as HmIpBewegung).detectionsToday = 0;
-      } else if (d.deviceType === DeviceType.ZigbeeSonoffMotion || d.deviceType === DeviceType.ZigbeeAquaraMotion) {
-        ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
-        (d as ZigbeeMotionSensor).detectionsToday = 0;
+        (d as iMotionSensor | HmIpPraezenz).detectionsToday = 0;
       }
     }
   }
@@ -110,7 +109,7 @@ export class Devices {
       `These are the battery values for each device. Device dependandt some are in volts, some in %`,
     ];
     for (const key in this.alLDevices) {
-      const d: IoBrokerBaseDevice = this.alLDevices[key];
+      const d: IBaseDevice = this.alLDevices[key];
       if (d.battery !== undefined) {
         data.push({ name: d.info.customName, amount: d.battery });
       }

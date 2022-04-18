@@ -7,13 +7,13 @@ import { ButtonPressType } from '../button';
 import { iButtonSwitch } from '../iButtonSwitch';
 
 export class TasterGroup extends BaseGroup {
-  public getButtons(): iButtonSwitch[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Buttons) as iButtonSwitch[];
-  }
-
   public constructor(roomName: string, buttonIds: string[]) {
     super(roomName, GroupType.Buttons);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Buttons, new DeviceList(buttonIds));
+  }
+
+  public getButtons(): iButtonSwitch[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Buttons) as iButtonSwitch[];
   }
 
   public initCallbacks(): void {

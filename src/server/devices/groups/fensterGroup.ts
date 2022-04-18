@@ -1,14 +1,9 @@
-import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { Utils } from '../../services/utils/utils';
-import { WeatherService } from '../../services/weather/weather-service';
+import { LogLevel, RoomBase, TimeCallback, TimeCallbackType } from '../../../models';
+import { ShutterService, TimeCallbackService, TimeOfDay, Utils, WeatherService } from '../../services';
 import { Fenster } from './Fenster';
-import { FensterPosition } from '../models/FensterPosition';
-import { LogLevel } from '../../../models/logLevel';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { ShutterService } from '../../services/ShutterService';
+import { FensterPosition } from '../models';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
-import { RoomBase } from '../../../models/rooms/RoomBase';
 
 export class FensterGroup extends BaseGroup {
   public constructor(roomName: string, public fenster: Fenster[]) {
@@ -96,14 +91,6 @@ export class FensterGroup extends BaseGroup {
     });
   }
 
-  private sunsetDown(): void {
-    this.allRolloToLevel(0, true);
-    const room: RoomBase = this.getRoom();
-    if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
-      room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
-    }
-  }
-
   public setRolloByWeatherStatus(): void {
     const room: RoomBase = this.getRoom();
     const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
@@ -155,6 +142,25 @@ export class FensterGroup extends BaseGroup {
       this.sunriseUp(true);
     } else {
       this.sunsetDown();
+    }
+  }
+
+  public changeVibrationMotionBlock(block: boolean) {
+    this.fenster.forEach((f) => {
+      if (f.getVibration().length === 0) {
+        return;
+      }
+      f.getVibration().forEach((v) => {
+        v.vibrationBlockedByMotion = block;
+      });
+    });
+  }
+
+  private sunsetDown(): void {
+    this.allRolloToLevel(0, true);
+    const room: RoomBase = this.getRoom();
+    if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
+      room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
     }
   }
 }

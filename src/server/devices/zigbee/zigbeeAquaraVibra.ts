@@ -1,13 +1,11 @@
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
+import { PollyService, Res, SonosService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { PollyService } from '../../services/Sonos/polly-service';
+import { LogLevel } from '../../../models';
+import { iVibrationSensor } from '../iVibrationSensor';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { LogLevel } from '../../../models/logLevel';
-import { SonosService } from '../../services/Sonos/sonos-service';
-import { Res } from '../../services/Translation/res';
 
-export class ZigbeeAquaraVibra extends ZigbeeDevice {
+export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor {
   public sensitivity: string = '';
   public tiltAngle: number = 0;
   public tiltAngleX: number = 0;
@@ -17,11 +15,10 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
   public tiltAngleZ: number = 0;
   public tilt: boolean = false;
   public vibration: boolean = false;
-  public vibrationBlockedTimeStamp: number = 0;
+  public vibrationBlockedByGriffTimeStamp: number = 0;
+  public vibrationBlockedByMotionTimeStamp: number = 0;
   private _idSensitivity: string = '';
-  private _vibrationBlocked: boolean = false;
   private _alarmMessage: string;
-  // TODO Set Sensitivity
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
@@ -30,12 +27,40 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
     this._idSensitivity = `${this.info.fullID}.sensitivity`;
   }
 
-  public set vibrationBlocked(pVal: boolean) {
-    this.log(LogLevel.Debug, `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName}`);
+  // TODO Set Sensitivity
+
+  private _vibrationBlockedByGriff: boolean = false;
+
+  public get vibrationBlockedByGriff(): boolean {
+    return this._vibrationBlockedByGriff;
+  }
+
+  public set vibrationBlockedByGriff(pVal: boolean) {
+    this.log(
+      LogLevel.Debug,
+      `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName} in Bezug auf den Fenstergriff`,
+    );
     if (pVal) {
-      this.vibrationBlockedTimeStamp = new Date().getTime();
+      this.vibrationBlockedByGriffTimeStamp = new Date().getTime();
     }
-    this._vibrationBlocked = pVal;
+    this._vibrationBlockedByGriff = pVal;
+  }
+
+  private _vibrationBlockedByMotion: boolean = false;
+
+  public get vibrationBlockedByMotion(): boolean {
+    return this._vibrationBlockedByMotion;
+  }
+
+  public set vibrationBlockedByMotion(pVal: boolean) {
+    this.log(
+      LogLevel.Debug,
+      `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName} in Bezug auf Bewegung`,
+    );
+    if (pVal) {
+      this.vibrationBlockedByMotionTimeStamp = Utils.nowMS();
+    }
+    this._vibrationBlockedByMotion = pVal;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -138,10 +163,17 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice {
     });
   }
 
-  private alarmCheck(): void {
-    this.log(LogLevel.Debug, `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlocked}`);
-    if (this._vibrationBlocked) {
+  public alarmCheck(): void {
+    this.log(
+      LogLevel.Debug,
+      `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlockedByGriff}`,
+    );
+    if (this._vibrationBlockedByGriff) {
       this.log(LogLevel.Debug, `Fenster offen, ignoriere Vibrationsalarm bei ${this.info.customName}`);
+      return;
+    }
+    if (this._vibrationBlockedByMotion) {
+      this.log(LogLevel.Debug, `Deaktivierende Bewegung, ignoriere Vibrationsalarm bei ${this.info.customName}`);
       return;
     }
 

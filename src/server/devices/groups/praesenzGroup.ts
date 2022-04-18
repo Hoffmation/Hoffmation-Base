@@ -1,21 +1,24 @@
-import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { HmIpPraezenz } from '../hmIPDevices/hmIpPraezenz';
-import { Utils } from '../../services/utils/utils';
-import { LogLevel } from '../../../models/logLevel';
-import { TimeCallbackService } from '../../services/time-callback-service';
-import { HmIpBewegung } from '../hmIPDevices/hmIpBewegung';
-import { RoomService } from '../../services/room-service/room-service';
+import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import { HmIpBewegung, HmIpPraezenz } from '../hmIPDevices';
+import { RoomService, TimeCallbackService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
-import { ZigbeeMotionSensor } from '../zigbee/zigbeeMotionSensor';
+import { ZigbeeMotionSensor } from '../zigbee';
+import { iMotionSensor } from '../iMotionSensor';
 
 export class PraesenzGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
   private _lastLeftTimeout: NodeJS.Timeout | null = null;
 
-  public getMotionDetector(): Array<HmIpBewegung | ZigbeeMotionSensor> {
+  public constructor(roomName: string, presenceDetectorIds: string[], motionSensorIds: string[]) {
+    super(roomName, GroupType.Presence);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.PresenceDetection, new DeviceList(presenceDetectorIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.MotionDetection, new DeviceList(motionSensorIds));
+  }
+
+  public getMotionDetector(): Array<iMotionSensor> {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MotionDetection) as Array<
       HmIpBewegung | ZigbeeMotionSensor
     >;
@@ -23,12 +26,6 @@ export class PraesenzGroup extends BaseGroup {
 
   public getPresenceSensors(): HmIpPraezenz[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.PresenceDetection) as HmIpPraezenz[];
-  }
-
-  public constructor(roomName: string, presenceDetectorIds: string[], motionSensorIds: string[]) {
-    super(roomName, GroupType.Presence);
-    this.deviceCluster.deviceMap.set(DeviceClusterType.PresenceDetection, new DeviceList(presenceDetectorIds));
-    this.deviceCluster.deviceMap.set(DeviceClusterType.MotionDetection, new DeviceList(motionSensorIds));
   }
 
   public initCallbacks(): void {
@@ -48,8 +45,11 @@ export class PraesenzGroup extends BaseGroup {
         if (!val) {
           return;
         }
-        if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !b.excludeFromNightAlarm)) {
+        if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !b.settings.excludeFromNightAlarm)) {
           RoomService.startIntrusionAlarm(this.getRoom(), b);
+        }
+        if (!b.settings.seesWindow) {
+          this.getRoom().FensterGroup?.changeVibrationMotionBlock(true);
         }
         RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${b.info.fullName}"`);
       });
@@ -124,6 +124,7 @@ export class PraesenzGroup extends BaseGroup {
         LogLevel.Debug,
         `Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
       );
+      this.getRoom().FensterGroup?.changeVibrationMotionBlock(false);
       cb();
       return;
     }
@@ -138,22 +139,13 @@ export class PraesenzGroup extends BaseGroup {
           `Delayed Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
         );
         if (!this.anyPresent() && timeAfterReset > 0) {
+          this.getRoom().FensterGroup?.changeVibrationMotionBlock(false);
           cb();
         }
       },
       Math.abs(timeAfterReset) + 500,
       this,
     );
-  }
-
-  /**
-   * In case of an existing delayed last left callback timeout, this removes it.
-   * @private
-   */
-  private resetLastLeftTimeout() {
-    if (this._lastLeftTimeout !== null) {
-      clearTimeout(this._lastLeftTimeout);
-    }
   }
 
   public addLastLeftCallback(cb: () => void): void {
@@ -169,18 +161,6 @@ export class PraesenzGroup extends BaseGroup {
     });
   }
 
-  private firstEnterCallback(val: boolean, cb: () => void): void {
-    if (!val) {
-      return;
-    }
-    this._lastMovement = new Date();
-    if (this.presentAmount() > 1) {
-      return;
-    }
-
-    cb();
-  }
-
   public addFirstEnterCallback(cb: () => void): void {
     this.getPresenceSensors().forEach((p) => {
       p.addPresenceCallback((val) => {
@@ -192,5 +172,27 @@ export class PraesenzGroup extends BaseGroup {
         this.firstEnterCallback(val, cb);
       });
     });
+  }
+
+  /**
+   * In case of an existing delayed last left callback timeout, this removes it.
+   * @private
+   */
+  private resetLastLeftTimeout() {
+    if (this._lastLeftTimeout !== null) {
+      clearTimeout(this._lastLeftTimeout);
+    }
+  }
+
+  private firstEnterCallback(val: boolean, cb: () => void): void {
+    if (!val) {
+      return;
+    }
+    this._lastMovement = new Date();
+    if (this.presentAmount() > 1) {
+      return;
+    }
+
+    cb();
   }
 }

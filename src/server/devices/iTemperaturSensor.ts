@@ -1,6 +1,6 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { IBaseDevice } from './iBaseDevice';
 
-export interface iTemperaturSensor extends IoBrokerBaseDevice {
+export interface iTemperaturSensor extends IBaseDevice {
   // Temperatur as a number in Celsius
   iTemperatur: number;
 

@@ -1,9 +1,10 @@
-import { Fenster } from './groups/Fenster';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { Fenster } from './groups';
+import { IBaseDevice } from './iBaseDevice';
 
-export interface iShutter extends IoBrokerBaseDevice {
+export interface iShutter extends IBaseDevice {
   currentLevel: number;
   desiredFensterLevel: number;
   fenster: Fenster | undefined;
+
   setLevel(pPosition: number, initial: boolean, skipOpenWarning?: boolean): void;
 }

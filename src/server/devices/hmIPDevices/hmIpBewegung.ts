@@ -1,23 +1,54 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { Utils } from '../../services/utils/utils';
+import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
+import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { LogLevel } from '../../../models/logLevel';
 import { iIlluminationSensor } from '../iIlluminationSensor';
-import { dbo } from '../../../index';
+import { dbo, MotionSensorSettings } from '../../../index';
+import { iMotionSensor } from '../iMotionSensor';
 
-export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
-  public excludeFromNightAlarm: boolean = false;
-  public movementDetected: boolean = false;
-  private _detectionsToday: number = 0;
-  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
+  public settings: MotionSensorSettings = new MotionSensorSettings();
+  public excludeFromNightAlarm: boolean = false;
+  public movementDetected: boolean = false;
+  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private initialized: boolean = false;
   private _fallBackTimeout: NodeJS.Timeout | undefined;
+  private _lastMotionTime: number = 0;
+
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, DeviceType.HmIpBewegung);
+    dbo
+      ?.getCount(this)
+      .then((todayCount: CountToday) => {
+        this.detectionsToday = todayCount.counter;
+        this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
+        this.initialized = true;
+      })
+      .catch((err: Error) => {
+        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
+      });
+  }
+
+  public get timeSinceLastMotion(): number {
+    return Math.floor((Utils.nowMS() - this._lastMotionTime) / 1000);
+  }
+
+  private _detectionsToday: number = 0;
+
+  public get detectionsToday(): number {
+    return this._detectionsToday;
+  }
+
+  public set detectionsToday(pVal: number) {
+    const oldVal: number = this._detectionsToday;
+    this._detectionsToday = pVal;
+    dbo?.persistTodayCount(this, pVal, oldVal);
+  }
+
   private _currentIllumination: number = -1;
 
   public get currentIllumination(): number {
@@ -35,30 +66,6 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
         this.room?.LampenGroup?.anyLightsOwn() ?? false,
       ),
     );
-  }
-
-  public get detectionsToday(): number {
-    return this._detectionsToday;
-  }
-
-  public set detectionsToday(pVal: number) {
-    const oldVal: number = this._detectionsToday;
-    this._detectionsToday = pVal;
-    dbo?.persistTodayCount(this, pVal, oldVal);
-  }
-
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.HmIpBewegung);
-    dbo
-      ?.getCount(this)
-      .then((todayCount: CountToday) => {
-        this.detectionsToday = todayCount.counter;
-        this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
-        this.initialized = true;
-      })
-      .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
-      });
   }
 
   public addMovementCallback(pCallback: (pValue: boolean) => void): void {
@@ -114,6 +121,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor {
     if (pVal) {
       this.startFallbackTimeout();
       this.detectionsToday++;
+      this._lastMotionTime = Utils.nowMS();
       this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung `);
     }
 

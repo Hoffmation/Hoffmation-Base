@@ -1,37 +1,19 @@
 import { DeviceType } from '../deviceType';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { Utils } from '../../services/utils/utils';
-import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { LogLevel } from '../../../models/logLevel';
+import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
+import { Utils } from '../../services';
+import { DeviceInfo } from '../DeviceInfo';
 import { dbo } from '../../../index';
+import { iMotionSensor } from '../iMotionSensor';
 
-export class ZigbeeMotionSensor extends ZigbeeDevice {
+export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
+  public settings: MotionSensorSettings = new MotionSensorSettings();
   public movementDetected: boolean = false;
   public excludeFromNightAlarm: boolean = false;
-
-  protected _timeSinceLastMotion: number = 0;
-  protected _detectionsToday: number = 0;
-
   protected _initialized: boolean = false;
   protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
-
-  // Time since last motion in seconds
-  public get timeSinceLastMotion(): number {
-    return this._timeSinceLastMotion;
-  }
-
-  public get detectionsToday(): number {
-    return this._detectionsToday;
-  }
-
-  public set detectionsToday(pVal: number) {
-    const oldVal: number = this._detectionsToday;
-    this._detectionsToday = pVal;
-    dbo?.persistTodayCount(this, pVal, oldVal);
-  }
 
   public constructor(pInfo: DeviceInfo, type: DeviceType) {
     super(pInfo, type);
@@ -45,6 +27,25 @@ export class ZigbeeMotionSensor extends ZigbeeDevice {
       .catch((err: Error) => {
         this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err?.message ?? err}`);
       });
+  }
+
+  protected _timeSinceLastMotion: number = 0;
+
+  // Time since last motion in seconds
+  public get timeSinceLastMotion(): number {
+    return this._timeSinceLastMotion;
+  }
+
+  protected _detectionsToday: number = 0;
+
+  public get detectionsToday(): number {
+    return this._detectionsToday;
+  }
+
+  public set detectionsToday(pVal: number) {
+    const oldVal: number = this._detectionsToday;
+    this._detectionsToday = pVal;
+    dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   /**

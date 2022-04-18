@@ -1,4 +1,4 @@
-import { HmIpHeizgruppe } from '../hmIPDevices/hmIpHeizgruppe';
+import { HmIpHeizgruppe } from '../hmIPDevices';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
@@ -7,6 +7,13 @@ import { iTemperaturSensor } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
 
 export class HeatGroup extends BaseGroup {
+  public constructor(roomName: string, heaterIds: string[], tempSensorIds: string[], humiditySensorIds: string[]) {
+    super(roomName, GroupType.Heating);
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Heater, new DeviceList(heaterIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.TemperaturSensor, new DeviceList(tempSensorIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.HumiditySensor, new DeviceList(humiditySensorIds));
+  }
+
   public get currentTemp(): number {
     if (this.getHeater().length === 0) {
       return -99;
@@ -35,17 +42,10 @@ export class HeatGroup extends BaseGroup {
   }
 
   public getTempSensors(): iTemperaturSensor[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.TemperaturSensor) as iTemperaturSensor[];
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.TemperaturSensor) as iTemperaturSensor[];
   }
 
   public getHumiditySensors(): iHumiditySensor[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.HumiditySensor) as iHumiditySensor[];
-  }
-
-  public constructor(roomName: string, heaterIds: string[], tempSensorIds: string[], humiditySensorIds: string[]) {
-    super(roomName, GroupType.Heating);
-    this.deviceCluster.deviceMap.set(DeviceClusterType.Heater, new DeviceList(heaterIds));
-    this.deviceCluster.deviceMap.set(DeviceClusterType.TemperaturSensor, new DeviceList(tempSensorIds));
-    this.deviceCluster.deviceMap.set(DeviceClusterType.HumiditySensor, new DeviceList(humiditySensorIds));
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.HumiditySensor) as iHumiditySensor[];
   }
 }

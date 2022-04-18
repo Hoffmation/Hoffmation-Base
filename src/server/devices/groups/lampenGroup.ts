@@ -36,7 +36,7 @@ export class LampenGroup extends BaseGroup {
   }
 
   public getLampen(): iLamp[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Lamps) as iLamp[];
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Lamps) as iLamp[];
   }
 
   public getLED(): ZigbeeIlluLedRGBCCT[] {

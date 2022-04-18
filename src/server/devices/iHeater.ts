@@ -1,7 +1,7 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { TemperaturSettings } from '../../models/temperaturSettings';
+import { TemperaturSettings } from '../../models';
+import { IBaseDevice } from './iBaseDevice';
 
-export interface iHeater extends IoBrokerBaseDevice {
+export interface iHeater extends IBaseDevice {
   readonly desiredTemperatur: number;
   readonly iLevel: number;
   readonly iTemperatur: number;

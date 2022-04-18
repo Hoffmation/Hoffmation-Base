@@ -1,8 +1,9 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { IDeviceUpdater } from './iDeviceUpdater';
-import { ServerLogService } from '../services/log-service/log-service';
-import { LogLevel } from '../../models/logLevel';
+import { ServerLogService } from '../services';
+import { LogLevel } from '../../models';
 import { Devices } from './devices';
+import { IBaseDevice } from './iBaseDevice';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;
@@ -28,12 +29,12 @@ export class DeviceUpdater implements IDeviceUpdater {
     const idSplit: string[] = id.split('.');
     if (idSplit.length < 2) return;
 
-    const device: undefined | IoBrokerBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
-    if (typeof device === 'undefined') {
+    const device: undefined | IBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
+    if (typeof device === 'undefined' && (device as IoBrokerBaseDevice).update !== undefined) {
       return;
     }
     try {
-      device.update(idSplit, state, initial, false);
+      (device as IoBrokerBaseDevice).update(idSplit, state, initial, false);
     } catch (e: any) {
       ServerLogService.writeLog(
         LogLevel.Alert,

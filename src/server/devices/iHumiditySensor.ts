@@ -1,6 +1,6 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { IBaseDevice } from './iBaseDevice';
 
-export interface iHumiditySensor extends IoBrokerBaseDevice {
+export interface iHumiditySensor extends IBaseDevice {
   humidity: number;
 
   addHumidityCallback(pCallback: (pValue: number) => void): void;

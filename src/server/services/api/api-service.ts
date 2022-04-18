@@ -1,19 +1,16 @@
-import { Devices } from '../../devices/devices';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
-import { RoomService } from '../room-service/room-service';
-import { ServerLogService } from '../log-service/log-service';
-import { LogLevel } from '../../../models/logLevel';
-import { LogObject } from '../log-service/log-object';
+import { Devices, IBaseDevice } from '../../devices';
+import { LogLevel, RoomBase } from '../../../models';
+import { RoomService } from '../room-service';
+import { LogObject, ServerLogService } from '../log-service';
 
 export class API {
-  public static getDevices(): { [id: string]: IoBrokerBaseDevice } {
+  public static getDevices(): { [id: string]: IBaseDevice } {
     // console.log(inspect(Devices.alLDevices, false, 3));
     return Devices.alLDevices;
   }
 
-  public static getDevice(id: string): IoBrokerBaseDevice {
-    const d: IoBrokerBaseDevice | undefined = Devices.alLDevices[id];
+  public static getDevice(id: string): IBaseDevice {
+    const d: IBaseDevice | undefined = Devices.alLDevices[id];
     if (d === undefined) {
       ServerLogService.writeLog(LogLevel.Warn, `Api.getDevice() --> "${id}" not found`);
     }

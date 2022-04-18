@@ -1,28 +1,17 @@
-import { HmIpGriff } from '../hmIPDevices/hmIpGriff';
-import { Utils } from '../../services/utils/utils';
-import { ZigbeeAquaraVibra } from '../zigbee/zigbeeAquaraVibra';
-import { FensterPosition } from '../models/FensterPosition';
-import { TimeCallbackService, TimeOfDay } from '../../services/time-callback-service';
-import { LogLevel } from '../../../models/logLevel';
+import { HmIpGriff } from '../hmIPDevices';
+import { ShutterService, TimeCallbackService, TimeOfDay, Utils } from '../../services';
+import { FensterPosition } from '../models';
+import { LogLevel } from '../../../models';
 import { iShutter } from '../iShutter';
-import { ShutterService } from '../../services/ShutterService';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
-import { ZigbeeMagnetContact } from '../zigbee/zigbeeMagnetContact';
+import { ZigbeeMagnetContact } from '../zigbee';
+import { iVibrationSensor } from '../iVibrationSensor';
 
 export class Fenster extends BaseGroup {
   public desiredPosition: number = 0;
-
-  /**
-   * sets the desired Pos and moves rollo to this level
-   * @param {number} value
-   */
-  public setDesiredPosition(value: number): void {
-    this.desiredPosition = value;
-    this.restoreDesiredPosition();
-  }
 
   public constructor(
     roomName: string,
@@ -39,6 +28,15 @@ export class Fenster extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.MagnetContact, new DeviceList(magnetIds));
   }
 
+  /**
+   * sets the desired Pos and moves rollo to this level
+   * @param {number} value
+   */
+  public setDesiredPosition(value: number): void {
+    this.desiredPosition = value;
+    this.restoreDesiredPosition();
+  }
+
   public getHandle(): HmIpGriff[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
   }
@@ -48,11 +46,11 @@ export class Fenster extends BaseGroup {
   }
 
   public getShutter(): iShutter[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Shutter) as iShutter[];
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Shutter) as iShutter[];
   }
 
-  public getVibration(): ZigbeeAquaraVibra[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Vibration) as ZigbeeAquaraVibra[];
+  public getVibration(): iVibrationSensor[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Vibration) as iVibrationSensor[];
   }
 
   public griffeInPosition(pPosition: FensterPosition): number {
@@ -72,7 +70,7 @@ export class Fenster extends BaseGroup {
           return;
         }
         this.getVibration().forEach((element) => {
-          element.vibrationBlocked = true;
+          element.vibrationBlockedByGriff = true;
         });
         const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().settings.rolloOffset);
         if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
@@ -85,7 +83,7 @@ export class Fenster extends BaseGroup {
       griff.addOffenCallback((offen: boolean) => {
         if (offen) {
           this.getVibration().forEach((element) => {
-            element.vibrationBlocked = true;
+            element.vibrationBlockedByGriff = true;
           });
           ShutterService.windowAllUp(this);
           return;
@@ -102,8 +100,8 @@ export class Fenster extends BaseGroup {
           this.getVibration().forEach((element) => {
             this.log(LogLevel.Debug, `Starte Timeout für Vibrationsdeaktivierung für ${element.info.customName}`);
             Utils.guardedTimeout(() => {
-              if (element.vibrationBlockedTimeStamp < now) {
-                element.vibrationBlocked = false;
+              if (element.vibrationBlockedByGriffTimeStamp < now) {
+                element.vibrationBlockedByGriff = false;
               }
             }, 12000);
           });

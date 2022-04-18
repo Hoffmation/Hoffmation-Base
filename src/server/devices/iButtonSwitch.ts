@@ -1,7 +1,7 @@
 import { Button } from './button';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { IBaseDevice } from './iBaseDevice';
 
-export interface iButtonSwitch extends IoBrokerBaseDevice {
+export interface iButtonSwitch extends IBaseDevice {
   // Primarily in 4-6 Button switches
   buttonTopLeft: Button | undefined;
   // Primarily in 4-6 Button switches

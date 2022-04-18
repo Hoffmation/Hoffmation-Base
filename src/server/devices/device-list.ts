@@ -1,17 +1,17 @@
-import { API } from '../services/api/api-service';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { OwnSonosDevice } from '../services/Sonos/sonos-service';
-import { OwnSonosDevices } from '../services/Sonos/OwnSonosDevices';
+import { API, OwnSonosDevice, OwnSonosDevices } from '../services';
+import { IBaseDevice } from './iBaseDevice';
 
 export class DeviceList {
+  public constructor(private _ids: string[] = []) {
+    // Empty
+  }
+
   public get ids(): string[] {
     return this._ids;
   }
 
-  public constructor(private _ids: string[] = []) {}
-
-  public getDevices(): Array<IoBrokerBaseDevice | OwnSonosDevice> {
-    const result: Array<IoBrokerBaseDevice | OwnSonosDevice> = [];
+  public getDevices(): Array<IBaseDevice | OwnSonosDevice> {
+    const result: Array<IBaseDevice | OwnSonosDevice> = [];
 
     for (const dID of this._ids) {
       const d = API.getDevice(dID);

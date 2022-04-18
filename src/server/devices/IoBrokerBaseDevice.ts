@@ -1,16 +1,53 @@
-import { ServerLogService } from '../services/log-service/log-service';
+import { ServerLogService, Utils } from '../services';
 import { DeviceInfo } from './DeviceInfo';
-import { RoomDeviceAddingSettings } from '../../models/rooms/RoomSettings/roomDeviceAddingSettings';
-import { RoomAddDeviceItem } from '../../models/rooms/RoomSettings/roomAddDeviceItem';
-import { IOBrokerConnection } from '../ioBroker/connection';
-import { LogLevel } from '../../models/logLevel';
+import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
+import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
-import { RoomBase } from '../../models/rooms/RoomBase';
-import { ioBrokerMain } from '../ioBroker/ioBroker.main';
-import { Utils } from '../services/utils/utils';
+import { IBaseDevice } from './iBaseDevice';
 
-export abstract class IoBrokerBaseDevice {
+export abstract class IoBrokerBaseDevice implements IBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
+  public room: RoomBase | undefined = undefined;
+  public battery: number | undefined;
+
+  protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {
+    this.addToCorrectRoom();
+  }
+
+  public get id(): string {
+    const result: string = Utils.guard(this.info.allDevicesKey);
+    if (result === '0' || result === '1') {
+      ServerLogService.writeLog(
+        LogLevel.Warn,
+        `Device "${this.info.fullName}" has an akward allDevicesKey of "${result}"`,
+      );
+    }
+    return result;
+  }
+
+  /**
+   * Getter info
+   * @return {DeviceInfo}
+   */
+  public get info(): DeviceInfo {
+    return this._info;
+  }
+
+  /**
+   * Setter info
+   * @param {DeviceInfo} value
+   */
+  public set info(value: DeviceInfo) {
+    this._info = value;
+  }
+
+  /**
+   * Getter ioConn
+   * @return {IOBrokerConnection}
+   */
+  public get ioConn(): IOBrokerConnection | undefined {
+    return ioBrokerMain.iOConnection;
+  }
 
   public static addRoom(shortName: string, settings: RoomDeviceAddingSettings): void {
     if (this.roomAddingSettings[shortName] !== undefined) {
@@ -29,48 +66,6 @@ export abstract class IoBrokerBaseDevice {
     }
   }
 
-  public room: RoomBase | undefined = undefined;
-  public battery: number | undefined;
-
-  public get id(): string {
-    const result: string = Utils.guard(this.info.allDevicesKey);
-    if (result === '0' || result === '1') {
-      ServerLogService.writeLog(
-        LogLevel.Warn,
-        `Device "${this.info.fullName}" has an akward allDevicesKey of "${result}"`,
-      );
-    }
-    return result;
-  }
-
-  protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {
-    this.addToCorrectRoom();
-  }
-
-  /**
-   * Getter info
-   * @return {TradFriInfo}
-   */
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
-  /**
-   * Setter info
-   * @param {TradFriInfo} value
-   */
-  public set info(value: DeviceInfo) {
-    this._info = value;
-  }
-
-  /**
-   * Getter ioConn
-   * @return {IOBrokerConnection}
-   */
-  public get ioConn(): IOBrokerConnection | undefined {
-    return ioBrokerMain.iOConnection;
-  }
-
   /**
    * Returns whether a connection to ioBroker is established or not
    * @param showError If true, an error message will be written to the log if the connection is not established
@@ -84,6 +79,19 @@ export abstract class IoBrokerBaseDevice {
   }
 
   public abstract update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean): void;
+
+  public log(level: LogLevel, message: string): void {
+    ServerLogService.writeLog(level, message, {
+      room: this.info.room,
+      deviceId: this.id,
+      deviceName: this.info.customName,
+    });
+  }
+
+  public toJSON(): Partial<IoBrokerBaseDevice> {
+    const result: Partial<IoBrokerBaseDevice> = Utils.jsonFilter(this);
+    return result;
+  }
 
   protected addToCorrectRoom(): void {
     const settings: RoomDeviceAddingSettings | undefined = IoBrokerBaseDevice.roomAddingSettings[this.info.room];
@@ -118,14 +126,6 @@ export abstract class IoBrokerBaseDevice {
     ServerLogService.writeLog(LogLevel.Warn, `${this.info.room} is noch kein bekannter Raum`);
   }
 
-  protected log(level: LogLevel, message: string): void {
-    ServerLogService.writeLog(level, message, {
-      room: this.info.room,
-      deviceId: this.id,
-      deviceName: this.info.customName,
-    });
-  }
-
   /**
    * Sets the state of a given data point and returns true if that was successful.
    * @param pointId Data point to write to
@@ -158,10 +158,5 @@ export abstract class IoBrokerBaseDevice {
         onSuccess();
       }
     });
-  }
-
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    const result: Partial<IoBrokerBaseDevice> = Utils.jsonFilter(this);
-    return result;
   }
 }
