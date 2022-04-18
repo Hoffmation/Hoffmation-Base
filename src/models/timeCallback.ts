@@ -26,6 +26,8 @@ export class TimeCallback {
     public hours?: number,
     public minutes?: number,
     public sunTimeOffset?: SunTimeOffsets,
+    // Additional Offset due to amount of clouds
+    public cloudOffset?: number,
   ) {}
 
   public recalcNextToDo(now: Date): void {
@@ -56,7 +58,12 @@ export class TimeCallback {
         );
         break;
       case TimeCallbackType.Sunrise:
-        let fixedSRDate: Date = new Date(TimeCallbackService.nextSunRise.getTime() + this.minuteOffset * 60 * 1000);
+        if (this.cloudOffset === undefined) {
+          this.cloudOffset = 0;
+        }
+        let fixedSRDate: Date = new Date(
+          TimeCallbackService.nextSunRise.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
+        );
         if (this.sunTimeOffset) {
           const nextMinSR: Date = this.sunTimeOffset.getNextMinimumSunrise(now);
           if (nextMinSR > fixedSRDate && fixedSRDate.getDate() === nextMinSR.getDate()) {
@@ -74,7 +81,14 @@ export class TimeCallback {
         this.nextToDo = fixedSRDate;
         break;
       case TimeCallbackType.SunSet:
-        let fixedSSDate: Date = new Date(TimeCallbackService.nextSunSet.getTime() + this.minuteOffset * 60 * 1000);
+        if (this.cloudOffset === undefined) {
+          this.cloudOffset = 0;
+        } else {
+          this.cloudOffset = this.cloudOffset * -1;
+        }
+        let fixedSSDate: Date = new Date(
+          TimeCallbackService.nextSunSet.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
+        );
         if (this.sunTimeOffset) {
           const nextMaxSS: Date = this.sunTimeOffset.getNextMaximumSunset(now);
           if (nextMaxSS < fixedSSDate && fixedSSDate.getDate() === nextMaxSS.getDate()) {

@@ -2,13 +2,13 @@ import { WeatherHourly } from './weather-hourly';
 import { WeatherCurrent } from './weather-current';
 import { WeatherMinutes } from './weather-minutes';
 import { WeatherAlert } from './weather-alert';
-import { iWeatherSettings } from '../../config/iConfig';
-import { LogLevel } from '../../../models/logLevel';
+import { iWeatherSettings } from '../../config';
+import { LogLevel } from '../../../models';
 import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
-import { Utils } from '../utils/utils';
-import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
-import { ServerLogService } from '../log-service/log-service';
+import { Utils } from '../utils';
+import { OwnSonosDevice, SonosService } from '../Sonos';
+import { ServerLogService } from '../log-service';
 import { WeatherDaily } from './weather-daily';
 
 export interface WeatherResponse {
@@ -27,10 +27,15 @@ export class WeatherService {
   public static active: boolean = false;
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public static lastResponse: WeatherResponse;
+  private static _dataUpdateCbs: { [name: string]: () => void } = {};
   private static _refreshInterval: NodeJS.Timeout | undefined;
   private static latitude: string;
   private static longitude: string;
   private static appID: string;
+
+  public static addWeatherUpdateCb(name: string, cb: () => void) {
+    this._dataUpdateCbs[name] = cb;
+  }
 
   public static initialize(config: iWeatherSettings): void {
     this.active = true;
@@ -168,6 +173,69 @@ export class WeatherService {
     }
   }
 
+  public static processHourlyWeather(): void {
+    ServerLogService.writeLog(
+      LogLevel.Info,
+      `Es sind gerade ${this.lastResponse.current.temp} Grad (gefühlt ${this.lastResponse.current.feels_like}).`,
+    );
+    if (this.lastResponse.alerts !== undefined && this.lastResponse.alerts.length > 0) {
+      const message: string[] = [`Es gibt folgende Wetterwarnungen:`];
+      this.lastResponse.alerts.forEach((element) => {
+        message.push(
+          `${element.event} von ${new Date(element.start * 1000)} bis ${new Date(element.end * 1000)}; Beschreibung: ${
+            element.description
+          } Herausgeber: ${element.sender_name}`,
+        );
+      });
+      ServerLogService.writeLog(LogLevel.Info, message.join('\n'));
+    }
+  }
+
+  public static getCurrentTemp(): number {
+    const wData: WeatherResponse = WeatherService.lastResponse;
+    if (wData === undefined || wData.current === undefined) {
+      ServerLogService.writeLog(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
+      return -99;
+    }
+    return wData.current.temp;
+  }
+
+  public static isOutsideWarmer(currentTemperatur: number): boolean {
+    const wData: WeatherResponse = WeatherService.lastResponse;
+    if (wData === undefined || wData.current === undefined) {
+      ServerLogService.writeLog(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
+      return false;
+    }
+    ServerLogService.writeLog(
+      LogLevel.Info,
+      `isOutsideWarmer(${currentTemperatur}) --> Aktuelle Temperatur: ${wData.current.temp}`,
+    );
+    return currentTemperatur < wData.current.temp;
+  }
+
+  public static weatherRolloPosition(normalPos: number, desiredTemperatur: number, currentTemperatur: number): number {
+    let result: number = normalPos;
+    if (currentTemperatur > desiredTemperatur && this.isOutsideWarmer(currentTemperatur) && normalPos > 30) {
+      // Draußen ist wärmer also runter
+      result = 30;
+    }
+
+    ServerLogService.writeLog(
+      LogLevel.Info,
+      `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${result}`,
+    );
+    return result;
+  }
+
+  public static getCurrentCloudiness(): number {
+    const wData: WeatherResponse = WeatherService.lastResponse;
+    if (wData === undefined || wData.current === undefined) {
+      ServerLogService.writeLog(LogLevel.Info, `WeatherService.getCurrentCloudiness(): There are no data yet`);
+      return 0;
+    }
+    return wData.current.clouds;
+  }
+
   private static getRainNextMinutes(): { minutes: number; precipitation: number } {
     const minutes: WeatherMinutes[] = WeatherService.lastResponse.minutely;
     let minutesUsed = 0;
@@ -223,62 +291,11 @@ export class WeatherService {
         Utils.guardedFunction(() => {
           WeatherService.lastResponse = JSON.parse(response);
           WeatherService.processHourlyWeather();
+          for (const dataUpdateCbsKey in this._dataUpdateCbs) {
+            this._dataUpdateCbs[dataUpdateCbsKey]();
+          }
         }, this);
       },
     );
-  }
-
-  public static processHourlyWeather(): void {
-    ServerLogService.writeLog(
-      LogLevel.Info,
-      `Es sind gerade ${this.lastResponse.current.temp} Grad (gefühlt ${this.lastResponse.current.feels_like}).`,
-    );
-    if (this.lastResponse.alerts !== undefined && this.lastResponse.alerts.length > 0) {
-      const message: string[] = [`Es gibt folgende Wetterwarnungen:`];
-      this.lastResponse.alerts.forEach((element) => {
-        message.push(
-          `${element.event} von ${new Date(element.start * 1000)} bis ${new Date(element.end * 1000)}; Beschreibung: ${
-            element.description
-          } Herausgeber: ${element.sender_name}`,
-        );
-      });
-      ServerLogService.writeLog(LogLevel.Info, message.join('\n'));
-    }
-  }
-
-  public static getCurrentTemp(): number {
-    const wData: WeatherResponse = WeatherService.lastResponse;
-    if (wData === undefined || wData.current === undefined) {
-      ServerLogService.writeLog(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
-      return -99;
-    }
-    return wData.current.temp;
-  }
-
-  public static isOutsideWarmer(currentTemperatur: number): boolean {
-    const wData: WeatherResponse = WeatherService.lastResponse;
-    if (wData === undefined || wData.current === undefined) {
-      ServerLogService.writeLog(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
-      return false;
-    }
-    ServerLogService.writeLog(
-      LogLevel.Info,
-      `isOutsideWarmer(${currentTemperatur}) --> Aktuelle Temperatur: ${wData.current.temp}`,
-    );
-    return currentTemperatur < wData.current.temp;
-  }
-
-  public static weatherRolloPosition(normalPos: number, desiredTemperatur: number, currentTemperatur: number): number {
-    let result: number = normalPos;
-    if (currentTemperatur > desiredTemperatur && this.isOutsideWarmer(currentTemperatur) && normalPos > 30) {
-      // Draußen ist wärmer also runter
-      result = 30;
-    }
-
-    ServerLogService.writeLog(
-      LogLevel.Info,
-      `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${result}`,
-    );
-    return result;
   }
 }

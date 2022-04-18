@@ -1,4 +1,4 @@
-import { iTimePair } from '../../../server/config/iConfig';
+import { iTimePair } from '../../../server';
 
 // These default settings can be overridden within every room
 export interface iRoomDefaultSettings {
@@ -28,6 +28,9 @@ export interface iRoomDefaultSettings {
 
   // +/- Offset for turning on lamps at movement after/before sunset
   sonnenUntergangLampenDelay: number;
+
+  // !Needs Weather Data! Additional Offset in Minutes per % Cloudiness
+  sonnenUntergangRolloAdditionalOffsetPerCloudiness: number;
 
   // Should shutters be opened on sunrise
   sonnenAufgangRollos: boolean;

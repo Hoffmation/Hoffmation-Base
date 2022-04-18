@@ -1,12 +1,8 @@
 import { RoomBase } from '../RoomBase';
 import { iRoomInitializationSettings } from './iRoomInitializationSettings';
 import { iRoomDefaultSettings } from './iRoomDefaultSettings';
-import { SunTimeOffsets } from '../../../server/services/time-callback-service';
-import { iTimePair } from '../../../server/config/iConfig';
+import { API, iTimePair, SettingsService, SunTimeOffsets, Utils, WeatherService } from '../../../server';
 import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
-import { SettingsService } from '../../../server/services/settings-service';
-import { API } from '../../../server/services/api/api-service';
-import { Utils } from '../../../server/services/utils/utils';
 import _ from 'lodash';
 
 export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
@@ -19,19 +15,6 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   public lampOffset: SunTimeOffsets;
   public roomName?: string;
   public rolloHeatReduction: boolean = this.defaultSettings.rolloHeatReduction;
-  private _lampenBeiBewegung: boolean = this.defaultSettings.lampenBeiBewegung;
-  private _lichtSonnenAufgangAus: boolean = this.defaultSettings.lichtSonnenAufgangAus;
-  private _sonnenUntergangRollos: boolean = this.defaultSettings.sonnenUntergangRollos;
-  private _sonnenAufgangRollos: boolean = this.defaultSettings.sonnenAufgangRollos;
-  private _movementResetTimer: number = this.defaultSettings.movementResetTimer;
-  private _sonnenUntergangRolloDelay: number = this.defaultSettings.sonnenUntergangRolloDelay;
-  private _sonnenUntergangRolloMaxTime: iTimePair = this.defaultSettings.sonnenUntergangRolloMaxTime;
-  private _sonnenUntergangLampenDelay: number = this.defaultSettings.sonnenUntergangLampenDelay;
-  private _sonnenAufgangRolloDelay: number = this.defaultSettings.sonnenAufgangRolloDelay;
-  private _sonnenAufgangRolloMinTime: iTimePair = this.defaultSettings.sonnenAufgangRolloMinTime;
-  private _sonnenAufgangLampenDelay: number = this.defaultSettings.sonnenAufgangLampenDelay;
-  private _lightIfNoWindows: boolean = this.defaultSettings.lightIfNoWindows;
-  private _roomIsAlwaysDark: boolean = this.defaultSettings.roomIsAlwaysDark;
 
   public constructor(initSettings: iRoomInitializationSettings) {
     this.shortName = initSettings.shortName;
@@ -48,79 +31,17 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
   }
 
-  private recalcRolloOffset(): void {
-    this.rolloOffset = new SunTimeOffsets(
-      this.sonnenAufgangRolloDelay,
-      this.sonnenUntergangRolloDelay,
-      this.sonnenAufgangRolloMinTime.hours,
-      this.sonnenAufgangRolloMinTime.minutes,
-      this.sonnenUntergangRolloMaxTime.hours,
-      this.sonnenUntergangRolloMaxTime.minutes,
-    );
-
-    this.room?.recalcTimeCallbacks();
-  }
-
-  private recalcLampOffset(): void {
-    this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenAufgangRolloDelay);
-    this.room?.recalcTimeCallbacks();
-  }
-
-  get roomIsAlwaysDark(): boolean {
-    return this._roomIsAlwaysDark;
-  }
-
-  set roomIsAlwaysDark(value: boolean) {
-    this._roomIsAlwaysDark = value;
-  }
-
-  get sonnenAufgangLampenDelay(): number {
-    return this._sonnenAufgangLampenDelay;
-  }
-
-  set sonnenAufgangLampenDelay(value: number) {
-    this._sonnenAufgangLampenDelay = value;
-    this.recalcLampOffset();
-  }
-
-  get sonnenAufgangRolloDelay(): number {
-    return this._sonnenAufgangRolloDelay;
-  }
-
-  set sonnenAufgangRolloDelay(value: number) {
-    this._sonnenAufgangRolloDelay = value;
-    this.recalcRolloOffset();
-  }
-
-  get sonnenUntergangLampenDelay(): number {
-    return this._sonnenUntergangLampenDelay;
-  }
-
-  set sonnenUntergangLampenDelay(value: number) {
-    this._sonnenUntergangLampenDelay = value;
-    this.recalcLampOffset();
-  }
-
-  get sonnenUntergangRolloDelay(): number {
-    return this._sonnenUntergangRolloDelay;
-  }
-
-  set sonnenUntergangRolloDelay(value: number) {
-    this._sonnenUntergangRolloDelay = value;
-    this.recalcRolloOffset();
-  }
-
-  get movementResetTimer(): number {
-    return this._movementResetTimer;
-  }
-
-  set movementResetTimer(value: number) {
-    this._movementResetTimer = value;
-  }
+  private _lichtSonnenAufgangAus: boolean = this.defaultSettings.lichtSonnenAufgangAus;
 
   get lichtSonnenAufgangAus(): boolean {
     return this._lichtSonnenAufgangAus;
   }
+
+  set lichtSonnenAufgangAus(value: boolean) {
+    this._lichtSonnenAufgangAus = value;
+  }
+
+  private _sonnenAufgangRollos: boolean = this.defaultSettings.sonnenAufgangRollos;
 
   get sonnenAufgangRollos(): boolean {
     return this._sonnenAufgangRollos;
@@ -131,26 +52,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this.recalcRolloOffset();
   }
 
-  get sonnenUntergangRollos(): boolean {
-    return this._sonnenUntergangRollos;
-  }
-
-  set sonnenUntergangRollos(value: boolean) {
-    this._sonnenUntergangRollos = value;
-    this.recalcRolloOffset();
-  }
-
-  set lichtSonnenAufgangAus(value: boolean) {
-    this._lichtSonnenAufgangAus = value;
-  }
-
-  get lampenBeiBewegung(): boolean {
-    return this._lampenBeiBewegung;
-  }
-
-  set lampenBeiBewegung(value: boolean) {
-    this._lampenBeiBewegung = value;
-  }
+  private _sonnenUntergangRolloMaxTime: iTimePair = this.defaultSettings.sonnenUntergangRolloMaxTime;
 
   get sonnenUntergangRolloMaxTime(): iTimePair {
     return this._sonnenUntergangRolloMaxTime;
@@ -161,6 +63,8 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this.recalcRolloOffset();
   }
 
+  private _sonnenAufgangRolloMinTime: iTimePair = this.defaultSettings.sonnenAufgangRolloMinTime;
+
   get sonnenAufgangRolloMinTime(): iTimePair {
     return this._sonnenAufgangRolloMinTime;
   }
@@ -170,12 +74,106 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     this.recalcRolloOffset();
   }
 
+  private _lightIfNoWindows: boolean = this.defaultSettings.lightIfNoWindows;
+
   get lightIfNoWindows(): boolean {
     return this._lightIfNoWindows;
   }
 
   set lightIfNoWindows(value: boolean) {
     this._lightIfNoWindows = value;
+  }
+
+  private _lampenBeiBewegung: boolean = this.defaultSettings.lampenBeiBewegung;
+
+  get lampenBeiBewegung(): boolean {
+    return this._lampenBeiBewegung;
+  }
+
+  set lampenBeiBewegung(value: boolean) {
+    this._lampenBeiBewegung = value;
+  }
+
+  private _sonnenUntergangRollos: boolean = this.defaultSettings.sonnenUntergangRollos;
+
+  get sonnenUntergangRollos(): boolean {
+    return this._sonnenUntergangRollos;
+  }
+
+  set sonnenUntergangRollos(value: boolean) {
+    this._sonnenUntergangRollos = value;
+    this.recalcRolloOffset();
+  }
+
+  private _movementResetTimer: number = this.defaultSettings.movementResetTimer;
+
+  get movementResetTimer(): number {
+    return this._movementResetTimer;
+  }
+
+  set movementResetTimer(value: number) {
+    this._movementResetTimer = value;
+  }
+
+  private _sonnenUntergangRolloDelay: number = this.defaultSettings.sonnenUntergangRolloDelay;
+
+  get sonnenUntergangRolloDelay(): number {
+    return this._sonnenUntergangRolloDelay;
+  }
+
+  set sonnenUntergangRolloDelay(value: number) {
+    this._sonnenUntergangRolloDelay = value;
+    this.recalcRolloOffset();
+  }
+
+  private _sonnenUntergangLampenDelay: number = this.defaultSettings.sonnenUntergangLampenDelay;
+
+  get sonnenUntergangLampenDelay(): number {
+    return this._sonnenUntergangLampenDelay;
+  }
+
+  set sonnenUntergangLampenDelay(value: number) {
+    this._sonnenUntergangLampenDelay = value;
+    this.recalcLampOffset();
+  }
+
+  private _sonnenUntergangRolloAdditionalOffsetPerCloudiness: number =
+    this.defaultSettings.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
+
+  get sonnenUntergangRolloAdditionalOffsetPerCloudiness(): number {
+    return this._sonnenUntergangRolloAdditionalOffsetPerCloudiness;
+  }
+
+  private _sonnenAufgangRolloDelay: number = this.defaultSettings.sonnenAufgangRolloDelay;
+
+  get sonnenAufgangRolloDelay(): number {
+    return this._sonnenAufgangRolloDelay;
+  }
+
+  set sonnenAufgangRolloDelay(value: number) {
+    this._sonnenAufgangRolloDelay = value;
+    this.recalcRolloOffset();
+  }
+
+  private _sonnenAufgangLampenDelay: number = this.defaultSettings.sonnenAufgangLampenDelay;
+
+  get sonnenAufgangLampenDelay(): number {
+    return this._sonnenAufgangLampenDelay;
+  }
+
+  set sonnenAufgangLampenDelay(value: number) {
+    this._sonnenAufgangLampenDelay = value;
+    this.recalcLampOffset();
+  }
+
+  private _roomIsAlwaysDark: boolean = this.defaultSettings.roomIsAlwaysDark;
+
+  get roomIsAlwaysDark(): boolean {
+    return this._roomIsAlwaysDark;
+  }
+
+  set roomIsAlwaysDark(value: boolean) {
+    this._roomIsAlwaysDark = value;
   }
 
   public get room(): RoomBase | undefined {
@@ -188,5 +186,27 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   public toJSON(): Partial<RoomSettings> {
     const result: Partial<RoomSettings> = Utils.jsonFilter(this);
     return _.omit(result, [`defaultSettings`, 'deviceAddidngSettings']);
+  }
+
+  private recalcRolloOffset(): void {
+    this.rolloOffset = new SunTimeOffsets(
+      this.sonnenAufgangRolloDelay,
+      this.sonnenUntergangRolloDelay,
+      this.sonnenAufgangRolloMinTime.hours,
+      this.sonnenAufgangRolloMinTime.minutes,
+      this.sonnenUntergangRolloMaxTime.hours,
+      this.sonnenUntergangRolloMaxTime.minutes,
+    );
+    if (this.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
+      WeatherService.addWeatherUpdateCb(`RolloWeatherUpdate${this.roomName}`, () => {
+        this.room?.recalcTimeCallbacks();
+      });
+    }
+    this.room?.recalcTimeCallbacks();
+  }
+
+  private recalcLampOffset(): void {
+    this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenAufgangRolloDelay);
+    this.room?.recalcTimeCallbacks();
   }
 }

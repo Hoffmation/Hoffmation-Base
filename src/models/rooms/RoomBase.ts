@@ -16,6 +16,7 @@ import {
   TimeCallbackService,
   Utils,
   WaterGroup,
+  WeatherService,
 } from '../../server';
 import { LogLevel } from '../logLevel';
 import { RoomSettings } from './RoomSettings';
@@ -105,6 +106,10 @@ export class RoomBase implements iRoomBase {
     if (this.sonnenUntergangCallback && this.settings.rolloOffset) {
       this.sonnenUntergangCallback.minuteOffset = this.settings.rolloOffset.sunset;
       this.sonnenUntergangCallback.sunTimeOffset = this.settings.rolloOffset;
+      if (this.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
+        this.sonnenUntergangCallback.cloudOffset =
+          WeatherService.getCurrentCloudiness() * this.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
+      }
       this.sonnenUntergangCallback.recalcNextToDo(now);
     }
     if (this.sonnenAufgangLichtCallback && this.settings.lampOffset) {
