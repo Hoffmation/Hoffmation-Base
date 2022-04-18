@@ -1,33 +1,21 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { LogLevel } from '../../../models/logLevel';
+import { CurrentIlluminationDataPoint, LogLevel } from '../../../models';
 import { iIlluminationSensor } from '../iIlluminationSensor';
 import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
-import { dbo } from '../../../index';
+import { Utils } from '../../services';
 
 export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminationSensor {
   private _illuminance: number = 0;
-  private _motionTimeout: number = 0;
   private occupancyTimeoutID = `occupancy_timeout`;
 
-  // Currently measured brightness in lux
-  public get currentIllumination(): number {
-    return this._illuminance;
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, DeviceType.ZigbeeAquaraMotion);
+
+    this.occupancyTimeoutID = `${this.info.fullID}.${this.occupancyTimeoutID}`;
   }
 
-  private set currentIllumination(value: number) {
-    this._illuminance = value;
-    dbo?.persistCurrentIllumination(
-      new CurrentIlluminationDataPoint(
-        this.info.room,
-        this.info.devID,
-        value,
-        new Date(),
-        this.room?.LampenGroup?.anyLightsOwn() ?? false,
-      ),
-    );
-  }
+  private _motionTimeout: number = 0;
 
   // Time after the last trigger until a motion event gets triggered again
   public get motionTimeout(): number {
@@ -47,10 +35,22 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
     );
   }
 
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.ZigbeeAquaraMotion);
+  // Currently measured brightness in lux
+  public get currentIllumination(): number {
+    return this._illuminance;
+  }
 
-    this.occupancyTimeoutID = `${this.info.fullID}.${this.occupancyTimeoutID}`;
+  private set currentIllumination(value: number) {
+    this._illuminance = value;
+    Utils.dbo?.persistCurrentIllumination(
+      new CurrentIlluminationDataPoint(
+        this.info.room,
+        this.info.devID,
+        value,
+        new Date(),
+        this.room?.LampenGroup?.anyLightsOwn() ?? false,
+      ),
+    );
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

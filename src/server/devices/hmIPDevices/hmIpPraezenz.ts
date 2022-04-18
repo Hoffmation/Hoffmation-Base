@@ -1,56 +1,24 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { Utils } from '../../services/utils/utils';
+import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
+import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { LogLevel } from '../../../models/logLevel';
 import { iIlluminationSensor } from '../iIlluminationSensor';
-import { dbo } from '../../../index';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
-  public excludeFromNightAlarm: boolean = false;
-  public presenceDetected: boolean = false;
-  private _detectionsToday: number = 0;
-  private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
+  public excludeFromNightAlarm: boolean = false;
+  public presenceDetected: boolean = false;
+  private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
   // private presenceStateID: string;
   private initialized: boolean = false;
-  private _currentIllumination: number = -1;
-
-  public get detectionsToday(): number {
-    return this._detectionsToday;
-  }
-
-  public set detectionsToday(pVal: number) {
-    const oldVal: number = this._detectionsToday;
-    this._detectionsToday = pVal;
-    dbo?.persistTodayCount(this, pVal, oldVal);
-  }
-
-  public get currentIllumination(): number {
-    return this._currentIllumination;
-  }
-
-  private set currentIllumination(value: number) {
-    this._currentIllumination = value;
-    dbo?.persistCurrentIllumination(
-      new CurrentIlluminationDataPoint(
-        this.info.room,
-        this.info.devID,
-        value,
-        new Date(),
-        this.room?.LampenGroup?.anyLightsOwn() ?? false,
-      ),
-    );
-  }
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
-    dbo
+    Utils.dbo
       ?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
@@ -60,6 +28,37 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
       .catch((err: Error) => {
         this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
       });
+  }
+
+  private _detectionsToday: number = 0;
+
+  public get detectionsToday(): number {
+    return this._detectionsToday;
+  }
+
+  public set detectionsToday(pVal: number) {
+    const oldVal: number = this._detectionsToday;
+    this._detectionsToday = pVal;
+    Utils.dbo?.persistTodayCount(this, pVal, oldVal);
+  }
+
+  private _currentIllumination: number = -1;
+
+  public get currentIllumination(): number {
+    return this._currentIllumination;
+  }
+
+  private set currentIllumination(value: number) {
+    this._currentIllumination = value;
+    Utils.dbo?.persistCurrentIllumination(
+      new CurrentIlluminationDataPoint(
+        this.info.room,
+        this.info.devID,
+        value,
+        new Date(),
+        this.room?.LampenGroup?.anyLightsOwn() ?? false,
+      ),
+    );
   }
 
   public addPresenceCallback(pCallback: (pValue: boolean) => void): void {

@@ -1,11 +1,17 @@
-import { ServerLogService } from '../server/services/log-service/log-service';
-import { SunTimeOffsets, TimeCallbackService } from '../server/services/time-callback-service';
+import { ServerLogService, SunTimeOffsets, TimeCallbackService } from '../server';
 import { LogLevel } from './logLevel';
 
 export enum TimeCallbackType {
   TimeOfDay = 1,
   Sunrise = 2,
   SunSet = 3,
+}
+
+export enum TimeOfDay {
+  BeforeSunrise = 1,
+  Daylight = 2,
+  AfterSunset = 3,
+  Night = 4,
 }
 
 export class TimeCallback {

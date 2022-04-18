@@ -1,18 +1,10 @@
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
-import { TimeCallback, TimeCallbackType } from '../../models/timeCallback';
-import { ServerLogService } from './log-service/log-service';
-import { Utils } from './utils/utils';
-import { iTimePair } from '../config/iConfig';
+import { LogLevel, TimeCallback, TimeCallbackType, TimeOfDay } from '../../models';
+import { ServerLogService } from './log-service';
+import { Utils } from './utils';
+import { iTimePair } from '../config';
 import { SettingsService } from './settings-service';
-import { Devices } from '../devices/devices';
-import { LogLevel } from '../../models/logLevel';
-
-export enum TimeOfDay {
-  BeforeSunrise = 1,
-  Daylight = 2,
-  AfterSunset = 3,
-  Night = 4,
-}
+import { Devices } from '../devices';
 
 export class SunTimeOffsets {
   public constructor(
@@ -46,11 +38,21 @@ export class SunTimeOffsets {
 export class TimeCallbackService {
   private static _todaySunRise: Date;
   private static _todaySunSet: Date;
-  private static _nextSunRise: Date;
-  private static _nextSunSet: Date;
   private static _callbacks: TimeCallback[] = [];
   private static _iCheckTimeout: NodeJS.Timeout | undefined;
   private static _lastCheck: Date = new Date(0);
+
+  private static _nextSunRise: Date;
+
+  public static get nextSunRise(): Date {
+    return TimeCallbackService._nextSunRise;
+  }
+
+  private static _nextSunSet: Date;
+
+  public static get nextSunSet(): Date {
+    return TimeCallbackService._nextSunSet;
+  }
 
   public static dayType(pOffset: SunTimeOffsets): TimeOfDay {
     const now: Date = new Date();
@@ -129,14 +131,6 @@ export class TimeCallbackService {
       clearInterval(this._iCheckTimeout);
       this._iCheckTimeout = undefined;
     }
-  }
-
-  public static get nextSunRise(): Date {
-    return TimeCallbackService._nextSunRise;
-  }
-
-  public static get nextSunSet(): Date {
-    return TimeCallbackService._nextSunSet;
   }
 
   public static init(): void {

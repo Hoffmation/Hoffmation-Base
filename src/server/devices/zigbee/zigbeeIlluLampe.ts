@@ -1,18 +1,17 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
-import { LogLevel } from '../../../models';
+import { LogLevel, TimeOfDay } from '../../../models';
 import { iLamp } from '../iLamp';
-import { TimeCallbackService, TimeOfDay } from '../../services';
-import { Utils } from '../../services';
+import { TimeCallbackService, Utils } from '../../services';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
-  public get lightOn(): boolean {
-    return super.actuatorOn;
-  }
-
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluLampe);
+  }
+
+  public get lightOn(): boolean {
+    return super.actuatorOn;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

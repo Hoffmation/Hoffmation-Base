@@ -3,9 +3,8 @@ import { iEnergyManager, PhaseState } from '../iEnergyManager';
 import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models';
-import { Utils } from '../../services';
-import { dbo, EnergyCalculation, SettingsService } from '../../../index';
+import { EnergyCalculation, LogLevel } from '../../../models';
+import { SettingsService, Utils } from '../../services';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
@@ -193,7 +192,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     obj.injectedKwH = Utils.round(obj.injectedKwH, 4);
     obj.selfConsumedKwH = Utils.round(obj.selfConsumedKwH, 4);
     obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
-    dbo?.persistEnergyManager(obj);
+    Utils.dbo?.persistEnergyManager(obj);
     this.log(LogLevel.Info, `Persisting energy Manager Data.`);
   }
 }

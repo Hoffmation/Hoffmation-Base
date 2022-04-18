@@ -3,7 +3,6 @@ import { ZigbeeDevice } from './zigbeeDevice';
 import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { dbo } from '../../../index';
 import { iMotionSensor } from '../iMotionSensor';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
@@ -17,7 +16,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
 
   public constructor(pInfo: DeviceInfo, type: DeviceType) {
     super(pInfo, type);
-    dbo
+    Utils.dbo
       ?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
@@ -45,7 +44,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   public set detectionsToday(pVal: number) {
     const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    dbo?.persistTodayCount(this, pVal, oldVal);
+    Utils.dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   /**

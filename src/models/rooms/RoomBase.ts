@@ -1,29 +1,42 @@
-import { TimeCallback } from '../timeCallback';
-import { TasterGroup } from '../../server/devices/groups/tasterGroup';
-import { PraesenzGroup } from '../../server/devices/groups/praesenzGroup';
-import { HeatGroup } from '../../server/devices/groups/heatGroup';
+import { TimeCallback, TimeOfDay } from '../timeCallback';
+import {
+  BaseGroup,
+  DeviceCluster,
+  FensterGroup,
+  GroupType,
+  HeatGroup,
+  LampenGroup,
+  PraesenzGroup,
+  RoomService,
+  ServerLogService,
+  ShutterService,
+  SmokeGroup,
+  SonosGroup,
+  TasterGroup,
+  TimeCallbackService,
+  Utils,
+  WaterGroup,
+} from '../../server';
 import { LogLevel } from '../logLevel';
-import { WaterGroup } from '../../server/devices/groups/waterGroup';
-import { ServerLogService } from '../../server/services/log-service/log-service';
-import { LampenGroup } from '../../server/devices/groups/lampenGroup';
-import { RoomSettings } from './RoomSettings/RoomSettings';
-import { SmokeGroup } from '../../server/devices/groups/smokeGroup';
-import { FensterGroup } from '../../server/devices/groups/fensterGroup';
-import { TimeCallbackService, TimeOfDay } from '../../server/services/time-callback-service';
-import { SonosGroup } from '../../server/devices/groups/sonosGroup';
+import { RoomSettings } from './RoomSettings';
 import { iRoomBase } from './iRoomBase';
-import { RoomService } from '../../server/services/room-service/room-service';
 import { RoomInfo } from './roomInfo';
-import { BaseGroup } from '../../server/devices/groups/base-group';
-import { GroupType } from '../../server/devices/groups/group-type';
-import { ShutterService } from '../../server/services/ShutterService';
-import { Utils } from '../../server/services/utils/utils';
 import _ from 'lodash';
-import { DeviceCluster } from '../../server/devices/device-cluster';
-import { dbo } from '../../index';
 
 export class RoomBase implements iRoomBase {
   public info: RoomInfo;
+  public sonnenAufgangCallback: TimeCallback | undefined;
+  public sonnenUntergangCallback: TimeCallback | undefined;
+  public sonnenAufgangLichtCallback: TimeCallback | undefined;
+  public skipNextRolloUp: boolean = false;
+
+  public constructor(roomName: string, public settings: RoomSettings, public groups: Map<GroupType, BaseGroup>) {
+    this.info = new RoomInfo(roomName, settings);
+    settings.roomName = roomName;
+    this.settings = settings;
+    RoomService.addToRoomList(this);
+  }
+
   protected _deviceCluster: DeviceCluster = new DeviceCluster();
 
   public get deviceCluster(): DeviceCluster {
@@ -62,24 +75,12 @@ export class RoomBase implements iRoomBase {
     return this.groups.get(GroupType.Heating) as HeatGroup | undefined;
   }
 
-  public sonnenAufgangCallback: TimeCallback | undefined;
-  public sonnenUntergangCallback: TimeCallback | undefined;
-  public sonnenAufgangLichtCallback: TimeCallback | undefined;
-  public skipNextRolloUp: boolean = false;
-
   public get roomName(): string {
     return this.info.roomName;
   }
 
   public get etage(): number | undefined {
     return this.info.etage;
-  }
-
-  public constructor(roomName: string, public settings: RoomSettings, public groups: Map<GroupType, BaseGroup>) {
-    this.info = new RoomInfo(roomName, settings);
-    settings.roomName = roomName;
-    this.settings = settings;
-    RoomService.addToRoomList(this);
   }
 
   public initializeBase(): void {
@@ -91,7 +92,7 @@ export class RoomBase implements iRoomBase {
   }
 
   public persist(): void {
-    dbo?.addRoom(this);
+    Utils.dbo?.addRoom(this);
   }
 
   public recalcTimeCallbacks(): void {

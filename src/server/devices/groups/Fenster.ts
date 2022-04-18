@@ -1,7 +1,7 @@
 import { HmIpGriff } from '../hmIPDevices';
-import { ShutterService, TimeCallbackService, TimeOfDay, Utils } from '../../services';
+import { ShutterService, TimeCallbackService, Utils } from '../../services';
 import { FensterPosition } from '../models';
-import { LogLevel } from '../../../models';
+import { LogLevel, TimeOfDay } from '../../../models';
 import { iShutter } from '../iShutter';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';

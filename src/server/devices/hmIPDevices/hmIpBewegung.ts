@@ -1,10 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
+import { CountToday, CurrentIlluminationDataPoint, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { iIlluminationSensor } from '../iIlluminationSensor';
-import { dbo, MotionSensorSettings } from '../../../index';
 import { iMotionSensor } from '../iMotionSensor';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
@@ -12,7 +11,6 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   public settings: MotionSensorSettings = new MotionSensorSettings();
-  public excludeFromNightAlarm: boolean = false;
   public movementDetected: boolean = false;
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private initialized: boolean = false;
@@ -21,7 +19,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpBewegung);
-    dbo
+    Utils.dbo
       ?.getCount(this)
       .then((todayCount: CountToday) => {
         this.detectionsToday = todayCount.counter;
@@ -46,7 +44,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   public set detectionsToday(pVal: number) {
     const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    dbo?.persistTodayCount(this, pVal, oldVal);
+    Utils.dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   private _currentIllumination: number = -1;
@@ -57,7 +55,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
 
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
-    dbo?.persistCurrentIllumination(
+    Utils.dbo?.persistCurrentIllumination(
       new CurrentIlluminationDataPoint(
         this.info.room,
         this.info.devID,

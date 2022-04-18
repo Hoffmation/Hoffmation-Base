@@ -8,11 +8,29 @@ import { Fenster } from '../groups';
 import { FensterPosition } from '../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { dbo } from '../../../index';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public settings: ShutterSettings = new ShutterSettings();
   protected _iMovementFinishTimeout: NodeJS.Timeout | null = null;
+  protected _firstCommandRecieved: boolean = false;
+  protected _setLevel: number = -1;
+  protected _setLevelTime: number = -1;
+  protected _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
+
+  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+    super(pInfo, pType);
+    Utils.dbo
+      ?.getShutterCalibration(this)
+      .then((calibrationData: ShutterCalibration) => {
+        this._shutterCalibrationData = calibrationData;
+        this.log(LogLevel.DeepTrace, `ZigbeeShutter  initialized with calibration data`);
+      })
+      .catch((err: Error) => {
+        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err?.message ?? err}`);
+      });
+  }
+
+  protected _currentLevel: number = -1;
 
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
@@ -33,12 +51,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this._currentLevel = value;
   }
 
-  public get desiredFensterLevel(): number {
-    if (this._fenster === undefined) {
-      return -1;
-    }
-    return this._fenster.desiredPosition;
-  }
+  protected _fenster?: Fenster;
 
   public get fenster(): Fenster | undefined {
     return this._fenster;
@@ -48,24 +61,11 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this._fenster = value;
   }
 
-  protected _currentLevel: number = -1;
-  protected _fenster?: Fenster;
-  protected _firstCommandRecieved: boolean = false;
-  protected _setLevel: number = -1;
-  protected _setLevelTime: number = -1;
-  protected _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
-
-  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
-    super(pInfo, pType);
-    dbo
-      ?.getShutterCalibration(this)
-      .then((calibrationData: ShutterCalibration) => {
-        this._shutterCalibrationData = calibrationData;
-        this.log(LogLevel.DeepTrace, `ZigbeeShutter  initialized with calibration data`);
-      })
-      .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err?.message ?? err}`);
-      });
+  public get desiredFensterLevel(): number {
+    if (this._fenster === undefined) {
+      return -1;
+    }
+    return this._fenster.desiredPosition;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
@@ -104,6 +104,10 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this.moveToPosition(pPosition);
   }
 
+  public toJSON(): Partial<IoBrokerBaseDevice> {
+    return _.omit(super.toJSON(), ['_fenster']);
+  }
+
   protected moveToPosition(pPosition: number): void {
     this.log(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
   }
@@ -137,7 +141,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       LogLevel.Trace,
       `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
     );
-    dbo?.persistShutterCalibration(this._shutterCalibrationData);
+    Utils.dbo?.persistShutterCalibration(this._shutterCalibrationData);
   }
 
   protected initializeMovementFinishTimeout(duration: number, endPosition: number): void {
@@ -152,9 +156,5 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       duration,
       this,
     );
-  }
-
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_fenster']);
   }
 }

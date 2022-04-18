@@ -1,11 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services';
-import { ActuatorSettings } from '../../../models';
+import { TimeCallbackService, Utils } from '../../services';
+import { ActuatorSettings, LogLevel, TimeOfDay } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
-import { LogLevel } from '../../../models';
-import { TimeCallbackService, TimeOfDay } from '../../services';
 
 export class HmIpLampe extends HmIPDevice implements iLamp {
   public lightOn: boolean = false;

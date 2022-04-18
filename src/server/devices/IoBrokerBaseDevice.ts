@@ -1,9 +1,9 @@
+import { IBaseDevice } from './iBaseDevice';
 import { ServerLogService, Utils } from '../services';
 import { DeviceInfo } from './DeviceInfo';
 import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
-import { IBaseDevice } from './iBaseDevice';
 
 export abstract class IoBrokerBaseDevice implements IBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
@@ -89,8 +89,7 @@ export abstract class IoBrokerBaseDevice implements IBaseDevice {
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    const result: Partial<IoBrokerBaseDevice> = Utils.jsonFilter(this);
-    return result;
+    return Utils.jsonFilter(this);
   }
 
   protected addToCorrectRoom(): void {

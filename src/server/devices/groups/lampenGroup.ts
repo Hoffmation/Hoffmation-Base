@@ -1,11 +1,11 @@
 import { ZigbeeIkeaSteckdose, ZigbeeIlluLedRGBCCT } from '../zigbee';
-import { TimeCallbackService, TimeOfDay } from '../../services';
+import { TimeCallbackService } from '../../services';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iLamp } from '../iLamp';
-import { LogLevel } from '../../../models';
+import { LogLevel, TimeOfDay } from '../../../models';
 
 export class LampenGroup extends BaseGroup {
   public constructor(roomName: string, lampenIds: string[] = [], steckerIds: string[] = [], ledIds: string[] = []) {

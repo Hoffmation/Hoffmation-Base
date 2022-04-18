@@ -1,9 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LedSettings } from '../../../models/deviceSettings/ledSettings';
+import { LedSettings, LogLevel, TimeOfDay } from '../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { LogLevel } from '../../../models/logLevel';
-import { TimeOfDay } from '../../services/time-callback-service';
 
 export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';
@@ -16,6 +14,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   private brightnessID: string = 'brightness';
   private colorID: string = '';
   private colorTempID: string = '';
+
   // private effectID: string = '';
 
   public constructor(pInfo: DeviceInfo) {

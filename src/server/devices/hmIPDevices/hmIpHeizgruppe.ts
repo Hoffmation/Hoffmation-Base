@@ -1,22 +1,18 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
+import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { TemperaturSettings } from '../../../models/temperaturSettings';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel, TemperaturSettings } from '../../../models';
 import { iTemperaturSensor } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
 import { iHeater } from '../iHeater';
 import { DeviceClusterType } from '../device-cluster-type';
-import { dbo } from '../../../index';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {
   private _automaticMode: boolean = true;
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _level: number = 0;
   private _temperatur: number = 0;
-  private _humidity: number = 0;
-  private _desiredTemperatur: number = 0;
   private _setPointTemperaturID: string = '';
   private _automaticFallBackTemperatur: number = 20;
   private _automaticPoints: { [name: string]: TemperaturSettings } = {};
@@ -28,21 +24,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
   }
 
-  public get sLevel(): string {
-    return `${this._level * 100}%`;
-  }
-
-  public get iLevel(): number {
-    return this._level;
-  }
-
-  public get sTemperatur(): string {
-    return `${this._temperatur}°C`;
-  }
-
-  public get iTemperatur(): number {
-    return this._temperatur;
-  }
+  private _humidity: number = 0;
 
   public get humidity(): number {
     return this._humidity;
@@ -54,6 +36,8 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
       cb(val);
     }
   }
+
+  private _desiredTemperatur: number = 0;
 
   public get desiredTemperatur(): number {
     return this._desiredTemperatur;
@@ -72,6 +56,22 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     );
   }
 
+  public get sLevel(): string {
+    return `${this._level * 100}%`;
+  }
+
+  public get iLevel(): number {
+    return this._level;
+  }
+
+  public get sTemperatur(): string {
+    return `${this._temperatur}°C`;
+  }
+
+  public get iTemperatur(): number {
+    return this._temperatur;
+  }
+
   public addHumidityCallback(pCallback: (pValue: number) => void): void {
     this._humidityCallbacks.push(pCallback);
     if (this._humidity > 0) {
@@ -87,8 +87,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     if (!this.room) {
       return [];
     }
-    const result: iHeater[] = this.room.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
-    return result;
+    return this.room.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
   }
 
   public setAutomaticPoint(name: string, setting: TemperaturSettings): void {
@@ -113,27 +112,9 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     }
   }
 
-  private updateBaseInformation(name: string, state: ioBroker.State) {
-    switch (name) {
-      case 'ACTUAL_TEMPERATURE':
-        this._temperatur = state.val as number;
-        break;
-      case 'LEVEL':
-        this._level = state.val as number;
-        break;
-      case 'HUMIDITY':
-        this.humidity = state.val as number;
-        break;
-      case 'SET_POINT_TEMPERATURE':
-        this.log(LogLevel.DeepTrace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
-        this._desiredTemperatur = state.val as number;
-        break;
-    }
-  }
-
   public checkAutomaticChange(): void {
     if (!this._automaticMode) {
-      dbo?.addTemperaturDataPoint(this);
+      Utils.dbo?.addTemperaturDataPoint(this);
       return;
     }
 
@@ -156,6 +137,24 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
       this.desiredTemperatur = setting.temperatur ?? this._automaticFallBackTemperatur;
     }
 
-    dbo?.addTemperaturDataPoint(this);
+    Utils.dbo?.addTemperaturDataPoint(this);
+  }
+
+  private updateBaseInformation(name: string, state: ioBroker.State) {
+    switch (name) {
+      case 'ACTUAL_TEMPERATURE':
+        this._temperatur = state.val as number;
+        break;
+      case 'LEVEL':
+        this._level = state.val as number;
+        break;
+      case 'HUMIDITY':
+        this.humidity = state.val as number;
+        break;
+      case 'SET_POINT_TEMPERATURE':
+        this.log(LogLevel.DeepTrace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
+        this._desiredTemperatur = state.val as number;
+        break;
+    }
   }
 }

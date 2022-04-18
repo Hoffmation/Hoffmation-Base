@@ -1,5 +1,5 @@
-import { LogLevel, RoomBase, TimeCallback, TimeCallbackType } from '../../../models';
-import { ShutterService, TimeCallbackService, TimeOfDay, Utils, WeatherService } from '../../services';
+import { LogLevel, RoomBase, TimeCallback, TimeCallbackType, TimeOfDay } from '../../../models';
+import { ShutterService, TimeCallbackService, Utils, WeatherService } from '../../services';
 import { Fenster } from './Fenster';
 import { FensterPosition } from '../models';
 import { BaseGroup } from './base-group';

@@ -1,17 +1,19 @@
 import { LogLevel } from './models';
 import {
-  ServerLogService,
   Devices,
   DeviceUpdater,
   iConfig,
   ioBrokerMain,
+  MongoPersistance,
   MP3Server,
   MuellService,
   NewsService,
   OwnSonosDevice,
   OwnSonosDevices,
-  MongoPersistance,
   PollyService,
+  PostgreSqlPersist,
+  Res,
+  ServerLogService,
   SettingsService,
   SonosService,
   TelegramCommands,
@@ -19,9 +21,6 @@ import {
   TimeCallbackService,
   Utils,
   WeatherService,
-  Res,
-  iPersist,
-  PostgreSqlPersist,
 } from './server';
 
 export * from './models/index';
@@ -30,8 +29,6 @@ export * from './server/index';
 export class HoffmationInitializationObject {
   public constructor(public config: iConfig) {}
 }
-
-export let dbo: iPersist | undefined;
 
 export class HoffmationBase {
   public static ioMain: ioBrokerMain;
@@ -45,11 +42,11 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
       if (initObject.config.persistence.mongo) {
-        dbo = new MongoPersistance(initObject.config.persistence);
+        Utils.dbo = new MongoPersistance(initObject.config.persistence);
       } else if (initObject.config.persistence.postgreSql) {
-        dbo = new PostgreSqlPersist(initObject.config.persistence);
+        Utils.dbo = new PostgreSqlPersist(initObject.config.persistence);
       }
-      await dbo?.initialize();
+      await Utils.dbo?.initialize();
     }
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);

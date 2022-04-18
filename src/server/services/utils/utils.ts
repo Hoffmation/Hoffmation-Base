@@ -1,9 +1,12 @@
-import { ServerLogService } from '../log-service/log-service';
-import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models';
 import _ from 'lodash';
-import { Res } from '../Translation/res';
+import { Res } from '../Translation';
+import { iPersist } from '../dbo';
 
 export class Utils {
+  public static dbo: iPersist | undefined;
+
   public static async catchEm<T>(promise: Promise<T>): Promise<{ reason: Error | null; data: T | null }> {
     return promise
       .then((data: T) => ({
@@ -86,11 +89,7 @@ export class Utils {
           // Exclude timeout Variables.
           return true;
         }
-        if (key.includes('Callback')) {
-          // Exclude Callback Variables.
-          return true;
-        }
-        return false;
+        return key.includes('Callback');
       }),
     );
   }
