@@ -72,7 +72,7 @@ export class Devices {
         Devices.processHMIPDevice(cDevConf);
       } else if (cName.indexOf('00-Zigbee') === 0) {
         Devices.processZigbeeDevice(cDevConf);
-      } else if (cName.indexOf('00-EnergyManager') === 0) {
+      } else if (cName.indexOf('00-EnergyManager') === 0 && cDevConf.type !== 'folder') {
         ServerLogService.writeLog(LogLevel.Info, `Found Energy-Manager in Device json.`);
         Devices.createEnergyManager(cDevConf);
       }
