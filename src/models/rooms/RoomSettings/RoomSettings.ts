@@ -144,6 +144,11 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
     return this._sonnenUntergangRolloAdditionalOffsetPerCloudiness;
   }
 
+  set sonnenUntergangRolloAdditionalOffsetPerCloudiness(value: number) {
+    this._sonnenUntergangRolloAdditionalOffsetPerCloudiness = value;
+    this.recalcRolloOffset();
+  }
+
   private _sonnenAufgangRolloDelay: number = this.defaultSettings.sonnenAufgangRolloDelay;
 
   get sonnenAufgangRolloDelay(): number {
