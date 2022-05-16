@@ -42,7 +42,7 @@
     "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.11",
-    "aws-sdk": "2.1135.0",
+    "aws-sdk": "2.1136.0",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
     "lodash": "^4.17.21",
