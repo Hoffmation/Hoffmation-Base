@@ -51,11 +51,21 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   }
 
   public get sTemperatur(): string {
-    return `${this._temperatur}°C`;
+    return `${this.iTemperatur}°C`;
   }
 
   public get iTemperatur(): number {
-    return this._temperatur;
+    if (this.settings.useOwnTemperatur) {
+      return this._temperatur;
+    } else {
+      return this._roomTemperatur;
+    }
+  }
+
+  protected _roomTemperatur: number = 0;
+
+  protected set roomTemperatur(val: number) {
+    this._roomTemperatur = val;
   }
 
   public checkAutomaticChange(): void {
@@ -99,5 +109,9 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
       clearInterval(this._iAutomaticInterval);
       this._iAutomaticInterval = undefined;
     }
+  }
+
+  public onTemperaturChange(newTemperatur: number): void {
+    this.roomTemperatur = newTemperatur;
   }
 }

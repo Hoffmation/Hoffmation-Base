@@ -3,7 +3,7 @@ import { DeviceType } from '../deviceType';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../models';
-import { iTemperaturSensor } from '../iTemperaturSensor';
+import { iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
 import { iHeater } from '../iHeater';
 import { DeviceClusterType } from '../device-cluster-type';
@@ -12,15 +12,31 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _level: number = 0;
-  private _temperatur: number = 0;
   private _setPointTemperaturID: string = '';
   private _automaticPoints: { [name: string]: TemperaturSettings } = {};
   private _humidityCallbacks: Array<(pValue: number) => void> = [];
+  private _temperaturCallbacks: ((pValue: number) => void)[] = [];
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizgruppe);
     this._setPointTemperaturID = `${this.info.fullID}.1.SET_POINT_TEMPERATURE`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
+  }
+
+  private _temperatur: number = UNDEFINED_TEMP_VALUE;
+
+  public get temperatur(): number {
+    if (this.settings.useOwnTemperatur) {
+      return this._temperatur;
+    }
+    return this._roomTemperatur;
+  }
+
+  private set temperatur(val: number) {
+    this._temperatur = val;
+    for (const cb of this._temperaturCallbacks) {
+      cb(val);
+    }
   }
 
   private _humidity: number = 0;
@@ -64,11 +80,17 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
   }
 
   public get sTemperatur(): string {
-    return `${this._temperatur}°C`;
+    return `${this.temperatur}°C`;
   }
 
   public get iTemperatur(): number {
-    return this._temperatur;
+    return this.temperatur;
+  }
+
+  private _roomTemperatur: number = UNDEFINED_TEMP_VALUE;
+
+  private set roomTemperatur(value: number) {
+    this._roomTemperatur = value;
   }
 
   public addHumidityCallback(pCallback: (pValue: number) => void): void {
@@ -139,10 +161,21 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     Utils.dbo?.addTemperaturDataPoint(this);
   }
 
+  public addTempChangeCallback(pCallback: (pValue: number) => void): void {
+    this._temperaturCallbacks.push(pCallback);
+    if (this._temperatur > UNDEFINED_TEMP_VALUE) {
+      pCallback(this._temperatur);
+    }
+  }
+
+  public onTemperaturChange(newTemperatur: number): void {
+    this.roomTemperatur = newTemperatur;
+  }
+
   private updateBaseInformation(name: string, state: ioBroker.State) {
     switch (name) {
       case 'ACTUAL_TEMPERATURE':
-        this._temperatur = state.val as number;
+        this.temperatur = state.val as number;
         break;
       case 'LEVEL':
         this._level = state.val as number;

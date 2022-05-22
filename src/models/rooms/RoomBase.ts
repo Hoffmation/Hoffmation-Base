@@ -90,6 +90,7 @@ export class RoomBase implements iRoomBase {
     this.PraesenzGroup?.initCallbacks();
     this.FensterGroup?.initialize();
     this.TasterGroup?.initCallbacks();
+    this.HeatGroup?.initialize();
   }
 
   public persist(): void {

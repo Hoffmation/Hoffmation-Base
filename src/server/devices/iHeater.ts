@@ -1,7 +1,8 @@
-import { TemperaturSettings } from '../../models';
+import { HeaterSettings, TemperaturSettings } from '../../models';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iHeater extends IBaseDevice {
+  settings: HeaterSettings;
   readonly desiredTemperatur: number;
   readonly humidity: number;
   readonly iLevel: number;
@@ -14,4 +15,6 @@ export interface iHeater extends IBaseDevice {
   stopAutomaticCheck(): void;
 
   checkAutomaticChange(): void;
+
+  onTemperaturChange(newTemperatur: number): void;
 }
