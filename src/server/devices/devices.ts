@@ -41,6 +41,7 @@ import { iEnergyManager } from './iEnergyManager';
 import { JsObjectEnergyManager } from './jsObject';
 import { iMotionSensor } from './iMotionSensor';
 import { IBaseDevice } from './iBaseDevice';
+import { ZigbeeTuyaValve } from './zigbee/zigbeeTuyaValve';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -188,6 +189,9 @@ export class Devices {
         break;
       case 'UbisysShutter':
         d = new ZigbeeUbisysShutter(zigbeeInfo);
+        break;
+      case 'TuyaValve':
+        d = new ZigbeeTuyaValve(zigbeeInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);

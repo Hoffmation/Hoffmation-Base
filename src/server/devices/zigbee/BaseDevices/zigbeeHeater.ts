@@ -4,6 +4,7 @@ import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../../models
 import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';
 import { Utils } from '../../../services';
+import { UNDEFINED_TEMP_VALUE } from '../../iTemperaturSensor';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   public settings: HeaterSettings = new HeaterSettings();
@@ -17,13 +18,14 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
     super(pInfo, pType);
   }
 
-  protected _desiredTemperatur: number = 0;
+  protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
 
   public get desiredTemperatur(): number {
     return this._desiredTemperatur;
   }
 
   public set desiredTemperatur(val: number) {
+    this._desiredTemperatur = val;
     this.setState(
       this._setPointTemperaturID,
       val,

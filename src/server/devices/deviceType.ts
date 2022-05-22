@@ -30,6 +30,7 @@ export enum DeviceType {
   ZigbeeSonoffTemp = 216,
   ZigbeeAqaraOpple3Switch = 217,
   ZigbeeUbisysShutter = 218,
+  ZigbeeTuyaValve = 219,
   JsEnergyManager = 301,
   Wled = 1001,
 }
