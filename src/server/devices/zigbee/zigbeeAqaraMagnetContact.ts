@@ -1,6 +1,6 @@
-import { ZigbeeMagnetContact } from './zigbeeMagnetContact';
-import { LogLevel } from '../../../models/logLevel';
-import { MagnetPosition } from '../models/MagnetPosition';
+import { ZigbeeMagnetContact } from './BaseDevices';
+import { LogLevel } from '../../../models';
+import { MagnetPosition } from '../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 

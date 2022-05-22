@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { ZigbeeDevice } from './zigbeeDevice';
+import { ZigbeeDevice } from './BaseDevices';
 import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';

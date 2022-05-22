@@ -1,9 +1,7 @@
 import { DeviceType } from '../deviceType';
-import { ActuatorSettings } from '../../../models/deviceSettings/actuatorSettings';
+import { ActuatorSettings, ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { LogLevel } from '../../../models/logLevel';
-import { ExcessEnergyConsumerSettings } from '../../../models/excessEnergyConsumerSettings';
+import { ZigbeeDevice } from './BaseDevices';
 import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
 
 export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsumer {

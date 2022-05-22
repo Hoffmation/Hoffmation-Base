@@ -1,8 +1,8 @@
-import { ZigbeeSwitch } from './zigbeeSwitch';
+import { ZigbeeSwitch } from './BaseDevices';
 import { Button, ButtonCapabilities, ButtonPressType } from '../button';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 
 export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -32,6 +32,28 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
     if (name.startsWith('button_')) {
       this.updateButton(name, state.val as boolean);
     }
+  }
+
+  public getButtonAssignment(): string {
+    const result: string[] = [`Button: ${this.info.customName}`];
+    for (const taste of [
+      this.buttonTopLeft,
+      this.buttonTopRight,
+      this.buttonMidLeft,
+      this.buttonMidRight,
+      this.buttonBotLeft,
+      this.buttonBotRight,
+    ]) {
+      const desc: string = taste.getDescription();
+      if (desc === '') {
+        continue;
+      }
+      result.push(`Button "${taste.name}":`);
+      result.push(desc);
+      result.push('');
+    }
+    result.push('____________');
+    return result.join('\n');
   }
 
   private updateButton(name: string, val: boolean): void {
@@ -86,27 +108,5 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
         );
         return;
     }
-  }
-
-  public getButtonAssignment(): string {
-    const result: string[] = [`Button: ${this.info.customName}`];
-    for (const taste of [
-      this.buttonTopLeft,
-      this.buttonTopRight,
-      this.buttonMidLeft,
-      this.buttonMidRight,
-      this.buttonBotLeft,
-      this.buttonBotRight,
-    ]) {
-      const desc: string = taste.getDescription();
-      if (desc === '') {
-        continue;
-      }
-      result.push(`Button "${taste.name}":`);
-      result.push(desc);
-      result.push('');
-    }
-    result.push('____________');
-    return result.join('\n');
   }
 }

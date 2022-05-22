@@ -1,13 +1,13 @@
-import { DeviceType } from '../deviceType';
-import { Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../models';
+import { DeviceType } from '../../deviceType';
+import { Utils } from '../../../services';
+import { DeviceInfo } from '../../DeviceInfo';
+import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iShutter } from '../iShutter';
-import { Fenster } from '../groups';
-import { FensterPosition } from '../models';
+import { iShutter } from '../../iShutter';
+import { Fenster } from '../../groups';
+import { FensterPosition } from '../../models';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public settings: ShutterSettings = new ShutterSettings();

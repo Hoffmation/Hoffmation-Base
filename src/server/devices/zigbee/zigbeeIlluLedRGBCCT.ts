@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { LedSettings, LogLevel, TimeOfDay } from '../../../models';
-import { ZigbeeDevice } from './zigbeeDevice';
+import { ZigbeeDevice } from './BaseDevices';
 
 export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';

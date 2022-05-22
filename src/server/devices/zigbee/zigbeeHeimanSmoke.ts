@@ -1,20 +1,24 @@
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
+import { PollyService, Res, RoomService, SonosService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { PollyService } from '../../services/Sonos/polly-service';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { LogLevel } from '../../../models/logLevel';
-import { SonosService } from '../../services/Sonos/sonos-service';
-import { Res } from '../../services/Translation/res';
-import { RoomService } from '../../services/room-service/room-service';
+import { ZigbeeDevice } from './BaseDevices';
+import { LogLevel } from '../../../models';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   public smoke: boolean = false;
-  private _roomName: string = '';
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
   private _messageAlarm: string = '';
   private _messageAlarmEnd: string = '';
+
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, DeviceType.ZigbeeHeimanSmoke);
+    this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
+    this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
+    this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
+  }
+
+  private _roomName: string = '';
 
   public set roomName(val: string) {
     this._roomName = val;
@@ -26,13 +30,6 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
     PollyService.preloadTTS(this._messageAlarmEnd);
   }
 
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.ZigbeeHeimanSmoke);
-    this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
-    this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
-    this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
-  }
-
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Smoke Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
@@ -40,7 +37,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
       case 'smoke':
         this.log(LogLevel.Debug, `Smoke Update für ${this.info.customName} auf Rauch: ${state.val}`);
         const newVal: boolean = state.val === true;
-        if (this.smoke === true && !newVal) {
+        if (this.smoke && !newVal) {
           this.stopAlarm();
         } else if (newVal) {
           this.startAlarm();
@@ -48,20 +45,6 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
         this.smoke = newVal;
         break;
     }
-  }
-
-  private startAlarm(): void {
-    if (this.iAlarmTimeout !== undefined) {
-      clearInterval(this.iAlarmTimeout);
-    }
-    this.iAlarmTimeout = Utils.guardedInterval(
-      () => {
-        this.alarm();
-      },
-      15000,
-      this,
-    );
-    this.alarm(true);
   }
 
   public stopAlarm(quiet: boolean = false): void {
@@ -78,6 +61,20 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
     Utils.guardedNewThread(() => {
       SonosService.speakOnAll(message);
     });
+  }
+
+  private startAlarm(): void {
+    if (this.iAlarmTimeout !== undefined) {
+      clearInterval(this.iAlarmTimeout);
+    }
+    this.iAlarmTimeout = Utils.guardedInterval(
+      () => {
+        this.alarm();
+      },
+      15000,
+      this,
+    );
+    this.alarm(true);
   }
 
   private alarm(first: boolean = false): void {

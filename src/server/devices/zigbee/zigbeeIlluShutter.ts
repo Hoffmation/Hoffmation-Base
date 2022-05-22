@@ -1,4 +1,4 @@
-import { ZigbeeShutter } from './zigbeeShutter';
+import { ZigbeeShutter } from './BaseDevices';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models';

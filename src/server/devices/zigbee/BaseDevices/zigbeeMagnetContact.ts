@@ -1,12 +1,9 @@
-import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
-import { DeviceInfo } from '../DeviceInfo';
-import { TelegramService } from '../../services/Telegram/telegram-service';
-import { LogLevel } from '../../../models/logLevel';
-import { SonosService } from '../../services/Sonos/sonos-service';
+import { DeviceType } from '../../deviceType';
+import { Res, SonosService, TelegramService, Utils } from '../../../services';
+import { DeviceInfo } from '../../DeviceInfo';
+import { LogLevel } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { MagnetPosition } from '../models/MagnetPosition';
-import { Res } from '../../services/Translation/res';
+import { MagnetPosition } from '../../models';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice {
   public position: MagnetPosition = MagnetPosition.closed;

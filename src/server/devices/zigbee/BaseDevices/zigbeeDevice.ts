@@ -1,7 +1,7 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models/logLevel';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { DeviceInfo } from '../DeviceInfo';
+import { DeviceType } from '../../deviceType';
+import { LogLevel } from '../../../../models';
+import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { DeviceInfo } from '../../DeviceInfo';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;

@@ -1,11 +1,10 @@
-import { ZigbeeDevice } from './zigbeeDevice';
+import { ZigbeeDevice } from './BaseDevices';
 import { iTemperaturSensor } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor, iHumiditySensor {
-  private _humidity: number = -99;
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperatur: number = -99;
 
@@ -13,17 +12,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
   }
 
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    super.update(idSplit, state, initial, true);
-    switch (idSplit[3]) {
-      case 'humidity':
-        this.humidity = state.val as number;
-        break;
-      case 'temperatur':
-        this._temperatur = state.val as number;
-        break;
-    }
-  }
+  private _humidity: number = -99;
 
   public get humidity(): number {
     return this._humidity;
@@ -42,6 +31,18 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
 
   public get sTemperatur(): string {
     return `${this._temperatur}°C`;
+  }
+
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
+    super.update(idSplit, state, initial, true);
+    switch (idSplit[3]) {
+      case 'humidity':
+        this.humidity = state.val as number;
+        break;
+      case 'temperatur':
+        this._temperatur = state.val as number;
+        break;
+    }
   }
 
   public addHumidityCallback(pCallback: (pValue: number) => void): void {

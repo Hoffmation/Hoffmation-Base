@@ -3,7 +3,7 @@ import { DeviceType } from '../deviceType';
 import { TimeCallbackService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../iLamp';
-import { ZigbeeDevice } from './zigbeeDevice';
+import { ZigbeeDevice } from './BaseDevices';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   public lightOn: boolean = false;
@@ -63,6 +63,9 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
 
   /**
    * @inheritDoc
+   * @param pValue The desired value
+   * @param timeout If > 0 time at which this should be turned off again
+   * @param force if it is an user based action which should override automatic ones
    * @param {number} brightness The desired brightness in percent
    * @param {number} transitionTime The transition time for the brightness, to switch smoothly
    */
