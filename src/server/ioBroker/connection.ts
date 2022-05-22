@@ -1,11 +1,11 @@
 /* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment */
 import { IncomingMessage } from 'http';
 import io from 'socket.io-client';
-import { SocketIoLogging, SocketIoLogLevel } from './socketIOLogging';
-import { Utils } from '../services/utils/utils';
-import { ConnectionCallbacks } from '../../models/connectionCallbacks';
+import { iobrokerConnectionLogging, iobrokerConnectionLogLevel } from './iobrokerConnectionLogging';
+import { Utils } from '../services';
+import { ConnectionCallbacks } from '../../models';
 import { SocketIOVisCommand } from './socketIOVisCommand';
-import { SocketIOAuthInfo } from './socketIOAuthInfo';
+import { IoBrokerAuthInfo } from './ioBrokerAuthInfo';
 import { SocketIOConnectOpts } from './socketIOConnectOptions';
 
 let session: unknown;
@@ -17,8 +17,7 @@ const socketUrl: string = '';
 const socketForceWebSockets: boolean = true;
 
 export class IOBrokerConnection {
-  private _isExecutedInBrowser: boolean = false;
-  private _authInfo: SocketIOAuthInfo = new SocketIOAuthInfo();
+  private _authInfo: IoBrokerAuthInfo = new IoBrokerAuthInfo();
   private _authRunning: boolean = false;
   private _cmdData: unknown;
   private _cmdQueue?: Array<{ func: string; args: IArguments }> = new Array<{ func: string; args: IArguments }>();
@@ -27,17 +26,11 @@ export class IOBrokerConnection {
   private _countDown: number = 0;
   private _defaultMode: number = 0x644;
   private _disconnectedSince?: Date;
-  private _enums?: {
-    [groupName: string]: Record<string, ioBroker.Enum>;
-  }; // used if _useStorage === true
-  private _isAuthDone: boolean = false;
   // @ts-ignore
   private _isAuthRequired: boolean = false;
   private _isConnected: boolean = false;
   private _isSecure: boolean = false;
   private _lastTimer?: Date;
-  private _namespace: string = 'vis.0';
-  private _objects?: Record<string, ioBroker.Object>; // used if _useStorage === true
   // @ts-ignore
   private _onConnChange: unknown;
   // @ts-ignore
@@ -45,140 +38,11 @@ export class IOBrokerConnection {
   private _reconnectInterval: number = 10000; // reconnect interval
   private _reloadInterval: number = 30; // if connection was absent longer than 30 seconds
   private _socket: SocketIOClient.Socket;
-  private _type: string = 'socket.io'; // [SignalR | socket.io | local]
   private _timerTimeout?: NodeJS.Timeout;
-  private _timeout: number = 0; // 0 - use transport default timeout to detect disconnect
-  private _user: string = '';
   private _useStorage: boolean = false;
   private _connectInterval?: NodeJS.Timeout;
   private _countInterval?: NodeJS.Timeout;
   private _gettingStates?: number;
-
-  //#region GetterSetter
-
-  /**
-   * Getter isExecutedInBrowser
-   * @return {boolean }
-   */
-  public get isExecutedInBrowser(): boolean {
-    return this._isExecutedInBrowser;
-  }
-
-  /**
-   * Getter enums
-   * @return {unknown}
-   */
-  public get enums():
-    | {
-        [groupName: string]: Record<string, ioBroker.Enum>;
-      }
-    | undefined {
-    return this._enums;
-  }
-
-  /**
-   * Getter isAuthDone
-   * @return {boolean }
-   */
-  public get isAuthDone(): boolean {
-    return this._isAuthDone;
-  }
-
-  /**
-   * Getter namespace
-   * @return {string }
-   */
-  public get namespace(): string {
-    return this._namespace;
-  }
-
-  /**
-   * Getter objects
-   * @return {unknown}
-   */
-  public get objects(): Record<string, ioBroker.Object> | undefined {
-    return this._objects;
-  }
-
-  /**
-   * Getter type
-   * @return {string }
-   */
-  public get type(): string {
-    return this._type;
-  }
-
-  /**
-   * Getter timeout
-   * @return {number }
-   */
-  public get timeout(): number {
-    return this._timeout;
-  }
-
-  /**
-   * Getter user
-   * @return {unknown}
-   */
-  public get user(): string {
-    return this._user;
-  }
-
-  /**
-   * Setter enums
-   * @param {unknown} value
-   */
-  public set enums(
-    value:
-      | {
-          [groupName: string]: Record<string, ioBroker.Enum>;
-        }
-      | undefined,
-  ) {
-    this._enums = value;
-  }
-
-  /**
-   * Setter namespace
-   * @param {string } value
-   */
-  public set namespace(value: string) {
-    this._namespace = value;
-  }
-
-  /**
-   * Setter objects
-   * @param {unknown} value
-   */
-  public set objects(value: Record<string, ioBroker.Object> | undefined) {
-    this._objects = value;
-  }
-
-  /**
-   * Setter type
-   * @param {string } value
-   */
-  public set type(value: string) {
-    this._type = value;
-  }
-
-  /**
-   * Setter timeout
-   * @param {number } value
-   */
-  public set timeout(value: number) {
-    this._timeout = value;
-  }
-
-  /**
-   * Setter user
-   * @param {unknown} value
-   */
-  public set user(value: string) {
-    this._user = value;
-  }
-
-  //#endregion
 
   public constructor(
     connOptions: SocketIOConnectOpts = {},
@@ -253,16 +117,19 @@ export class IOBrokerConnection {
       transports: connOptions.socketForceWebSockets ? ['websocket'] : undefined,
     };
 
-    SocketIoLogging.writeLog(SocketIoLogLevel.Trace, `Going to create socket for url ${url}`);
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, `Going to create socket for url ${url}`);
     console.log(opts);
     this._socket = io(url, opts);
-    SocketIoLogging.writeLog(SocketIoLogLevel.Trace, 'Created socket');
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, 'Created socket');
 
     this._socket.on('connect', () => {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Trace, 'In Connect callback');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, 'In Connect callback');
       if (this._disconnectedSince) {
         const offlineTime = new Date().getTime() - this._disconnectedSince.getTime();
-        SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'was offline for ' + offlineTime / 1000 + 's');
+        iobrokerConnectionLogging.writeLog(
+          iobrokerConnectionLogLevel.Debug,
+          'was offline for ' + offlineTime / 1000 + 's',
+        );
 
         // reload whole page if no connection longer than some period
         if (this._isExecutedInBrowser && this._reloadInterval && offlineTime > this._reloadInterval * 1000) {
@@ -287,12 +154,15 @@ export class IOBrokerConnection {
       }
 
       this._socket.emit('name', connOptions.name);
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, new Date().toISOString() + ' Connected => authenticate');
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.Debug,
+        new Date().toISOString() + ' Connected => authenticate',
+      );
       Utils.guardedTimeout(
         () => {
           const wait = Utils.guardedTimeout(
             () => {
-              SocketIoLogging.writeLog(SocketIoLogLevel.Error, 'No answer from server');
+              iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, 'No answer from server');
               if (this._isExecutedInBrowser) window.location.reload();
             },
             3000,
@@ -301,11 +171,14 @@ export class IOBrokerConnection {
 
           this._socket.emit('authenticate', (isOk: boolean, isSecure: boolean) => {
             clearTimeout(wait);
-            SocketIoLogging.writeLog(SocketIoLogLevel.Debug, new Date().toISOString() + ' Authenticated: ' + isOk);
+            iobrokerConnectionLogging.writeLog(
+              iobrokerConnectionLogLevel.Debug,
+              new Date().toISOString() + ' Authenticated: ' + isOk,
+            );
             if (isOk) {
               this._onAuth(objectsRequired, isSecure);
             } else {
-              SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'permissionError');
+              iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'permissionError');
             }
           });
         },
@@ -322,12 +195,15 @@ export class IOBrokerConnection {
           app.onConnChange(false);
         }
       }
-      SocketIoLogging.writeLog(SocketIoLogLevel.Warn, 'reauthenticate');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'reauthenticate');
       if (this._isExecutedInBrowser) window.location.reload();
     });
 
     this._socket.on('connect_error', (err: unknown) => {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Error, `Couldn't Connect --> Reconecting (Error: ${err})`);
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.Error,
+        `Couldn't Connect --> Reconecting (Error: ${err})`,
+      );
 
       this.reconnect(connOptions);
     });
@@ -361,7 +237,7 @@ export class IOBrokerConnection {
     this._socket.on('reconnect', () => {
       const discoSinceTime: number = this._disconnectedSince === undefined ? 0 : this._disconnectedSince?.getTime();
       const offlineTime = new Date().getTime() - discoSinceTime;
-      SocketIoLogging.writeLog(SocketIoLogLevel.Info, `was offline for ${offlineTime / 1000}s`);
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Info, `was offline for ${offlineTime / 1000}s`);
 
       // reload whole page if no connection longer than one minute
       if (this._reloadInterval && offlineTime > this._reloadInterval * 1000) {
@@ -406,8 +282,8 @@ export class IOBrokerConnection {
           try {
             state.val = JSON.parse(state.val);
           } catch (e) {
-            SocketIoLogging.writeLog(
-              SocketIoLogLevel.Debug,
+            iobrokerConnectionLogging.writeLog(
+              iobrokerConnectionLogLevel.Debug,
               'Command seems to be an object, but cannot parse it: ' + state.val,
             );
           }
@@ -446,84 +322,153 @@ export class IOBrokerConnection {
                      }*/
         this._connCallbacks.onError(err);
       } else {
-        SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'permissionError');
+        iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'permissionError');
       }
     });
   }
 
-  private _checkConnection(pFunc: unknown, pArguments: IArguments): boolean {
-    if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Warn, 'No connection!');
-      return false;
-    }
+  private _isExecutedInBrowser: boolean = false;
 
-    // @ts-ignore
-    if (this._queueCmdIfRequired(pFunc, pArguments)) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Warn, 'Command queued');
-      return false;
-    }
-
-    //socket.io
-    if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Warn, 'socket.io not initialized');
-      return false;
-    }
-    return true;
+  /**
+   * Getter isExecutedInBrowser
+   * @return {boolean }
+   */
+  public get isExecutedInBrowser(): boolean {
+    return this._isExecutedInBrowser;
   }
 
-  private _monitor(): void {
-    if (this._timerTimeout !== undefined) return;
-    const ts: number = new Date().getTime();
-    const lastTimerTime: number = this._lastTimer === undefined ? 0 : this._lastTimer.getTime();
-    if (this._reloadInterval && ts - lastTimerTime > this._reloadInterval * 1000) {
-      // It seems, that PC was in a sleep => Reload page to request authentication anew
-      if (this._isExecutedInBrowser) window.location.reload();
-    } else {
-      this._lastTimer = new Date(ts);
-    }
-    this._timerTimeout = Utils.guardedTimeout(
-      () => {
-        this._timerTimeout = undefined;
-        this._monitor();
-      },
-      10000,
-      this,
-    );
+  private _enums?: {
+    [groupName: string]: Record<string, ioBroker.Enum>;
+  }; // used if _useStorage === true
+
+  /**
+   * Getter enums
+   * @return {unknown}
+   */
+  public get enums():
+    | {
+        [groupName: string]: Record<string, ioBroker.Enum>;
+      }
+    | undefined {
+    return this._enums;
   }
 
-  private _onAuth(pObjectsRequired: boolean, pIsSecure: boolean): void {
-    this._isSecure = pIsSecure;
+  /**
+   * Setter enums
+   * @param {unknown} value
+   */
+  public set enums(
+    value:
+      | {
+          [groupName: string]: Record<string, ioBroker.Enum>;
+        }
+      | undefined,
+  ) {
+    this._enums = value;
+  }
 
-    if (this._isSecure) {
-      this._lastTimer = new Date();
-      this._monitor();
-    }
+  private _isAuthDone: boolean = false;
 
-    this._socket.emit('subscribe', '*');
-    if (pObjectsRequired) this._socket.emit('subscribeObjects', '*');
+  /**
+   * Getter isAuthDone
+   * @return {boolean }
+   */
+  public get isAuthDone(): boolean {
+    return this._isAuthDone;
+  }
 
-    if (this._isConnected === true) {
-      // This seems to be a reconnect because we're already connected!
-      // -> prevent firing onConnChange twice
-      return;
-    }
+  //#region GetterSetter
 
-    this._isConnected = true;
-    if (this._connCallbacks.onConnChange) {
-      Utils.guardedNewThread(() => {
-        // @ts-ignore
-        this._socket.emit('authEnabled', (auth: unknown, user: string) => {
-          this._user = user;
-          if (typeof this._connCallbacks.onConnChange !== 'undefined') {
-            this._connCallbacks.onConnChange(this._isConnected);
-          }
-          if (typeof app !== 'undefined') {
-            // @ts-ignore
-            app.onConnChange(this._isConnected);
-          }
-        });
-      }, this);
-    }
+  private _namespace: string = 'vis.0';
+
+  /**
+   * Getter namespace
+   * @return {string }
+   */
+  public get namespace(): string {
+    return this._namespace;
+  }
+
+  /**
+   * Setter namespace
+   * @param {string } value
+   */
+  public set namespace(value: string) {
+    this._namespace = value;
+  }
+
+  private _objects?: Record<string, ioBroker.Object>; // used if _useStorage === true
+
+  /**
+   * Getter objects
+   * @return {unknown}
+   */
+  public get objects(): Record<string, ioBroker.Object> | undefined {
+    return this._objects;
+  }
+
+  /**
+   * Setter objects
+   * @param {unknown} value
+   */
+  public set objects(value: Record<string, ioBroker.Object> | undefined) {
+    this._objects = value;
+  }
+
+  private _type: string = 'socket.io'; // [SignalR | socket.io | local]
+
+  /**
+   * Getter type
+   * @return {string }
+   */
+  public get type(): string {
+    return this._type;
+  }
+
+  /**
+   * Setter type
+   * @param {string } value
+   */
+  public set type(value: string) {
+    this._type = value;
+  }
+
+  private _timeout: number = 0; // 0 - use transport default timeout to detect disconnect
+
+  /**
+   * Getter timeout
+   * @return {number }
+   */
+  public get timeout(): number {
+    return this._timeout;
+  }
+
+  /**
+   * Setter timeout
+   * @param {number } value
+   */
+  public set timeout(value: number) {
+    this._timeout = value;
+  }
+
+  private _user: string = '';
+
+  /**
+   * Getter user
+   * @return {unknown}
+   */
+  public get user(): string {
+    return this._user;
+  }
+
+  //#endregion
+
+  /**
+   * Setter user
+   * @param {unknown} value
+   */
+  public set user(value: string) {
+    this._user = value;
   }
 
   public reconnect(pConnOptions: unknown): void {
@@ -535,11 +480,11 @@ export class IOBrokerConnection {
 
     this._connectInterval = Utils.guardedInterval(
       () => {
-        SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'Trying connect...');
+        iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'Trying connect...');
         this._socket.connect();
         this._countDown = Math.floor(this._reconnectInterval / 1000);
-        SocketIoLogging.writeLog(
-          SocketIoLogLevel.Trace,
+        iobrokerConnectionLogging.writeLog(
+          iobrokerConnectionLogLevel.Trace,
           `Connection.ts: Connection Retry Countdown ${this._countDown}`,
         );
       },
@@ -548,13 +493,16 @@ export class IOBrokerConnection {
     );
 
     this._countDown = Math.floor(this._reconnectInterval / 1000);
-    SocketIoLogging.writeLog(SocketIoLogLevel.Trace, `Connection.ts: Connection Retry Countdown ${this._countDown}`);
+    iobrokerConnectionLogging.writeLog(
+      iobrokerConnectionLogLevel.Trace,
+      `Connection.ts: Connection Retry Countdown ${this._countDown}`,
+    );
 
     this._countInterval = Utils.guardedInterval(
       () => {
         this._countDown--;
-        SocketIoLogging.writeLog(
-          SocketIoLogLevel.Trace,
+        iobrokerConnectionLogging.writeLog(
+          iobrokerConnectionLogLevel.Trace,
           `Connection.ts: Connection Retry Countdown ${this._countDown}`,
         );
       },
@@ -566,7 +514,7 @@ export class IOBrokerConnection {
   // FIXME: CallBack Type
   public logout(callback: unknown): void {
     if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
     }
 
@@ -584,30 +532,6 @@ export class IOBrokerConnection {
       // FIXME: version Type
       (error: unknown, version: string) => {
         if (callback) {
-          // @ts-ignore
-          callback(error, version);
-        }
-      },
-    );
-  }
-
-  // FIXME: CallBack Type
-  private _checkAuth(callback: unknown) {
-    if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, '_checkAuth: No connection!');
-      return;
-    }
-    //socket.io
-    if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, '_checkAuth: socket.io not initialized');
-      return;
-    }
-    this._socket.emit(
-      'getVersion',
-      // FIXME: CallBack Type
-      (error: unknown, version: unknown) => {
-        if (callback) {
-          SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, '_checkAuth: socket.io getVersion Callback');
           // @ts-ignore
           callback(error, version);
         }
@@ -812,7 +736,7 @@ export class IOBrokerConnection {
   public readDir(dirname: string, callback: ioBroker.ReadDirCallback): void {
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     if (!dirname) dirname = '/';
@@ -869,14 +793,14 @@ export class IOBrokerConnection {
   ): void {
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     if (!callback) {
       callback = (err?, id?) => {
         if (err) {
-          SocketIoLogging.writeLog(
-            SocketIoLogLevel.Error,
+          iobrokerConnectionLogging.writeLog(
+            iobrokerConnectionLogLevel.Error,
             `socket.io setState Error: ${err}\nwith updating ${pointId} to value ${state}\nid:${id}`,
           );
         }
@@ -901,28 +825,28 @@ export class IOBrokerConnection {
 
   // callback(err: Error, data)
   public getStates(IDs: string[] | null, callback: ioBroker.GetStatesCallback): void {
-    SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, 'getStates');
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.DeepTrace, 'getStates');
     if (this._type === 'local') {
       return callback(null, {});
     }
 
     if (!this._checkConnection('getStates', arguments)) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'getStates: No Connection');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'getStates: No Connection');
       return;
     }
     this._gettingStates = this._gettingStates || 0;
     this._gettingStates++;
     if (this._gettingStates > 1) {
       // fix for slow devices
-      SocketIoLogging.writeLog(
-        SocketIoLogLevel.Trace,
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.Trace,
         'Trying to get empty list, because the whole list could not be loaded',
       );
       // FIXME: Check if this is correct to get all
       IDs = null;
     }
     this._socket.emit('getStates', IDs, (err: Error, data: Record<string, ioBroker.State>) => {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Trace, `getStates Callback; Error: "${err}"`);
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, `getStates Callback; Error: "${err}"`);
       this._gettingStates !== undefined && this._gettingStates--;
       if (err || !data) {
         if (callback) {
@@ -932,30 +856,6 @@ export class IOBrokerConnection {
         callback(null, data);
       }
     });
-  }
-
-  // TODO: check if ioBroker.Object is correct
-  private _fillChildren(objects: { [id: string]: ioBroker.Object & { children?: string[] } }): void {
-    const items: Array<string> = [];
-
-    for (const id in objects) {
-      items.push(id);
-    }
-    items.sort();
-
-    for (let i = 0; i < items.length; i++) {
-      if (objects[items[i]].common) {
-        let j = i + 1;
-        const children = [];
-        const len = items[i].length + 1;
-        const name = items[i] + '.';
-        while (j < items.length && items[j].substring(0, len) === name) {
-          children.push(items[j++]);
-        }
-
-        objects[items[i]].children = children;
-      }
-    }
   }
 
   // callback(err: Error, data)
@@ -1315,16 +1215,15 @@ export class IOBrokerConnection {
     return new Date(0);
   }
 
-  // FIXME finish implementation of this file
   // @ts-ignore
   public addObject(objId: unknown, obj: unknown, callback: unknown): void {
     if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
     }
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
   }
@@ -1337,12 +1236,12 @@ export class IOBrokerConnection {
 
   public httpGet(url: string, callback: (res: IncomingMessage | Error) => void): void {
     if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
     }
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     this._socket.emit('httpGet', url, (data: IncomingMessage | Error) => {
@@ -1351,64 +1250,17 @@ export class IOBrokerConnection {
   }
 
   public logError(errorText: string): void {
-    SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'Error: ' + errorText);
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'Error: ' + errorText);
     if (!this._isConnected) {
       //SocketIoLogging.writeLog(SocketIoLogLevel.Debug,'No connection!');
       return;
     }
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     this._socket.emit('log', 'error', 'Addon DashUI  ' + errorText);
-  }
-
-  private _queueCmdIfRequired(func: string, args: IArguments) {
-    if (this.isAuthDone) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: Auth is already done`);
-      return false;
-    }
-    SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: Auth is not yet done`);
-    // Queue command
-    // @ts-ignore
-    this._cmdQueue.push({ func: func, args: args });
-    if (this._authRunning) {
-      SocketIoLogging.writeLog(
-        SocketIoLogLevel.DeepTrace,
-        `_queueCmdIfRequired: Authentication Process is already Running`,
-      );
-      return true;
-    }
-
-    SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: Starting Authentication Process`);
-    this._authRunning = true;
-    // Try to read version
-    // @ts-ignore
-    this._checkAuth((error: unknown, version: string) => {
-      SocketIoLogging.writeLog(SocketIoLogLevel.DeepTrace, `_queueCmdIfRequired: _checkAuth CB data: "${version}"`);
-      // If we have got version string, so there is no authentication, or we are authenticated
-      this._authRunning = false;
-      if (!version) {
-        // Auth required
-        this._isAuthRequired = true;
-        // What for AuthRequest from server
-        return;
-      }
-      this._isAuthDone = true;
-      // Repeat all stored requests
-      const __cmdQueue = this._cmdQueue;
-      // Trigger GC
-      this._cmdQueue = undefined;
-      this._cmdQueue = [];
-      // @ts-ignore
-      for (let t = 0, len = __cmdQueue.length; t < len; t++) {
-        // @ts-ignore
-        (this as unknown)[__cmdQueue[t].func].apply(this, __cmdQueue[t].args);
-      }
-    });
-
-    return true;
   }
 
   public authenticate(user: string, password: string, salt: string): void {
@@ -1423,14 +1275,16 @@ export class IOBrokerConnection {
     }
 
     if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
     }
 
     if (!this._authInfo) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No credentials!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No credentials!');
     }
   }
+
+  // FIXME finish implementation of this file
 
   public getConfig(
     useCache: boolean,
@@ -1485,41 +1339,6 @@ export class IOBrokerConnection {
     this.setState(this.namespace + '.control.command', { val: command, ack: ack });
   }
 
-  private _detectViews(
-    projectDir: string,
-    callback: (
-      err?: NodeJS.ErrnoException | null,
-      obj?: { name: string; readOnly: undefined | boolean; mode: number },
-    ) => void,
-  ) {
-    this.readDir(
-      '/' + this.namespace + '/' + projectDir,
-      (err?: NodeJS.ErrnoException | null, dirs?: ioBroker.ReadDirResult[]) => {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        // find vis-views.json
-        if (dirs === undefined) {
-          callback(new Error('No directories found'));
-          return;
-        }
-
-        for (const dir of dirs) {
-          if (dir.file === 'vis-views.json' && (!dir.acl || dir.acl.read)) {
-            return callback(err, {
-              name: projectDir,
-              readOnly: dir.acl && !dir.acl.write,
-              mode: dir.acl ? dir.acl.permissions : 0,
-            });
-          }
-        }
-        callback(err);
-      },
-    );
-  }
-
   public readProjects(
     callback: (
       err?: NodeJS.ErrnoException | null,
@@ -1558,7 +1377,7 @@ export class IOBrokerConnection {
   public chmodProject(projectDir: string, mode: number | string, callback: ioBroker.ChownFileCallback): void {
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     this._socket.emit(
@@ -1614,6 +1433,226 @@ export class IOBrokerConnection {
     });
   }
 
+  private _checkConnection(pFunc: unknown, pArguments: IArguments): boolean {
+    if (!this._isConnected) {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'No connection!');
+      return false;
+    }
+
+    // @ts-ignore
+    if (this._queueCmdIfRequired(pFunc, pArguments)) {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'Command queued');
+      return false;
+    }
+
+    //socket.io
+    if (this._socket === null) {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'socket.io not initialized');
+      return false;
+    }
+    return true;
+  }
+
+  private _monitor(): void {
+    if (this._timerTimeout !== undefined) return;
+    const ts: number = new Date().getTime();
+    const lastTimerTime: number = this._lastTimer === undefined ? 0 : this._lastTimer.getTime();
+    if (this._reloadInterval && ts - lastTimerTime > this._reloadInterval * 1000) {
+      // It seems, that PC was in a sleep => Reload page to request authentication anew
+      if (this._isExecutedInBrowser) window.location.reload();
+    } else {
+      this._lastTimer = new Date(ts);
+    }
+    this._timerTimeout = Utils.guardedTimeout(
+      () => {
+        this._timerTimeout = undefined;
+        this._monitor();
+      },
+      10000,
+      this,
+    );
+  }
+
+  private _onAuth(pObjectsRequired: boolean, pIsSecure: boolean): void {
+    this._isSecure = pIsSecure;
+
+    if (this._isSecure) {
+      this._lastTimer = new Date();
+      this._monitor();
+    }
+
+    this._socket.emit('subscribe', '*');
+    if (pObjectsRequired) this._socket.emit('subscribeObjects', '*');
+
+    if (this._isConnected === true) {
+      // This seems to be a reconnect because we're already connected!
+      // -> prevent firing onConnChange twice
+      return;
+    }
+
+    this._isConnected = true;
+    if (this._connCallbacks.onConnChange) {
+      Utils.guardedNewThread(() => {
+        // @ts-ignore
+        this._socket.emit('authEnabled', (auth: unknown, user: string) => {
+          this._user = user;
+          if (typeof this._connCallbacks.onConnChange !== 'undefined') {
+            this._connCallbacks.onConnChange(this._isConnected);
+          }
+          if (typeof app !== 'undefined') {
+            // @ts-ignore
+            app.onConnChange(this._isConnected);
+          }
+        });
+      }, this);
+    }
+  }
+
+  // FIXME: CallBack Type
+  private _checkAuth(callback: unknown) {
+    if (!this._isConnected) {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, '_checkAuth: No connection!');
+      return;
+    }
+    //socket.io
+    if (this._socket === null) {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.DeepTrace, '_checkAuth: socket.io not initialized');
+      return;
+    }
+    this._socket.emit(
+      'getVersion',
+      // FIXME: CallBack Type
+      (error: unknown, version: unknown) => {
+        if (callback) {
+          iobrokerConnectionLogging.writeLog(
+            iobrokerConnectionLogLevel.DeepTrace,
+            '_checkAuth: socket.io getVersion Callback',
+          );
+          // @ts-ignore
+          callback(error, version);
+        }
+      },
+    );
+  }
+
+  // TODO: check if ioBroker.Object is correct
+  private _fillChildren(objects: { [id: string]: ioBroker.Object & { children?: string[] } }): void {
+    const items: Array<string> = [];
+
+    for (const id in objects) {
+      items.push(id);
+    }
+    items.sort();
+
+    for (let i = 0; i < items.length; i++) {
+      if (objects[items[i]].common) {
+        let j = i + 1;
+        const children = [];
+        const len = items[i].length + 1;
+        const name = items[i] + '.';
+        while (j < items.length && items[j].substring(0, len) === name) {
+          children.push(items[j++]);
+        }
+
+        objects[items[i]].children = children;
+      }
+    }
+  }
+
+  private _queueCmdIfRequired(func: string, args: IArguments) {
+    if (this.isAuthDone) {
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.DeepTrace,
+        `_queueCmdIfRequired: Auth is already done`,
+      );
+      return false;
+    }
+    iobrokerConnectionLogging.writeLog(
+      iobrokerConnectionLogLevel.DeepTrace,
+      `_queueCmdIfRequired: Auth is not yet done`,
+    );
+    // Queue command
+    // @ts-ignore
+    this._cmdQueue.push({ func: func, args: args });
+    if (this._authRunning) {
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.DeepTrace,
+        `_queueCmdIfRequired: Authentication Process is already Running`,
+      );
+      return true;
+    }
+
+    iobrokerConnectionLogging.writeLog(
+      iobrokerConnectionLogLevel.DeepTrace,
+      `_queueCmdIfRequired: Starting Authentication Process`,
+    );
+    this._authRunning = true;
+    // Try to read version
+    // @ts-ignore
+    this._checkAuth((error: unknown, version: string) => {
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.DeepTrace,
+        `_queueCmdIfRequired: _checkAuth CB data: "${version}"`,
+      );
+      // If we have got version string, so there is no authentication, or we are authenticated
+      this._authRunning = false;
+      if (!version) {
+        // Auth required
+        this._isAuthRequired = true;
+        // What for AuthRequest from server
+        return;
+      }
+      this._isAuthDone = true;
+      // Repeat all stored requests
+      const __cmdQueue = this._cmdQueue;
+      // Trigger GC
+      this._cmdQueue = undefined;
+      this._cmdQueue = [];
+      // @ts-ignore
+      for (let t = 0, len = __cmdQueue.length; t < len; t++) {
+        // @ts-ignore
+        (this as unknown)[__cmdQueue[t].func].apply(this, __cmdQueue[t].args);
+      }
+    });
+
+    return true;
+  }
+
+  private _detectViews(
+    projectDir: string,
+    callback: (
+      err?: NodeJS.ErrnoException | null,
+      obj?: { name: string; readOnly: undefined | boolean; mode: number },
+    ) => void,
+  ) {
+    this.readDir(
+      '/' + this.namespace + '/' + projectDir,
+      (err?: NodeJS.ErrnoException | null, dirs?: ioBroker.ReadDirResult[]) => {
+        if (err) {
+          callback(err);
+          return;
+        }
+
+        // find vis-views.json
+        if (dirs === undefined) {
+          callback(new Error('No directories found'));
+          return;
+        }
+
+        for (const dir of dirs) {
+          if (dir.file === 'vis-views.json' && (!dir.acl || dir.acl.read)) {
+            return callback(err, {
+              name: projectDir,
+              readOnly: dir.acl && !dir.acl.write,
+              mode: dir.acl ? dir.acl.permissions : 0,
+            });
+          }
+        }
+        callback(err);
+      },
+    );
+  }
+
   private getLiveHost(callback: (host: string) => void) {
     this._socket.emit(
       'getObjectView',
@@ -1651,19 +1690,19 @@ export class IOBrokerConnection {
   // @ts-ignore
   private readDirAsZip(project: string, useConvert: boolean = false, callback: ioBroker.ReadDirCallback) {
     if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
     }
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     if (project.match(/\/$/)) project = project.substring(0, project.length - 1);
 
     this.getLiveHost((host) => {
       if (!host) {
-        SocketIoLogging.writeLog(SocketIoLogLevel.Error, 'No active host found');
+        iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, 'No active host found');
         return;
       }
       // to do find active host
@@ -1682,7 +1721,7 @@ export class IOBrokerConnection {
         // FIXME: ioBroker.Message has no attribute error
         (data: unknown) => {
           // @ts-ignore
-          if (data.error) SocketIoLogging.writeLog(SocketIoLogLevel.Error, data.error);
+          if (data.error) iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, data.error);
           if (callback) {
             // @ts-ignore
             callback(data.error, data.data);
@@ -1695,19 +1734,19 @@ export class IOBrokerConnection {
   // @ts-ignore
   private writeDirAsZip(project: string, base64: string, callback: ioBroker.ReadDirCallback): void {
     if (!this._isConnected) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'No connection!');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
     }
     //socket.io
     if (this._socket === null) {
-      SocketIoLogging.writeLog(SocketIoLogLevel.Debug, 'socket.io not initialized');
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'socket.io not initialized');
       return;
     }
     if (project.match(/\/$/)) project = project.substring(0, project.length - 1);
 
     this.getLiveHost((host) => {
       if (!host) {
-        SocketIoLogging.writeLog(SocketIoLogLevel.Error, 'No active host found');
+        iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, 'No active host found');
         return;
       }
       this._socket.emit(
@@ -1721,7 +1760,7 @@ export class IOBrokerConnection {
         },
         (data: ioBroker.Message) => {
           // @ts-ignore
-          if (data.error) SocketIoLogging.writeLog(SocketIoLogLevel.Error, data.error);
+          if (data.error) iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, data.error);
           if (callback) {
             // @ts-ignore
             callback(data.error, data.message);

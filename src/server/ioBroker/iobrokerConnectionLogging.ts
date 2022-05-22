@@ -1,4 +1,4 @@
-export enum SocketIoLogLevel {
+export enum iobrokerConnectionLogLevel {
   Error = 1,
   Warn = 2,
   Info = 3,
@@ -7,18 +7,19 @@ export enum SocketIoLogLevel {
   DeepTrace = 6,
 }
 
-export class SocketIoLogging {
+export class iobrokerConnectionLogging {
   public static LogLevel = 5;
-  public static writeLog(pLevel: SocketIoLogLevel, pMessage: string): void {
-    if (pLevel > SocketIoLogging.LogLevel) {
+
+  public static writeLog(pLevel: iobrokerConnectionLogLevel, pMessage: string): void {
+    if (pLevel > iobrokerConnectionLogging.LogLevel) {
       return;
     }
 
     switch (pLevel) {
-      case SocketIoLogLevel.Error:
+      case iobrokerConnectionLogLevel.Error:
         console.error(pMessage);
         break;
-      case SocketIoLogLevel.Warn:
+      case iobrokerConnectionLogLevel.Warn:
         console.warn(pMessage);
         break;
       default:
