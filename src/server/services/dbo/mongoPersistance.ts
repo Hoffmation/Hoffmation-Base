@@ -1,21 +1,23 @@
-import { DailyMovementCount } from '../../../models/persistence/DailyMovementCount';
-import { RoomBase } from '../../../models/rooms/RoomBase';
 import { Collection, Db, FindOptions, MongoClient } from 'mongodb';
-import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
-import { RoomDetailInfo } from '../../../models/persistence/RoomDetailInfo';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
-import { ServerLogService } from '../log-service/log-service';
-import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { BasicRoomInfo } from '../../../models/persistence/BasicRoomInfo';
-import { LogLevel } from '../../../models/logLevel';
-import { iMongoSettings, iPersistenceSettings } from '../../config/iConfig';
-import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
+import { ServerLogService } from '../log-service';
+import { iMongoSettings, iPersistenceSettings } from '../../config';
+import {
+  BasicRoomInfo,
+  CountToday,
+  CurrentIlluminationDataPoint,
+  DailyMovementCount,
+  EnergyCalculation,
+  LogLevel,
+  RoomBase,
+  RoomDetailInfo,
+  ShutterCalibration,
+  TemperaturDataPoint,
+} from '../../../models';
 import { iPersist } from './iPersist';
-import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
+import { iHeater, IoBrokerBaseDevice } from '../../devices';
 
 export class MongoPersistance implements iPersist {
+  initialized: boolean = false;
   private BasicRoomCollection?: Collection<BasicRoomInfo>;
   private CountTodayCollection?: Collection<CountToday>;
   private CurrentIlluminationCollection?: Collection<CurrentIlluminationDataPoint>;
@@ -24,41 +26,51 @@ export class MongoPersistance implements iPersist {
   private RoomDetailsCollection?: Collection<RoomDetailInfo>;
   private ShutterCalibrationCollection?: Collection<ShutterCalibration>;
   private TemperatureHistoryCollection?: Collection<TemperaturDataPoint>;
-  initialized: boolean = false;
   private Mongo?: Db;
   private MongoClient: MongoClient;
   private mongoConf: iMongoSettings;
 
-  addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
+  public constructor(config: iPersistenceSettings) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.mongoConf = config.mongo!;
+    this.MongoClient = new MongoClient(this.mongoConf.mongoConnection);
+  }
+
+  private static handleReject(reason: any, func: string) {
+    ServerLogService.writeLog(LogLevel.Warn, `Error persisting data for "${func}"`);
+    ServerLogService.writeLog(LogLevel.Debug, `Persisting Error reason: "${reason}"`);
+  }
+
+  addTemperaturDataPoint(heater: iHeater): void {
     if (!this.isMongoAllowedAndReady()) {
       return;
     }
 
     const dataPoint: TemperaturDataPoint = new TemperaturDataPoint(
-      hzGrp.info.customName,
-      hzGrp.iTemperatur,
-      hzGrp.desiredTemperatur,
-      hzGrp.iLevel,
-      hzGrp.humidity,
+      heater.info.customName,
+      heater.iTemperatur,
+      heater.desiredTemperatur,
+      heater.iLevel,
+      heater.humidity,
       new Date(),
     );
-    ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${hzGrp.info.customName}`);
+    ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${heater.info.customName}`);
     this.TemperatureHistoryCollection?.insertOne(dataPoint).catch((r) => {
-      this.handleReject(r, 'TemperatureHistoryCollection.insertOne');
+      MongoPersistance.handleReject(r, 'TemperatureHistoryCollection.insertOne');
     });
 
     // Needs to be duplicated as the object "dataPoint" is an document now
     const heatGroupDataPoint: TemperaturDataPoint = new TemperaturDataPoint(
-      hzGrp.info.customName,
-      hzGrp.iTemperatur,
-      hzGrp.desiredTemperatur,
-      hzGrp.iLevel,
-      hzGrp.humidity,
+      heater.info.customName,
+      heater.iTemperatur,
+      heater.desiredTemperatur,
+      heater.iLevel,
+      heater.humidity,
       new Date(),
     );
     this.HeatGroupCollection?.updateOne({ name: dataPoint.name }, { $set: heatGroupDataPoint }, { upsert: true }).catch(
       (r) => {
-        this.handleReject(r, 'HeatGroupCollection.updateOne');
+        MongoPersistance.handleReject(r, 'HeatGroupCollection.updateOne');
       },
     );
   }
@@ -74,7 +86,7 @@ export class MongoPersistance implements iPersist {
       { $set: new BasicRoomInfo(room.roomName, room.settings.etage) },
       { upsert: true },
     ).catch((r) => {
-      this.handleReject(r, 'BasicRoomCollection.updateOne');
+      MongoPersistance.handleReject(r, 'BasicRoomCollection.updateOne');
     });
     const detailed = new RoomDetailInfo(room.roomName, room.settings.etage);
     if (room.HeatGroup) {
@@ -84,7 +96,7 @@ export class MongoPersistance implements iPersist {
     }
     this.RoomDetailsCollection?.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
       (r) => {
-        this.handleReject(r, 'RoomDetailsCollection.updateOne');
+        MongoPersistance.handleReject(r, 'RoomDetailsCollection.updateOne');
       },
     );
   }
@@ -128,12 +140,6 @@ export class MongoPersistance implements iPersist {
     return new ShutterCalibration(device.info.fullID, 0, 0, 0, 0);
   }
 
-  public constructor(config: iPersistenceSettings) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.mongoConf = config.mongo!;
-    this.MongoClient = new MongoClient(this.mongoConf.mongoConnection);
-  }
-
   async initialize(): Promise<void> {
     await this.MongoClient.connect();
     this.Mongo = this.MongoClient.db(this.mongoConf.mongoDbName);
@@ -167,7 +173,7 @@ export class MongoPersistance implements iPersist {
         { $set: new DailyMovementCount(device.info.fullID, oldCount, device.info.room, date) },
         { upsert: true },
       ).catch((r) => {
-        this.handleReject(r, 'DailyMovementCountTodayCollection.updateOne');
+        MongoPersistance.handleReject(r, 'DailyMovementCountTodayCollection.updateOne');
       });
       ServerLogService.writeLog(
         LogLevel.Trace,
@@ -202,7 +208,7 @@ export class MongoPersistance implements iPersist {
       { $set: data },
       { upsert: true },
     ).catch((r) => {
-      this.handleReject(r, 'persistCurrentIllumination');
+      MongoPersistance.handleReject(r, 'persistCurrentIllumination');
     });
     ServerLogService.writeLog(
       LogLevel.Trace,
@@ -210,7 +216,7 @@ export class MongoPersistance implements iPersist {
     );
   }
 
-  async readTemperaturDataPoint(hzGrp: HmIpHeizgruppe, limit: number = -1): Promise<TemperaturDataPoint[]> {
+  async readTemperaturDataPoint(heater: iHeater, limit: number = -1): Promise<TemperaturDataPoint[]> {
     return new Promise<TemperaturDataPoint[]>(async (resolve) => {
       if (!this.isMongoAllowedAndReady()) {
         resolve([]);
@@ -222,16 +228,15 @@ export class MongoPersistance implements iPersist {
         sort: { date: -1 },
       };
       const data = (await this.TemperatureHistoryCollection?.find(
-        { name: hzGrp.info.customName },
+        { name: heater.info.customName },
         options,
       ).toArray()) as TemperaturDataPoint[];
       resolve(data);
     });
   }
 
-  private handleReject(reason: any, func: string) {
-    ServerLogService.writeLog(LogLevel.Warn, `Error persisting data for "${func}"`);
-    ServerLogService.writeLog(LogLevel.Debug, `Persisting Error reason: "${reason}"`);
+  persistEnergyManager(_energyData: EnergyCalculation): void {
+    ServerLogService.writeLog(LogLevel.Warn, `MongoDb doesn't support EnergyCalculation yet.`);
   }
 
   private isMongoAllowedAndReady(): boolean {
@@ -248,9 +253,5 @@ export class MongoPersistance implements iPersist {
       return false;
     }
     return true;
-  }
-
-  persistEnergyManager(_energyData: EnergyCalculation): void {
-    ServerLogService.writeLog(LogLevel.Warn, `MongoDb doesn't support EnergyCalculation yet.`);
   }
 }

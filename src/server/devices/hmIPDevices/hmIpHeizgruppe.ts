@@ -2,19 +2,18 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel, TemperaturSettings } from '../../../models';
+import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../models';
 import { iTemperaturSensor } from '../iTemperaturSensor';
 import { iHumiditySensor } from '../iHumiditySensor';
 import { iHeater } from '../iHeater';
 import { DeviceClusterType } from '../device-cluster-type';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {
-  private _automaticMode: boolean = true;
+  public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _level: number = 0;
   private _temperatur: number = 0;
   private _setPointTemperaturID: string = '';
-  private _automaticFallBackTemperatur: number = 20;
   private _automaticPoints: { [name: string]: TemperaturSettings } = {};
   private _humidityCallbacks: Array<(pValue: number) => void> = [];
 
@@ -113,7 +112,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
   }
 
   public checkAutomaticChange(): void {
-    if (!this._automaticMode) {
+    if (!this.settings.automaticMode) {
       Utils.dbo?.addTemperaturDataPoint(this);
       return;
     }
@@ -125,7 +124,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
 
     if (setting === undefined) {
       this.log(LogLevel.Warn, `Undefined Heating Timestamp.`);
-      this.desiredTemperatur = this._automaticFallBackTemperatur;
+      this.desiredTemperatur = this.settings.automaticFallBackTemperatur;
       return;
     }
 
@@ -134,7 +133,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
         LogLevel.Debug,
         `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperatur}°C`,
       );
-      this.desiredTemperatur = setting.temperatur ?? this._automaticFallBackTemperatur;
+      this.desiredTemperatur = setting.temperatur ?? this.settings.automaticFallBackTemperatur;
     }
 
     Utils.dbo?.addTemperaturDataPoint(this);

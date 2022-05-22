@@ -1,16 +1,17 @@
-import { HmIpHeizgruppe } from '../../devices/hmIPDevices/hmIpHeizgruppe';
-import { RoomBase } from '../../../models/rooms/RoomBase';
-import { IoBrokerBaseDevice } from '../../devices/IoBrokerBaseDevice';
-import { CountToday } from '../../../models/persistence/todaysCount';
-import { ShutterCalibration } from '../../../models/persistence/ShutterCalibration';
-import { CurrentIlluminationDataPoint } from '../../../models/persistence/CurrentIlluminationDataPoint';
-import { TemperaturDataPoint } from '../../../models/persistence/temperaturDataPoint';
-import { EnergyCalculation } from '../../../models/persistence/EnergyCalculation';
+import { iHeater, IoBrokerBaseDevice } from '../../devices';
+import {
+  CountToday,
+  CurrentIlluminationDataPoint,
+  EnergyCalculation,
+  RoomBase,
+  ShutterCalibration,
+  TemperaturDataPoint,
+} from '../../../models';
 
 export interface iPersist {
   initialized: boolean;
 
-  addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void;
+  addTemperaturDataPoint(heater: iHeater): void;
 
   addRoom(room: RoomBase): void;
 
@@ -28,5 +29,5 @@ export interface iPersist {
 
   persistEnergyManager(energyData: EnergyCalculation): void;
 
-  readTemperaturDataPoint(hzGrp: HmIpHeizgruppe, limit: number): Promise<TemperaturDataPoint[]>;
+  readTemperaturDataPoint(hzGrp: iHeater, limit: number): Promise<TemperaturDataPoint[]>;
 }

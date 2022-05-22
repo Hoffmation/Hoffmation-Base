@@ -1,20 +1,21 @@
 import { iPersist } from './iPersist';
-import { RoomBase } from '../../../models';
-import { IoBrokerBaseDevice } from '../../devices';
-import { CountToday } from '../../../models';
-import { TemperaturDataPoint } from '../../../models';
-import { HmIpHeizgruppe } from '../../devices';
-import { CurrentIlluminationDataPoint } from '../../../models';
+import {
+  CountToday,
+  CurrentIlluminationDataPoint,
+  EnergyCalculation,
+  LogLevel,
+  RoomBase,
+  ShutterCalibration,
+  TemperaturDataPoint,
+} from '../../../models';
+import { iHeater, IoBrokerBaseDevice } from '../../devices';
 import { iPersistenceSettings } from '../../config';
-import { ShutterCalibration } from '../../../models';
 import { Pool } from 'pg';
 import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models';
-import { EnergyCalculation } from '../../../models';
 
 export class PostgreSqlPersist implements iPersist {
-  private psql: Pool;
   initialized: boolean = false;
+  private readonly psql: Pool;
 
   public constructor(config: iPersistenceSettings) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -32,26 +33,26 @@ values ('${room.roomName}',${room.settings.etage})
     `);
   }
 
-  addTemperaturDataPoint(hzGrp: HmIpHeizgruppe): void {
-    ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${hzGrp.info.customName}`);
+  addTemperaturDataPoint(heater: iHeater): void {
+    ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${heater.info.customName}`);
     this.query(`
 insert into hoffmation_schema."TemperaturData" ("date", humidity, "istTemperatur", level, name, "sollTemperatur")
-values ('${new Date().toISOString()}',${hzGrp.humidity},${hzGrp.iTemperatur},${hzGrp.iLevel},'${
-      hzGrp.info.customName
-    }',${hzGrp.desiredTemperatur});`);
+values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperatur},${heater.iLevel},'${
+      heater.info.customName
+    }',${heater.desiredTemperatur});`);
 
     this.query(`
 insert into hoffmation_schema."HeatGroupCollection" ("date", humidity, "istTemperatur", level, name, "sollTemperatur")
-values ('${new Date().toISOString()}',${hzGrp.humidity},${hzGrp.iTemperatur},${hzGrp.iLevel},'${
-      hzGrp.info.customName
-    }',${hzGrp.desiredTemperatur})
+values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperatur},${heater.iLevel},'${
+      heater.info.customName
+    }',${heater.desiredTemperatur})
     ON CONFLICT (name)
     DO UPDATE SET
         "date" = '${new Date().toISOString()}',
-        humidity = ${hzGrp.humidity},
-        "istTemperatur" = ${hzGrp.iTemperatur},
-        level = ${hzGrp.iLevel},
-        "sollTemperatur" = ${hzGrp.desiredTemperatur}
+        humidity = ${heater.humidity},
+        "istTemperatur" = ${heater.iTemperatur},
+        level = ${heater.iLevel},
+        "sollTemperatur" = ${heater.desiredTemperatur}
 ;
     `);
   }
@@ -245,10 +246,10 @@ values ('${data.roomName}','${data.deviceID}',${data.currentIllumination},'${dat
     }
   }
 
-  async readTemperaturDataPoint(hzGrp: HmIpHeizgruppe, limit: number): Promise<TemperaturDataPoint[]> {
+  async readTemperaturDataPoint(heater: iHeater, limit: number): Promise<TemperaturDataPoint[]> {
     const dbResult: TemperaturDataPoint[] | null = await this.query<TemperaturDataPoint>(`
 SELECT * FROM hoffmation_schema."TemperaturData" 
-WHERE name = '${hzGrp.info.customName}'
+WHERE name = '${heater.info.customName}'
 ORDER BY "date" DESC
 LIMIT ${limit}
     `);
@@ -256,6 +257,15 @@ LIMIT ${limit}
       return dbResult;
     }
     return [];
+  }
+
+  persistEnergyManager(calc: EnergyCalculation): void {
+    this.query(`
+insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
+                                                   "drawnKwH")
+values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOString()}',
+        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH});
+    `);
   }
 
   private async query<T>(query: string): Promise<T[] | null> {
@@ -285,14 +295,5 @@ LIMIT ${limit}
       return false;
     }
     return true;
-  }
-
-  persistEnergyManager(calc: EnergyCalculation): void {
-    this.query(`
-insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
-                                                   "drawnKwH")
-values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOString()}',
-        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH});
-    `);
   }
 }
