@@ -1,7 +1,7 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "0.1.41-19",
+  "version": "0.1.41-20",
   "files": [
     "lib/**/*"
   ],
@@ -29,20 +29,20 @@
     "check-package-upgrades": "npx npm-check-updates -i"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.9",
+    "@babel/runtime": "^7.18.0",
     "@svrooij/sonos": "^2.5.0-beta.8",
     "@types/debug": "^4.1.7",
     "@types/iobroker": "^4.0.3",
     "@types/jest": "^27.5.1",
     "@types/lodash": "^4.14.182",
     "@types/mongodb": "^4.0.7",
-    "@types/node": "17.0.34",
+    "@types/node": "17.0.35",
     "@types/node-fetch": "^3.0.3",
     "@types/node-telegram-bot-api": "^0.57.1",
     "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.11",
-    "aws-sdk": "2.1137.0",
+    "aws-sdk": "2.1140.0",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
     "lodash": "^4.17.21",
@@ -60,7 +60,7 @@
     "@typescript-eslint/parser": "^5.25.0",
     "autoprefixer": "^10.4.7",
     "coveralls": "^3.1.1",
-    "eslint": "^8.15.0",
+    "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
