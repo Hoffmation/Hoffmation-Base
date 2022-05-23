@@ -1,20 +1,44 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
-import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../../models';
+import { HeaterSettings, LogLevel, TemperaturSettings, TimeCallback, TimeCallbackType } from '../../../../models';
 import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';
-import { Utils } from '../../../services';
+import { TimeCallbackService, Utils } from '../../../services';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   public settings: HeaterSettings = new HeaterSettings();
   protected _automaticPoints: { [name: string]: TemperaturSettings } = {};
   protected _iAutomaticInterval: NodeJS.Timeout | undefined;
+  protected _initialSeasonCheckDone: boolean = false;
   protected _level: number = 0;
   protected _setPointTemperaturID: string = '';
   protected _temperatur: number = 0;
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
+    this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
+    TimeCallbackService.addCallback(
+      new TimeCallback(
+        `${this.info.fullID} Season Check`,
+        TimeCallbackType.TimeOfDay,
+        () => {
+          this.checkSeasonTurnOff();
+        },
+        0,
+        2,
+        0,
+      ),
+    );
+  }
+
+  protected _seasonTurnOff: boolean = false;
+
+  public get seasonTurnOff(): boolean {
+    return this._seasonTurnOff;
+  }
+
+  public set seasonTurnOff(value: boolean) {
+    this._seasonTurnOff = value;
   }
 
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
@@ -70,7 +94,10 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   }
 
   public checkAutomaticChange(): void {
-    if (!this.settings.automaticMode) {
+    if (!this._initialSeasonCheckDone) {
+      this.checkSeasonTurnOff();
+    }
+    if (!this.settings.automaticMode || this.seasonTurnOff) {
       Utils.dbo?.addTemperaturDataPoint(this);
       return;
     }
@@ -114,5 +141,17 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
 
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
+  }
+
+  private checkSeasonTurnOff(): void {
+    const desiredState: boolean = Utils.beetweenDays(
+      new Date(),
+      this.settings.seasonTurnOffDay,
+      this.settings.seasonTurnOnDay,
+    );
+    if (desiredState !== this.seasonTurnOff) {
+      this.seasonTurnOff = desiredState;
+    }
+    this._initialSeasonCheckDone = true;
   }
 }

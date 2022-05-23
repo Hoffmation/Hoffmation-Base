@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { Res } from '../Translation';
 import { iPersist } from '../dbo';
 
+export const DAYMS: number = 24 * 60 * 60 * 1000;
+
 export class Utils {
   public static dbo: iPersist | undefined;
 
@@ -106,5 +108,13 @@ export class Utils {
   public static round(number: number, digits: number): number {
     const factor: number = Math.pow(10, digits);
     return Math.round(number * factor) / factor;
+  }
+
+  public static beetweenDays(date: Date, startDay: number, endDay: number): boolean {
+    const yearStart = new Date(date.getTime());
+    yearStart.setMonth(0, 1);
+    const startDate = new Date(yearStart.getTime() + startDay * DAYMS);
+    const endDate = new Date(yearStart.getTime() + endDay * DAYMS);
+    return date <= endDate && date >= startDate;
   }
 }

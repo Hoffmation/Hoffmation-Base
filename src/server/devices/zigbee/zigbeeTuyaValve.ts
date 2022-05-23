@@ -20,6 +20,11 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     this._setModeId = `${this.info.fullID}.mode`;
   }
 
+  public override set seasonTurnOff(value: boolean) {
+    this._seasonTurnOff = value;
+    this.setMode(value ? 'off' : 'auto');
+  }
+
   public override set roomTemperatur(value: number) {
     this._roomTemperatur = value;
     if (this.settings.useOwnTemperatur) {
@@ -56,7 +61,7 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
       case 'mode':
         this.log(LogLevel.Trace, `Tuya Valve mode Update for ${this.info.customName} to "${state.val}"`);
         this._mode = state.val as string;
-        if (this.settings.automaticMode && this._mode !== 'auto') {
+        if (!this.settings.seasonalTurnOffActive && this._mode !== 'auto') {
           this.setMode('auto');
         }
         break;

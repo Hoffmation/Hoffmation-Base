@@ -8,6 +8,8 @@ export interface iHeater extends IBaseDevice {
   readonly iLevel: number;
   readonly iTemperatur: number;
 
+  set seasonTurnOff(value: boolean);
+
   deleteAutomaticPoint(name: string): void;
 
   setAutomaticPoint(name: string, setting: TemperaturSettings): void;

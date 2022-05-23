@@ -4,5 +4,4 @@ export * from './dimmerSettings';
 export * from './heaterSettings';
 export * from './ledSettings';
 export * from './motionSensorSettings';
-export * from './seasonalHeaterSettings';
 export * from './shutterSettings';

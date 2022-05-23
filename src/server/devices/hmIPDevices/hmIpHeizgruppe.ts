@@ -1,14 +1,15 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services';
+import { TimeCallbackService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../models';
+import { HeaterSettings, LogLevel, TemperaturSettings, TimeCallback, TimeCallbackType } from '../../../models';
 import { iHeater, iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { DeviceClusterType } from '../device-cluster-type';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
+  private _initialSeasonCheckDone: boolean = false;
   private _level: number = 0;
   private _setPointTemperaturID: string = '';
   private _automaticPoints: { [name: string]: TemperaturSettings } = {};
@@ -19,6 +20,33 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     super(pInfo, DeviceType.HmIpHeizgruppe);
     this._setPointTemperaturID = `${this.info.fullID}.1.SET_POINT_TEMPERATURE`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
+    TimeCallbackService.addCallback(
+      new TimeCallback(
+        `${this.info.fullID} Season Check`,
+        TimeCallbackType.TimeOfDay,
+        () => {
+          this.checkSeasonTurnOff();
+        },
+        0,
+        2,
+        0,
+      ),
+    );
+  }
+
+  protected _seasonTurnOff: boolean = false;
+
+  public get seasonTurnOff(): boolean {
+    return this._seasonTurnOff;
+  }
+
+  public set seasonTurnOff(value: boolean) {
+    this._seasonTurnOff = value;
+    if (value) {
+      this.setState(this._setPointTemperaturID, 5);
+    } else {
+      this.setState(this._setPointTemperaturID, this.desiredTemperatur);
+    }
   }
 
   private _temperatur: number = UNDEFINED_TEMP_VALUE;
@@ -59,7 +87,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
   public set desiredTemperatur(val: number) {
     this.setState(
       this._setPointTemperaturID,
-      val,
+      this.seasonTurnOff ? 5 : val,
       () => {
         this.log(LogLevel.Info, `Changed temperature of to "${val}.`);
       },
@@ -132,7 +160,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
   }
 
   public checkAutomaticChange(): void {
-    if (!this.settings.automaticMode) {
+    if (!this._initialSeasonCheckDone) {
+      this.checkSeasonTurnOff();
+    }
+    if (!this.settings.automaticMode || this.seasonTurnOff) {
       Utils.dbo?.addTemperaturDataPoint(this);
       return;
     }
@@ -186,5 +217,17 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
         this._desiredTemperatur = state.val as number;
         break;
     }
+  }
+
+  private checkSeasonTurnOff(): void {
+    const desiredState: boolean = Utils.beetweenDays(
+      new Date(),
+      this.settings.seasonTurnOffDay,
+      this.settings.seasonTurnOnDay,
+    );
+    if (desiredState !== this.seasonTurnOff) {
+      this.seasonTurnOff = desiredState;
+    }
+    this._initialSeasonCheckDone = true;
   }
 }
