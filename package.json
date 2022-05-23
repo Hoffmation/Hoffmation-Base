@@ -1,7 +1,7 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "0.1.41-21",
+  "version": "0.1.41-22",
   "files": [
     "lib/**/*"
   ],
@@ -42,7 +42,7 @@
     "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.11",
-    "aws-sdk": "2.1140.0",
+    "aws-sdk": "2.1141.0",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
     "lodash": "^4.17.21",
@@ -56,8 +56,8 @@
     "sunrise-sunset-js": "^2.2.1"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.25.0",
-    "@typescript-eslint/parser": "^5.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "autoprefixer": "^10.4.7",
     "coveralls": "^3.1.1",
     "eslint": "^8.16.0",
