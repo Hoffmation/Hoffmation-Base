@@ -7,6 +7,7 @@ export * from './iHumiditySensor';
 export * from './iIlluminationSensor';
 export * from './iLamp';
 export * from './iMotionSensor';
+export * from './iSeasonalHeater';
 export * from './iShutter';
 export * from './iTemperaturSensor';
 export * from './iVibrationSensor';
