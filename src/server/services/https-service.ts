@@ -1,17 +1,13 @@
 import * as fs from 'fs';
 import HTTPS from 'https';
-import { ServerLogService } from './log-service/log-service';
-import { Utils } from './utils/utils';
-import { LogLevel } from '../../models/logLevel';
+import { ServerLogService } from './log-service';
+import { Utils } from './utils';
+import { LogLevel } from '../../models';
 import { HTTPSOptions } from './HTTPSOptions';
 import path from 'path';
 import { IncomingMessage } from 'http';
 
 export class HTTPSService {
-  private static defaultCallback(data: string, statuscode: number): void {
-    ServerLogService.writeLog(LogLevel.DeepTrace, `Response statusCode:"${statuscode}"\nData:"${data}"`);
-  }
-
   public static request(
     options: HTTPSOptions,
     postData: string = '',
@@ -87,5 +83,9 @@ export class HTTPSService {
         fs.unlink(filePath, () => resolve(false));
       });
     });
+  }
+
+  private static defaultCallback(data: string, statuscode: number): void {
+    ServerLogService.writeLog(LogLevel.DeepTrace, `Response statusCode:"${statuscode}"\nData:"${data}"`);
   }
 }

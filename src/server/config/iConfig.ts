@@ -1,5 +1,4 @@
-import { LogLevel } from '../../models/logLevel';
-import { iRoomDefaultSettings } from '../../models/rooms/RoomSettings/iRoomDefaultSettings';
+import { iRoomDefaultSettings, LogLevel } from '../../models';
 import { PoolConfig } from 'pg';
 
 interface iSonosSettings {

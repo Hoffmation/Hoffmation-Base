@@ -1,4 +1,4 @@
-import { deviceConfig } from '../../models/deviceConfig';
+import { deviceConfig } from '../../models';
 import _ from 'lodash';
 
 export class DeviceInfo {
@@ -8,7 +8,6 @@ export class DeviceInfo {
   public deviceRoomIndex: number;
   public type: 'device' | 'channel' | 'state';
   public fullName: string;
-  private _customName?: string;
   public fullID: string;
   public channel?: number;
   public valueName?: string;
@@ -75,9 +74,7 @@ export class DeviceInfo {
     }
   }
 
-  public set customName(val: string) {
-    this._customName = val;
-  }
+  private _customName?: string;
 
   public get customName(): string {
     if (this._customName !== undefined) {
@@ -85,6 +82,10 @@ export class DeviceInfo {
     }
 
     return this.fullName;
+  }
+
+  public set customName(val: string) {
+    this._customName = val;
   }
 
   public toJSON(): Partial<DeviceInfo> {

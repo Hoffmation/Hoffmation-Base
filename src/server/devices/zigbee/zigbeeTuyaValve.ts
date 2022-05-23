@@ -1,7 +1,7 @@
 import { ZigbeeHeater } from './BaseDevices';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { UNDEFINED_TEMP_VALUE } from '../iTemperaturSensor';
+import { UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { LogLevel } from '../../../models';
 import { Utils } from '../../services';
 

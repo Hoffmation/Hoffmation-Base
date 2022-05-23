@@ -1,4 +1,4 @@
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';

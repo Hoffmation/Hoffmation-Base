@@ -1,6 +1,6 @@
 import { OwnSonosDevice } from './sonos-service';
-import { ServerLogService } from '../log-service/log-service';
-import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models';
 
 export class OwnSonosDevices {
   public static ownDevices: { [name: string]: OwnSonosDevice } = {};

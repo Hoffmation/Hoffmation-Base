@@ -1,13 +1,10 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
+import { TelegramService, Utils, WeatherService } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { WeatherService } from '../../services/weather/weather-service';
-import { TelegramService } from '../../services/Telegram/telegram-service';
-import { FensterPosition } from '../models/FensterPosition';
-import { Fenster } from '../groups/Fenster';
-import { LogLevel } from '../../../models/logLevel';
-import { HeatGroup } from '../groups/heatGroup';
+import { FensterPosition } from '../models';
+import { Fenster, HeatGroup } from '../groups';
+import { LogLevel } from '../../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 
@@ -25,6 +22,10 @@ export class HmIpGriff extends HmIPDevice {
     super(pInfo, DeviceType.HmIpGriff);
   }
 
+  public set Fenster(value: Fenster) {
+    this._fenster = value;
+  }
+
   public addOffenCallback(pCallback: (pValue: boolean) => void): void {
     this._offenCallback.push(pCallback);
   }
@@ -35,10 +36,6 @@ export class HmIpGriff extends HmIPDevice {
 
   public addClosedCallback(pCallback: (pValue: boolean) => void): void {
     this._closedCallback.push(pCallback);
-  }
-
-  public set Fenster(value: Fenster) {
-    this._fenster = value;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

@@ -1,15 +1,27 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
+import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { Fenster } from '../groups/Fenster';
-import { FensterPosition } from '../models/FensterPosition';
-import { LogLevel } from '../../../models/logLevel';
-import { iShutter } from '../iShutter';
+import { Fenster } from '../groups';
+import { FensterPosition } from '../models';
+import { LogLevel } from '../../../models';
+import { iShutter } from '../baseDeviceInterfaces';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
+  private _setLevelSwitchID: string;
+  private _firstCommandRecieved: boolean = false;
+  private _setLevel: number = -1;
+  private _setLevelTime: number = -1;
+
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, DeviceType.HmIpRoll);
+    this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
+  }
+
+  private _currentLevel: number = -1;
+
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
       return this._setLevel;
@@ -29,12 +41,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this._currentLevel = value;
   }
 
-  public get desiredFensterLevel(): number {
-    if (this._fenster === undefined) {
-      return -1;
-    }
-    return this._fenster.desiredPosition;
-  }
+  private _fenster?: Fenster;
 
   public get fenster(): Fenster | undefined {
     return this._fenster;
@@ -44,16 +51,11 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this._fenster = value;
   }
 
-  private _currentLevel: number = -1;
-  private _setLevelSwitchID: string;
-  private _fenster?: Fenster;
-  private _firstCommandRecieved: boolean = false;
-  private _setLevel: number = -1;
-  private _setLevelTime: number = -1;
-
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.HmIpRoll);
-    this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
+  public get desiredFensterLevel(): number {
+    if (this._fenster === undefined) {
+      return -1;
+    }
+    return this._fenster.desiredPosition;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

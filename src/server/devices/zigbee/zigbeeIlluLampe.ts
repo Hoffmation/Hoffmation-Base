@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 import { LogLevel, TimeOfDay } from '../../../models';
-import { iLamp } from '../iLamp';
+import { iLamp } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {

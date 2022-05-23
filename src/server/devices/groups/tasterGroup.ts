@@ -4,7 +4,7 @@ import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { SonosGroup } from './sonosGroup';
 import { ButtonPressType } from '../button';
-import { iButtonSwitch } from '../iButtonSwitch';
+import { iButtonSwitch } from '../baseDeviceInterfaces';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {

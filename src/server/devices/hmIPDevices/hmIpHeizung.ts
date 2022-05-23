@@ -1,6 +1,6 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 import { HmIPDevice } from './hmIpDevice';
 
 enum HmIpHeizungAdaptionStates {
@@ -19,6 +19,11 @@ export class HmIpHeizung extends HmIPDevice {
   private _temperatur: number = 0;
   private _level: number = 0;
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
+
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, DeviceType.HmIpHeizung);
+  }
+
   private _desiredTemperatur: number = 0;
 
   get desiredTemperatur(): number {
@@ -31,10 +36,6 @@ export class HmIpHeizung extends HmIPDevice {
 
   get iTemperatur(): number {
     return this._temperatur;
-  }
-
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.HmIpHeizung);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

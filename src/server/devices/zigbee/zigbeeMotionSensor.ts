@@ -3,7 +3,7 @@ import { ZigbeeDevice } from './BaseDevices';
 import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { iMotionSensor } from '../iMotionSensor';
+import { iMotionSensor } from '../baseDeviceInterfaces';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   public settings: MotionSensorSettings = new MotionSensorSettings();

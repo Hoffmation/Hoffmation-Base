@@ -1,5 +1,4 @@
-import { OwnSonosDevice } from '../../services/Sonos/sonos-service';
-import { Utils } from '../../services/utils/utils';
+import { OwnSonosDevice, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';

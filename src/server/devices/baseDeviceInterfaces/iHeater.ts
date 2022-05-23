@@ -1,4 +1,4 @@
-import { HeaterSettings, TemperaturSettings } from '../../models';
+import { HeaterSettings, TemperaturSettings } from '../../../models';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iHeater extends IBaseDevice {

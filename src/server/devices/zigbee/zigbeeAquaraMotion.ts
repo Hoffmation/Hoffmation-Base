@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { CurrentIlluminationDataPoint, LogLevel } from '../../../models';
-import { iIlluminationSensor } from '../iIlluminationSensor';
+import { iIlluminationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
 import { Utils } from '../../services';
 

@@ -37,10 +37,8 @@ import {
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
 import { DeviceInfo } from './DeviceInfo';
-import { iEnergyManager } from './iEnergyManager';
+import { IBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
-import { iMotionSensor } from './iMotionSensor';
-import { IBaseDevice } from './iBaseDevice';
 import { ZigbeeTuyaValve } from './zigbee/zigbeeTuyaValve';
 
 export class Devices {

@@ -1,6 +1,5 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { iEnergyManager, PhaseState } from '../iEnergyManager';
-import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
+import { iEnergyManager, iExcessEnergyConsumer, PhaseState } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { EnergyCalculation, LogLevel } from '../../../models';

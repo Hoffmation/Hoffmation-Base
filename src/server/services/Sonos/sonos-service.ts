@@ -1,29 +1,29 @@
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
-import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { ServerLogService } from '../log-service/log-service';
-import { Utils } from '../utils/utils';
+import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import { ServerLogService } from '../log-service';
+import { Utils } from '../utils';
 import { PollyService } from './polly-service';
-import { TelegramService } from '../Telegram/telegram-service';
-import { LogLevel } from '../../../models/logLevel';
+import { TelegramService } from '../Telegram';
 import { TimeCallbackService } from '../time-callback-service';
 import { SettingsService } from '../settings-service';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;
+
+  public constructor(public name: string, public roomName: string, public device: SonosDevice | undefined) {}
+
   public playTestMessage(): void {
     SonosService.speakOnDevice(`Ich bin ${this.name}`, this);
   }
-  public constructor(public name: string, public roomName: string, public device: SonosDevice | undefined) {}
 }
 
 export class SonosService {
-  private static sonosManager: SonosManager;
-  private static ownDevices: { [name: string]: OwnSonosDevice } = {};
-
-  private static isInitialized: boolean;
   public static all: SonosDevice[] = [];
   public static devicesDict: { [name: string]: SonosDevice } = {};
+  private static sonosManager: SonosManager;
+  private static ownDevices: { [name: string]: OwnSonosDevice } = {};
+  private static isInitialized: boolean;
   private static checkTimeCallback: TimeCallback;
   private static reinitializationDevice: OwnSonosDevice | undefined;
 

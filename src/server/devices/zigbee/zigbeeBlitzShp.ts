@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { ActuatorSettings, ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './BaseDevices';
-import { iExcessEnergyConsumer } from '../iExcessEnergyConsumer';
+import { iExcessEnergyConsumer } from '../baseDeviceInterfaces';
 
 export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsumer {
   public steckerOn: boolean = false;

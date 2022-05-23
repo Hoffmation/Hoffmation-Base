@@ -1,6 +1,5 @@
 import { ZigbeeDevice } from './BaseDevices';
-import { iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../iTemperaturSensor';
-import { iHumiditySensor } from '../iHumiditySensor';
+import { iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 

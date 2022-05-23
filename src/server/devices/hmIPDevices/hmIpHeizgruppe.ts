@@ -3,9 +3,7 @@ import { DeviceType } from '../deviceType';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../models';
-import { iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../iTemperaturSensor';
-import { iHumiditySensor } from '../iHumiditySensor';
-import { iHeater } from '../iHeater';
+import { iHeater, iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { DeviceClusterType } from '../device-cluster-type';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {

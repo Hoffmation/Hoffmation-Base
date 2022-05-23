@@ -1,12 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services/utils/utils';
-import { MagnetPosition } from '../models/MagnetPosition';
+import { Res, SonosService, TelegramService, Utils } from '../../services';
+import { MagnetPosition } from '../models';
 import { DeviceInfo } from '../DeviceInfo';
-import { TelegramService } from '../../services/Telegram/telegram-service';
-import { LogLevel } from '../../../models/logLevel';
-import { SonosService } from '../../services/Sonos/sonos-service';
-import { Res } from '../../services/Translation/res';
+import { LogLevel } from '../../../models';
 
 export class HmIpTuer extends HmIPDevice {
   public position: MagnetPosition = MagnetPosition.closed;

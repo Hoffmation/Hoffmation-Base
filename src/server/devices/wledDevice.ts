@@ -1,8 +1,8 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
-import { ServerLogService } from '../services/log-service/log-service';
+import { ServerLogService } from '../services';
 import { DeviceInfo } from './DeviceInfo';
-import { LogLevel } from '../../models/logLevel';
+import { LogLevel } from '../../models';
 
 export class WledDevice extends IoBrokerBaseDevice {
   public on: boolean = false;

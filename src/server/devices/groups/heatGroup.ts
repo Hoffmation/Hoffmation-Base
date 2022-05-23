@@ -2,9 +2,7 @@ import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
-import { iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../iTemperaturSensor';
-import { iHumiditySensor } from '../iHumiditySensor';
-import { iHeater } from '../iHeater';
+import { iHeater, iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 
 export class HeatGroup extends BaseGroup {
   public constructor(roomName: string, heaterIds: string[], tempSensorIds: string[], humiditySensorIds: string[]) {

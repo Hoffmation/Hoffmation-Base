@@ -1,6 +1,6 @@
 import { IRessourceObject, IRessources } from './iRessources';
 import resJson from './resources.json';
-import { iTranslationSettings } from '../../config/iConfig';
+import { iTranslationSettings } from '../../config';
 
 export class Res {
   private static translations: IRessources;

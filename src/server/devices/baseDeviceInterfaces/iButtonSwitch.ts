@@ -1,4 +1,4 @@
-import { Button } from './button';
+import { Button } from '../button';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iButtonSwitch extends IBaseDevice {

@@ -4,7 +4,7 @@ import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { OwnSonosDevice, Utils } from '../services';
 import _ from 'lodash';
 import { DeviceType } from './deviceType';
-import { IBaseDevice } from './iBaseDevice';
+import { IBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceCluster {
   public constructor(public deviceMap: Map<DeviceClusterType, DeviceList> = new Map<DeviceClusterType, DeviceList>()) {}

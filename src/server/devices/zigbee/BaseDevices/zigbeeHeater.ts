@@ -1,10 +1,9 @@
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iHeater } from '../../iHeater';
+import { iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
 import { HeaterSettings, LogLevel, TemperaturSettings } from '../../../../models';
 import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';
 import { Utils } from '../../../services';
-import { UNDEFINED_TEMP_VALUE } from '../../iTemperaturSensor';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   public settings: HeaterSettings = new HeaterSettings();

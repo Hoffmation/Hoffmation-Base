@@ -1,4 +1,4 @@
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 import { LogFilterData } from './log-filter-data';
 
 export class LogObject {

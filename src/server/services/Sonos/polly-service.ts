@@ -4,16 +4,16 @@ import * as fs from 'fs';
 // @ts-ignore
 import getMP3Duration from 'get-mp3-duration';
 import crypto from 'crypto';
-import { ServerLogService } from '../log-service/log-service';
-import { iPollySettings } from '../../config/iConfig';
-import { LogLevel } from '../../../models/logLevel';
+import { ServerLogService } from '../log-service';
+import { iPollySettings } from '../../config';
+import { LogLevel } from '../../../models';
 import path from 'path';
 
 export class PollyService {
-  private static _mp3Path: string;
   public static active: boolean = false;
   public static polly: AWS.Polly;
   public static voice: string;
+  private static _mp3Path: string;
 
   public static initialize(config: iPollySettings): void {
     this.active = true;

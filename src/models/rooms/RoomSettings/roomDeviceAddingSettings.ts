@@ -1,7 +1,6 @@
-import { ServerLogService } from '../../../server/services/log-service/log-service';
+import { DeviceType, ServerLogService } from '../../../server';
 import { RoomAddDeviceItem } from './roomAddDeviceItem';
 import { LogLevel } from '../../logLevel';
-import { DeviceType } from '../../../server/devices/deviceType';
 import { RoomBase } from '../RoomBase';
 
 export class RoomDeviceAddingSettings {

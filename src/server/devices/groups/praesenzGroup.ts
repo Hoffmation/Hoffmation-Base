@@ -6,7 +6,7 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { ZigbeeMotionSensor } from '../zigbee';
-import { iMotionSensor } from '../iMotionSensor';
+import { iMotionSensor } from '../baseDeviceInterfaces';
 
 export class PraesenzGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);

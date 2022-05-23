@@ -1,6 +1,6 @@
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
 
 export class ZigbeeSonoffMotion extends ZigbeeMotionSensor {

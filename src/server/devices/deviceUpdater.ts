@@ -3,7 +3,7 @@ import { IDeviceUpdater } from './iDeviceUpdater';
 import { ServerLogService } from '../services';
 import { LogLevel } from '../../models';
 import { Devices } from './devices';
-import { IBaseDevice } from './iBaseDevice';
+import { IBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;

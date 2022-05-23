@@ -2,7 +2,7 @@ import { DeviceType } from './deviceType';
 import { TemperaturDataPoint } from '../../models';
 import { HmIpHeizgruppe } from './hmIPDevices';
 import { Devices } from './devices';
-import { iHeater } from './iHeater';
+import { iHeater } from './baseDeviceInterfaces';
 import { Utils } from '../services';
 
 export class Heizgruppen {

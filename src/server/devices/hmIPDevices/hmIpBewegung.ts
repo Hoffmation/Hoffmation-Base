@@ -3,8 +3,7 @@ import { DeviceType } from '../deviceType';
 import { CountToday, CurrentIlluminationDataPoint, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { iIlluminationSensor } from '../iIlluminationSensor';
-import { iMotionSensor } from '../iMotionSensor';
+import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';

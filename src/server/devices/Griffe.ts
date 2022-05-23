@@ -1,6 +1,6 @@
-import { HmIpGriff } from './hmIPDevices/hmIpGriff';
+import { HmIpGriff } from './hmIPDevices';
 import { DeviceType } from './deviceType';
-import { FensterPosition } from './models/FensterPosition';
+import { FensterPosition } from './models';
 import { Devices } from './devices';
 
 export class Griffe {

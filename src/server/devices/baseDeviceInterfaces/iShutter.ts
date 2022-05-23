@@ -1,4 +1,4 @@
-import { Fenster } from './groups';
+import { Fenster } from '../groups';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iShutter extends IBaseDevice {

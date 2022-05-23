@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { PollyService, Res, SonosService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
-import { iVibrationSensor } from '../iVibrationSensor';
+import { iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor {

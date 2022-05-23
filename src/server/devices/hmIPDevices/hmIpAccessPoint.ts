@@ -1,17 +1,17 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { LogLevel } from '../../../models/logLevel';
+import { LogLevel } from '../../../models';
 
 export class HmIpAccessPoint extends HmIPDevice {
+  public constructor(pInfo: DeviceInfo) {
+    super(pInfo, DeviceType.HmIpAccessPoint);
+  }
+
   private _ip: string = '';
 
   public get ip(): string {
     return this._ip;
-  }
-
-  public constructor(pInfo: DeviceInfo) {
-    super(pInfo, DeviceType.HmIpAccessPoint);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

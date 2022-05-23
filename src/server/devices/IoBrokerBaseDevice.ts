@@ -1,4 +1,4 @@
-import { IBaseDevice } from './iBaseDevice';
+import { IBaseDevice } from './baseDeviceInterfaces';
 import { ServerLogService, Utils } from '../services';
 import { DeviceInfo } from './DeviceInfo';
 import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';

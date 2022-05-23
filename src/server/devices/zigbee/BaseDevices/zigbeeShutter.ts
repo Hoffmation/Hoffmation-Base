@@ -3,7 +3,7 @@ import { Utils } from '../../../services';
 import { DeviceInfo } from '../../DeviceInfo';
 import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iShutter } from '../../iShutter';
+import { iShutter } from '../../baseDeviceInterfaces';
 import { Fenster } from '../../groups';
 import { FensterPosition } from '../../models';
 import _ from 'lodash';

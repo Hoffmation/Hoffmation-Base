@@ -1,5 +1,5 @@
 import { API, OwnSonosDevice, OwnSonosDevices } from '../services';
-import { IBaseDevice } from './iBaseDevice';
+import { IBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceList {
   public constructor(private _ids: string[] = []) {

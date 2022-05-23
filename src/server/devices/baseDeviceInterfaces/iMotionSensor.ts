@@ -1,4 +1,4 @@
-import { MotionSensorSettings } from '../../models';
+import { MotionSensorSettings } from '../../../models';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iMotionSensor extends IBaseDevice {

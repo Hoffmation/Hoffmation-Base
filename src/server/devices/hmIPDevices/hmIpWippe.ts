@@ -1,9 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
-import { ButtonCapabilities, ButtonPressType, Button } from '../button';
-import { LogLevel } from '../../../models/logLevel';
-import { iButtonSwitch } from '../iButtonSwitch';
+import { Button, ButtonCapabilities, ButtonPressType } from '../button';
+import { LogLevel } from '../../../models';
+import { iButtonSwitch } from '../baseDeviceInterfaces';
 
 export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -60,6 +60,7 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
         break;
     }
   }
+
   public getButtonAssignment(): string {
     const result: string[] = [`Button: ${this.info.customName}`];
     for (const taste of [this.buttonTop, this.buttonBot]) {

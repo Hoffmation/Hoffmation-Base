@@ -3,7 +3,7 @@ import { DeviceType } from '../deviceType';
 import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
 import { Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { iIlluminationSensor } from '../iIlluminationSensor';
+import { iIlluminationSensor } from '../baseDeviceInterfaces';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';

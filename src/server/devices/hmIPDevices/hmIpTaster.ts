@@ -1,9 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { iButtonSwitch } from '../iButtonSwitch';
+import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { DeviceInfo } from '../DeviceInfo';
-import { ButtonCapabilities, ButtonPressType, Button } from '../button';
-import { LogLevel } from '../../../models/logLevel';
+import { Button, ButtonCapabilities, ButtonPressType } from '../button';
+import { LogLevel } from '../../../models';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {

@@ -1,13 +1,12 @@
 import * as fs from 'fs';
 import { Stats } from 'fs';
 import { HTTPSService } from './https-service';
-import { Utils } from './utils/utils';
-import { ServerLogService } from './log-service/log-service';
-import { OwnSonosDevice, SonosService } from './Sonos/sonos-service';
-import { PollyService } from './Sonos/polly-service';
+import { Utils } from './utils';
+import { ServerLogService } from './log-service';
+import { OwnSonosDevice, PollyService, SonosService } from './Sonos';
 import { SettingsService } from './settings-service';
-import { LogLevel } from '../../models/logLevel';
-import { iNewsSettings } from '../config/iConfig';
+import { LogLevel } from '../../models';
+import { iNewsSettings } from '../config';
 import path from 'path';
 import Parser from 'rss-parser';
 import { LogSource } from '../../models/logSource';
@@ -99,6 +98,37 @@ export class NewsService {
     }
 
     NewsService.downloadLatestFileFromFeed(NewsService.rssUrl, SettingsService.settings.mp3Server.path);
+  }
+
+  /**
+   * Plays the latest news on a sonos device
+   * @param ownSonosDevice Sonos device to play from
+   * @param volume volume to play at
+   * @param retries Number of times playing should be tried if there is currently no audio file available
+   */
+  public static playLastNews(ownSonosDevice: OwnSonosDevice, volume: number = 30, retries: number = 5): void {
+    if (!NewsService.lastNewsAudioFile) {
+      if (retries > 0) {
+        ServerLogService.writeLog(LogLevel.Warn, `Service not ready yet --> waiting, remaining tries: ${retries - 1}`, {
+          source: LogSource.News,
+        });
+        Utils.guardedTimeout(() => {
+          NewsService.playLastNews(ownSonosDevice, volume, retries - 1);
+        }, 1000);
+      } else {
+        ServerLogService.writeLog(LogLevel.Error, `Service not ready despite waiting --> Abort.`, {
+          source: LogSource.News,
+        });
+      }
+      return;
+    }
+
+    SonosService.playOnDevice(
+      ownSonosDevice,
+      path.basename(NewsService.lastNewsAudioFile, path.extname(NewsService.lastNewsAudioFile)),
+      PollyService.getDuration(NewsService.lastNewsAudioFile),
+      volume,
+    );
   }
 
   private static downloadLatestFileFromFeed(rssUrl: string, targetDir: string) {
@@ -196,36 +226,5 @@ export class NewsService {
     if (deleteCount > 0) {
       ServerLogService.writeLog(LogLevel.Info, `Deleted ${deleteCount} old file/s.`, { source: LogSource.News });
     }
-  }
-
-  /**
-   * Plays the latest news on a sonos device
-   * @param ownSonosDevice Sonos device to play from
-   * @param volume volume to play at
-   * @param retries Number of times playing should be tried if there is currently no audio file available
-   */
-  public static playLastNews(ownSonosDevice: OwnSonosDevice, volume: number = 30, retries: number = 5): void {
-    if (!NewsService.lastNewsAudioFile) {
-      if (retries > 0) {
-        ServerLogService.writeLog(LogLevel.Warn, `Service not ready yet --> waiting, remaining tries: ${retries - 1}`, {
-          source: LogSource.News,
-        });
-        Utils.guardedTimeout(() => {
-          NewsService.playLastNews(ownSonosDevice, volume, retries - 1);
-        }, 1000);
-      } else {
-        ServerLogService.writeLog(LogLevel.Error, `Service not ready despite waiting --> Abort.`, {
-          source: LogSource.News,
-        });
-      }
-      return;
-    }
-
-    SonosService.playOnDevice(
-      ownSonosDevice,
-      path.basename(NewsService.lastNewsAudioFile, path.extname(NewsService.lastNewsAudioFile)),
-      PollyService.getDuration(NewsService.lastNewsAudioFile),
-      volume,
-    );
   }
 }

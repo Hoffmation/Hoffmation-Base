@@ -1,4 +1,4 @@
-import { ExcessEnergyConsumerSettings } from '../../models';
+import { ExcessEnergyConsumerSettings } from '../../../models';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iExcessEnergyConsumer extends IBaseDevice {

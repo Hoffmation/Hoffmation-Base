@@ -1,7 +1,7 @@
-import { OwnSonosDevice, SonosService } from '../Sonos/sonos-service';
-import { ServerLogService } from '../log-service/log-service';
-import { TelegramService } from '../Telegram/telegram-service';
-import { LogLevel } from '../../../models/logLevel';
+import { OwnSonosDevice, SonosService } from '../Sonos';
+import { ServerLogService } from '../log-service';
+import { TelegramService } from '../Telegram';
+import { LogLevel } from '../../../models';
 
 export class MuellTonne {
   public static oneDay: number = 1000 * 60 * 60 * 24;

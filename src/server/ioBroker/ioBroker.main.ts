@@ -1,13 +1,7 @@
-import { IDeviceUpdater } from '../devices/iDeviceUpdater';
-import { ServerLogService } from '../services/log-service/log-service';
-import { Utils } from '../services/utils/utils';
-import { ConnectionCallbacks } from '../../models/connectionCallbacks';
-import { DeviceUpdater } from '../devices/deviceUpdater';
+import { DeviceUpdater, IDeviceUpdater } from '../devices';
+import { ServerLogService, SettingsService, TimeCallbackService, Utils } from '../services';
+import { ConnectionCallbacks, iRoomBase, LogLevel } from '../../models';
 import { IOBrokerConnection } from './connection';
-import { SettingsService } from '../services/settings-service';
-import { LogLevel } from '../../models/logLevel';
-import { TimeCallbackService } from '../services/time-callback-service';
-import { iRoomBase } from '../../models/rooms/iRoomBase';
 
 export class ioBrokerMain {
   public static iOConnection: IOBrokerConnection | undefined;
@@ -16,14 +10,6 @@ export class ioBrokerMain {
   private deviceUpdater: IDeviceUpdater;
   private states: Record<string, ioBroker.State> = {};
   private connectionCallbacks: ConnectionCallbacks;
-
-  public static addRoomConstructor(roomName: string, constr: { new (): iRoomBase }): void {
-    if (ioBrokerMain.roomConstructors[roomName] !== undefined) {
-      ServerLogService.writeLog(LogLevel.Error, `Konstruktor für Raum mit Namen "${roomName}" bereits hinzugefügt`);
-      return;
-    }
-    ioBrokerMain.roomConstructors[roomName] = constr;
-  }
 
   public constructor(pDeviceUpdater: DeviceUpdater) {
     this.deviceUpdater = pDeviceUpdater;
@@ -41,6 +27,14 @@ export class ioBrokerMain {
 
     ioBrokerMain.iOConnection = this.servConn;
     ioBrokerMain.initRooms();
+  }
+
+  public static addRoomConstructor(roomName: string, constr: { new (): iRoomBase }): void {
+    if (ioBrokerMain.roomConstructors[roomName] !== undefined) {
+      ServerLogService.writeLog(LogLevel.Error, `Konstruktor für Raum mit Namen "${roomName}" bereits hinzugefügt`);
+      return;
+    }
+    ioBrokerMain.roomConstructors[roomName] = constr;
   }
 
   private static initRooms(): void {

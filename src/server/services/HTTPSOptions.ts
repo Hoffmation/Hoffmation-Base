@@ -1,5 +1,5 @@
-import { ServerLogService } from './log-service/log-service';
-import { LogLevel } from '../../models/logLevel';
+import { ServerLogService } from './log-service';
+import { LogLevel } from '../../models';
 
 export class HTTPSOptions {
   constructor(

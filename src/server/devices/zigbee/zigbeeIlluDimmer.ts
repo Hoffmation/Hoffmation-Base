@@ -2,7 +2,7 @@ import { DimmerSettings, LogLevel, TimeOfDay } from '../../../models';
 import { DeviceType } from '../deviceType';
 import { TimeCallbackService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { iLamp } from '../iLamp';
+import { iLamp } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {

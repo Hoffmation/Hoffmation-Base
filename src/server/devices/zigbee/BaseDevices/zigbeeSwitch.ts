@@ -1,4 +1,4 @@
-import { iButtonSwitch } from '../../iButtonSwitch';
+import { iButtonSwitch } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';

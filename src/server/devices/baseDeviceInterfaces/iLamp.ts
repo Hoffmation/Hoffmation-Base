@@ -1,4 +1,4 @@
-import { ActuatorSettings, RoomBase, TimeOfDay } from '../../models';
+import { ActuatorSettings, RoomBase, TimeOfDay } from '../../../models';
 import { IBaseDevice } from './iBaseDevice';
 
 export interface iLamp extends IBaseDevice {

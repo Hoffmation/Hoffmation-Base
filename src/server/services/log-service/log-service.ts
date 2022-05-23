@@ -1,8 +1,8 @@
-import { TelegramService } from '../Telegram/telegram-service';
-import { LogLevel } from '../../../models/logLevel';
-import { DeviceType } from '../../devices/deviceType';
-import { iLogSettings } from '../../config/iConfig';
-import { ringStorage } from '../utils/ringstorage';
+import { TelegramService } from '../Telegram';
+import { LogLevel } from '../../../models';
+import { DeviceType } from '../../devices';
+import { iLogSettings } from '../../config';
+import { ringStorage } from '../utils';
 import { LogObject } from './log-object';
 import { LogFilterData } from './log-filter-data';
 import { LogSource } from '../../../models/logSource';
