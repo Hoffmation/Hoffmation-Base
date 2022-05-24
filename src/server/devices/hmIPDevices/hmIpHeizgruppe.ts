@@ -225,7 +225,8 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
       this.settings.seasonTurnOffDay,
       this.settings.seasonTurnOnDay,
     );
-    if (desiredState !== this.seasonTurnOff) {
+    if (desiredState !== this.seasonTurnOff || !this._initialSeasonCheckDone) {
+      this.log(LogLevel.Info, `Switching Seasonal Heating --> New seasonTurnOff: ${desiredState}`);
       this.seasonTurnOff = desiredState;
     }
     this._initialSeasonCheckDone = true;
