@@ -9,6 +9,10 @@ export const DAYMS: number = 24 * 60 * 60 * 1000;
 export class Utils {
   public static dbo: iPersist | undefined;
 
+  public static get timeTilMidnight(): number {
+    return new Date(Utils.nowMS() + DAYMS).setHours(0, 0, 0, 0) - Utils.nowMS();
+  }
+
   public static async catchEm<T>(promise: Promise<T>): Promise<{ reason: Error | null; data: T | null }> {
     return promise
       .then((data: T) => ({

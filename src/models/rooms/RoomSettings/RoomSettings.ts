@@ -6,6 +6,7 @@ import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import _ from 'lodash';
 
 export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
+  public ambientLightAfterSunset: boolean = false;
   public shortName: string;
   public defaultSettings: iRoomDefaultSettings = SettingsService.settings.roomDefault;
   public deviceAddidngSettings?: RoomDeviceAddingSettings;

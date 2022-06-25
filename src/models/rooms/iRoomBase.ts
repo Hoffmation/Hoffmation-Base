@@ -4,6 +4,7 @@ export interface iRoomBase {
   sonnenAufgangCallback: TimeCallback | undefined;
   sonnenUntergangCallback: TimeCallback | undefined;
   sonnenAufgangLichtCallback: TimeCallback | undefined;
+  sonnenUntergangLichtCallback: TimeCallback | undefined;
   skipNextRolloUp: boolean;
   roomName: string;
 

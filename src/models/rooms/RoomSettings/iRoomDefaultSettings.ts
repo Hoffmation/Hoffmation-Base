@@ -49,4 +49,7 @@ export interface iRoomDefaultSettings {
 
   // Should Light be turned on at day if there are no Windows configured for this room
   lightIfNoWindows: boolean;
+
+  // Wether this room should always have ambient light on after sunset (regardless of motion e.g. Gardenlights).
+  ambientLightAfterSunset: boolean;
 }
