@@ -14,9 +14,9 @@ export class WaterGroup extends BaseGroup {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.WaterDetectors) as ZigbeeAquaraWater[];
   }
 
-  public stopAlarm(): void {
+  public stopAlarm(timeout: number = 3600000): void {
     for (const d of this.getWaterDetectors()) {
-      d.stopAlarm(true);
+      d.stopAlarm(true, timeout);
     }
   }
 }

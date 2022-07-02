@@ -10,6 +10,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   private _messageAlarmFirst: string = '';
   private _messageAlarm: string = '';
   private _messageAlarmEnd: string = '';
+  private _supressAlarmTimeStamp: number = 0;
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraWater);
@@ -47,9 +48,12 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
     }
   }
 
-  public stopAlarm(quiet: boolean = false): void {
+  public stopAlarm(quiet: boolean = false, timeout: number = -1): void {
     if (this.iAlarmTimeout) {
       clearInterval(this.iAlarmTimeout);
+    }
+    if (timeout > -1 && this.water) {
+      this._supressAlarmTimeStamp = Utils.nowMS() + timeout;
     }
     if (quiet) {
       return;
@@ -64,6 +68,10 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   }
 
   private startAlarm(): void {
+    if (Utils.nowMS() < this._supressAlarmTimeStamp) {
+      this.log(LogLevel.Warn, `Would start alarm, but we are supressed.`);
+      return;
+    }
     if (this.iAlarmTimeout !== undefined) {
       clearInterval(this.iAlarmTimeout);
     }
