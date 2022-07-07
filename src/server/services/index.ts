@@ -1,5 +1,6 @@
 export * from './api/index';
 export * from './calendar/index';
+export * from './daikin/index';
 export * from './dbo/index';
 export * from './log-service/index';
 export * from './room-service/index';

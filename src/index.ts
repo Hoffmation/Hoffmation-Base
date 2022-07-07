@@ -1,4 +1,5 @@
 import {
+  DaikinService,
   Devices,
   DeviceUpdater,
   iConfig,
@@ -7,6 +8,7 @@ import {
   MP3Server,
   MuellService,
   NewsService,
+  OwnDaikinDevices,
   OwnSonosDevice,
   OwnSonosDevices,
   PollyService,
@@ -71,6 +73,11 @@ export class HoffmationBase {
     if (SettingsService.settings.sonos?.active) {
       SonosService.addOwnDevices(OwnSonosDevices.ownDevices);
       SonosService.initialize();
+    }
+
+    if (SettingsService.settings.daikin?.active) {
+      DaikinService.addOwnDevices(OwnDaikinDevices.ownDevices);
+      DaikinService.initialize();
     }
 
     Utils.guardedNewThread(() => {

@@ -1,6 +1,10 @@
 import { iRoomDefaultSettings, LogLevel } from '../../models';
 import { PoolConfig } from 'pg';
 
+interface iDaikinSettings {
+  active: boolean;
+}
+
 interface iSonosSettings {
   active: boolean;
 }
@@ -11,6 +15,7 @@ export interface iRestSettings {
 }
 
 export interface iConfig {
+  daikin?: iDaikinSettings;
   // Price per kWh from the grid
   wattagePrice: number;
   // Earnigs per kWh injecting into the grid
