@@ -17,4 +17,5 @@ export enum DeviceClusterType {
   MagnetContact,
   TemperaturSensor,
   HumiditySensor,
+  Ac,
 }

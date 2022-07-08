@@ -8,7 +8,7 @@ export class SonosGroup extends BaseGroup {
   private _playing: boolean = false;
 
   public constructor(roomName: string, speakerIds: string[]) {
-    super(roomName, GroupType.Smoke);
+    super(roomName, GroupType.Speaker);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds));
   }
 

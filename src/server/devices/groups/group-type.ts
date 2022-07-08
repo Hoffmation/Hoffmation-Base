@@ -8,4 +8,5 @@ export enum GroupType {
   Smoke,
   Water,
   Heating,
+  Ac,
 }
