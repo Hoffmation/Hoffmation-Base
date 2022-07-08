@@ -81,18 +81,15 @@ export class DaikinService {
   public static setAll(on: boolean): void {
     for (const deviceName in this._daikinManager.devices) {
       const dev: DaikinAC = this._daikinManager.devices[deviceName];
-      dev.getACControlInfo((err, info) => {
-        if (!info) {
-          ServerLogService.writeLog(LogLevel.Warn, `Loading Ac Info from ${deviceName} failed:  ${err} `);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      dev.setACControlInfo({ power: on }, (err, res) => {
+        if (!res) {
+          ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${deviceName} failed:  ${err} `);
           return;
+        } else {
+          ServerLogService.writeLog(LogLevel.Info, `Switching Ac ${deviceName} to ${on ? 'on' : 'off'} was successful`);
         }
-        info.power = on;
-        dev.setACControlInfo(info, (err, res) => {
-          if (!res) {
-            ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${deviceName} failed:  ${err} `);
-            return;
-          }
-        });
       });
     }
   }
