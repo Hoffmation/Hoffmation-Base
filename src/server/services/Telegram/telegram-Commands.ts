@@ -1,14 +1,8 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { DeviceType } from '../../devices';
+import { Devices, DeviceType, Griffe, Heizgruppen, HmIpTaster, ZigbeeAquaraVibra } from '../../devices';
 import { TelegramMessageCallback } from './telegramMessageCalback';
 import { ShutterService } from '../ShutterService';
-import { Griffe } from '../../devices';
-import { ZigbeeAquaraVibra } from '../../devices';
-import { Heizgruppen } from '../../devices';
-import { HmIpTaster } from '../../devices';
 import { TelegramService } from './telegram-service';
-import { Devices } from '../../devices';
-import { SonosService } from '../Sonos';
 import { RoomService } from '../room-service';
 
 export class TelegramCommands {
@@ -249,20 +243,5 @@ export class TelegramCommands {
         ),
       );
     }
-
-    TelegramService.addMessageCallback(
-      new TelegramMessageCallback(
-        'SonosTest',
-        /\/perform_sonos_test/,
-        async (m: TelegramBot.Message): Promise<boolean> => {
-          if (m.from === undefined) return false;
-          SonosService.speakTestMessageOnEachDevice();
-          TelegramService.sendMessage([m.from.id], 'Testnachricht gesprochen --> Führe weiteren Test durch');
-          await SonosService.checkAll();
-          return true;
-        },
-        `Spiele eine kurze Nachricht auf allen Sonos Geräten um diese zu identifizieren`,
-      ),
-    );
   }
 }

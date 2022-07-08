@@ -3,10 +3,11 @@ import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import { PollyService } from './polly-service';
-import { TelegramService } from '../Telegram';
+import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import { TimeCallbackService } from '../time-callback-service';
 import { SettingsService } from '../settings-service';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
+import TelegramBot from 'node-telegram-bot-api';
 
 export class OwnSonosDevice {
   public maxPlayOnAllVolume: number = 80;
@@ -52,6 +53,21 @@ export class SonosService {
         30,
       );
       TimeCallbackService.addCallback(this.checkTimeCallback);
+
+      TelegramService.addMessageCallback(
+        new TelegramMessageCallback(
+          'SonosTest',
+          /\/perform_sonos_test/,
+          async (m: TelegramBot.Message): Promise<boolean> => {
+            if (m.from === undefined) return false;
+            SonosService.speakTestMessageOnEachDevice();
+            TelegramService.sendMessage([m.from.id], 'Testnachricht gesprochen --> Führe weiteren Test durch');
+            await SonosService.checkAll();
+            return true;
+          },
+          `Spiele eine kurze Nachricht auf allen Sonos Geräten um diese zu identifizieren`,
+        ),
+      );
     }
     this.all = [];
     this.sonosManager = new SonosManager();

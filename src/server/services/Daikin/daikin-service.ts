@@ -2,6 +2,8 @@ import { DaikinAC, DaikinManager } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 import { OwnDaikinDevice } from './own-daikin-device';
+import { TelegramMessageCallback, TelegramService } from '../Telegram';
+import TelegramBot from 'node-telegram-bot-api';
 
 export class DaikinService {
   private static _ownDevices: { [name: string]: OwnDaikinDevice } = {};
@@ -31,6 +33,32 @@ export class DaikinService {
     for (const ownDevicesKey in this._ownDevices) {
       devices[ownDevicesKey] = this._ownDevices[ownDevicesKey].ip;
     }
+    TelegramService.addMessageCallback(
+      new TelegramMessageCallback(
+        'AcOn',
+        /\/ac_on/,
+        async (m: TelegramBot.Message): Promise<boolean> => {
+          if (m.from === undefined) return false;
+          DaikinService.setAll(true);
+          TelegramService.sendMessage([m.from.id], 'Command executed');
+          return true;
+        },
+        `Turns all Ac's on without changing any settings`,
+      ),
+    );
+    TelegramService.addMessageCallback(
+      new TelegramMessageCallback(
+        'AcOff',
+        /\/ac_off/,
+        async (m: TelegramBot.Message): Promise<boolean> => {
+          if (m.from === undefined) return false;
+          DaikinService.setAll(false);
+          TelegramService.sendMessage([m.from.id], 'Command executed');
+          return true;
+        },
+        `Turns all Ac's off without changing any settings`,
+      ),
+    );
     return new Promise((res, _rej) => {
       this._daikinManager = new DaikinManager({
         addDevicesByDiscovery: false,
@@ -48,6 +76,25 @@ export class DaikinService {
         },
       });
     });
+  }
+
+  public static setAll(on: boolean): void {
+    for (const deviceName in this._daikinManager.devices) {
+      const dev: DaikinAC = this._daikinManager.devices[deviceName];
+      dev.getACControlInfo((err, info) => {
+        if (!info) {
+          ServerLogService.writeLog(LogLevel.Warn, `Loading Ac Info from ${deviceName} failed:  ${err} `);
+          return;
+        }
+        info.power = on;
+        dev.setACControlInfo(info, (err, res) => {
+          if (!res) {
+            ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${deviceName} failed:  ${err} `);
+            return;
+          }
+        });
+      });
+    }
   }
 
   private static initializeDevice(d: DaikinAC, name: string): void {
