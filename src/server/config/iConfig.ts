@@ -4,6 +4,7 @@ import { PoolConfig } from 'pg';
 interface iDaikinSettings {
   active: boolean;
   activateTracingLogger?: boolean;
+  useGetToPost?: boolean;
 }
 
 interface iSonosSettings {

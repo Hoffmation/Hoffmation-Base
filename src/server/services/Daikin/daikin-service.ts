@@ -4,6 +4,7 @@ import { LogLevel } from '../../../models';
 import { OwnDaikinDevice } from './own-daikin-device';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import TelegramBot from 'node-telegram-bot-api';
+import { SettingsService } from '../settings-service';
 
 export class DaikinService {
   private static _ownDevices: { [name: string]: OwnDaikinDevice } = {};
@@ -65,7 +66,7 @@ export class DaikinService {
         deviceList: devices,
         deviceDiscoveryWaitCount: 3,
         logInitialDeviceConnection: true,
-        useGetToPost: false,
+        useGetToPost: SettingsService.settings.daikin?.useGetToPost ?? false,
         initializeCB: (message) => {
           ServerLogService.writeLog(LogLevel.Debug, `Connected Daikin Devices resolved with "${message}"`);
           this._isInitialized = true;
