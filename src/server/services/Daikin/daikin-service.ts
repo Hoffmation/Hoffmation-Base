@@ -1,4 +1,4 @@
-import { ControlInfo, DaikinAC, DaikinManager } from 'daikin-controller';
+import { DaikinAC, DaikinManager } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 import { OwnDaikinDevice } from './own-daikin-device';
@@ -79,19 +79,13 @@ export class DaikinService {
   }
 
   public static setAll(on: boolean): void {
-    for (const deviceName in this._daikinManager.devices) {
-      const dev: DaikinAC = this._daikinManager.devices[deviceName];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      dev.setACControlInfo({ power: on }, (err, res) => {
-        if (!res) {
-          ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${deviceName} failed:  ${err} `);
-          return;
-        } else {
-          ServerLogService.writeLog(LogLevel.Info, `Switching Ac ${deviceName} to ${on ? 'on' : 'off'} was successful`);
-          this.logInfo(res, deviceName);
-        }
-      });
+    for (const deviceName in this._ownDevices) {
+      const dev: OwnDaikinDevice = this._ownDevices[deviceName];
+      if (on) {
+        dev.turnOn();
+      } else {
+        dev.turnOff();
+      }
     }
   }
 
@@ -102,9 +96,5 @@ export class DaikinService {
     }
     this._ownDevices[name].device = d;
     ServerLogService.writeLog(LogLevel.Debug, `Daikin ${name} gefunden`);
-  }
-
-  private static logInfo(info: ControlInfo, name: string): void {
-    ServerLogService.writeLog(LogLevel.Debug, `Device Info for "${name}": ${JSON.stringify(info)}`);
   }
 }
