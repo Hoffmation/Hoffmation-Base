@@ -1,4 +1,4 @@
-import { DaikinAC, DaikinManager } from 'daikin-controller';
+import { ControlInfo, DaikinAC, DaikinManager } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 import { OwnDaikinDevice } from './own-daikin-device';
@@ -89,6 +89,7 @@ export class DaikinService {
           return;
         } else {
           ServerLogService.writeLog(LogLevel.Info, `Switching Ac ${deviceName} to ${on ? 'on' : 'off'} was successful`);
+          this.logInfo(res, deviceName);
         }
       });
     }
@@ -101,5 +102,9 @@ export class DaikinService {
     }
     this._ownDevices[name].device = d;
     ServerLogService.writeLog(LogLevel.Debug, `Daikin ${name} gefunden`);
+  }
+
+  private static logInfo(info: ControlInfo, name: string): void {
+    ServerLogService.writeLog(LogLevel.Debug, `Device Info for "${name}": ${JSON.stringify(info)}`);
   }
 }
