@@ -183,11 +183,14 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
       this.log(LogLevel.Warn, `Not persisting energy Data, as all values are 0.`);
       return;
     }
+    if (!SettingsService.settings.wattagePrice) {
+      this.log(LogLevel.Warn, `Wattage price not set, assuming average of 34ct.`);
+    }
     this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
     obj.endMs = this._lastPersistenceCalculation;
     obj.earnedInjected = Utils.round(obj.injectedKwH * (SettingsService.settings.injectWattagePrice ?? 0.06), 4);
-    obj.savedSelfConsume = Utils.round(obj.selfConsumedKwH * SettingsService.settings.wattagePrice, 4);
-    obj.costDrawn = Utils.round(obj.drawnKwH * SettingsService.settings.wattagePrice, 4);
+    obj.savedSelfConsume = Utils.round(obj.selfConsumedKwH * (SettingsService.settings.wattagePrice ?? 0.35), 4);
+    obj.costDrawn = Utils.round(obj.drawnKwH * (SettingsService.settings.wattagePrice ?? 0.35), 4);
     obj.injectedKwH = Utils.round(obj.injectedKwH, 4);
     obj.selfConsumedKwH = Utils.round(obj.selfConsumedKwH, 4);
     obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
