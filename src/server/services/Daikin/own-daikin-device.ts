@@ -1,6 +1,7 @@
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
+import { SettingsService } from '../settings-service';
 
 export class OwnDaikinDevice {
   public desiredState: boolean = Power.OFF;
@@ -12,8 +13,23 @@ export class OwnDaikinDevice {
     public name: string,
     public roomName: string,
     public ip: string,
-    public device: DaikinAC | undefined,
+    private _device: DaikinAC | undefined,
   ) {}
+
+  public get device(): DaikinAC | undefined {
+    return this._device;
+  }
+
+  public set device(device: DaikinAC | undefined) {
+    this._device = device;
+    if (device && SettingsService.settings.daikin?.activateTracingLogger) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this._device._logger = (data) => {
+        ServerLogService.writeLog(LogLevel.Debug, `${this.name}_Logger: ${data}`);
+      };
+    }
+  }
 
   public turnOn(): void {
     this.desiredState = Power.ON;

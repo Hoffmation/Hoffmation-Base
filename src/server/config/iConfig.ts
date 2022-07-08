@@ -3,6 +3,7 @@ import { PoolConfig } from 'pg';
 
 interface iDaikinSettings {
   active: boolean;
+  activateTracingLogger?: boolean;
 }
 
 interface iSonosSettings {
