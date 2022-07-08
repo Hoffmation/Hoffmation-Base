@@ -28,6 +28,11 @@ export class OwnDaikinDevice {
       this._device._logger = (data) => {
         ServerLogService.writeLog(LogLevel.Debug, `${this.name}_Logger: ${data}`);
       };
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this._device._daikinRequest.logger = (data) => {
+        ServerLogService.writeLog(LogLevel.Debug, `${this.name}_RequestLogger: ${data}`);
+      };
     }
   }
 
