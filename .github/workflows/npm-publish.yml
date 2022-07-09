@@ -56,10 +56,10 @@ jobs:
 
       # If you are using TypeScript, additional build steps might be necessary
       # Run them here, e.g.:
-      # - name: Install dependencies
-      #   run: npm ci
-      # - name: Create a clean build
-      #   run: npx gulp build
+      - name: Install dependencies
+        run: npm ci
+      - name: Create a clean build
+        run: npm run build
 
       # How to release packages to npm depends on the package type.
       # Choose one of these possibilities and or comment out the others:
