@@ -19,7 +19,7 @@ export interface iRestSettings {
 export interface iConfig {
   daikin?: iDaikinSettings;
   // Price per kWh from the grid
-  wattagePrice: number;
+  wattagePrice?: number;
   // Earnigs per kWh injecting into the grid
   injectWattagePrice?: number;
   ioBrokerUrl: string;
