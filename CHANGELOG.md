@@ -6,5 +6,4 @@
 -->
 
 ## **WORK IN PROGRESS**
-
 * (theimo1221): Add ExcessEnergyConsumer Handling for Daikin AC
