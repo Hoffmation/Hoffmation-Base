@@ -29,7 +29,10 @@
     "release": "release-script",
     "check-package-upgrades": "npx npm-check-updates -i",
     "pre-release-check": "npm run build && npm run full-test",
-    "release-minor-pre": "npm run pre-release-check && npm run release prerelease --"
+    "release-patch-pre": "npm run pre-release-check && npm run release prerelease --",
+    "release-patch": "npm run pre-release-check && npm run release patch --",
+    "release-minor": "npm run pre-release-check && npm run release minor --",
+    "release-major": "npm run pre-release-check && npm run release major --"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
@@ -45,7 +48,7 @@
     "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.11",
-    "aws-sdk": "2.1170.0",
+    "aws-sdk": "2.1171.0",
     "daikin-controller": "^2.0.3",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
@@ -61,8 +64,8 @@
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.9",
-    "@typescript-eslint/eslint-plugin": "^5.30.3",
-    "@typescript-eslint/parser": "^5.30.3",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
     "autoprefixer": "^10.4.7",
     "coveralls": "^3.1.1",
     "eslint": "^8.19.0",
