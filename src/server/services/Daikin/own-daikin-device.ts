@@ -3,6 +3,8 @@ import { ServerLogService } from '../log-service';
 import { ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
 import { SettingsService } from '../settings-service';
 import { iExcessEnergyConsumer } from '../../devices';
+import { DaikinService } from './daikin-service';
+import { Utils } from '../utils';
 
 export class OwnDaikinDevice implements iExcessEnergyConsumer {
   public currentConsumption: number = -1;
@@ -71,12 +73,20 @@ export class OwnDaikinDevice implements iExcessEnergyConsumer {
       // @ts-ignore
       changeObject,
       (err, res) => {
-        if (!res) {
+        if (err !== null) {
           ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${this.name} failed:  ${err} `);
+          if (err.message.includes('EHOSTUNREACH')) {
+            this.log(LogLevel.Warn, `Detected EHOSTUNREACH, will try reconecting`);
+            this.device = DaikinService.reconnect(this.name, this.ip);
+            Utils.guardedTimeout(this.setDesiredInfo, 10000, this);
+          }
           return;
+        } else if (res) {
+          this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
+          this.logInfo(res);
+        } else {
+          this.log(LogLevel.Warn, `No Error, but also no response...`);
         }
-        ServerLogService.writeLog(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
-        this.logInfo(res);
       },
     );
   }

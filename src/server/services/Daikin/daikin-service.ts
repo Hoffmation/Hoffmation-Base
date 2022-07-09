@@ -91,6 +91,14 @@ export class DaikinService {
     }
   }
 
+  public static reconnect(name: string, ip: string): DaikinAC | undefined {
+    const d = new DaikinAC(ip, {}, (_error, _info) => {
+      ServerLogService.writeLog(LogLevel.Info, `Reconected ${name}`);
+    });
+    this._daikinManager.devices[name] = d;
+    return d;
+  }
+
   private static initializeDevice(d: DaikinAC, name: string): void {
     if (this._ownDevices[name] === undefined) {
       ServerLogService.writeLog(LogLevel.Alert, `Unbekanntes Daikin Gerät "${name}"`);
