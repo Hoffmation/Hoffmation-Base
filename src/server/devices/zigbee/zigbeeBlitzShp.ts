@@ -22,6 +22,10 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
     return this.loadPower;
   }
 
+  public get on(): boolean {
+    return this.steckerOn;
+  }
+
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
@@ -77,5 +81,13 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
     const newVal = !this.steckerOn;
     this.setStecker(newVal);
     return newVal;
+  }
+
+  public turnOn(): void {
+    this.setStecker(true);
+  }
+
+  public turnOff(): void {
+    this.setStecker(false);
   }
 }

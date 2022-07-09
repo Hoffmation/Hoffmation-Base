@@ -14,6 +14,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   private _powerValuePhaseA: number = -1;
   private _powerValuePhaseB: number = -1;
   private _powerValuePhaseC: number = -1;
+  private blockDeviceChangeTime: number = -1;
 
   public constructor(info: DeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
@@ -129,7 +130,15 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   }
 
   public recalculatePowerSharing(): void {
-    // TODO Implement
+    // As some devices need time to start/shutdown we need to delay turning on/off more devices.
+    if (Utils.nowMS() < this.blockDeviceChangeTime) {
+      return;
+    }
+    if (this.excessEnergy > 400) {
+      this.turnOnAdditionalConsumer();
+    } else if (this.excessEnergy < 200) {
+      this.turnOffAdditionalConsumer();
+    }
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean = false): void {
@@ -193,5 +202,35 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
     Utils.dbo?.persistEnergyManager(obj);
     this.log(LogLevel.Info, `Persisting energy Manager Data.`);
+  }
+
+  private turnOnAdditionalConsumer(): void {
+    const potentialDevices: iExcessEnergyConsumer[] = this._excessEnergyConsumer.filter((e) => {
+      return e.energyConsumerSettings.priority !== -1 && !e.on;
+    });
+    if (potentialDevices.length === 0) {
+      return;
+    }
+    potentialDevices.sort((a, b) => {
+      return b.energyConsumerSettings.priority - a.energyConsumerSettings.priority;
+    });
+    this.blockDeviceChangeTime = Utils.nowMS() + potentialDevices[0].energyConsumerSettings.powerReactionTime;
+    potentialDevices[0].log(LogLevel.Info, `Turning on, as we have ${this.excessEnergy}W to spare...`);
+    potentialDevices[0].turnOn();
+  }
+
+  private turnOffAdditionalConsumer(): void {
+    const potentialDevices: iExcessEnergyConsumer[] = this._excessEnergyConsumer.filter((e) => {
+      return e.energyConsumerSettings.priority !== -1 && e.on;
+    });
+    if (potentialDevices.length === 0) {
+      return;
+    }
+    potentialDevices.sort((a, b) => {
+      return a.energyConsumerSettings.priority - b.energyConsumerSettings.priority;
+    });
+    potentialDevices[0].log(LogLevel.Info, `Turning off, as we don't have energy to spare...`);
+    this.blockDeviceChangeTime = Utils.nowMS() + potentialDevices[0].energyConsumerSettings.powerReactionTime;
+    potentialDevices[0].turnOff();
   }
 }

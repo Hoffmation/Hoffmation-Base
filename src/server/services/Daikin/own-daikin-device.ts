@@ -1,20 +1,29 @@
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models';
+import { ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
 import { SettingsService } from '../settings-service';
+import { iExcessEnergyConsumer } from '../../devices';
 
-export class OwnDaikinDevice {
+export class OwnDaikinDevice implements iExcessEnergyConsumer {
+  public currentConsumption: number = -1;
   public desiredState: boolean = Power.OFF;
   public desiredTemp: number = 21;
   public desiredHum: number | 'AUTO' = 'AUTO';
   public desiredMode: number = Mode.COLD;
+  public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
 
   public constructor(
     public name: string,
     public roomName: string,
     public ip: string,
     private _device: DaikinAC | undefined,
-  ) {}
+  ) {
+    this.energyConsumerSettings.priority = 50;
+  }
+
+  public get on(): boolean {
+    return this._device?.currentACControlInfo?.power ?? false;
+  }
 
   public get device(): DaikinAC | undefined {
     return this._device;
@@ -46,6 +55,10 @@ export class OwnDaikinDevice {
     this.setDesiredInfo();
   }
 
+  public log(level: LogLevel, message: string): void {
+    ServerLogService.writeLog(level, `${this.name}: ${message}`);
+  }
+
   private setDesiredInfo(): void {
     const changeObject: Partial<ControlInfo> = {
       power: this.desiredState,
@@ -69,6 +82,6 @@ export class OwnDaikinDevice {
   }
 
   private logInfo(info: ControlInfo): void {
-    ServerLogService.writeLog(LogLevel.Debug, `Device Info for "${this.name}": ${JSON.stringify(info)}`);
+    this.log(LogLevel.Debug, `Device Info ${JSON.stringify(info)}`);
   }
 }

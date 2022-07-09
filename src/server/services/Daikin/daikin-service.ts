@@ -5,6 +5,7 @@ import { OwnDaikinDevice } from './own-daikin-device';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import TelegramBot from 'node-telegram-bot-api';
 import { SettingsService } from '../settings-service';
+import { Devices } from '../../devices';
 
 export class DaikinService {
   private static _ownDevices: { [name: string]: OwnDaikinDevice } = {};
@@ -96,6 +97,7 @@ export class DaikinService {
       return;
     }
     this._ownDevices[name].device = d;
+    Devices.energymanager?.addExcessConsumer(this._ownDevices[name]);
     ServerLogService.writeLog(LogLevel.Debug, `Daikin ${name} gefunden`);
   }
 }
