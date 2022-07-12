@@ -75,8 +75,8 @@ export class TasterGroup extends BaseGroup {
       if (SettingsService.settings.sonos?.buttonBotRightForRadio === true) {
         const sonosGroup: SonosGroup | undefined = this.getRoom().SonosGroup;
         if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
-          t.buttonBotRight?.addCb(ButtonPressType.long, () => {
-            sonosGroup.trigger(this.getRoom().settings.radioUrl);
+          t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
+            pValue && sonosGroup.trigger(this.getRoom().settings.radioUrl);
           });
         }
       }
@@ -84,11 +84,11 @@ export class TasterGroup extends BaseGroup {
       if (SettingsService.settings.daikin?.buttonBotRightForAc === true) {
         const acGroup: AcGroup | undefined = this.getRoom().AcGroup;
         if (acGroup !== undefined && acGroup.getOwnAcDevices().length > 0) {
-          t.buttonBotRight?.addCb(ButtonPressType.short, () => {
-            acGroup.setAc(true);
+          t.buttonBotRight?.addCb(ButtonPressType.short, (pValue: boolean) => {
+            pValue && acGroup.setAc(true);
           });
-          t.buttonBotRight?.addCb(ButtonPressType.long, () => {
-            acGroup.setAc(false, true);
+          t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
+            pValue && acGroup.setAc(false, true);
           });
         }
       }

@@ -4,6 +4,11 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Minor Fix in Tastergroup
+
 ## 0.1.42-alpha.4 (2022-07-12)
 
 * (theimo1221) Ac Device as superclass from OwnDaikinDevice
