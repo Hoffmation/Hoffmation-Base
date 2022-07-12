@@ -8,6 +8,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Prevent infinity loop on daikin reconnect
+* (theimo1221) Add log messages to find an awkward bug with AC Group dev.turnOn not being a function
 
 ## 0.1.42-alpha.5 (2022-07-12)
 
