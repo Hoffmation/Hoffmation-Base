@@ -2,7 +2,11 @@ import { AcDevice, API, OwnDaikinDevice, OwnDaikinDevices, OwnSonosDevice, OwnSo
 import { IBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceList {
-  public constructor(private _ids: string[] = []) {
+  public constructor(
+    private _ids: string[] = [],
+    private readonly _isSonos: boolean = false,
+    private readonly _isDaikin: boolean = false,
+  ) {
     // Empty
   }
 
@@ -14,19 +18,21 @@ export class DeviceList {
     const result: Array<IBaseDevice | OwnSonosDevice | AcDevice> = [];
 
     for (const dID of this._ids) {
-      const d = API.getDevice(dID);
-      if (d !== undefined) {
-        result.push(d);
-      }
-    }
-    for (const name of this._ids) {
-      const s: OwnSonosDevice = OwnSonosDevices.ownDevices[name];
-      if (s !== undefined) {
-        result.push(OwnSonosDevices.ownDevices[name]);
-      }
-      const daikinDevice: OwnDaikinDevice = OwnDaikinDevices.ownDevices[name];
-      if (daikinDevice !== undefined) {
-        result.push(OwnDaikinDevices.ownDevices[name]);
+      if (this._isSonos) {
+        const s: OwnSonosDevice = OwnSonosDevices.ownDevices[dID];
+        if (s !== undefined) {
+          result.push(OwnSonosDevices.ownDevices[dID]);
+        }
+      } else if (this._isDaikin) {
+        const daikinDevice: OwnDaikinDevice = OwnDaikinDevices.ownDevices[dID];
+        if (daikinDevice !== undefined) {
+          result.push(OwnDaikinDevices.ownDevices[dID]);
+        }
+      } else {
+        const d = API.getDevice(dID);
+        if (d !== undefined) {
+          result.push(d);
+        }
       }
     }
     return result;

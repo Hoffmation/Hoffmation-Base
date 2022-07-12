@@ -1,15 +1,14 @@
-import { AcDevice, ServerLogService } from '../../services';
+import { AcDevice } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { LogLevel } from '../../../models';
-import * as util from 'util';
 
 export class AcGroup extends BaseGroup {
   public constructor(roomName: string, acIds: string[]) {
     super(roomName, GroupType.Ac);
-    this.deviceCluster.deviceMap.set(DeviceClusterType.Ac, new DeviceList(acIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Ac, new DeviceList(acIds, false, true));
   }
 
   public getOwnAcDevices(): AcDevice[] {
@@ -26,12 +25,7 @@ export class AcGroup extends BaseGroup {
     this.log(LogLevel.Debug, `set ${devs.length} Ac's to new State: ${newDesiredState}`);
     for (const dev of devs) {
       if (newDesiredState) {
-        try {
-          dev.turnOn();
-        } catch (e) {
-          ServerLogService.writeLog(LogLevel.Error, `Crash on turn Device on`);
-          util.inspect(dev);
-        }
+        dev.turnOn();
         continue;
       }
       if (force) {
