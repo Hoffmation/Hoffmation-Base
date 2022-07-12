@@ -5,6 +5,8 @@ import { DeviceList } from '../device-list';
 import { SonosGroup } from './sonosGroup';
 import { ButtonPressType } from '../button';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
+import { SettingsService } from '../../services';
+import { AcGroup } from './acGroup';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {
@@ -70,11 +72,25 @@ export class TasterGroup extends BaseGroup {
         `Turn all Lights in this room off`,
       );
 
-      const sonosGroup: SonosGroup | undefined = this.getRoom().SonosGroup;
-      if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
-        t.buttonBotRight?.addCb(ButtonPressType.long, () => {
-          sonosGroup.trigger(this.getRoom().settings.radioUrl);
-        });
+      if (SettingsService.settings.sonos?.buttonBotRightForRadio === true) {
+        const sonosGroup: SonosGroup | undefined = this.getRoom().SonosGroup;
+        if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
+          t.buttonBotRight?.addCb(ButtonPressType.long, () => {
+            sonosGroup.trigger(this.getRoom().settings.radioUrl);
+          });
+        }
+      }
+
+      if (SettingsService.settings.daikin?.buttonBotRightForAc === true) {
+        const acGroup: AcGroup | undefined = this.getRoom().AcGroup;
+        if (acGroup !== undefined && acGroup.getOwnAcDevices().length > 0) {
+          t.buttonBotRight?.addCb(ButtonPressType.short, () => {
+            acGroup.setAc(true);
+          });
+          t.buttonBotRight?.addCb(ButtonPressType.long, () => {
+            acGroup.setAc(false, true);
+          });
+        }
       }
     });
   }

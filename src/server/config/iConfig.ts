@@ -5,10 +5,14 @@ interface iDaikinSettings {
   active: boolean;
   activateTracingLogger?: boolean;
   useGetToPost?: boolean;
+  // Whether Room Default Callbacks should be added to start ac on Bottom Right short and stop on long button press.
+  buttonBotRightForAc?: boolean;
 }
 
 interface iSonosSettings {
   active: boolean;
+  // Whether Room Default Callbacks should be added to start Radio on Bottom Right long button press.
+  buttonBotRightForRadio?: boolean;
 }
 
 export interface iRestSettings {

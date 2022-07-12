@@ -8,7 +8,7 @@ export interface iExcessEnergyConsumer {
   // Whether this consumer is currently on or off
   on: boolean;
 
-  // This can be used to block energy consumer from turning device on (e.g. manual turn off for AC)
+  // This can be used to block energy consumer from turning device on (e.g. manual turn off for ac)
   isAvailableForExcessEnergy(): boolean;
 
   log(level: LogLevel, message: string): void;

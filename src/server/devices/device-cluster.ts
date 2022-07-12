@@ -1,7 +1,7 @@
 import { DeviceClusterType } from './device-cluster-type';
 import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { OwnDaikinDevice, OwnSonosDevice, Utils } from '../services';
+import { AcDevice, OwnSonosDevice, Utils } from '../services';
 import _ from 'lodash';
 import { DeviceType } from './deviceType';
 import { IBaseDevice } from './baseDeviceInterfaces';
@@ -16,7 +16,7 @@ export class DeviceCluster {
     return this.getDevicesByType(type) as Array<IoBrokerBaseDevice>;
   }
 
-  public getDevicesByType(type: DeviceClusterType): Array<IBaseDevice | OwnSonosDevice | OwnDaikinDevice> {
+  public getDevicesByType(type: DeviceClusterType): Array<IBaseDevice | OwnSonosDevice | AcDevice> {
     return this.deviceMap.get(type)?.getDevices() ?? [];
   }
 

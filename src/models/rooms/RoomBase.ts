@@ -1,5 +1,6 @@
 import { TimeCallback, TimeCallbackType, TimeOfDay } from '../timeCallback';
 import {
+  AcGroup,
   BaseGroup,
   DeviceCluster,
   FensterGroup,
@@ -43,6 +44,10 @@ export class RoomBase implements iRoomBase {
 
   public get deviceCluster(): DeviceCluster {
     return this._deviceCluster;
+  }
+
+  public get AcGroup(): AcGroup | undefined {
+    return this.groups.get(GroupType.Ac) as AcGroup | undefined;
   }
 
   public get FensterGroup(): FensterGroup | undefined {

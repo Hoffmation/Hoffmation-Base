@@ -1,33 +1,24 @@
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
-import { ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import { SettingsService } from '../settings-service';
-import { iExcessEnergyConsumer } from '../../devices';
 import { DaikinService } from './daikin-service';
 import { Utils } from '../utils';
+import { AcDevice } from './ac-device';
 
-export class OwnDaikinDevice implements iExcessEnergyConsumer {
-  public currentConsumption: number = -1;
+export class OwnDaikinDevice extends AcDevice {
   public desiredState: boolean = Power.OFF;
   public desiredTemp: number = 21;
   public desiredHum: number | 'AUTO' = 'AUTO';
   public desiredMode: number = Mode.COLD;
-  public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
-  private _activatedByExcessEnergy: boolean = false;
-  private _blockAutomaticTurnOnMS: number = -1;
 
-  public constructor(
-    public name: string,
-    public roomName: string,
-    public ip: string,
-    private _device: DaikinAC | undefined,
-  ) {
+  public constructor(name: string, roomName: string, ip: string, device: DaikinAC | undefined) {
+    super(name, roomName, ip);
     this.energyConsumerSettings.priority = 50;
+    this._device = device;
   }
 
-  public get on(): boolean {
-    return this._device?.currentACControlInfo?.power ?? false;
-  }
+  private _device: DaikinAC | undefined;
 
   public get device(): DaikinAC | undefined {
     return this._device;
@@ -49,17 +40,8 @@ export class OwnDaikinDevice implements iExcessEnergyConsumer {
     }
   }
 
-  public isAvailableForExcessEnergy(): boolean {
-    return Utils.nowMS() >= this._blockAutomaticTurnOnMS;
-  }
-
-  /**
-   * Disable automatic Turn-On for given amount of ms and turn off immediately.
-   * @param {number} timeout
-   */
-  public deactivateAutomaticTurnOn(timeout: number = 60 * 60 * 1000): void {
-    this._blockAutomaticTurnOnMS = Utils.nowMS() + timeout;
-    this.turnOff();
+  public get on(): boolean {
+    return this._device?.currentACControlInfo?.power ?? false;
   }
 
   public turnOn(): void {
@@ -67,27 +49,10 @@ export class OwnDaikinDevice implements iExcessEnergyConsumer {
     this.setDesiredInfo();
   }
 
-  public turnOnForExcessEnergy(): void {
-    this._activatedByExcessEnergy = true;
-    this.turnOn();
-  }
-
   public turnOff(): void {
     this._activatedByExcessEnergy = false;
     this.desiredState = Power.OFF;
     this.setDesiredInfo();
-  }
-
-  public turnOffDueToMissingEnergy(): void {
-    this.turnOff();
-  }
-
-  public log(level: LogLevel, message: string): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`);
-  }
-
-  public wasActivatedByExcessEnergy(): boolean {
-    return this._activatedByExcessEnergy;
   }
 
   private setDesiredInfo(): void {
