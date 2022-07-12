@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 0.1.42-alpha.7 (2022-07-12)
 
 * (theimo1221) Fix issue with conflicting daikin and Sonos device names
 
