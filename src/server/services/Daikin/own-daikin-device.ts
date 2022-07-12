@@ -13,6 +13,8 @@ export class OwnDaikinDevice implements iExcessEnergyConsumer {
   public desiredHum: number | 'AUTO' = 'AUTO';
   public desiredMode: number = Mode.COLD;
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
+  private _activatedByExcessEnergy: boolean = false;
+  private _blockAutomaticTurnOnMS: number = -1;
 
   public constructor(
     public name: string,
@@ -47,18 +49,45 @@ export class OwnDaikinDevice implements iExcessEnergyConsumer {
     }
   }
 
+  public isAvailableForExcessEnergy(): boolean {
+    return Utils.nowMS() >= this._blockAutomaticTurnOnMS;
+  }
+
+  /**
+   * Disable automatic Turn-On for given amount of ms and turn off immediately.
+   * @param {number} timeout
+   */
+  public deactivateAutomaticTurnOn(timeout: number = 60 * 60 * 1000): void {
+    this._blockAutomaticTurnOnMS = Utils.nowMS() + timeout;
+    this.turnOff();
+  }
+
   public turnOn(): void {
     this.desiredState = Power.ON;
     this.setDesiredInfo();
   }
 
+  public turnOnForExcessEnergy(): void {
+    this._activatedByExcessEnergy = true;
+    this.turnOn();
+  }
+
   public turnOff(): void {
+    this._activatedByExcessEnergy = false;
     this.desiredState = Power.OFF;
     this.setDesiredInfo();
   }
 
+  public turnOffDueToMissingEnergy(): void {
+    this.turnOff();
+  }
+
   public log(level: LogLevel, message: string): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`);
+  }
+
+  public wasActivatedByExcessEnergy(): boolean {
+    return this._activatedByExcessEnergy;
   }
 
   private setDesiredInfo(): void {

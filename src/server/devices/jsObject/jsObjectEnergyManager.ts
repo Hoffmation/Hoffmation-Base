@@ -209,7 +209,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
 
   private turnOnAdditionalConsumer(): void {
     const potentialDevices: iExcessEnergyConsumer[] = this._excessEnergyConsumer.filter((e) => {
-      return e.energyConsumerSettings.priority !== -1 && !e.on;
+      return e.energyConsumerSettings.priority !== -1 && !e.on && e.isAvailableForExcessEnergy();
     });
     if (potentialDevices.length === 0) {
       return;
@@ -219,12 +219,12 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     });
     this.blockDeviceChangeTime = Utils.nowMS() + potentialDevices[0].energyConsumerSettings.powerReactionTime;
     potentialDevices[0].log(LogLevel.Info, `Turning on, as we have ${this.excessEnergy}W to spare...`);
-    potentialDevices[0].turnOn();
+    potentialDevices[0].turnOnForExcessEnergy();
   }
 
   private turnOffAdditionalConsumer(): void {
     const potentialDevices: iExcessEnergyConsumer[] = this._excessEnergyConsumer.filter((e) => {
-      return e.energyConsumerSettings.priority !== -1 && e.on;
+      return e.energyConsumerSettings.priority !== -1 && e.on && e.wasActivatedByExcessEnergy();
     });
     if (potentialDevices.length === 0) {
       return;
@@ -234,6 +234,6 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     });
     potentialDevices[0].log(LogLevel.Info, `Turning off, as we don't have energy to spare...`);
     this.blockDeviceChangeTime = Utils.nowMS() + potentialDevices[0].energyConsumerSettings.powerReactionTime;
-    potentialDevices[0].turnOff();
+    potentialDevices[0].turnOffDueToMissingEnergy();
   }
 }

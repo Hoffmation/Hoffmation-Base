@@ -11,7 +11,9 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
   public loadPower: number = 0;
   public settings: ActuatorSettings = new ActuatorSettings();
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
+  private readonly _availableForExcessEnergy: boolean = true;
   private readonly steckerOnSwitchID: string = '';
+  private _activatedByExcessEnergy: boolean = false;
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.ZigbeeBlitzShp);
@@ -24,6 +26,10 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
 
   public get on(): boolean {
     return this.steckerOn;
+  }
+
+  public isAvailableForExcessEnergy(): boolean {
+    return this._availableForExcessEnergy;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -72,6 +78,9 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
     }
 
     this.log(LogLevel.Debug, `Switch outlet, target Value: ${pValue}`);
+    if (!pValue) {
+      this._activatedByExcessEnergy = false;
+    }
     this.setState(this.steckerOnSwitchID, pValue, undefined, (err) => {
       this.log(LogLevel.Error, `Switching outlet resulted in error: ${err}`);
     });
@@ -83,11 +92,16 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
     return newVal;
   }
 
-  public turnOn(): void {
+  public turnOnForExcessEnergy(): void {
+    this._activatedByExcessEnergy = true;
     this.setStecker(true);
   }
 
-  public turnOff(): void {
+  public turnOffDueToMissingEnergy(): void {
     this.setStecker(false);
+  }
+
+  public wasActivatedByExcessEnergy(): boolean {
+    return this._activatedByExcessEnergy;
   }
 }

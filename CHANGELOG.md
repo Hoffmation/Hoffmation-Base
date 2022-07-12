@@ -8,6 +8,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Try reconnect unreachable Daikin Devices
+* (theimo1221) Allow manual deactivating of DainkinAC
 
 ## 0.1.42-alpha.2 (2022-07-09)
 
