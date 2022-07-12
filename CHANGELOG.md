@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 0.1.42-alpha.4 (2022-07-12)
 
 * (theimo1221) Ac Device as superclass from OwnDaikinDevice
 * (theimo1221) Add Roomsetting for default button callbacks
