@@ -55,7 +55,7 @@ export class OwnDaikinDevice extends AcDevice {
     this.setDesiredInfo();
   }
 
-  private setDesiredInfo(): void {
+  private setDesiredInfo(retry: boolean = false): void {
     const changeObject: Partial<ControlInfo> = {
       power: this.desiredState,
       mode: this.desiredMode,
@@ -69,10 +69,16 @@ export class OwnDaikinDevice extends AcDevice {
       (err, res) => {
         if (err !== null) {
           ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${this.name} failed:  ${err} `);
-          if (err.message.includes('EHOSTUNREACH')) {
+          if (err.message.includes('EHOSTUNREACH') && !retry) {
             this.log(LogLevel.Warn, `Detected EHOSTUNREACH, will try reconecting`);
             this.device = DaikinService.reconnect(this.name, this.ip);
-            Utils.guardedTimeout(this.setDesiredInfo, 10000, this);
+            Utils.guardedTimeout(
+              () => {
+                this.setDesiredInfo(true);
+              },
+              10000,
+              this,
+            );
           }
           return;
         } else if (res) {
