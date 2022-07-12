@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 0.1.42-alpha.3 (2022-07-12)
 
 * (theimo1221) Try reconnect unreachable Daikin Devices
 * (theimo1221) Allow manual deactivating of DainkinAC
