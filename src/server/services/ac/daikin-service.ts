@@ -6,6 +6,8 @@ import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import TelegramBot from 'node-telegram-bot-api';
 import { SettingsService } from '../settings-service';
 import { Devices } from '../../devices';
+import { Router } from '../network';
+import { Utils } from '../utils';
 
 export class DaikinService {
   private static _ownDevices: { [name: string]: OwnDaikinDevice } = {};
@@ -91,7 +93,18 @@ export class DaikinService {
     }
   }
 
-  public static reconnect(name: string, ip: string): DaikinAC | undefined {
+  public static async reconnect(name: string, ip: string): Promise<DaikinAC | undefined> {
+    ServerLogService.writeLog(LogLevel.Debug, `Reconnecting Daikin AC "${name}"`);
+    const router: Router | undefined = Router.getRouter();
+    if (router === undefined) {
+      return this.reconstructDaikinAc(ip, name);
+    }
+    await router.reconnectDeviceByIp(ip);
+    await Utils.delay(5000);
+    return this.reconstructDaikinAc(ip, name);
+  }
+
+  private static reconstructDaikinAc(ip: string, name: string): DaikinAC | undefined {
     const d = new DaikinAC(ip, {}, (_error, _info) => {
       ServerLogService.writeLog(LogLevel.Info, `Reconected ${name}`);
     });

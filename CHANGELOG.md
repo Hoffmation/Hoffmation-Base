@@ -8,6 +8,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Implement Router
+* (theimo1221) Add Network reconnect to daikin device
 
 ## 0.1.42-alpha.7 (2022-07-12)
 

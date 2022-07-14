@@ -71,14 +71,16 @@ export class OwnDaikinDevice extends AcDevice {
           ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${this.name} failed:  ${err} `);
           if (err.message.includes('EHOSTUNREACH') && !retry) {
             this.log(LogLevel.Warn, `Detected EHOSTUNREACH, will try reconecting`);
-            this.device = DaikinService.reconnect(this.name, this.ip);
-            Utils.guardedTimeout(
-              () => {
-                this.setDesiredInfo(true);
-              },
-              10000,
-              this,
-            );
+            DaikinService.reconnect(this.name, this.ip).then((device) => {
+              this.device = device;
+              Utils.guardedTimeout(
+                () => {
+                  this.setDesiredInfo(true);
+                },
+                5000,
+                this,
+              );
+            });
           }
           return;
         } else if (res) {

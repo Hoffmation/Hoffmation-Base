@@ -44,6 +44,12 @@ export class Utils {
     return new Date().getTime();
   }
 
+  public static delay(ms: number): Promise<void> {
+    return new Promise((res) => {
+      setTimeout(res, ms);
+    });
+  }
+
   public static guardedNewThread(func: (...args: unknown[]) => void, thisContext?: unknown | undefined): void {
     Utils.guardedTimeout(func, 1, thisContext);
   }
