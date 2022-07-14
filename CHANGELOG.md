@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.0 (2022-07-14)
 
 It is time for a new Major release, as the amount of added functionality grew quite high. Following Changenotes are an
 extract of all the patches since V0.1.20...
