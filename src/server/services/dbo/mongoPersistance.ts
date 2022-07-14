@@ -36,7 +36,7 @@ export class MongoPersistance implements iPersist {
     this.MongoClient = new MongoClient(this.mongoConf.mongoConnection);
   }
 
-  private static handleReject(reason: any, func: string) {
+  private static handleReject(reason: unknown, func: string) {
     ServerLogService.writeLog(LogLevel.Warn, `Error persisting data for "${func}"`);
     ServerLogService.writeLog(LogLevel.Debug, `Persisting Error reason: "${reason}"`);
   }
@@ -94,11 +94,15 @@ export class MongoPersistance implements iPersist {
         detailed.heaters.push(h.info.customName);
       }
     }
-    this.RoomDetailsCollection?.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
-      (r) => {
-        MongoPersistance.handleReject(r, 'RoomDetailsCollection.updateOne');
-      },
-    );
+    if (this.RoomDetailsCollection) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.RoomDetailsCollection.updateOne({ roomName: room.roomName }, { $set: detailed }, { upsert: true }).catch(
+        (r: unknown) => {
+          MongoPersistance.handleReject(r, 'RoomDetailsCollection.updateOne');
+        },
+      );
+    }
   }
 
   async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {

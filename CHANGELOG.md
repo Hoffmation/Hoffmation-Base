@@ -8,6 +8,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add Ac Modes
+* (theimo1221) Update packages
 
 ## 0.1.42-alpha.8 (2022-07-14)
 
