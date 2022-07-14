@@ -5,6 +5,7 @@ import { SettingsService } from '../settings-service';
 import { DaikinService } from './daikin-service';
 import { Utils } from '../utils';
 import { AcDevice } from './ac-device';
+import { AcMode } from './ac-mode';
 
 export class OwnDaikinDevice extends AcDevice {
   public desiredState: boolean = Power.OFF;
@@ -42,6 +43,26 @@ export class OwnDaikinDevice extends AcDevice {
 
   public get on(): boolean {
     return this._device?.currentACControlInfo?.power ?? false;
+  }
+
+  public setDesiredMode(mode: AcMode): void {
+    let newMode: number = -1;
+    switch (mode) {
+      case AcMode.Heating:
+        newMode = Mode.HOT;
+        break;
+      case AcMode.Cooling:
+        newMode = Mode.COLD;
+        break;
+      case AcMode.Auto:
+        newMode = Mode.AUTO;
+        break;
+    }
+    if (newMode === -1 || newMode === this.desiredMode) {
+      return;
+    }
+    this.desiredMode = newMode;
+    this.setDesiredInfo();
   }
 
   public turnOn(): void {

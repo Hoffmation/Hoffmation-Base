@@ -2,6 +2,7 @@ import { iExcessEnergyConsumer } from '../../devices';
 import { ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
 import { Utils } from '../utils';
 import { ServerLogService } from '../log-service';
+import { AcMode } from './ac-mode';
 
 export abstract class AcDevice implements iExcessEnergyConsumer {
   public currentConsumption: number = -1;
@@ -25,6 +26,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
     this._blockAutomaticTurnOnMS = Utils.nowMS() + timeout;
     this.turnOff();
   }
+
+  public abstract setDesiredMode(mode: AcMode): void;
 
   public abstract turnOn(): void;
 
