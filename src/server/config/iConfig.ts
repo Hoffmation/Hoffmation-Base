@@ -15,12 +15,20 @@ interface iSonosSettings {
   buttonBotRightForRadio?: boolean;
 }
 
+export interface iAsusConfig {
+  address: string;
+  ignoreSSL?: boolean;
+  password: string;
+  username: string;
+}
+
 export interface iRestSettings {
   active: boolean;
   port?: number;
 }
 
 export interface iConfig {
+  asusConfig?: iAsusConfig;
   daikin?: iDaikinSettings;
   // Price per kWh from the grid
   wattagePrice?: number;

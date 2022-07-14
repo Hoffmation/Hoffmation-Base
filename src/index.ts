@@ -1,4 +1,5 @@
 import {
+  AsusRouter,
   DaikinService,
   Devices,
   DeviceUpdater,
@@ -61,6 +62,10 @@ export class HoffmationBase {
     if (SettingsService.settings.polly) {
       ServerLogService.writeLog(LogLevel.Info, `Amazon Polly settings detected --> initializing`);
       PollyService.initialize(SettingsService.settings.polly);
+    }
+    if (SettingsService.settings.asusConfig) {
+      ServerLogService.writeLog(LogLevel.Info, `Asus Router settings detected --> initializing`);
+      new AsusRouter(SettingsService.settings.asusConfig);
     }
     TimeCallbackService.init();
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base First Initializations finished`);
