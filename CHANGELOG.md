@@ -4,6 +4,11 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) AC Shutdown via Telegram should also block automatic turn on, for some time
+
 ## 1.0.1 (2022-07-15)
 
 * (theimo1221) Fix ac-device manual block handling

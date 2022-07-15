@@ -56,7 +56,7 @@ export class DaikinService {
         /\/ac_off/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          DaikinService.setAll(false);
+          DaikinService.setAll(false, true);
           TelegramService.sendMessage([m.from.id], 'Command executed');
           return true;
         },
@@ -82,11 +82,13 @@ export class DaikinService {
     });
   }
 
-  public static setAll(on: boolean): void {
+  public static setAll(on: boolean, force: boolean = false): void {
     for (const deviceName in this._ownDevices) {
       const dev: OwnDaikinDevice = this._ownDevices[deviceName];
       if (on) {
         dev.turnOn();
+      } else if (force) {
+        dev.deactivateAutomaticTurnOn(180 * 60 * 1000);
       } else {
         dev.turnOff();
       }
