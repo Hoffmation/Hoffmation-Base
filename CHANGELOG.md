@@ -6,7 +6,6 @@
 -->
 
 ## **WORK IN PROGRESS**
-
 * (theimo1221) Update Asus API to prevent crashes on getClientList failure
 
 ## 1.0.2 (2022-07-15)
