@@ -32,6 +32,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
   public abstract turnOn(): void;
 
   public turnOnForExcessEnergy(): void {
+    if (this._blockAutomaticTurnOnMS > Utils.nowMS()) {
+      return;
+    }
     this._activatedByExcessEnergy = true;
     this.turnOn();
   }
