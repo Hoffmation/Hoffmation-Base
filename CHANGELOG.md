@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.3 (2022-07-15)
 * (theimo1221) Update Asus API to prevent crashes on getClientList failure
 
 ## 1.0.2 (2022-07-15)
