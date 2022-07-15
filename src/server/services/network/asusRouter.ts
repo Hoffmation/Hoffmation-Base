@@ -15,12 +15,28 @@ export class AsusRouter extends Router {
 
   public async reconnectDeviceByIp(ip: string): Promise<boolean> {
     ServerLogService.writeLog(LogLevel.Debug, `Reconnecting Ip Device "${ip}"`);
-    const client: Client | null = await this._api.getClientByIp(ip);
-    if (client === null) {
-      ServerLogService.writeLog(LogLevel.Warn, `Couldn't reconnect device, as no device found for ip-address ${ip}`);
-      return false;
-    }
-    return this.reconnectDeviceByMac(client.rawData.mac);
+    return new Promise<boolean>((res, _rej) => {
+      this._api
+        .getClientByIp(ip)
+        .then((client: Client | null) => {
+          if (client === null) {
+            ServerLogService.writeLog(
+              LogLevel.Warn,
+              `Couldn't reconnect device, as no device found for ip-address ${ip}`,
+            );
+            res(false);
+            return;
+          }
+          res(this.reconnectDeviceByMac(client.rawData.mac));
+        })
+        .catch((reason) => {
+          ServerLogService.writeLog(
+            LogLevel.Warn,
+            `Couldn't reconnect device, as ip-lookup failed due to: "${reason}"`,
+          );
+          res(false);
+        });
+    });
   }
 
   public async reconnectDeviceByMac(mac: string): Promise<boolean> {
