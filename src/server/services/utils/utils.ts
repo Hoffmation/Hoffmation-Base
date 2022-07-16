@@ -97,7 +97,7 @@ export class Utils {
     return _.omit(
       object,
       Object.keys(object).filter((key): boolean => {
-        if (key.includes('Timeout') || key.includes('Interval')) {
+        if (key.includes('Timeout') || key.includes('Interval') || key.includes('timeouts')) {
           // Exclude timeout Variables.
           return true;
         }

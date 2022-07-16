@@ -8,6 +8,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add Ac Options To Api
+* (theimo1221) Extend JSON Filter
 
 ## 1.0.5 (2022-07-16)
 
