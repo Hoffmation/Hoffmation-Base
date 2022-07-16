@@ -16,5 +16,5 @@ export class LogFilterData {
   deviceName?: string;
   groupType?: string;
   source?: LogSource;
-  debugType: LogDebugType = LogDebugType.None;
+  debugType?: LogDebugType = LogDebugType.None;
 }

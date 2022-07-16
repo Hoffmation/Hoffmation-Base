@@ -27,11 +27,7 @@ export class ServerLogService {
 
   public static writeLog(pLevel: LogLevel, pMessage: string, additionalLogInfo?: LogFilterData): void {
     const now: number = Date.now();
-    if (
-      additionalLogInfo &&
-      additionalLogInfo.debugType !== LogDebugType.None &&
-      ServerLogService.checkDebugLogSkip(additionalLogInfo.debugType)
-    ) {
+    if (additionalLogInfo?.debugType !== undefined && ServerLogService.checkDebugLogSkip(additionalLogInfo.debugType)) {
       return;
     }
     if (pLevel > this.storageLevel && pLevel > ServerLogService.settings.logLevel) {
