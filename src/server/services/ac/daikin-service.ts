@@ -44,7 +44,7 @@ export class DaikinService {
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           DaikinService.setAll(true);
-          TelegramService.sendMessage([m.from.id], 'Command executed');
+          TelegramService.sendMessage([m.chat.id], 'Command executed');
           return true;
         },
         `Turns all Ac's on without changing any settings`,
@@ -57,7 +57,7 @@ export class DaikinService {
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           DaikinService.setAll(false, true);
-          TelegramService.sendMessage([m.from.id], 'Command executed');
+          TelegramService.sendMessage([m.chat.id], 'Command executed');
           return true;
         },
         `Turns all Ac's off without changing any settings`,

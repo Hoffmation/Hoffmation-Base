@@ -72,7 +72,7 @@ export class TelegramService {
               `${telegramCb.identifier.toString().replace(/\//g, '').replace(/\\/g, '')} - ${telegramCb.helpMessage}`,
             );
           }
-          TelegramService.sendMessage([m.from?.id], message.join('\n'));
+          TelegramService.sendMessage([m.chat.id], message.join('\n'));
           return true;
         },
         `Gibt eine Liste mit sämtlichen Kommandos aus`,

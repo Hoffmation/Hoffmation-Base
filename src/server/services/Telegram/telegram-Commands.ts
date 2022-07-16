@@ -15,7 +15,7 @@ export class TelegramCommands {
           if (m.from === undefined) return false;
           RoomService.clearAllAlarms();
           TelegramService.sendMessage(
-            [m.from.id],
+            [m.chat.id],
             'Alle ausgelösten Wasser-/Rauchmelder und Eindringlingsalarme wurden gestoppt.',
           );
           return true;
@@ -56,7 +56,7 @@ export class TelegramCommands {
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           RoomService.endAlarmModes();
-          TelegramService.sendMessage([m.from.id], 'Der Abwesenheitsmodus ist deaktiviert.');
+          TelegramService.sendMessage([m.chat.id], 'Der Abwesenheitsmodus ist deaktiviert.');
           return true;
         },
         'Alarmanlage nach Abwesenheit/Nacht entschärfen',
@@ -69,7 +69,7 @@ export class TelegramCommands {
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           TelegramService.sendMessage(
-            [m.from.id],
+            [m.chat.id],
             `Im Folgenden sind die letzten Bewegungen\n${RoomService.getLastMovements()}`,
           );
           return true;
@@ -83,7 +83,7 @@ export class TelegramCommands {
         /\/test/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], 'Hallo, ich bin der HoffMation Bot.');
+          TelegramService.sendMessage([m.chat.id], 'Hallo, ich bin der HoffMation Bot.');
           return true;
         },
         'Eine Möglichkeit die Verknüpfung mit dem HoffMation Bot zu testen',
@@ -96,7 +96,7 @@ export class TelegramCommands {
         /\/check_rollo/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], ShutterService.getRolladenPosition());
+          TelegramService.sendMessage([m.chat.id], ShutterService.getRolladenPosition());
           return true;
         },
         'Gibt die Positionen der Rollos aus, warnt über offene Rollos und nennt die nächsten Fahrten',
@@ -109,7 +109,7 @@ export class TelegramCommands {
         /\/check_fenster/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], Griffe.getGriffPosition());
+          TelegramService.sendMessage([m.chat.id], Griffe.getGriffPosition());
           return true;
         },
         'Gibt die Positionen der Fenstergriffe aus und warnt somit über offene Fenster',
@@ -122,7 +122,7 @@ export class TelegramCommands {
         /\/check_battery/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return Promise.resolve(false);
-          TelegramService.sendMessage([m.from.id], Devices.getBatteryInfo());
+          TelegramService.sendMessage([m.chat.id], Devices.getBatteryInfo());
           return Promise.resolve(true);
         },
         'Returns a list of all battery driven devices in ascending order.',
@@ -135,7 +135,7 @@ export class TelegramCommands {
         /\/check_temperatur/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], Heizgruppen.getInfo());
+          TelegramService.sendMessage([m.chat.id], Heizgruppen.getInfo());
           return true;
         },
         'Gibt die Namen und aktuellen Werte sämtlicher Heizgruppen aus (aktuelle Temperatur, Soll Temperatur, Ventilstellung).',
@@ -148,7 +148,7 @@ export class TelegramCommands {
         /\/temperatur_error/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], Heizgruppen.getProblems());
+          TelegramService.sendMessage([m.chat.id], Heizgruppen.getProblems());
           return true;
         },
         'Zeigt Differenzen zwischen Heizungen und den jeweiligen Heizgruppen auf',
@@ -161,7 +161,7 @@ export class TelegramCommands {
         /\/check_1_temperatur.*/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.from.id], await Heizgruppen.getSpecificInfo(m.text));
+          TelegramService.sendMessage([m.chat.id], await Heizgruppen.getSpecificInfo(m.text));
           return true;
         },
         `Gibt den Verlauf der in \\"\\" übergebenen Heizgruppe aus.`,
@@ -176,7 +176,7 @@ export class TelegramCommands {
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           RoomService.setAllRolloOfFloor(-1, 0);
-          TelegramService.sendMessage([m.from.id], `Es werden alle Rollos heruntergefahren`);
+          TelegramService.sendMessage([m.chat.id], `Es werden alle Rollos heruntergefahren`);
           return true;
         },
         `Fährt alle rollos runter`,
@@ -195,7 +195,7 @@ export class TelegramCommands {
               (d as ZigbeeAquaraVibra).setSensitivity(2);
             }
           }
-          TelegramService.sendMessage([m.from.id], 'Abgeschlossen');
+          TelegramService.sendMessage([m.chat.id], 'Abgeschlossen');
           return true;
         },
         `Setzt alle Vibrationsensoren auf High`,
@@ -215,7 +215,7 @@ export class TelegramCommands {
               response.push((d as HmIpTaster).getButtonAssignment());
             }
           }
-          TelegramService.sendMessage([m.from.id], response.join('\n'));
+          TelegramService.sendMessage([m.chat.id], response.join('\n'));
           return true;
         },
         `Retrieves the button assignments for all buttons in home`,
@@ -236,7 +236,7 @@ export class TelegramCommands {
             response.push(`Drawing Wattage: ${Devices.energymanager?.drawingWattage}W`);
             response.push(`Self Consuming Wattage: ${Devices.energymanager?.selfConsumingWattage}W`);
             response.push(`Injecting Wattage: ${Devices.energymanager?.injectingWattage}W`);
-            TelegramService.sendMessage([m.from.id], response.join('\n'));
+            TelegramService.sendMessage([m.chat.id], response.join('\n'));
             return true;
           },
           `Retrieves the current energy manager values`,

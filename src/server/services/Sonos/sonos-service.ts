@@ -61,7 +61,7 @@ export class SonosService {
           async (m: TelegramBot.Message): Promise<boolean> => {
             if (m.from === undefined) return false;
             SonosService.speakTestMessageOnEachDevice();
-            TelegramService.sendMessage([m.from.id], 'Testnachricht gesprochen --> Führe weiteren Test durch');
+            TelegramService.sendMessage([m.chat.id], 'Testnachricht gesprochen --> Führe weiteren Test durch');
             await SonosService.checkAll();
             return true;
           },
@@ -100,6 +100,7 @@ export class SonosService {
       for (const deviceName in this.ownDevices) {
         currentDevice = this.ownDevices[deviceName];
         if (currentDevice?.device === undefined) {
+          // noinspection ExceptionCaughtLocallyJS
           throw `${currentDevice?.name} is missing`;
         }
         await currentDevice.device.GetState();
