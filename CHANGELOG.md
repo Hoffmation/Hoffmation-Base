@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.4 (2022-07-16)
 
 * (theimo1221) First try resolving "Param NG" from Daikin Device
 * (theimo1221) Add option to change Ac Mode without writing to device
