@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.5 (2022-07-16)
 
 * (theimo1221) Telegram Bot should respond in the chat he recieved the message, not directly to that person
 
