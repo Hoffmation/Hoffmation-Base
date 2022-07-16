@@ -1,5 +1,5 @@
 import { IBaseDevice } from './baseDeviceInterfaces';
-import { ServerLogService, Utils } from '../services';
+import { LogDebugType, ServerLogService, Utils } from '../services';
 import { DeviceInfo } from './DeviceInfo';
 import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
@@ -80,11 +80,12 @@ export abstract class IoBrokerBaseDevice implements IBaseDevice {
 
   public abstract update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean): void;
 
-  public log(level: LogLevel, message: string): void {
+  public log(level: LogLevel, message: string, logDebugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, message, {
       room: this.info.room,
       deviceId: this.id,
       deviceName: this.info.customName,
+      debugType: logDebugType,
     });
   }
 

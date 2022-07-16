@@ -1,5 +1,5 @@
 import { DeviceType } from '../../deviceType';
-import { Utils } from '../../../services';
+import { LogDebugType, Utils } from '../../../services';
 import { DeviceInfo } from '../../DeviceInfo';
 import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
@@ -80,7 +80,11 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       return;
     }
     if (this.currentLevel === pPosition) {
-      this.log(LogLevel.Debug, `Skip Rollo command to Position ${pPosition} as this is the current one`);
+      this.log(
+        LogLevel.Debug,
+        `Skip Rollo command to Position ${pPosition} as this is the current one`,
+        LogDebugType.SkipUnchangedRolloPosition,
+      );
       return;
     }
 

@@ -1,4 +1,4 @@
-import { Utils } from '../../../services';
+import { LogDebugType, Utils } from '../../../services';
 import { ActuatorSettings, LogLevel } from '../../../../models';
 import { DeviceInfo } from '../../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
@@ -51,11 +51,15 @@ export class ZigbeeActuator extends ZigbeeDevice {
     }
 
     if (!force && pValue === this.actuatorOn && this.queuedValue === null) {
-      this.log(LogLevel.Debug, `Skip actuator command as it is already ${pValue}`);
+      this.log(
+        LogLevel.Debug,
+        `Skip actuator command as it is already ${pValue}`,
+        LogDebugType.SkipUnchangedActuatorCommand,
+      );
       return;
     }
 
-    this.log(LogLevel.Debug, `Switch actuator to: ${pValue}`);
+    this.log(LogLevel.Debug, `Set outlet Acutator to "${pValue}"`, LogDebugType.SetActuator);
     this.setState(this.actuatorOnSwitchID, pValue, undefined, (err) => {
       this.log(LogLevel.Error, `Switching actuator resulted in error: ${err}`);
     });

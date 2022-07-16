@@ -53,6 +53,11 @@ export interface iConfig {
 export interface iLogSettings {
   logLevel: number;
   useTimestamp: boolean;
+  debugNewMovementState?: boolean;
+  debugShutterPositionChange?: boolean;
+  debugActuatorChange?: boolean;
+  debugUchangedShutterPosition?: boolean;
+  debugUnchangedActuator?: boolean;
 }
 
 export interface iTimePair {

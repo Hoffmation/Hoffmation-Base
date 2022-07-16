@@ -3,7 +3,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 import { LogLevel, TimeOfDay } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
-import { TimeCallbackService, Utils } from '../../services';
+import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   public constructor(pInfo: DeviceInfo) {
@@ -25,7 +25,7 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
 
   /** @inheritdoc */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
-    this.log(LogLevel.Debug, `Lampenaktor schalten Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Set Light Acutator to "${pValue}"`, LogDebugType.SetActuator);
     if (this.settings.isStromStoss) {
       timeout = 3000;
       Utils.guardedTimeout(

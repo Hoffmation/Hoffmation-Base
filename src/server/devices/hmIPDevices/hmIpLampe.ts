@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { TimeCallbackService, Utils } from '../../services';
+import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import { ActuatorSettings, LogLevel, TimeOfDay } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../baseDeviceInterfaces';
@@ -34,7 +34,11 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   /** @inheritdoc */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     if (!force && pValue === this.lightOn && this.queuedLightValue === null) {
-      this.log(LogLevel.DeepTrace, `Skip light command as it is already ${pValue}`);
+      this.log(
+        LogLevel.DeepTrace,
+        `Skip light command as it is already ${pValue}`,
+        LogDebugType.SkipUnchangedActuatorCommand,
+      );
       return;
     }
     if (this.lightOnSwitchID === '') {
@@ -50,7 +54,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
       return;
     }
 
-    this.log(LogLevel.Debug, `Lampe schalten Wert: ${pValue}`);
+    this.log(LogLevel.Debug, `Set Light Acutator to "${pValue}"`, LogDebugType.SetActuator);
     this.setState(this.lightOnSwitchID, pValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });

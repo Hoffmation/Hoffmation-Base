@@ -1,6 +1,6 @@
 import { DimmerSettings, LogLevel, TimeOfDay } from '../../../models';
 import { DeviceType } from '../deviceType';
-import { TimeCallbackService, Utils } from '../../services';
+import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
@@ -105,8 +105,11 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
     if (pValue && brightness === -1 && this.brightness < 10) {
       brightness = 10;
     }
-    this.log(LogLevel.Debug, `Dimmer Schalten An: ${pValue} \t Helligkeit: ${brightness}%`);
-
+    this.log(
+      LogLevel.Debug,
+      `Set Light Acutator to "${pValue}" with brightness ${brightness}`,
+      LogDebugType.SetActuator,
+    );
     this.setState(this.stateID, pValue);
     this.queuedValue = pValue;
 

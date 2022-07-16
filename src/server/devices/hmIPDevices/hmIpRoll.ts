@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Utils } from '../../services';
+import { LogDebugType, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { Fenster } from '../groups';
 import { FensterPosition } from '../models';
@@ -79,7 +79,11 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       return;
     }
     if (this.currentLevel === pPosition) {
-      this.log(LogLevel.Debug, `Skip Rollo command to Position ${pPosition} as this is the current one`);
+      this.log(
+        LogLevel.Debug,
+        `Skip Rollo command to Position ${pPosition} as this is the current one`,
+        LogDebugType.SkipUnchangedRolloPosition,
+      );
       return;
     }
     if (this._setLevelSwitchID === '') {

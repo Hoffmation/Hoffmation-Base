@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { ZigbeeDevice } from './BaseDevices';
 import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
-import { Utils } from '../../services';
+import { LogDebugType, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { iMotionSensor } from '../baseDeviceInterfaces';
 
@@ -68,7 +68,11 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
     }
 
     if (newState === this.movementDetected) {
-      this.log(LogLevel.Debug, `Skip movement because state is already ${newState}`);
+      this.log(
+        LogLevel.Debug,
+        `Skip movement because state is already ${newState}`,
+        LogDebugType.SkipUnchangedMovementState,
+      );
 
       if (newState) {
         // Wenn ein Sensor sich nicht von alleine zurücksetzt, hier erzwingen.
@@ -80,7 +84,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
 
     this.resetFallbackTimeout();
     this.movementDetected = newState;
-    this.log(LogLevel.Debug, `New movement state: ${newState}`);
+    this.log(LogLevel.Debug, `New movement state: ${newState}`, LogDebugType.NewMovementState);
 
     if (newState) {
       this.startFallbackTimeout();
