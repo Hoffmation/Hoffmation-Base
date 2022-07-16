@@ -45,7 +45,7 @@ export class OwnDaikinDevice extends AcDevice {
     return this._device?.currentACControlInfo?.power ?? false;
   }
 
-  public setDesiredMode(mode: AcMode): void {
+  public setDesiredMode(mode: AcMode, writeToDevice: boolean = true): void {
     let newMode: number = -1;
     switch (mode) {
       case AcMode.Heating:
@@ -62,7 +62,9 @@ export class OwnDaikinDevice extends AcDevice {
       return;
     }
     this.desiredMode = newMode;
-    this.setDesiredInfo();
+    if (writeToDevice) {
+      this.setDesiredInfo();
+    }
   }
 
   public turnOn(): void {
@@ -91,19 +93,12 @@ export class OwnDaikinDevice extends AcDevice {
         if (err !== null) {
           ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${this.name} failed:  ${err} `);
           if (err.message.includes('EHOSTUNREACH') && !retry) {
-            this.log(LogLevel.Warn, `Detected EHOSTUNREACH, will try reconecting`);
-            DaikinService.reconnect(this.name, this.ip).then((device) => {
-              this.device = device;
-              Utils.guardedTimeout(
-                () => {
-                  this.setDesiredInfo(true);
-                },
-                5000,
-                this,
-              );
-            });
+            this.handleDeviceUnreach();
+            return;
+          } else if (err.message.includes('ret=PARAM NG') && !retry) {
+            this.handleParamNg();
+            return;
           }
-          return;
         } else if (res) {
           this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
           this.logInfo(res);
@@ -112,6 +107,30 @@ export class OwnDaikinDevice extends AcDevice {
         }
       },
     );
+  }
+
+  private handleDeviceUnreach(): void {
+    this.log(LogLevel.Warn, `Detected EHOSTUNREACH, will try reconecting`);
+    DaikinService.reconnect(this.name, this.ip).then((device) => {
+      this.device = device;
+      Utils.guardedTimeout(
+        () => {
+          this.setDesiredInfo(true);
+        },
+        5000,
+        this,
+      );
+    });
+  }
+
+  private handleParamNg(): void {
+    this.log(LogLevel.Warn, `Detected Param Ng, will try reloading Control Info`);
+    this._device?.getACControlInfo((err: Error | null) => {
+      if (err === null) {
+        this.log(LogLevel.Warn, `Device Info loaded successfull will try setting Control Info again`);
+        this.setDesiredInfo(true);
+      }
+    });
   }
 
   private logInfo(info: ControlInfo): void {

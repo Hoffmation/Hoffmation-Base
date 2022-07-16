@@ -27,7 +27,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
     this.turnOff();
   }
 
-  public abstract setDesiredMode(mode: AcMode): void;
+  public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
 
   public abstract turnOn(): void;
 
