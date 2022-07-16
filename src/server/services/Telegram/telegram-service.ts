@@ -128,7 +128,7 @@ export class TelegramService {
   }
 
   public static checkAuthorized(msg: TelegramBot.Message): boolean {
-    if (msg.from !== undefined && this.allowedIDs.includes(msg.from?.id)) {
+    if ((msg.from !== undefined && this.allowedIDs.includes(msg.from?.id)) || this.allowedIDs.includes(msg.chat.id)) {
       ServerLogService.writeLog(LogLevel.Debug, `Authorisierte Telegram Message erhalten: ${JSON.stringify(msg)}`);
       return true;
     }

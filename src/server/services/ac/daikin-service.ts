@@ -83,6 +83,9 @@ export class DaikinService {
   }
 
   public static setAll(on: boolean, force: boolean = false): void {
+    if (!this.isInitialized) {
+      return;
+    }
     for (const deviceName in this._ownDevices) {
       const dev: OwnDaikinDevice = this._ownDevices[deviceName];
       if (on) {
