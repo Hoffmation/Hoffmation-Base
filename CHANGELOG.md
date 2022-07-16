@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.6 (2022-07-16)
 
 * (theimo1221) Add Ac Options To Api
 * (theimo1221) Extend JSON Filter
