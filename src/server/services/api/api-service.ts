@@ -1,4 +1,4 @@
-import { Devices, IBaseDevice } from '../../devices';
+import { Devices, IBaseDevice, iLamp } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
@@ -65,5 +65,23 @@ export class API {
    */
   public static setAllAc(desiredState: boolean): void {
     DaikinService.setAll(desiredState, true);
+  }
+
+  /**
+   * Changes the status of a given Lamp
+   * @param {string} deviceId The device Id of the lamp
+   * @param {boolean} state The desired new state
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static setLight(deviceId: string, state: boolean): Error | null {
+    const d = this.getDevice(deviceId);
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (typeof (d as iLamp).setLight !== 'function') {
+      return new Error(`Device with ID ${deviceId} is no Lamp`);
+    }
+    (d as iLamp).setLight(state, 60 * 60 * 1000, true);
+    return null;
   }
 }

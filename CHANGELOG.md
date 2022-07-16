@@ -9,6 +9,7 @@
 
 * (theimo1221) Add Ac Options To Api
 * (theimo1221) Extend JSON Filter
+* (theimo1221) Allow Lamp changing options to Api
 
 ## 1.0.5 (2022-07-16)
 
