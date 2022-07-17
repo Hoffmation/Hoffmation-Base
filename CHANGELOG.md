@@ -4,6 +4,11 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update dependencies
+
 ## 1.0.8 (2022-07-17)
 
 * (theimo1221) Fix Error resulting in no device messages being logged
