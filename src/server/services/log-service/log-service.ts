@@ -93,7 +93,7 @@ export class ServerLogService {
   private static checkDebugLogSkip(debugType: LogDebugType): boolean {
     switch (debugType) {
       case LogDebugType.None:
-        break;
+        return false;
       case LogDebugType.SkipUnchangedActuatorCommand:
         if (SettingsService.settings.logSettings?.debugUnchangedActuator === true) {
           return false;
