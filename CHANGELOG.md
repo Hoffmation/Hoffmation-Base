@@ -8,6 +8,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update dependencies
+* (theimo1221) Prevent issue, where 1 disconnected AC could halt the whole system
 
 ## 1.0.8 (2022-07-17)
 
