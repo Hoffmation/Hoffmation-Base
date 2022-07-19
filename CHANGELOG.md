@@ -4,8 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.9 (2022-07-19)
 
 * (theimo1221) Update dependencies
 * (theimo1221) Prevent issue, where 1 disconnected AC could halt the whole system
