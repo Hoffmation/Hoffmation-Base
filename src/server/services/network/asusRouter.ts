@@ -25,15 +25,18 @@ export class AsusRouter extends Router {
               `Couldn't reconnect device, as no device found for ip-address ${ip}`,
             );
             res(false);
+            this._api.logout();
             return;
           }
           res(this.reconnectDeviceByMac(client.rawData.mac));
+          this._api.logout();
         })
         .catch((reason) => {
           ServerLogService.writeLog(
             LogLevel.Warn,
             `Couldn't reconnect device, as ip-lookup failed due to: "${reason}"`,
           );
+          this._api.logout();
           res(false);
         });
     });
