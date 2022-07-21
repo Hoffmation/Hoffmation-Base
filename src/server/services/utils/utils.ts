@@ -127,4 +127,13 @@ export class Utils {
     const endDate = new Date(yearStart.getTime() + endDay * DAYMS);
     return date <= endDate && date >= startDate;
   }
+
+  public static nowTime(): { hours: number; minutes: number } {
+    const now = new Date();
+    return { hours: now.getHours(), minutes: now.getMinutes() };
+  }
+
+  public static dateByTimeSpan(hours: number, minutes: number): Date {
+    return new Date(new Date().setHours(hours, minutes));
+  }
 }

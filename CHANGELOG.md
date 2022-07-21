@@ -10,6 +10,7 @@
 
 * (theimo1221) Update packages
 * (theimo1221) Add proper Logout in Asus Router calls
+* (theimo1221) Add option to forbid automatic AC before/after certain time
 
 ## 1.0.9 (2022-07-19)
 
