@@ -1,5 +1,5 @@
 import { HmIpGriff } from '../hmIPDevices';
-import { ShutterService, TimeCallbackService, Utils } from '../../services';
+import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services';
 import { FensterPosition } from '../models';
 import { LogLevel, TimeOfDay } from '../../../models';
 import { iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
@@ -123,7 +123,11 @@ export class Fenster extends BaseGroup {
   }
 
   public rolloPositionChange(pValue: number): void {
-    this.log(LogLevel.Debug, `Rollo Position Change in ${this.roomName} to ${pValue}`);
+    this.log(
+      LogLevel.Debug,
+      `Rollo Position Change in ${this.roomName} to ${pValue}`,
+      pValue == this.desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
+    );
 
     if (pValue === 0 || pValue === 100) {
       this.getRoom().setLightTimeBased(true);
