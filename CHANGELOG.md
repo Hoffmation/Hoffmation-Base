@@ -11,6 +11,7 @@
 * (theimo1221) Reduce Logging in Fenster regarding shutter change
 * (theimo1221) Increase Error Level on Daikin Problems
 * (theimo1221) Reduce Logging on handle Sunrise Off
+* (theimo1221) Log to find client requesting falty files
 
 ## 1.0.11 (2022-07-23)
 

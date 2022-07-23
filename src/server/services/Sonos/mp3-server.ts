@@ -38,7 +38,10 @@ export class MP3Server {
         const fPath: string = this.mp3Path + fName + '.mp3';
         try {
           if (!fs.existsSync(fPath)) {
-            ServerLogService.writeLog(LogLevel.Error, `Die angefragte Datei existiert nicht ${fName}`);
+            ServerLogService.writeLog(
+              LogLevel.Error,
+              `Die von ${req.socket.remoteAddress} angefragte Datei existiert nicht ${fName}`,
+            );
             return;
           }
         } catch (err) {
