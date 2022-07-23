@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add temperature threshhold for AC activation
+
 ## 1.0.13 (2022-07-23)
 
 * (theimo1221) Increase AC Logging to spot Param NG issue

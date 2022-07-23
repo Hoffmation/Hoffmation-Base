@@ -11,6 +11,12 @@ export class AcGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.Ac, new DeviceList(acIds, false, true));
   }
 
+  public initialize(): void {
+    this.getOwnAcDevices().forEach((acDev: AcDevice) => {
+      acDev.room = this.getRoom();
+    });
+  }
+
   public getOwnAcDevices(): AcDevice[] {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Ac) as AcDevice[];
   }

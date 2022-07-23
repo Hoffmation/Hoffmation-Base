@@ -97,6 +97,7 @@ export class RoomBase implements iRoomBase {
     this.FensterGroup?.initialize();
     this.TasterGroup?.initCallbacks();
     this.HeatGroup?.initialize();
+    this.AcGroup?.initialize();
     if (this.settings.ambientLightAfterSunset && this.settings.lampOffset) {
       const cb: TimeCallback = new TimeCallback(
         `${this.roomName} Ambient Light after Sunset`,
