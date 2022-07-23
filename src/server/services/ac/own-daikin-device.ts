@@ -96,7 +96,7 @@ export class OwnDaikinDevice extends AcDevice {
             this.handleDeviceUnreach();
             return;
           } else if (err.message.includes('ret=PARAM NG') && !retry) {
-            this.handleParamNg();
+            this.handleParamNg(changeObject);
             return;
           }
         } else if (res) {
@@ -123,11 +123,17 @@ export class OwnDaikinDevice extends AcDevice {
     });
   }
 
-  private handleParamNg(): void {
-    this.log(LogLevel.Error, `Detected Param Ng for ${this.name}(${this.ip}), will try reloading Control Info`);
+  private handleParamNg(changeObject: Partial<ControlInfo>): void {
+    this.log(
+      LogLevel.Error,
+      `Detected Param Ng for ${this.name}(${this.ip}), will try reloading Control Info. Change Object: ${changeObject}`,
+    );
     this._device?.getACControlInfo((err: Error | null) => {
       if (err === null) {
-        this.log(LogLevel.Warn, `Device Info loaded successfull will try setting Control Info again`);
+        this.log(
+          LogLevel.Warn,
+          `Device Info loaded successfull will try setting Control Info again: ${this._device?.currentACControlInfo}`,
+        );
         this.setDesiredInfo(true);
       }
     });
