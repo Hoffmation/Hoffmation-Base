@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.11 (2022-07-23)
 
 * (theimo1221) Add Debug Message for news download
 
