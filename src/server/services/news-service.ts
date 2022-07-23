@@ -161,6 +161,7 @@ export class NewsService {
             return;
           }
 
+          ServerLogService.writeLog(LogLevel.Debug, `Current news download Link: "${currentFeedItem.enclosure.url}"`);
           HTTPSService.downloadFile(currentFeedItem.enclosure.url, filePath)
             .then((success: boolean) => {
               if (!success) {
