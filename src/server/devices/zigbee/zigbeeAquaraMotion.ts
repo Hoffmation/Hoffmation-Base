@@ -48,7 +48,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
         this.info.devID,
         value,
         new Date(),
-        this.room?.LampenGroup?.anyLightsOwn() ?? false,
+        this.room?.LampenGroup?.anyLightsOn() ?? false,
       ),
     );
   }

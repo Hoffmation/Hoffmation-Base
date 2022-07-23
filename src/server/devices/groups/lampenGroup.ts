@@ -15,7 +15,7 @@ export class LampenGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.LED, new DeviceList(ledIds));
   }
 
-  public anyLightsOwn(): boolean {
+  public anyLightsOn(): boolean {
     let i: number;
     for (i = 0; i < this.getLampen().length; i++) {
       if (this.getLampen()[i].lightOn) {
@@ -45,6 +45,14 @@ export class LampenGroup extends BaseGroup {
 
   public getStecker(): ZigbeeIkeaSteckdose[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Outlets) as ZigbeeIkeaSteckdose[];
+  }
+
+  public handleSunriseOff(): void {
+    if (!this.anyLightsOn()) {
+      return;
+    }
+    this.log(LogLevel.Info, `Es ist hell genug --> Schalte Lampen im ${this.roomName} aus`);
+    this.switchAll(false);
   }
 
   public switchAll(target: boolean, force: boolean = false): void {

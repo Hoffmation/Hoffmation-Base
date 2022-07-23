@@ -60,7 +60,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
         this.info.devID,
         value,
         new Date(),
-        this.room?.LampenGroup?.anyLightsOwn() ?? false,
+        this.room?.LampenGroup?.anyLightsOn() ?? false,
       ),
     );
   }

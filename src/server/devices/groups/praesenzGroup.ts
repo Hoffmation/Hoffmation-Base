@@ -59,8 +59,7 @@ export class PraesenzGroup extends BaseGroup {
         `${this.roomName} Morgens Lampe aus`,
         TimeCallbackType.Sunrise,
         () => {
-          this.log(LogLevel.Info, `Es ist hell genug --> Schalte Lampen im ${this.roomName} aus`);
-          this.getRoom().LampenGroup?.switchAll(false);
+          this.getRoom().LampenGroup?.handleSunriseOff();
         },
         this.getRoom().settings.lampOffset.sunrise,
       );
