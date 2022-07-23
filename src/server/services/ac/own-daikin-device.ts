@@ -110,7 +110,7 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   private handleDeviceUnreach(): void {
-    this.log(LogLevel.Warn, `Detected EHOSTUNREACH, will try reconecting`);
+    this.log(LogLevel.Warn, `Detected EHOSTUNREACH for ${this.name}(${this.ip}), will try reconecting`);
     DaikinService.reconnect(this.name, this.ip).then((device) => {
       this.device = device;
       Utils.guardedTimeout(
@@ -124,7 +124,7 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   private handleParamNg(): void {
-    this.log(LogLevel.Warn, `Detected Param Ng, will try reloading Control Info`);
+    this.log(LogLevel.Error, `Detected Param Ng for ${this.name}(${this.ip}), will try reloading Control Info`);
     this._device?.getACControlInfo((err: Error | null) => {
       if (err === null) {
         this.log(LogLevel.Warn, `Device Info loaded successfull will try setting Control Info again`);

@@ -9,7 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Reduce Logging in Fenster regarding shutter change
-*
+* (theimo1221) Increase Error Level on Daikin Problems
 
 ## 1.0.11 (2022-07-23)
 
