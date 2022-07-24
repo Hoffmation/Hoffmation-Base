@@ -109,7 +109,7 @@ export class FensterGroup extends BaseGroup {
           desiredPos,
           room.HeatGroup?.desiredTemp ?? -99,
           room.HeatGroup?.temperature ?? -99,
-          this.log,
+          this.log.bind(this),
         );
       }
       if (f.griffeInPosition(FensterPosition.offen) > 0 && desiredPos < 100) {
