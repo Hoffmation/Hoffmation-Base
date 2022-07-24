@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.18-alpha.1 (2022-07-24)
 
 * (theimo1221) Fix logging in weather service
 * (theimo1221) Reduce Daikin Logging in success case
