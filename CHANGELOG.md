@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.15 (2022-07-24)
 
 * (theimo1221) Move AcDevice into heatGroup
 
