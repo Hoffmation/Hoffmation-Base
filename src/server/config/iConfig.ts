@@ -58,6 +58,7 @@ export interface iLogSettings {
   debugActuatorChange?: boolean;
   debugUchangedShutterPosition?: boolean;
   debugUnchangedActuator?: boolean;
+  debugDaikinSuccessfullControlInfo?: boolean;
 }
 
 export interface iTimePair {

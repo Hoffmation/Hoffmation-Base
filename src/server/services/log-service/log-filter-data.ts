@@ -8,6 +8,7 @@ export enum LogDebugType {
   ShutterPositionChange,
   NewMovementState,
   SkipUnchangedMovementState,
+  DaikinSuccessfullControlInfo,
 }
 
 export class LogFilterData {

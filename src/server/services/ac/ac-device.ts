@@ -1,7 +1,7 @@
 import { iExcessEnergyConsumer } from '../../devices';
 import { ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
 import { Utils } from '../utils';
-import { ServerLogService } from '../log-service';
+import { LogDebugType, ServerLogService } from '../log-service';
 import { AcMode } from './ac-mode';
 import { AcSettings } from '../../../models/deviceSettings/acSettings';
 import { AcDeviceType } from './acDeviceType';
@@ -82,8 +82,13 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
     this.turnOff();
   }
 
-  public log(level: LogLevel, message: string): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`);
+  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
+    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
+      debugType: debugType,
+      room: this.room?.roomName ?? '',
+      deviceId: this.name,
+      deviceName: this.name,
+    });
   }
 
   public wasActivatedByExcessEnergy(): boolean {

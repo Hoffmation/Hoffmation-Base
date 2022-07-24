@@ -1,5 +1,5 @@
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
-import { ServerLogService } from '../log-service';
+import { LogDebugType, ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 import { SettingsService } from '../settings-service';
 import { DaikinService } from './daikin-service';
@@ -102,7 +102,7 @@ export class OwnDaikinDevice extends AcDevice {
           }
         } else if (res) {
           this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
-          this.logInfo(res);
+          this.log(LogLevel.Debug, `Device Info ${JSON.stringify(res)}`, LogDebugType.DaikinSuccessfullControlInfo);
         } else {
           this.log(LogLevel.Warn, `No Error, but also no response...`);
         }
@@ -142,9 +142,5 @@ export class OwnDaikinDevice extends AcDevice {
         this.setDesiredInfo(true);
       }
     });
-  }
-
-  private logInfo(info: ControlInfo): void {
-    this.log(LogLevel.Debug, `Device Info ${JSON.stringify(info)}`);
   }
 }

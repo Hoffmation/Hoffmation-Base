@@ -120,6 +120,14 @@ export class ServerLogService {
         }
         break;
       case LogDebugType.SkipUnchangedMovementState:
+        if (SettingsService.settings.logSettings?.debugNewMovementState === true) {
+          return false;
+        }
+        break;
+      case LogDebugType.DaikinSuccessfullControlInfo:
+        if (SettingsService.settings.logSettings?.debugDaikinSuccessfullControlInfo === true) {
+          return false;
+        }
         break;
     }
     return true;
