@@ -83,7 +83,7 @@ export class DeviceCluster {
         clusterTypes.push(DeviceClusterType.Outlets);
         break;
       case DeviceType.ZigbeeIlluActuator: // Dependent on use case
-      case DeviceType.HmIpTherm: // Humidity and temperatur not yet implemented
+      case DeviceType.HmIpTherm: // Humidity and temperature not yet implemented
       case DeviceType.HmIpHeizung: // Setting/Controlling via HM-Ip Heizgruppe
       case DeviceType.unknown:
       case DeviceType.Wled: // TODO: Implement

@@ -5,7 +5,7 @@ import { DeviceList } from '../device-list';
 import {
   iHeater,
   iHumiditySensor,
-  iTemperaturSensor,
+  iTemperatureSensor,
   UNDEFINED_HUMIDITY_VALUE,
   UNDEFINED_TEMP_VALUE,
 } from '../baseDeviceInterfaces';
@@ -57,7 +57,7 @@ export class HeatGroup extends BaseGroup {
     let temp: number = UNDEFINED_TEMP_VALUE;
     let count: number = 0;
     this.getTempSensors().forEach((sensor) => {
-      const sensorValue: number = sensor.iTemperatur;
+      const sensorValue: number = sensor.iTemperature;
       if (sensorValue === UNDEFINED_TEMP_VALUE) {
         return;
       }
@@ -72,7 +72,7 @@ export class HeatGroup extends BaseGroup {
       if (!heaterAsSensor.settings.useOwnTemperatur) {
         return;
       }
-      const sensorValue: number = heaterAsSensor.iTemperatur;
+      const sensorValue: number = heaterAsSensor.iTemperature;
       if (sensorValue === UNDEFINED_TEMP_VALUE) {
         return;
       }
@@ -92,7 +92,7 @@ export class HeatGroup extends BaseGroup {
     }
     let value: number = 0;
     for (const h of this.getHeater()) {
-      value += h.desiredTemperatur;
+      value += h.desiredTemperature;
     }
     return Math.round((value / this.getHeater().length) * 10) / 10;
   }
@@ -109,7 +109,7 @@ export class HeatGroup extends BaseGroup {
     response.push(`Name\t\tLuft Feuchtigkeit\t\tAktuelle Temperatur\t\tSoll Temperatur\t\tVentilstellung`);
     for (const r of rooms) {
       response.push(
-        `${r.roomName}:\t\t${r.HeatGroup?.humidity}%\t\t${r.HeatGroup?.temperature}\t\t${r.HeatGroup?.desiredTemp}°C`,
+        `${r.roomName}:\t\t${r.HeatGroup?.humidity}%\t\t${r.HeatGroup?.temperature}°C\t\t${r.HeatGroup?.desiredTemp}°C`,
         // TODO: Add AC Info and Heating Valve percentage
       );
     }
@@ -120,8 +120,8 @@ export class HeatGroup extends BaseGroup {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
   }
 
-  public getTempSensors(): iTemperaturSensor[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.TemperaturSensor) as iTemperaturSensor[];
+  public getTempSensors(): iTemperatureSensor[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.TemperaturSensor) as iTemperatureSensor[];
   }
 
   public getHumiditySensors(): iHumiditySensor[] {

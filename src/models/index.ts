@@ -7,5 +7,5 @@ export * from './deviceConfig';
 export * from './excessEnergyConsumerSettings';
 export * from './iTemperaturDataPoint';
 export * from './logLevel';
-export * from './temperaturSettings';
+export * from './temperatureSettings';
 export * from './timeCallback';

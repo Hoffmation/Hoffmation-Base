@@ -8,5 +8,5 @@ export * from './iIlluminationSensor';
 export * from './iLamp';
 export * from './iMotionSensor';
 export * from './iShutter';
-export * from './iTemperaturSensor';
+export * from './iTemperatureSensor';
 export * from './iVibrationSensor';

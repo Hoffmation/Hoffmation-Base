@@ -200,7 +200,7 @@ export class WeatherService {
     return wData.current.temp;
   }
 
-  public static isOutsideWarmer(currentTemperatur: number): boolean {
+  public static isOutsideWarmer(currentTemperature: number): boolean {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
       ServerLogService.writeLog(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
@@ -208,9 +208,9 @@ export class WeatherService {
     }
     ServerLogService.writeLog(
       LogLevel.Info,
-      `isOutsideWarmer(${currentTemperatur}) --> Aktuelle Temperatur: ${wData.current.temp}`,
+      `isOutsideWarmer(${currentTemperature}) --> Aktuelle Temperatur: ${wData.current.temp}`,
     );
-    return currentTemperatur < wData.current.temp;
+    return currentTemperature < wData.current.temp;
   }
 
   public static weatherRolloPosition(normalPos: number, desiredTemperatur: number, currentTemperatur: number): number {

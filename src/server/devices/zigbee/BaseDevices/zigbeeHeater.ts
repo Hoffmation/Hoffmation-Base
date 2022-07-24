@@ -1,18 +1,19 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
-import { HeaterSettings, LogLevel, TemperaturSettings, TimeCallback, TimeCallbackType } from '../../../../models';
+import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../../models';
 import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   public settings: HeaterSettings = new HeaterSettings();
-  protected _automaticPoints: { [name: string]: TemperaturSettings } = {};
+  protected _automaticPoints: { [name: string]: TemperatureSettings } = {};
   protected _iAutomaticInterval: NodeJS.Timeout | undefined;
   protected _initialSeasonCheckDone: boolean = false;
   protected _level: number = 0;
   protected _setPointTemperaturID: string = '';
   protected _temperatur: number = 0;
+  protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
 
   public constructor(pInfo: DeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -41,13 +42,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
     this._seasonTurnOff = value;
   }
 
-  protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
-
-  public get desiredTemperatur(): number {
+  public get desiredTemperature(): number {
     return this._desiredTemperatur;
   }
 
-  public set desiredTemperatur(val: number) {
+  public set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
     this.setState(
       this._setPointTemperaturID,
@@ -76,10 +75,10 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   }
 
   public get sTemperatur(): string {
-    return `${this.iTemperatur}°C`;
+    return `${this.iTemperature}°C`;
   }
 
-  public get iTemperatur(): number {
+  public get iTemperature(): number {
     if (this.settings.useOwnTemperatur) {
       return this._temperatur;
     } else {
@@ -102,23 +101,23 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
       return;
     }
 
-    const setting: TemperaturSettings | undefined = TemperaturSettings.getActiveSetting(
+    const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
       this._automaticPoints,
       new Date(),
     );
 
     if (setting === undefined) {
       this.log(LogLevel.Warn, `Undefined Heating Timestamp.`);
-      this.desiredTemperatur = this.settings.automaticFallBackTemperatur;
+      this.desiredTemperature = this.settings.automaticFallBackTemperatur;
       return;
     }
 
-    if (this._desiredTemperatur !== setting.temperatur) {
+    if (this._desiredTemperatur !== setting.temperature) {
       this.log(
         LogLevel.Debug,
-        `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperatur}°C`,
+        `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperature}°C`,
       );
-      this.desiredTemperatur = setting.temperatur ?? this.settings.automaticFallBackTemperatur;
+      this.desiredTemperature = setting.temperature ?? this.settings.automaticFallBackTemperatur;
     }
 
     Utils.dbo?.addTemperaturDataPoint(this);
@@ -128,7 +127,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
     if (this._automaticPoints[name] !== undefined) delete this._automaticPoints[name];
   }
 
-  public setAutomaticPoint(name: string, setting: TemperaturSettings): void {
+  public setAutomaticPoint(name: string, setting: TemperatureSettings): void {
     this._automaticPoints[name] = setting;
   }
 

@@ -33,7 +33,7 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     this.checkTempDiff();
   }
 
-  public override set desiredTemperatur(val: number) {
+  public override set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
     this.checkTempDiff();
   }
@@ -79,7 +79,7 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     if (this.settings.useOwnTemperatur) {
       return;
     }
-    const desiredDiff: number = Utils.round(this.desiredTemperatur - this._roomTemperatur, 1);
+    const desiredDiff: number = Utils.round(this.desiredTemperature - this._roomTemperatur, 1);
     const currentDiff: number = this.tempDiff;
     const missingDiff: number = Utils.round(desiredDiff - currentDiff, 1);
     if (Math.abs(missingDiff) < 0.15) {
@@ -92,13 +92,13 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     );
     if (Math.abs(desiredDiff) <= 9.0) {
       // Check possible with local Diff only
-      this.setTargetTemperatur(this.desiredTemperatur);
+      this.setTargetTemperatur(this.desiredTemperature);
       this.setLocalDiff(-1 * desiredDiff);
       return;
     }
     const newLocalDiff: number = Math.sign(desiredDiff) * -9;
     this.setLocalDiff(newLocalDiff);
-    this.setTargetTemperatur(this._localTempVal + this._roomTemperatur + newLocalDiff + this.desiredTemperatur);
+    this.setTargetTemperatur(this._localTempVal + this._roomTemperatur + newLocalDiff + this.desiredTemperature);
   }
 
   private setLocalDiff(newLocalDiff: number): void {

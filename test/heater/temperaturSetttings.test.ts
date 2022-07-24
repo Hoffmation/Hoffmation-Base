@@ -23,10 +23,10 @@ describe('TemperaturSettings', () => {
   });
 
   it('23:59:59.999 should give last range', () => {
-    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 23:59:59.999'))?.temperatur).toBe(20);
+    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 23:59:59.999'))?.temperature).toBe(20);
   });
 
   it('06:04:41 should give first range', () => {
-    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 06:04:41'))?.temperatur).toBe(18);
+    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 06:04:41'))?.temperature).toBe(18);
   });
 });

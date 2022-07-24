@@ -1,9 +1,9 @@
 import { ZigbeeDevice } from './BaseDevices';
-import { iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 
-export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor, iHumiditySensor {
+export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor {
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperaturCallbacks: ((pValue: number) => void)[] = [];
 
@@ -24,18 +24,18 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
     }
   }
 
-  public get iTemperatur(): number {
-    return this._temperatur;
+  public get iTemperature(): number {
+    return this._temperature;
   }
 
-  public get sTemperatur(): string {
-    return `${this._temperatur}°C`;
+  public get sTemperature(): string {
+    return `${this._temperature}°C`;
   }
 
-  private _temperatur: number = UNDEFINED_TEMP_VALUE;
+  private _temperature: number = UNDEFINED_TEMP_VALUE;
 
-  private set temperatur(val: number) {
-    this._temperatur = val;
+  private set temperature(val: number) {
+    this._temperature = val;
     for (const cb of this._temperaturCallbacks) {
       cb(val);
     }
@@ -47,8 +47,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
       case 'humidity':
         this.humidity = state.val as number;
         break;
-      case 'temperatur':
-        this.temperatur = state.val as number;
+      case 'temperature':
+        this.temperature = state.val as number;
         break;
     }
   }
@@ -62,8 +62,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
 
   public addTempChangeCallback(pCallback: (pValue: number) => void): void {
     this._temperaturCallbacks.push(pCallback);
-    if (this._temperatur > UNDEFINED_TEMP_VALUE) {
-      pCallback(this._temperatur);
+    if (this._temperature > UNDEFINED_TEMP_VALUE) {
+      pCallback(this._temperature);
     }
   }
 }

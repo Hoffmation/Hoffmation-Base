@@ -36,13 +36,13 @@ export class Heizgruppen {
     response.push(`Raumname\t\tIst-Temperatur\t\tGerät`);
     for (const g of groups) {
       const heizungen: iHeater[] = g.getBelongingHeizungen();
-      const tempProblem: string[] = [`${g.info.room}\t\t${g.iTemperatur}°C\t\t${g.info.customName}`];
+      const tempProblem: string[] = [`${g.info.room}\t\t${g.iTemperature}°C\t\t${g.info.customName}`];
       let print = false;
       for (const h of heizungen) {
-        if (h.iTemperatur !== g.iTemperatur) {
+        if (h.iTemperature !== g.iTemperature) {
           print = true;
         }
-        tempProblem.push(`${h.info.room}\t\t${h.iTemperatur}°C\t\t${h.info.customName}`);
+        tempProblem.push(`${h.info.room}\t\t${h.iTemperature}°C\t\t${h.info.customName}`);
       }
       if (print) {
         response.push(tempProblem.join('\n'));

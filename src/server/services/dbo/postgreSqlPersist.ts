@@ -37,22 +37,22 @@ values ('${room.roomName}',${room.settings.etage})
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${heater.info.customName}`);
     this.query(`
 insert into hoffmation_schema."TemperaturData" ("date", humidity, "istTemperatur", level, name, "sollTemperatur")
-values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperatur},${heater.iLevel},'${
+values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel},'${
       heater.info.customName
-    }',${heater.desiredTemperatur});`);
+    }',${heater.desiredTemperature});`);
 
     this.query(`
 insert into hoffmation_schema."HeatGroupCollection" ("date", humidity, "istTemperatur", level, name, "sollTemperatur")
-values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperatur},${heater.iLevel},'${
+values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel},'${
       heater.info.customName
-    }',${heater.desiredTemperatur})
+    }',${heater.desiredTemperature})
     ON CONFLICT (name)
     DO UPDATE SET
         "date" = '${new Date().toISOString()}',
         humidity = ${heater.humidity},
-        "istTemperatur" = ${heater.iTemperatur},
+        "istTemperatur" = ${heater.iTemperature},
         level = ${heater.iLevel},
-        "sollTemperatur" = ${heater.desiredTemperatur}
+        "sollTemperatur" = ${heater.desiredTemperature}
 ;
     `);
   }

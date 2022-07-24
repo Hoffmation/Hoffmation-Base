@@ -48,8 +48,8 @@ export class MongoPersistance implements iPersist {
 
     const dataPoint: TemperaturDataPoint = new TemperaturDataPoint(
       heater.info.customName,
-      heater.iTemperatur,
-      heater.desiredTemperatur,
+      heater.iTemperature,
+      heater.desiredTemperature,
       heater.iLevel,
       heater.humidity,
       new Date(),
@@ -62,8 +62,8 @@ export class MongoPersistance implements iPersist {
     // Needs to be duplicated as the object "dataPoint" is an document now
     const heatGroupDataPoint: TemperaturDataPoint = new TemperaturDataPoint(
       heater.info.customName,
-      heater.iTemperatur,
-      heater.desiredTemperatur,
+      heater.iTemperature,
+      heater.desiredTemperature,
       heater.iLevel,
       heater.humidity,
       new Date(),

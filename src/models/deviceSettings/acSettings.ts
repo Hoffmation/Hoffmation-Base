@@ -6,12 +6,12 @@ export class AcSettings extends DeviceSettings {
   public maximumHours: number = 24;
   public maximumMinutes: number = 0;
   /**
-   * The temperatur below which cooling should be stopped
+   * The temperature below which cooling should be stopped
    * @type {number}
    */
   public stopCoolingTemperatur: number = 22;
   /**
-   * The temperatur above which heating should be stopped
+   * The temperature above which heating should be stopped
    * @type {number}
    */
   public stopHeatingTemperatur: number = 21.0;
