@@ -4,24 +4,9 @@ import { HmIpHeizgruppe } from './hmIPDevices';
 import { Devices } from './devices';
 import { iHeater } from './baseDeviceInterfaces';
 import { Utils } from '../services';
+import { HeatGroup } from './groups';
 
 export class Heizgruppen {
-  public static getInfo(): string {
-    const gruppen: HmIpHeizgruppe[] = Heizgruppen.getAllGruppen();
-    gruppen.sort((a, b): number => {
-      return a.info.customName.localeCompare(b.info.customName);
-    });
-
-    const response: string[] = [`Dies sind die aktuellen Informationen der Heizungen:`];
-    response.push(`Name\t\tLuft Feuchtigkeit\t\tAktuelle Temperatur\t\tSoll Temperatur\t\tVentilstellung`);
-    for (const g of gruppen) {
-      response.push(
-        `${g.info.customName}:\t\t${g.humidity}%\t\t${g.sTemperatur}\t\t${g.desiredTemperatur}°C\t\t${g.sLevel}`,
-      );
-    }
-    return response.join('\n');
-  }
-
   public static async getSpecificInfo(pText: string | undefined): Promise<string> {
     if (pText === undefined || !pText.includes('"')) {
       return `Bitte übergeben Sie eine Heizgruppe innerhalb von "". z.B. "EG Flur HeizGr"`;
@@ -30,7 +15,7 @@ export class Heizgruppen {
     const group: HmIpHeizgruppe | undefined = this.getSpecificGroup(searchText);
 
     if (group === undefined) {
-      return `"${searchText}" ist keine gültige Heizgruppe, im Folgenden ist eine Liste aller gültigen Heizgruppen:\n${this.getInfo()}`;
+      return `"${searchText}" ist keine gültige Heizgruppe, im Folgenden ist eine Liste aller gültigen Heizgruppen:\n${HeatGroup.getInfo()}`;
     }
 
     const results: TemperaturDataPoint[] = (await Utils.dbo?.readTemperaturDataPoint(group, 20)) ?? [];

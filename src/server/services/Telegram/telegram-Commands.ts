@@ -1,5 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { Devices, DeviceType, Griffe, Heizgruppen, HmIpTaster, ZigbeeAquaraVibra } from '../../devices';
+import { Devices, DeviceType, Griffe, HeatGroup, Heizgruppen, HmIpTaster, ZigbeeAquaraVibra } from '../../devices';
 import { TelegramMessageCallback } from './telegramMessageCalback';
 import { ShutterService } from '../ShutterService';
 import { TelegramService } from './telegram-service';
@@ -135,7 +135,7 @@ export class TelegramCommands {
         /\/check_temperatur/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.chat.id], Heizgruppen.getInfo());
+          TelegramService.sendMessage([m.chat.id], HeatGroup.getInfo());
           return true;
         },
         'Gibt die Namen und aktuellen Werte sämtlicher Heizgruppen aus (aktuelle Temperatur, Soll Temperatur, Ventilstellung).',
