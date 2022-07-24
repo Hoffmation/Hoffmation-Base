@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix daikin debug output
+
 ## 1.0.17 (2022-07-24)
 
 * (theimo1221) Fix Sonoff Temp and general temperature typo

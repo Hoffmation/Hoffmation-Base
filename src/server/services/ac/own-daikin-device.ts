@@ -127,13 +127,17 @@ export class OwnDaikinDevice extends AcDevice {
   private handleParamNg(changeObject: Partial<ControlInfo>): void {
     this.log(
       LogLevel.Error,
-      `Detected Param Ng for ${this.name}(${this.ip}), will try reloading Control Info. Change Object: ${changeObject}`,
+      `Detected Param Ng for ${this.name}(${this.ip}), will try reloading Control Info. Change Object: ${JSON.stringify(
+        changeObject,
+      )}`,
     );
     this._device?.getACControlInfo((err: Error | null) => {
       if (err === null) {
         this.log(
           LogLevel.Warn,
-          `Device Info loaded successfull will try setting Control Info again: ${this._device?.currentACControlInfo}`,
+          `Device Info loaded successfull will try setting Control Info again: ${JSON.stringify(
+            this._device?.currentACControlInfo,
+          )}`,
         );
         this.setDesiredInfo(true);
       }
