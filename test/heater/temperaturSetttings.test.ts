@@ -1,12 +1,12 @@
-import { Daytime, TemperaturSettings } from '../../lib';
+import { Daytime, TemperatureSettings } from '../../lib';
 
-describe('TemperaturSettings', () => {
-  const setting: TemperaturSettings = new TemperaturSettings(new Daytime(0, 0), new Daytime(6, 0), 20);
-  const setting2: TemperaturSettings = new TemperaturSettings(new Daytime(22, 0), new Daytime(24, 0), 20);
-  const roomSetting: { [name: string]: TemperaturSettings } = {
-    Nacht: new TemperaturSettings(new Daytime(0), new Daytime(10), 18),
-    Tagsüber: new TemperaturSettings(new Daytime(10), new Daytime(22), 19),
-    Abend: new TemperaturSettings(new Daytime(22), new Daytime(24), 20),
+describe('TemperatureSettings', () => {
+  const setting: TemperatureSettings = new TemperatureSettings(new Daytime(0, 0), new Daytime(6, 0), 20);
+  const setting2: TemperatureSettings = new TemperatureSettings(new Daytime(22, 0), new Daytime(24, 0), 20);
+  const roomSetting: { [name: string]: TemperatureSettings } = {
+    Nacht: new TemperatureSettings(new Daytime(0), new Daytime(10), 18),
+    Tagsüber: new TemperatureSettings(new Daytime(10), new Daytime(22), 19),
+    Abend: new TemperatureSettings(new Daytime(22), new Daytime(24), 20),
   };
 
   it('00:00:00.001 should be in range', () => {
@@ -23,10 +23,12 @@ describe('TemperaturSettings', () => {
   });
 
   it('23:59:59.999 should give last range', () => {
-    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 23:59:59.999'))?.temperature).toBe(20);
+    expect(TemperatureSettings.getActiveSetting(roomSetting, new Date('2022-03-21 23:59:59.999'))?.temperature).toBe(
+      20,
+    );
   });
 
   it('06:04:41 should give first range', () => {
-    expect(TemperaturSettings.getActiveSetting(roomSetting, new Date('2022-03-21 06:04:41'))?.temperature).toBe(18);
+    expect(TemperatureSettings.getActiveSetting(roomSetting, new Date('2022-03-21 06:04:41'))?.temperature).toBe(18);
   });
 });
