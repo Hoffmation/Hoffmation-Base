@@ -1,6 +1,5 @@
 import { TimeCallback, TimeCallbackType, TimeOfDay } from '../timeCallback';
 import {
-  AcGroup,
   BaseGroup,
   DeviceCluster,
   FensterGroup,
