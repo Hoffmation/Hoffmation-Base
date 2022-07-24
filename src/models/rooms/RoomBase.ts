@@ -45,10 +45,6 @@ export class RoomBase implements iRoomBase {
     return this._deviceCluster;
   }
 
-  public get AcGroup(): AcGroup | undefined {
-    return this.groups.get(GroupType.Ac) as AcGroup | undefined;
-  }
-
   public get FensterGroup(): FensterGroup | undefined {
     return this.groups.get(GroupType.Window) as FensterGroup | undefined;
   }
@@ -96,7 +92,6 @@ export class RoomBase implements iRoomBase {
     this.FensterGroup?.initialize();
     this.TasterGroup?.initCallbacks();
     this.HeatGroup?.initialize();
-    this.AcGroup?.initialize();
     if (this.settings.ambientLightAfterSunset && this.settings.lampOffset) {
       const cb: TimeCallback = new TimeCallback(
         `${this.roomName} Ambient Light after Sunset`,
