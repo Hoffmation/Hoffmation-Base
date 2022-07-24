@@ -105,10 +105,11 @@ export class FensterGroup extends BaseGroup {
       }
       let desiredPos: number = f.desiredPosition;
       if (desiredPos > 0) {
-        WeatherService.weatherRolloPosition(
+        desiredPos = WeatherService.weatherRolloPosition(
           desiredPos,
           room.HeatGroup?.desiredTemp ?? -99,
           room.HeatGroup?.temperature ?? -99,
+          this.log,
         );
       }
       if (f.griffeInPosition(FensterPosition.offen) > 0 && desiredPos < 100) {

@@ -8,7 +8,7 @@ import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
 import { Utils } from '../utils';
 import { OwnSonosDevice, SonosService } from '../Sonos';
-import { ServerLogService } from '../log-service';
+import { LogDebugType, ServerLogService } from '../log-service';
 import { WeatherDaily } from './weather-daily';
 
 export interface WeatherResponse {
@@ -200,27 +200,32 @@ export class WeatherService {
     return wData.current.temp;
   }
 
-  public static isOutsideWarmer(currentTemperature: number): boolean {
+  public static isOutsideWarmer(
+    currentTemperature: number,
+    logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
+  ): boolean {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
-      ServerLogService.writeLog(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
+      logger(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
       return false;
     }
-    ServerLogService.writeLog(
-      LogLevel.Info,
-      `isOutsideWarmer(${currentTemperature}) --> Aktuelle Temperatur: ${wData.current.temp}`,
-    );
+    logger(LogLevel.Info, `isOutsideWarmer(${currentTemperature}) --> Aktuelle Temperatur: ${wData.current.temp}`);
     return currentTemperature < wData.current.temp;
   }
 
-  public static weatherRolloPosition(normalPos: number, desiredTemperatur: number, currentTemperatur: number): number {
+  public static weatherRolloPosition(
+    normalPos: number,
+    desiredTemperatur: number,
+    currentTemperatur: number,
+    logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
+  ): number {
     let result: number = normalPos;
-    if (currentTemperatur > desiredTemperatur && this.isOutsideWarmer(currentTemperatur) && normalPos > 30) {
+    if (currentTemperatur > desiredTemperatur && this.isOutsideWarmer(currentTemperatur, logger) && normalPos > 30) {
       // Draußen ist wärmer also runter
       result = 30;
     }
 
-    ServerLogService.writeLog(
+    logger(
       LogLevel.Info,
       `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${result}`,
     );

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix logging in weather service
+
 ## 1.0.18-alpha.0 (2022-07-24)
 
 * (theimo1221) Fix daikin debug output
