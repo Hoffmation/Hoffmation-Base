@@ -1,11 +1,11 @@
-import { AcDevice, API, OwnDaikinDevice, OwnDaikinDevices, OwnSonosDevice, OwnSonosDevices } from '../services';
+import { AcDevice, API, OwnAcDevices, OwnSonosDevice, OwnSonosDevices } from '../services';
 import { IBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceList {
   public constructor(
     private _ids: string[] = [],
     private readonly _isSonos: boolean = false,
-    private readonly _isDaikin: boolean = false,
+    private readonly _isAc: boolean = false,
   ) {
     // Empty
   }
@@ -23,10 +23,10 @@ export class DeviceList {
         if (s !== undefined) {
           result.push(OwnSonosDevices.ownDevices[dID]);
         }
-      } else if (this._isDaikin) {
-        const daikinDevice: OwnDaikinDevice = OwnDaikinDevices.ownDevices[dID];
-        if (daikinDevice !== undefined) {
-          result.push(OwnDaikinDevices.ownDevices[dID]);
+      } else if (this._isAc) {
+        const acDevice: AcDevice = OwnAcDevices.ownDevices[dID];
+        if (acDevice !== undefined) {
+          result.push(OwnAcDevices.ownDevices[dID]);
         }
       } else {
         const d = API.getDevice(dID);

@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Use Heatgroups for check_temp
+* (theimo1221) Generalize owndaikidevices
 
 ## 1.0.15 (2022-07-24)
 

@@ -4,6 +4,7 @@ import { Utils } from '../utils';
 import { ServerLogService } from '../log-service';
 import { AcMode } from './ac-mode';
 import { AcSettings } from '../../../models/deviceSettings/acSettings';
+import { AcDeviceType } from './acDeviceType';
 
 export abstract class AcDevice implements iExcessEnergyConsumer {
   public currentConsumption: number = -1;
@@ -13,7 +14,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
   protected _activatedByExcessEnergy: boolean = false;
   protected _blockAutomaticTurnOnMS: number = -1;
 
-  protected constructor(public name: string, public roomName: string, public ip: string) {
+  protected constructor(
+    public name: string,
+    public roomName: string,
+    public ip: string,
+    public acDeviceType: AcDeviceType,
+  ) {
     Utils.guardedInterval(this.automaticCheck, 60000, this, true);
   }
 

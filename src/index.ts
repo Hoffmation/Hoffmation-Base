@@ -9,7 +9,7 @@ import {
   MP3Server,
   MuellService,
   NewsService,
-  OwnDaikinDevices,
+  OwnAcDevices,
   OwnSonosDevice,
   OwnSonosDevices,
   PollyService,
@@ -81,7 +81,7 @@ export class HoffmationBase {
     }
 
     if (SettingsService.settings.daikin?.active) {
-      DaikinService.addOwnDevices(OwnDaikinDevices.ownDevices);
+      DaikinService.addOwnDevices(OwnAcDevices.ownDevices);
       DaikinService.initialize();
     }
 

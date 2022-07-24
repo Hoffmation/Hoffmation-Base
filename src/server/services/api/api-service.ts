@@ -2,16 +2,16 @@ import { Devices, IBaseDevice, iLamp } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
-import { DaikinService, OwnDaikinDevice, OwnDaikinDevices } from '../ac';
+import { AcDevice, DaikinService, OwnAcDevices } from '../ac';
 
 export class API {
   /**
-   * Gets the instance of an Daikin Device identified by name
+   * Gets the instance of an Ac Device identified by name
    * @param {string} name
    * @returns {OwnDaikinDevice | undefined}
    */
-  public static getAc(name: string): OwnDaikinDevice | undefined {
-    return OwnDaikinDevices.ownDevices[name];
+  public static getAc(name: string): AcDevice | undefined {
+    return OwnAcDevices.ownDevices[name];
   }
 
   public static getDevices(): { [id: string]: IBaseDevice } {

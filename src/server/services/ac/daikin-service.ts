@@ -8,6 +8,8 @@ import { SettingsService } from '../settings-service';
 import { Devices } from '../../devices';
 import { Router } from '../network';
 import { Utils } from '../utils';
+import { AcDevice } from './ac-device';
+import { AcDeviceType } from './acDeviceType';
 
 export class DaikinService {
   private static _ownDevices: { [name: string]: OwnDaikinDevice } = {};
@@ -24,8 +26,15 @@ export class DaikinService {
     return this._isInitialized;
   }
 
-  public static addOwnDevices(daikinDevices: { [name: string]: OwnDaikinDevice }): void {
-    this._ownDevices = daikinDevices;
+  public static addOwnDevices(daikinDevices: { [name: string]: AcDevice }): void {
+    const toAdd: { [name: string]: OwnDaikinDevice } = {};
+    for (const name in daikinDevices) {
+      const d = daikinDevices[name];
+      if (d.acDeviceType == AcDeviceType.Daikin) {
+        toAdd[name] = d as OwnDaikinDevice;
+      }
+    }
+    this._ownDevices = toAdd;
   }
 
   public static getDevice(name: string): DaikinAC | undefined {

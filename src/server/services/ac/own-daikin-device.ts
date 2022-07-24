@@ -6,6 +6,7 @@ import { DaikinService } from './daikin-service';
 import { Utils } from '../utils';
 import { AcDevice } from './ac-device';
 import { AcMode } from './ac-mode';
+import { AcDeviceType } from './acDeviceType';
 
 export class OwnDaikinDevice extends AcDevice {
   public desiredState: boolean = Power.OFF;
@@ -14,7 +15,7 @@ export class OwnDaikinDevice extends AcDevice {
   public desiredMode: number = Mode.COLD;
 
   public constructor(name: string, roomName: string, ip: string, device: DaikinAC | undefined) {
-    super(name, roomName, ip);
+    super(name, roomName, ip, AcDeviceType.Daikin);
     this.energyConsumerSettings.priority = 50;
     this._device = device;
   }
