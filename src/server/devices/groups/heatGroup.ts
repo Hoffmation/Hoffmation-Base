@@ -3,13 +3,22 @@ import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iHeater, iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { AcDevice } from '../../services';
+import { LogLevel } from '../../../models';
 
 export class HeatGroup extends BaseGroup {
-  public constructor(roomName: string, heaterIds: string[], tempSensorIds: string[], humiditySensorIds: string[]) {
+  public constructor(
+    roomName: string,
+    heaterIds: string[],
+    tempSensorIds: string[],
+    humiditySensorIds: string[],
+    acIds: string[],
+  ) {
     super(roomName, GroupType.Heating);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Heater, new DeviceList(heaterIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.TemperaturSensor, new DeviceList(tempSensorIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.HumiditySensor, new DeviceList(humiditySensorIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Ac, new DeviceList(acIds));
   }
 
   public get currentTemp(): number {
@@ -47,12 +56,40 @@ export class HeatGroup extends BaseGroup {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.HumiditySensor) as iHumiditySensor[];
   }
 
+  public getOwnAcDevices(): AcDevice[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Ac) as AcDevice[];
+  }
+
   public initialize(): void {
     this.getTempSensors().forEach((sensor) => {
       sensor.addTempChangeCallback((_newVal) => {
         this.recalcRoomTemperatur();
       });
     });
+    this.getOwnAcDevices().forEach((acDev: AcDevice) => {
+      acDev.room = this.getRoom();
+    });
+  }
+
+  /**
+   * Sets all ACs to new desired Value
+   * @param {boolean} newDesiredState
+   * @param {boolean} force Whether this was a manual trigger, thus blocking automatic changes for 1 hour
+   */
+  public setAc(newDesiredState: boolean, force: boolean = false): void {
+    const devs: AcDevice[] = this.getOwnAcDevices();
+    this.log(LogLevel.Debug, `set ${devs.length} Ac's to new State: ${newDesiredState}`);
+    for (const dev of devs) {
+      if (newDesiredState) {
+        dev.turnOn();
+        continue;
+      }
+      if (force) {
+        dev.deactivateAutomaticTurnOn(60 * 60 * 1000);
+        continue;
+      }
+      dev.turnOff();
+    }
   }
 
   private recalcRoomTemperatur(): void {

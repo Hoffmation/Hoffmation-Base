@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Move AcDevice into heatGroup
+
 ## 1.0.14 (2022-07-23)
 
 * (theimo1221) Add temperature threshhold for AC activation

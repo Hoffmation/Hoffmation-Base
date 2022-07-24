@@ -6,7 +6,7 @@ import { SonosGroup } from './sonosGroup';
 import { ButtonPressType } from '../button';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { SettingsService } from '../../services';
-import { AcGroup } from './acGroup';
+import { HeatGroup } from './heatGroup';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {
@@ -82,13 +82,13 @@ export class TasterGroup extends BaseGroup {
       }
 
       if (SettingsService.settings.daikin?.buttonBotRightForAc === true) {
-        const acGroup: AcGroup | undefined = this.getRoom().AcGroup;
-        if (acGroup !== undefined && acGroup.getOwnAcDevices().length > 0) {
+        const heatGroup: HeatGroup | undefined = this.getRoom().HeatGroup;
+        if (heatGroup !== undefined && heatGroup.getOwnAcDevices().length > 0) {
           t.buttonBotRight?.addCb(ButtonPressType.short, (pValue: boolean) => {
-            pValue && acGroup.setAc(true);
+            pValue && heatGroup.setAc(true);
           });
           t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
-            pValue && acGroup.setAc(false, true);
+            pValue && heatGroup.setAc(false, true);
           });
         }
       }
