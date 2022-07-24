@@ -85,7 +85,7 @@ export class HmIpGriff extends HmIPDevice {
           const heatgroup: HeatGroup | undefined = this._fenster?.getRoom().HeatGroup;
           if (heatgroup !== undefined) {
             const desiredTemp: number = heatgroup.desiredTemp;
-            const currentTemp: number = heatgroup.currentTemp;
+            const currentTemp: number = heatgroup.temperature;
             const outSideTemp: number = WeatherService.getCurrentTemp();
 
             // Check if any of these values are unavailable

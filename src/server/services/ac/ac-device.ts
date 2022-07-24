@@ -33,7 +33,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
   }
 
   public calculateDesiredMode(): AcMode {
-    const temp: number | undefined = this.room?.HeatGroup?.currentTemp;
+    const temp: number | undefined = this.room?.HeatGroup?.temperature;
     if (temp === undefined) {
       this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no room temperature`);
       return AcMode.Off;

@@ -11,7 +11,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperaturSensor,
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
   }
 
-  private _humidity: number = -99;
+  private _humidity: number = UNDEFINED_TEMP_VALUE;
 
   public get humidity(): number {
     return this._humidity;

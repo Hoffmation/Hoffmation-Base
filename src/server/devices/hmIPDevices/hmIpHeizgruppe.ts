@@ -3,7 +3,13 @@ import { DeviceType } from '../deviceType';
 import { TimeCallbackService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { HeaterSettings, LogLevel, TemperaturSettings, TimeCallback, TimeCallbackType } from '../../../models';
-import { iHeater, iHumiditySensor, iTemperaturSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import {
+  iHeater,
+  iHumiditySensor,
+  iTemperaturSensor,
+  UNDEFINED_HUMIDITY_VALUE,
+  UNDEFINED_TEMP_VALUE,
+} from '../baseDeviceInterfaces';
 import { DeviceClusterType } from '../device-cluster-type';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHumiditySensor, iHeater {
@@ -65,7 +71,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperaturSensor, iHu
     }
   }
 
-  private _humidity: number = 0;
+  private _humidity: number = UNDEFINED_HUMIDITY_VALUE;
 
   public get humidity(): number {
     return this._humidity;
