@@ -234,7 +234,7 @@ export class WeatherService {
     let result: number = normalPos;
     if (
       windowDirection !== undefined &&
-      Utils.degreeInBetween(windowDirection - 45, windowDirection + 45, this.sunDirection)
+      !Utils.degreeInBetween(windowDirection - 50, windowDirection + 50, this.sunDirection)
     ) {
       logger(LogLevel.Trace, `Sun is facing a different direction`);
       return result;
