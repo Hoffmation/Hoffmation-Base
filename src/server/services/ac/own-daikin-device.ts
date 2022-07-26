@@ -29,16 +29,12 @@ export class OwnDaikinDevice extends AcDevice {
   public set device(device: DaikinAC | undefined) {
     this._device = device;
     if (device && SettingsService.settings.daikin?.activateTracingLogger) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this._device._logger = (data) => {
+      device.logger = (data) => {
         ServerLogService.writeLog(LogLevel.Debug, `${this.name}_Logger: ${data}`);
       };
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      this._device._daikinRequest.logger = (data) => {
+      device.setRequestLogger((data) => {
         ServerLogService.writeLog(LogLevel.Debug, `${this.name}_RequestLogger: ${data}`);
-      };
+      });
     }
   }
 
@@ -86,28 +82,23 @@ export class OwnDaikinDevice extends AcDevice {
       targetHumidity: this.desiredHum,
       targetTemperature: this.desiredTemp,
     };
-    this.device?.setACControlInfo(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      changeObject,
-      (err, res) => {
-        if (err !== null) {
-          ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${this.name} failed:  ${err} `);
-          if (err.message.includes('EHOSTUNREACH') && !retry) {
-            this.handleDeviceUnreach();
-            return;
-          } else if (err.message.includes('ret=PARAM NG') && !retry) {
-            this.handleParamNg(changeObject);
-            return;
-          }
-        } else if (res) {
-          this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
-          this.log(LogLevel.Debug, `Device Info ${JSON.stringify(res)}`, LogDebugType.DaikinSuccessfullControlInfo);
-        } else {
-          this.log(LogLevel.Warn, `No Error, but also no response...`);
+    this.device?.setACControlInfo(changeObject, (err, res) => {
+      if (err !== null) {
+        ServerLogService.writeLog(LogLevel.Warn, `Setting Ac Info for ${this.name} failed:  ${err} `);
+        if (err.message.includes('EHOSTUNREACH') && !retry) {
+          this.handleDeviceUnreach();
+          return;
+        } else if (err.message.includes('ret=PARAM NG') && !retry) {
+          this.handleParamNg(changeObject);
+          return;
         }
-      },
-    );
+      } else if (res) {
+        this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
+        this.log(LogLevel.Debug, `Device Info ${JSON.stringify(res)}`, LogDebugType.DaikinSuccessfullControlInfo);
+      } else {
+        this.log(LogLevel.Warn, `No Error, but also no response...`);
+      }
+    });
   }
 
   private handleDeviceUnreach(): void {

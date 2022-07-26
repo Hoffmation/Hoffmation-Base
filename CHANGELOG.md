@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Use new daikin functionality
 
 ## 1.0.21 (2022-07-26)
 
