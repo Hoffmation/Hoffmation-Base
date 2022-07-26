@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add unit tests and fix issue in degree check
+
 ## 1.0.19 (2022-07-26)
 
 * (theimo1221) Add SunDirection to rollo position check

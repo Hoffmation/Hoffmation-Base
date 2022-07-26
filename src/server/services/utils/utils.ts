@@ -137,10 +137,14 @@ export class Utils {
     return new Date(new Date().setHours(hours, minutes));
   }
 
+  public static positiveMod(number: number, mod: number): number {
+    return ((number % mod) + mod) % mod;
+  }
+
   public static degreeInBetween(minDegree: number, maxDegree: number, degreeToCheck: number) {
-    const modMin: number = minDegree % 360;
-    const modMax: number = maxDegree % 360;
-    const modToCheck: number = degreeToCheck % 360;
+    const modMin: number = this.positiveMod(minDegree, 360);
+    const modMax: number = this.positiveMod(maxDegree, 360);
+    const modToCheck: number = this.positiveMod(degreeToCheck, 360);
     return modMin < modMax ? modToCheck <= modMax && modToCheck >= modMin : modToCheck > modMin || modToCheck < modMax;
   }
 }

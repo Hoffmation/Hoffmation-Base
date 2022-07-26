@@ -108,7 +108,7 @@ export interface iWeatherSettings {
   lattitude: string;
   longitude: string;
   // App-ID from OpenWeatherMap
-  appid: string;
+  appid?: string;
 }
 
 export interface iMuellSettings {

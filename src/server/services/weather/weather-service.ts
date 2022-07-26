@@ -37,7 +37,7 @@ export class WeatherService {
   private static _refreshInterval: NodeJS.Timeout | undefined;
   private static latitude: string;
   private static longitude: string;
-  private static appID: string;
+  private static appID?: string;
 
   public static addWeatherUpdateCb(name: string, cb: () => void) {
     this._dataUpdateCbs[name] = cb;
@@ -299,6 +299,9 @@ export class WeatherService {
   }
 
   private static getWeatherData(): void {
+    if (!this.appID) {
+      return;
+    }
     HTTPSService.request(
       new HTTPSOptions(
         'api.openweathermap.org',
