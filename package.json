@@ -56,15 +56,17 @@
     "mongodb": "^4.8.0",
     "node-fetch": "3.2.9",
     "node-ical": "^0.15.1",
-    "node-telegram-bot-api": "^0.58.0",
     "node-merlin-wrt-api": "^0.0.2-alpha.5",
+    "node-telegram-bot-api": "^0.58.0",
     "pg": "^8.7.3",
     "rss-parser": "^3.12.0",
     "socket.io-client": "2.4.x",
+    "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.9",
+    "@types/suncalc": "^1.8.1",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
     "autoprefixer": "^10.4.7",

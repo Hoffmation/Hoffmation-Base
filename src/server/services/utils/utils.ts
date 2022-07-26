@@ -136,4 +136,11 @@ export class Utils {
   public static dateByTimeSpan(hours: number, minutes: number): Date {
     return new Date(new Date().setHours(hours, minutes));
   }
+
+  public static degreeInBetween(minDegree: number, maxDegree: number, degreeToCheck: number) {
+    const modMin: number = minDegree % 360;
+    const modMax: number = maxDegree % 360;
+    const modToCheck: number = degreeToCheck % 360;
+    return modMin < modMax ? modToCheck <= modMax && modToCheck >= modMin : modToCheck > modMin || modToCheck < modMax;
+  }
 }

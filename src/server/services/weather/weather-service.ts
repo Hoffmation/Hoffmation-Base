@@ -10,6 +10,7 @@ import { Utils } from '../utils';
 import { OwnSonosDevice, SonosService } from '../Sonos';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { WeatherDaily } from './weather-daily';
+import SunCalc from 'suncalc';
 
 export interface WeatherResponse {
   lat: number;
@@ -27,6 +28,11 @@ export class WeatherService {
   public static active: boolean = false;
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public static lastResponse: WeatherResponse;
+  /**
+   * The sun horizontal degree (0 is North)
+   * @type {number}
+   */
+  public static sunDirection: number;
   private static _dataUpdateCbs: { [name: string]: () => void } = {};
   private static _refreshInterval: NodeJS.Timeout | undefined;
   private static latitude: string;
@@ -43,7 +49,12 @@ export class WeatherService {
     this.latitude = config.lattitude;
     this.appID = config.appid;
 
-    this._refreshInterval = Utils.guardedInterval(WeatherService.getWeatherData, 10 * 60 * 1000, WeatherService, true);
+    this._refreshInterval = Utils.guardedInterval(WeatherService.update, 10 * 60 * 1000, WeatherService, true);
+  }
+
+  public static update(): void {
+    this.recalcAzimuth();
+    this.getWeatherData();
   }
 
   public static stopInterval(): void {
@@ -218,8 +229,16 @@ export class WeatherService {
     desiredTemperatur: number,
     currentTemperatur: number,
     logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
+    windowDirection?: number,
   ): number {
     let result: number = normalPos;
+    if (
+      windowDirection !== undefined &&
+      Utils.degreeInBetween(windowDirection - 45, windowDirection + 45, this.sunDirection)
+    ) {
+      logger(LogLevel.Trace, `Sun is facing a different direction`);
+      return result;
+    }
     if (currentTemperatur > desiredTemperatur && this.isOutsideWarmer(currentTemperatur, logger) && normalPos > 30) {
       // Draußen ist wärmer also runter
       result = 30;
@@ -302,5 +321,11 @@ export class WeatherService {
         }, this);
       },
     );
+  }
+
+  private static recalcAzimuth(): void {
+    this.sunDirection =
+      180 +
+      (180 / Math.PI) * SunCalc.getPosition(new Date(), parseFloat(this.latitude), parseFloat(this.longitude)).azimuth;
   }
 }

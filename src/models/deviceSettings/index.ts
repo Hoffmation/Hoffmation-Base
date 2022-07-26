@@ -5,3 +5,4 @@ export * from './heaterSettings';
 export * from './ledSettings';
 export * from './motionSensorSettings';
 export * from './shutterSettings';
+export * from './windowSettings';
