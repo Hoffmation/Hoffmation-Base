@@ -5,17 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 1.0.18-alpha.2 (2022-07-24)
-
+## **WORK IN PROGRESS**
 * (theimo1221) Fix this context in basegroup logging
-
-## 1.0.18-alpha.1 (2022-07-24)
-
 * (theimo1221) Fix logging in weather service
 * (theimo1221) Reduce Daikin Logging in success case
-
-## 1.0.18-alpha.0 (2022-07-24)
-
 * (theimo1221) Fix daikin debug output
 
 ## 1.0.17 (2022-07-24)
