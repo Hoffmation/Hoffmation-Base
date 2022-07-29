@@ -119,9 +119,13 @@ export class DaikinService {
   }
 
   private static reconstructDaikinAc(ip: string, name: string): DaikinAC | undefined {
-    const d = new DaikinAC(ip, {}, (_error, _info) => {
-      ServerLogService.writeLog(LogLevel.Info, `Reconected ${name}`);
-    });
+    const d = new DaikinAC(
+      ip,
+      { useGetToPost: SettingsService.settings.daikin?.useGetToPost ?? false },
+      (_error, _info) => {
+        ServerLogService.writeLog(LogLevel.Info, `Reconected ${name}`);
+      },
+    );
     this._daikinManager.devices[name] = d;
     return d;
   }
