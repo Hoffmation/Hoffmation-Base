@@ -105,9 +105,8 @@ export class TelegramService {
   }
 
   public static sendMessage(ids: number[], message: string): void {
-    if (!TelegramService.active) {
-      // We can't use Log Service here, as it might result in a recursion
-      console.log(`Telegram message ${message} wasn't send as TelegramService is inactive`);
+    if (!this.active) {
+      ServerLogService.writeLog(LogLevel.Debug, `Would have send telegram message, but telegram is not active`);
       return;
     }
 
