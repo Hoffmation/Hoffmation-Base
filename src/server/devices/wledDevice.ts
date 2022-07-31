@@ -73,15 +73,4 @@ export class WledDevice extends IoBrokerBaseDevice {
       });
     }
   }
-
-  protected override addToCorrectRoom(): void {
-    ServerLogService.writeLog(LogLevel.DeepTrace, `Neues Zigbee Gerät für ${this._info.room}`);
-    switch (this._info.room) {
-      case 'Wohnz':
-        // room1OGWohn.addWLED(this._info);
-        break;
-      default:
-        console.warn(`${this._info.room} ist noch kein bekannter Raum für WLED Geräte`);
-    }
-  }
 }
