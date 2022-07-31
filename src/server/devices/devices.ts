@@ -40,11 +40,13 @@ import { DeviceInfo } from './DeviceInfo';
 import { IBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
 import { ZigbeeTuyaValve } from './zigbee/zigbeeTuyaValve';
+import { WledDevice } from './wledDevice';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
   public static IDENTIFIER_JS: string = 'javascript';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
+  public static IDENTIFIER_WLED: string = 'wled';
   public static alLDevices: { [id: string]: IBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
 
@@ -71,6 +73,8 @@ export class Devices {
         Devices.processHMIPDevice(cDevConf);
       } else if (cName.indexOf('00-Zigbee') === 0) {
         Devices.processZigbeeDevice(cDevConf);
+      } else if (cName.indexOf('00-WLED') === 0) {
+        Devices.processWledDevice(cDevConf);
       } else if (cName.indexOf('00-EnergyManager') === 0 && cDevConf.type !== 'folder') {
         ServerLogService.writeLog(LogLevel.Info, `Found Energy-Manager in Device json.`);
         Devices.createEnergyManager(cDevConf);
@@ -196,6 +200,22 @@ export class Devices {
         d = new ZigbeeDevice(zigbeeInfo, DeviceType.unknown);
     }
     Devices.alLDevices[fullName] = d;
+  }
+
+  private static processWledDevice(cDevConf: deviceConfig) {
+    const wledDeviceInfo: DeviceInfo = new DeviceInfo(cDevConf);
+    const fullName: string = `${Devices.IDENTIFIER_WLED}-${wledDeviceInfo.devID}`;
+    wledDeviceInfo.allDevicesKey = fullName;
+
+    if (typeof Devices.alLDevices[fullName] !== 'undefined') {
+      return;
+    }
+
+    ServerLogService.writeLog(
+      LogLevel.Trace,
+      `${wledDeviceInfo.devID} with Type "${wledDeviceInfo.deviceType}" doesn't exists --> create it`,
+    );
+    Devices.alLDevices[fullName] = new WledDevice(wledDeviceInfo);
   }
 
   private static processHMIPDevice(cDevConf: deviceConfig) {
