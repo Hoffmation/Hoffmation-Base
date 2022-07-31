@@ -1,19 +1,7 @@
-import { ServerLogService, Utils } from '../services';
-import { LogLevel } from '../../models';
-
-export class ButtonCapabilities {
-  shortPress: boolean = true;
-  doublePress: boolean = true;
-  triplePress: boolean = true;
-  longPress: boolean = true;
-}
-
-export enum ButtonPressType {
-  short,
-  long,
-  double,
-  triple,
-}
+import { ServerLogService, Utils } from '../../services';
+import { LogLevel } from '../../../models';
+import { ButtonCapabilities } from './buttonCapabilities';
+import { ButtonPressType } from './buttonPressType';
 
 export class Button {
   private _state: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();
@@ -110,5 +98,9 @@ export class Button {
         this,
       ),
     );
+  }
+
+  public toJSON(): Partial<Button> {
+    return Utils.jsonFilter(this);
   }
 }

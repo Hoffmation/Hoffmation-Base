@@ -3,10 +3,10 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { SonosGroup } from './sonosGroup';
-import { ButtonPressType } from '../button';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { SettingsService } from '../../services';
 import { HeatGroup } from './heatGroup';
+import { ButtonPressType } from '../button';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {

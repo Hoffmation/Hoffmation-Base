@@ -5,10 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 1.0.24-alpha.0 (2022-07-31)
+## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
-* (theimo1221) Try to find circular structure on getDevices
+* (theimo1221) Fix Circular Issue in Button for getDevices
 
 ## 1.0.23 (2022-07-29)
 

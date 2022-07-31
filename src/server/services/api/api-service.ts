@@ -3,7 +3,6 @@ import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, DaikinService, OwnAcDevices } from '../ac';
-import * as Util from 'util';
 
 export class API {
   /**
@@ -16,7 +15,7 @@ export class API {
   }
 
   public static getDevices(): { [id: string]: IBaseDevice } {
-    console.log(Util.inspect(Devices.alLDevices, false, 5));
+    // console.log(Util.inspect(Devices.alLDevices, false, 5));
     return Devices.alLDevices;
   }
 
