@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update packages
+
 ## 1.0.23 (2022-07-29)
 
 * (theimo1221) Fix Daikin useGetToPost on reconnect
