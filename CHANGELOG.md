@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.27 (2022-07-31)
 
 * (theimo1221) Debugging Messages for Wled
 
