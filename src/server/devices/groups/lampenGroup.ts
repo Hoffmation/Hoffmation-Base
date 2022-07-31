@@ -6,13 +6,21 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iLamp } from '../baseDeviceInterfaces';
 import { LogLevel, TimeOfDay } from '../../../models';
+import { WledDevice } from '../wledDevice';
 
 export class LampenGroup extends BaseGroup {
-  public constructor(roomName: string, lampenIds: string[] = [], steckerIds: string[] = [], ledIds: string[] = []) {
+  public constructor(
+    roomName: string,
+    lampenIds: string[] = [],
+    steckerIds: string[] = [],
+    ledIds: string[] = [],
+    wledIds: string[] = [],
+  ) {
     super(roomName, GroupType.Light);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Lamps, new DeviceList(lampenIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Outlets, new DeviceList(steckerIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.LED, new DeviceList(ledIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.WLED, new DeviceList(wledIds));
   }
 
   public anyLightsOn(): boolean {
@@ -32,6 +40,11 @@ export class LampenGroup extends BaseGroup {
         return true;
       }
     }
+    for (i = 0; i < this.getWled().length; i++) {
+      if (this.getWled()[i].on) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -41,6 +54,10 @@ export class LampenGroup extends BaseGroup {
 
   public getLED(): ZigbeeIlluLedRGBCCT[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.LED) as ZigbeeIlluLedRGBCCT[];
+  }
+
+  public getWled(): WledDevice[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.WLED) as WledDevice[];
   }
 
   public getStecker(): ZigbeeIkeaSteckdose[] {
@@ -62,6 +79,10 @@ export class LampenGroup extends BaseGroup {
     this.getLED().forEach((s) => {
       s.setLight(target);
     });
+
+    this.getWled().forEach((wled) => {
+      wled.setLight(target);
+    });
   }
 
   public switchTimeConditional(time: TimeOfDay): void {
@@ -73,6 +94,9 @@ export class LampenGroup extends BaseGroup {
       this.log(LogLevel.Trace, `Set LEDs time based for time "${TimeOfDay[time]}"`);
       this.getLED().forEach((s) => {
         s.setTimeBased(time);
+      });
+      this.getWled().forEach((wled) => {
+        wled.setTimeBased(time);
       });
     } else if (this.getStecker().length > 0) {
       this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[time]}"`);

@@ -2,7 +2,8 @@ import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
 import { DeviceInfo } from './DeviceInfo';
-import { LogLevel } from '../../models';
+import { LogLevel, TimeOfDay } from '../../models';
+import { WledSettings } from '../../models/deviceSettings/wledSettings';
 
 export class WledDevice extends IoBrokerBaseDevice {
   public on: boolean = false;
@@ -10,13 +11,16 @@ export class WledDevice extends IoBrokerBaseDevice {
   public linkQuality: number = 0;
   public battery: number = -1;
   public voltage: string = '';
-  private _onID: string;
-  private _brightnessID: string;
+  public settings: WledSettings = new WledSettings();
+  private readonly _onID: string;
+  private readonly _presetID: string;
+  private readonly _brightnessID: string;
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.Wled);
     this.addToCorrectRoom();
     this._onID = `${this.info.fullID}.on`;
+    this._presetID = `${this.info.fullID}.ps`;
     this._brightnessID = `${this.info.fullID}.bri`;
   }
 
@@ -43,7 +47,7 @@ export class WledDevice extends IoBrokerBaseDevice {
     }
   }
 
-  public setLight(pValue: boolean, brightness: number = -1): void {
+  public setLight(pValue: boolean, brightness: number = -1, preset?: number): void {
     if (this._onID === '') {
       ServerLogService.writeLog(LogLevel.Error, `Keine On ID für "${this.info.customName}" bekannt.`);
       return;
@@ -54,7 +58,7 @@ export class WledDevice extends IoBrokerBaseDevice {
       return;
     }
 
-    if (pValue && brightness === -1 && this.brightness < 10) {
+    if (pValue && brightness !== -1 && this.brightness < 10) {
       brightness = 10;
     }
 
@@ -62,6 +66,12 @@ export class WledDevice extends IoBrokerBaseDevice {
       LogLevel.Debug,
       `WLED Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%`,
     );
+
+    if (preset !== undefined) {
+      this.setState(this._presetID, preset, undefined, (err) => {
+        ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
+      });
+    }
 
     this.setState(this._onID, pValue, undefined, (err) => {
       ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
@@ -71,6 +81,31 @@ export class WledDevice extends IoBrokerBaseDevice {
       this.setState(this._brightnessID, brightness, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
       });
+    }
+  }
+
+  public setTimeBased(time: TimeOfDay): void {
+    switch (time) {
+      case TimeOfDay.Night:
+        if (this.settings.nightOn) {
+          this.setLight(true, this.settings.nightBrightness, this.settings.nightPreset);
+        }
+        break;
+      case TimeOfDay.AfterSunset:
+        if (this.settings.duskOn) {
+          this.setLight(true, this.settings.duskBrightness, this.settings.duskPreset);
+        }
+        break;
+      case TimeOfDay.BeforeSunrise:
+        if (this.settings.dawnOn) {
+          this.setLight(true, this.settings.dawnBrightness, this.settings.dawnPreset);
+        }
+        break;
+      case TimeOfDay.Daylight:
+        if (this.settings.dayOn) {
+          this.setLight(true, this.settings.dayBrightness, this.settings.dayPreset);
+        }
+        break;
     }
   }
 }
