@@ -13,6 +13,7 @@ export class MuellService {
   public static graueTonne: MuellTonne;
   public static gelbeTonne: MuellTonne;
   public static brauneTonne: MuellTonne;
+  public static loadingPending: boolean = true;
   public static updateTimeCallback: TimeCallback;
   public static checkTimeCallback: TimeCallback;
   public static months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -57,6 +58,7 @@ export class MuellService {
     async
       .fromURL(this._calendarURL)
       .then((data) => {
+        this.loadingPending = false;
         this.gelbeTonne = new MuellTonne('Gelbe Tonne', this.defaultSonosDevice);
         this.graueTonne = new MuellTonne('Graue Tonne', this.defaultSonosDevice);
         this.blaueTonne = new MuellTonne('Blaue Tonne', this.defaultSonosDevice);
@@ -113,6 +115,7 @@ export class MuellService {
         }
       })
       .catch((r) => {
+        this.loadingPending = true;
         ServerLogService.writeLog(LogLevel.Error, `Loading Trash Calendar failed with error: "${r}"`);
       });
   }
