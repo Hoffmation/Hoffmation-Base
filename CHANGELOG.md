@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent duplicate room adding for wled
+
 ## 1.0.25 (2022-07-31)
 
 * (theimo1221) Wled Device Handling

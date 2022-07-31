@@ -18,7 +18,6 @@ export class WledDevice extends IoBrokerBaseDevice {
 
   public constructor(pInfo: DeviceInfo) {
     super(pInfo, DeviceType.WledDevice);
-    this.addToCorrectRoom();
     this._onID = `${this.info.fullID}.on`;
     this._presetID = `${this.info.fullID}.ps`;
     this._brightnessID = `${this.info.fullID}.bri`;
