@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Prevent duplicate room adding for wled
+* (theimo1221) Dont set brightness and preset the same time
 
 ## 1.0.25 (2022-07-31)
 
