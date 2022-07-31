@@ -53,6 +53,7 @@ export class RoomService {
       room.LampenGroup?.setAllLampen(status, -1, true, timeout);
       room.LampenGroup?.setAllLED(status);
       room.LampenGroup?.setAllStecker(status, -1, true);
+      room.LampenGroup?.setAllWled(status);
     }
   }
 

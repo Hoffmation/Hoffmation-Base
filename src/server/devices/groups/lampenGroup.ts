@@ -150,4 +150,10 @@ export class LampenGroup extends BaseGroup {
       s.setLight(pValue, brightness, color, colortemp);
     });
   }
+
+  public setAllWled(pValue: boolean, brightness: number = -1, preset?: number): void {
+    this.getWled().forEach((w) => {
+      w.setLight(pValue, brightness, preset);
+    });
+  }
 }

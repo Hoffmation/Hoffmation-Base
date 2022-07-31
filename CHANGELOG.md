@@ -5,13 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 1.0.25-alpha.1 (2022-07-31)
 
-* (theimo1221) Wled fixes
+## **WORK IN PROGRESS**
 
-## 1.0.25-alpha.0 (2022-07-31)
-
-* (theimo1221) Wled preparation
+* (theimo1221) Wled Device Handling
 
 ## 1.0.24 (2022-07-31)
 
