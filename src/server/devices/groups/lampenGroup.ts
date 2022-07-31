@@ -90,13 +90,16 @@ export class LampenGroup extends BaseGroup {
 
     let resultLampen = false;
     let resultSteckdosen = false;
+    if (this.getWled().length > 0) {
+      this.log(LogLevel.Debug, `Set Wled time based for time "${TimeOfDay[time]}"`);
+      this.getWled().forEach((wled) => {
+        wled.setTimeBased(time);
+      });
+    }
     if (this.getLED().length > 0) {
       this.log(LogLevel.Trace, `Set LEDs time based for time "${TimeOfDay[time]}"`);
       this.getLED().forEach((s) => {
         s.setTimeBased(time);
-      });
-      this.getWled().forEach((wled) => {
-        wled.setTimeBased(time);
       });
     } else if (this.getStecker().length > 0) {
       this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[time]}"`);

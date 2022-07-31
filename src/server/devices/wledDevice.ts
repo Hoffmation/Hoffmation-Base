@@ -82,6 +82,7 @@ export class WledDevice extends IoBrokerBaseDevice {
   }
 
   public setTimeBased(time: TimeOfDay): void {
+    this.log(LogLevel.Debug, `Wled setTimeBased ${time}`);
     switch (time) {
       case TimeOfDay.Night:
         if (this.settings.nightOn) {
