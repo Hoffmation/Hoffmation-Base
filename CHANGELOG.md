@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Try to find circular structure on getDevices
 
 ## 1.0.23 (2022-07-29)
 
