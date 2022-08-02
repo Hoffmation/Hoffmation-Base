@@ -211,8 +211,8 @@ export class WeatherService {
     return wData.current.temp;
   }
 
-  public static isOutsideWarmer(
-    currentTemperature: number,
+  public static willOutsideBeWarmer(
+    referenceTemperature: number,
     logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
   ): boolean {
     const wData: WeatherResponse = WeatherService.lastResponse;
@@ -220,8 +220,11 @@ export class WeatherService {
       logger(LogLevel.Info, `WeatherService.isOutsideWarmer(): There are no data yet`);
       return false;
     }
-    logger(LogLevel.Info, `isOutsideWarmer(${currentTemperature}) --> Aktuelle Temperatur: ${wData.current.temp}`);
-    return currentTemperature < wData.current.temp;
+    logger(
+      LogLevel.Info,
+      `willOutsideBeWarmer(${referenceTemperature}) --> Today Max Temperature: ${wData.daily[0].temp.max}`,
+    );
+    return referenceTemperature < wData.daily[0].temp.max;
   }
 
   public static weatherRolloPosition(
@@ -232,15 +235,21 @@ export class WeatherService {
     windowDirection?: number,
   ): number {
     let result: number = normalPos;
-    if (
+    if (currentTemperatur < desiredTemperatur) {
+      logger(LogLevel.Trace, `RolloWeatherPosition: Room needs to heat up anyways.`);
+      return result;
+    } else if (normalPos < 30) {
+      logger(LogLevel.Trace, `RolloWeatherPosition: Shutter should be down anyways.`);
+      return result;
+    } else if (
       windowDirection !== undefined &&
       !Utils.degreeInBetween(windowDirection - 50, windowDirection + 50, this.sunDirection)
     ) {
-      logger(LogLevel.Trace, `Sun is facing a different direction`);
+      logger(LogLevel.Trace, `RolloWeatherPosition: Sun is facing a different direction`);
       return result;
-    }
-    if (currentTemperatur > desiredTemperatur && this.isOutsideWarmer(currentTemperatur, logger) && normalPos > 30) {
-      // Draußen ist wärmer also runter
+    } else if (this.getCurrentCloudiness() > 40) {
+      logger(LogLevel.Trace, `RolloWeatherPosition: It´s cloudy now.`);
+    } else if (this.willOutsideBeWarmer(26, logger)) {
       result = 30;
     }
 

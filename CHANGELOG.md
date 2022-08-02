@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve WeatherRolloPosition calculation
+
 ## 1.0.29 (2022-08-02)
 
 * (theimo1221) #435 Add EuroHeating

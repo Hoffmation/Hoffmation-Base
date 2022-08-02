@@ -82,7 +82,7 @@ export class FensterGroup extends BaseGroup {
     }
 
     if (room.settings.rolloHeatReduction) {
-      Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, true);
+      Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, false);
       Utils.guardedTimeout(this.setRolloByWeatherStatus, 2 * 60 * 1000, this);
     }
 
