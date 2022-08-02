@@ -22,6 +22,7 @@ import {
   ZigbeeAquaraWater,
   ZigbeeBlitzShp,
   ZigbeeDevice,
+  ZigbeeEuroHeater,
   ZigbeeHeimanSmoke,
   ZigbeeIkeaSteckdose,
   ZigbeeIlluActuator,
@@ -32,6 +33,7 @@ import {
   ZigbeeSMaBiTMagnetContact,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
+  ZigbeeTuyaValve,
   ZigbeeUbisysShutter,
 } from './zigbee';
 import { DeviceType } from './deviceType';
@@ -39,7 +41,6 @@ import { ServerLogService } from '../services';
 import { DeviceInfo } from './DeviceInfo';
 import { IBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
-import { ZigbeeTuyaValve } from './zigbee/zigbeeTuyaValve';
 import { WledDevice } from './wledDevice';
 
 export class Devices {
@@ -194,6 +195,9 @@ export class Devices {
         break;
       case 'TuyaValve':
         d = new ZigbeeTuyaValve(zigbeeInfo);
+        break;
+      case 'EuroHeater':
+        d = new ZigbeeEuroHeater(zigbeeInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);
