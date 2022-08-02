@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.28 (2022-08-02)
 
 * (theimo1221) Fix open Handle in Tests
 
