@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) #435 Add EuroHeating
+* (theimo1221) Update packages
 
 ## 1.0.28 (2022-08-02)
 
