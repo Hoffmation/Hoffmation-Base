@@ -207,8 +207,8 @@ export class RoomBase implements iRoomBase {
 
   public toJSON(): Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> {
     const result: Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> = Utils.jsonFilter(this);
-    result.groupDict = Utils.jsonFilter(Object.fromEntries(this.groups)) as { [p: string]: BaseGroup };
-    return _.omit(result, ['groups', '_deviceCluster']);
+    result.groupDict = Object.fromEntries(this.groups);
+    return Utils.jsonFilter(_.omit(result, ['groups', '_deviceCluster']));
   }
 
   private log(level: LogLevel, message: string): void {

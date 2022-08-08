@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Harden Devices against Circular JSON
+
 ## 1.0.31 (2022-08-07)
 
 * (theimo1221) Harden Rooms against Circular JSON

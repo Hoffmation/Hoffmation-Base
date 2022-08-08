@@ -12,4 +12,6 @@ export interface IBaseDevice {
   battery: number | undefined;
 
   log(level: LogLevel, message: string): void;
+
+  toJSON(): Partial<IBaseDevice>;
 }

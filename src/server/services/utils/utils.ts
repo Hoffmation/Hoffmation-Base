@@ -94,16 +94,7 @@ export class Utils {
   }
 
   public static jsonFilter(object: object): Partial<object> {
-    return _.omit(
-      object,
-      Object.keys(object).filter((key): boolean => {
-        if (key.includes('Timeout') || key.includes('Interval') || key.includes('timeouts')) {
-          // Exclude timeout Variables.
-          return true;
-        }
-        return key.includes('Callback');
-      }),
-    );
+    return this.deepOmit(object, ['timeout', 'interval', 'timeouts', 'callback']);
   }
 
   public static testInitializeServices(): void {
@@ -146,5 +137,21 @@ export class Utils {
     const modMax: number = this.positiveMod(maxDegree, 360);
     const modToCheck: number = this.positiveMod(degreeToCheck, 360);
     return modMin < modMax ? modToCheck <= modMax && modToCheck >= modMin : modToCheck > modMin || modToCheck < modMax;
+  }
+
+  private static deepOmit(obj: object, keysToOmit: string[]): object {
+    // the inner function which will be called recursivley
+    return _.transform(obj, (result: { [name: string]: unknown }, value, key: string) => {
+      const lowerKey: string = key.toLowerCase();
+      // transform to a new object
+      for (const checkKey of keysToOmit) {
+        // if the key is in the index skip it
+        if (lowerKey.includes(checkKey)) {
+          return;
+        }
+      }
+      // if the key is an object run it through the inner function - omitFromObject
+      result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit) : value;
+    });
   }
 }
