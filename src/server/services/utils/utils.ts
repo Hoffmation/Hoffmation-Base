@@ -197,7 +197,9 @@ export class Utils {
           const dict: { [key: string | number]: unknown } = {};
           const map: Map<string | number, unknown> = value as Map<string, unknown>;
           for (const mapName of map.keys()) {
-            dict[mapName] = map.get(mapName)!;
+            dict[mapName] = _.isObject(map.get(mapName))
+              ? this.deepOmit(map.get(mapName) as object, keysToOmit)
+              : map.get(mapName);
           }
           result[newKey] = dict;
           return;
