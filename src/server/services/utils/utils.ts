@@ -141,13 +141,15 @@ export class Utils {
 
   private static deepOmit(obj: object, keysToOmit: string[]): object {
     // the inner function which will be called recursivley
-    return _.transform(obj, (result: { [name: string]: unknown }, value, key: string) => {
-      const lowerKey: string = key.toLowerCase();
-      // transform to a new object
-      for (const checkKey of keysToOmit) {
-        // if the key is in the index skip it
-        if (lowerKey.includes(checkKey)) {
-          return;
+    return _.transform(obj, (result: { [name: string]: unknown }, value, key: string | number) => {
+      if (typeof key == 'string') {
+        const lowerKey: string = key.toLowerCase();
+        // transform to a new object
+        for (const checkKey of keysToOmit) {
+          // if the key is in the index skip it
+          if (lowerKey.includes(checkKey)) {
+            return;
+          }
         }
       }
       // if the key is an object run it through the inner function - omitFromObject
