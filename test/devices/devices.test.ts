@@ -6,6 +6,7 @@ import {
   Fenster,
   FensterGroup,
   GroupType,
+  PraesenzGroup,
   RoomBase,
   RoomInitializationSettings,
   RoomSettings,
@@ -38,6 +39,7 @@ describe('Devices', () => {
   it('Should be able to create Room JSON', () => {
     const groups: Map<GroupType, BaseGroup> = new Map<GroupType, BaseGroup>();
     groups.set(GroupType.Window, new FensterGroup('Testroom', [new Fenster('Testroom', ['hm-rpc-0007DA49A781DF'])]));
+    groups.set(GroupType.Presence, new PraesenzGroup('Testroom', [], ['zigbee-00124b0022cd373c']));
     const room: RoomBase = new RoomBase(
       'Testroom',
       new RoomSettings(new RoomInitializationSettings('Testroom', 1)),

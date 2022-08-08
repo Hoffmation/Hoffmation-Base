@@ -183,6 +183,9 @@ export class Utils {
   private static deepOmit(obj: object, keysToOmit: string[]): object {
     // the inner function which will be called recursivley
     return _.transform(obj, (result: { [name: string]: unknown }, value, key: string | number) => {
+      if (value === undefined) {
+        return;
+      }
       if (typeof key == 'string') {
         const lowerKey: string = key.toLowerCase();
         // transform to a new object
@@ -204,6 +207,10 @@ export class Utils {
           result[newKey] = dict;
           return;
         }
+      }
+      if (typeof (value as Date).getMonth === 'function') {
+        result[key] = (value as Date).getTime();
+        return;
       }
       // if the key is an object run it through the inner function - omitFromObject
       result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit) : value;

@@ -130,6 +130,30 @@
       "owner": "system.user.admin",
       "ownerGroup": "system.group.administrator"
     }
+  },
+  "zigbee.0.00124b0022cd373c": {
+    "type": "device",
+    "common": {
+      "name": "00-Zigbee-EGZwischenf-SonoffMotion-1",
+      "type": "SNZB-03",
+      "icon": "img/ewelink_MS01.png",
+      "color": null,
+      "statusStates": {
+        "onlineId": "zigbee.0.00124b0022cd373c.available"
+      }
+    },
+    "native": {
+      "id": "00124b0022cd373c"
+    },
+    "from": "system.adapter.zigbee.0",
+    "user": "system.user.admin",
+    "ts": 1659218870308,
+    "_id": "zigbee.0.00124b0022cd373c",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
   }
 }
 
