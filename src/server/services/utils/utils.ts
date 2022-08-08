@@ -183,7 +183,7 @@ export class Utils {
   private static deepOmit(obj: object, keysToOmit: string[]): object {
     // the inner function which will be called recursivley
     return _.transform(obj, (result: { [name: string]: unknown }, value, key: string | number) => {
-      if (value === undefined) {
+      if (value === undefined || value === null) {
         return;
       }
       if (typeof key == 'string') {
