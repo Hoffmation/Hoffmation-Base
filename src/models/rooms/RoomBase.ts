@@ -32,7 +32,7 @@ export class RoomBase implements iRoomBase {
   public sonnenUntergangLichtCallback: TimeCallback | undefined;
   public skipNextRolloUp: boolean = false;
 
-  public constructor(roomName: string, public settings: RoomSettings, public groups: Map<GroupType, BaseGroup>) {
+  public constructor(roomName: string, public settings: RoomSettings, public groupMap: Map<GroupType, BaseGroup>) {
     this.info = new RoomInfo(roomName, settings);
     settings.roomName = roomName;
     this.settings = settings;
@@ -46,35 +46,35 @@ export class RoomBase implements iRoomBase {
   }
 
   public get FensterGroup(): FensterGroup | undefined {
-    return this.groups.get(GroupType.Window) as FensterGroup | undefined;
+    return this.groupMap.get(GroupType.Window) as FensterGroup | undefined;
   }
 
   public get PraesenzGroup(): PraesenzGroup | undefined {
-    return this.groups.get(GroupType.Presence) as PraesenzGroup | undefined;
+    return this.groupMap.get(GroupType.Presence) as PraesenzGroup | undefined;
   }
 
   public get LampenGroup(): LampenGroup | undefined {
-    return this.groups.get(GroupType.Light) as LampenGroup | undefined;
+    return this.groupMap.get(GroupType.Light) as LampenGroup | undefined;
   }
 
   public get TasterGroup(): TasterGroup | undefined {
-    return this.groups.get(GroupType.Buttons) as TasterGroup | undefined;
+    return this.groupMap.get(GroupType.Buttons) as TasterGroup | undefined;
   }
 
   public get SonosGroup(): SonosGroup | undefined {
-    return this.groups.get(GroupType.Speaker) as SonosGroup | undefined;
+    return this.groupMap.get(GroupType.Speaker) as SonosGroup | undefined;
   }
 
   public get SmokeGroup(): SmokeGroup | undefined {
-    return this.groups.get(GroupType.Smoke) as SmokeGroup | undefined;
+    return this.groupMap.get(GroupType.Smoke) as SmokeGroup | undefined;
   }
 
   public get WaterGroup(): WaterGroup | undefined {
-    return this.groups.get(GroupType.Water) as WaterGroup | undefined;
+    return this.groupMap.get(GroupType.Water) as WaterGroup | undefined;
   }
 
   public get HeatGroup(): HeatGroup | undefined {
-    return this.groups.get(GroupType.Heating) as HeatGroup | undefined;
+    return this.groupMap.get(GroupType.Heating) as HeatGroup | undefined;
   }
 
   public get roomName(): string {
@@ -206,9 +206,7 @@ export class RoomBase implements iRoomBase {
   }
 
   public toJSON(): Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> {
-    const result: Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> = Utils.jsonFilter(this);
-    result.groupDict = Object.fromEntries(this.groups);
-    return Utils.jsonFilter(_.omit(result, ['groups', '_deviceCluster']));
+    return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
   }
 
   private log(level: LogLevel, message: string): void {

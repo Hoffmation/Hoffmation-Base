@@ -3,6 +3,7 @@ import { LogLevel } from '../../../models';
 import _ from 'lodash';
 import { Res } from '../Translation';
 import { iPersist } from '../dbo';
+import { SettingsService } from '../settings-service';
 
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 
@@ -99,7 +100,47 @@ export class Utils {
 
   public static testInitializeServices(): void {
     ServerLogService.settings.logLevel = -1;
-    Res.initialize({ language: 'en' });
+    SettingsService.initialize({
+      ioBrokerUrl: '',
+      timeSettings: {
+        nightEnd: {
+          hours: 7,
+          minutes: 30,
+        },
+        nightStart: {
+          hours: 23,
+          minutes: 30,
+        },
+      },
+      translationSettings: {
+        language: 'en',
+      },
+      roomDefault: {
+        rolloHeatReduction: true,
+        roomIsAlwaysDark: false,
+        lampenBeiBewegung: true,
+        lichtSonnenAufgangAus: true,
+        sonnenUntergangRollos: true,
+        sonnenAufgangRollos: true,
+        movementResetTimer: 240,
+        sonnenUntergangRolloDelay: 15,
+        sonnenUntergangLampenDelay: 15,
+        sonnenUntergangRolloMaxTime: {
+          hours: 21,
+          minutes: 30,
+        },
+        sonnenAufgangRolloMinTime: {
+          hours: 7,
+          minutes: 30,
+        },
+        sonnenAufgangRolloDelay: 35,
+        sonnenAufgangLampenDelay: 15,
+        sonnenUntergangRolloAdditionalOffsetPerCloudiness: 0.25,
+        lightIfNoWindows: false,
+        ambientLightAfterSunset: false,
+      },
+    });
+    Res.initialize(SettingsService.settings.translationSettings);
   }
 
   public static kWh(wattage: number, durationInMs: number): number {
@@ -150,6 +191,16 @@ export class Utils {
           if (lowerKey.includes(checkKey)) {
             return;
           }
+        }
+        if (lowerKey.endsWith('map')) {
+          const newKey: string = lowerKey.replace('map', 'dict');
+          const dict: { [key: string | number]: unknown } = {};
+          const map: Map<string | number, unknown> = value as Map<string, unknown>;
+          for (const mapName of map.keys()) {
+            dict[mapName] = map.get(mapName)!;
+          }
+          result[newKey] = dict;
+          return;
         }
       }
       // if the key is an object run it through the inner function - omitFromObject

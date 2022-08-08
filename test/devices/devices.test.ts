@@ -1,4 +1,16 @@
-import { deviceConfig, Devices, Utils } from '../../src';
+import {
+  BaseGroup,
+  DeviceCluster,
+  deviceConfig,
+  Devices,
+  Fenster,
+  FensterGroup,
+  GroupType,
+  RoomBase,
+  RoomInitializationSettings,
+  RoomSettings,
+  Utils,
+} from '../../src';
 import ExampleDevices from './exampleDevices.json';
 
 describe('Devices', () => {
@@ -10,6 +22,28 @@ describe('Devices', () => {
   new Devices(deviceJSON);
   it('Should be able to create device JSON', () => {
     const json: string = JSON.stringify(Devices.alLDevices);
+    expect(json !== '').toBeTruthy();
+    const newObject: string = JSON.parse(json);
+    expect(Object.keys(newObject).length > 0).toBeTruthy();
+  });
+  it('Should be able to create DeviceCluster JSON', () => {
+    const cluster: DeviceCluster = new DeviceCluster();
+    const deviceKey: string = Object.keys(Devices.alLDevices)[0];
+    cluster.addByDeviceType(Devices.alLDevices[deviceKey]);
+    const json: string = JSON.stringify(cluster);
+    expect(json !== '').toBeTruthy();
+    const newObject: string = JSON.parse(json);
+    expect(Object.keys(newObject).length > 0).toBeTruthy();
+  });
+  it('Should be able to create Room JSON', () => {
+    const groups: Map<GroupType, BaseGroup> = new Map<GroupType, BaseGroup>();
+    groups.set(GroupType.Window, new FensterGroup('Testroom', [new Fenster('Testroom', ['hm-rpc-0007DA49A781DF'])]));
+    const room: RoomBase = new RoomBase(
+      'Testroom',
+      new RoomSettings(new RoomInitializationSettings('Testroom', 1)),
+      groups,
+    );
+    const json: string = JSON.stringify(room);
     expect(json !== '').toBeTruthy();
     const newObject: string = JSON.parse(json);
     expect(Object.keys(newObject).length > 0).toBeTruthy();

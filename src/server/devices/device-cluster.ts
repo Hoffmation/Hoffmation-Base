@@ -2,7 +2,6 @@ import { DeviceClusterType } from './device-cluster-type';
 import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { AcDevice, OwnSonosDevice, Utils } from '../services';
-import _ from 'lodash';
 import { DeviceType } from './deviceType';
 import { IBaseDevice } from './baseDeviceInterfaces';
 
@@ -109,8 +108,6 @@ export class DeviceCluster {
   }
 
   public toJSON(): Partial<DeviceCluster & { deviceDict?: { [p: string]: DeviceList } }> {
-    const result: Partial<DeviceCluster & { deviceDict?: { [p: string]: DeviceList } }> = Utils.jsonFilter(this);
-    result.deviceDict = Object.fromEntries(this.deviceMap);
-    return _.omit(result, [`deviceMap`]);
+    return Utils.jsonFilter(this);
   }
 }

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve JSON Filter Handling for maps
+
 ## 1.0.32 (2022-08-08)
 
 * (theimo1221) Harden Devices against Circular JSON
