@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Ignore Rollo Heatreduction close to sunset
 
 ## 1.0.34 (2022-08-08)
 
