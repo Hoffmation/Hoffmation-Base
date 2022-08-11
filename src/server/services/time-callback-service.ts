@@ -235,6 +235,14 @@ Nächster Sonnenuntergang um ${TimeCallbackService._nextSunSet.toLocaleTimeStrin
     lat: number = 51.529556852253826,
     long: number = 7.097266042276687,
   ): void {
-    TimeCallbackService._nextSunSet = getSunset(lat, long, pDay);
+    TimeCallbackService._nextSunSet = this.getSunsetForDate(pDay, lat, long);
+  }
+
+  public static getSunsetForDate(
+    pDay: Date = new Date(),
+    lat: number = 51.529556852253826,
+    long: number = 7.097266042276687,
+  ): Date {
+    return getSunset(lat, long, pDay);
   }
 }

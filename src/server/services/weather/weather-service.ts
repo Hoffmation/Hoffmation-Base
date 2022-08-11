@@ -11,6 +11,7 @@ import { OwnSonosDevice, SonosService } from '../Sonos';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { WeatherDaily } from './weather-daily';
 import SunCalc from 'suncalc';
+import { TimeCallbackService } from '../time-callback-service';
 
 export interface WeatherResponse {
   lat: number;
@@ -241,6 +242,9 @@ export class WeatherService {
     } else if (normalPos < 30) {
       logger(LogLevel.Trace, `RolloWeatherPosition: Shutter should be down anyways.`);
       return result;
+    } else if (this.hoursTilSunset() < 1) {
+      logger(LogLevel.Trace, `RolloWeatherPosition: It's close to or after todays sunset`);
+      return result;
     } else if (
       windowDirection !== undefined &&
       !Utils.degreeInBetween(windowDirection - 50, windowDirection + 50, this.sunDirection)
@@ -339,5 +343,15 @@ export class WeatherService {
     this.sunDirection =
       180 +
       (180 / Math.PI) * SunCalc.getPosition(new Date(), parseFloat(this.latitude), parseFloat(this.longitude)).azimuth;
+  }
+
+  private static hoursTilSunset(): number {
+    const now: Date = new Date();
+    const sunset: Date = TimeCallbackService.getSunsetForDate(
+      now,
+      parseFloat(this.latitude),
+      parseFloat(this.longitude),
+    );
+    return (sunset.getTime() - now.getTime()) / (1000 * 60 * 60);
   }
 }
