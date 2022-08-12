@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.40 (2022-08-12)
 
 * (theimo1221) Include AC on state in JSON response
 
