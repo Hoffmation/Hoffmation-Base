@@ -6,7 +6,7 @@ import { AcDevice, DaikinService } from '../ac';
 
 export class API {
   /**
-   * Gets the instance of an Ac Device identified by name
+   * Gets the instance of an Ac Device identified by id
    * @param {string} id
    * @returns {OwnDaikinDevice | undefined}
    */
@@ -52,7 +52,7 @@ export class API {
   public static setAc(id: string, desiredState: boolean): boolean {
     const d = this.getAc(id);
     if (!d) {
-      ServerLogService.writeLog(LogLevel.Warn, `Daikin Device for name ${name} not found`);
+      ServerLogService.writeLog(LogLevel.Warn, `Daikin Device for id ${id} not found`);
       return false;
     }
     if (desiredState) {
