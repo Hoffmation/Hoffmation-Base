@@ -1,6 +1,6 @@
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
-import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
-import { ServerLogService } from '../log-service';
+import { LogLevel, RoomBase, TimeCallback, TimeCallbackType } from '../../../models';
+import { LogDebugType, ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import { PollyService } from './polly-service';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
@@ -8,14 +8,56 @@ import { TimeCallbackService } from '../time-callback-service';
 import { SettingsService } from '../settings-service';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import TelegramBot from 'node-telegram-bot-api';
+import { DeviceInfo, Devices, DeviceType, IBaseDevice } from '../../devices';
+import _ from 'lodash';
 
-export class OwnSonosDevice {
+export class OwnSonosDevice implements IBaseDevice {
   public maxPlayOnAllVolume: number = 80;
+  public room: RoomBase | undefined;
+  public readonly deviceType: DeviceType = DeviceType.Sonos;
 
-  public constructor(public name: string, public roomName: string, public device: SonosDevice | undefined) {}
+  public constructor(name: string, roomName: string, public device: SonosDevice | undefined) {
+    this._info = new DeviceInfo();
+    this._info.fullName = `Sonos ${name}`;
+    this._info.customName = `${roomName} ${name}`;
+    this._info.room = roomName;
+    this._info.allDevicesKey = `sonos-${roomName}-${name}`;
+    Devices.alLDevices[`sonos-${roomName}-${name}`] = this;
+  }
+
+  protected _info: DeviceInfo;
+
+  public get info(): DeviceInfo {
+    return this._info;
+  }
+
+  public set info(info: DeviceInfo) {
+    this._info = info;
+  }
+
+  public get id(): string {
+    return this.info.allDevicesKey ?? `sonos-${this.info.room}-${this.info.customName}`;
+  }
+
+  public get name(): string {
+    return this.info.customName;
+  }
 
   public playTestMessage(): void {
     SonosService.speakOnDevice(`Ich bin ${this.name}`, this);
+  }
+
+  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
+    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
+      debugType: debugType,
+      room: this.room?.roomName ?? '',
+      deviceId: this.name,
+      deviceName: this.name,
+    });
+  }
+
+  public toJSON(): Partial<OwnSonosDevice> {
+    return Utils.jsonFilter(_.omit(this, ['room']));
   }
 }
 
@@ -159,11 +201,9 @@ export class SonosService {
       volume: volume,
       specificTimeout: specificTimeout,
       notificationFired: (played) => {
-        ServerLogService.writeLog(
+        ownSnDevice.log(
           LogLevel.Trace,
-          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played in ${
-            ownSnDevice.roomName
-          } (duration: "${specificTimeout}")`,
+          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
         );
       },
     };
@@ -182,11 +222,9 @@ export class SonosService {
       }
       ServerLogService.writeLog(LogLevel.Trace, `Spiele nun die Ausgabe für "${mp3Name}" auf "${ownSnDevice.name}"`);
       device.PlayNotificationTwo(options).then((played) => {
-        ServerLogService.writeLog(
+        ownSnDevice.log(
           LogLevel.Debug,
-          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played in ${
-            ownSnDevice.roomName
-          } (duration: "${specificTimeout}")`,
+          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
         );
       });
     } catch (err) {

@@ -35,4 +35,5 @@ export enum DeviceType {
   JsEnergyManager = 301,
   WledDevice = 1001,
   Daikin = 2001,
+  Sonos = 3001,
 }

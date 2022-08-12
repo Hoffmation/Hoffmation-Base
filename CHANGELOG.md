@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Better Naming for Ac Devices
+* (theimo1221) Include Sonos Devices in devices.allDevices
 
 ## 1.0.38 (2022-08-12)
 

@@ -5,12 +5,15 @@ import { LogDebugType, ServerLogService } from '../log-service';
 import { AcMode } from './ac-mode';
 import { AcSettings } from '../../../models/deviceSettings/acSettings';
 import { AcDeviceType } from './acDeviceType';
+import _ from 'lodash';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
   public currentConsumption: number = -1;
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   public acSettings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
+
+  protected _info: DeviceInfo;
 
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
     this._info = new DeviceInfo();
@@ -20,8 +23,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
     this._info.allDevicesKey = `ac-${roomName}-${name}`;
     Utils.guardedInterval(this.automaticCheck, 60000, this, true);
   }
-
-  protected _info: DeviceInfo;
 
   public get info(): DeviceInfo {
     return this._info;
@@ -130,6 +131,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
   }
 
   public toJSON(): Partial<AcDevice> {
-    return Utils.jsonFilter(this);
+    return Utils.jsonFilter(_.omit(this, ['room']));
   }
 }
