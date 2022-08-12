@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Api problems for hoffmation ios
+
 ## 1.0.35 (2022-08-11)
 
 * (theimo1221) Update packages

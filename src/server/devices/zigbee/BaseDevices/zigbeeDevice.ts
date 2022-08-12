@@ -46,7 +46,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
         break;
 
       case 'voltage':
-        this.voltage = state.val as string;
+        this.voltage = (state.val as string | number).toString();
         break;
     }
   }
