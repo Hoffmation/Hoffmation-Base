@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
 import { HmIPDevice } from './hmIpDevice';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 enum HmIpHeizungAdaptionStates {
   StateNotAvailable = 0,
@@ -20,7 +20,7 @@ export class HmIpHeizung extends HmIPDevice {
   private _level: number = 0;
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizung);
   }
 

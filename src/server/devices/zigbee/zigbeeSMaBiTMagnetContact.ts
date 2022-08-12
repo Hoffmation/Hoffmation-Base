@@ -1,11 +1,11 @@
 import { ZigbeeMagnetContact } from './BaseDevices';
 import { LogLevel } from '../../../models';
 import { MagnetPosition } from '../models';
-import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeSMaBiTMagnetContact extends ZigbeeMagnetContact {
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSMaBiTMagnetContact);
   }
 

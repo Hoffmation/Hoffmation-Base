@@ -1,8 +1,8 @@
 import { LogDebugType, Utils } from '../../../services';
 import { ActuatorSettings, LogLevel } from '../../../../models';
-import { DeviceInfo } from '../../DeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceType } from '../../deviceType';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 
 export class ZigbeeActuator extends ZigbeeDevice {
   public settings: ActuatorSettings = new ActuatorSettings();
@@ -12,7 +12,7 @@ export class ZigbeeActuator extends ZigbeeDevice {
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
-  public constructor(pInfo: DeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
+  public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
     super(pInfo, type);
     this.actuatorOnSwitchID = actuatorOnSwitchID;
   }

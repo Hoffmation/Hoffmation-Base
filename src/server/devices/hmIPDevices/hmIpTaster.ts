@@ -1,9 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
-import { DeviceInfo } from '../DeviceInfo';
 import { Button, ButtonCapabilities, ButtonPressType } from '../button';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -22,7 +22,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch {
   public buttonBot: undefined = undefined;
   public buttonTop: undefined = undefined;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTaster);
   }
 

@@ -1,9 +1,9 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
 import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../../models';
-import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   public settings: HeaterSettings = new HeaterSettings();
@@ -15,7 +15,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   protected _temperatur: number = 0;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
 
-  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(

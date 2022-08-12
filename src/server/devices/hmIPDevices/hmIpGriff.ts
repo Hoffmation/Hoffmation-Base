@@ -1,12 +1,12 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { TelegramService, Utils, WeatherService } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { FensterPosition } from '../models';
 import { Fenster, HeatGroup } from '../groups';
 import { LogLevel } from '../../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpGriff extends HmIPDevice {
   public position: FensterPosition = FensterPosition.geschlossen;
@@ -18,7 +18,7 @@ export class HmIpGriff extends HmIPDevice {
   private _fenster: Fenster | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpGriff);
   }
 

@@ -1,9 +1,9 @@
 import { DeviceType } from '../../deviceType';
 import { Res, SonosService, TelegramService, Utils } from '../../../services';
-import { DeviceInfo } from '../../DeviceInfo';
 import { LogLevel } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { MagnetPosition } from '../../models';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice {
   public position: MagnetPosition = MagnetPosition.closed;
@@ -14,7 +14,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice {
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   private minutesOpen: number = 0;
 
-  public constructor(pInfo: DeviceInfo, deviceType: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
   }
 

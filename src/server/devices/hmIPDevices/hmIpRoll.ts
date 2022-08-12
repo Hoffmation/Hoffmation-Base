@@ -1,13 +1,13 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { LogDebugType, Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { Fenster } from '../groups';
 import { FensterPosition } from '../models';
 import { LogLevel } from '../../../models';
 import { iShutter } from '../baseDeviceInterfaces';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   private _setLevelSwitchID: string;
@@ -15,7 +15,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpRoll);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
   }

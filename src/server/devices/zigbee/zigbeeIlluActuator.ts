@@ -1,10 +1,10 @@
 import { ZigbeeActuator } from './BaseDevices';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
 import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeIlluActuator extends ZigbeeActuator {
-  public constructor(pInfo: DeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeIlluActuator) {
+  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeIlluActuator) {
     super(pInfo, deviceType, `${pInfo.fullID}.state`);
   }
 

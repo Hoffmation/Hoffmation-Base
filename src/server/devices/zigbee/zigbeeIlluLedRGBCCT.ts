@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
 import { LedSettings, LogLevel, TimeOfDay } from '../../../models';
 import { ZigbeeDevice } from './BaseDevices';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';
@@ -17,7 +17,7 @@ export class ZigbeeIlluLedRGBCCT extends ZigbeeDevice {
 
   // private effectID: string = '';
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluLedRGBCCT);
     this.stateID = `${this.info.fullID}.state`;
     this.brightnessID = `${this.info.fullID}.brightness`;

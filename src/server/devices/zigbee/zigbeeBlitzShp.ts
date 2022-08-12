@@ -1,8 +1,8 @@
 import { DeviceType } from '../deviceType';
 import { ActuatorSettings, ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
-import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './BaseDevices';
 import { iExcessEnergyConsumer } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsumer {
   public steckerOn: boolean = false;
@@ -15,7 +15,7 @@ export class ZigbeeBlitzShp extends ZigbeeDevice implements iExcessEnergyConsume
   private readonly steckerOnSwitchID: string = '';
   private _activatedByExcessEnergy: boolean = false;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeBlitzShp);
     this.steckerOnSwitchID = `${this.info.fullID}.state`;
   }

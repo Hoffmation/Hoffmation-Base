@@ -9,7 +9,7 @@ export class SonosGroup extends BaseGroup {
 
   public constructor(roomName: string, speakerIds: string[]) {
     super(roomName, GroupType.Speaker);
-    this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds, true, false));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds, true));
   }
 
   public getOwnSonosDevices(): OwnSonosDevice[] {

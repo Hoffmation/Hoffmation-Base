@@ -2,8 +2,8 @@ import { DeviceType } from '../deviceType';
 import { ZigbeeDevice } from './BaseDevices';
 import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
 import { LogDebugType, Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { iMotionSensor } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   public settings: MotionSensorSettings = new MotionSensorSettings();
@@ -13,7 +13,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
 
-  public constructor(pInfo: DeviceInfo, type: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
     Utils.dbo
       ?.getCount(this)

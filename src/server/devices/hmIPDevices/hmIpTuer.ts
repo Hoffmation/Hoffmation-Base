@@ -2,8 +2,8 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { Res, SonosService, TelegramService, Utils } from '../../services';
 import { MagnetPosition } from '../models';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpTuer extends HmIPDevice {
   public position: MagnetPosition = MagnetPosition.closed;
@@ -12,7 +12,7 @@ export class HmIpTuer extends HmIPDevice {
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   private minutesOpen: number = 0;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTuer);
   }
 

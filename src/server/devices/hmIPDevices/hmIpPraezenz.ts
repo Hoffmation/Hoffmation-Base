@@ -2,8 +2,8 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
 import { Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { iIlluminationSensor } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
@@ -15,7 +15,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   // private presenceStateID: string;
   private initialized: boolean = false;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
     Utils.dbo

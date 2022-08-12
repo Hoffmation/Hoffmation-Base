@@ -7,12 +7,14 @@ import { Utils } from '../utils';
 import { AcDevice } from './ac-device';
 import { AcMode } from './ac-mode';
 import { AcDeviceType } from './acDeviceType';
+import { DeviceType } from '../../devices';
 
 export class OwnDaikinDevice extends AcDevice {
   public desiredState: boolean = Power.OFF;
   public desiredTemp: number = 21;
   public desiredHum: number | 'AUTO' = 'AUTO';
   public desiredMode: number = Mode.COLD;
+  public deviceType: DeviceType = DeviceType.Daikin;
 
   public constructor(name: string, roomName: string, ip: string, device: DaikinAC | undefined) {
     super(name, roomName, ip, AcDeviceType.Daikin);

@@ -1,4 +1,4 @@
-import { iExcessEnergyConsumer } from '../../devices';
+import { DeviceInfo, DeviceType, IBaseDevice, iExcessEnergyConsumer } from '../../devices';
 import { ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
@@ -6,21 +6,34 @@ import { AcMode } from './ac-mode';
 import { AcSettings } from '../../../models/deviceSettings/acSettings';
 import { AcDeviceType } from './acDeviceType';
 
-export abstract class AcDevice implements iExcessEnergyConsumer {
+export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
   public currentConsumption: number = -1;
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   public acSettings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
+
+  public info: DeviceInfo;
+
+  protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
+    this.info = new DeviceInfo();
+    this.info.fullName = `AC ${name}`;
+    this.info.customName = name;
+    this.info.room = roomName;
+    this.info.allDevicesKey = `ac-${roomName}-${name}`;
+    Utils.guardedInterval(this.automaticCheck, 60000, this, true);
+  }
+
+  public abstract get deviceType(): DeviceType;
+
+  public get name(): string {
+    return this.info.customName;
+  }
+
   protected _activatedByExcessEnergy: boolean = false;
   protected _blockAutomaticTurnOnMS: number = -1;
 
-  protected constructor(
-    public name: string,
-    public roomName: string,
-    public ip: string,
-    public acDeviceType: AcDeviceType,
-  ) {
-    Utils.guardedInterval(this.automaticCheck, 60000, this, true);
+  public get id(): string {
+    return this.info.allDevicesKey ?? `ac-${this.info.room}-${this.info.customName}`;
   }
 
   public abstract get on(): boolean;
@@ -106,5 +119,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer {
       this.turnOff();
       return;
     }
+  }
+
+  public toJSON(): Partial<AcDevice> {
+    return Utils.jsonFilter(this);
   }
 }

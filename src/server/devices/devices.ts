@@ -38,10 +38,11 @@ import {
 } from './zigbee';
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
-import { DeviceInfo } from './DeviceInfo';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { IBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -113,7 +114,7 @@ export class Devices {
       `These are the battery values for each device. Device dependandt some are in volts, some in %`,
     ];
     for (const key in this.alLDevices) {
-      const d: IBaseDevice = this.alLDevices[key];
+      const d: IoBrokerBaseDevice = this.alLDevices[key] as IoBrokerBaseDevice;
       if (d.battery !== undefined) {
         data.push({ name: d.info.customName, amount: d.battery });
       }
@@ -128,7 +129,7 @@ export class Devices {
   }
 
   private static processZigbeeDevice(cDevConf: deviceConfig) {
-    const zigbeeInfo: DeviceInfo = new DeviceInfo(cDevConf);
+    const zigbeeInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${zigbeeInfo.devID}`;
     zigbeeInfo.allDevicesKey = fullName;
 
@@ -207,9 +208,9 @@ export class Devices {
   }
 
   private static processWledDevice(cDevConf: deviceConfig) {
-    const wledDeviceInfo: DeviceInfo = new DeviceInfo(cDevConf);
-    const fullName: string = `${Devices.IDENTIFIER_WLED}-${wledDeviceInfo.devID}`;
-    wledDeviceInfo.allDevicesKey = fullName;
+    const wledIoBrokerDeviceInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const fullName: string = `${Devices.IDENTIFIER_WLED}-${wledIoBrokerDeviceInfo.devID}`;
+    wledIoBrokerDeviceInfo.allDevicesKey = fullName;
 
     if (typeof Devices.alLDevices[fullName] !== 'undefined') {
       return;
@@ -217,13 +218,13 @@ export class Devices {
 
     ServerLogService.writeLog(
       LogLevel.Trace,
-      `${wledDeviceInfo.devID} with Type "${wledDeviceInfo.deviceType}" doesn't exists --> create it`,
+      `${wledIoBrokerDeviceInfo.devID} with Type "${wledIoBrokerDeviceInfo.deviceType}" doesn't exists --> create it`,
     );
-    Devices.alLDevices[fullName] = new WledDevice(wledDeviceInfo);
+    Devices.alLDevices[fullName] = new WledDevice(wledIoBrokerDeviceInfo);
   }
 
   private static processHMIPDevice(cDevConf: deviceConfig) {
-    const hmIPInfo: DeviceInfo = new DeviceInfo(cDevConf);
+    const hmIPInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_HOMEMATIC}-${hmIPInfo.devID}`;
     hmIPInfo.allDevicesKey = fullName;
 
@@ -282,7 +283,7 @@ export class Devices {
   }
 
   private static createEnergyManager(cDevConf: deviceConfig) {
-    const devInfo: DeviceInfo = new DeviceInfo(cDevConf, true);
+    const devInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf, true);
     const fullName: string = `${Devices.IDENTIFIER_JS}-${devInfo.devID}`;
     devInfo.allDevicesKey = fullName;
     Devices.energymanager = new JsObjectEnergyManager(devInfo);

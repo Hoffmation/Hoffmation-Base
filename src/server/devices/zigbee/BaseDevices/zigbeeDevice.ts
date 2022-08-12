@@ -1,14 +1,14 @@
 import { DeviceType } from '../../deviceType';
 import { LogLevel } from '../../../../models';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
-import { DeviceInfo } from '../../DeviceInfo';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;
   public linkQuality: number = 0;
   public voltage: string = '';
 
-  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
   }
 

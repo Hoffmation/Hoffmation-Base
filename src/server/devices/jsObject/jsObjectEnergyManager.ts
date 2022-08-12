@@ -1,9 +1,9 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { iEnergyManager, iExcessEnergyConsumer, PhaseState } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
 import { EnergyCalculation, LogLevel } from '../../../models';
 import { SettingsService, Utils } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
@@ -17,7 +17,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   private blockDeviceChangeTime: number = -1;
   private _lastDeviceChange: undefined | { newState: boolean; device: iExcessEnergyConsumer };
 
-  public constructor(info: DeviceInfo) {
+  public constructor(info: IoBrokerDeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
     this.log(LogLevel.Info, `Creating Energy Manager Device`);
     this._iCalculationInterval = Utils.guardedInterval(

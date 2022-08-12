@@ -1,9 +1,9 @@
 import { DimmerSettings, LogLevel, TimeOfDay } from '../../../models';
 import { DeviceType } from '../deviceType';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   public lightOn: boolean = false;
@@ -17,7 +17,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iLamp {
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluDimmer);
     this.stateID = `${this.info.fullID}.state`;
     this.brightnessID = `${this.info.fullID}.brightness`;

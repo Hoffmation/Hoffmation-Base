@@ -1,16 +1,16 @@
 import { IBaseDevice } from './baseDeviceInterfaces';
 import { LogDebugType, ServerLogService, Utils } from '../services';
-import { DeviceInfo } from './DeviceInfo';
 import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 
 export abstract class IoBrokerBaseDevice implements IBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
   public battery: number | undefined;
 
-  protected constructor(protected _info: DeviceInfo, public deviceType: DeviceType) {
+  protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {
     this.addToCorrectRoom();
   }
 
@@ -27,9 +27,9 @@ export abstract class IoBrokerBaseDevice implements IBaseDevice {
 
   /**
    * Getter info
-   * @return {DeviceInfo}
+   * @return {IoBrokerDeviceInfo}
    */
-  public get info(): DeviceInfo {
+  public get info(): IoBrokerDeviceInfo {
     return this._info;
   }
 
@@ -37,7 +37,7 @@ export abstract class IoBrokerBaseDevice implements IBaseDevice {
    * Setter info
    * @param {DeviceInfo} value
    */
-  public set info(value: DeviceInfo) {
+  public set info(value: IoBrokerDeviceInfo) {
     this._info = value;
   }
 

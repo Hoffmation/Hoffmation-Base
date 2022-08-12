@@ -1,8 +1,8 @@
 import { ZigbeeSwitch } from './BaseDevices';
 import { Button, ButtonCapabilities, ButtonPressType } from '../button';
-import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -21,7 +21,7 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
   public buttonBot: undefined = undefined;
   public buttonTop: undefined = undefined;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAqaraOpple3Switch);
   }
 

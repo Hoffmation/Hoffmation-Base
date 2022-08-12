@@ -2,8 +2,8 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import { ActuatorSettings, LogLevel, TimeOfDay } from '../../../models';
-import { DeviceInfo } from '../DeviceInfo';
 import { iLamp } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpLampe extends HmIPDevice implements iLamp {
   public lightOn: boolean = false;
@@ -13,7 +13,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpLampe);
     this.lightOnSwitchID = `${this.info.fullID}.2.STATE`;
   }

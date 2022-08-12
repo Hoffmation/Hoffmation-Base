@@ -2,8 +2,8 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { CountToday, CurrentIlluminationDataPoint, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';
@@ -16,7 +16,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   private _fallBackTimeout: NodeJS.Timeout | undefined;
   private _lastMotionTime: number = 0;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpBewegung);
     Utils.dbo
       ?.getCount(this)

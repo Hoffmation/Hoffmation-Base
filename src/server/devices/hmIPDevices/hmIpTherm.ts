@@ -1,10 +1,10 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpTherm extends HmIPDevice {
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTherm);
   }
 

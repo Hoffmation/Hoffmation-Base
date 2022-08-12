@@ -1,6 +1,5 @@
 import { DeviceType } from '../../deviceType';
 import { LogDebugType, Utils } from '../../../services';
-import { DeviceInfo } from '../../DeviceInfo';
 import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../../baseDeviceInterfaces';
@@ -8,6 +7,7 @@ import { Fenster } from '../../groups';
 import { FensterPosition } from '../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public settings: ShutterSettings = new ShutterSettings();
@@ -17,7 +17,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   protected _setLevelTime: number = -1;
   protected _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
 
-  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     Utils.dbo
       ?.getShutterCalibration(this)

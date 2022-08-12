@@ -1,12 +1,12 @@
 import { ZigbeeShutter } from './BaseDevices';
-import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeUbisysShutter extends ZigbeeShutter {
   private _positionStateId: string;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeUbisysShutter);
     this._positionStateId = `${this.info.fullID}.position`;
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;

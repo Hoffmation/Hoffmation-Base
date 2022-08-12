@@ -1,8 +1,8 @@
 import { iButtonSwitch } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceInfo } from '../../DeviceInfo';
 import { DeviceType } from '../../deviceType';
 import { Button } from '../../button';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 
 export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch {
   public abstract buttonBot: Button | undefined;
@@ -14,7 +14,7 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
   public abstract buttonTopLeft: Button | undefined;
   public abstract buttonTopRight: Button | undefined;
 
-  public constructor(pInfo: DeviceInfo, deviceType: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
   }
 

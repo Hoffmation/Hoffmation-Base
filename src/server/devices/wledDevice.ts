@@ -1,9 +1,9 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
-import { DeviceInfo } from './DeviceInfo';
 import { LogLevel, TimeOfDay } from '../../models';
 import { WledSettings } from '../../models/deviceSettings/wledSettings';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 
 export class WledDevice extends IoBrokerBaseDevice {
   public on: boolean = false;
@@ -16,7 +16,7 @@ export class WledDevice extends IoBrokerBaseDevice {
   private readonly _presetID: string;
   private readonly _brightnessID: string;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.WledDevice);
     this._onID = `${this.info.fullID}.on`;
     this._presetID = `${this.info.fullID}.ps`;

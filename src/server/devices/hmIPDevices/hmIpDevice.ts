@@ -1,12 +1,12 @@
 import { LogLevel } from '../../../models';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
 
-  public constructor(pInfo: DeviceInfo, pType: DeviceType) {
+  public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
   }
 

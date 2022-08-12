@@ -1,8 +1,8 @@
 import { ZigbeeShutter } from './BaseDevices';
-import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models';
 import { Utils } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 enum MovementState {
   Down = 30,
@@ -17,7 +17,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   private _movementStartPos: number = -1;
   private _iMovementTimeout: NodeJS.Timeout | undefined;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluShutter);
     this._movementStateId = `${this.info.fullID}.position`;
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;

@@ -1,15 +1,15 @@
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
 import { CurrentIlluminationDataPoint, LogLevel } from '../../../models';
 import { iIlluminationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
 import { Utils } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminationSensor {
   private _illuminance: number = 0;
   private occupancyTimeoutID = `occupancy_timeout`;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraMotion);
 
     this.occupancyTimeoutID = `${this.info.fullID}.${this.occupancyTimeoutID}`;

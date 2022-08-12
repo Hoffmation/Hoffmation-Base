@@ -1,9 +1,9 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, SonosService, Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
 import { iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor {
   public sensitivity: string = '';
@@ -20,7 +20,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor 
   private _idSensitivity: string = '';
   private _alarmMessage: string;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
     this._alarmMessage = Res.vibrationAlarm(this.info.customName);
     PollyService.preloadTTS(this._alarmMessage);

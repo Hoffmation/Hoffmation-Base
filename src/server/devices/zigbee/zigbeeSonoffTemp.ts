@@ -1,13 +1,13 @@
 import { ZigbeeDevice } from './BaseDevices';
 import { iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor {
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperaturCallbacks: ((pValue: number) => void)[] = [];
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
   }
 

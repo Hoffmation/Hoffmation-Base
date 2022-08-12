@@ -1,8 +1,8 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, RoomService, SonosService, Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './BaseDevices';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   public smoke: boolean = false;
@@ -11,7 +11,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
   private _messageAlarm: string = '';
   private _messageAlarmEnd: string = '';
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeHeimanSmoke);
     this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
     this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);

@@ -1,10 +1,10 @@
 import { DeviceType } from '../deviceType';
 import { ZigbeeActuator } from './BaseDevices';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeIkeaSteckdose extends ZigbeeActuator {
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIkeaSteckdose, `${pInfo.fullID}.state`);
   }
 

@@ -1,8 +1,8 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, SonosService, Utils } from '../../services';
-import { DeviceInfo } from '../DeviceInfo';
 import { ZigbeeDevice } from './BaseDevices';
 import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeAquaraWater extends ZigbeeDevice {
   public water: boolean = false;
@@ -12,7 +12,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
   private _messageAlarmEnd: string = '';
   private _supressAlarmTimeStamp: number = 0;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraWater);
     this._messageAlarmFirst = Res.waterAlarmStart(this.info.customName, this._roomName);
     this._messageAlarm = Res.waterAlarmRepeat(this.info.customName, this._roomName);

@@ -9,8 +9,6 @@ export interface IBaseDevice {
 
   readonly id: string;
 
-  battery: number | undefined;
-
   log(level: LogLevel, message: string): void;
 
   toJSON(): Partial<IBaseDevice>;

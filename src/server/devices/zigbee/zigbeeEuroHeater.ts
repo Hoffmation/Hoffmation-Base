@@ -1,9 +1,9 @@
 import { ZigbeeHeater } from './BaseDevices';
-import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
 import { UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { LogLevel } from '../../../models';
 import { Utils } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeEuroHeater extends ZigbeeHeater {
   private _setLocalTempCalibrationId: string;
@@ -15,7 +15,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
 
   private _mode: 1 | 2 = 1;
 
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeEuroHeater);
     this._setPointTemperaturID = `${this.info.fullID}.heating_setpnt_current`;
     this._setLocalTempCalibrationId = `${this.info.fullID}.local_temp_calibration`;

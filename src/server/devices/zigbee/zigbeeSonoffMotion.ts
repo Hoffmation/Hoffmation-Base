@@ -1,10 +1,10 @@
 import { DeviceType } from '../deviceType';
-import { DeviceInfo } from '../DeviceInfo';
 import { LogLevel } from '../../../models';
 import { ZigbeeMotionSensor } from './zigbeeMotionSensor';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeSonoffMotion extends ZigbeeMotionSensor {
-  public constructor(pInfo: DeviceInfo) {
+  public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSonoffMotion);
     this._needsMovementResetFallback = false;
   }
