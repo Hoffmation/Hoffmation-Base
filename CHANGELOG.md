@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Better Naming for Ac Devices
+
 ## 1.0.38 (2022-08-12)
 
 * (theimo1221) Fix ac-device to include _info in api response

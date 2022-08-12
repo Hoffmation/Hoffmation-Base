@@ -15,7 +15,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
     this._info = new DeviceInfo();
     this._info.fullName = `AC ${name}`;
-    this._info.customName = name;
+    this._info.customName = `${roomName} ${name}`;
     this._info.room = roomName;
     this._info.allDevicesKey = `ac-${roomName}-${name}`;
     Utils.guardedInterval(this.automaticCheck, 60000, this, true);
