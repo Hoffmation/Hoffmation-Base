@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Include AC on state in JSON response
+
 ## 1.0.39 (2022-08-12)
 
 * (theimo1221) Better Naming for Ac Devices

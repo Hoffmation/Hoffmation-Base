@@ -131,6 +131,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
   }
 
   public toJSON(): Partial<AcDevice> {
-    return Utils.jsonFilter(_.omit(this, ['room']));
+    // eslint-disable-next-line
+    const result: any = _.omit(this, ['room']);
+    result['on'] = this.on;
+    return Utils.jsonFilter(result);
   }
 }
