@@ -12,15 +12,23 @@ export abstract class AcDevice implements iExcessEnergyConsumer, IBaseDevice {
   public acSettings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
 
-  public info: DeviceInfo;
-
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
-    this.info = new DeviceInfo();
-    this.info.fullName = `AC ${name}`;
-    this.info.customName = name;
-    this.info.room = roomName;
-    this.info.allDevicesKey = `ac-${roomName}-${name}`;
+    this._info = new DeviceInfo();
+    this._info.fullName = `AC ${name}`;
+    this._info.customName = name;
+    this._info.room = roomName;
+    this._info.allDevicesKey = `ac-${roomName}-${name}`;
     Utils.guardedInterval(this.automaticCheck, 60000, this, true);
+  }
+
+  protected _info: DeviceInfo;
+
+  public get info(): DeviceInfo {
+    return this._info;
+  }
+
+  public set info(info: DeviceInfo) {
+    this._info = info;
   }
 
   public abstract get deviceType(): DeviceType;

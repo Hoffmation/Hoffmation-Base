@@ -35,7 +35,7 @@ export abstract class IoBrokerBaseDevice implements IBaseDevice {
 
   /**
    * Setter info
-   * @param {DeviceInfo} value
+   * @param {IoBrokerDeviceInfo} value
    */
   public set info(value: IoBrokerDeviceInfo) {
     this._info = value;
