@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.37 (2022-08-12)
 
 * (theimo1221) Refactor Device Info to allow AC Devices be included in normal Devices.allDevices
 
