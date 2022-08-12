@@ -1,17 +1,21 @@
-import { Devices, IBaseDevice, iLamp } from '../../devices';
+import { Devices, DeviceType, IBaseDevice, iLamp } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
-import { AcDevice, DaikinService, OwnAcDevices } from '../ac';
+import { AcDevice, DaikinService } from '../ac';
 
 export class API {
   /**
    * Gets the instance of an Ac Device identified by name
-   * @param {string} name
+   * @param {string} id
    * @returns {OwnDaikinDevice | undefined}
    */
-  public static getAc(name: string): AcDevice | undefined {
-    return OwnAcDevices.ownDevices[name];
+  public static getAc(id: string): AcDevice | undefined {
+    const result: IBaseDevice | undefined = this.getDevice(id);
+    if (result?.deviceType !== DeviceType.Daikin) {
+      return undefined;
+    }
+    return result as AcDevice;
   }
 
   public static getDevices(): { [id: string]: IBaseDevice } {
@@ -41,12 +45,12 @@ export class API {
   }
 
   /**
-   * Turns on/off one AC identified by it's name
-   * @param name The name of the device, if wrong false will be returned
+   * Turns on/off one AC identified by it's id
+   * @param id The id of the device, if wrong false will be returned
    * @param {boolean} desiredState
    */
-  public static setAc(name: string, desiredState: boolean): boolean {
-    const d = this.getAc(name);
+  public static setAc(id: string, desiredState: boolean): boolean {
+    const d = this.getAc(id);
     if (!d) {
       ServerLogService.writeLog(LogLevel.Warn, `Daikin Device for name ${name} not found`);
       return false;
