@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.39 (2022-08-12)
 
 * (theimo1221) Better Naming for Ac Devices
 * (theimo1221) Include Sonos Devices in devices.allDevices
