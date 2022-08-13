@@ -1,4 +1,4 @@
-import { Devices, iActuator, iBaseDevice, iLamp } from '../../devices';
+import { Devices, iActuator, iBaseDevice, iLamp, iShutter } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
@@ -137,6 +137,18 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
     d.setLight(state, timeout, true, brightness, transitionTime);
+    return null;
+  }
+
+  public static setShutter(deviceId: string, level: number): Error | null {
+    const d = this.getDevice(deviceId) as iShutter | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.shutter)) {
+      return new Error(`Device with ID ${deviceId} is no Shutter`);
+    }
+    d.setLevel(level, false);
     return null;
   }
 }
