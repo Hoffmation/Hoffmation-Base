@@ -4,6 +4,7 @@ import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, DaikinService } from '../ac';
 import { DeviceCapabilities } from '../../devices/DeviceCapabilities';
+import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 
 export class API {
   /**
@@ -109,6 +110,33 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
     d.setActuator(state, 60 * 60 * 1000, true);
+    return null;
+  }
+
+  /**
+   * Changes the status of a given actuator
+   * @param {string} deviceId The device Id of the actuator
+   * @param {boolean} state The desired new state
+   * @param timeout A chosen Timeout after which the light should be reset
+   * @param brightness The desired brightness
+   * @param transitionTime The transition time during turnOn/turnOff
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static setDimmer(
+    deviceId: string,
+    state: boolean,
+    timeout?: number,
+    brightness?: number,
+    transitionTime?: number,
+  ): Error | null {
+    const d = this.getDevice(deviceId) as iDimmableLamp | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapabilities.dimmablelamp)) {
+      return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
+    }
+    d.setLight(state, timeout, true, brightness, transitionTime);
     return null;
   }
 }

@@ -8,6 +8,7 @@ export enum DeviceCapabilities {
   humiditySensor,
   illuminationSensor,
   lamp,
+  dimmablelamp,
   motionSensor,
   shutter,
   temperatureSensor,
