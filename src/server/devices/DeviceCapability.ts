@@ -14,4 +14,5 @@ export enum DeviceCapability {
   temperatureSensor = 12,
   vibrationSensor = 13,
   speaker = 14,
+  handleSensor = 15,
 }

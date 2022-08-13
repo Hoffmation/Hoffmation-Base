@@ -8,6 +8,7 @@ import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HmIPDevice } from './hmIpDevice';
 import { iHandleSensor } from '../baseDeviceInterfaces';
+import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor {
   public position: FensterPosition = FensterPosition.geschlossen;
@@ -21,6 +22,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpGriff);
+    this.deviceCapabilities.push(DeviceCapability.handleSensor);
   }
 
   public set Fenster(value: Fenster) {
