@@ -38,7 +38,9 @@ export class DeviceUpdater implements IDeviceUpdater {
     } catch (e) {
       ServerLogService.writeLog(
         LogLevel.Alert,
-        `deviceUpdater.updateState('${id}', '${state}'): Error occured updating Device: ${e} \n ${e.stack}`,
+        `deviceUpdater.updateState('${id}', '${state}'): Error occured updating Device: ${e} \n ${
+          (e as Error)?.stack ?? ''
+        }`,
       );
     }
   }
