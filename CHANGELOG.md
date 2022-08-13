@@ -4,9 +4,8 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
--->  
-
-## **WORK IN PROGRESS**
+-->
+## 1.0.45 (2022-08-13)
 
 * (theimo1221) Update packages
 * (theimo1221) Rename deviceCapability
