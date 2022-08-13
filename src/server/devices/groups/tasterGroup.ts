@@ -2,7 +2,7 @@ import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
-import { SonosGroup } from './sonosGroup';
+import { SpeakerGroup } from './speakerGroup';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { SettingsService } from '../../services';
 import { HeatGroup } from './heatGroup';
@@ -73,7 +73,7 @@ export class TasterGroup extends BaseGroup {
       );
 
       if (SettingsService.settings.sonos?.buttonBotRightForRadio === true) {
-        const sonosGroup: SonosGroup | undefined = this.getRoom().SonosGroup;
+        const sonosGroup: SpeakerGroup | undefined = this.getRoom().SonosGroup;
         if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
           t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
             pValue && sonosGroup.trigger(this.getRoom().settings.radioUrl);

@@ -4,7 +4,7 @@ import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeUbisysShutter extends ZigbeeShutter {
-  private _positionStateId: string;
+  private readonly _positionStateId: string;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeUbisysShutter);

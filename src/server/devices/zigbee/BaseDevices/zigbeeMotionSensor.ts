@@ -1,9 +1,10 @@
-import { DeviceType } from '../deviceType';
-import { ZigbeeDevice } from './BaseDevices';
-import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
-import { LogDebugType, Utils } from '../../services';
-import { iMotionSensor } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../../deviceType';
+import { ZigbeeDevice } from './index';
+import { CountToday, LogLevel, MotionSensorSettings } from '../../../../models';
+import { LogDebugType, Utils } from '../../../services';
+import { iMotionSensor } from '../../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapabilities } from '../../DeviceCapabilities';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   public settings: MotionSensorSettings = new MotionSensorSettings();
@@ -15,6 +16,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
+    this.deviceCapabilities.push(DeviceCapabilities.motionSensor);
     Utils.dbo
       ?.getCount(this)
       .then((todayCount: CountToday) => {

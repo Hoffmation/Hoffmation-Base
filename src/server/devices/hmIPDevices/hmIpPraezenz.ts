@@ -4,8 +4,10 @@ import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../mod
 import { Utils } from '../../services';
 import { iIlluminationSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapabilities } from '../DeviceCapabilities';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
+  // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
@@ -17,6 +19,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
+    this.deviceCapabilities.push(DeviceCapabilities.illuminationSensor);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
     Utils.dbo
       ?.getCount(this)

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) #450 Add Device Capabilities
+
 ## 1.0.42 (2022-08-13)
 
 * (theimo1221) Fix error in setAc api Call

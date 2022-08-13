@@ -1,14 +1,14 @@
-import { OwnSonosDevice, SonosService } from '../Sonos';
 import { ServerLogService } from '../log-service';
 import { TelegramService } from '../Telegram';
 import { LogLevel } from '../../../models';
+import { ISpeaker } from '../../devices';
 
 export class MuellTonne {
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public nextDate: Date | undefined = undefined;
   public dates: Date[] = [];
 
-  public constructor(public name: string, public ownSonosDevice?: OwnSonosDevice) {}
+  public constructor(public name: string, public ownSpeaker?: ISpeaker) {}
 
   public sortDates(): void {
     this.dates = this.dates.sort((a, b) => a.getTime() - b.getTime());
@@ -59,9 +59,7 @@ export class MuellTonne {
       const message = `Die Mülltonne mit dem Namen ${this.name} wird morgen abgeholt!`;
       TelegramService.inform(message);
 
-      if (this.ownSonosDevice) {
-        SonosService.speakOnDevice(message, this.ownSonosDevice, 30);
-      }
+      this.ownSpeaker?.speakOnDevice(message, 30);
       return;
     }
 
@@ -69,15 +67,11 @@ export class MuellTonne {
       if (new Date().getHours() > 10) {
         const message = `Die Mülltonne mit dem Namen ${this.name} wurde heute abgeholt, Mülltonne zurückstellen!`;
         TelegramService.inform(message);
-        if (this.ownSonosDevice) {
-          SonosService.speakOnDevice(message, this.ownSonosDevice, 30);
-        }
+        this.ownSpeaker?.speakOnDevice(message, 30);
       } else {
         const message = `Die Mülltonne mit dem Namen ${this.name} wird heute abgeholt!`;
         TelegramService.inform(message);
-        if (this.ownSonosDevice) {
-          SonosService.speakOnDevice(message, this.ownSonosDevice, 30);
-        }
+        this.ownSpeaker?.speakOnDevice(message, 30);
       }
       return;
     }

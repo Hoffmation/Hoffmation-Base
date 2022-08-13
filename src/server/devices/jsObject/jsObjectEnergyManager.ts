@@ -4,6 +4,7 @@ import { DeviceType } from '../deviceType';
 import { EnergyCalculation, LogLevel } from '../../../models';
 import { SettingsService, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapabilities } from '../DeviceCapabilities';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
@@ -19,6 +20,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
 
   public constructor(info: IoBrokerDeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
+    this.deviceCapabilities.push(DeviceCapabilities.energyManager);
     this.log(LogLevel.Info, `Creating Energy Manager Device`);
     this._iCalculationInterval = Utils.guardedInterval(
       () => {

@@ -4,6 +4,7 @@ import { CountToday, CurrentIlluminationDataPoint, LogLevel, MotionSensorSetting
 import { Utils } from '../../services';
 import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapabilities } from '../DeviceCapabilities';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';
@@ -18,6 +19,8 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpBewegung);
+    this.deviceCapabilities.push(DeviceCapabilities.motionSensor);
+    this.deviceCapabilities.push(DeviceCapabilities.illuminationSensor);
     Utils.dbo
       ?.getCount(this)
       .then((todayCount: CountToday) => {

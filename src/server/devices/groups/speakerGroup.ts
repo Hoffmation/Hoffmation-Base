@@ -1,25 +1,26 @@
-import { OwnSonosDevice, Utils } from '../../services';
+import { Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
+import { ISpeaker } from '../baseDeviceInterfaces';
 
-export class SonosGroup extends BaseGroup {
+export class SpeakerGroup extends BaseGroup {
   private _playing: boolean = false;
 
   public constructor(roomName: string, speakerIds: string[]) {
     super(roomName, GroupType.Speaker);
-    this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds, true));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds));
   }
 
-  public getOwnSonosDevices(): OwnSonosDevice[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.Speaker) as OwnSonosDevice[];
+  public getOwnSonosDevices(): ISpeaker[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Speaker) as ISpeaker[];
   }
 
   public playRadio(radioUrl: string): void {
     this.getOwnSonosDevices().forEach((s) => {
       Utils.guardedTimeout(() => {
-        s.device?.SetAVTransportURI(radioUrl);
+        s.playUrl(radioUrl);
       }, 1500);
     });
     this._playing = true;
@@ -27,7 +28,7 @@ export class SonosGroup extends BaseGroup {
 
   public turnOff(): void {
     this.getOwnSonosDevices().forEach((s) => {
-      s.device?.Stop();
+      s.stop();
     });
     this._playing = false;
   }

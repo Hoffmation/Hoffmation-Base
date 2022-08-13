@@ -1,12 +1,10 @@
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
 import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { ServerLogService } from '../log-service';
-import { Utils } from '../utils';
 import { PollyService } from './polly-service';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import { TimeCallbackService } from '../time-callback-service';
 import { SettingsService } from '../settings-service';
-import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import TelegramBot from 'node-telegram-bot-api';
 import { OwnSonosDevice } from './own-sonos-device';
 
@@ -74,12 +72,8 @@ export class SonosService {
           SonosService.initializeDevice(d);
         });
         this.isInitialized = true;
-        if (!reinitialize && this.reinitializationDevice !== undefined) {
-          this.speakOnDevice(
-            `Sonos System initialisiert und bereit für Sprachausgaben.`,
-            this.reinitializationDevice,
-            30,
-          );
+        if (!reinitialize) {
+          this.reinitializationDevice?.speakOnDevice(`Sonos System initialisiert und bereit für Sprachausgaben.`, 30);
         }
       })
       .catch(console.error);
@@ -118,78 +112,12 @@ export class SonosService {
       const volume: number = hours < 10 || hours > 22 ? 40 : 80;
 
       for (const deviceName in this.ownDevices) {
-        SonosService.playOnDevice(
-          this.ownDevices[deviceName],
+        this.ownDevices[deviceName].playOnDevice(
           networkPath,
           duration,
           volumeOverride > -1 ? volumeOverride : Math.min(volume, this.ownDevices[deviceName].maxPlayOnAllVolume),
         );
       }
-    });
-  }
-
-  public static playOnDevice(
-    ownSnDevice: OwnSonosDevice,
-    mp3Name: string,
-    duration: number,
-    volume: number | undefined = undefined,
-    onlyWhenPlaying: boolean | undefined = undefined,
-    resolveAfterRevert: boolean | undefined = false,
-  ): void {
-    if (SettingsService.settings.mp3Server?.serverAddress === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, `Sonos: Can't speak as we have no mp3Server`);
-      return;
-    }
-    const specificTimeout: number = Math.ceil(duration / 1000) + 5;
-    const options: PlayNotificationTwoOptions = {
-      catchQueueErrors: true,
-      trackUri: `${SettingsService.settings.mp3Server?.serverAddress}/file.mp3?fname=${mp3Name}`,
-      delayMs: 750,
-      onlyWhenPlaying: onlyWhenPlaying,
-      resolveAfterRevert: resolveAfterRevert,
-      volume: volume,
-      specificTimeout: specificTimeout,
-      notificationFired: (played) => {
-        ownSnDevice.log(
-          LogLevel.Trace,
-          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
-        );
-      },
-    };
-    try {
-      const device: SonosDevice | undefined = ownSnDevice.device;
-      if (device === undefined) {
-        ServerLogService.writeLog(LogLevel.Alert, `Sonos Geräte ${ownSnDevice.name} ist nicht initialisiert`);
-        Utils.guardedTimeout(
-          () => {
-            this.initialize();
-          },
-          500,
-          this,
-        );
-        return;
-      }
-      ServerLogService.writeLog(LogLevel.Trace, `Spiele nun die Ausgabe für "${mp3Name}" auf "${ownSnDevice.name}"`);
-      device.PlayNotificationTwo(options).then((played) => {
-        ownSnDevice.log(
-          LogLevel.Debug,
-          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
-        );
-      });
-    } catch (err) {
-      ServerLogService.writeLog(LogLevel.Info, `Sonos Error ${(err as Error).message}: ${(err as Error).stack}`);
-    }
-  }
-
-  public static speakOnDevice(
-    pMessage: string,
-    ownSnDevice: OwnSonosDevice,
-    volume: number | undefined = undefined,
-    onlyWhenPlaying: boolean | undefined = undefined,
-    resolveAfterRevert: boolean | undefined = undefined,
-  ): void {
-    PollyService.tts(pMessage, (networkPath: string, duration: number) => {
-      SonosService.playOnDevice(ownSnDevice, networkPath, duration, volume, onlyWhenPlaying, resolveAfterRevert);
     });
   }
 

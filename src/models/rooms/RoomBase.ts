@@ -11,7 +11,7 @@ import {
   ServerLogService,
   ShutterService,
   SmokeGroup,
-  SonosGroup,
+  SpeakerGroup,
   TasterGroup,
   TimeCallbackService,
   Utils,
@@ -61,8 +61,8 @@ export class RoomBase implements iRoomBase {
     return this.groupMap.get(GroupType.Buttons) as TasterGroup | undefined;
   }
 
-  public get SonosGroup(): SonosGroup | undefined {
-    return this.groupMap.get(GroupType.Speaker) as SonosGroup | undefined;
+  public get SonosGroup(): SpeakerGroup | undefined {
+    return this.groupMap.get(GroupType.Speaker) as SpeakerGroup | undefined;
   }
 
   public get SmokeGroup(): SmokeGroup | undefined {

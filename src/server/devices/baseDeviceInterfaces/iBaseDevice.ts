@@ -1,11 +1,13 @@
 import { LogLevel, RoomBase } from '../../../models';
 import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
+import { DeviceCapabilities } from '../DeviceCapabilities';
 
 export interface IBaseDevice {
   room: RoomBase | undefined;
   deviceType: DeviceType;
   info: DeviceInfo;
+  readonly deviceCapabilities: DeviceCapabilities[];
 
   readonly id: string;
 

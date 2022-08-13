@@ -1,8 +1,8 @@
-import { AcDevice, API, OwnSonosDevice, OwnSonosDevices } from '../services';
+import { API } from '../services';
 import { IBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceList {
-  public constructor(private _ids: string[] = [], private readonly _isSonos: boolean = false) {
+  public constructor(private _ids: string[] = []) {
     // Empty
   }
 
@@ -10,20 +10,13 @@ export class DeviceList {
     return this._ids;
   }
 
-  public getDevices(): Array<IBaseDevice | OwnSonosDevice | AcDevice> {
-    const result: Array<IBaseDevice | OwnSonosDevice | AcDevice> = [];
+  public getDevices(): Array<IBaseDevice> {
+    const result: Array<IBaseDevice> = [];
 
     for (const dID of this._ids) {
-      if (this._isSonos) {
-        const s: OwnSonosDevice = OwnSonosDevices.ownDevices[dID];
-        if (s !== undefined) {
-          result.push(OwnSonosDevices.ownDevices[dID]);
-        }
-      } else {
-        const d = API.getDevice(dID);
-        if (d !== undefined) {
-          result.push(d);
-        }
+      const d = API.getDevice(dID);
+      if (d !== undefined) {
+        result.push(d);
       }
     }
     return result;

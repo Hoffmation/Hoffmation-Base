@@ -1,7 +1,7 @@
 import { DeviceClusterType } from './device-cluster-type';
 import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { AcDevice, OwnSonosDevice, Utils } from '../services';
+import { Utils } from '../services';
 import { DeviceType } from './deviceType';
 import { IBaseDevice } from './baseDeviceInterfaces';
 
@@ -15,7 +15,7 @@ export class DeviceCluster {
     return this.getDevicesByType(type) as Array<IoBrokerBaseDevice>;
   }
 
-  public getDevicesByType(type: DeviceClusterType): Array<IBaseDevice | OwnSonosDevice | AcDevice> {
+  public getDevicesByType(type: DeviceClusterType): Array<IBaseDevice> {
     return this.deviceMap.get(type)?.getDevices() ?? [];
   }
 
@@ -23,6 +23,12 @@ export class DeviceCluster {
     const type: DeviceType = device.deviceType;
     const clusterTypes: DeviceClusterType[] = [DeviceClusterType.all];
     switch (type) {
+      case DeviceType.Daikin:
+        clusterTypes.push(DeviceClusterType.Ac);
+        break;
+      case DeviceType.Sonos:
+        clusterTypes.push(DeviceClusterType.Speaker);
+        break;
       case DeviceType.HmIpLampe:
       case DeviceType.ZigbeeIlluDimmer:
       case DeviceType.ZigbeeIlluLampe:

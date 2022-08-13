@@ -6,6 +6,6 @@ export * from './heatGroup';
 export * from './lampenGroup';
 export * from './praesenzGroup';
 export * from './smokeGroup';
-export * from './sonosGroup';
+export * from './speakerGroup';
 export * from './tasterGroup';
 export * from './waterGroup';

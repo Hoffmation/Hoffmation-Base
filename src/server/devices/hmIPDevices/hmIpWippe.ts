@@ -4,6 +4,7 @@ import { Button, ButtonCapabilities, ButtonPressType } from '../button';
 import { LogLevel } from '../../../models';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapabilities } from '../DeviceCapabilities';
 
 export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -24,6 +25,7 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpWippe);
+    this.deviceCapabilities.push(DeviceCapabilities.buttonSwitch);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

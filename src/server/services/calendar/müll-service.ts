@@ -1,11 +1,11 @@
 import { async, VEvent } from 'node-ical';
 import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { iMuellSettings } from '../../config';
-import { OwnSonosDevice } from '../Sonos';
 import { ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import { MuellTonne } from './muell-tonne';
 import { TimeCallbackService } from '../time-callback-service';
+import { ISpeaker } from '../../devices';
 
 export class MuellService {
   public static alleTonnen: Array<{ name: string; date: Date }> = [];
@@ -20,10 +20,10 @@ export class MuellService {
   private static lastCheck: Date = new Date(0);
   private static _calendarURL: string;
   private static _active: boolean = false;
-  private static defaultSonosDevice: OwnSonosDevice | undefined = undefined;
+  private static defaultSpeaker: ISpeaker | undefined = undefined;
 
-  public static intialize(config: iMuellSettings, defaultSonosDevice: OwnSonosDevice | undefined): void {
-    this.defaultSonosDevice = defaultSonosDevice;
+  public static intialize(config: iMuellSettings, defaultSpeaker: ISpeaker | undefined): void {
+    this.defaultSpeaker = defaultSpeaker;
     this._active = true;
     this._calendarURL = config.calendarURL;
     this.updateTimeCallback = new TimeCallback(
@@ -59,10 +59,10 @@ export class MuellService {
       .fromURL(this._calendarURL)
       .then((data) => {
         this.loadingPending = false;
-        this.gelbeTonne = new MuellTonne('Gelbe Tonne', this.defaultSonosDevice);
-        this.graueTonne = new MuellTonne('Graue Tonne', this.defaultSonosDevice);
-        this.blaueTonne = new MuellTonne('Blaue Tonne', this.defaultSonosDevice);
-        this.brauneTonne = new MuellTonne('Braune Tonne', this.defaultSonosDevice);
+        this.gelbeTonne = new MuellTonne('Gelbe Tonne', this.defaultSpeaker);
+        this.graueTonne = new MuellTonne('Graue Tonne', this.defaultSpeaker);
+        this.blaueTonne = new MuellTonne('Blaue Tonne', this.defaultSpeaker);
+        this.brauneTonne = new MuellTonne('Braune Tonne', this.defaultSpeaker);
         this.alleTonnen = [];
         const todayMidnight: number = new Date().setHours(0, 0, 0, 0);
         for (const k in data) {

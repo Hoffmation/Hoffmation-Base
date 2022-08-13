@@ -3,7 +3,6 @@ export class DeviceInfo {
   public room: string = '';
   public allDevicesKey?: string;
   private _customName?: string;
-  public deviceCapabilities: DeviceCapabilities[] = [];
 
   public get customName(): string {
     if (this._customName !== undefined) {

@@ -24,7 +24,7 @@ export class HeatGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.Heater, new DeviceList(heaterIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.TemperaturSensor, new DeviceList(tempSensorIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.HumiditySensor, new DeviceList(humiditySensorIds));
-    this.deviceCluster.deviceMap.set(DeviceClusterType.Ac, new DeviceList(acIds, false));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Ac, new DeviceList(acIds));
   }
 
   /**

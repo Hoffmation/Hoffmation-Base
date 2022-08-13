@@ -1,0 +1,15 @@
+export enum DeviceCapabilities {
+  ac,
+  buttonSwitch,
+  energyManager,
+  excessEnergyConsumer,
+  heater,
+  humiditySensor,
+  illuminationSensor,
+  lamp,
+  motionSensor,
+  shutter,
+  temperatureSensor,
+  vibrationSensor,
+  speaker,
+}

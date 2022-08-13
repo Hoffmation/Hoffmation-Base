@@ -1,16 +1,21 @@
-import { DeviceInfo, Devices, DeviceType, IBaseDevice } from '../../devices';
+import { DeviceInfo, Devices, DeviceType, ISpeaker } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { SonosDevice } from '@svrooij/sonos/lib';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import _ from 'lodash';
 import { SonosService } from './sonos-service';
+import { DeviceCapabilities } from '../../devices/DeviceCapabilities';
+import { SettingsService } from '../settings-service';
+import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
+import { PollyService } from './polly-service';
 
-export class OwnSonosDevice implements IBaseDevice {
+export class OwnSonosDevice implements ISpeaker {
   public maxPlayOnAllVolume: number = 80;
   public room: RoomBase | undefined;
   public readonly deviceType: DeviceType = DeviceType.Sonos;
   public readonly discoveryName: string;
+  public readonly deviceCapabilities: DeviceCapabilities[] = [DeviceCapabilities.speaker];
 
   public constructor(discoveryName: string, roomName: string, public device: SonosDevice | undefined) {
     this.discoveryName = discoveryName;
@@ -40,8 +45,78 @@ export class OwnSonosDevice implements IBaseDevice {
     return this.info.customName;
   }
 
+  public playOnDevice(
+    mp3Name: string,
+    duration: number,
+    volume: number | undefined = undefined,
+    onlyWhenPlaying: boolean | undefined = undefined,
+    resolveAfterRevert: boolean | undefined = false,
+  ): void {
+    if (SettingsService.settings.mp3Server?.serverAddress === undefined) {
+      ServerLogService.writeLog(LogLevel.Alert, `Sonos: Can't speak as we have no mp3Server`);
+      return;
+    }
+    const specificTimeout: number = Math.ceil(duration / 1000) + 5;
+    const options: PlayNotificationTwoOptions = {
+      catchQueueErrors: true,
+      trackUri: `${SettingsService.settings.mp3Server?.serverAddress}/file.mp3?fname=${mp3Name}`,
+      delayMs: 750,
+      onlyWhenPlaying: onlyWhenPlaying,
+      resolveAfterRevert: resolveAfterRevert,
+      volume: volume,
+      specificTimeout: specificTimeout,
+      notificationFired: (played) => {
+        this.log(
+          LogLevel.Trace,
+          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
+        );
+      },
+    };
+    try {
+      if (this.device === undefined) {
+        ServerLogService.writeLog(LogLevel.Alert, `Sonos Geräte ${this.name} ist nicht initialisiert`);
+        Utils.guardedTimeout(
+          () => {
+            SonosService.initialize();
+          },
+          500,
+          this,
+        );
+        return;
+      }
+      ServerLogService.writeLog(LogLevel.Trace, `Spiele nun die Ausgabe für "${mp3Name}" auf "${this.name}"`);
+      this.device.PlayNotificationTwo(options).then((played) => {
+        this.log(
+          LogLevel.Debug,
+          `Sonos Notification ("${mp3Name}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
+        );
+      });
+    } catch (err) {
+      ServerLogService.writeLog(LogLevel.Info, `Sonos Error ${(err as Error).message}: ${(err as Error).stack}`);
+    }
+  }
+
   public playTestMessage(): void {
-    SonosService.speakOnDevice(`Ich bin ${this.name}`, this);
+    this.speakOnDevice(`Ich bin ${this.name}`);
+  }
+
+  public speakOnDevice(
+    pMessage: string,
+    volume: number | undefined = undefined,
+    onlyWhenPlaying: boolean | undefined = undefined,
+    resolveAfterRevert: boolean | undefined = undefined,
+  ): void {
+    PollyService.tts(pMessage, (networkPath: string, duration: number) => {
+      this.playOnDevice(networkPath, duration, volume, onlyWhenPlaying, resolveAfterRevert);
+    });
+  }
+
+  public stop(): void {
+    this.device?.Stop();
+  }
+
+  public playUrl(url: string): void {
+    this.device?.SetAVTransportURI(url);
   }
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {

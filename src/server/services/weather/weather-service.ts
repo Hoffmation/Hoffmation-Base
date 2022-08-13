@@ -7,11 +7,11 @@ import { LogLevel } from '../../../models';
 import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
 import { Utils } from '../utils';
-import { OwnSonosDevice, SonosService } from '../Sonos';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { WeatherDaily } from './weather-daily';
 import SunCalc from 'suncalc';
 import { TimeCallbackService } from '../time-callback-service';
+import { ISpeaker } from '../../devices';
 
 export interface WeatherResponse {
   lat: number;
@@ -65,12 +65,7 @@ export class WeatherService {
     }
   }
 
-  public static playWeatherInfo(
-    sonosDevice: OwnSonosDevice,
-    volume: number = 30,
-    short: boolean = false,
-    retries = 5,
-  ): void {
+  public static playWeatherInfo(speaker: ISpeaker, volume: number = 30, short: boolean = false, retries = 5): void {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined) {
       if (retries > 0) {
@@ -79,7 +74,7 @@ export class WeatherService {
           `WeatherService.playWeatherInfo(): Der Wetterbericht ist noch nicht bereit --> warten`,
         );
         setTimeout(() => {
-          WeatherService.playWeatherInfo(sonosDevice, volume, short, retries - 1);
+          WeatherService.playWeatherInfo(speaker, volume, short, retries - 1);
         }, 1000);
       } else {
         ServerLogService.writeLog(
@@ -90,46 +85,36 @@ export class WeatherService {
       return;
     }
 
-    SonosService.speakOnDevice(short ? `Kurze Wetterinfo:` : `HoffMation Wetter-Bericht:`, sonosDevice, volume, false);
-    SonosService.speakOnDevice(
-      `Wetterbeschreibung für heute:  ${wData.daily[0].weather[0].description}`,
-      sonosDevice,
-      volume,
-      false,
-    );
-    SonosService.speakOnDevice(`Aktuell sind es ${Math.round(wData.current.temp)} Grad.`, sonosDevice, volume, false);
+    speaker.speakOnDevice(short ? `Kurze Wetterinfo:` : `HoffMation Wetter-Bericht:`, volume, false);
+    speaker.speakOnDevice(`Wetterbeschreibung für heute:  ${wData.daily[0].weather[0].description}`, volume, false);
+    speaker.speakOnDevice(`Aktuell sind es ${Math.round(wData.current.temp)} Grad.`, volume, false);
     if (!short) {
-      SonosService.speakOnDevice(
+      speaker.speakOnDevice(
         `Heute sollen es im Durchschnitt ${Math.round(wData.daily[0].temp.day)} Grad sein.`,
-        sonosDevice,
         volume,
         false,
       );
-      SonosService.speakOnDevice(
+      speaker.speakOnDevice(
         `Die Höchsttemperatur liegt heute bei ${Math.round(wData.daily[0].temp.max)} Grad.`,
-        sonosDevice,
         volume,
         false,
       );
-      SonosService.speakOnDevice(
+      speaker.speakOnDevice(
         `Die Tiefsttemperatur soll heute ${Math.round(wData.daily[0].temp.min)} Grad betragen.`,
-        sonosDevice,
         volume,
         false,
       );
       if (wData.daily[0].rain !== undefined) {
-        SonosService.speakOnDevice(
+        speaker.speakOnDevice(
           `Es sollen heute etwa ${Math.round(wData.daily[0].rain)} Millimeter Regen fallen.`,
-          sonosDevice,
           volume,
           false,
         );
       }
     }
     if (wData.daily[0].snow !== undefined && wData.daily[0].snow > 0) {
-      SonosService.speakOnDevice(
+      speaker.speakOnDevice(
         `Heute wird es Schneien! Es werden etwa ${Math.round(wData.daily[0].snow)} Millimeter Schnee erwartet.`,
-        sonosDevice,
         volume,
         false,
       );
@@ -158,12 +143,11 @@ export class WeatherService {
         message += `bleibt es trocken.`;
         break;
     }
-    SonosService.speakOnDevice(message, sonosDevice, volume, false);
+    speaker.speakOnDevice(message, volume, false);
     !short &&
       precipitation > 0 &&
-      SonosService.speakOnDevice(
+      speaker.speakOnDevice(
         `Es werden etwa ${precipitation} Millimeter Niederschlag in den nächsten ${minutes} Minuten fallen`,
-        sonosDevice,
         volume,
         false,
       );
@@ -179,9 +163,9 @@ export class WeatherService {
         );
         // } bis ${new Date(element.end * 1000).toLocaleString("de-DE")}; Beschreibung: ${element.description} Herausgeber: ${element.sender_name}`)
       });
-      SonosService.speakOnDevice(alertMessage.join('\n'), sonosDevice, volume, false);
+      speaker.speakOnDevice(alertMessage.join('\n'), volume, false);
     } else if (!short) {
-      SonosService.speakOnDevice(`Für heute liegt keine Unwetterwarnungen vor`, sonosDevice, volume, false);
+      speaker.speakOnDevice(`Für heute liegt keine Unwetterwarnungen vor`, volume, false);
     }
   }
 

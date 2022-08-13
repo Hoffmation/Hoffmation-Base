@@ -4,6 +4,7 @@ import { LogLevel } from '../../../models';
 import { iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapabilities } from '../DeviceCapabilities';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor {
   public sensitivity: string = '';
@@ -22,6 +23,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor 
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
+    this.deviceCapabilities.push(DeviceCapabilities.vibrationSensor);
     this._alarmMessage = Res.vibrationAlarm(this.info.customName);
     PollyService.preloadTTS(this._alarmMessage);
     this._idSensitivity = `${this.info.fullID}.sensitivity`;
