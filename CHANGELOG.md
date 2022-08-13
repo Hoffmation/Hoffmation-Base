@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.44 (2022-08-13)
 
 * (theimo1221) #450 Implement iActuator
 * (theimo1221) #450 Implement iDimmer
