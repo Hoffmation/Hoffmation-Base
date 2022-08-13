@@ -6,14 +6,14 @@ import { AcMode } from './ac-mode';
 import { AcSettings } from '../../../models/deviceSettings/acSettings';
 import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
-import { DeviceCapabilities } from '../../devices/DeviceCapabilities';
+import { DeviceCapability } from '../../devices/DeviceCapability';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iBaseDevice, iAcDevice {
   public currentConsumption: number = -1;
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   public acSettings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
-  public deviceCapabilities: DeviceCapabilities[] = [DeviceCapabilities.ac];
+  public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac];
 
   protected _info: DeviceInfo;
 

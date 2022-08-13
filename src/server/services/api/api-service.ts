@@ -3,7 +3,7 @@ import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, DaikinService } from '../ac';
-import { DeviceCapabilities } from '../../devices/DeviceCapabilities';
+import { DeviceCapability } from '../../devices/DeviceCapability';
 import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 
 export class API {
@@ -14,7 +14,7 @@ export class API {
    */
   public static getAc(id: string): AcDevice | undefined {
     const result: iBaseDevice | undefined = this.getDevice(id);
-    if (!result.deviceCapabilities.includes(DeviceCapabilities.ac)) {
+    if (!result.deviceCapabilities.includes(DeviceCapability.ac)) {
       return undefined;
     }
     return result as AcDevice;
@@ -57,7 +57,7 @@ export class API {
       ServerLogService.writeLog(LogLevel.Warn, `AC Device for id ${id} not found`);
       return false;
     }
-    if (!d.deviceCapabilities.includes(DeviceCapabilities.ac)) {
+    if (!d.deviceCapabilities.includes(DeviceCapability.ac)) {
       ServerLogService.writeLog(LogLevel.Warn, `Device for id ${id} is not an ac`);
       return false;
     }
@@ -88,7 +88,7 @@ export class API {
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }
-    if (!d.deviceCapabilities.includes(DeviceCapabilities.lamp)) {
+    if (!d.deviceCapabilities.includes(DeviceCapability.lamp)) {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
     d.setLight(state, 60 * 60 * 1000, true);
@@ -106,7 +106,7 @@ export class API {
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }
-    if (!d.deviceCapabilities.includes(DeviceCapabilities.actuator)) {
+    if (!d.deviceCapabilities.includes(DeviceCapability.actuator)) {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
     d.setActuator(state, 60 * 60 * 1000, true);
@@ -133,7 +133,7 @@ export class API {
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }
-    if (!d.deviceCapabilities.includes(DeviceCapabilities.dimmablelamp)) {
+    if (!d.deviceCapabilities.includes(DeviceCapability.dimmablelamp)) {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
     d.setLight(state, timeout, true, brightness, transitionTime);

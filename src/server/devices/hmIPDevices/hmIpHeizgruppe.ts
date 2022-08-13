@@ -11,7 +11,7 @@ import {
 } from '../baseDeviceInterfaces';
 import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapabilities } from '../DeviceCapabilities';
+import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater {
   public settings: HeaterSettings = new HeaterSettings();
@@ -25,9 +25,9 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizgruppe);
-    this.deviceCapabilities.push(DeviceCapabilities.temperatureSensor);
-    this.deviceCapabilities.push(DeviceCapabilities.humiditySensor);
-    this.deviceCapabilities.push(DeviceCapabilities.heater);
+    this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
+    this.deviceCapabilities.push(DeviceCapability.humiditySensor);
+    this.deviceCapabilities.push(DeviceCapability.heater);
     this._setPointTemperatureID = `${this.info.fullID}.1.SET_POINT_TEMPERATURE`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(

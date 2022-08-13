@@ -8,7 +8,7 @@ import { iShutter } from '../baseDeviceInterfaces';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapabilities } from '../DeviceCapabilities';
+import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   private _setLevelSwitchID: string;
@@ -18,7 +18,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpRoll);
-    this.deviceCapabilities.push(DeviceCapabilities.shutter);
+    this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
   }
 

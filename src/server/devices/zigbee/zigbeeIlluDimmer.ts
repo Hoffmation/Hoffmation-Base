@@ -3,7 +3,7 @@ import { DeviceType } from '../deviceType';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import { ZigbeeDevice } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapabilities } from '../DeviceCapabilities';
+import { DeviceCapability } from '../DeviceCapability';
 import { iDimmableLamp } from '../baseDeviceInterfaces/iDimmableLamp';
 
 export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
@@ -20,8 +20,8 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluDimmer);
-    this.deviceCapabilities.push(DeviceCapabilities.lamp);
-    this.deviceCapabilities.push(DeviceCapabilities.dimmablelamp);
+    this.deviceCapabilities.push(DeviceCapability.lamp);
+    this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
     this.stateID = `${this.info.fullID}.state`;
     this.brightnessID = `${this.info.fullID}.brightness`;
     this.transitionID = `${this.info.fullID}.transition_time`;

@@ -8,7 +8,7 @@ import { FensterPosition } from '../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapabilities } from '../../DeviceCapabilities';
+import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public settings: ShutterSettings = new ShutterSettings();
@@ -20,7 +20,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
-    this.deviceCapabilities.push(DeviceCapabilities.shutter);
+    this.deviceCapabilities.push(DeviceCapability.shutter);
     Utils.dbo
       ?.getShutterCalibration(this)
       .then((calibrationData: ShutterCalibration) => {

@@ -4,7 +4,7 @@ import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import { ActuatorSettings, LogLevel, TimeOfDay } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapabilities } from '../DeviceCapabilities';
+import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpLampe extends HmIPDevice implements iLamp {
   public lightOn: boolean = false;
@@ -16,7 +16,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpLampe);
-    this.deviceCapabilities.push(DeviceCapabilities.lamp);
+    this.deviceCapabilities.push(DeviceCapability.lamp);
     this.lightOnSwitchID = `${this.info.fullID}.2.STATE`;
   }
 

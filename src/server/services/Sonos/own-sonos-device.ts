@@ -5,7 +5,7 @@ import { LogDebugType, ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import _ from 'lodash';
 import { SonosService } from './sonos-service';
-import { DeviceCapabilities } from '../../devices/DeviceCapabilities';
+import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import { PollyService } from './polly-service';
@@ -15,7 +15,7 @@ export class OwnSonosDevice implements ISpeaker {
   public room: RoomBase | undefined;
   public readonly deviceType: DeviceType = DeviceType.Sonos;
   public readonly discoveryName: string;
-  public readonly deviceCapabilities: DeviceCapabilities[] = [DeviceCapabilities.speaker];
+  public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.speaker];
 
   public constructor(discoveryName: string, roomName: string, public device: SonosDevice | undefined) {
     this.discoveryName = discoveryName;

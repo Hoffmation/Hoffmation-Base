@@ -4,13 +4,13 @@ import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from 
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { DeviceCapabilities } from './DeviceCapabilities';
+import { DeviceCapability } from './DeviceCapability';
 
 export abstract class IoBrokerBaseDevice implements iBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
   public battery: number | undefined;
-  public readonly deviceCapabilities: DeviceCapabilities[] = [];
+  public readonly deviceCapabilities: DeviceCapability[] = [];
 
   protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {
     this.addToCorrectRoom();

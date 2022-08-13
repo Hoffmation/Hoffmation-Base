@@ -4,7 +4,7 @@ import { DeviceType } from '../../deviceType';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { iActuator } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceCapabilities } from '../../DeviceCapabilities';
+import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   public settings: ActuatorSettings = new ActuatorSettings();
@@ -16,7 +16,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
     super(pInfo, type);
-    this.deviceCapabilities.push(DeviceCapabilities.actuator);
+    this.deviceCapabilities.push(DeviceCapability.actuator);
     this.actuatorOnSwitchID = actuatorOnSwitchID;
   }
 

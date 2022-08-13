@@ -4,12 +4,12 @@ import { LogLevel, TimeOfDay } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapabilities } from '../DeviceCapabilities';
+import { DeviceCapability } from '../DeviceCapability';
 
 export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluLampe);
-    this.deviceCapabilities.push(DeviceCapabilities.lamp);
+    this.deviceCapabilities.push(DeviceCapability.lamp);
   }
 
   public get lightOn(): boolean {
