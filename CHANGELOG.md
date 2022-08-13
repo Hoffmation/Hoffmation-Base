@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.46 (2022-08-13)
 
 * (theimo1221) Expose shutter position control in API
 
