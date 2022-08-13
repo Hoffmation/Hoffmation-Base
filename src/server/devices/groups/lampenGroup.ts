@@ -1,10 +1,10 @@
-import { ZigbeeIkeaSteckdose, ZigbeeIlluLedRGBCCT } from '../zigbee';
+import { ZigbeeIlluLedRGBCCT } from '../zigbee';
 import { TimeCallbackService } from '../../services';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
-import { iLamp } from '../baseDeviceInterfaces';
+import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogLevel, TimeOfDay } from '../../../models';
 import { WledDevice } from '../wledDevice';
 
@@ -36,7 +36,7 @@ export class LampenGroup extends BaseGroup {
       }
     }
     for (i = 0; i < this.getStecker().length; i++) {
-      if (this.getStecker()[i].steckerOn) {
+      if (this.getStecker()[i].actuatorOn) {
         return true;
       }
     }
@@ -60,8 +60,8 @@ export class LampenGroup extends BaseGroup {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.WLED) as WledDevice[];
   }
 
-  public getStecker(): ZigbeeIkeaSteckdose[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Outlets) as ZigbeeIkeaSteckdose[];
+  public getStecker(): iActuator[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Outlets) as iActuator[];
   }
 
   public handleSunriseOff(): void {
@@ -143,7 +143,7 @@ export class LampenGroup extends BaseGroup {
         (time === TimeOfDay.AfterSunset && s.settings.duskOn)
       ) {
         const timeout: number = pValue && force ? 30 * 60 * 1000 : -1;
-        s.setStecker(pValue, timeout, force);
+        s.setActuator(pValue, timeout, force);
       }
     });
   }

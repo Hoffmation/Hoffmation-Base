@@ -1,4 +1,5 @@
 export * from './iAcDevice';
+export * from './iActuator';
 export * from './iBaseDevice';
 export * from './iButtonSwitch';
 export * from './iEnergyManager';

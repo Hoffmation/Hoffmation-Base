@@ -1,5 +1,6 @@
 export enum DeviceCapabilities {
   ac,
+  actuator,
   buttonSwitch,
   energyManager,
   excessEnergyConsumer,

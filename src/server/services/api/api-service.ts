@@ -1,8 +1,9 @@
-import { Devices, DeviceType, IBaseDevice, iLamp } from '../../devices';
+import { Devices, iActuator, IBaseDevice, iLamp } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, DaikinService } from '../ac';
+import { DeviceCapabilities } from '../../devices/DeviceCapabilities';
 
 export class API {
   /**
@@ -12,7 +13,7 @@ export class API {
    */
   public static getAc(id: string): AcDevice | undefined {
     const result: IBaseDevice | undefined = this.getDevice(id);
-    if (result?.deviceType !== DeviceType.Daikin) {
+    if (!result.deviceCapabilities.includes(DeviceCapabilities.ac)) {
       return undefined;
     }
     return result as AcDevice;
@@ -52,7 +53,11 @@ export class API {
   public static setAc(id: string, desiredState: boolean): boolean {
     const d = this.getAc(id);
     if (!d) {
-      ServerLogService.writeLog(LogLevel.Warn, `Daikin Device for id ${id} not found`);
+      ServerLogService.writeLog(LogLevel.Warn, `AC Device for id ${id} not found`);
+      return false;
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapabilities.ac)) {
+      ServerLogService.writeLog(LogLevel.Warn, `Device for id ${id} is not an ac`);
       return false;
     }
     if (desiredState) {
@@ -77,15 +82,33 @@ export class API {
    * @param {boolean} state The desired new state
    * @returns {Error | null} In case it failed the Error containing the reason
    */
-  public static setLight(deviceId: string, state: boolean): Error | null {
-    const d = this.getDevice(deviceId);
+  public static setLamp(deviceId: string, state: boolean): Error | null {
+    const d = this.getDevice(deviceId) as iLamp | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }
-    if (typeof (d as iLamp).setLight !== 'function') {
+    if (!d.deviceCapabilities.includes(DeviceCapabilities.lamp)) {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
-    (d as iLamp).setLight(state, 60 * 60 * 1000, true);
+    d.setLight(state, 60 * 60 * 1000, true);
+    return null;
+  }
+
+  /**
+   * Changes the status of a given actuator
+   * @param {string} deviceId The device Id of the actuator
+   * @param {boolean} state The desired new state
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static setActuator(deviceId: string, state: boolean): Error | null {
+    const d = this.getDevice(deviceId) as iActuator | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapabilities.actuator)) {
+      return new Error(`Device with ID ${deviceId} is no actuator`);
+    }
+    d.setActuator(state, 60 * 60 * 1000, true);
     return null;
   }
 }

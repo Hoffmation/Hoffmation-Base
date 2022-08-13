@@ -1,19 +1,22 @@
 import { LogDebugType, Utils } from '../../../services';
 import { ActuatorSettings, LogLevel } from '../../../../models';
-import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceType } from '../../deviceType';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { iActuator } from '../../baseDeviceInterfaces';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { DeviceCapabilities } from '../../DeviceCapabilities';
 
-export class ZigbeeActuator extends ZigbeeDevice {
+export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   public settings: ActuatorSettings = new ActuatorSettings();
   protected readonly actuatorOnSwitchID: string;
   protected queuedValue: boolean | null = null;
-  protected actuatorOn: boolean = false;
+  public actuatorOn: boolean = false;
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
     super(pInfo, type);
+    this.deviceCapabilities.push(DeviceCapabilities.actuator);
     this.actuatorOnSwitchID = actuatorOnSwitchID;
   }
 

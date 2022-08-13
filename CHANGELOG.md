@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) #450 Implement iActuator
+
 ## 1.0.43 (2022-08-13)
 
 * (theimo1221) #450 Add Device Capabilities
