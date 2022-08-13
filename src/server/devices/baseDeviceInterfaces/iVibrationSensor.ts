@@ -1,6 +1,6 @@
-import { IBaseDevice } from './iBaseDevice';
+import { iBaseDevice } from './iBaseDevice';
 
-export interface iVibrationSensor extends IBaseDevice {
+export interface iVibrationSensor extends iBaseDevice {
   vibrationBlockedByGriff: boolean;
   vibrationBlockedByGriffTimeStamp: number;
   vibrationBlockedByMotion: boolean;

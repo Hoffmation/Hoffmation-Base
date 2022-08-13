@@ -1,7 +1,7 @@
 import { Fenster } from '../groups';
-import { IBaseDevice } from './iBaseDevice';
+import { iBaseDevice } from './iBaseDevice';
 
-export interface iShutter extends IBaseDevice {
+export interface iShutter extends iBaseDevice {
   currentLevel: number;
   desiredFensterLevel: number;
   fenster: Fenster | undefined;

@@ -1,4 +1,4 @@
-import { Devices, iActuator, IBaseDevice, iLamp } from '../../devices';
+import { Devices, iActuator, iBaseDevice, iLamp } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
@@ -13,20 +13,20 @@ export class API {
    * @returns {OwnDaikinDevice | undefined}
    */
   public static getAc(id: string): AcDevice | undefined {
-    const result: IBaseDevice | undefined = this.getDevice(id);
+    const result: iBaseDevice | undefined = this.getDevice(id);
     if (!result.deviceCapabilities.includes(DeviceCapabilities.ac)) {
       return undefined;
     }
     return result as AcDevice;
   }
 
-  public static getDevices(): { [id: string]: IBaseDevice } {
+  public static getDevices(): { [id: string]: iBaseDevice } {
     // console.log(Util.inspect(Devices.alLDevices, false, 5));
     return Devices.alLDevices;
   }
 
-  public static getDevice(id: string): IBaseDevice {
-    const d: IBaseDevice | undefined = Devices.alLDevices[id];
+  public static getDevice(id: string): iBaseDevice {
+    const d: iBaseDevice | undefined = Devices.alLDevices[id];
     if (d === undefined) {
       ServerLogService.writeLog(LogLevel.Warn, `Api.getDevice() --> "${id}" not found`);
     }

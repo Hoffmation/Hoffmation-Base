@@ -10,6 +10,7 @@
 
 * (theimo1221) #450 Implement iActuator
 * (theimo1221) #450 Implement iDimmer
+* (theimo1221) #450 Implement iHandle
 
 ## 1.0.43 (2022-08-13)
 

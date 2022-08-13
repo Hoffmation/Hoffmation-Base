@@ -1,7 +1,7 @@
 import { HeaterSettings, TemperatureSettings } from '../../../models';
-import { IBaseDevice } from './iBaseDevice';
+import { iBaseDevice } from './iBaseDevice';
 
-export interface iHeater extends IBaseDevice {
+export interface iHeater extends iBaseDevice {
   settings: HeaterSettings;
   readonly desiredTemperature: number;
   readonly humidity: number;

@@ -1,5 +1,5 @@
 import { API } from '../services';
-import { IBaseDevice } from './baseDeviceInterfaces';
+import { iBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceList {
   public constructor(private _ids: string[] = []) {
@@ -10,8 +10,8 @@ export class DeviceList {
     return this._ids;
   }
 
-  public getDevices(): Array<IBaseDevice> {
-    const result: Array<IBaseDevice> = [];
+  public getDevices(): Array<iBaseDevice> {
+    const result: Array<iBaseDevice> = [];
 
     for (const dID of this._ids) {
       const d = API.getDevice(dID);

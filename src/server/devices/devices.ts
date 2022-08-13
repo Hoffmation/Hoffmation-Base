@@ -39,7 +39,7 @@ import {
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { IBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
+import { iBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
@@ -49,7 +49,7 @@ export class Devices {
   public static IDENTIFIER_JS: string = 'javascript';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
   public static IDENTIFIER_WLED: string = 'wled';
-  public static alLDevices: { [id: string]: IBaseDevice } = {};
+  public static alLDevices: { [id: string]: iBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
 
   public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {

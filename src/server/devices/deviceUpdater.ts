@@ -3,7 +3,7 @@ import { IDeviceUpdater } from './iDeviceUpdater';
 import { ServerLogService } from '../services';
 import { LogLevel } from '../../models';
 import { Devices } from './devices';
-import { IBaseDevice } from './baseDeviceInterfaces';
+import { iBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;
@@ -29,13 +29,13 @@ export class DeviceUpdater implements IDeviceUpdater {
     const idSplit: string[] = id.split('.');
     if (idSplit.length < 2) return;
 
-    const device: undefined | IBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
+    const device: undefined | iBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
       return;
     }
     try {
       (device as IoBrokerBaseDevice).update(idSplit, state, initial, false);
-    } catch (e: any) {
+    } catch (e) {
       ServerLogService.writeLog(
         LogLevel.Alert,
         `deviceUpdater.updateState('${id}', '${state}'): Error occured updating Device: ${e} \n ${e.stack}`,

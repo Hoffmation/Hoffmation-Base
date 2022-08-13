@@ -1,4 +1,3 @@
-import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { TelegramService, Utils, WeatherService } from '../../services';
 import { FensterPosition } from '../models';
@@ -7,14 +6,16 @@ import { LogLevel } from '../../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { HmIPDevice } from './hmIpDevice';
+import { iHandleSensor } from '../baseDeviceInterfaces';
 
-export class HmIpGriff extends HmIPDevice {
+export class HmIpGriff extends HmIPDevice implements iHandleSensor {
   public position: FensterPosition = FensterPosition.geschlossen;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _offenCallback: Array<(pValue: boolean) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
-  private minutesOpen: number = 0;
+  public minutesOpen: number = 0;
   private _fenster: Fenster | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
 

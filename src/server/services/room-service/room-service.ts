@@ -4,7 +4,7 @@ import { ServerLogService } from '../log-service';
 import { SonosService } from '../Sonos';
 import { Res } from '../Translation';
 import { TelegramService } from '../Telegram';
-import { IBaseDevice } from '../../devices';
+import { iBaseDevice } from '../../devices';
 
 export class RoomService {
   public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
@@ -44,6 +44,7 @@ export class RoomService {
    * !!floor -1 sets all lamps in house instead!!
    * @param floor the level on which all lamps shall be changed -1 equals all rooms
    * @param status
+   * @param timeout
    */
   public static setAllLampsOfFloor(floor: number, status: boolean = false, timeout?: number): void {
     ServerLogService.writeLog(LogLevel.Info, `Schalte alle Lampen in Etage ${floor} auf den Wert ${status}`);
@@ -103,7 +104,7 @@ export class RoomService {
     );
   }
 
-  public static startIntrusionAlarm(room: iRoomBase, device: IBaseDevice): void {
+  public static startIntrusionAlarm(room: iRoomBase, device: iBaseDevice): void {
     const message: string = `!Potenzieller Eindringling! Bewegung in ${room.roomName} von ${device.info.fullName} festgestellt`;
     ServerLogService.writeLog(LogLevel.Info, message);
     if (!this.awayModeActive && !this.nightAlarmActive) {

@@ -3,7 +3,7 @@ import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapabilities } from '../DeviceCapabilities';
 
-export interface IBaseDevice {
+export interface iBaseDevice {
   room: RoomBase | undefined;
   deviceType: DeviceType;
   info: DeviceInfo;
@@ -13,5 +13,5 @@ export interface IBaseDevice {
 
   log(level: LogLevel, message: string): void;
 
-  toJSON(): Partial<IBaseDevice>;
+  toJSON(): Partial<iBaseDevice>;
 }

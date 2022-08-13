@@ -4,6 +4,7 @@ export * from './iBaseDevice';
 export * from './iButtonSwitch';
 export * from './iEnergyManager';
 export * from './iExcessEnergyConsumer';
+export * from './iHandleSensor';
 export * from './iHeater';
 export * from './iHumiditySensor';
 export * from './iIlluminationSensor';

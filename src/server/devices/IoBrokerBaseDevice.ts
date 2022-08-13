@@ -1,4 +1,4 @@
-import { IBaseDevice } from './baseDeviceInterfaces';
+import { iBaseDevice } from './baseDeviceInterfaces';
 import { LogDebugType, ServerLogService, Utils } from '../services';
 import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
@@ -6,7 +6,7 @@ import { DeviceType } from './deviceType';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { DeviceCapabilities } from './DeviceCapabilities';
 
-export abstract class IoBrokerBaseDevice implements IBaseDevice {
+export abstract class IoBrokerBaseDevice implements iBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
   public battery: number | undefined;

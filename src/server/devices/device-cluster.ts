@@ -3,7 +3,7 @@ import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { Utils } from '../services';
 import { DeviceType } from './deviceType';
-import { IBaseDevice } from './baseDeviceInterfaces';
+import { iBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceCluster {
   public constructor(public deviceMap: Map<DeviceClusterType, DeviceList> = new Map<DeviceClusterType, DeviceList>()) {}
@@ -15,11 +15,11 @@ export class DeviceCluster {
     return this.getDevicesByType(type) as Array<IoBrokerBaseDevice>;
   }
 
-  public getDevicesByType(type: DeviceClusterType): Array<IBaseDevice> {
+  public getDevicesByType(type: DeviceClusterType): Array<iBaseDevice> {
     return this.deviceMap.get(type)?.getDevices() ?? [];
   }
 
-  public addByDeviceType(device: IBaseDevice): void {
+  public addByDeviceType(device: iBaseDevice): void {
     const type: DeviceType = device.deviceType;
     const clusterTypes: DeviceClusterType[] = [DeviceClusterType.all];
     switch (type) {
@@ -102,7 +102,7 @@ export class DeviceCluster {
     }
   }
 
-  public addToList(type: DeviceClusterType, device: IBaseDevice): void {
+  public addToList(type: DeviceClusterType, device: iBaseDevice): void {
     const list: string[] | undefined = this.deviceMap.get(type)?.ids;
     if (list !== undefined) {
       if (list.indexOf(device.id) < 0) {
