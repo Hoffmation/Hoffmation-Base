@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.42 (2022-08-13)
 
 * (theimo1221) Fix error in setAc api Call
 * (theimo1221) Fix Sonos identification
