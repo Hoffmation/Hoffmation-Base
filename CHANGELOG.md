@@ -4,7 +4,13 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
--->
+-->  
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update packages
+* (theimo1221) Rename deviceCapability
+
 ## 1.0.44 (2022-08-13)
 
 * (theimo1221) #450 Implement iActuator
