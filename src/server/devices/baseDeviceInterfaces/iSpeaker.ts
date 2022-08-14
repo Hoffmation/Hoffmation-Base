@@ -1,6 +1,6 @@
 import { iBaseDevice } from './iBaseDevice';
 
-export interface ISpeaker extends iBaseDevice {
+export interface iSpeaker extends iBaseDevice {
   playOnDevice(
     mp3Name: string,
     duration: number,

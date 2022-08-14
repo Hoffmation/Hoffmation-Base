@@ -5,7 +5,7 @@ import { ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import { MuellTonne } from './muell-tonne';
 import { TimeCallbackService } from '../time-callback-service';
-import { ISpeaker } from '../../devices';
+import { iSpeaker } from '../../devices';
 
 export class MuellService {
   public static alleTonnen: Array<{ name: string; date: Date }> = [];
@@ -20,9 +20,9 @@ export class MuellService {
   private static lastCheck: Date = new Date(0);
   private static _calendarURL: string;
   private static _active: boolean = false;
-  private static defaultSpeaker: ISpeaker | undefined = undefined;
+  private static defaultSpeaker: iSpeaker | undefined = undefined;
 
-  public static intialize(config: iMuellSettings, defaultSpeaker: ISpeaker | undefined): void {
+  public static intialize(config: iMuellSettings, defaultSpeaker: iSpeaker | undefined): void {
     this.defaultSpeaker = defaultSpeaker;
     this._active = true;
     this._calendarURL = config.calendarURL;

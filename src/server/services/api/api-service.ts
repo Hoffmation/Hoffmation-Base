@@ -1,4 +1,4 @@
-import { Devices, iActuator, iBaseDevice, iLamp, iShutter } from '../../devices';
+import { Devices, iActuator, iBaseDevice, iLamp, iShutter, iSpeaker } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
@@ -149,6 +149,18 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no Shutter`);
     }
     d.setLevel(level, false);
+    return null;
+  }
+
+  public static speakOnDevice(deviceId: string, message: string, volume: number = 30): Error | null {
+    const d = this.getDevice(deviceId) as iSpeaker | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.speaker)) {
+      return new Error(`Device with ID ${deviceId} is no speaker`);
+    }
+    d.speakOnDevice(message, volume);
     return null;
   }
 }

@@ -11,7 +11,7 @@ import { LogDebugType, ServerLogService } from '../log-service';
 import { WeatherDaily } from './weather-daily';
 import SunCalc from 'suncalc';
 import { TimeCallbackService } from '../time-callback-service';
-import { ISpeaker } from '../../devices';
+import { iSpeaker } from '../../devices';
 
 export interface WeatherResponse {
   lat: number;
@@ -65,7 +65,7 @@ export class WeatherService {
     }
   }
 
-  public static playWeatherInfo(speaker: ISpeaker, volume: number = 30, short: boolean = false, retries = 5): void {
+  public static playWeatherInfo(speaker: iSpeaker, volume: number = 30, short: boolean = false, retries = 5): void {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined) {
       if (retries > 0) {

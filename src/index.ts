@@ -5,7 +5,7 @@ import {
   DeviceUpdater,
   iConfig,
   ioBrokerMain,
-  ISpeaker,
+  iSpeaker,
   MongoPersistance,
   MP3Server,
   MuellService,
@@ -71,7 +71,7 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base First Initializations finished`);
   }
 
-  public static initializePostIoBroker(defaultMuellSonos?: ISpeaker): void {
+  public static initializePostIoBroker(defaultMuellSonos?: iSpeaker): void {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations`);
     if (SettingsService.TelegramActive) TelegramCommands.initialize();
 

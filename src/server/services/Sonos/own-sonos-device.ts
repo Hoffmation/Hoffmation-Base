@@ -1,4 +1,4 @@
-import { DeviceInfo, Devices, DeviceType, ISpeaker } from '../../devices';
+import { DeviceInfo, Devices, DeviceType, iSpeaker } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { SonosDevice } from '@svrooij/sonos/lib';
 import { LogDebugType, ServerLogService } from '../log-service';
@@ -10,7 +10,7 @@ import { SettingsService } from '../settings-service';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import { PollyService } from './polly-service';
 
-export class OwnSonosDevice implements ISpeaker {
+export class OwnSonosDevice implements iSpeaker {
   public maxPlayOnAllVolume: number = 80;
   public room: RoomBase | undefined;
   public readonly deviceType: DeviceType = DeviceType.Sonos;

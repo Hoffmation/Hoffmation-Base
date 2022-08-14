@@ -10,7 +10,7 @@ import { iNewsSettings } from '../config';
 import path from 'path';
 import Parser from 'rss-parser';
 import { LogSource } from '../../models/logSource';
-import { ISpeaker } from '../devices';
+import { iSpeaker } from '../devices';
 import ErrnoException = NodeJS.ErrnoException;
 
 export class NewsService {
@@ -107,7 +107,7 @@ export class NewsService {
    * @param volume volume to play at
    * @param retries Number of times playing should be tried if there is currently no audio file available
    */
-  public static playLastNews(speaker: ISpeaker, volume: number = 30, retries: number = 5): void {
+  public static playLastNews(speaker: iSpeaker, volume: number = 30, retries: number = 5): void {
     if (!NewsService.lastNewsAudioFile) {
       if (retries > 0) {
         ServerLogService.writeLog(LogLevel.Warn, `Service not ready yet --> waiting, remaining tries: ${retries - 1}`, {

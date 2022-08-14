@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Correctly add HandleSensorCapability
+* (theimo1221) Expose iSpeaker.speakOnDevice in api
 
 ## 1.0.46 (2022-08-13)
 

@@ -1,14 +1,14 @@
 import { ServerLogService } from '../log-service';
 import { TelegramService } from '../Telegram';
 import { LogLevel } from '../../../models';
-import { ISpeaker } from '../../devices';
+import { iSpeaker } from '../../devices';
 
 export class MuellTonne {
   public static oneDay: number = 1000 * 60 * 60 * 24;
   public nextDate: Date | undefined = undefined;
   public dates: Date[] = [];
 
-  public constructor(public name: string, public ownSpeaker?: ISpeaker) {}
+  public constructor(public name: string, public ownSpeaker?: iSpeaker) {}
 
   public sortDates(): void {
     this.dates = this.dates.sort((a, b) => a.getTime() - b.getTime());

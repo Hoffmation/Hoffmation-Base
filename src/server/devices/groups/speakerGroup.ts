@@ -3,7 +3,7 @@ import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
-import { ISpeaker } from '../baseDeviceInterfaces';
+import { iSpeaker } from '../baseDeviceInterfaces';
 
 export class SpeakerGroup extends BaseGroup {
   private _playing: boolean = false;
@@ -13,8 +13,8 @@ export class SpeakerGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.Speaker, new DeviceList(speakerIds));
   }
 
-  public getOwnSonosDevices(): ISpeaker[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.Speaker) as ISpeaker[];
+  public getOwnSonosDevices(): iSpeaker[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Speaker) as iSpeaker[];
   }
 
   public playRadio(radioUrl: string): void {
