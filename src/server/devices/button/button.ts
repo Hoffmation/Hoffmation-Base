@@ -4,8 +4,8 @@ import { ButtonCapabilities } from './buttonCapabilities';
 import { ButtonPressType } from './buttonPressType';
 
 export class Button {
-  private _state: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();
-  private _callbacks: Map<ButtonPressType, Array<{ cb: (pValue: boolean) => void; description: string }>> = new Map<
+  private _statesMap: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();
+  private _callbacksMap: Map<ButtonPressType, Array<{ cb: (pValue: boolean) => void; description: string }>> = new Map<
     ButtonPressType,
     Array<{ cb: (pValue: boolean) => void; description: string }>
   >();
@@ -13,29 +13,29 @@ export class Button {
 
   public constructor(public name: string, public buttonCapabilities: ButtonCapabilities) {
     if (buttonCapabilities.shortPress) {
-      this._callbacks.set(ButtonPressType.short, []);
+      this._callbacksMap.set(ButtonPressType.short, []);
       this._timeouts.set(ButtonPressType.short, null);
-      this._state.set(ButtonPressType.short, false);
+      this._statesMap.set(ButtonPressType.short, false);
     }
     if (buttonCapabilities.longPress) {
-      this._callbacks.set(ButtonPressType.long, []);
+      this._callbacksMap.set(ButtonPressType.long, []);
       this._timeouts.set(ButtonPressType.long, null);
-      this._state.set(ButtonPressType.long, false);
+      this._statesMap.set(ButtonPressType.long, false);
     }
     if (buttonCapabilities.doublePress) {
-      this._callbacks.set(ButtonPressType.double, []);
+      this._callbacksMap.set(ButtonPressType.double, []);
       this._timeouts.set(ButtonPressType.double, null);
-      this._state.set(ButtonPressType.double, false);
+      this._statesMap.set(ButtonPressType.double, false);
     }
     if (buttonCapabilities.triplePress) {
-      this._callbacks.set(ButtonPressType.triple, []);
+      this._callbacksMap.set(ButtonPressType.triple, []);
       this._timeouts.set(ButtonPressType.triple, null);
-      this._state.set(ButtonPressType.triple, false);
+      this._statesMap.set(ButtonPressType.triple, false);
     }
   }
 
   public getState(type: ButtonPressType): boolean {
-    return this._state.get(type) ?? false;
+    return this._statesMap.get(type) ?? false;
   }
 
   public addCb(
@@ -44,7 +44,7 @@ export class Button {
     description: string = 'Not described',
   ): void {
     const cbArr: Array<{ cb: (pValue: boolean) => void; description: string }> | undefined =
-      this._callbacks.get(buttonType);
+      this._callbacksMap.get(buttonType);
     if (cbArr === undefined) {
       ServerLogService.writeLog(
         LogLevel.Error,
@@ -57,7 +57,7 @@ export class Button {
 
   public getDescription(): string {
     const description: string[] = [];
-    for (const [key, arr] of this._callbacks.entries()) {
+    for (const [key, arr] of this._callbacksMap.entries()) {
       for (const entry of arr) {
         description.push(`${ButtonPressType[key]}: "${entry.description}"`);
       }
@@ -66,17 +66,17 @@ export class Button {
   }
 
   public updateState(type: ButtonPressType, pValue: boolean): void {
-    if (pValue === this._state.get(type)) {
+    if (pValue === this._statesMap.get(type)) {
       return;
     }
 
-    this._state.set(type, pValue);
-    if (!this._callbacks.has(type)) {
+    this._statesMap.set(type, pValue);
+    if (!this._callbacksMap.has(type)) {
       ServerLogService.writeLog(LogLevel.Error, `This Button doesn't support press Type ${ButtonPressType[type]}`);
       return;
     }
 
-    for (const c of this._callbacks.get(type) ?? []) {
+    for (const c of this._callbacksMap.get(type) ?? []) {
       c.cb(pValue);
     }
 

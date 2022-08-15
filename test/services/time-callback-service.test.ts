@@ -16,9 +16,9 @@ describe('TimeCallbackService', () => {
     expect(minimumOffset.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
   it('next Minimum Time is today and correct', async () => {
-    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);
-    const expectedDate: Date = new Date('4/9/2022, 6:30:00 AM');
-    const sunRiseCalcDate: Date = new Date('4/9/2022, 00:30:00 AM');
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 7, 30, 22, 30);
+    const expectedDate: Date = new Date('4/9/2022, 7:30:00 AM');
+    const sunRiseCalcDate: Date = new Date('4/9/2022, 6:45:00 AM');
     const minimumOffset = offset.getNextMinimumSunrise(sunRiseCalcDate);
     expect(minimumOffset.toLocaleString()).toBe(expectedDate.toLocaleString());
   });

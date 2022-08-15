@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Expose button states and callbacks to JSON Api
+
 ## 1.0.47 (2022-08-14)
 
 * (theimo1221) Correctly add HandleSensorCapability
