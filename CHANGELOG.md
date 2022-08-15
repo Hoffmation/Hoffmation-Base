@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.48 (2022-08-15)
 
 * (theimo1221) Expose button states and callbacks to JSON Api
 
