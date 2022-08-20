@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.52 (2022-08-20)
 
 * (theimo1221) Fix stateMap for HmIp Devices
 * (theimo1221) Add some more docu
