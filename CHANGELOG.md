@@ -10,6 +10,7 @@
 
 * (theimo1221) Allow access to all ioBroker States (even unhandled)
 * (theimo1221) Allow cb assignment to any iobrokerdevice state
+* (theimo1221) Bugfix: Motionsensors without dbo
 
 ## 1.0.50 (2022-08-20)
 

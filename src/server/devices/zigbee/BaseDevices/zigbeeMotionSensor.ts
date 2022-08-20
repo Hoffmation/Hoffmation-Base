@@ -19,16 +19,20 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
-    Utils.dbo
-      ?.getCount(this)
-      .then((todayCount: CountToday) => {
-        this.detectionsToday = todayCount.counter;
-        this.log(LogLevel.Debug, `Preinitialized movement counter with ${this.detectionsToday}`);
-        this._initialized = true;
-      })
-      .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err?.message ?? err}`);
-      });
+    if (!Utils.anyDboActive) {
+      this._initialized = true;
+    } else {
+      Utils.dbo
+        ?.getCount(this)
+        .then((todayCount: CountToday) => {
+          this.detectionsToday = todayCount.counter;
+          this.log(LogLevel.Debug, `Preinitialized movement counter with ${this.detectionsToday}`);
+          this._initialized = true;
+        })
+        .catch((err: Error) => {
+          this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err?.message ?? err}`);
+        });
+    }
   }
 
   protected _timeSinceLastMotion: number = 0;

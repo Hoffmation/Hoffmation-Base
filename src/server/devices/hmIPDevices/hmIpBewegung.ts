@@ -21,16 +21,20 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     super(pInfo, DeviceType.HmIpBewegung);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
     this.deviceCapabilities.push(DeviceCapability.illuminationSensor);
-    Utils.dbo
-      ?.getCount(this)
-      .then((todayCount: CountToday) => {
-        this.detectionsToday = todayCount.counter;
-        this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
-        this.initialized = true;
-      })
-      .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
-      });
+    if (!Utils.anyDboActive) {
+      this.initialized = true;
+    } else {
+      Utils.dbo
+        ?.getCount(this)
+        .then((todayCount: CountToday) => {
+          this.detectionsToday = todayCount.counter;
+          this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
+          this.initialized = true;
+        })
+        .catch((err: Error) => {
+          this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
+        });
+    }
   }
 
   public get timeSinceLastMotion(): number {

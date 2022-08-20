@@ -23,16 +23,20 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     this.deviceCapabilities.push(DeviceCapability.illuminationSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
-    Utils.dbo
-      ?.getCount(this)
-      .then((todayCount: CountToday) => {
-        this.detectionsToday = todayCount.counter;
-        this.log(LogLevel.Debug, `Präsenzcounter vorinitialisiert mit ${this.detectionsToday}`);
-        this.initialized = true;
-      })
-      .catch((err: Error) => {
-        this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
-      });
+    if (!Utils.anyDboActive) {
+      this.initialized = true;
+    } else {
+      Utils.dbo
+        ?.getCount(this)
+        .then((todayCount: CountToday) => {
+          this.detectionsToday = todayCount.counter;
+          this.log(LogLevel.Debug, `Präsenzcounter vorinitialisiert mit ${this.detectionsToday}`);
+          this.initialized = true;
+        })
+        .catch((err: Error) => {
+          this.log(LogLevel.Warn, `Failed to initialize Movement Counter, err ${err?.message ?? err}`);
+        });
+    }
   }
 
   private _detectionsToday: number = 0;
