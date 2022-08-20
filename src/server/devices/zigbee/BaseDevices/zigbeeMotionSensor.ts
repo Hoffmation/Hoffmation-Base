@@ -2,13 +2,14 @@ import { DeviceType } from '../../deviceType';
 import { ZigbeeDevice } from './index';
 import { CountToday, LogLevel, MotionSensorSettings } from '../../../../models';
 import { LogDebugType, Utils } from '../../../services';
-import { iMotionSensor } from '../../baseDeviceInterfaces';
+import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
-export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
+export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
   public settings: MotionSensorSettings = new MotionSensorSettings();
   public movementDetected: boolean = false;
+  public battery: number = -99;
   protected _initialized: boolean = false;
   protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
@@ -17,6 +18,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     Utils.dbo
       ?.getCount(this)
       .then((todayCount: CountToday) => {
@@ -103,6 +105,12 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor {
     this.log(LogLevel.DeepTrace, `Motion update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, pOverride);
     switch (idSplit[3]) {
+      case 'battery':
+        this.battery = state.val as number;
+        if (this.battery < 20) {
+          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+        }
+        break;
       case 'occupancy':
         this.log(LogLevel.Trace, `Motion sensor: Update for motion state of ${this.info.customName}: ${state.val}`);
         this.updateMovement(state.val as boolean);
