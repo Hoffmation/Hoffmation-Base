@@ -1,13 +1,14 @@
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
+import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
 import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
-export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
+export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   public settings: HeaterSettings = new HeaterSettings();
+  public battery: number = -99;
   protected _automaticPoints: { [name: string]: TemperatureSettings } = {};
   protected _iAutomaticInterval: NodeJS.Timeout | undefined;
   protected _initialSeasonCheckDone: boolean = false;
@@ -19,6 +20,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this.deviceCapabilities.push(DeviceCapability.heater);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(
       new TimeCallback(
@@ -142,6 +144,18 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater {
 
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
+  }
+
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
+    switch (idSplit[3]) {
+      case 'battery':
+        this.battery = state.val as number;
+        if (this.battery < 20) {
+          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+        }
+        break;
+    }
+    super.update(idSplit, state, initial, pOverride);
   }
 
   private checkSeasonTurnOff(): void {
