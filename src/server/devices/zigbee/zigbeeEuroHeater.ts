@@ -45,6 +45,10 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     this.checkTempDiff();
   }
 
+  public override get desiredTemperature(): number {
+    return this._desiredTemperatur;
+  }
+
   public override set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
     this.checkTempDiff();
