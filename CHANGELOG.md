@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix stateMap for HmIp Devices
+
 ## 1.0.51 (2022-08-20)
 
 * (theimo1221) Allow access to all ioBroker States (even unhandled)

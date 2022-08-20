@@ -22,22 +22,18 @@ export class HmIPDevice extends IoBrokerBaseDevice {
       `Base-Device Update for ${this.info.customName}("${idSplit.join('.')}", ${state}, ${initial}, ${pOverride})`,
     );
 
-    if (idSplit[3] !== '0') {
-      // Dies ist etwas Gerätespezifisches
-      return;
-    }
-
-    switch (idSplit[4]) {
-      case 'LOW_BAT':
+    const combinedStateName: string = `${idSplit[3]}.${idSplit[4]}`;
+    switch (combinedStateName) {
+      case '0.LOW_BAT':
         const newBatLowVal: boolean = state.val as boolean;
         if (newBatLowVal) {
           this.log(LogLevel.Warn, `!!BATTERIE FAST LEER!!`);
         }
         break;
     }
-    this.stateMap.set(idSplit[3], state.val);
+    this.stateMap.set(combinedStateName, state.val);
     const individualCallbacks: Array<(val: ioBroker.StateValue) => void> | undefined =
-      this.individualStateCallbacks.get(idSplit[3]);
+      this.individualStateCallbacks.get(combinedStateName);
     if (individualCallbacks !== undefined) {
       for (const cb of individualCallbacks) {
         cb(state.val);
