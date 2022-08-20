@@ -121,7 +121,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
         LogLevel.Debug,
         `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperature}°C`,
       );
-      this.desiredTemperature = setting.temperature ?? this.settings.automaticFallBackTemperatur;
+      this.desiredTemperature = setting.temperature;
     }
 
     Utils.dbo?.addTemperaturDataPoint(this);

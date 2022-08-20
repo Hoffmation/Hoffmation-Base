@@ -3,7 +3,7 @@ import { iBaseDevice } from './iBaseDevice';
 
 export interface iHeater extends iBaseDevice {
   settings: HeaterSettings;
-  readonly desiredTemperature: number;
+  desiredTemperature: number;
   readonly humidity: number;
   readonly iLevel: number;
   readonly iTemperature: number;
