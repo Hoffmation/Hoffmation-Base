@@ -36,22 +36,22 @@ values ('${room.roomName}',${room.settings.etage})
   addTemperaturDataPoint(heater: iHeater): void {
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${heater.info.customName}`);
     this.query(`
-insert into hoffmation_schema."TemperaturData" ("date", humidity, "istTemperatur", level, name, "sollTemperatur")
+insert into hoffmation_schema."TemperaturData" ("date", "humidity", "istTemperatur", "level", "name", "sollTemperatur")
 values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel},'${
       heater.info.customName
     }',${heater.desiredTemperature});`);
 
     this.query(`
-insert into hoffmation_schema."HeatGroupCollection" ("date", humidity, "istTemperatur", level, name, "sollTemperatur")
+insert into hoffmation_schema."HeatGroupCollection" ("date", "humidity", "istTemperatur", "level", "name", "sollTemperatur")
 values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel},'${
       heater.info.customName
     }',${heater.desiredTemperature})
     ON CONFLICT (name)
     DO UPDATE SET
         "date" = '${new Date().toISOString()}',
-        humidity = ${heater.humidity},
+        "humidity" = ${heater.humidity},
         "istTemperatur" = ${heater.iTemperature},
-        level = ${heater.iLevel},
+        "level" = ${heater.iLevel},
         "sollTemperatur" = ${heater.desiredTemperature}
 ;
     `);
@@ -280,6 +280,7 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
         })
         .catch((r) => {
           ServerLogService.writeLog(LogLevel.Warn, `Postgres Query failed: ${r}`);
+          ServerLogService.writeLog(LogLevel.Debug, `Query: ${query}`);
           resolve(null);
         });
     });
