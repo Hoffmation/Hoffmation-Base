@@ -2,6 +2,8 @@ import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models';
 import { HmIPDevice } from './hmIpDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { DeviceCapability } from '../DeviceCapability';
 
 enum HmIpHeizungAdaptionStates {
   StateNotAvailable = 0,
@@ -15,13 +17,15 @@ enum HmIpHeizungAdaptionStates {
   ErrorPosition = 8,
 }
 
-export class HmIpHeizung extends HmIPDevice {
+export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
   private _temperatur: number = 0;
   private _level: number = 0;
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
+  public battery: number = -99;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizung);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
   private _desiredTemperatur: number = 0;
@@ -43,6 +47,13 @@ export class HmIpHeizung extends HmIPDevice {
     super.update(idSplit, state, initial, true);
 
     switch (idSplit[3]) {
+      case '0':
+        switch (idSplit[4]) {
+          case 'OPERATING_VOLTAGE':
+            this.battery = ((state.val as number) - 1.8) / 1.2;
+            break;
+        }
+        break;
       case '1':
         this.updateBaseInformation(idSplit[4], state);
         break;

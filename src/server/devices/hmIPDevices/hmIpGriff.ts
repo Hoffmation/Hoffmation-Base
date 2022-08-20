@@ -7,10 +7,11 @@ import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HmIPDevice } from './hmIpDevice';
-import { iHandleSensor } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class HmIpGriff extends HmIPDevice implements iHandleSensor {
+export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice {
+  public battery: number = -99;
   public position: FensterPosition = FensterPosition.geschlossen;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
@@ -23,6 +24,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor {
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpGriff);
     this.deviceCapabilities.push(DeviceCapability.handleSensor);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
   public set Fenster(value: Fenster) {
@@ -45,9 +47,21 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor {
     this.log(LogLevel.DeepTrace, `Griff Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
+      case '0':
+        switch (idSplit[4]) {
+          case 'OPERATING_VOLTAGE':
+            this.battery = ((state.val as number) - 0.9) / 0.6;
+            break;
+        }
+        break;
       case '1':
-        if (idSplit[4] === 'STATE') {
-          this.updatePosition(state.val as FensterPosition);
+        switch (idSplit[4]) {
+          case 'STATE':
+            this.updatePosition(state.val as FensterPosition);
+            break;
+          case 'OPERATING_VOLTAGE':
+            this.battery = ((state.val as number) - 0.9) / 0.6;
+            break;
         }
         break;
     }

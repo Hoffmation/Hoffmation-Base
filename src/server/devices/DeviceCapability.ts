@@ -15,4 +15,5 @@ export enum DeviceCapability {
   vibrationSensor = 13,
   speaker = 14,
   handleSensor = 15,
+  batteryDriven = 16,
 }

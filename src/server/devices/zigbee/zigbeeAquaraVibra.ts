@@ -1,12 +1,13 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, SonosService, Utils } from '../../services';
 import { LogLevel } from '../../../models';
-import { iVibrationSensor } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor {
+export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor, iBatteryDevice {
+  public battery: number = -99;
   public sensitivity: string = '';
   public tiltAngle: number = 0;
   public tiltAngleX: number = 0;
@@ -23,6 +24,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor 
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this.deviceCapabilities.push(DeviceCapability.vibrationSensor);
     this._alarmMessage = Res.vibrationAlarm(this.info.customName);
     PollyService.preloadTTS(this._alarmMessage);
@@ -69,6 +71,12 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor 
     this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
+      case 'battery':
+        this.battery = state.val as number;
+        if (this.battery < 20) {
+          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+        }
+        break;
       case 'sensitivity':
         this.log(
           initial ? LogLevel.DeepTrace : LogLevel.Trace,

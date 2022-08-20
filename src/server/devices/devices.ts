@@ -39,10 +39,10 @@ import {
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { iBaseDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
+import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { DeviceCapability } from './DeviceCapability';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -114,7 +114,10 @@ export class Devices {
       `These are the battery values for each device. Device dependandt some are in volts, some in %`,
     ];
     for (const key in this.alLDevices) {
-      const d: IoBrokerBaseDevice = this.alLDevices[key] as IoBrokerBaseDevice;
+      const d: iBatteryDevice = this.alLDevices[key] as iBatteryDevice;
+      if (!d.deviceCapabilities.includes(DeviceCapability.batteryDriven)) {
+        continue;
+      }
       if (d.battery !== undefined) {
         data.push({ name: d.info.customName, amount: d.battery });
       }

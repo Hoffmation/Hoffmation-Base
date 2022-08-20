@@ -3,8 +3,11 @@ import { PollyService, Res, RoomService, SonosService, Utils } from '../../servi
 import { ZigbeeDevice } from './BaseDevices';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { DeviceCapability } from '../DeviceCapability';
 
-export class ZigbeeHeimanSmoke extends ZigbeeDevice {
+export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice {
+  public battery: number = -99;
   public smoke: boolean = false;
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
@@ -13,6 +16,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeHeimanSmoke);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
     this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
     this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
@@ -34,6 +38,12 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice {
     this.log(LogLevel.DeepTrace, `Smoke Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
+      case 'battery':
+        this.battery = state.val as number;
+        if (this.battery < 20) {
+          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+        }
+        break;
       case 'smoke':
         this.log(LogLevel.Debug, `Smoke Update für ${this.info.customName} auf Rauch: ${state.val}`);
         const newVal: boolean = state.val === true;

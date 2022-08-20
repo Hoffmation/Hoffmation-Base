@@ -31,13 +31,6 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
           this.log(LogLevel.Debug, `Das Zigbee Gerät ist nicht erreichbar.`);
         }
         break;
-      case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
-          this.log(LogLevel.Alert, `Das Zigbee Gerät hat unter 20% Batterie.`);
-        }
-        break;
-
       case 'link_quality':
         this.linkQuality = state.val as number;
         if (this.linkQuality < 5) {

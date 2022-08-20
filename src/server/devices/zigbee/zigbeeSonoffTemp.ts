@@ -1,10 +1,12 @@
 import { ZigbeeDevice } from './BaseDevices';
-import { iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { LogLevel } from '../../../models';
 
-export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor {
+export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
+  public battery: number = -99;
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperaturCallbacks: ((pValue: number) => void)[] = [];
 
@@ -12,6 +14,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
     this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
     this.deviceCapabilities.push(DeviceCapability.humiditySensor);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
   private _humidity: number = UNDEFINED_TEMP_VALUE;
@@ -47,6 +50,12 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
+      case 'battery':
+        this.battery = state.val as number;
+        if (this.battery < 20) {
+          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+        }
+        break;
       case 'humidity':
         this.humidity = state.val as number;
         break;

@@ -1,12 +1,12 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { iButtonSwitch } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iButtonSwitch } from '../baseDeviceInterfaces';
 import { Button, ButtonCapabilities, ButtonPressType } from '../button';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class HmIpTaster extends HmIPDevice implements iButtonSwitch {
+export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDevice {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
     shortPress: true,
     longPress: true,
@@ -22,10 +22,12 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch {
   public buttonBotRight: Button = new Button('BotRight', HmIpTaster.BUTTON_CAPABILLITIES);
   public buttonBot: undefined = undefined;
   public buttonTop: undefined = undefined;
+  public battery: number = -99;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTaster);
     this.deviceCapabilities.push(DeviceCapability.buttonSwitch);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -33,6 +35,13 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch {
     super.update(idSplit, state, initial, true);
     let cTaste: Button | undefined = undefined;
     switch (idSplit[3]) {
+      case '0':
+        switch (idSplit[4]) {
+          case 'OPERATING_VOLTAGE':
+            this.battery = ((state.val as number) - 1.8) / 1.2;
+            break;
+        }
+        break;
       case '1':
         cTaste = this.buttonTopLeft;
         break;

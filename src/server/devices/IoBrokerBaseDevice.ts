@@ -9,7 +9,6 @@ import { DeviceCapability } from './DeviceCapability';
 export abstract class IoBrokerBaseDevice implements iBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
-  public battery: number | undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [];
 
   protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {

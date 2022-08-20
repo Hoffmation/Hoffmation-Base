@@ -2,17 +2,18 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
 import { Utils } from '../../services';
-import { iIlluminationSensor } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iIlluminationSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
+export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice {
   // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   public excludeFromNightAlarm: boolean = false;
   public presenceDetected: boolean = false;
+  public battery: number = -99;
   private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
   // private presenceStateID: string;
   private initialized: boolean = false;
@@ -20,6 +21,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
     this.deviceCapabilities.push(DeviceCapability.illuminationSensor);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
     Utils.dbo
       ?.getCount(this)
@@ -72,17 +74,23 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor {
     this.log(LogLevel.DeepTrace, `Präzens Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
 
-    if (idSplit[3] !== '1') {
-      // Nur die Infos in Kanal 1 sind relevant
-      return;
-    }
-
-    switch (idSplit[4]) {
-      case HmIpPraezenz.PRESENCE_DETECTION:
-        this.updatePresence(state.val as boolean);
+    switch (idSplit[3]) {
+      case '0':
+        switch (idSplit[4]) {
+          case 'OPERATING_VOLTAGE':
+            this.battery = ((state.val as number) - 1.8) / 1.2;
+            break;
+        }
         break;
-      case HmIpPraezenz.CURRENT_ILLUMINATION:
-        this.currentIllumination = state.val as number;
+      case '1':
+        switch (idSplit[4]) {
+          case HmIpPraezenz.PRESENCE_DETECTION:
+            this.updatePresence(state.val as boolean);
+            break;
+          case HmIpPraezenz.CURRENT_ILLUMINATION:
+            this.currentIllumination = state.val as number;
+            break;
+        }
         break;
     }
   }

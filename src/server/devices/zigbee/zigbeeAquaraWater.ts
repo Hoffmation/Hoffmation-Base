@@ -3,8 +3,11 @@ import { PollyService, Res, SonosService, Utils } from '../../services';
 import { ZigbeeDevice } from './BaseDevices';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { DeviceCapability } from '../DeviceCapability';
 
-export class ZigbeeAquaraWater extends ZigbeeDevice {
+export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
+  public battery: number = -99;
   public water: boolean = false;
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
@@ -14,6 +17,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraWater);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this._messageAlarmFirst = Res.waterAlarmStart(this.info.customName, this._roomName);
     this._messageAlarm = Res.waterAlarmRepeat(this.info.customName, this._roomName);
     this._messageAlarmEnd = Res.waterAlarmEnd(this._roomName);
@@ -35,6 +39,12 @@ export class ZigbeeAquaraWater extends ZigbeeDevice {
     this.log(LogLevel.DeepTrace, `Water Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
+      case 'battery':
+        this.battery = state.val as number;
+        if (this.battery < 20) {
+          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+        }
+        break;
       case 'detected':
         this.log(LogLevel.Debug, `Wasser Update für ${this.info.customName} auf Wasser: ${state.val}`);
         const newVal: boolean = state.val === true;
