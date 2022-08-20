@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.51 (2022-08-20)
 
 * (theimo1221) Allow access to all ioBroker States (even unhandled)
 * (theimo1221) Allow cb assignment to any iobrokerdevice state
