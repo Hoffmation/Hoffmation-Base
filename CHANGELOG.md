@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Allow access to all ioBroker States (even unhandled)
+
 ## 1.0.50 (2022-08-20)
 
 * (theimo1221) Update packages

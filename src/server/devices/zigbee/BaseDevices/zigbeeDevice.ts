@@ -7,6 +7,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
   public available: boolean = false;
   public linkQuality: number = 0;
   public voltage: string = '';
+  public stateMap: Map<string, ioBroker.StateValue> = new Map<string, ioBroker.StateValue>();
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -42,5 +43,6 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
         this.voltage = (state.val as string | number).toString();
         break;
     }
+    this.stateMap.set(idSplit[3], state.val);
   }
 }

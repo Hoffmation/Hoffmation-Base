@@ -5,6 +5,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
+  public stateMap: Map<string, ioBroker.StateValue> = new Map<string, ioBroker.StateValue>();
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -34,5 +35,6 @@ export class HmIPDevice extends IoBrokerBaseDevice {
         }
         break;
     }
+    this.stateMap.set(idSplit[3], state.val);
   }
 }
