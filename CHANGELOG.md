@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix stateMap for HmIp Devices
+* (theimo1221) Add some more docu
 
 ## 1.0.51 (2022-08-20)
 

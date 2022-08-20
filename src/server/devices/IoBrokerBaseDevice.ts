@@ -71,6 +71,11 @@ export abstract class IoBrokerBaseDevice implements iBaseDevice {
     }
   }
 
+  /**
+   * Allows to react on the state change of a given state with the passed cb
+   * @param {string} stateName Last part of the id e.g. "available" not "zigbee.0.00158d00053d3e4b.available"
+   * @param {(val: ioBroker.StateValue) => void} cb Desired Callback Action, with passed ioBroker.StateValue
+   */
   public addIndividualStateCallback(stateName: string, cb: (val: ioBroker.StateValue) => void): void {
     let arr: Array<(val: ioBroker.StateValue) => void> | undefined = this.individualStateCallbacks.get(stateName);
     if (arr === undefined) {
