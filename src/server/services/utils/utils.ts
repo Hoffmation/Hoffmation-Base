@@ -94,8 +94,10 @@ export class Utils {
     return object;
   }
 
-  public static jsonFilter(object: object): Partial<object> {
-    return this.deepOmit(object, ['timeout', 'interval', 'timeouts', 'callback']);
+  public static jsonFilter(object: object, additionalOmitKeys: string[] = []): Partial<object> {
+    const keysToOmit: string[] = ['timeout', 'interval', 'timeouts', 'callback'];
+    keysToOmit.push(...additionalOmitKeys);
+    return this.deepOmit(object, keysToOmit);
   }
 
   public static testInitializeServices(): void {

@@ -36,5 +36,12 @@ export class HmIPDevice extends IoBrokerBaseDevice {
         break;
     }
     this.stateMap.set(idSplit[3], state.val);
+    const individualCallbacks: Array<(val: ioBroker.StateValue) => void> | undefined =
+      this.individualStateCallbacks.get(idSplit[3]);
+    if (individualCallbacks !== undefined) {
+      for (const cb of individualCallbacks) {
+        cb(state.val);
+      }
+    }
   }
 }

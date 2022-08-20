@@ -10,6 +10,10 @@ export abstract class IoBrokerBaseDevice implements iBaseDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [];
+  protected readonly individualStateCallbacks: Map<string, Array<(val: ioBroker.StateValue) => void>> = new Map<
+    string,
+    Array<(val: ioBroker.StateValue) => void>
+  >();
 
   protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {
     this.addToCorrectRoom();
@@ -67,6 +71,16 @@ export abstract class IoBrokerBaseDevice implements iBaseDevice {
     }
   }
 
+  public addIndividualStateCallback(stateName: string, cb: (val: ioBroker.StateValue) => void): void {
+    let arr: Array<(val: ioBroker.StateValue) => void> | undefined = this.individualStateCallbacks.get(stateName);
+    if (arr === undefined) {
+      arr = [cb];
+    } else {
+      arr.push(cb);
+    }
+    this.individualStateCallbacks.set(stateName, arr);
+  }
+
   /**
    * Returns whether a connection to ioBroker is established or not
    * @param showError If true, an error message will be written to the log if the connection is not established
@@ -91,7 +105,7 @@ export abstract class IoBrokerBaseDevice implements iBaseDevice {
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return Utils.jsonFilter(this);
+    return Utils.jsonFilter(this, ['individualStateCallbacks']);
   }
 
   protected addToCorrectRoom(): void {
