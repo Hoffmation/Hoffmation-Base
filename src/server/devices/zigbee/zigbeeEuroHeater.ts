@@ -88,7 +88,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
       case 'target_temperature':
         this.log(LogLevel.Trace, `Euro Valve Target_Temp Update for ${this.info.customName} to "${state.val}"`);
         this._targetTempVal = state.val as number;
-        if (!initial) this.checkTempDiff();
+        if (!initial) this.checkTempDiff(); // TODO: If we change it this results in an infinite loop
         break;
     }
 

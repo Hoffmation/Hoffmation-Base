@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) blitzshp as actuator
+
 ## 1.0.55 (2022-08-21)
 
 * (theimo1221) Bugfix: Temporary prevent infinity loop
