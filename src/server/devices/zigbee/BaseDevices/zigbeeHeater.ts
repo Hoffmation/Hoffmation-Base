@@ -5,10 +5,7 @@ import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import liquidPID from 'liquid-pid';
+import { PIDController } from 'liquid-pid';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   public settings: HeaterSettings = new HeaterSettings();
@@ -20,7 +17,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   protected _setPointTemperaturID: string = '';
   protected _temperatur: number = 0;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
-  protected _pidController: liquidPID = new liquidPID({
+  protected _pidController: PIDController = new PIDController({
     temp: {
       ref: 20, // Point temperature
     },
