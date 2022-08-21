@@ -8,7 +8,6 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 export class ZigbeeEuroHeater extends ZigbeeHeater {
   private _setLocalTempCalibrationId: string;
   private _targetTempVal: number = UNDEFINED_TEMP_VALUE;
-  private _localTempVal: number = UNDEFINED_TEMP_VALUE;
   private _localDiffTempVal: number = 0;
   private _setModeId: string;
   private _valvePosId: string;
@@ -64,9 +63,9 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     const tempChangeMs: number = this.stateMap.get('local_temp')?.lc ?? 0;
     const calibChangeMs: number = this.stateMap.get('local_temp_calibration')?.lc ?? 0;
     if (tempChangeMs < calibChangeMs) {
-      return this._targetTempVal - (this._localTempVal + this._localDiffTempVal);
+      return this._targetTempVal - (this._temperatur + this._localDiffTempVal);
     } else {
-      return this._targetTempVal - this._localTempVal;
+      return this._targetTempVal - this._temperatur;
     }
   }
 
@@ -78,7 +77,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
         break;
       case 'local_temp':
         this.log(LogLevel.Trace, `Euro Valve Local_Temp Update for ${this.info.customName} to "${state.val}"`);
-        this._localTempVal = state.val as number;
+        this._temperatur = state.val as number;
         if (!initial) this.checkTempDiff();
         break;
       case 'local_temp_calibration':
@@ -152,7 +151,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     }
     const newLocalDiff: number = Math.sign(desiredDiff) * -9;
     this.setLocalDiff(newLocalDiff);
-    this.setTargetTemperatur(this._localTempVal + this._roomTemperatur + newLocalDiff + this.desiredTemperature);
+    this.setTargetTemperatur(this._temperatur + this._roomTemperatur + newLocalDiff + this.desiredTemperature);
   }
 
   private setLocalDiff(newLocalDiff: number): void {
