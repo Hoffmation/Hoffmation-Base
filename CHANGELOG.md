@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Bugfix: Temporary prevent infinity loop
+
 ## 1.0.54 (2022-08-21)
 
 * (theimo1221) Bugfix: HmIp Device Battery percentage calculation
