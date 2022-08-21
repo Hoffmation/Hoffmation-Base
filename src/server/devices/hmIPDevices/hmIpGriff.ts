@@ -50,7 +50,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = ((state.val as number) - 0.9) / 0.6;
+            this.battery = 100 * (((state.val as number) - 0.9) / 0.6);
             break;
         }
         break;
@@ -60,7 +60,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             this.updatePosition(state.val as FensterPosition);
             break;
           case 'OPERATING_VOLTAGE':
-            this.battery = ((state.val as number) - 0.9) / 0.6;
+            this.battery = 100 * (((state.val as number) - 0.9) / 0.6);
             break;
         }
         break;

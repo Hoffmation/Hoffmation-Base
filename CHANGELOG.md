@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Bugfix: HmIp Device Battery percentage calculation
+
 ## 1.0.53 (2022-08-20)
 
 * (theimo1221) Fix some weird issue with undefined target temp in dbo

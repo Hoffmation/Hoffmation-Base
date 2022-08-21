@@ -82,7 +82,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = ((state.val as number) - 1.8) / 1.2;
+            this.battery = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;
