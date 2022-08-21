@@ -15,7 +15,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   protected _initialSeasonCheckDone: boolean = false;
   protected _level: number = 0;
   protected _setPointTemperaturID: string = '';
-  protected _temperatur: number = 0;
+  protected _temperatur: number = UNDEFINED_TEMP_VALUE;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
   protected _pidController: PIDController = new PIDController({
     temp: {

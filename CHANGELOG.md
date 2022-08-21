@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix issue with temperature 0 being used with Zigbee Heater
+
 ## 1.0.59 (2022-08-21)
 
 * (theimo1221)  Fix import resolve
