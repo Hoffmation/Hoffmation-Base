@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.55 (2022-08-21)
 
 * (theimo1221) Bugfix: Temporary prevent infinity loop
 
