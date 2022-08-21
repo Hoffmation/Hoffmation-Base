@@ -85,6 +85,9 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
         this.log(LogLevel.Trace, `Euro Valve Local_Temp_calib Update for ${this.info.customName} to "${state.val}"`);
         this._localDiffTempVal = state.val as number;
         if (!initial) this.checkTempDiff();
+        if (initial && state.val !== 0) {
+          this.setLocalDiff(0);
+        }
         break;
       case 'spz_trv_mode':
         this.log(LogLevel.Trace, `Euro Valve mode Update for ${this.info.customName} to "${state.val}"`);

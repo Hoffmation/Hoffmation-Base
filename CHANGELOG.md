@@ -10,6 +10,7 @@
 
 * (theimo1221) Fix issue with temperature 0 being used with Zigbee Heater
 * (theimo1221) Remove unnecessary packages
+* (theimo1221) Reset LocalDiff on bootup with euroheater
 
 ## 1.0.59 (2022-08-21)
 
