@@ -96,6 +96,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
   }
 
   private checkTempDiff(): void {
+    return; // TODO: Fix this
     if (this.settings.useOwnTemperatur || this.seasonTurnOff) {
       return;
     }
