@@ -5,7 +5,7 @@ import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
-import { PIDController } from 'liquid-pid';
+import { PIDController } from '../../../../liquid-pid';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   public settings: HeaterSettings = new HeaterSettings();

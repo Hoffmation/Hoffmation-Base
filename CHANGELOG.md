@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221)  Fix import resolve
+
 ## 1.0.58 (2022-08-21)
 
 * (theimo1221) Fix Liquid PID Import
