@@ -52,6 +52,7 @@
     "daikin-controller": "^2.1.0",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
+    "liquid-pid": "^1.0.0",
     "lodash": "^4.17.21",
     "mongodb": "^4.9.0",
     "node-fetch": "3.2.10",

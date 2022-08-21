@@ -6,6 +6,10 @@ import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import liquidPID from 'liquid-pid';
+
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   public settings: HeaterSettings = new HeaterSettings();
   public battery: number = -99;
@@ -16,6 +20,17 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   protected _setPointTemperaturID: string = '';
   protected _temperatur: number = 0;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
+  protected _pidController: liquidPID = new liquidPID({
+    temp: {
+      ref: 20, // Point temperature
+    },
+    Pmax: 100, // Max power (output),
+
+    // Tune the PID Controller
+    Kp: 25, // PID: Kp in 1/1000
+    Ki: 1000, // PID: Ki in 1/1000
+    Kd: 9, // PID: Kd in 1/1000
+  });
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -156,6 +171,19 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
         break;
     }
     super.update(idSplit, state, initial, pOverride);
+  }
+
+  protected getNextPidLevel(): number {
+    if (this.seasonTurnOff) {
+      return 0;
+    }
+    this._pidController.setPoint(this.desiredTemperature);
+    const newValue: number = this._pidController.calculate(this._roomTemperatur);
+    this.log(
+      LogLevel.Debug,
+      `New PID Value ${newValue}% (cTemp: ${this._roomTemperatur}, dTemp: ${this.desiredTemperature})`,
+    );
+    return newValue;
   }
 
   private checkSeasonTurnOff(): void {

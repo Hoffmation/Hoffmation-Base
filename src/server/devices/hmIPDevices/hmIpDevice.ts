@@ -5,7 +5,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public lowBattery: boolean = false;
-  public stateMap: Map<string, ioBroker.StateValue> = new Map<string, ioBroker.StateValue>();
+  public stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -31,7 +31,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
         }
         break;
     }
-    this.stateMap.set(combinedStateName, state.val);
+    this.stateMap.set(combinedStateName, state);
     const individualCallbacks: Array<(val: ioBroker.StateValue) => void> | undefined =
       this.individualStateCallbacks.get(combinedStateName);
     if (individualCallbacks !== undefined) {

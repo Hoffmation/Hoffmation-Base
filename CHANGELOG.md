@@ -5,6 +5,16 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Limit EuroHeater checkTempDiff Interval
+* (theimo1221) Add first implementation of PID controlled Heater
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update packages
+
 ## 1.0.56 (2022-08-21)
 
 * (theimo1221) blitzshp as actuator

@@ -10,6 +10,7 @@ export class HeaterSettings extends DeviceSettings {
    * @type {boolean}
    */
   public controlByPid: boolean = false;
+  public controlByTempDiff: boolean = false;
 
   /**
    * Whether this device should turn off at Start of summer season and only heat in winter

@@ -12,8 +12,10 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
   private _localDiffTempVal: number = 0;
   private _setModeId: string;
   private _valvePosId: string;
+  private _lastRecalc: number = 0;
 
   private _mode: 1 | 2 = 1;
+  private _recalcTimeout: NodeJS.Timeout | null = null;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeEuroHeater);
@@ -21,6 +23,10 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     this._setLocalTempCalibrationId = `${this.info.fullID}.local_temp_calibration`;
     this._setModeId = `${this.info.fullID}.spz_trv_mode`;
     this._valvePosId = `${this.info.fullID}.valve_position`;
+  }
+
+  public get seasonTurnOff(): boolean {
+    return this._seasonTurnOff;
   }
 
   public override set seasonTurnOff(value: boolean) {
@@ -42,7 +48,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     if (this.settings.useOwnTemperatur) {
       return;
     }
-    this.checkTempDiff();
+    this.recalcLevel();
   }
 
   public override get desiredTemperature(): number {
@@ -51,11 +57,17 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
 
   public override set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
-    this.checkTempDiff();
+    this.recalcLevel();
   }
 
   private get tempDiff(): number {
-    return this._targetTempVal - (this._localTempVal + this._localDiffTempVal);
+    const tempChangeMs: number = this.stateMap.get('local_temp')?.lc ?? 0;
+    const calibChangeMs: number = this.stateMap.get('local_temp_calibration')?.lc ?? 0;
+    if (tempChangeMs < calibChangeMs) {
+      return this._targetTempVal - (this._localTempVal + this._localDiffTempVal);
+    } else {
+      return this._targetTempVal - this._localTempVal;
+    }
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -95,11 +107,29 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     super.update(idSplit, state, initial, true);
   }
 
-  private checkTempDiff(): void {
-    return; // TODO: Fix this
+  public recalcLevel(): void {
     if (this.settings.useOwnTemperatur || this.seasonTurnOff) {
       return;
     }
+    const msTilNextMinimumCheck: number = this._lastRecalc + 5 * 60 * 1000 - Utils.nowMS();
+    if (msTilNextMinimumCheck > 0) {
+      if (this._recalcTimeout == null) {
+        this._recalcTimeout = Utils.guardedTimeout(this.recalcLevel, msTilNextMinimumCheck, this);
+      }
+      return;
+    }
+    if (this.settings.controlByPid) {
+      this.setValve(this.getNextPidLevel());
+      return;
+    }
+    this.checkTempDiff();
+  }
+
+  private checkTempDiff(): void {
+    if (!this.settings.controlByTempDiff) {
+      return;
+    }
+    this._lastRecalc = Utils.nowMS();
     const desiredDiff: number = Utils.round(this.desiredTemperature - this._roomTemperatur, 1);
     const currentDiff: number = this.tempDiff;
     const missingDiff: number = Utils.round(desiredDiff - currentDiff, 1);
