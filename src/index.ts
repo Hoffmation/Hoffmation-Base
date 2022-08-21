@@ -28,6 +28,7 @@ import { LogLevel } from './models';
 
 export * from './models/index';
 export * from './server/index';
+export * from './liquid-pid';
 
 export class HoffmationInitializationObject {
   public constructor(public config: iConfig) {}
