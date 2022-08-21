@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.57 (2022-08-21)
 
 * (theimo1221) Limit EuroHeater checkTempDiff Interval
 * (theimo1221) Add first implementation of PID controlled Heater
