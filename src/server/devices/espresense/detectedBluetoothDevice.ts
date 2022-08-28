@@ -33,6 +33,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
   public updateDistance(tracker: iBluetoothDetector, distance: number) {
     const trackedDistance = this.distanceMap.get(tracker.id) ?? new TrackedDistanceData(tracker);
     trackedDistance.update(distance);
+    this.distanceMap.set(tracker.id, trackedDistance);
   }
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix missing update of distance map
+
 ## 1.0.61-alpha.5 (2022-08-28)
 
 * (theimo1221) Add possibility to monitor specific devices
