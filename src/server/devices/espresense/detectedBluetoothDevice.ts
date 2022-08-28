@@ -72,7 +72,12 @@ export class DetectedBluetoothDevice implements iBaseDevice {
     const dataPoints = this.getDistances(maxAge);
     const result = [`Distances for ${this.info.customName}`];
     for (const data of dataPoints) {
-      result.push(`${data.trackerName}: ${Utils.round(data.distance ?? -99, 2)}m updated ${new Date(data.lastUpdate)}`);
+      result.push(
+        `${data.trackerName}: ${Utils.round(data.distance ?? -99, 2)}m updated ${new Date(
+          data.lastUpdate,
+        ).toLocaleTimeString()}`,
+      );
+      Utils.nowTime();
     }
     return result.join('\n');
   }
