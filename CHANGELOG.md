@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.61-alpha.7 (2022-08-28)
 
 * (theimo1221) Fix device overwrite
 
