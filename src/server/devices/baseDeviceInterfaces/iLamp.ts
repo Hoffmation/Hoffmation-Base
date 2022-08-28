@@ -1,7 +1,7 @@
 import { ActuatorSettings, TimeOfDay } from '../../../models';
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
-export interface iLamp extends iBaseDevice {
+export interface iLamp extends iRoomDevice {
   settings: ActuatorSettings;
   lightOn: boolean;
 

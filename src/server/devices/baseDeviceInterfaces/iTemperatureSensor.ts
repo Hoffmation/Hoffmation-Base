@@ -1,8 +1,8 @@
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
-export interface iTemperatureSensor extends iBaseDevice {
+export interface iTemperatureSensor extends iRoomDevice {
   // Temperature as a number in Celsius
   iTemperature: number;
 

@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add possibility to monitor specific devices
+* (theimo1221) Refactor iBaseDevice to allow roomless devices
+
 ## 1.0.61-alpha.4 (2022-08-28)
 
 * (theimo1221) Respect configured Device Names

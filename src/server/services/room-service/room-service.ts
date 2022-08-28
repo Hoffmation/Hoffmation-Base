@@ -4,7 +4,7 @@ import { ServerLogService } from '../log-service';
 import { SonosService } from '../Sonos';
 import { Res } from '../Translation';
 import { TelegramService } from '../Telegram';
-import { iBaseDevice } from '../../devices';
+import { iRoomDevice } from '../../devices';
 
 export class RoomService {
   public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
@@ -104,7 +104,7 @@ export class RoomService {
     );
   }
 
-  public static startIntrusionAlarm(room: iRoomBase, device: iBaseDevice): void {
+  public static startIntrusionAlarm(room: iRoomBase, device: iRoomDevice): void {
     const message: string = `!Potenzieller Eindringling! Bewegung in ${room.roomName} von ${device.info.fullName} festgestellt`;
     ServerLogService.writeLog(LogLevel.Info, message);
     if (!this.awayModeActive && !this.nightAlarmActive) {

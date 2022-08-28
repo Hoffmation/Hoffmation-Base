@@ -1,7 +1,7 @@
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 import { ProximityCallback } from '../espresense';
 
-export interface iBluetoothDetector extends iBaseDevice {
+export interface iBluetoothDetector extends iRoomDevice {
   /**
    * Add callback to react on a specified device entering/leaving a given zone
    * @param cb

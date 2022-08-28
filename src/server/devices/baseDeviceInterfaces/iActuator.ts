@@ -1,7 +1,7 @@
 import { ActuatorSettings } from '../../../models';
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
-export interface iActuator extends iBaseDevice {
+export interface iActuator extends iRoomDevice {
   settings: ActuatorSettings;
   actuatorOn: boolean;
 

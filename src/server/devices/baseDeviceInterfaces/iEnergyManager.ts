@@ -1,5 +1,5 @@
 import { iExcessEnergyConsumer } from './iExcessEnergyConsumer';
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
 export class PhaseState {
   private readonly _injectingWattage: number = 0;
@@ -31,7 +31,7 @@ export class PhaseState {
   }
 }
 
-export interface iEnergyManager extends iBaseDevice {
+export interface iEnergyManager extends iRoomDevice {
   // Consumption from non controlled Devices in Watts
   baseConsumption: number;
   // Total available Energy in Watts

@@ -37,4 +37,5 @@ export enum DeviceType {
   Daikin = 2001,
   Sonos = 3001,
   Espresense = 4001,
+  TrackableDevice = 4002,
 }

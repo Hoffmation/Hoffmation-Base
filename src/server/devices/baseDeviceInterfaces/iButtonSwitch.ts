@@ -1,7 +1,7 @@
 import { Button } from '../button';
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
-export interface iButtonSwitch extends iBaseDevice {
+export interface iButtonSwitch extends iRoomDevice {
   // Primarily in 4-6 Button switches
   buttonTopLeft: Button | undefined;
   // Primarily in 4-6 Button switches

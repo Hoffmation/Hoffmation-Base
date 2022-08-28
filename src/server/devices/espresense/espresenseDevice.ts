@@ -1,4 +1,4 @@
-import { iBaseDevice } from '../baseDeviceInterfaces';
+import { iRoomDevice } from '../baseDeviceInterfaces';
 import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
 import { DeviceCapability } from '../DeviceCapability';
 import { LogLevel, RoomBase } from '../../../models';
@@ -10,7 +10,7 @@ import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
 import { EspresenseCoordinator } from './espresenseCoordinator';
 
-export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
+export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.bluetoothDetector];
   public deviceType: DeviceType = DeviceType.Espresense;
   public readonly name: string;
@@ -52,7 +52,7 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
         continue;
       }
 
-      return dev.lastUpdate > Utils.nowMS() - 1000 * maxAge ? dev.distance : undefined;
+      return dev.getDistance(this.id, maxAge)?.distance;
     }
     return undefined;
   }
@@ -71,12 +71,34 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
     }
     let dev = this.deviceMap.get(devName);
     if (dev === undefined) {
-      dev = this.addDeviceTracking(devName, SettingsService.settings.espresense?.deviceNaming[devName] ?? 'Unknown');
+      dev = this.addDeviceTracking(devName);
     }
-    dev.lastUpdate = Utils.nowMS();
-    dev.previousDistance = dev.distance;
-    dev.distance = data.distance;
-    this.checkCbs(dev);
+    dev.updateDistance(this, data.distance);
+    const cbs = this.proximityCallback.get(dev.name);
+    if (cbs === undefined) {
+      return;
+    }
+
+    const trackedDistance = dev.getDistance(this.id);
+    if (trackedDistance === undefined) {
+      this.log(LogLevel.Error, `TrackedDistance Undefined directly after update`);
+      return;
+    }
+    const distance: number | undefined = trackedDistance.distance;
+    const hasPreviousDistance: boolean = trackedDistance.previousDistance !== undefined;
+    for (const cb of cbs) {
+      if (distance === undefined) {
+        if (hasPreviousDistance) {
+          cb.callback(false, undefined);
+        }
+        continue;
+      }
+      if (distance > cb.distanceTrigger && (trackedDistance.previousDistance ?? 99) < cb.distanceTrigger) {
+        cb.callback(false, distance);
+      } else if (distance < cb.distanceTrigger && (trackedDistance.previousDistance ?? 0) > cb.distanceTrigger) {
+        cb.callback(true, distance);
+      }
+    }
   }
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
@@ -88,7 +110,7 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
     });
   }
 
-  public toJSON(): Partial<iBaseDevice> {
+  public toJSON(): Partial<iRoomDevice> {
     return Utils.jsonFilter(this);
   }
 
@@ -101,32 +123,10 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
     this.proximityCallback.set(cb.deviceName, currentValue);
   }
 
-  private addDeviceTracking(devName: string, translatedName: string = 'Unknown'): DetectedBluetoothDevice {
-    const dev = new DetectedBluetoothDevice(devName, translatedName);
+  private addDeviceTracking(devName: string): DetectedBluetoothDevice {
+    const settings = SettingsService.settings.espresense?.deviceMap[devName];
+    const dev = new DetectedBluetoothDevice(devName, settings);
     this.deviceMap.set(devName, dev);
     return dev;
-  }
-
-  private checkCbs(dev: DetectedBluetoothDevice): void {
-    const cbs = this.proximityCallback.get(dev.name);
-    if (cbs === undefined) {
-      return;
-    }
-
-    const distance: number | undefined = dev.distance;
-    const hasPreviousDstance: boolean = dev.previousDistance !== undefined;
-    for (const cb of cbs) {
-      if (distance === undefined) {
-        if (hasPreviousDstance) {
-          cb.callback(false, undefined);
-        }
-        continue;
-      }
-      if (distance > cb.distanceTrigger && (dev.previousDistance ?? 99) < cb.distanceTrigger) {
-        cb.callback(false, distance);
-      } else if (distance < cb.distanceTrigger && (dev.previousDistance ?? 0) > cb.distanceTrigger) {
-        cb.callback(true, distance);
-      }
-    }
   }
 }

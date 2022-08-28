@@ -29,7 +29,12 @@ export interface iRestSettings {
 
 export interface iEspresenseSettings {
   mqttInstance: number;
-  deviceNaming: { [folderId: string]: string };
+  deviceMap: { [folderId: string]: iBluetoothTrackingSettings };
+}
+
+export interface iBluetoothTrackingSettings {
+  customName: string;
+  activeTracking: boolean;
 }
 
 export interface iConfig {

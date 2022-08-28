@@ -1,7 +1,7 @@
 import { FensterPosition } from '../models';
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
-export interface iHandleSensor extends iBaseDevice {
+export interface iHandleSensor extends iRoomDevice {
   position: FensterPosition;
   minutesOpen: number;
 

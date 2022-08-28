@@ -1,7 +1,7 @@
 import { MotionSensorSettings } from '../../../models';
-import { iBaseDevice } from './iBaseDevice';
+import { iRoomDevice } from './iRoomDevice';
 
-export interface iMotionSensor extends iBaseDevice {
+export interface iMotionSensor extends iRoomDevice {
   settings: MotionSensorSettings;
   movementDetected: boolean;
   readonly timeSinceLastMotion: number;

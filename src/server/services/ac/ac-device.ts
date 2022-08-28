@@ -1,4 +1,4 @@
-import { DeviceInfo, DeviceType, iAcDevice, iBaseDevice, iExcessEnergyConsumer } from '../../devices';
+import { DeviceInfo, DeviceType, iAcDevice, iExcessEnergyConsumer, iRoomDevice } from '../../devices';
 import { ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
@@ -8,7 +8,7 @@ import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 
-export abstract class AcDevice implements iExcessEnergyConsumer, iBaseDevice, iAcDevice {
+export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice {
   public currentConsumption: number = -1;
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   public acSettings: AcSettings = new AcSettings();
