@@ -5,7 +5,8 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 1.0.61-alpha.0 (2022-08-28)
+
+## **WORK IN PROGRESS**
 
 * (theimo1221) Espresense implementation
 
