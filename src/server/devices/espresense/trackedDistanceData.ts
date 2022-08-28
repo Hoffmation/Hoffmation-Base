@@ -18,6 +18,6 @@ export class TrackedDistanceData {
   }
 
   public isOutdated(maxAge: number = 120): boolean {
-    return this.lastUpdate > Utils.nowMS() - maxAge * 1000;
+    return this.lastUpdate < Utils.nowMS() - maxAge * 1000;
   }
 }
