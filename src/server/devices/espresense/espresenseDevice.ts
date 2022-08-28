@@ -4,7 +4,7 @@ import { DeviceCapability } from '../DeviceCapability';
 import { LogLevel, RoomBase } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { API, LogDebugType, ServerLogService, SettingsService, Utils } from '../../services';
+import { API, LogDebugType, ServerLogService, Utils } from '../../services';
 import { Devices } from '../devices';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
@@ -124,8 +124,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   }
 
   private addDeviceTracking(devName: string): DetectedBluetoothDevice {
-    const settings = SettingsService.settings.espresense?.deviceMap[devName];
-    const dev = new DetectedBluetoothDevice(devName, settings);
+    const dev = DetectedBluetoothDevice.getOrCreate(devName);
     this.deviceMap.set(devName, dev);
     return dev;
   }

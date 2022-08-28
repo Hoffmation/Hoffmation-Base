@@ -4,7 +4,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 import { LogLevel } from '../../../models';
-import { LogDebugType, ServerLogService, Utils } from '../../services';
+import { API, LogDebugType, ServerLogService, SettingsService, Utils } from '../../services';
 import { Devices } from '../devices';
 import { TrackedDistanceData } from './trackedDistanceData';
 import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
@@ -20,8 +20,8 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       return;
     }
     this.info.customName = settings.customName;
+    this.info.allDevicesKey = DetectedBluetoothDevice.deviceKeyBySettings(settings);
     if (settings.activeTracking) {
-      this.info.allDevicesKey = `trackedDevice-${settings.customName}`;
       Devices.alLDevices[this.info.allDevicesKey] = this;
     }
   }
@@ -75,5 +75,18 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       result.push(`${data.trackerName}: ${Utils.round(data.distance ?? -99, 2)}m updated ${new Date(data.lastUpdate)}`);
     }
     return result.join('\n');
+  }
+
+  public static getOrCreate(devName: string): DetectedBluetoothDevice {
+    const settings = SettingsService.settings.espresense?.deviceMap[devName];
+    if (settings === undefined) {
+      return new DetectedBluetoothDevice(devName);
+    }
+    const dev = API.getDevice(this.deviceKeyBySettings(settings));
+    return (dev as DetectedBluetoothDevice | undefined) ?? new DetectedBluetoothDevice(devName, settings);
+  }
+
+  private static deviceKeyBySettings(settings: iBluetoothTrackingSettings): string {
+    return `trackedDevice-${settings.customName}`;
   }
 }
