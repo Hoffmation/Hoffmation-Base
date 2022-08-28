@@ -27,9 +27,16 @@ export interface iRestSettings {
   port?: number;
 }
 
+export interface iEspresenseSettings {
+  mqttInstance: number;
+  roomMapping: { [devName: string]: string };
+  deviceNaming: { [folderId: string]: string };
+}
+
 export interface iConfig {
   asusConfig?: iAsusConfig;
   daikin?: iDaikinSettings;
+  espresense?: iEspresenseSettings;
   // Price per kWh from the grid
   wattagePrice?: number;
   // Earnigs per kWh injecting into the grid

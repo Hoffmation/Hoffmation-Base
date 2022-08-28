@@ -16,4 +16,5 @@ export enum DeviceCapability {
   speaker = 14,
   handleSensor = 15,
   batteryDriven = 16,
+  bluetoothDetector = 17,
 }

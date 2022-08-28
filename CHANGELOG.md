@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Espresense implementation
+
 ## 1.0.60 (2022-08-21)
 
 * (theimo1221) Fix issue with temperature 0 being used with Zigbee Heater

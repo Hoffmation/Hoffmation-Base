@@ -36,4 +36,5 @@ export enum DeviceType {
   WledDevice = 1001,
   Daikin = 2001,
   Sonos = 3001,
+  Espresense = 4001,
 }
