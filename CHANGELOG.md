@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Respect configured Device Names
+
 ## 1.0.61-alpha.3 (2022-08-28)
 
 * (theimo1221) Add possibility to limit age of last proximity update

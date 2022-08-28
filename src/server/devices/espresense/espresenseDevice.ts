@@ -4,7 +4,7 @@ import { DeviceCapability } from '../DeviceCapability';
 import { LogLevel, RoomBase } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { API, LogDebugType, ServerLogService, Utils } from '../../services';
+import { API, LogDebugType, ServerLogService, SettingsService, Utils } from '../../services';
 import { Devices } from '../devices';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
@@ -71,7 +71,7 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
     }
     let dev = this.deviceMap.get(devName);
     if (dev === undefined) {
-      dev = this.addDeviceTracking(devName, 'Unknown');
+      dev = this.addDeviceTracking(devName, SettingsService.settings.espresense?.deviceNaming[devName] ?? 'Unknown');
     }
     dev.lastUpdate = Utils.nowMS();
     dev.previousDistance = dev.distance;
