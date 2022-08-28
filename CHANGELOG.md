@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add possibility to limit age of last proximity update
+
 ## 1.0.61-alpha.2 (2022-08-28)
 
 * (theimo1221) Make Espresense Device announce itself to coordinator instead

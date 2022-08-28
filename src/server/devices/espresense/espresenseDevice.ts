@@ -46,17 +46,19 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
     return API.getRoom(this.info.room);
   }
 
-  public distanceOfDevice(deviceName: string): number | undefined {
+  public distanceOfDevice(deviceName: string, maxAge: number = 60): number | undefined {
     for (const dev of this.deviceMap.values()) {
-      if (dev.name == deviceName) {
-        return dev.distance;
+      if (dev.name != deviceName) {
+        continue;
       }
+
+      return dev.lastUpdate > Utils.nowMS() - 1000 * maxAge ? dev.distance : undefined;
     }
     return undefined;
   }
 
-  public isDevicePresent(deviceName: string, maxDistance: number): boolean {
-    return (this.distanceOfDevice(deviceName) ?? 99) < maxDistance;
+  public isDevicePresent(deviceName: string, maxDistance: number, maxAge: number = 60): boolean {
+    return (this.distanceOfDevice(deviceName, maxAge) ?? 99) < maxDistance;
   }
 
   public update(devName: string, state: ioBroker.State): void {

@@ -8,7 +8,20 @@ export interface iBluetoothDetector extends iBaseDevice {
    */
   addProximityCallback(cb: ProximityCallback): void;
 
-  distanceOfDevice(deviceName: string): number | undefined;
+  /**
+   * Gets the distance of a currently present device
+   * @param {string} deviceName The mapped Device name
+   * @param {number} maxAge The maximum age in seconds to still respect that device
+   * @returns {number | undefined} Distance in meters or undefined if currently not present
+   */
+  distanceOfDevice(deviceName: string, maxAge: number): number | undefined;
 
-  isDevicePresent(deviceName: string, maxDistance: number): boolean;
+  /**
+   * Check if a device is currently present and below the given Distance
+   * @param {string} deviceName The mapped Device name
+   * @param {number} maxDistance The maximum distance in meters
+   * @param {number} maxAge The maximum age in seconds to still respect that device
+   * @returns {boolean}
+   */
+  isDevicePresent(deviceName: string, maxDistance: number, maxAge: number): boolean;
 }
