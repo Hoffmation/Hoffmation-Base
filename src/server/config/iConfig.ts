@@ -29,7 +29,6 @@ export interface iRestSettings {
 
 export interface iEspresenseSettings {
   mqttInstance: number;
-  roomMapping: { [devName: string]: string };
   deviceNaming: { [folderId: string]: string };
 }
 

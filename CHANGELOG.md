@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Make Espresense Device announce itself to coordinator instead
+
 ## 1.0.61-alpha.1 (2022-08-28)
 
 * (theimo1221) Espresense implementation

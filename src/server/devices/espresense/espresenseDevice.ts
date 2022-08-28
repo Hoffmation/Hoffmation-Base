@@ -4,27 +4,28 @@ import { DeviceCapability } from '../DeviceCapability';
 import { LogLevel, RoomBase } from '../../../models';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceType } from '../deviceType';
-import { LogDebugType, ServerLogService, Utils } from '../../services';
+import { API, LogDebugType, ServerLogService, Utils } from '../../services';
 import { Devices } from '../devices';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
+import { EspresenseCoordinator } from './espresenseCoordinator';
 
 export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.bluetoothDetector];
   public deviceType: DeviceType = DeviceType.Espresense;
   public readonly name: string;
-  public room: RoomBase | undefined;
   private deviceMap: Map<string, DetectedBluetoothDevice> = new Map<string, DetectedBluetoothDevice>();
   private proximityCallback: Map<string, ProximityCallback[]> = new Map<string, ProximityCallback[]>();
 
-  public constructor(name: string, room: RoomBase) {
+  public constructor(name: string, roomName: string) {
     this.name = name;
     this._info = new DeviceInfo();
-    this._info.fullName = `Espresense ${room.roomName} ${name}`;
+    this._info.fullName = `Espresense ${roomName} ${name}`;
     this._info.customName = `Espresense ${name}`;
-    this._info.room = room.roomName;
-    this._info.allDevicesKey = `espresense-${room.roomName}-${name}`;
+    this._info.room = roomName;
+    this._info.allDevicesKey = `espresense-${roomName}-${name}`;
     Devices.alLDevices[this._info.allDevicesKey] = this;
+    EspresenseCoordinator.addDevice(this, name);
   }
 
   protected _info: DeviceInfo;
@@ -39,6 +40,10 @@ export class EspresenseDevice implements iBaseDevice, iBluetoothDetector {
 
   public get id(): string {
     return this.info.allDevicesKey ?? `espresense-${this.info.room}-${this.info.customName}`;
+  }
+
+  public get room(): RoomBase | undefined {
+    return API.getRoom(this.info.room);
   }
 
   public distanceOfDevice(deviceName: string): number | undefined {

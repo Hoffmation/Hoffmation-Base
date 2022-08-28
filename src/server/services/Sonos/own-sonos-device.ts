@@ -9,10 +9,10 @@ import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import { PollyService } from './polly-service';
+import { API } from '../api';
 
 export class OwnSonosDevice implements iSpeaker {
   public maxPlayOnAllVolume: number = 80;
-  public room: RoomBase | undefined;
   public readonly deviceType: DeviceType = DeviceType.Sonos;
   public readonly discoveryName: string;
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.speaker];
@@ -35,6 +35,10 @@ export class OwnSonosDevice implements iSpeaker {
 
   public set info(info: DeviceInfo) {
     this._info = info;
+  }
+
+  public get room(): RoomBase | undefined {
+    return API.getRoom(this.info.room);
   }
 
   public get id(): string {
