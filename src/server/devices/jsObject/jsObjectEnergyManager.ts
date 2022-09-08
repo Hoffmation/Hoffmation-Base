@@ -241,7 +241,11 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
 
   private turnOffAdditionalConsumer(): void {
     const potentialDevices: iExcessEnergyConsumer[] = this._excessEnergyConsumer.filter((e) => {
-      if (e.energyConsumerSettings.priority === -1 || !e.on || !e.wasActivatedByExcessEnergy()) {
+      if (e.energyConsumerSettings.priority === -1 || !e.on) {
+        return false;
+      }
+      if (!e.wasActivatedByExcessEnergy()) {
+        e.log(LogLevel.Info, 'This would have been turned off, but was activated manually....');
         return false;
       }
       if (this._lastDeviceChange?.newState === false && e === this._lastDeviceChange.device) {

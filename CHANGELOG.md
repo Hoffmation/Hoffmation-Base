@@ -10,6 +10,7 @@
 
 * (theimo1221) Update packages
 * (theimo1221) Persist any AC Changes
+* (theimo1221) Log manual energyConsumer without spare energy
 
 ## 1.0.61-alpha.8 (2022-08-28)
 
