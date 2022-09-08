@@ -97,6 +97,7 @@ export class OwnDaikinDevice extends AcDevice {
       } else if (res) {
         this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
         this.log(LogLevel.Debug, `Device Info ${JSON.stringify(res)}`, LogDebugType.DaikinSuccessfullControlInfo);
+        this.persist();
       } else {
         this.log(LogLevel.Warn, `No Error, but also no response...`);
       }

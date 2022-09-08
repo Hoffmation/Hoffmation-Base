@@ -24,6 +24,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._info.room = roomName;
     this._info.allDevicesKey = `ac-${roomName}-${name}`;
     Utils.guardedInterval(this.automaticCheck, 60000, this, true);
+    Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
   }
 
   public get info(): DeviceInfo {
@@ -90,6 +91,13 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
 
   public abstract turnOn(): void;
+
+  public persist(): void {
+    if (!Utils.anyDboActive) {
+      return;
+    }
+    Utils.dbo?.persistAC(this);
+  }
 
   public turnOnForExcessEnergy(): void {
     if (this._blockAutomaticTurnOnMS > Utils.nowMS()) {

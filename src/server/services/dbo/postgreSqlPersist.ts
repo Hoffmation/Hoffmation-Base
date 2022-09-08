@@ -8,7 +8,7 @@ import {
   ShutterCalibration,
   TemperaturDataPoint,
 } from '../../../models';
-import { iHeater, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iHeater, IoBrokerBaseDevice } from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
@@ -187,6 +187,21 @@ alter table "PresenceToday"
 create unique index presencetoday_deviceid_uindex
     on "PresenceToday" ("deviceID");
     END IF;
+
+IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then    
+  create table hoffmation_schema."AcDeviceData"
+  (
+      "deviceID" varchar(60) not null,
+      "on"       boolean,
+      date       timestamp   not null,
+      constraint acdevicedata_pk
+          primary key ("deviceID", date)
+  );
+
+  alter table hoffmation_schema."AcDeviceData"
+    owner to postgres;
+END IF;
+    
     IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
 create table "TemperaturData"
 (
@@ -208,6 +223,13 @@ $$;`,
     );
     this.initialized = true;
     ServerLogService.writeLog(LogLevel.Info, `Postgres DB initialized`);
+  }
+
+  public persistAC(device: iAcDevice): void {
+    this.query(`
+insert into hoffmation_schema."AcDeviceData" (deviceID, "on", "date")
+values ('${device.id}', ${device.on},'${new Date().toISOString()}');
+    `);
   }
 
   persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {

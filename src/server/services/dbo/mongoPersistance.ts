@@ -14,7 +14,7 @@ import {
   TemperaturDataPoint,
 } from '../../../models';
 import { iPersist } from './iPersist';
-import { iHeater, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iHeater, IoBrokerBaseDevice } from '../../devices';
 
 export class MongoPersistance implements iPersist {
   initialized: boolean = false;
@@ -34,6 +34,10 @@ export class MongoPersistance implements iPersist {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.mongoConf = config.mongo!;
     this.MongoClient = new MongoClient(this.mongoConf.mongoConnection);
+  }
+
+  persistAC(_device: iAcDevice): void {
+    ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
   }
 
   private static handleReject(reason: unknown, func: string) {
