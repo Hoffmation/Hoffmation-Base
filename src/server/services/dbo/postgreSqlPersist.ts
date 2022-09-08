@@ -227,7 +227,7 @@ $$;`,
 
   public persistAC(device: iAcDevice): void {
     this.query(`
-insert into hoffmation_schema."AcDeviceData" (deviceID, "on", "date")
+insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date")
 values ('${device.id}', ${device.on},'${new Date().toISOString()}');
     `);
   }

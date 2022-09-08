@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) More precise window info
+* (theimo1221) Fix AC Persisting
 
 ## 1.0.61 (2022-09-08)
 
