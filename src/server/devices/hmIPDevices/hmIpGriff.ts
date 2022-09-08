@@ -134,7 +134,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             case 120:
             case 240:
               this.log(LogLevel.Info, message);
-              TelegramService.inform(message);
+              TelegramService.inform(`${this.info.room}: ${message}`);
               break;
             default:
               this.log(LogLevel.Trace, message);

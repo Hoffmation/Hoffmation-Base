@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) More precise window info
+
 ## 1.0.61 (2022-09-08)
 
 * (theimo1221) Update packages
