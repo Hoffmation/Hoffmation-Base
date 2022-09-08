@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.61 (2022-09-08)
 
 * (theimo1221) Update packages
 * (theimo1221) Persist any AC Changes
