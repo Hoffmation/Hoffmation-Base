@@ -10,7 +10,7 @@ import {
 } from '../../../models';
 import { iHeater, IoBrokerBaseDevice } from '../../devices';
 import { iPersistenceSettings } from '../../config';
-import { Pool } from 'pg';
+import { Pool, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
 
 export class PostgreSqlPersist implements iPersist {
@@ -268,7 +268,7 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
     `);
   }
 
-  private async query<T>(query: string): Promise<T[] | null> {
+  private async query<T extends QueryResultRow>(query: string): Promise<T[] | null> {
     if (!this.isPsqlReady()) {
       return null;
     }
