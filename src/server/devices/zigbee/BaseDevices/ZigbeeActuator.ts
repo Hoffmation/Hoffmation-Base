@@ -33,7 +33,9 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'state':
-        !handledByChildObject && this.log(LogLevel.Trace, `Aktor Update für ${this.info.customName} auf ${state.val}`);
+        if (!handledByChildObject) {
+          this.log(LogLevel.Trace, `Aktor Update für ${this.info.customName} auf ${state.val}`);
+        }
         this.actuatorOn = state.val as boolean;
         break;
     }

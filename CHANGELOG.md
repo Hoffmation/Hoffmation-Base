@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Attempt to fixed undefined for lamp value
+
 ## 1.0.65 (2022-09-09)
 
 * (theimo1221) Remove Daily Movement Count

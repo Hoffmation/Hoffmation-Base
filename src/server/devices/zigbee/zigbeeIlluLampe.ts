@@ -13,7 +13,7 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   }
 
   public get lightOn(): boolean {
-    return super.actuatorOn;
+    return super.isActuatorOn;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
