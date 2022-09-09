@@ -6,7 +6,6 @@ import {
   iConfig,
   ioBrokerMain,
   iSpeaker,
-  MongoPersistance,
   MP3Server,
   MuellService,
   NewsService,
@@ -45,9 +44,7 @@ export class HoffmationBase {
     }
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
-      if (initObject.config.persistence.mongo) {
-        Utils.dbo = new MongoPersistance(initObject.config.persistence);
-      } else if (initObject.config.persistence.postgreSql) {
+      if (initObject.config.persistence.postgreSql) {
         Utils.dbo = new PostgreSqlPersist(initObject.config.persistence);
       }
       await Utils.dbo?.initialize();

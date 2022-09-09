@@ -11,10 +11,7 @@ export class Utils {
   public static dbo: iPersist | undefined;
 
   public static get anyDboActive(): boolean {
-    return (
-      SettingsService.settings.persistence?.mongo !== undefined ||
-      SettingsService.settings.persistence?.postgreSql !== undefined
-    );
+    return SettingsService.settings.persistence?.postgreSql !== undefined;
   }
 
   public static get timeTilMidnight(): number {

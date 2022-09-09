@@ -34,7 +34,6 @@
       "bson",
       "iobroker",
       "jest",
-      "mongodb",
       "node",
       "node-fetch",
       "node-telegram-bot-api",

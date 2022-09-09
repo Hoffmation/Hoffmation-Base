@@ -90,13 +90,7 @@ export interface iTelegramSettings {
 }
 
 export interface iPersistenceSettings {
-  mongo?: iMongoSettings;
   postgreSql?: PoolConfig;
-}
-
-export interface iMongoSettings {
-  mongoConnection: string;
-  mongoDbName: string;
 }
 
 export interface iPollySettings {
