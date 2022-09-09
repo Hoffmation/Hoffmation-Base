@@ -119,25 +119,6 @@ create table "CurrentIllumination"
 alter table "CurrentIllumination"
     owner to postgres;
     END IF;
-    IF (SELECT to_regclass('hoffmation_schema."DailyMovementCount"') IS NULL) Then
--- auto-generated definition
-create table "DailyMovementCount"
-(
-    counter    integer,
-    date       timestamp   not null,
-    "deviceID" varchar(60) not null,
-    "roomName" varchar(30) not null
-        constraint dailymovementcount_basicrooms_name_fk
-            references hoffmation_schema."BasicRooms",
-    constraint dailymovementcount_pk
-        primary key (date, "deviceID")
-);
-
-alter table "DailyMovementCount"
-    owner to postgres;
-
-
-    END IF;
     IF (SELECT to_regclass('hoffmation_schema."EnergyCalculation"') IS NULL) Then
 create table "EnergyCalculation"
 (
