@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Remove Mongo
+* (theimo1221) Refactor Today Count logic
 
 ## 1.0.63 (2022-09-09)
 
