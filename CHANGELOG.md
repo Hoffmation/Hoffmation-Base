@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Device Info persistence
+
 ## 1.1.0 (2022-09-09)
 
 * (theimo1221) Log Device Info to db

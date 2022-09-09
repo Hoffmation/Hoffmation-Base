@@ -37,7 +37,7 @@ values ('${room.roomName}',${room.settings.etage})
     this.query(`
 insert into hoffmation_schema."DeviceInfo" ("deviceid", "roomname", "alldeviceskey", "customname", "devtype")
 values ('${device.id}','${device.info.room}','${device.info.allDevicesKey}','${device.info.customName}', ${device.deviceType})
-    ON CONFLICT (name)
+    ON CONFLICT ("deviceid")
     DO UPDATE SET
         "roomname" = '${device.info.room}',
         "alldeviceskey" = '${device.info.allDevicesKey}',
