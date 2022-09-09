@@ -193,6 +193,7 @@ IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then
   (
       "deviceID" varchar(60) not null,
       "on"       boolean,
+      "istTemperatur"  double precision,
       date       timestamp   not null,
       constraint acdevicedata_pk
           primary key ("deviceID", date)
@@ -227,8 +228,8 @@ $$;`,
 
   public persistAC(device: iAcDevice): void {
     this.query(`
-insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date")
-values ('${device.id}', ${device.on},'${new Date().toISOString()}');
+insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date", "roomTemperature")
+values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.temperature});
     `);
   }
 
