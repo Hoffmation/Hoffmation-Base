@@ -17,6 +17,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
 
   protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {
     this.addToCorrectRoom();
+    this.persistDeviceInfo();
   }
 
   public get id(): string {
@@ -111,6 +112,16 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
     return Utils.jsonFilter(this, ['individualStateCallbacks']);
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
   }
 
   protected addToCorrectRoom(): void {

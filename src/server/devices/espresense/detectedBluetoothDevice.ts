@@ -23,6 +23,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
     this.info.allDevicesKey = DetectedBluetoothDevice.deviceKeyBySettings(settings);
     if (settings.activeTracking) {
       Devices.alLDevices[this.info.allDevicesKey] = this;
+      this.persistDeviceInfo();
     }
   }
 
@@ -93,5 +94,15 @@ export class DetectedBluetoothDevice implements iBaseDevice {
 
   private static deviceKeyBySettings(settings: iBluetoothTrackingSettings): string {
     return `trackedDevice-${settings.customName}`;
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
   }
 }

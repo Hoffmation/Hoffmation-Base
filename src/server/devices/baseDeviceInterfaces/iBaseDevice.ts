@@ -12,5 +12,7 @@ export interface iBaseDevice {
 
   log(level: LogLevel, message: string): void;
 
+  persistDeviceInfo(): void;
+
   toJSON(): Partial<iBaseDevice>;
 }

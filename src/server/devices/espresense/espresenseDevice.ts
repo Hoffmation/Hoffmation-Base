@@ -26,6 +26,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     this._info.allDevicesKey = `espresense-${roomName}-${name}`;
     Devices.alLDevices[this._info.allDevicesKey] = this;
     EspresenseCoordinator.addDevice(this, name);
+    this.persistDeviceInfo();
   }
 
   protected _info: DeviceInfo;
@@ -112,6 +113,16 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
 
   public toJSON(): Partial<iRoomDevice> {
     return Utils.jsonFilter(this);
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
   }
 
   public addProximityCallback(cb: ProximityCallback): void {

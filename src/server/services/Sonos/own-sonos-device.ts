@@ -25,6 +25,7 @@ export class OwnSonosDevice implements iSpeaker {
     this._info.room = roomName;
     this._info.allDevicesKey = `sonos-${roomName}-${discoveryName}`;
     Devices.alLDevices[`sonos-${roomName}-${discoveryName}`] = this;
+    this.persistDeviceInfo();
   }
 
   protected _info: DeviceInfo;
@@ -134,5 +135,15 @@ export class OwnSonosDevice implements iSpeaker {
 
   public toJSON(): Partial<OwnSonosDevice> {
     return Utils.jsonFilter(_.omit(this, ['room']));
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
   }
 }

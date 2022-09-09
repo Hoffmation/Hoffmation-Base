@@ -8,7 +8,7 @@ import {
   ShutterCalibration,
   TemperaturDataPoint,
 } from '../../../models';
-import { iAcDevice, iHeater, iLamp, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iBaseDevice, iHeater, iLamp, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
@@ -29,6 +29,20 @@ values ('${room.roomName}',${room.settings.etage})
     ON CONFLICT (name)
     DO UPDATE SET
         etage = ${room.settings.etage}
+;
+    `);
+  }
+
+  addDevice(device: iBaseDevice): void {
+    this.query(`
+insert into hoffmation_schema."DeviceInfo" ("deviceid", "roomname", "alldeviceskey", "customname", "devtype")
+values ('${device.id}','${device.info.room}','${device.info.allDevicesKey}','${device.info.customName}', ${device.deviceType})
+    ON CONFLICT (name)
+    DO UPDATE SET
+        "roomname" = '${device.info.room}',
+        "alldeviceskey" = '${device.info.allDevicesKey}',
+        "customname" = '${device.info.customName}',
+        "devtype" = ${device.deviceType}
 ;
     `);
   }
@@ -104,6 +118,25 @@ create unique index table_name_name_uindex
     on "BasicRooms" (name);
 
     END IF;
+IF (SELECT to_regclass('hoffmation_schema."DeviceInfo"') IS NULL) Then    
+    create table hoffmation_schema."DeviceInfo"
+(
+    deviceid      varchar(60) not null
+        constraint deviceinfo_pk
+            primary key,
+    roomname      varchar(30)
+        constraint "DeviceInfo_BasicRooms_null_fk"
+            references hoffmation_schema."BasicRooms",
+    alldeviceskey varchar(30),
+    customname    varchar(60),
+    devtype       integer
+);
+
+alter table hoffmation_schema."DeviceInfo"
+    owner to postgres;
+
+    END IF;
+
     IF (SELECT to_regclass('hoffmation_schema."CurrentIllumination"') IS NULL) Then
 create table "CurrentIllumination"
 (

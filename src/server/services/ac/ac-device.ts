@@ -29,6 +29,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._info.allDevicesKey = `ac-${roomName}-${name}`;
     Utils.guardedInterval(this.automaticCheck, 60000, this, true);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
+    this.persistDeviceInfo();
   }
 
   public get temperature(): number {
@@ -156,6 +157,16 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       this.turnOff();
       return;
     }
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
   }
 
   public toJSON(): Partial<AcDevice> {

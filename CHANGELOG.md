@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Log Device Info to db
+
 ## 1.0.67 (2022-09-09)
 
 * (theimo1221) Prevent double persisting on brightness and lamp change

@@ -1,4 +1,4 @@
-import { iAcDevice, iHeater, iLamp, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iBaseDevice, iHeater, iLamp, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
 import {
   CountToday,
   CurrentIlluminationDataPoint,
@@ -14,6 +14,8 @@ export interface iPersist {
   addTemperaturDataPoint(heater: iHeater): void;
 
   addRoom(room: RoomBase): void;
+
+  addDevice(device: iBaseDevice): void;
 
   motionSensorTodayCount(device: iMotionSensor): Promise<CountToday>;
 
