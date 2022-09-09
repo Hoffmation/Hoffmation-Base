@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Remove Daily Movement Count
+* (theimo1221) Add Lamp Persistence
 
 ## 1.0.64 (2022-09-09)
 

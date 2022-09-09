@@ -5,6 +5,8 @@ export interface iLamp extends iRoomDevice {
   settings: ActuatorSettings;
   lightOn: boolean;
 
+  persist(): void;
+
   setTimeBased(time: TimeOfDay, timeout: number, force: boolean): void;
 
   toggleLight(time: TimeOfDay, force: boolean, calculateTime: boolean): void;

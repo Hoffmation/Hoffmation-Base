@@ -8,7 +8,7 @@ import {
   ShutterCalibration,
   TemperaturDataPoint,
 } from '../../../models';
-import { iAcDevice, iHeater, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iHeater, iLamp, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
@@ -174,6 +174,21 @@ IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then
     owner to postgres;
 END IF;
 
+
+IF (SELECT to_regclass('hoffmation_schema."LampDeviceData"') IS NULL) Then    
+  create table hoffmation_schema."LampDeviceData"
+  (
+      "deviceID" varchar(60) not null,
+      "on"       boolean,
+      date       timestamp   not null,
+      constraint lampdevicedata_pk
+          primary key ("deviceID", date)
+  );
+
+  alter table hoffmation_schema."LampDeviceData"
+    owner to postgres;
+END IF;
+
 IF (SELECT to_regclass('hoffmation_schema."MotionSensorDeviceData"') IS NULL) Then    
   create table hoffmation_schema."MotionSensorDeviceData"
   (
@@ -215,6 +230,13 @@ $$;`,
     this.query(`
 insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date", "roomTemperature")
 values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.temperature});
+    `);
+  }
+
+  public persistLamp(device: iLamp): void {
+    this.query(`
+insert into hoffmation_schema."LampDeviceData" ("deviceID", "on", "date")
+values ('${device.id}', ${device.lightOn}, '${new Date().toISOString()}');
     `);
   }
 

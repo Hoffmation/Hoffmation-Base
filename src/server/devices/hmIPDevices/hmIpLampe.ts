@@ -28,6 +28,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
       case '1':
         if (idSplit[4] === 'STATE') {
           this.lightOn = state.val as boolean;
+          this.persist();
         }
         break;
     }
@@ -122,5 +123,9 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     ) {
       this.setLight(true, timeout, force);
     }
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistLamp(this);
   }
 }

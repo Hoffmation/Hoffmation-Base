@@ -35,10 +35,12 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
       case 'state':
         this.log(LogLevel.Trace, `Dimmer Update für ${this.info.customName} auf ${state.val}`);
         this.lightOn = state.val as boolean;
+        this.persist();
         break;
       case 'brightness':
         this.log(LogLevel.Trace, `Dimmer Helligkeit Update für ${this.info.customName} auf ${state.val}`);
         this.brightness = state.val as number;
+        this.persist();
         break;
       case 'transition_time':
         this.log(LogLevel.Trace, `Dimmer Transition Time Update für ${this.info.customName} auf ${state.val}`);
@@ -155,6 +157,10 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
       timeout,
       this,
     );
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistLamp(this);
   }
 
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {

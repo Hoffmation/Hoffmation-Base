@@ -21,6 +21,7 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     switch (idSplit[3]) {
       case 'state':
         this.log(LogLevel.Trace, `Lampen Update für ${this.info.customName} auf ${state.val}`);
+        this.persist();
         break;
     }
   }
@@ -65,5 +66,9 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     ) {
       this.setLight(true, timeout, force);
     }
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistLamp(this);
   }
 }
