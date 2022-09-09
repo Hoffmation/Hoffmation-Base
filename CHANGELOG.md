@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent double persisting on brightness and lamp change
+
 ## 1.0.66 (2022-09-09)
 
 * (theimo1221) Attempt to fixed undefined for lamp value

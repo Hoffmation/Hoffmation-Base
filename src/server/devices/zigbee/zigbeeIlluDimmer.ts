@@ -17,6 +17,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
   private transitionID: string = 'transition_time';
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
+  private _lastPersist: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluDimmer);
@@ -160,7 +161,12 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
   }
 
   public persist(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastPersist + 1000 < now) {
+      return;
+    }
     Utils.dbo?.persistLamp(this);
+    this._lastPersist = now;
   }
 
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
