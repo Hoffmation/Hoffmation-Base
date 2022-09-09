@@ -150,7 +150,7 @@ export class TimeCallbackService {
       'Daily3oClockRecalc',
       TimeCallbackType.TimeOfDay,
       () => {
-        Devices.resetPraesenzCount();
+        Devices.resetDetectionsToday();
       },
       0,
       3,

@@ -48,9 +48,6 @@ export class DeviceCluster {
         clusterTypes.push(DeviceClusterType.TemperaturSensor);
         clusterTypes.push(DeviceClusterType.HumiditySensor);
         break;
-      case DeviceType.HmIpPraezenz:
-        clusterTypes.push(DeviceClusterType.PresenceDetection);
-        break;
       case DeviceType.HmIpGriff:
         clusterTypes.push(DeviceClusterType.Handle);
         break;
@@ -67,6 +64,7 @@ export class DeviceCluster {
       case DeviceType.HmIpBewegung:
       case DeviceType.ZigbeeAquaraMotion:
       case DeviceType.ZigbeeSonoffMotion:
+      case DeviceType.HmIpPraezenz:
         clusterTypes.push(DeviceClusterType.MotionDetection);
         break;
       case DeviceType.ZigbeeIkeaSteckdose:

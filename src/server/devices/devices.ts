@@ -91,18 +91,13 @@ export class Devices {
     // Nothing yet
   }
 
-  public static resetPraesenzCount(): void {
-    ServerLogService.writeLog(LogLevel.Info, `3 Uhr Reset der Präsenzmelder`);
+  public static resetDetectionsToday(): void {
+    ServerLogService.writeLog(LogLevel.Info, `3 o'clock reset of motion sensors`);
     for (const dID in Devices.alLDevices) {
       const d = Devices.alLDevices[dID];
-      if (
-        d.deviceType === DeviceType.HmIpPraezenz ||
-        d.deviceType === DeviceType.HmIpBewegung ||
-        d.deviceType === DeviceType.ZigbeeSonoffMotion ||
-        d.deviceType === DeviceType.ZigbeeAquaraMotion
-      ) {
-        ServerLogService.writeLog(LogLevel.Debug, `2 Uhr Reset der Tages Detektionen von ${d.info.customName}`);
-        (d as iMotionSensor | HmIpPraezenz).detectionsToday = 0;
+      if (d.deviceCapabilities.includes(DeviceCapability.motionSensor)) {
+        d.log(LogLevel.Debug, `3 o'clock reset of detections`);
+        (d as iMotionSensor).detectionsToday = 0;
       }
     }
   }

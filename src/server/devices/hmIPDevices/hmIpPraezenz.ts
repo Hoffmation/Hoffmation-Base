@@ -24,6 +24,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     super(pInfo, DeviceType.HmIpPraezenz);
     this.deviceCapabilities.push(DeviceCapability.illuminationSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+    this.deviceCapabilities.push(DeviceCapability.motionSensor);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
     if (!Utils.anyDboActive) {
       this.initialized = true;

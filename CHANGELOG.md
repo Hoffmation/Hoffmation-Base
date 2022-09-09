@@ -10,6 +10,7 @@
 
 * (theimo1221) Remove Mongo
 * (theimo1221) Refactor Today Count logic
+* (theimo1221) HmIpPräsenz ebenfalls als MotionSensor
 
 ## 1.0.63 (2022-09-09)
 

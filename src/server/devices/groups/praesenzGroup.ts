@@ -1,45 +1,25 @@
 import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
-import { HmIpBewegung, HmIpPraezenz } from '../hmIPDevices';
 import { RoomService, TimeCallbackService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
-import { ZigbeeMotionSensor } from '../zigbee';
 import { iMotionSensor } from '../baseDeviceInterfaces';
 
 export class PraesenzGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
   private _lastLeftTimeout: NodeJS.Timeout | null = null;
 
-  public constructor(roomName: string, presenceDetectorIds: string[], motionSensorIds: string[]) {
+  public constructor(roomName: string, motionSensorIds: string[]) {
     super(roomName, GroupType.Presence);
-    this.deviceCluster.deviceMap.set(DeviceClusterType.PresenceDetection, new DeviceList(presenceDetectorIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.MotionDetection, new DeviceList(motionSensorIds));
   }
 
   public getMotionDetector(): Array<iMotionSensor> {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MotionDetection) as Array<
-      HmIpBewegung | ZigbeeMotionSensor
-    >;
-  }
-
-  public getPresenceSensors(): HmIpPraezenz[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.PresenceDetection) as HmIpPraezenz[];
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.MotionDetection) as Array<iMotionSensor>;
   }
 
   public initCallbacks(): void {
-    this.getPresenceSensors().forEach((p) => {
-      p.addMovementCallback((val) => {
-        if (!val) {
-          return;
-        }
-        if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !p.excludeFromNightAlarm)) {
-          RoomService.startIntrusionAlarm(this.getRoom(), p);
-        }
-        RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${p.info.fullName}"`);
-      });
-    });
     this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((val) => {
         if (!val) {
@@ -81,11 +61,6 @@ export class PraesenzGroup extends BaseGroup {
 
   public presentAmount(): number {
     let count = 0;
-    for (let i = 0; i < this.getPresenceSensors().length; i++) {
-      if (this.getPresenceSensors()[i].movementDetected) {
-        count++;
-      }
-    }
     for (let i = 0; i < this.getMotionDetector().length; i++) {
       if (this.getMotionDetector()[i].movementDetected) {
         count++;
@@ -96,11 +71,6 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public anyPresent(): boolean {
-    for (let i = 0; i < this.getPresenceSensors().length; i++) {
-      if (this.getPresenceSensors()[i].movementDetected) {
-        return true;
-      }
-    }
     for (let i = 0; i < this.getMotionDetector().length; i++) {
       if (this.getMotionDetector()[i].movementDetected) {
         return true;
@@ -148,11 +118,6 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public addLastLeftCallback(cb: () => void): void {
-    this.getPresenceSensors().forEach((p) => {
-      p.addMovementCallback((val) => {
-        this.lastLeftCB(val, cb);
-      });
-    });
     this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((val) => {
         this.lastLeftCB(val, cb);
@@ -161,11 +126,6 @@ export class PraesenzGroup extends BaseGroup {
   }
 
   public addFirstEnterCallback(cb: () => void): void {
-    this.getPresenceSensors().forEach((p) => {
-      p.addMovementCallback((val) => {
-        this.firstEnterCallback(val, cb);
-      });
-    });
     this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((val) => {
         this.firstEnterCallback(val, cb);

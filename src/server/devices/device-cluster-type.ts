@@ -6,7 +6,6 @@ export enum DeviceClusterType {
   Lamps = 4,
   MotionDetection = 5,
   Outlets = 6,
-  PresenceDetection = 7,
   Speaker = 8,
   SmokeDetector = 9,
   WaterDetectors = 10,
