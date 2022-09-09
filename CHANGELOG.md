@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.65 (2022-09-09)
 
 * (theimo1221) Remove Daily Movement Count
 * (theimo1221) Add Lamp Persistence
