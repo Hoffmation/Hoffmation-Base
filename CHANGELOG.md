@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.64 (2022-09-09)
 
 * (theimo1221) Remove Mongo
 * (theimo1221) Refactor Today Count logic
