@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.0.66 (2022-09-09)
 
 * (theimo1221) Attempt to fixed undefined for lamp value
 
