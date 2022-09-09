@@ -23,10 +23,10 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       this._initialized = true;
     } else {
       Utils.dbo
-        ?.getCount(this)
+        ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
-          this.detectionsToday = todayCount.counter;
-          this.log(LogLevel.Debug, `Preinitialized movement counter with ${this.detectionsToday}`);
+          this.detectionsToday = todayCount.count;
+          this.log(LogLevel.Debug, `Reinitialized movement counter with ${this.detectionsToday}`);
           this._initialized = true;
         })
         .catch((err: Error) => {
@@ -49,9 +49,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   }
 
   public set detectionsToday(pVal: number) {
-    const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    Utils.dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   /**

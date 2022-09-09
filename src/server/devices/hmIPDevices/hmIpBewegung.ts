@@ -25,9 +25,9 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
       this.initialized = true;
     } else {
       Utils.dbo
-        ?.getCount(this)
+        ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
-          this.detectionsToday = todayCount.counter;
+          this.detectionsToday = todayCount.count;
           this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
           this.initialized = true;
         })
@@ -48,9 +48,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   }
 
   public set detectionsToday(pVal: number) {
-    const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    Utils.dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   private _currentIllumination: number = -1;

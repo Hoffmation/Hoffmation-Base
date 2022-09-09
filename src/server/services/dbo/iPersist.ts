@@ -15,13 +15,11 @@ export interface iPersist {
 
   addRoom(room: RoomBase): void;
 
-  getCount(device: IoBrokerBaseDevice): Promise<CountToday>;
+  motionSensorTodayCount(device: iMotionSensor): Promise<CountToday>;
 
   getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration>;
 
   initialize(): Promise<void>;
-
-  persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void;
 
   persistShutterCalibration(data: ShutterCalibration): void;
 

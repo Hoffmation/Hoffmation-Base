@@ -30,7 +30,7 @@ export class PraesenzGroup extends BaseGroup {
 
   public initCallbacks(): void {
     this.getPresenceSensors().forEach((p) => {
-      p.addPresenceCallback((val) => {
+      p.addMovementCallback((val) => {
         if (!val) {
           return;
         }
@@ -82,7 +82,7 @@ export class PraesenzGroup extends BaseGroup {
   public presentAmount(): number {
     let count = 0;
     for (let i = 0; i < this.getPresenceSensors().length; i++) {
-      if (this.getPresenceSensors()[i].presenceDetected) {
+      if (this.getPresenceSensors()[i].movementDetected) {
         count++;
       }
     }
@@ -97,7 +97,7 @@ export class PraesenzGroup extends BaseGroup {
 
   public anyPresent(): boolean {
     for (let i = 0; i < this.getPresenceSensors().length; i++) {
-      if (this.getPresenceSensors()[i].presenceDetected) {
+      if (this.getPresenceSensors()[i].movementDetected) {
         return true;
       }
     }
@@ -149,7 +149,7 @@ export class PraesenzGroup extends BaseGroup {
 
   public addLastLeftCallback(cb: () => void): void {
     this.getPresenceSensors().forEach((p) => {
-      p.addPresenceCallback((val) => {
+      p.addMovementCallback((val) => {
         this.lastLeftCB(val, cb);
       });
     });
@@ -162,7 +162,7 @@ export class PraesenzGroup extends BaseGroup {
 
   public addFirstEnterCallback(cb: () => void): void {
     this.getPresenceSensors().forEach((p) => {
-      p.addPresenceCallback((val) => {
+      p.addMovementCallback((val) => {
         this.firstEnterCallback(val, cb);
       });
     });

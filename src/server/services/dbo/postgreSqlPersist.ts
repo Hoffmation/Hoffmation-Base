@@ -57,16 +57,21 @@ values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},
     `);
   }
 
-  async getCount(device: IoBrokerBaseDevice): Promise<CountToday> {
+  async motionSensorTodayCount(device: iMotionSensor): Promise<CountToday> {
     const dbResult: CountToday[] | null = await this.query<CountToday>(
-      `SELECT * FROM hoffmation_schema."DailyMovementCount" WHERE "deviceID" = '${device.info.fullID}'`,
+      `SELECT Count(*) 
+from hoffmation_schema."MotionSensorDeviceData" 
+WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DATE AND date < CURRENT_DATE + INTERVAL '1 DAY'`,
     );
     if (dbResult !== null && dbResult.length > 0) {
       return dbResult[0];
     }
 
-    ServerLogService.writeLog(LogLevel.Debug, `Es gibt noch keinen persistierten Counter für ${device.info.fullName}`);
-    return new CountToday(device.info.fullID, 0);
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Es gibt noch keine persistierten Bewegungen für ${device.info.fullName}`,
+    );
+    return new CountToday(0);
   }
 
   getShutterCalibration(_device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
@@ -172,21 +177,6 @@ create unique index heatgroupcollection_name_uindex
     on "HeatGroupCollection" (name);
 
     END IF;
-    IF (SELECT to_regclass('hoffmation_schema."PresenceToday"') IS NULL) Then
-create table "PresenceToday"
-(
-    counter    integer,
-    "deviceID" varchar(60) not null
-        constraint presencetoday_pk
-            primary key
-);
-
-alter table "PresenceToday"
-    owner to postgres;
-
-create unique index presencetoday_deviceid_uindex
-    on "PresenceToday" ("deviceID");
-    END IF;
 
 IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then    
   create table hoffmation_schema."AcDeviceData"
@@ -265,29 +255,6 @@ values ('${data.roomName}','${data.deviceID}',${data.currentIllumination},'${dat
 
   persistShutterCalibration(_data: ShutterCalibration): void {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
-  }
-
-  persistTodayCount(device: IoBrokerBaseDevice, count: number, oldCount: number): void {
-    this.query(`
-  insert into hoffmation_schema."PresenceToday" (counter, "deviceID")
-  values (${count}, '${device.id}')
-    ON CONFLICT ("deviceID")
-    DO UPDATE SET
-        counter = ${count}
-  ;    
-      `);
-    if (count === 0) {
-      const date = new Date();
-      date.setHours(-24, 0, 0, 0);
-      this.query(`
-  insert into hoffmation_schema."DailyMovementCount" (counter, "date", "deviceID", "roomName")
-  values (${oldCount}, '${date.toISOString()}', '${device.id}', '${device.info.room}')
-    ON CONFLICT ("deviceID", "date")
-    DO UPDATE SET
-        counter = ${oldCount}
-  ;    
-      `);
-    }
   }
 
   async readTemperaturDataPoint(heater: iHeater, limit: number): Promise<TemperaturDataPoint[]> {

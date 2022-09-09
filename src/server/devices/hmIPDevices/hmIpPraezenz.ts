@@ -1,22 +1,24 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday, CurrentIlluminationDataPoint, LogLevel } from '../../../models';
+import { CountToday, CurrentIlluminationDataPoint, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
-import { iBatteryDevice, iIlluminationSensor } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice {
+export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
   // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   public excludeFromNightAlarm: boolean = false;
-  public presenceDetected: boolean = false;
+  public movementDetected: boolean = false;
   public battery: number = -99;
-  private _presenceDetectedCallback: Array<(pValue: boolean) => void> = [];
+  public settings: MotionSensorSettings = new MotionSensorSettings();
+  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   // private presenceStateID: string;
   private initialized: boolean = false;
+  private _lastMotionTime: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
@@ -27,9 +29,9 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
       this.initialized = true;
     } else {
       Utils.dbo
-        ?.getCount(this)
+        ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
-          this.detectionsToday = todayCount.counter;
+          this.detectionsToday = todayCount.count;
           this.log(LogLevel.Debug, `Präsenzcounter vorinitialisiert mit ${this.detectionsToday}`);
           this.initialized = true;
         })
@@ -39,6 +41,10 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     }
   }
 
+  public get timeSinceLastMotion(): number {
+    return Math.floor((Utils.nowMS() - this._lastMotionTime) / 1000);
+  }
+
   private _detectionsToday: number = 0;
 
   public get detectionsToday(): number {
@@ -46,9 +52,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   }
 
   public set detectionsToday(pVal: number) {
-    const oldVal: number = this._detectionsToday;
     this._detectionsToday = pVal;
-    Utils.dbo?.persistTodayCount(this, pVal, oldVal);
   }
 
   private _currentIllumination: number = -1;
@@ -70,8 +74,8 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     );
   }
 
-  public addPresenceCallback(pCallback: (pValue: boolean) => void): void {
-    this._presenceDetectedCallback.push(pCallback);
+  public addMovementCallback(pCallback: (pValue: boolean) => void): void {
+    this._movementDetectedCallback.push(pCallback);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -114,20 +118,26 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
       );
       return;
     }
-    if (pVal === this.presenceDetected) {
+    if (pVal === this.movementDetected) {
       this.log(LogLevel.Debug, `Überspringe Präsenz da bereits der Wert ${pVal} vorliegt`);
       return;
     }
 
-    this.presenceDetected = pVal;
+    this.movementDetected = pVal;
+    this.persist();
     this.log(LogLevel.Debug, `Neuer Präsenzstatus Wert : ${pVal}`);
 
     if (pVal) {
       this.detectionsToday++;
+      this._lastMotionTime = Utils.nowMS();
       this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung `);
     }
-    for (const c of this._presenceDetectedCallback) {
+    for (const c of this._movementDetectedCallback) {
       c(pVal);
     }
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistMotionSensor(this);
   }
 }
