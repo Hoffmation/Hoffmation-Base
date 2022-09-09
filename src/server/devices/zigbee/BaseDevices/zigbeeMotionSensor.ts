@@ -62,6 +62,10 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     this._movementDetectedCallback.push(pCallback);
   }
 
+  public persist(): void {
+    Utils.dbo?.persistMotionSensor(this);
+  }
+
   public updateMovement(newState: boolean): void {
     if (!this._initialized && newState) {
       this.log(LogLevel.Trace, `Movement recognized, but database initialization has not finished yet --> delay.`);
@@ -92,6 +96,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
 
     this.resetFallbackTimeout();
     this.movementDetected = newState;
+    this.persist();
     this.log(LogLevel.Debug, `New movement state: ${newState}`, LogDebugType.NewMovementState);
 
     if (newState) {

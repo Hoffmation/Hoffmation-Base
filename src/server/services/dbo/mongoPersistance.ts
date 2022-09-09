@@ -14,7 +14,7 @@ import {
   TemperaturDataPoint,
 } from '../../../models';
 import { iPersist } from './iPersist';
-import { iAcDevice, iHeater, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iHeater, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
 
 export class MongoPersistance implements iPersist {
   initialized: boolean = false;
@@ -37,7 +37,11 @@ export class MongoPersistance implements iPersist {
   }
 
   persistAC(_device: iAcDevice): void {
-    ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
+    ServerLogService.writeLog(LogLevel.Warn, `Mongo doesn't support AC Persistence yet.`);
+  }
+
+  persistMotionSensor(_device: iMotionSensor): void {
+    ServerLogService.writeLog(LogLevel.Warn, `Mongo doesn't support MotionSensor Persistence yet.`);
   }
 
   private static handleReject(reason: unknown, func: string) {

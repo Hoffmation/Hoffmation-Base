@@ -12,4 +12,6 @@ export interface iMotionSensor extends iRoomDevice {
    * @param pCallback Function that accepts the new state as parameter
    */
   addMovementCallback(pCallback: (newState: boolean) => void): void;
+
+  persist(): void;
 }

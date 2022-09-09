@@ -1,4 +1,4 @@
-import { iAcDevice, iHeater, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iHeater, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
 import {
   CountToday,
   CurrentIlluminationDataPoint,
@@ -30,6 +30,8 @@ export interface iPersist {
   persistEnergyManager(energyData: EnergyCalculation): void;
 
   persistAC(device: iAcDevice): void;
+
+  persistMotionSensor(device: iMotionSensor): void;
 
   readTemperaturDataPoint(hzGrp: iHeater, limit: number): Promise<TemperaturDataPoint[]>;
 }

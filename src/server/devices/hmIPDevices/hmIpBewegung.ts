@@ -76,6 +76,10 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     this._movementDetectedCallback.push(pCallback);
   }
 
+  public persist(): void {
+    Utils.dbo?.persistMotionSensor(this);
+  }
+
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Bewegungs Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);
@@ -122,6 +126,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     this.resetFallbackTimeout();
     this.movementDetected = pVal;
     this.log(LogLevel.Debug, `Neuer Bewegunsstatus Wert : ${pVal}`);
+    this.persist();
     if (pVal) {
       this.startFallbackTimeout();
       this.detectionsToday++;
