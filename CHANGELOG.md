@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.0 (2022-09-09)
 
 * (theimo1221) Log Device Info to db
 
