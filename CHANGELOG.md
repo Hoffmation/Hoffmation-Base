@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Log More Actuators
+
 ## 1.1.4 (2022-09-10)
 
 * (theimo1221) Prevent Duplicate logging for Buttons
