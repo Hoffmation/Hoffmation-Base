@@ -110,7 +110,7 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
       );
       return;
     }
-    if (val) {
+    if (val && !taste.isPressActive(pressType)) {
       this.persist(taste.name, pressType);
     }
     taste.updateState(pressType, val);

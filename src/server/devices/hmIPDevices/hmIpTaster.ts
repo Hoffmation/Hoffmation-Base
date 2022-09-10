@@ -78,26 +78,28 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     }
 
     const boolVal = state.val as boolean;
+    let pressType: ButtonPressType | undefined;
     switch (idSplit[4]) {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          if (boolVal) {
-            this.persist(cTaste.name, ButtonPressType.short);
-          }
-          cTaste.updateState(ButtonPressType.short, boolVal);
+          pressType = ButtonPressType.short;
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          if (boolVal) {
-            this.persist(cTaste.name, ButtonPressType.long);
-          }
-          cTaste.updateState(ButtonPressType.long, boolVal);
+          pressType = ButtonPressType.long;
         }
         break;
     }
+    if (pressType == undefined) {
+      return;
+    }
+    if (boolVal && !cTaste.isPressActive(pressType)) {
+      this.persist(cTaste.name, pressType);
+    }
+    cTaste.updateState(pressType, boolVal);
   }
 
   public getButtonAssignment(): string {

@@ -55,6 +55,10 @@ export class Button {
     cbArr.push({ cb: pCallback, description: description });
   }
 
+  public isPressActive(type: ButtonPressType) {
+    return this._statesMap.get(type);
+  }
+
   public getDescription(): string {
     const description: string[] = [];
     for (const [key, arr] of this._callbacksMap.entries()) {

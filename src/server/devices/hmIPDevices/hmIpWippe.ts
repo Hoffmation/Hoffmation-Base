@@ -51,7 +51,7 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          if (boolVal) {
+          if (boolVal && !cTaste.isPressActive(ButtonPressType.long)) {
             this.persist(cTaste.name, ButtonPressType.short);
           }
           cTaste.updateState(ButtonPressType.short, boolVal);
@@ -60,7 +60,7 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          if (boolVal) {
+          if (boolVal && !cTaste.isPressActive(ButtonPressType.long)) {
             this.persist(cTaste.name, ButtonPressType.long);
           }
           cTaste.updateState(ButtonPressType.long, boolVal);

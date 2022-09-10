@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent Duplicate logging for Buttons
+
 ## 1.1.3 (2022-09-10)
 
 * (theimo1221) Wled as iDimmable Lamp
