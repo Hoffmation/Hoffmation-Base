@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Wled as iDimmable Lamp
+
 ## 1.1.2 (2022-09-10)
 
 * (theimo1221) Persist all actuator
