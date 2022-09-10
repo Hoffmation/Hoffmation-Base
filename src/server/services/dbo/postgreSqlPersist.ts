@@ -8,7 +8,16 @@ import {
   ShutterCalibration,
   TemperaturDataPoint,
 } from '../../../models';
-import { iAcDevice, iActuator, iBaseDevice, iHeater, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
+import {
+  ButtonPressType,
+  iAcDevice,
+  iActuator,
+  iBaseDevice,
+  iButtonSwitch,
+  iHeater,
+  iMotionSensor,
+  IoBrokerBaseDevice,
+} from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
@@ -154,6 +163,25 @@ create table "CurrentIllumination"
 alter table "CurrentIllumination"
     owner to postgres;
     END IF;
+    
+    IF (SELECT to_regclass('hoffmation_schema."ButtonSwitchPresses"') IS NULL) Then
+create table if not exists hoffmation_schema."ButtonSwitchPresses"
+(
+    "deviceID"         varchar(60) not null
+        constraint "ButtonSwitchPresses_DeviceInfo_null_fk"
+            references hoffmation_schema."DeviceInfo"
+            on delete set null,
+    "pressType" int,
+    "buttonName" varchar(30),
+    date               timestamp   not null,
+    constraint buttonswitchpresses_pk
+        primary key ("deviceID", "pressType", date)
+);
+
+alter table hoffmation_schema."ButtonSwitchPresses"
+    owner to postgres;
+    END IF;
+    
     IF (SELECT to_regclass('hoffmation_schema."EnergyCalculation"') IS NULL) Then
 create table "EnergyCalculation"
 (
@@ -276,6 +304,13 @@ values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.te
     this.query(`
 insert into hoffmation_schema."ActuatorDeviceData" ("deviceID", "on", "date", "percentage")
 values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${percentage ?? 'null'});
+    `);
+  }
+
+  public persistSwitchInput(device: iButtonSwitch, pressType: ButtonPressType, buttonName: string): void {
+    this.query(`
+insert into hoffmation_schema."ButtonSwitchPresses" ("deviceID", "pressType", "buttonName", "date")
+values ('${device.id}', ${pressType}, '${buttonName}', '${new Date().toISOString()}');
     `);
   }
 

@@ -1,4 +1,13 @@
-import { iAcDevice, iActuator, iBaseDevice, iHeater, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
+import {
+  ButtonPressType,
+  iAcDevice,
+  iActuator,
+  iBaseDevice,
+  iButtonSwitch,
+  iHeater,
+  iMotionSensor,
+  IoBrokerBaseDevice,
+} from '../../devices';
 import {
   CountToday,
   CurrentIlluminationDataPoint,
@@ -32,6 +41,8 @@ export interface iPersist {
   persistAC(device: iAcDevice): void;
 
   persistActuator(device: iActuator): void;
+
+  persistSwitchInput(device: iButtonSwitch, pressType: ButtonPressType, buttonName: string): void;
 
   persistMotionSensor(device: iMotionSensor): void;
 

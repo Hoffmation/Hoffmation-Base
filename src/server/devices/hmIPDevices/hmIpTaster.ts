@@ -5,6 +5,7 @@ import { Button, ButtonCapabilities, ButtonPressType } from '../button';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { Utils } from '../../services';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDevice {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -14,12 +15,12 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     triplePress: false,
   };
 
-  public buttonTopLeft: Button = new Button('TopLeft', HmIpTaster.BUTTON_CAPABILLITIES);
-  public buttonMidLeft: Button = new Button('MidLeft', HmIpTaster.BUTTON_CAPABILLITIES);
-  public buttonBotLeft: Button = new Button('BotLeft', HmIpTaster.BUTTON_CAPABILLITIES);
-  public buttonTopRight: Button = new Button('TopRight', HmIpTaster.BUTTON_CAPABILLITIES);
-  public buttonMidRight: Button = new Button('MidRight', HmIpTaster.BUTTON_CAPABILLITIES);
-  public buttonBotRight: Button = new Button('BotRight', HmIpTaster.BUTTON_CAPABILLITIES);
+  public buttonTopLeft: Button;
+  public buttonMidLeft: Button;
+  public buttonBotLeft: Button;
+  public buttonTopRight: Button;
+  public buttonMidRight: Button;
+  public buttonBotRight: Button;
   public buttonBot: undefined = undefined;
   public buttonTop: undefined = undefined;
   public battery: number = -99;
@@ -28,6 +29,16 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     super(pInfo, DeviceType.HmIpTaster);
     this.deviceCapabilities.push(DeviceCapability.buttonSwitch);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+    this.buttonTopLeft = new Button('TopLeft', HmIpTaster.BUTTON_CAPABILLITIES);
+    this.buttonMidLeft = new Button('MidLeft', HmIpTaster.BUTTON_CAPABILLITIES);
+    this.buttonBotLeft = new Button('BotLeft', HmIpTaster.BUTTON_CAPABILLITIES);
+    this.buttonTopRight = new Button('TopRight', HmIpTaster.BUTTON_CAPABILLITIES);
+    this.buttonMidRight = new Button('MidRight', HmIpTaster.BUTTON_CAPABILLITIES);
+    this.buttonBotRight = new Button('BotRight', HmIpTaster.BUTTON_CAPABILLITIES);
+  }
+
+  public persist(buttonName: string, pressType: ButtonPressType): void {
+    Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -66,17 +77,24 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
       return;
     }
 
+    const boolVal = state.val as boolean;
     switch (idSplit[4]) {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          cTaste.updateState(ButtonPressType.short, state.val as boolean);
+          if (boolVal) {
+            this.persist(cTaste.name, ButtonPressType.short);
+          }
+          cTaste.updateState(ButtonPressType.short, boolVal);
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          cTaste.updateState(ButtonPressType.long, state.val as boolean);
+          if (boolVal) {
+            this.persist(cTaste.name, ButtonPressType.long);
+          }
+          cTaste.updateState(ButtonPressType.long, boolVal);
         }
         break;
     }

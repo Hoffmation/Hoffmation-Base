@@ -88,25 +88,31 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
         return;
     }
 
+    let pressType: ButtonPressType | undefined = undefined;
     switch (parts[2]) {
       case 'click':
-        taste.updateState(ButtonPressType.short, val);
-        return;
+        pressType = ButtonPressType.short;
+        break;
       case 'hold':
-        taste.updateState(ButtonPressType.long, val);
-        return;
+        pressType = ButtonPressType.long;
+        break;
       case 'double':
-        taste.updateState(ButtonPressType.double, val);
-        return;
+        pressType = ButtonPressType.double;
+        break;
       case 'triple':
-        taste.updateState(ButtonPressType.triple, val);
-        return;
-      default:
-        this.log(
-          LogLevel.Error,
-          `Unknown pressType: "${parts[2]}" for button, Aqara Opple 3 has only types "click, hold, double, triple".`,
-        );
-        return;
+        pressType = ButtonPressType.triple;
+        break;
     }
+    if (pressType == undefined) {
+      this.log(
+        LogLevel.Error,
+        `Unknown pressType: "${parts[2]}" for button, Aqara Opple 3 has only types "click, hold, double, triple".`,
+      );
+      return;
+    }
+    if (val) {
+      this.persist(taste.name, pressType);
+    }
+    taste.updateState(pressType, val);
   }
 }

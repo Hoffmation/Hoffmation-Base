@@ -1,10 +1,11 @@
 import { iButtonSwitch } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceType } from '../../deviceType';
-import { Button } from '../../button';
+import { Button, ButtonPressType } from '../../button';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { LogLevel } from '../../../../models';
+import { Utils } from '../../../services';
 
 export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch {
   public battery: number = -99;
@@ -20,6 +21,10 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
   public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+  }
+
+  public persist(buttonName: string, pressType: ButtonPressType): void {
+    Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverrride: boolean = false): void {
