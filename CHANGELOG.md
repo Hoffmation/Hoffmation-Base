@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.3 (2022-09-10)
 
 * (theimo1221) Wled as iDimmable Lamp
 * (theimo1221) Persist Button Presses
