@@ -49,6 +49,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       Utils.guardedNewThread(() => {
         this._fenster?.rolloPositionChange(value);
       }, this);
+      this.persist();
     }
     this._currentLevel = value;
   }
@@ -68,6 +69,10 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       return -1;
     }
     return this._fenster.desiredPosition;
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistShutter(this);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {

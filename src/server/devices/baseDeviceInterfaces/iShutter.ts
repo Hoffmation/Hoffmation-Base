@@ -6,5 +6,7 @@ export interface iShutter extends iRoomDevice {
   desiredFensterLevel: number;
   fenster: Fenster | undefined;
 
+  persist(): void;
+
   setLevel(pPosition: number, initial: boolean, skipOpenWarning?: boolean): void;
 }

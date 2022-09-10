@@ -17,6 +17,7 @@ import {
   iHeater,
   iMotionSensor,
   IoBrokerBaseDevice,
+  iShutter,
 } from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
@@ -265,6 +266,23 @@ IF (SELECT to_regclass('hoffmation_schema."MotionSensorDeviceData"') IS NULL) Th
   alter table hoffmation_schema."MotionSensorDeviceData"
     owner to postgres;
 END IF;
+
+IF (SELECT to_regclass('hoffmation_schema."ShutterDeviceData"') IS NULL) Then    
+  create table if not exists hoffmation_schema."ShutterDeviceData"
+(
+    "deviceID"         varchar(60) not null
+        constraint "ShutterDeviceData_DeviceInfo_null_fk"
+            references hoffmation_schema."DeviceInfo"
+            on delete set null,
+    "position" double precision,
+    date               timestamp   not null,
+    constraint shutterdevicedata_pk
+        primary key ("deviceID", date)
+);
+
+alter table hoffmation_schema."ShutterDeviceData"
+    owner to postgres;
+END IF;
     
     IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
 create table "TemperaturData"
@@ -318,6 +336,13 @@ values ('${device.id}', ${pressType}, '${buttonName}', '${new Date().toISOString
     this.query(`
 insert into hoffmation_schema."MotionSensorDeviceData" ("deviceID", "movementDetected", "date")
 values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}');
+    `);
+  }
+
+  public persistShutter(device: iShutter): void {
+    this.query(`
+insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date")
+values ('${device.id}', ${device.currentLevel}, '${new Date().toISOString()}');
     `);
   }
 

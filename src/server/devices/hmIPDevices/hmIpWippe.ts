@@ -5,6 +5,7 @@ import { LogLevel } from '../../../models';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { Utils } from '../../services';
 
 export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -45,22 +46,31 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
       return;
     }
 
+    const boolVal: boolean = state.val as boolean;
     switch (idSplit[4]) {
       case 'PRESS_SHORT':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          this.log(LogLevel.Debug, `Tasten Update initial ignoriert`);
-          cTaste.updateState(ButtonPressType.short, state.val as boolean);
+          if (boolVal) {
+            this.persist(cTaste.name, ButtonPressType.short);
+          }
+          cTaste.updateState(ButtonPressType.short, boolVal);
         }
         break;
       case 'PRESS_LONG':
         if (!initial) {
           // Tasten beim Starten ignorieren
-          this.log(LogLevel.Debug, `Tasten Update initial ignoriert`);
-          cTaste.updateState(ButtonPressType.long, state.val as boolean);
+          if (boolVal) {
+            this.persist(cTaste.name, ButtonPressType.long);
+          }
+          cTaste.updateState(ButtonPressType.long, boolVal);
         }
         break;
     }
+  }
+
+  public persist(buttonName: string, pressType: ButtonPressType): void {
+    Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
   public getButtonAssignment(): string {

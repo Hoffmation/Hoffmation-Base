@@ -10,6 +10,7 @@
 
 * (theimo1221) Wled as iDimmable Lamp
 * (theimo1221) Persist Button Presses
+* (theimo1221) Persist Shutter Data
 
 ## 1.1.2 (2022-09-10)
 

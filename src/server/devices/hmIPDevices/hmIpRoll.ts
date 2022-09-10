@@ -39,6 +39,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       Utils.guardedNewThread(() => {
         this._fenster?.rolloPositionChange(value);
       }, this);
+      this.persist();
     }
     this._currentLevel = value;
   }
@@ -58,6 +59,10 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       return -1;
     }
     return this._fenster.desiredPosition;
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistShutter(this);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
