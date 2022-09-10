@@ -95,6 +95,10 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     );
   }
 
+  public persist(): void {
+    Utils.dbo?.persistActuator(this);
+  }
+
   public toggleActuator(force: boolean = false): boolean {
     const newVal = this.queuedValue !== null ? !this.queuedValue : !this.actuatorOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;

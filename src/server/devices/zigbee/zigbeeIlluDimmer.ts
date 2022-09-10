@@ -28,6 +28,10 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
     this.transitionID = `${this.info.fullID}.transition_time`;
   }
 
+  public get actuatorOn(): boolean {
+    return this.lightOn;
+  }
+
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.queuedValue = null;
     this.log(LogLevel.DeepTrace, `Dimmer Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
@@ -65,6 +69,14 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
         this.setLight(true, timeout, force, this.settings.dayBrightness);
         break;
     }
+  }
+
+  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
+    this.setLight(pValue, timeout, force);
+  }
+
+  public toggleActuator(force: boolean): boolean {
+    return this.toggleLight(undefined, force);
   }
 
   /**
@@ -165,7 +177,7 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
     if (this._lastPersist + 1000 < now) {
       return;
     }
-    Utils.dbo?.persistLamp(this);
+    Utils.dbo?.persistActuator(this);
     this._lastPersist = now;
   }
 

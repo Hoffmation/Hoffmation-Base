@@ -4,6 +4,8 @@ import { DimmerSettings, TimeOfDay } from '../../../models';
 export interface iDimmableLamp extends iLamp {
   settings: DimmerSettings;
 
+  readonly brightness: number;
+
   toggleLight(time: TimeOfDay, force: boolean, calculateTime: boolean): void;
 
   /**

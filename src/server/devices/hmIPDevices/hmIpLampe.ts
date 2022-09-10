@@ -20,6 +20,10 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     this.lightOnSwitchID = `${this.info.fullID}.2.STATE`;
   }
 
+  public get actuatorOn(): boolean {
+    return this.lightOn;
+  }
+
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Lampen Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
@@ -32,6 +36,14 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
         }
         break;
     }
+  }
+
+  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
+    this.setLight(pValue, timeout, force);
+  }
+
+  public toggleActuator(force: boolean): boolean {
+    return this.toggleLight(undefined, force);
   }
 
   /** @inheritdoc */
@@ -126,6 +138,6 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
   }
 
   public persist(): void {
-    Utils.dbo?.persistLamp(this);
+    Utils.dbo?.persistActuator(this);
   }
 }

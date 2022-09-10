@@ -8,10 +8,12 @@ import {
   ShutterCalibration,
   TemperaturDataPoint,
 } from '../../../models';
-import { iAcDevice, iBaseDevice, iHeater, iLamp, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
+import { iAcDevice, iActuator, iBaseDevice, iHeater, iMotionSensor, IoBrokerBaseDevice } from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
+import { DeviceCapability } from '../../devices/DeviceCapability';
+import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 
 export class PostgreSqlPersist implements iPersist {
   initialized: boolean = false;
@@ -208,17 +210,17 @@ IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then
 END IF;
 
 
-IF (SELECT to_regclass('hoffmation_schema."LampDeviceData"') IS NULL) Then    
-  create table hoffmation_schema."LampDeviceData"
+IF (SELECT to_regclass('hoffmation_schema."ActuatorDeviceData"') IS NULL) Then    
+  create table hoffmation_schema."ActuatorDeviceData"
   (
       "deviceID" varchar(60) not null,
       "on"       boolean,
       date       timestamp   not null,
-      constraint lampdevicedata_pk
+      constraint ActuatorDeviceData_pk
           primary key ("deviceID", date)
   );
 
-  alter table hoffmation_schema."LampDeviceData"
+  alter table hoffmation_schema."ActuatorDeviceData"
     owner to postgres;
 END IF;
 
@@ -266,10 +268,14 @@ values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.te
     `);
   }
 
-  public persistLamp(device: iLamp): void {
+  public persistActuator(device: iActuator): void {
+    let percentage: number | undefined = undefined;
+    if (device.deviceCapabilities.includes(DeviceCapability.dimmablelamp)) {
+      percentage = (device as iDimmableLamp).brightness;
+    }
     this.query(`
-insert into hoffmation_schema."LampDeviceData" ("deviceID", "on", "date")
-values ('${device.id}', ${device.lightOn}, '${new Date().toISOString()}');
+insert into hoffmation_schema."ActuatorDeviceData" ("deviceID", "on", "date", "percentage")
+values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${percentage ?? 'null'});
     `);
   }
 

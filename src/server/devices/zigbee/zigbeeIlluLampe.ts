@@ -69,6 +69,6 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
   }
 
   public persist(): void {
-    Utils.dbo?.persistLamp(this);
+    Utils.dbo?.persistActuator(this);
   }
 }

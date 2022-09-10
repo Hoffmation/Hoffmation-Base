@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Persist all actuator
+
 ## 1.1.1 (2022-09-09)
 
 * (theimo1221) Fix Device Info persistence

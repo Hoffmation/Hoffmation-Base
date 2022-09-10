@@ -5,6 +5,8 @@ export interface iActuator extends iRoomDevice {
   settings: ActuatorSettings;
   actuatorOn: boolean;
 
+  persist(): void;
+
   /**
    * Controls the power state of this actuator
    * @param {boolean} pValue the new desired State
