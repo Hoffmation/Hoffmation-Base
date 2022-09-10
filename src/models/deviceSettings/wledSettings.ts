@@ -1,6 +1,6 @@
-import { DeviceSettings } from './deviceSettings';
+import { DimmerSettings } from './dimmerSettings';
 
-export class WledSettings extends DeviceSettings {
+export class WledSettings extends DimmerSettings {
   public dayOn: boolean = false;
   public dayBrightness: number = 100;
   public dawnOn: boolean = true;

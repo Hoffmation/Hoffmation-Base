@@ -1,11 +1,12 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
-import { ServerLogService } from '../services';
+import { ServerLogService, TimeCallbackService, Utils } from '../services';
 import { LogLevel, TimeOfDay } from '../../models';
 import { WledSettings } from '../../models/deviceSettings/wledSettings';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
+import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp';
 
-export class WledDevice extends IoBrokerBaseDevice {
+export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   public on: boolean = false;
   public brightness: number = -1;
   public linkQuality: number = 0;
@@ -21,6 +22,14 @@ export class WledDevice extends IoBrokerBaseDevice {
     this._onID = `${this.info.fullID}.on`;
     this._presetID = `${this.info.fullID}.ps`;
     this._brightnessID = `${this.info.fullID}.bri`;
+  }
+
+  public get actuatorOn(): boolean {
+    return this.on;
+  }
+
+  public get lightOn(): boolean {
+    return this.on;
   }
 
   public override update(
@@ -46,7 +55,17 @@ export class WledDevice extends IoBrokerBaseDevice {
     }
   }
 
-  public setLight(pValue: boolean, brightness: number = -1, preset?: number): void {
+  public setLight(
+    pValue: boolean,
+    _timeout?: number,
+    _force?: boolean,
+    brightness?: number,
+    _transitionTime?: number,
+  ): void {
+    this.setWled(pValue, brightness);
+  }
+
+  public setWled(pValue: boolean, brightness: number = -1, preset?: number): void {
     if (this._onID === '') {
       ServerLogService.writeLog(LogLevel.Error, `Keine On ID für "${this.info.customName}" bekannt.`);
       return;
@@ -86,24 +105,50 @@ export class WledDevice extends IoBrokerBaseDevice {
     switch (time) {
       case TimeOfDay.Night:
         if (this.settings.nightOn) {
-          this.setLight(true, this.settings.nightBrightness, this.settings.nightPreset);
+          this.setWled(true, this.settings.nightBrightness, this.settings.nightPreset);
         }
         break;
       case TimeOfDay.AfterSunset:
         if (this.settings.duskOn) {
-          this.setLight(true, this.settings.duskBrightness, this.settings.duskPreset);
+          this.setWled(true, this.settings.duskBrightness, this.settings.duskPreset);
         }
         break;
       case TimeOfDay.BeforeSunrise:
         if (this.settings.dawnOn) {
-          this.setLight(true, this.settings.dawnBrightness, this.settings.dawnPreset);
+          this.setWled(true, this.settings.dawnBrightness, this.settings.dawnPreset);
         }
         break;
       case TimeOfDay.Daylight:
         if (this.settings.dayOn) {
-          this.setLight(true, this.settings.dayBrightness, this.settings.dayPreset);
+          this.setWled(true, this.settings.dayBrightness, this.settings.dayPreset);
         }
         break;
     }
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistActuator(this);
+  }
+
+  public setActuator(pValue: boolean, _timeout?: number, _force?: boolean): void {
+    this.setLight(pValue);
+  }
+
+  public toggleActuator(_force: boolean): boolean {
+    this.setLight(!this.on);
+    return this.on;
+  }
+
+  public toggleLight(time?: TimeOfDay, _force: boolean = false, calculateTime: boolean = false): boolean {
+    const newVal = !this.lightOn;
+    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
+      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
+    }
+    if (newVal && time !== undefined) {
+      this.setTimeBased(time);
+      return true;
+    }
+    this.setLight(newVal);
+    return newVal;
   }
 }
