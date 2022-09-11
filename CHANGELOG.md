@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix mistake in Position restore
+
 ## 1.1.6 (2022-09-11)
 
 * (theimo1221) Rename "Fenster" to window

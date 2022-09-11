@@ -31,10 +31,9 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
         this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err?.message ?? err}`);
       });
     Utils.dbo?.getLastDesiredPosition(this).then((val) => {
-      if (val.desiredPosition === -1) {
-        return;
+      if (val.desiredPosition >= -1) {
+        this._window?.setDesiredPosition(val.desiredPosition);
       }
-      this._window?.setDesiredPosition(val.desiredPosition);
     });
   }
 

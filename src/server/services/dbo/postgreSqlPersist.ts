@@ -362,11 +362,11 @@ values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}
   }
 
   public persistShutter(device: iShutter): void {
+    const currentLevel: number | null = device.currentLevel >= 0 ? device.currentLevel : null;
+    const desiredLevel: number | null = device.desiredWindowShutterLevel >= 0 ? device.desiredWindowShutterLevel : null;
     this.query(`
 insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date", "desiredPosition")
-values ('${device.id}', ${device.currentLevel === -1 ? 'null' : device.currentLevel}, '${new Date().toISOString()}', ${
-      device.desiredWindowShutterLevel
-    });
+values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desiredLevel});
     `);
   }
 
