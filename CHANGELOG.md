@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Rename "Fenster" to window
+* (theimo1221) Persist desired Shutter position
 
 ## 1.1.5 (2022-09-10)
 

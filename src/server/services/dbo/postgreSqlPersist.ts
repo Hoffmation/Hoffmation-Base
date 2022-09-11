@@ -276,6 +276,7 @@ IF (SELECT to_regclass('hoffmation_schema."ShutterDeviceData"') IS NULL) Then
             on delete set null,
     "position" double precision,
     date               timestamp   not null,
+    "desiredPosition" double precision,
     constraint shutterdevicedata_pk
         primary key ("deviceID", date)
 );
@@ -341,8 +342,8 @@ values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}
 
   public persistShutter(device: iShutter): void {
     this.query(`
-insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date")
-values ('${device.id}', ${device.currentLevel}, '${new Date().toISOString()}');
+insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date", "desiredPosition")
+values ('${device.id}', ${device.currentLevel}, '${new Date().toISOString()}', ${device.desiredWindowShutterLevel});
     `);
   }
 
