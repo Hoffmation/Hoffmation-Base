@@ -1,4 +1,4 @@
-import { Devices, DeviceType, Fenster, iShutter } from '../devices';
+import { Devices, DeviceType, iShutter, Window } from '../devices';
 import { API } from './api';
 
 export class ShutterService {
@@ -19,15 +19,17 @@ export class ShutterService {
 
     const response: string[] = [`Dies sind die aktuellen Rollo Positionen:`];
     for (const r of rollos) {
-      response.push(`${r.currentLevel}% Rollo: "${r.info.customName}" Gewünschte Position: ${r.desiredFensterLevel}`);
+      response.push(
+        `${r.currentLevel}% Rollo: "${r.info.customName}" Gewünschte Position: ${r.desiredWindowShutterLevel}`,
+      );
     }
     response.push(`\nDie nächsten Zeiten zum Hochfahren:`);
     const down: string[] = [`\nDie nächsten Zeiten zum Runterfahren:`];
     for (const r of API.getRooms().values()) {
-      if (!r.FensterGroup) {
+      if (!r.WindowGroup) {
         continue;
       }
-      for (const f of r.FensterGroup.fenster) {
+      for (const f of r.WindowGroup.windows) {
         f.getShutter().forEach((shutter) => {
           response.push(
             `Rollo: "${shutter.info.customName}"\t${
@@ -71,26 +73,26 @@ export class ShutterService {
     shutter.setLevel(100, initial);
   }
 
-  public static windowAllDown(f: Fenster, initial: boolean = false): void {
+  public static windowAllDown(f: Window, initial: boolean = false): void {
     f.getShutter().forEach((s) => {
       s.setLevel(0, initial);
     });
   }
 
-  public static windowAllMiddle(f: Fenster, initial: boolean = false): void {
+  public static windowAllMiddle(f: Window, initial: boolean = false): void {
     f.getShutter().forEach((s) => {
       s.setLevel(50, initial);
     });
   }
 
-  public static windowAllUp(f: Fenster, initial: boolean = false): void {
+  public static windowAllUp(f: Window, initial: boolean = false): void {
     f.getShutter().forEach((s) => {
       s.setLevel(100, initial);
     });
   }
 
   public static windowAllToPosition(
-    f: Fenster,
+    f: Window,
     position: number,
     initial: boolean = false,
     skipOpenWarning: boolean = false,

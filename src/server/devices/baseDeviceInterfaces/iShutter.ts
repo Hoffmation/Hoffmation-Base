@@ -1,10 +1,10 @@
-import { Fenster } from '../groups';
+import { Window } from '../groups';
 import { iRoomDevice } from './iRoomDevice';
 
 export interface iShutter extends iRoomDevice {
   currentLevel: number;
-  desiredFensterLevel: number;
-  fenster: Fenster | undefined;
+  desiredWindowShutterLevel: number;
+  window: Window | undefined;
 
   persist(): void;
 

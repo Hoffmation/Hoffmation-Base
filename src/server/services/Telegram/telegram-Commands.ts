@@ -105,14 +105,14 @@ export class TelegramCommands {
 
     TelegramService.addMessageCallback(
       new TelegramMessageCallback(
-        'FensterCheck',
-        /\/check_fenster/,
+        'WindowCheck',
+        /\/check_windows/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
           TelegramService.sendMessage([m.chat.id], Griffe.getGriffPosition());
           return true;
         },
-        'Gibt die Positionen der Fenstergriffe aus und warnt somit über offene Fenster',
+        'Returns the handle positions and warns about open windows.',
       ),
     );
 

@@ -1,6 +1,6 @@
 import { HmIpGriff } from '../hmIPDevices';
 import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services';
-import { FensterPosition } from '../models';
+import { WindowPosition } from '../models';
 import { LogLevel, TimeOfDay, WindowSettings } from '../../../models';
 import { iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
 import { BaseGroup } from './base-group';
@@ -9,7 +9,7 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { ZigbeeMagnetContact } from '../zigbee';
 
-export class Fenster extends BaseGroup {
+export class Window extends BaseGroup {
   public desiredPosition: number = 0;
   public settings: WindowSettings = new WindowSettings();
 
@@ -53,7 +53,7 @@ export class Fenster extends BaseGroup {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Vibration) as iVibrationSensor[];
   }
 
-  public griffeInPosition(pPosition: FensterPosition): number {
+  public griffeInPosition(pPosition: WindowPosition): number {
     let count = 0;
     for (const griff of this.getHandle()) {
       if (griff.position === pPosition) {
@@ -66,7 +66,7 @@ export class Fenster extends BaseGroup {
   public initialize(): void {
     this.getHandle().forEach((griff) => {
       griff.addKippCallback((kipp: boolean) => {
-        if (!(kipp && this.griffeInPosition(FensterPosition.offen) === 0)) {
+        if (!(kipp && this.griffeInPosition(WindowPosition.offen) === 0)) {
           return;
         }
         this.getVibration().forEach((element) => {
@@ -93,8 +93,8 @@ export class Fenster extends BaseGroup {
       griff.addClosedCallback((geschlossen: boolean) => {
         if (
           geschlossen &&
-          this.griffeInPosition(FensterPosition.offen) === 0 &&
-          this.griffeInPosition(FensterPosition.kipp) === 0
+          this.griffeInPosition(WindowPosition.offen) === 0 &&
+          this.griffeInPosition(WindowPosition.kipp) === 0
         ) {
           const now = new Date().getTime();
           this.getVibration().forEach((element) => {
@@ -112,10 +112,10 @@ export class Fenster extends BaseGroup {
     Utils.guardedTimeout(
       () => {
         this.getShutter().forEach((shutter) => {
-          shutter.fenster = this;
+          shutter.window = this;
         });
         this.getHandle().forEach((g) => {
-          g.Fenster = this;
+          g.window = this;
         });
       },
       5,

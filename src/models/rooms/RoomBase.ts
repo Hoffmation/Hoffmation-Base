@@ -2,7 +2,6 @@ import { TimeCallback, TimeCallbackType, TimeOfDay } from '../timeCallback';
 import {
   BaseGroup,
   DeviceCluster,
-  FensterGroup,
   GroupType,
   HeatGroup,
   LampenGroup,
@@ -17,6 +16,7 @@ import {
   Utils,
   WaterGroup,
   WeatherService,
+  WindowGroup,
 } from '../../server';
 import { LogLevel } from '../logLevel';
 import { RoomSettings } from './RoomSettings';
@@ -45,8 +45,8 @@ export class RoomBase implements iRoomBase {
     return this._deviceCluster;
   }
 
-  public get FensterGroup(): FensterGroup | undefined {
-    return this.groupMap.get(GroupType.Window) as FensterGroup | undefined;
+  public get WindowGroup(): WindowGroup | undefined {
+    return this.groupMap.get(GroupType.Window) as WindowGroup | undefined;
   }
 
   public get PraesenzGroup(): PraesenzGroup | undefined {
@@ -89,7 +89,7 @@ export class RoomBase implements iRoomBase {
     this.log(LogLevel.Debug, `RoomBase Init für ${this.roomName}`);
     this.recalcTimeCallbacks();
     this.PraesenzGroup?.initCallbacks();
-    this.FensterGroup?.initialize();
+    this.WindowGroup?.initialize();
     this.TasterGroup?.initCallbacks();
     this.HeatGroup?.initialize();
     if (this.settings.ambientLightAfterSunset && this.settings.lampOffset) {
@@ -173,8 +173,8 @@ export class RoomBase implements iRoomBase {
       : TimeCallbackService.dayType(this.settings.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
-      ((this.settings.lightIfNoWindows && (!this.FensterGroup || this.FensterGroup.fenster.length === 0)) ||
-        this.FensterGroup?.fenster.some((f) => {
+      ((this.settings.lightIfNoWindows && (!this.WindowGroup || this.WindowGroup.windows.length === 0)) ||
+        this.WindowGroup?.windows.some((f) => {
           return ShutterService.anyRolloDown(f.getShutter());
         }))
     ) {
@@ -196,7 +196,7 @@ export class RoomBase implements iRoomBase {
       : TimeCallbackService.dayType(this.settings.lampOffset);
     if (
       timeOfDay === TimeOfDay.Daylight &&
-      this.FensterGroup?.fenster.some((f) => {
+      this.WindowGroup?.windows.some((f) => {
         return ShutterService.anyRolloDown(f.getShutter());
       })
     ) {

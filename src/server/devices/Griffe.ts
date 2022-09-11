@@ -1,6 +1,6 @@
 import { HmIpGriff } from './hmIPDevices';
 import { DeviceType } from './deviceType';
-import { FensterPosition } from './models';
+import { WindowPosition } from './models';
 import { Devices } from './devices';
 
 export class Griffe {
@@ -11,9 +11,9 @@ export class Griffe {
       return b.position - a.position;
     });
 
-    const response: string[] = [`Dies sind die aktuellen Stellungen der FensterGriffe:`];
+    const response: string[] = [`These are the current handle positions:`];
     for (const g of griffe) {
-      response.push(`${FensterPosition[g.position]} Fenster: "${g.info.customName}"`);
+      response.push(`${WindowPosition[g.position]} Window: "${g.info.customName}"`);
     }
     return response.join('\n');
   }

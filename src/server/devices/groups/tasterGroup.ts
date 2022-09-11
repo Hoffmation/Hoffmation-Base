@@ -23,7 +23,7 @@ export class TasterGroup extends BaseGroup {
       t.buttonTopLeft?.addCb(
         ButtonPressType.long,
         (pValue) => {
-          pValue && this.getRoom().FensterGroup?.allRolloDown(false, true);
+          pValue && this.getRoom().WindowGroup?.allRolloDown(false, true);
         },
         `Close all Rollos in this room`,
       );
@@ -31,7 +31,7 @@ export class TasterGroup extends BaseGroup {
       t.buttonTopLeft?.addCb(
         ButtonPressType.short,
         (pValue) => {
-          pValue && this.getRoom().FensterGroup?.allRolloToLevel(25, true);
+          pValue && this.getRoom().WindowGroup?.allRolloToLevel(25, true);
         },
         `Nearly closes all Rollos in this room`,
       );
@@ -43,7 +43,7 @@ export class TasterGroup extends BaseGroup {
             return;
           }
 
-          this.getRoom().FensterGroup?.allRolloUp(true);
+          this.getRoom().WindowGroup?.allRolloUp(true);
         },
         `Open all Rollos in this room`,
       );
@@ -51,7 +51,7 @@ export class TasterGroup extends BaseGroup {
       t.buttonTopRight?.addCb(
         ButtonPressType.short,
         (pValue) => {
-          pValue && this.getRoom().FensterGroup?.allRolloToLevel(50, true);
+          pValue && this.getRoom().WindowGroup?.allRolloToLevel(50, true);
         },
         `All Rollos in this room to middle`,
       );

@@ -3,14 +3,14 @@ import {
   DeviceCluster,
   deviceConfig,
   Devices,
-  Fenster,
-  FensterGroup,
   GroupType,
   PraesenzGroup,
   RoomBase,
   RoomInitializationSettings,
   RoomSettings,
   Utils,
+  Window,
+  WindowGroup,
 } from '../../src';
 import ExampleDevices from './exampleDevices.json';
 
@@ -38,7 +38,7 @@ describe('Devices', () => {
   });
   it('Should be able to create Room JSON', () => {
     const groups: Map<GroupType, BaseGroup> = new Map<GroupType, BaseGroup>();
-    groups.set(GroupType.Window, new FensterGroup('Testroom', [new Fenster('Testroom', ['hm-rpc-0007DA49A781DF'])]));
+    groups.set(GroupType.Window, new WindowGroup('Testroom', [new Window('Testroom', ['hm-rpc-0007DA49A781DF'])]));
     groups.set(GroupType.Presence, new PraesenzGroup('Testroom', ['zigbee-00124b0022cd373c']));
     const room: RoomBase = new RoomBase(
       'Testroom',

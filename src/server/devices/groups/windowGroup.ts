@@ -1,24 +1,24 @@
 import { LogLevel, RoomBase, TimeCallback, TimeCallbackType, TimeOfDay } from '../../../models';
 import { ShutterService, TimeCallbackService, Utils, WeatherService } from '../../services';
-import { Fenster } from './Fenster';
-import { FensterPosition } from '../models';
+import { Window } from './Window';
+import { WindowPosition } from '../models';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 
-export class FensterGroup extends BaseGroup {
-  public constructor(roomName: string, public fenster: Fenster[]) {
+export class WindowGroup extends BaseGroup {
+  public constructor(roomName: string, public windows: Window[]) {
     super(roomName, GroupType.WindowGroup);
   }
 
   public allRolloDown(initial: boolean = false, savePosition: boolean = false): void {
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       if (savePosition) f.desiredPosition = 0;
       ShutterService.windowAllDown(f, initial);
     });
   }
 
   public allRolloUp(savePosition: boolean = false): void {
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       if (savePosition) {
         f.desiredPosition = 100;
       }
@@ -27,7 +27,7 @@ export class FensterGroup extends BaseGroup {
   }
 
   public allRolloToLevel(level: number, savePosition: boolean = false): void {
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       if (savePosition) {
         f.desiredPosition = level;
       }
@@ -86,7 +86,7 @@ export class FensterGroup extends BaseGroup {
       Utils.guardedTimeout(this.setRolloByWeatherStatus, 2 * 60 * 1000, this);
     }
 
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       f.initialize();
     });
   }
@@ -95,7 +95,7 @@ export class FensterGroup extends BaseGroup {
     const room: RoomBase = this.getRoom();
     const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       if (f.getShutter().length === 0) {
         return;
       }
@@ -113,10 +113,10 @@ export class FensterGroup extends BaseGroup {
           f.settings.direction,
         );
       }
-      if (f.griffeInPosition(FensterPosition.offen) > 0 && desiredPos < 100) {
+      if (f.griffeInPosition(WindowPosition.offen) > 0 && desiredPos < 100) {
         return;
       }
-      if (f.griffeInPosition(FensterPosition.kipp) > 0) {
+      if (f.griffeInPosition(WindowPosition.kipp) > 0) {
         desiredPos = Math.max(30, desiredPos);
       }
       ShutterService.windowAllToPosition(f, desiredPos, false, true);
@@ -124,7 +124,7 @@ export class FensterGroup extends BaseGroup {
   }
 
   public sunriseUp(initial: boolean = false): void {
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       if (f.noRolloOnSunrise || f.getShutter().length === 0) {
         return;
       }
@@ -135,7 +135,7 @@ export class FensterGroup extends BaseGroup {
 
   public restoreRolloPosition(recalc: boolean = false): void {
     if (!recalc) {
-      this.fenster.forEach((f) => {
+      this.windows.forEach((f) => {
         f.restoreDesiredPosition();
       });
       return;
@@ -148,7 +148,7 @@ export class FensterGroup extends BaseGroup {
   }
 
   public changeVibrationMotionBlock(block: boolean): void {
-    this.fenster.forEach((f) => {
+    this.windows.forEach((f) => {
       if (f.getVibration().length === 0) {
         return;
       }

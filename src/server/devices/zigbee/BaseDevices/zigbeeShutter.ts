@@ -3,8 +3,8 @@ import { LogDebugType, Utils } from '../../../services';
 import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../../baseDeviceInterfaces';
-import { Fenster } from '../../groups';
-import { FensterPosition } from '../../models';
+import { Window } from '../../groups';
+import { WindowPosition } from '../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
@@ -45,30 +45,30 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (value !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
       value = this._setLevel;
     }
-    if (value !== this._currentLevel && this._fenster) {
+    if (value !== this._currentLevel && this._window) {
       Utils.guardedNewThread(() => {
-        this._fenster?.rolloPositionChange(value);
+        this._window?.rolloPositionChange(value);
       }, this);
       this.persist();
     }
     this._currentLevel = value;
   }
 
-  protected _fenster?: Fenster;
+  protected _window?: Window;
 
-  public get fenster(): Fenster | undefined {
-    return this._fenster;
+  public get window(): Window | undefined {
+    return this._window;
   }
 
-  public set fenster(value: Fenster | undefined) {
-    this._fenster = value;
+  public set window(value: Window | undefined) {
+    this._window = value;
   }
 
-  public get desiredFensterLevel(): number {
-    if (this._fenster === undefined) {
+  public get desiredWindowShutterLevel(): number {
+    if (this._window === undefined) {
       return -1;
     }
-    return this._fenster.desiredPosition;
+    return this._window.desiredPosition;
   }
 
   public persist(): void {
@@ -95,17 +95,17 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       return;
     }
 
-    if (this._fenster !== undefined) {
-      if (this._fenster.griffeInPosition(FensterPosition.offen) > 0 && pPosition < 100) {
+    if (this._window !== undefined) {
+      if (this._window.griffeInPosition(WindowPosition.offen) > 0 && pPosition < 100) {
         if (!skipOpenWarning) {
-          this.log(LogLevel.Alert, `Fahre Rollo  nicht runter, weil das Fenster offen ist!`);
+          this.log(LogLevel.Alert, `Not closing the shutter, as the window is open!`);
         }
         return;
       }
-      if (this._fenster.griffeInPosition(FensterPosition.kipp) > 0 && pPosition < 50) {
+      if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!skipOpenWarning) {
-          this.log(LogLevel.Alert, `Fahre Rollo  nicht runter, weil das Fenster auf Kipp ist!`);
+          this.log(LogLevel.Alert, `Not closing the shutter, as the window is half open!`);
         }
       }
     }
@@ -116,7 +116,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_fenster']);
+    return _.omit(super.toJSON(), ['_window']);
   }
 
   protected moveToPosition(pPosition: number): void {

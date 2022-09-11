@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { TelegramService, Utils, WeatherService } from '../../services';
-import { FensterPosition } from '../models';
-import { Fenster, HeatGroup } from '../groups';
+import { WindowPosition } from '../models';
+import { HeatGroup, Window } from '../groups';
 import { LogLevel } from '../../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
@@ -12,13 +12,13 @@ import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice {
   public battery: number = -99;
-  public position: FensterPosition = FensterPosition.geschlossen;
+  public position: WindowPosition = WindowPosition.geschlossen;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _offenCallback: Array<(pValue: boolean) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   public minutesOpen: number = 0;
-  private _fenster: Fenster | undefined = undefined;
+  private _window: Window | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
@@ -27,8 +27,8 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
-  public set Fenster(value: Fenster) {
-    this._fenster = value;
+  public set window(value: Window) {
+    this._window = value;
   }
 
   public addOffenCallback(pCallback: (pValue: boolean) => void): void {
@@ -57,7 +57,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       case '1':
         switch (idSplit[4]) {
           case 'STATE':
-            this.updatePosition(state.val as FensterPosition);
+            this.updatePosition(state.val as WindowPosition);
             break;
           case 'OPERATING_VOLTAGE':
             this.battery = 100 * (((state.val as number) - 0.9) / 0.6);
@@ -67,12 +67,12 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     }
   }
 
-  public updatePosition(pValue: FensterPosition): void {
+  public updatePosition(pValue: WindowPosition): void {
     if (pValue === this.position) {
       return;
     }
 
-    this.log(LogLevel.Trace, `Update Fenstergriff auf Position "${FensterPosition[pValue]}"`);
+    this.log(LogLevel.Trace, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -87,10 +87,10 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       c3(pValue === 2);
     }
 
-    if (pValue === FensterPosition.geschlossen) {
+    if (pValue === WindowPosition.geschlossen) {
       if (this._iOpenTimeout !== undefined) {
         clearInterval(this._iOpenTimeout);
-        this.log(LogLevel.Info, `Fenster nach ${this.minutesOpen} Minuten geschlossen`);
+        this.log(LogLevel.Info, `Window closed after ${this.minutesOpen} minutes`);
         this.minutesOpen = 0;
         this._iOpenTimeout = undefined;
       }
@@ -99,7 +99,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       this._iOpenTimeout = Utils.guardedInterval(
         () => {
           this.minutesOpen++;
-          const heatgroup: HeatGroup | undefined = this._fenster?.getRoom().HeatGroup;
+          const heatgroup: HeatGroup | undefined = this._window?.getRoom().HeatGroup;
           if (heatgroup !== undefined) {
             const desiredTemp: number = heatgroup.desiredTemp;
             const currentTemp: number = heatgroup.temperature;
@@ -111,7 +111,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
                 (desiredTemp < currentTemp && outSideTemp < currentTemp) ||
                 (desiredTemp > currentTemp && outSideTemp > currentTemp);
               if (!wouldHelp && this._helpingRoomTemp) {
-                const info: string = `Das Fenster sollte geschlossen werden, es hilft dem Raum nicht mehr`;
+                const info: string = `Window should be closed, as it doesn't help reaching target temperature.`;
                 this.log(LogLevel.Info, info);
                 TelegramService.inform(info);
                 this._helpingRoomTemp = false;
@@ -126,7 +126,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
               }
             }
           }
-          const message = `Fenster seit ${this.minutesOpen} Minuten auf Position ${FensterPosition[this.position]}`;
+          const message = `Window is in position ${WindowPosition[this.position]} since ${this.minutesOpen} minutes`;
           switch (this.minutesOpen) {
             case 15:
             case 30:
@@ -148,6 +148,6 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_fenster']);
+    return _.omit(super.toJSON(), ['_window']);
   }
 }

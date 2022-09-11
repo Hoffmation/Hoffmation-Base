@@ -29,7 +29,7 @@ export class PraesenzGroup extends BaseGroup {
           RoomService.startIntrusionAlarm(this.getRoom(), b);
         }
         if (!b.settings.seesWindow) {
-          this.getRoom().FensterGroup?.changeVibrationMotionBlock(true);
+          this.getRoom().WindowGroup?.changeVibrationMotionBlock(true);
         }
         RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${b.info.fullName}"`);
       });
@@ -93,7 +93,7 @@ export class PraesenzGroup extends BaseGroup {
         LogLevel.Debug,
         `Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
       );
-      this.getRoom().FensterGroup?.changeVibrationMotionBlock(false);
+      this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
       cb();
       return;
     }
@@ -108,7 +108,7 @@ export class PraesenzGroup extends BaseGroup {
           `Delayed Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
         );
         if (!this.anyPresent() && timeAfterReset > 0) {
-          this.getRoom().FensterGroup?.changeVibrationMotionBlock(false);
+          this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
           cb();
         }
       },

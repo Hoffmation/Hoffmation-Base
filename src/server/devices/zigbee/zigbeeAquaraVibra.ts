@@ -40,10 +40,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   }
 
   public set vibrationBlockedByGriff(pVal: boolean) {
-    this.log(
-      LogLevel.Debug,
-      `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName} in Bezug auf den Fenstergriff`,
-    );
+    this.log(LogLevel.Debug, `${pVal ? 'disa' : 'a'}rming vibration alarm for ${this.info.customName} due to handle`);
     if (pVal) {
       this.vibrationBlockedByGriffTimeStamp = new Date().getTime();
     }
@@ -179,7 +176,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
       `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlockedByGriff}`,
     );
     if (this._vibrationBlockedByGriff) {
-      this.log(LogLevel.Debug, `Fenster offen, ignoriere Vibrationsalarm bei ${this.info.customName}`);
+      this.log(LogLevel.Debug, `Window is open; ignoring vibration alarm.`);
       return;
     }
     if (this._vibrationBlockedByMotion) {

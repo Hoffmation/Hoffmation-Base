@@ -1,2 +1,2 @@
-export * from './FensterPosition';
+export * from './WindowPosition';
 export * from './MagnetPosition';
