@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.8 (2022-09-11)
 
 * (theimo1221) Fix type from motionSensorTOdayCount Load
 
