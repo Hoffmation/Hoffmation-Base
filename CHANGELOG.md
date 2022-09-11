@@ -10,6 +10,7 @@
 
 * (theimo1221) Rename "Fenster" to window
 * (theimo1221) Persist desired Shutter position
+* (theimo1221) Load desired Shutter position on startup
 
 ## 1.1.5 (2022-09-10)
 

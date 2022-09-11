@@ -12,6 +12,7 @@ import {
 import {
   CountToday,
   CurrentIlluminationDataPoint,
+  DesiredShutterPosition,
   EnergyCalculation,
   RoomBase,
   ShutterCalibration,
@@ -28,6 +29,8 @@ export interface iPersist {
   addDevice(device: iBaseDevice): void;
 
   motionSensorTodayCount(device: iMotionSensor): Promise<CountToday>;
+
+  getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition>;
 
   getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration>;
 

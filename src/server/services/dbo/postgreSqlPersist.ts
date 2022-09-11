@@ -2,6 +2,7 @@ import { iPersist } from './iPersist';
 import {
   CountToday,
   CurrentIlluminationDataPoint,
+  DesiredShutterPosition,
   EnergyCalculation,
   LogLevel,
   RoomBase,
@@ -81,6 +82,26 @@ values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},
         "sollTemperatur" = ${heater.desiredTemperature}
 ;
     `);
+  }
+
+  async getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition> {
+    const dbResult: DesiredShutterPosition[] | null = await this.query<DesiredShutterPosition>(
+      `SELECT position
+from hoffmation_schema."ShutterDeviceData"
+WHERE "deviceID" = '${device.id}'
+and date >= CURRENT_DATE AND date < CURRENT_DATE + INTERVAL '1 DAY'
+ORDER BY date desc
+Limit 1`,
+    );
+    if (dbResult !== null && dbResult.length > 0) {
+      return dbResult[0];
+    }
+
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Es gibt noch keine persistierten Bewegungen für ${device.info.fullName}`,
+    );
+    return new DesiredShutterPosition(-1);
   }
 
   async motionSensorTodayCount(device: iMotionSensor): Promise<CountToday> {

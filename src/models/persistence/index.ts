@@ -1,5 +1,6 @@
 export * from './BasicRoomInfo';
 export * from './CurrentIlluminationDataPoint';
+export * from './DesiredShutterPosition';
 export * from './EnergyCalculation';
 export * from './RoomDetailInfo';
 export * from './ShutterCalibration';

@@ -20,6 +20,12 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     super(pInfo, DeviceType.HmIpRoll);
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
+    Utils.dbo?.getLastDesiredPosition(this).then((val) => {
+      if (val.desiredPosition === -1) {
+        return;
+      }
+      this._window?.setDesiredPosition(val.desiredPosition);
+    });
   }
 
   private _currentLevel: number = -1;

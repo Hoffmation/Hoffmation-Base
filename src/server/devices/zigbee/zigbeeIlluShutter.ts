@@ -20,7 +20,6 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeIlluShutter);
     this._movementStateId = `${this.info.fullID}.position`;
-    // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
