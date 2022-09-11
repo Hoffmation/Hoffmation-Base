@@ -25,7 +25,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       Utils.dbo
         ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
-          this.detectionsToday = todayCount.count;
+          this.detectionsToday = todayCount.count ?? 0;
           this.log(LogLevel.Debug, `Reinitialized movement counter with ${this.detectionsToday}`);
           this._initialized = true;
         })

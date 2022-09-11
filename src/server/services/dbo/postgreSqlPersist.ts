@@ -111,7 +111,9 @@ from hoffmation_schema."MotionSensorDeviceData"
 WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DATE AND date < CURRENT_DATE + INTERVAL '1 DAY'`,
     );
     if (dbResult !== null && dbResult.length > 0) {
-      return dbResult[0];
+      const result = dbResult[0];
+      result.count = Number(result.count);
+      return result;
     }
 
     ServerLogService.writeLog(

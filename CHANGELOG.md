@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix type from motionSensorTOdayCount Load
+
 ## 1.1.7 (2022-09-11)
 
 * (theimo1221) Fix mistake in Position restore
