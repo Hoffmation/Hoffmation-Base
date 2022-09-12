@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent fast switching on ac by separating start and endpoint for cooling by atleast 1°C
+
 ## 1.1.8 (2022-09-11)
 
 * (theimo1221) Fix type from motionSensorTOdayCount Load
