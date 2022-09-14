@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add persistence for Temperature Sensors
+* (theimo1221) Add persistence for Heater
 
 ## 1.1.9 (2022-09-12)
 

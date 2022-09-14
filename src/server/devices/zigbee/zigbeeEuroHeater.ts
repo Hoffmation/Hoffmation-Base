@@ -50,6 +50,10 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     this.recalcLevel();
   }
 
+  public override get roomTemperature(): number {
+    return this._roomTemperatur;
+  }
+
   public override get desiredTemperature(): number {
     return this._desiredTemperatur;
   }

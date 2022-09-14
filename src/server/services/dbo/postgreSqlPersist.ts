@@ -327,6 +327,26 @@ IF (SELECT to_regclass('hoffmation_schema."TemperaturSensorDeviceData"') IS NULL
 alter table hoffmation_schema."TemperaturSensorDeviceData"
     owner to postgres;
 END IF;
+
+  
+    
+  IF (SELECT to_regclass('hoffmation_schema."HeaterDeviceData"') IS NULL) Then
+create table if not exists hoffmation_schema."HeaterDeviceData"
+(
+    "deviceID"        varchar(60) not null
+        constraint "HeaterDeviceData_DeviceInfo_null_fk"
+            references hoffmation_schema."DeviceInfo",
+    "level"              double precision,
+    date              timestamp   not null,
+    "roomTemperature" double precision,
+    "desiredTemperature" double precision,
+    constraint heaterevicedata_pk
+        primary key ("deviceID", date)
+);
+
+alter table hoffmation_schema."HeaterDeviceData"
+    owner to postgres;
+END IF;
     
     IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
 create table "TemperaturData"
@@ -366,6 +386,17 @@ values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.te
     this.query(`
 insert into hoffmation_schema."ActuatorDeviceData" ("deviceID", "on", "date", "percentage")
 values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${percentage ?? 'null'});
+    `);
+  }
+
+  public persistHeater(device: iHeater): void {
+    let roomTemp: number | null = device.roomTemperature;
+    if (roomTemp == UNDEFINED_TEMP_VALUE) {
+      roomTemp = null;
+    }
+    void this.query(`
+insert into hoffmation_schema."heaterDeviceData" ("deviceID", "level", "date", "roomTemperature", "desiredTemperature")
+values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp}, ${device.desiredTemperature});
     `);
   }
 

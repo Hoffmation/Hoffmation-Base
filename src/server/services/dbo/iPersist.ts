@@ -47,9 +47,11 @@ export interface iPersist {
 
   persistActuator(device: iActuator): void;
 
-  persistSwitchInput(device: iButtonSwitch, pressType: ButtonPressType, buttonName: string): void;
+  persistHeater(device: iHeater): void;
 
   persistMotionSensor(device: iMotionSensor): void;
+
+  persistSwitchInput(device: iButtonSwitch, pressType: ButtonPressType, buttonName: string): void;
 
   persistShutter(device: iShutter): void;
 

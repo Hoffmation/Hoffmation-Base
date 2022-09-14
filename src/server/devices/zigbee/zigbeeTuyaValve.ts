@@ -33,6 +33,10 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     this.checkTempDiff();
   }
 
+  public override get roomTemperatur(): number {
+    return this._roomTemperatur;
+  }
+
   public override set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
     this.checkTempDiff();

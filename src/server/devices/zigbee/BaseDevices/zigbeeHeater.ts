@@ -8,6 +8,12 @@ import { DeviceCapability } from '../../DeviceCapability';
 import { PIDController } from '../../../../liquid-pid';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
+  public readonly persistInterval: NodeJS.Timeout = Utils.guardedInterval(
+    this.persistHeater,
+    5 * 60 * 1000,
+    this,
+    false,
+  );
   public settings: HeaterSettings = new HeaterSettings();
   public battery: number = -99;
   protected _automaticPoints: { [name: string]: TemperatureSettings } = {};
@@ -102,10 +108,14 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     }
   }
 
-  protected _roomTemperatur: number = 0;
+  protected _roomTemperatur: number = UNDEFINED_TEMP_VALUE;
 
-  protected set roomTemperatur(val: number) {
+  public set roomTemperatur(val: number) {
     this._roomTemperatur = val;
+  }
+
+  public get roomTemperature(): number {
+    return this._roomTemperatur;
   }
 
   public checkAutomaticChange(): void {
@@ -156,6 +166,10 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
 
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
+  }
+
+  public persistHeater(): void {
+    Utils.dbo?.persistHeater(this);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {

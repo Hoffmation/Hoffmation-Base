@@ -14,6 +14,12 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater {
+  public readonly persistInterval: NodeJS.Timeout = Utils.guardedInterval(
+    this.persistHeater,
+    5 * 60 * 1000,
+    this,
+    false,
+  );
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
@@ -65,7 +71,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     if (this.settings.useOwnTemperatur) {
       return this._temperature;
     }
-    return this._roomTemperatur;
+    return this._roomTemperature;
   }
 
   private set temperature(val: number) {
@@ -124,10 +130,14 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     return this.temperature;
   }
 
-  private _roomTemperatur: number = UNDEFINED_TEMP_VALUE;
+  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
 
-  private set roomTemperatur(value: number) {
-    this._roomTemperatur = value;
+  public get roomTemperature(): number {
+    return this._roomTemperature;
+  }
+
+  public set roomTemperature(value: number) {
+    this._roomTemperature = value;
   }
 
   public addHumidityCallback(pCallback: (pValue: number) => void): void {
@@ -209,11 +219,15 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   public onTemperaturChange(newTemperatur: number): void {
-    this.roomTemperatur = newTemperatur;
+    this.roomTemperature = newTemperatur;
   }
 
   public persistTemperaturSensor(): void {
     Utils.dbo?.persistTemperatureSensor(this);
+  }
+
+  public persistHeater(): void {
+    Utils.dbo?.persistHeater(this);
   }
 
   private updateBaseInformation(name: string, state: ioBroker.State) {
