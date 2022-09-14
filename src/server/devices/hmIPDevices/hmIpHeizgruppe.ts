@@ -14,8 +14,14 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater {
-  public readonly persistInterval: NodeJS.Timeout = Utils.guardedInterval(
+  public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     this.persistHeater,
+    5 * 60 * 1000,
+    this,
+    false,
+  );
+  public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
+    this.persistTemperaturSensor,
     5 * 60 * 1000,
     this,
     false,
@@ -79,7 +85,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     for (const cb of this._temperatureCallbacks) {
       cb(val);
     }
-    this.persistTemperaturSensor();
   }
 
   private _humidity: number = UNDEFINED_HUMIDITY_VALUE;

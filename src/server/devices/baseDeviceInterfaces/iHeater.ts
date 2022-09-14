@@ -8,7 +8,7 @@ export interface iHeater extends iRoomDevice {
   readonly iLevel: number;
   readonly iTemperature: number;
   roomTemperature: number;
-  readonly persistInterval: NodeJS.Timeout;
+  readonly persistHeaterInterval: NodeJS.Timeout;
 
   set seasonTurnOff(value: boolean);
 

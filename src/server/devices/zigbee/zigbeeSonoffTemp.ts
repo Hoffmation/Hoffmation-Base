@@ -7,6 +7,12 @@ import { LogLevel } from '../../../models';
 import { Utils } from '../../services';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
+  public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
+    this.persistTemperaturSensor,
+    5 * 60 * 1000,
+    this,
+    false,
+  );
   public battery: number = -99;
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperaturCallbacks: ((pValue: number) => void)[] = [];
@@ -46,7 +52,6 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     for (const cb of this._temperaturCallbacks) {
       cb(val);
     }
-    this.persistTemperaturSensor();
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
