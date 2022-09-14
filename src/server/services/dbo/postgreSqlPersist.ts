@@ -310,21 +310,21 @@ alter table hoffmation_schema."ShutterDeviceData"
     owner to postgres;
 END IF;
 
-IF (SELECT to_regclass('hoffmation_schema."TemperaturSensorDeviceData"') IS NULL) Then  
-  create table if not exists hoffmation_schema."TemperaturSensorDeviceData"
+IF (SELECT to_regclass('hoffmation_schema."TemperatureSensorDeviceData"') IS NULL) Then  
+  create table if not exists hoffmation_schema."TemperatureSensorDeviceData"
 (
     "deviceID"        varchar(60) not null
-        constraint "TemperaturSensorDeviceData_DeviceInfo_null_fk"
+        constraint "TemperatureSensorDeviceData_DeviceInfo_null_fk"
             references hoffmation_schema."DeviceInfo"
             on delete set null,
-    position          double precision,
+    temperature          double precision,
     date              timestamp   not null,
-    "desiredPosition" double precision,
+    "roomTemperature" double precision,
     constraint temperaturesensordevicedata_pk
         primary key ("deviceID", date)
 );
 
-alter table hoffmation_schema."TemperaturSensorDeviceData"
+alter table hoffmation_schema."TemperatureSensorDeviceData"
     owner to postgres;
 END IF;
 
@@ -429,11 +429,11 @@ values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desire
 
   public persistTemperatureSensor(device: iTemperatureSensor): void {
     let roomTemp: number | undefined | null = device.room?.HeatGroup?.temperature;
-    if (roomTemp == UNDEFINED_TEMP_VALUE) {
+    if (roomTemp == UNDEFINED_TEMP_VALUE || undefined) {
       roomTemp = null;
     }
     this.query(`
-insert into hoffmation_schema."TemperaturSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
+insert into hoffmation_schema."TemperatureSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
 values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp});
     `);
   }
