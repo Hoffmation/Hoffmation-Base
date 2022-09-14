@@ -340,6 +340,7 @@ create table if not exists hoffmation_schema."HeaterDeviceData"
     date              timestamp   not null,
     "roomTemperature" double precision,
     "desiredTemperature" double precision,
+    "seasonTurnOff" boolean,
     constraint heaterevicedata_pk
         primary key ("deviceID", date)
 );
@@ -399,10 +400,10 @@ values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${p
       desiredTemperature = null;
     }
     void this.query(`
-insert into hoffmation_schema."HeaterDeviceData" ("deviceID", "level", "date", "roomTemperature", "desiredTemperature")
+insert into hoffmation_schema."HeaterDeviceData" ("deviceID", "level", "date", "roomTemperature", "desiredTemperature", "seasonTurnOff")
 values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp ?? 'null'}, ${
       desiredTemperature ?? 'null'
-    });
+    }, ${device.seasonTurnOff});
     `);
   }
 
