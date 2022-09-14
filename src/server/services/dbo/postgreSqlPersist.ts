@@ -391,12 +391,16 @@ values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${p
 
   public persistHeater(device: iHeater): void {
     let roomTemp: number | null = device.roomTemperature;
+    let desiredTemperature: number | null = device.desiredTemperature;
     if (roomTemp == UNDEFINED_TEMP_VALUE) {
       roomTemp = null;
     }
+    if (desiredTemperature == UNDEFINED_TEMP_VALUE) {
+      desiredTemperature = null;
+    }
     void this.query(`
-insert into hoffmation_schema."heaterDeviceData" ("deviceID", "level", "date", "roomTemperature", "desiredTemperature")
-values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp}, ${device.desiredTemperature});
+insert into hoffmation_schema."HeaterDeviceData" ("deviceID", "level", "date", "roomTemperature", "desiredTemperature")
+values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp}, ${desiredTemperature});
     `);
   }
 
