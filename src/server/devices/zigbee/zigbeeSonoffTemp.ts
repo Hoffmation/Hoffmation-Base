@@ -8,7 +8,9 @@ import { Utils } from '../../services';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    this.persistTemperaturSensor,
+    () => {
+      this.persistTemperaturSensor();
+    },
     5 * 60 * 1000,
     this,
     false,

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Persistence
+
 ## 1.1.10 (2022-09-14)
 
 * (theimo1221) Add persistence for Temperature Sensors

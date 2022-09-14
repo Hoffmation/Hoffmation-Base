@@ -15,13 +15,17 @@ import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater {
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
-    this.persistHeater,
+    () => {
+      this.persistHeater();
+    },
     5 * 60 * 1000,
     this,
     false,
   );
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    this.persistTemperaturSensor,
+    () => {
+      this.persistTemperaturSensor();
+    },
     5 * 60 * 1000,
     this,
     false,
