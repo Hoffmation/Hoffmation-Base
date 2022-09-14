@@ -430,8 +430,8 @@ values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desire
   }
 
   public persistTemperatureSensor(device: iTemperatureSensor): void {
-    let roomTemp: number | undefined | null = device.room?.HeatGroup?.temperature;
-    if (roomTemp == UNDEFINED_TEMP_VALUE) {
+    let roomTemp: number | null = device.roomTemperature;
+    if (roomTemp === UNDEFINED_TEMP_VALUE) {
       roomTemp = null;
     }
     this.query(`

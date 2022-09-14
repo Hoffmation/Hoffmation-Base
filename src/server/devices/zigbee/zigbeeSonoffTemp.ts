@@ -27,6 +27,15 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   }
 
   private _humidity: number = UNDEFINED_TEMP_VALUE;
+  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
+
+  public get roomTemperature(): number {
+    return this._roomTemperature;
+  }
+
+  public set roomTemperature(value: number) {
+    this._roomTemperature = value;
+  }
 
   public get humidity(): number {
     return this._humidity;
@@ -86,6 +95,10 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
       pCallback(this._temperature);
     }
+  }
+
+  public onTemperaturChange(newTemperatur: number): void {
+    this.roomTemperature = newTemperatur;
   }
 
   public persistTemperaturSensor(): void {

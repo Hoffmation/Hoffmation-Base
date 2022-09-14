@@ -172,6 +172,9 @@ export class HeatGroup extends BaseGroup {
     this.getHeater().forEach((heater) => {
       heater.onTemperaturChange(temp);
     });
+    this.getTempSensors().forEach((sensor) => {
+      sensor.onTemperaturChange(temp);
+    });
     this.getOwnAcDevices().forEach((ac) => {
       ac.onTemperaturChange(temp);
     });
