@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add persistence for Temperature Sensors
+
 ## 1.1.9 (2022-09-12)
 
 * (theimo1221) Prevent fast switching on ac by separating start and endpoint for cooling by atleast 1°C

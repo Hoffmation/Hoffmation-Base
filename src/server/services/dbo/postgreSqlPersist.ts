@@ -19,6 +19,8 @@ import {
   iMotionSensor,
   IoBrokerBaseDevice,
   iShutter,
+  iTemperatureSensor,
+  UNDEFINED_TEMP_VALUE,
 } from '../../devices';
 import { iPersistenceSettings } from '../../config';
 import { Pool, QueryResultRow } from 'pg';
@@ -307,6 +309,24 @@ IF (SELECT to_regclass('hoffmation_schema."ShutterDeviceData"') IS NULL) Then
 alter table hoffmation_schema."ShutterDeviceData"
     owner to postgres;
 END IF;
+
+IF (SELECT to_regclass('hoffmation_schema."TemperaturSensorDeviceData"') IS NULL) Then  
+  create table if not exists hoffmation_schema."TemperaturSensorDeviceData"
+(
+    "deviceID"        varchar(60) not null
+        constraint "TemperaturSensorDeviceData_DeviceInfo_null_fk"
+            references hoffmation_schema."DeviceInfo"
+            on delete set null,
+    position          double precision,
+    date              timestamp   not null,
+    "desiredPosition" double precision,
+    constraint temperaturesensordevicedata_pk
+        primary key ("deviceID", date)
+);
+
+alter table hoffmation_schema."TemperaturSensorDeviceData"
+    owner to postgres;
+END IF;
     
     IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
 create table "TemperaturData"
@@ -369,6 +389,17 @@ values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}
     this.query(`
 insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date", "desiredPosition")
 values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desiredLevel});
+    `);
+  }
+
+  public persistTemperatureSensor(device: iTemperatureSensor): void {
+    let roomTemp: number | undefined | null = device.room?.HeatGroup?.temperature;
+    if (roomTemp == UNDEFINED_TEMP_VALUE) {
+      roomTemp = null;
+    }
+    this.query(`
+insert into hoffmation_schema."TemperaturSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
+values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp});
     `);
   }
 

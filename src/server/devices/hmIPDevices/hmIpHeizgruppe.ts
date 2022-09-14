@@ -73,6 +73,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     for (const cb of this._temperatureCallbacks) {
       cb(val);
     }
+    this.persistTemperaturSensor();
   }
 
   private _humidity: number = UNDEFINED_HUMIDITY_VALUE;
@@ -209,6 +210,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
+  }
+
+  public persistTemperaturSensor(): void {
+    Utils.dbo?.persistTemperatureSensor(this);
   }
 
   private updateBaseInformation(name: string, state: ioBroker.State) {

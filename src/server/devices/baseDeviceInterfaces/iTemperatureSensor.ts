@@ -10,4 +10,6 @@ export interface iTemperatureSensor extends iRoomDevice {
   sTemperature: string;
 
   addTempChangeCallback(pCallback: (pValue: number) => void): void;
+
+  persistTemperaturSensor(): void;
 }

@@ -4,6 +4,7 @@ import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { LogLevel } from '../../../models';
+import { Utils } from '../../services';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   public battery: number = -99;
@@ -45,6 +46,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     for (const cb of this._temperaturCallbacks) {
       cb(val);
     }
+    this.persistTemperaturSensor();
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -77,5 +79,9 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
       pCallback(this._temperature);
     }
+  }
+
+  public persistTemperaturSensor(): void {
+    Utils.dbo?.persistTemperatureSensor(this);
   }
 }

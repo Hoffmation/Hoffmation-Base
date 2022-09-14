@@ -125,7 +125,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     }
 
     this.movementDetected = pVal;
-    this.persist();
+    this.persistMotionSensor();
     this.log(LogLevel.Debug, `Neuer Präsenzstatus Wert : ${pVal}`);
 
     if (pVal) {
@@ -138,7 +138,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     }
   }
 
-  public persist(): void {
+  public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
   }
 }

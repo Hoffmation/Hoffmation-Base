@@ -13,5 +13,5 @@ export interface iMotionSensor extends iRoomDevice {
    */
   addMovementCallback(pCallback: (newState: boolean) => void): void;
 
-  persist(): void;
+  persistMotionSensor(): void;
 }

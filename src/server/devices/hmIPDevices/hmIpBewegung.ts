@@ -74,7 +74,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     this._movementDetectedCallback.push(pCallback);
   }
 
-  public persist(): void {
+  public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
   }
 
@@ -124,7 +124,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     this.resetFallbackTimeout();
     this.movementDetected = pVal;
     this.log(LogLevel.Debug, `Neuer Bewegunsstatus Wert : ${pVal}`);
-    this.persist();
+    this.persistMotionSensor();
     if (pVal) {
       this.startFallbackTimeout();
       this.detectionsToday++;

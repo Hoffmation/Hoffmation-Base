@@ -8,6 +8,7 @@ import {
   iMotionSensor,
   IoBrokerBaseDevice,
   iShutter,
+  iTemperatureSensor,
 } from '../../devices';
 import {
   CountToday,
@@ -51,6 +52,8 @@ export interface iPersist {
   persistMotionSensor(device: iMotionSensor): void;
 
   persistShutter(device: iShutter): void;
+
+  persistTemperatureSensor(device: iTemperatureSensor): void;
 
   readTemperaturDataPoint(hzGrp: iHeater, limit: number): Promise<TemperaturDataPoint[]>;
 }
