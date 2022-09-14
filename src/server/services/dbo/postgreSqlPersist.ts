@@ -400,7 +400,9 @@ values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${p
     }
     void this.query(`
 insert into hoffmation_schema."HeaterDeviceData" ("deviceID", "level", "date", "roomTemperature", "desiredTemperature")
-values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp}, ${desiredTemperature});
+values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp ?? 'null'}, ${
+      desiredTemperature ?? 'null'
+    });
     `);
   }
 
@@ -429,12 +431,12 @@ values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desire
 
   public persistTemperatureSensor(device: iTemperatureSensor): void {
     let roomTemp: number | undefined | null = device.room?.HeatGroup?.temperature;
-    if (roomTemp == UNDEFINED_TEMP_VALUE || undefined) {
+    if (roomTemp == UNDEFINED_TEMP_VALUE) {
       roomTemp = null;
     }
     this.query(`
 insert into hoffmation_schema."TemperatureSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
-values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp});
+values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp ?? 'null'});
     `);
   }
 

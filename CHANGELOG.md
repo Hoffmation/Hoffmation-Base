@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Temperature Persistence
+
 ## 1.1.13 (2022-09-14)
 
 * (theimo1221) Fix Temperature Persistence
