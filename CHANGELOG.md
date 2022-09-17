@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.20 (2022-09-17)
 
 * (theimo1221) Zigbee IlluLedRGBCCT as Dimmable Lamp
 
