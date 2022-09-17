@@ -39,7 +39,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
   }
 
   public override set roomTemperatur(value: number) {
-    this._roomTemperatur = value;
+    this._roomTemperature = value;
     if (this.settings.controlByPid) {
       //TODO: Implement PID controlling
       return;
@@ -51,7 +51,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
   }
 
   public override get roomTemperature(): number {
-    return this._roomTemperatur;
+    return this._roomTemperature;
   }
 
   public override get desiredTemperature(): number {
@@ -136,7 +136,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
       return;
     }
     this._lastRecalc = Utils.nowMS();
-    const desiredDiff: number = Utils.round(this.desiredTemperature - this._roomTemperatur, 1);
+    const desiredDiff: number = Utils.round(this.desiredTemperature - this._roomTemperature, 1);
     const currentDiff: number = this.tempDiff;
     const missingDiff: number = Utils.round(desiredDiff - currentDiff, 1);
     if (Math.abs(missingDiff) < 0.15) {
@@ -155,7 +155,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     }
     const newLocalDiff: number = Math.sign(desiredDiff) * -9;
     this.setLocalDiff(newLocalDiff);
-    this.setTargetTemperatur(this._temperatur + this._roomTemperatur + newLocalDiff + this.desiredTemperature);
+    this.setTargetTemperatur(this._temperatur + this._roomTemperature + newLocalDiff + this.desiredTemperature);
   }
 
   private setLocalDiff(newLocalDiff: number): void {

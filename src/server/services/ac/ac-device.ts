@@ -19,8 +19,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   protected _info: DeviceInfo;
 
-  public get roomTemperature(): number {
-    return this._roomTemperatur;
+  public get temperature(): number {
+    return this._roomTemperature;
   }
 
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
@@ -34,18 +34,18 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.persistDeviceInfo();
   }
 
-  public get temperature(): number {
-    return this._roomTemperatur;
-  }
+  private _roomTemperature: number = 0;
 
-  private _roomTemperatur: number = 0;
+  public get roomTemperature(): number {
+    return this._roomTemperature;
+  }
 
   public get info(): DeviceInfo {
     return this._info;
   }
 
   protected set roomTemperatur(val: number) {
-    this._roomTemperatur = val;
+    this._roomTemperature = val;
   }
 
   public set info(info: DeviceInfo) {

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Room Temperature naming
+
 ## 1.1.18 (2022-09-17)
 
 * (theimo1221) Allow AC Heating

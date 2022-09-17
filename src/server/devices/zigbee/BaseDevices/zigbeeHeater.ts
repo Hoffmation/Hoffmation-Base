@@ -106,18 +106,18 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     if (this.settings.useOwnTemperatur) {
       return this._temperatur;
     } else {
-      return this._roomTemperatur;
+      return this._roomTemperature;
     }
   }
 
-  protected _roomTemperatur: number = UNDEFINED_TEMP_VALUE;
-
-  public set roomTemperatur(val: number) {
-    this._roomTemperatur = val;
-  }
+  protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
 
   public get roomTemperature(): number {
-    return this._roomTemperatur;
+    return this._roomTemperature;
+  }
+
+  public set roomTemperatur(val: number) {
+    this._roomTemperature = val;
   }
 
   public checkAutomaticChange(): void {
@@ -191,10 +191,10 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       return 0;
     }
     this._pidController.setPoint(this.desiredTemperature);
-    const newValue: number = this._pidController.calculate(this._roomTemperatur);
+    const newValue: number = this._pidController.calculate(this._roomTemperature);
     this.log(
       LogLevel.Debug,
-      `New PID Value ${newValue}% (cTemp: ${this._roomTemperatur}, dTemp: ${this.desiredTemperature})`,
+      `New PID Value ${newValue}% (cTemp: ${this._roomTemperature}, dTemp: ${this.desiredTemperature})`,
     );
     return newValue;
   }
