@@ -1,4 +1,4 @@
-import { iConfig } from '../config';
+import { HeatingMode, iConfig } from '../config';
 
 export class SettingsService {
   public static settings: iConfig;
@@ -13,5 +13,9 @@ export class SettingsService {
 
   public static initialize(config: iConfig): void {
     this.settings = config;
+  }
+
+  public static get heatMode(): HeatingMode {
+    return this.settings?.heaterSettings?.mode ?? HeatingMode.None;
   }
 }

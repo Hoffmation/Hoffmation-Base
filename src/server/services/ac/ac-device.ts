@@ -7,6 +7,8 @@ import { AcSettings } from '../../../models/deviceSettings/acSettings';
 import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
+import { SettingsService } from '../settings-service';
+import { HeatingMode } from '../../config';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice {
   public currentConsumption: number = -1;
@@ -85,10 +87,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
-    if (temp > this.acSettings.stopCoolingTemperatur + 1) {
+    if (temp > this.acSettings.stopCoolingTemperatur + 1 && SettingsService.heatMode !== HeatingMode.Winter) {
       return AcMode.Cooling;
     }
-    if (temp < this.acSettings.stopHeatingTemperatur && this.acSettings.heatingAllowed) {
+    if (
+      temp < this.acSettings.stopHeatingTemperatur &&
+      this.acSettings.heatingAllowed &&
+      SettingsService.heatMode !== HeatingMode.Sommer
+    ) {
       return AcMode.Heating;
     }
     return AcMode.Off;
@@ -147,10 +153,18 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   private automaticCheck(): void {
-    if (!this.on) {
+    const desiredMode: AcMode = this.calculateDesiredMode();
+    if (!this.on && desiredMode === AcMode.Off) {
       return;
     }
-    const desiredMode: AcMode = this.calculateDesiredMode();
+
+    if (desiredMode === AcMode.Heating && SettingsService.settings.heaterSettings?.allowAcHeating) {
+      this.setDesiredMode(AcMode.Heating, true);
+      this.turnOn();
+      return;
+    }
+
+    // Check Cooling Turn Off
     const maximumEnd: Date = Utils.dateByTimeSpan(this.acSettings.maximumHours, this.acSettings.maximumMinutes);
     const now: Date = new Date();
     if (now > maximumEnd || (this._activatedByExcessEnergy && desiredMode == AcMode.Off)) {

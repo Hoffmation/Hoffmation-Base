@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Allow AC Heating
+
 ## 1.1.17 (2022-09-14)
 
 * (theimo1221) Include season Turnoff in heater persistence

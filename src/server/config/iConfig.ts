@@ -41,13 +41,11 @@ export interface iConfig {
   asusConfig?: iAsusConfig;
   daikin?: iDaikinSettings;
   espresense?: iEspresenseSettings;
-  // Price per kWh from the grid
-  wattagePrice?: number;
   // Earnigs per kWh injecting into the grid
   injectWattagePrice?: number;
   ioBrokerUrl: string;
+  heaterSettings?: iHeaterSettings;
   logSettings?: iLogSettings;
-  translationSettings: iTranslationSettings;
   mp3Server?: iMp3Settings;
   muell?: iMuellSettings;
   news?: iNewsSettings;
@@ -58,7 +56,25 @@ export interface iConfig {
   sonos?: iSonosSettings;
   telegram?: iTelegramSettings;
   timeSettings: iTimeSettings;
+  translationSettings: iTranslationSettings;
+  // Price per kWh from the grid
+  wattagePrice?: number;
   weather?: iWeatherSettings;
+}
+
+export enum HeatingMode {
+  None,
+  Winter,
+  Sommer,
+}
+
+export interface iHeaterSettings {
+  /**
+   * Whether heating with ac is allowed
+   * This normally depends on the cost difference between ac heating and conventional heating
+   */
+  allowAcHeating?: boolean;
+  mode?: HeatingMode;
 }
 
 export interface iLogSettings {
