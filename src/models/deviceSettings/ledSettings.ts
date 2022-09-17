@@ -1,6 +1,6 @@
-import { DeviceSettings } from './deviceSettings';
+import { DimmerSettings } from './dimmerSettings';
 
-export class LedSettings extends DeviceSettings {
+export class LedSettings extends DimmerSettings {
   public defaultColor: string = '#fbbc32';
   public dayOn: boolean = false;
   public dayBrightness: number = 100;

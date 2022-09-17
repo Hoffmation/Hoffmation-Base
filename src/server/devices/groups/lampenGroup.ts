@@ -31,7 +31,7 @@ export class LampenGroup extends BaseGroup {
       }
     }
     for (i = 0; i < this.getLED().length; i++) {
-      if (this.getLED()[i].on) {
+      if (this.getLED()[i].actuatorOn) {
         return true;
       }
     }
@@ -150,7 +150,7 @@ export class LampenGroup extends BaseGroup {
 
   public setAllLED(pValue: boolean, brightness: number = -1, color: string = '', colortemp: number = -1): void {
     this.getLED().forEach((s) => {
-      s.setLight(pValue, brightness, color, colortemp);
+      s.setLight(pValue, undefined, true, brightness, undefined, color, colortemp);
     });
   }
 

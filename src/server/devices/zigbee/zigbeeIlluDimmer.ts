@@ -12,15 +12,15 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
   public brightness: number = 0;
   public transitionTime: number = 0;
   public settings: DimmerSettings = new DimmerSettings();
-  private stateID: string = 'state';
-  private brightnessID: string = 'brightness';
-  private transitionID: string = 'transition_time';
+  protected readonly stateID: string = 'state';
+  protected readonly brightnessID: string = 'brightness';
+  protected readonly transitionID: string = 'transition_time';
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
   private _lastPersist: number = 0;
 
-  public constructor(pInfo: IoBrokerDeviceInfo) {
-    super(pInfo, DeviceType.ZigbeeIlluDimmer);
+  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeIlluDimmer) {
+    super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
     this.stateID = `${this.info.fullID}.state`;
