@@ -149,7 +149,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public wasActivatedByExcessEnergy(): boolean {
-    return this._activatedByExcessEnergy;
+    return (
+      this._activatedByExcessEnergy ||
+      (this.acSettings.heatingAllowed &&
+        SettingsService.heatMode === HeatingMode.Winter &&
+        SettingsService.settings.heaterSettings?.allowAcHeating === true)
+    );
   }
 
   private automaticCheck(): void {
