@@ -212,7 +212,7 @@ export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSe
   }
 
   private recalcLampOffset(): void {
-    this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenAufgangRolloDelay);
+    this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
     this.room?.recalcTimeCallbacks();
   }
 }

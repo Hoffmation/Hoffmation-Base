@@ -54,9 +54,7 @@ export class TimeCallbackService {
     return TimeCallbackService._nextSunSet;
   }
 
-  public static dayType(pOffset: SunTimeOffsets): TimeOfDay {
-    const now: Date = new Date();
-
+  public static dayType(pOffset: SunTimeOffsets, now: Date = new Date()): TimeOfDay {
     const hours = now.getHours();
     const minutes = now.getMinutes();
 
@@ -198,10 +196,10 @@ export class TimeCallbackService {
     TimeCallbackService._lastCheck = now;
   }
 
-  public static recalcSunTimes(): void {
-    TimeCallbackService._todaySunRise = getSunrise(51.529556852253826, 7.097266042276687, new Date());
+  public static recalcSunTimes(calculationDate: Date = new Date()): void {
+    TimeCallbackService._todaySunRise = getSunrise(51.529556852253826, 7.097266042276687, calculationDate);
 
-    TimeCallbackService._todaySunSet = getSunset(51.529556852253826, 7.097266042276687, new Date());
+    TimeCallbackService._todaySunSet = getSunset(51.529556852253826, 7.097266042276687, calculationDate);
     TimeCallbackService.updateSunSet();
     TimeCallbackService.updateSunRise();
     ServerLogService.writeLog(

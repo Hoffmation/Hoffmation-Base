@@ -1,4 +1,11 @@
-import { SunTimeOffsets, TimeCallback, TimeCallbackService, TimeCallbackType } from '../../src';
+import {
+  SettingsService,
+  SunTimeOffsets,
+  TimeCallback,
+  TimeCallbackService,
+  TimeCallbackType,
+  TimeOfDay,
+} from '../../src';
 
 describe('TimeCallbackService', () => {
   it('next Maximum Time is Today and correct', async () => {
@@ -154,5 +161,13 @@ describe('TimeCallbackService', () => {
     cb.recalcNextToDo(nextToDoCalculationDate);
     const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
     expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
+  });
+  it('calculates time of day correct', async () => {
+    SettingsService.settings = SettingsService.testConfig;
+    TimeCallbackService.recalcSunTimes(new Date('09/18/2022, 3:24:00 AM'));
+    const calculationDate: Date = new Date('09/18/2022, 7:24:00 AM');
+    const offset: SunTimeOffsets = new SunTimeOffsets(15, -10, 6, 30, 22, 30);
+    const calculatedTimeOfDay = TimeCallbackService.dayType(offset, calculationDate);
+    expect(calculatedTimeOfDay).toBe(TimeOfDay.Daylight);
   });
 });

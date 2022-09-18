@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix weird time light bug between sunrise and daylight in combination with shutter still down
+
 ## 1.1.21 (2022-09-18)
 
 * (theimo1221) Use Room Temp variable within ac devices
