@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Reduce Excess Energy turnoff warning if ac heating is permitted
+* (theimo1221) Improve daikin heating/cooling capability by using bigger temp range
 
 ## 1.1.22 (2022-09-18)
 
