@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Use Room Temp variable within ac devices
+
 ## 1.1.20 (2022-09-17)
 
 * (theimo1221) Zigbee IlluLedRGBCCT as Dimmable Lamp
