@@ -159,12 +159,13 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   private automaticCheck(): void {
     const desiredMode: AcMode = this.calculateDesiredMode();
-    if (!this.on && desiredMode === AcMode.Off) {
+    if (this.on === (desiredMode !== AcMode.Off)) {
+      // Device already in desired state --> do nothing
       return;
     }
 
     if (desiredMode === AcMode.Heating && SettingsService.settings.heaterSettings?.allowAcHeating) {
-      this.setDesiredMode(AcMode.Heating, true);
+      this.setDesiredMode(AcMode.Heating, false);
       this.turnOn();
       return;
     }
