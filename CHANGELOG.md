@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.21 (2022-09-18)
 
 * (theimo1221) Use Room Temp variable within ac devices
 
