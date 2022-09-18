@@ -178,8 +178,7 @@ export class RoomBase implements iRoomBase {
           return ShutterService.anyRolloDown(f.getShutter());
         }))
     ) {
-      const hours = Utils.nowTime().hours;
-      timeOfDay = hours > 1 && hours < 12 ? TimeOfDay.BeforeSunrise : TimeOfDay.AfterSunset;
+      timeOfDay = Utils.nowTime().hours > 16 ? TimeOfDay.AfterSunset : TimeOfDay.BeforeSunrise;
     }
     this.LampenGroup.switchTimeConditional(timeOfDay);
   }
