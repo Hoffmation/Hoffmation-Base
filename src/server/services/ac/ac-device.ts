@@ -91,7 +91,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Cooling;
     }
     if (
-      temp < this.acSettings.stopHeatingTemperatur &&
+      temp < this.acSettings.stopHeatingTemperatur - 1 &&
       this.acSettings.heatingAllowed &&
       SettingsService.heatMode !== HeatingMode.Sommer
     ) {
@@ -149,12 +149,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public wasActivatedByExcessEnergy(): boolean {
-    return (
-      this._activatedByExcessEnergy ||
-      (this.acSettings.heatingAllowed &&
-        SettingsService.heatMode === HeatingMode.Winter &&
-        SettingsService.settings.heaterSettings?.allowAcHeating === true)
-    );
+    return this._activatedByExcessEnergy;
   }
 
   private automaticCheck(): void {
@@ -170,10 +165,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return;
     }
 
+    if (desiredMode == AcMode.Off && (this.energyConsumerSettings.priority === -1 || this._activatedByExcessEnergy)) {
+      this.turnOff();
+    }
+
     // Check Cooling Turn Off
     const maximumEnd: Date = Utils.dateByTimeSpan(this.acSettings.maximumHours, this.acSettings.maximumMinutes);
     const now: Date = new Date();
-    if (now > maximumEnd || (this._activatedByExcessEnergy && desiredMode == AcMode.Off)) {
+    if (now > maximumEnd) {
       this.turnOff();
       return;
     }

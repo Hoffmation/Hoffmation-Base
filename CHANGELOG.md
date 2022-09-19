@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix AC Heating by allowing turn off after target is reached
+
 ## 1.1.23 (2022-09-18)
 
 * (theimo1221) Reduce Excess Energy turnoff warning if ac heating is permitted
