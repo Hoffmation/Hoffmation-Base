@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.24 (2022-09-19)
 
 * (theimo1221) Fix AC Heating by allowing turn off after target is reached
 
