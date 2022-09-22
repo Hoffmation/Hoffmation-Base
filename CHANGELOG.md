@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve ac heating by removing -/+1 when the turn on threshold was reached before
+
 ## 1.1.24 (2022-09-19)
 
 * (theimo1221) Fix AC Heating by allowing turn off after target is reached
