@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.25 (2022-09-22)
 
 * (theimo1221) Improve ac heating by removing -/+1 when the turn on threshold was reached before
 
