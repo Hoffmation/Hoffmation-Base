@@ -87,11 +87,13 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
-    if (temp > this.acSettings.stopCoolingTemperatur + 1 && SettingsService.heatMode !== HeatingMode.Winter) {
+    const threshold: number = this.on ? 0 : 1;
+
+    if (temp > this.acSettings.stopCoolingTemperatur + threshold && SettingsService.heatMode !== HeatingMode.Winter) {
       return AcMode.Cooling;
     }
     if (
-      temp < this.acSettings.stopHeatingTemperatur - 1 &&
+      temp < this.acSettings.stopHeatingTemperatur - threshold &&
       this.acSettings.heatingAllowed &&
       SettingsService.heatMode !== HeatingMode.Sommer
     ) {
