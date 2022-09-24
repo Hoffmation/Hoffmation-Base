@@ -53,11 +53,11 @@ export class ioBrokerMain {
 
     this.connectionCallbacks.onConnChange = (isConnected: boolean) => {
       if (!isConnected) {
-        console.log('disconnected');
+        console.log('onConnChange.disconnected');
         return;
       }
 
-      console.log('connected');
+      console.log('onConnChange.connected');
       this.servConn.getStates(null, (err, _states) => {
         if (err !== null && err !== undefined) {
           ServerLogService.writeLog(LogLevel.Info, `Iobroker Error: ${err?.message ?? err}\n${err.stack}`);

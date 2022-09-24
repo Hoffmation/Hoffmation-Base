@@ -209,6 +209,7 @@ export class IOBrokerConnection {
     });
 
     this._socket.on('disconnect', () => {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, `Connection.ts: socket.on('disconnect')`);
       this._disconnectedSince = new Date();
 
       // called only once when connection lost (and it was here before)
@@ -477,7 +478,7 @@ export class IOBrokerConnection {
     if (this._connectInterval !== undefined || (pConnOptions.mayReconnect && !pConnOptions.mayReconnect())) {
       return;
     }
-
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, `Connection.ts: reconnect()`);
     this._connectInterval = Utils.guardedInterval(
       () => {
         iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'Trying connect...');
