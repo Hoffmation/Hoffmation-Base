@@ -188,6 +188,7 @@ export class IOBrokerConnection {
     });
 
     this._socket.on('reauthenticate', () => {
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, `Connection.ts: socket.on(reauthenticate)`);
       if (this._connCallbacks.onConnChange) {
         this._connCallbacks.onConnChange(false);
         if (typeof app !== 'undefined') {
