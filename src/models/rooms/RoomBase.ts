@@ -156,7 +156,7 @@ export class RoomBase implements iRoomBase {
     }
 
     if (movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
-      this.log(LogLevel.Trace, 'Turn off lights as noone is present.');
+      this.log(LogLevel.Trace, 'Turn off lights as no-one is present.');
       this.LampenGroup.switchAll(false);
       return;
     }
