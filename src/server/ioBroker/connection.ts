@@ -16,6 +16,13 @@ const socketNamespace: string = '';
 const socketUrl: string = '';
 const socketForceWebSockets: boolean = true;
 
+enum ConnectionState {
+  notConnected,
+  commandQueued,
+  socketNotInitialized,
+  connected,
+}
+
 export class IOBrokerConnection {
   private _authInfo: IoBrokerAuthInfo = new IoBrokerAuthInfo();
   private _authRunning: boolean = false;
@@ -525,7 +532,7 @@ export class IOBrokerConnection {
 
   // FIXME: CallBack Type
   public getVersion(callback: unknown): void {
-    if (!this._checkConnection('getVersion', arguments)) {
+    if (this._checkConnection('getVersion', arguments) != ConnectionState.connected) {
       return;
     }
 
@@ -554,33 +561,33 @@ export class IOBrokerConnection {
         // @ts-ignore
         callback(err, undefined);
       }
-    } else {
-      if (!this._checkConnection('readFile', arguments)) return;
-
-      if (!isRemote && typeof app !== 'undefined') {
-        // @ts-ignore
-        app.readLocalFile(filename.replace(/^\/vis\.0\//, ''), callback);
-      } else {
-        let adapter = this.namespace;
-        if (filename[0] === '/') {
-          const p = filename.split('/');
-          adapter = p[1];
-          p.splice(0, 2);
-          filename = p.join('/');
-        }
-
-        this._socket.emit(
-          'readFile',
-          adapter,
-          filename,
-          (err: Error, data: string | Buffer | undefined, mimeType: string) => {
-            Utils.guardedNewThread(() => {
-              callback(err, data, mimeType);
-            }, this);
-          },
-        );
-      }
+      return;
     }
+    if (this._checkConnection('readFile', arguments) != ConnectionState.connected) return;
+
+    if (!isRemote && typeof app !== 'undefined') {
+      // @ts-ignore
+      app.readLocalFile(filename.replace(/^\/vis\.0\//, ''), callback);
+      return;
+    }
+    let adapter = this.namespace;
+    if (filename[0] === '/') {
+      const p = filename.split('/');
+      adapter = p[1];
+      p.splice(0, 2);
+      filename = p.join('/');
+    }
+
+    this._socket.emit(
+      'readFile',
+      adapter,
+      filename,
+      (err: Error, data: string | Buffer | undefined, mimeType: string) => {
+        Utils.guardedNewThread(() => {
+          callback(err, data, mimeType);
+        }, this);
+      },
+    );
   }
 
   public getMimeType(ext: string): string {
@@ -637,7 +644,7 @@ export class IOBrokerConnection {
       throw 'No callback set';
     }
 
-    if (!this._checkConnection('readFile', arguments)) return;
+    if (this._checkConnection('readFile', arguments) != ConnectionState.connected) return;
 
     if (!isRemote && typeof app !== 'undefined') {
       // FIXME: data Type
@@ -700,7 +707,7 @@ export class IOBrokerConnection {
       return;
     }
 
-    if (!this._checkConnection('writeFile', arguments)) {
+    if (this._checkConnection('writeFile', arguments) != ConnectionState.connected) {
       return;
     }
     // @ts-ignore
@@ -726,7 +733,7 @@ export class IOBrokerConnection {
 
   // Write file base 64
   public writeFile64(filename: string, data: string, callback: ioBroker.ErrnoCallback): void {
-    if (!this._checkConnection('writeFile', arguments)) return;
+    if (this._checkConnection('writeFile', arguments) != ConnectionState.connected) return;
 
     const parts = filename.split('/');
     const adapter = parts[1];
@@ -832,8 +839,12 @@ export class IOBrokerConnection {
       return callback(null, {});
     }
 
-    if (!this._checkConnection('getStates', arguments)) {
-      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'getStates: No Connection');
+    const connected: ConnectionState = this._checkConnection('getStates', arguments);
+    if (connected != ConnectionState.connected) {
+      iobrokerConnectionLogging.writeLog(
+        iobrokerConnectionLogLevel.Debug,
+        `getStates: Not connected, current Connection: ${connected}`,
+      );
       return;
     }
     this._gettingStates = this._gettingStates || 0;
@@ -877,7 +888,7 @@ export class IOBrokerConnection {
       }
     }
 
-    if (!this._checkConnection('getObjects', arguments)) return;
+    if (this._checkConnection('getObjects', arguments) != ConnectionState.connected) return;
     this._socket.emit('getObjects', (err: Error, data: Record<string, ioBroker.Object>) => {
       if (err) {
         callback(err);
@@ -1000,7 +1011,7 @@ export class IOBrokerConnection {
     // @ts-ignore
     ...args: unknown[]
   ): void {
-    if (!this._checkConnection('getChildren', arguments)) return;
+    if (this._checkConnection('getChildren', arguments) != ConnectionState.connected) return;
 
     if (!id) return callback(new Error('getChildren: no id given'));
 
@@ -1231,7 +1242,7 @@ export class IOBrokerConnection {
   }
 
   public delObject(objId: string): void {
-    if (!this._checkConnection('delObject', arguments)) return;
+    if (this._checkConnection('delObject', arguments) != ConnectionState.connected) return;
 
     this._socket.emit('delObject', objId);
   }
@@ -1294,7 +1305,7 @@ export class IOBrokerConnection {
     // @ts-ignore
     ...args: unknown[]
   ): void {
-    if (!this._checkConnection('getConfig', arguments)) return;
+    if (this._checkConnection('getConfig', arguments) != ConnectionState.connected) return;
 
     if (typeof useCache === 'function') {
       callback = useCache;
@@ -1410,7 +1421,7 @@ export class IOBrokerConnection {
     // @ts-ignore
     ...args: unknown[]
   ): void {
-    if (!this._checkConnection('getHistory', arguments)) return;
+    if (this._checkConnection('getHistory', arguments) != ConnectionState.connected) return;
 
     if (!options) options = {};
 
@@ -1435,24 +1446,24 @@ export class IOBrokerConnection {
     });
   }
 
-  private _checkConnection(pFunc: unknown, pArguments: IArguments): boolean {
+  private _checkConnection(pFunc: unknown, pArguments: IArguments): ConnectionState {
     if (!this._isConnected) {
-      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'No connection!');
-      return false;
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, '_checkConnection: No connection!');
+      return ConnectionState.notConnected;
     }
 
     // @ts-ignore
     if (this._queueCmdIfRequired(pFunc, pArguments)) {
       iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'Command queued');
-      return false;
+      return ConnectionState.commandQueued;
     }
 
     //socket.io
     if (this._socket === null) {
       iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Warn, 'socket.io not initialized');
-      return false;
+      return ConnectionState.socketNotInitialized;
     }
-    return true;
+    return ConnectionState.connected;
   }
 
   private _monitor(): void {
@@ -1569,10 +1580,7 @@ export class IOBrokerConnection {
       );
       return false;
     }
-    iobrokerConnectionLogging.writeLog(
-      iobrokerConnectionLogLevel.DeepTrace,
-      `_queueCmdIfRequired: Auth is not yet done`,
-    );
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, `_queueCmdIfRequired: Auth is not yet done`);
     // Queue command
     // @ts-ignore
     this._cmdQueue.push({ func: func, args: args });
@@ -1585,7 +1593,7 @@ export class IOBrokerConnection {
     }
 
     iobrokerConnectionLogging.writeLog(
-      iobrokerConnectionLogLevel.DeepTrace,
+      iobrokerConnectionLogLevel.Trace,
       `_queueCmdIfRequired: Starting Authentication Process`,
     );
     this._authRunning = true;
@@ -1628,7 +1636,7 @@ export class IOBrokerConnection {
     ) => void,
   ) {
     this.readDir(
-      '/' + this.namespace + '/' + projectDir,
+      `/${this.namespace}/${projectDir}`,
       (err?: NodeJS.ErrnoException | null, dirs?: ioBroker.ReadDirResult[]) => {
         if (err) {
           callback(err);

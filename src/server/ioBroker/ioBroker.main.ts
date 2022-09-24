@@ -53,16 +53,17 @@ export class ioBrokerMain {
 
     this.connectionCallbacks.onConnChange = (isConnected: boolean) => {
       if (!isConnected) {
-        console.log('onConnChange.disconnected');
+        ServerLogService.writeLog(LogLevel.Info, 'onConnChange.disconnected');
         return;
       }
 
-      console.log('onConnChange.connected');
+      ServerLogService.writeLog(LogLevel.Info, 'onConnChange.connected');
       this.servConn.getStates(null, (err, _states) => {
         if (err !== null && err !== undefined) {
           ServerLogService.writeLog(LogLevel.Info, `Iobroker Error: ${err?.message ?? err}\n${err.stack}`);
         }
         if (_states === undefined) {
+          ServerLogService.writeLog(LogLevel.Info, `Keine iOBroker states....`);
           return;
         }
         ServerLogService.writeLog(LogLevel.Debug, `Im initialen GetStates Callback`);
@@ -72,7 +73,7 @@ export class ioBrokerMain {
           this.deviceUpdater.updateState(id, _states[id], true);
           count++;
         }
-        console.log('Received ' + count + ' states.');
+        ServerLogService.writeLog(LogLevel.Info, `Received ${count} states.`);
         this.states = _states;
         TimeCallbackService.performCheck();
         TimeCallbackService.performCheck();
