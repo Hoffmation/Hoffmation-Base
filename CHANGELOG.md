@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) More Logging in IoBroker Connection
+
 ## 1.1.26 (2022-09-24)
 
 * (theimo1221) Update packages
