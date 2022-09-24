@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Improve spare energy usage, by allow 1 degree overshoot of ac.
 
 ## 1.1.25 (2022-09-22)
 

@@ -1,4 +1,4 @@
-import { DeviceInfo, DeviceType, iAcDevice, iExcessEnergyConsumer, iRoomDevice } from '../../devices';
+import { DeviceInfo, Devices, DeviceType, iAcDevice, iExcessEnergyConsumer, iRoomDevice } from '../../devices';
 import { ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
@@ -87,7 +87,11 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
-    const threshold: number = this.on ? 0 : 1;
+    let threshold: number = this.on ? 0 : 0.5;
+    if (Devices.energymanager?.excessEnergy ?? 0 > 500) {
+      // As there is plenty of energy to spare we plan to overshoot the target by 1 degree
+      threshold = -1;
+    }
 
     if (temp > this.acSettings.stopCoolingTemperatur + threshold && SettingsService.heatMode !== HeatingMode.Winter) {
       return AcMode.Cooling;
