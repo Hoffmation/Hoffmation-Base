@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve ioBroker Socket Connection, its error handling and logging
+
 ## 1.1.32 (2022-09-25)
 
 * (theimo1221) Ac force to overrule ac heating as well

@@ -14,16 +14,16 @@ export class iobrokerConnectionLogging {
     if (pLevel > iobrokerConnectionLogging.LogLevel) {
       return;
     }
-
+    const message: string = `${new Date().toISOString()}: ${pMessage}`;
     switch (pLevel) {
       case iobrokerConnectionLogLevel.Error:
-        console.error(pMessage);
+        console.error(message);
         break;
       case iobrokerConnectionLogLevel.Warn:
-        console.warn(pMessage);
+        console.warn(message);
         break;
       default:
-        console.log(pMessage);
+        console.log(message);
         break;
     }
   }

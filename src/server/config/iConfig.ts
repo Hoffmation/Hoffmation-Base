@@ -44,6 +44,7 @@ export interface iConfig {
   // Earnigs per kWh injecting into the grid
   injectWattagePrice?: number;
   ioBrokerUrl: string;
+  ioBroker?: iIobrokerSettigns;
   heaterSettings?: iHeaterSettings;
   logSettings?: iLogSettings;
   mp3Server?: iMp3Settings;
@@ -75,6 +76,14 @@ export interface iHeaterSettings {
    */
   allowAcHeating?: boolean;
   mode?: HeatingMode;
+}
+
+export interface iIobrokerSettigns {
+  /**
+   * Whether states should be initialized by processing each key on its own.
+   * This allows to detect states which crash the Websocket Payload limit
+   */
+  useSplitInitialization?: boolean;
 }
 
 export interface iLogSettings {

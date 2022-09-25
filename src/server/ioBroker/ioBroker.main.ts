@@ -4,6 +4,7 @@ import { ConnectionCallbacks, iRoomBase, LogLevel } from '../../models';
 import { IOBrokerConnection } from './connection';
 
 export class ioBrokerMain {
+  private static readonly SplitKeys: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   public static iOConnection: IOBrokerConnection | undefined;
   private static roomConstructors: { [roomName: string]: { new (): iRoomBase } } = {};
   private servConn: IOBrokerConnection;
@@ -58,26 +59,7 @@ export class ioBrokerMain {
       }
 
       ServerLogService.writeLog(LogLevel.Info, 'onConnChange.connected');
-      this.servConn.getStates(null, (err, _states) => {
-        if (err !== null && err !== undefined) {
-          ServerLogService.writeLog(LogLevel.Info, `Iobroker Error: ${err?.message ?? err}\n${err.stack}`);
-        }
-        if (_states === undefined) {
-          ServerLogService.writeLog(LogLevel.Info, `Keine iOBroker states....`);
-          return;
-        }
-        ServerLogService.writeLog(LogLevel.Debug, `Im initialen GetStates Callback`);
-
-        let count = 0;
-        for (const id in _states) {
-          this.deviceUpdater.updateState(id, _states[id], true);
-          count++;
-        }
-        ServerLogService.writeLog(LogLevel.Info, `Received ${count} states.`);
-        this.states = _states;
-        TimeCallbackService.performCheck();
-        TimeCallbackService.performCheck();
-      });
+      this.retrieveAllStates();
     };
     this.connectionCallbacks.onRefresh = () => {
       //
@@ -94,5 +76,46 @@ export class ioBrokerMain {
     this.connectionCallbacks.onError = (err: any) => {
       console.log(`Cannot execute ${err.command} for ${err.arg}, because of insufficient permissions`);
     };
+  }
+
+  private async retrieveAllStates(): Promise<void> {
+    const allStates: Record<string, ioBroker.State> = {};
+    if (SettingsService.settings.ioBroker?.useSplitInitialization !== true) {
+      this.processAllStates((await this.getStatesRange(`*`)) ?? {});
+      return;
+    }
+    for (const char of ioBrokerMain.SplitKeys) {
+      const range = await this.getStatesRange(`${char}*`);
+      if (range) {
+        for (const id in range) {
+          allStates[id] = range[id];
+        }
+      }
+    }
+    this.processAllStates(allStates);
+  }
+
+  private getStatesRange(pattern: string): Promise<Record<string, ioBroker.State> | undefined> {
+    return new Promise<Record<string, ioBroker.State> | undefined>((res) => {
+      this.servConn.getStates(pattern, (err, _states) => {
+        ServerLogService.writeLog(LogLevel.Debug, `iobroker.getStates(${pattern}).CB(${err}, ...)`);
+        if (err !== null && err !== undefined) {
+          ServerLogService.writeLog(LogLevel.Info, `Iobroker Error: ${err?.message ?? err}\n${err.stack}`);
+        }
+        res(_states);
+      });
+    });
+  }
+
+  private processAllStates(allStates: Record<string, ioBroker.State>): void {
+    let count = 0;
+    for (const id in allStates) {
+      this.deviceUpdater.updateState(id, allStates[id], true);
+      count++;
+    }
+    ServerLogService.writeLog(LogLevel.Info, `Received ${count} states.`);
+    this.states = allStates;
+    TimeCallbackService.performCheck();
+    TimeCallbackService.performCheck();
   }
 }

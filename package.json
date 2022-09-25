@@ -61,7 +61,7 @@
     "pg": "^8.8.0",
     "rss-parser": "^3.12.0",
     "samsung-tv-control": "^1.13.0",
-    "socket.io-client": "2.4.x",
+    "socket.io-client": "2.5.x",
     "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1"
   },
