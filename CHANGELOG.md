@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.32 (2022-09-25)
 
 * (theimo1221) Ac force to overrule ac heating as well
 
