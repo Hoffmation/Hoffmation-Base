@@ -11,7 +11,7 @@ export interface iAcDevice extends iBaseDevice {
    * Disable automatic Turn-On for given amount of ms and turn off immediately.
    * @param {number} timeout
    */
-  deactivateAutomaticTurnOn(timeout: number): void;
+  deactivateAutomaticChange(timeout: number): void;
 
   onTemperaturChange(newTemperatur: number): void;
 

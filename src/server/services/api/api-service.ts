@@ -63,9 +63,8 @@ export class API {
     }
     if (desiredState) {
       d.turnOn();
-    } else {
-      d.deactivateAutomaticTurnOn(60 * 60 * 1000);
     }
+    d.deactivateAutomaticChange(60 * 60 * 1000);
     return true;
   }
 

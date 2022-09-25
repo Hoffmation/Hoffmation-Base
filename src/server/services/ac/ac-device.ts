@@ -124,9 +124,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
    * Disable automatic Turn-On for given amount of ms and turn off immediately.
    * @param {number} timeout
    */
-  public deactivateAutomaticTurnOn(timeout: number = 60 * 60 * 1000): void {
+  public deactivateAutomaticChange(timeout: number = 60 * 60 * 1000): void {
     this._blockAutomaticTurnOnMS = Utils.nowMS() + timeout;
-    this.turnOff();
   }
 
   public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
@@ -174,7 +173,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   protected automaticCheck(): void {
     const desiredMode: AcMode = this.calculateDesiredMode();
-    if (this.on === (desiredMode !== AcMode.Off)) {
+    if (Utils.nowMS() < this._blockAutomaticTurnOnMS || this.on === (desiredMode !== AcMode.Off)) {
       // Device already in desired state --> do nothing
       return;
     }

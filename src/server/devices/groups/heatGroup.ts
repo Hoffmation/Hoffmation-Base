@@ -157,7 +157,7 @@ export class HeatGroup extends BaseGroup {
         continue;
       }
       if (force) {
-        dev.deactivateAutomaticTurnOn(60 * 60 * 1000);
+        dev.deactivateAutomaticChange(60 * 60 * 1000);
         continue;
       }
       dev.turnOff();

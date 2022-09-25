@@ -99,10 +99,11 @@ export class DaikinService {
       const dev: OwnDaikinDevice = this._ownDevices[deviceName];
       if (on) {
         dev.turnOn();
-      } else if (force) {
-        dev.deactivateAutomaticTurnOn(180 * 60 * 1000);
       } else {
         dev.turnOff();
+      }
+      if (force) {
+        dev.deactivateAutomaticChange(180 * 60 * 1000);
       }
     }
   }
