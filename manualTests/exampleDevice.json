@@ -1,0 +1,55 @@
+{
+  "hm-rpc.1.0007DA49A781DF": {
+    "_id": "hm-rpc.1.0007DA49A781DF",
+    "type": "device",
+    "common": {
+      "name": "00-HmIP-EGWohnz-Griff-3",
+      "icon": "/icons/130_hmip-srh_thumb.png"
+    },
+    "native": {
+      "TYPE": "HmIP-SRH",
+      "SUBTYPE": "SRH",
+      "ADDRESS": "0007DA49A781DF",
+      "RF_ADDRESS": 7847215,
+      "CHILDREN": [
+        "0007DA49A781DF:0",
+        "0007DA49A781DF:1",
+        "0007DA49A781DF:2"
+      ],
+      "PARENT": "",
+      "PARENT_TYPE": "",
+      "INDEX": 0,
+      "AES_ACTIVE": 1,
+      "PARAMSETS": [
+        "MASTER",
+        "SERVICE"
+      ],
+      "FIRMWARE": "1.2.10",
+      "AVAILABLE_FIRMWARE": "0.0.0",
+      "UPDATABLE": true,
+      "FIRMWARE_UPDATE_STATE": "UP_TO_DATE",
+      "VERSION": 2,
+      "FLAGS": 1,
+      "LINK_SOURCE_ROLES": "",
+      "LINK_TARGET_ROLES": "",
+      "DIRECTION": 0,
+      "GROUP": "",
+      "TEAM": "",
+      "TEAM_TAG": "",
+      "TEAM_CHANNELS": [],
+      "INTERFACE": "",
+      "ROAMING": 0,
+      "RX_MODE": 4
+    },
+    "from": "system.adapter.hm-rega.0",
+    "user": "system.user.admin",
+    "ts": 1634652074474,
+    "acl": {
+      "object": 1636,
+      "state": 1636,
+      "file": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
+  }
+}
