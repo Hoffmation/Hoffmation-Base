@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.33 (2022-09-25)
 
 * (theimo1221) Improve ioBroker Socket Connection, its error handling and logging
 
