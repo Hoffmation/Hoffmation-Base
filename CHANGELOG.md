@@ -10,6 +10,7 @@
 
 * (theimo1221) Allow manual testing ioBroker Connection
 * (theimo1221) Samsung TV Device preparations
+* (theimo1221) Gather daikin Device info more frequently
 
 ## 1.1.30 (2022-09-25)
 

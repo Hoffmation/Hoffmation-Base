@@ -37,7 +37,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._info.customName = `${roomName} ${name}`;
     this._info.room = roomName;
     this._info.allDevicesKey = `ac-${roomName}-${name}`;
-    Utils.guardedInterval(this.automaticCheck, 60000, this, true);
+    Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, true);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.persistDeviceInfo();
   }
@@ -98,7 +98,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
     let threshold: number = acOn ? 0 : 1;
     let desiredMode: AcMode = AcMode.Off;
-    if (Devices.energymanager?.excessEnergy ?? 0 > 1000) {
+    if (Devices.energymanager?.excessEnergy ?? 0 > (acOn ? 200 : 1000)) {
       // As there is plenty of energy to spare we plan to overshoot the target by 1 degree
       threshold = -1;
     }
@@ -106,7 +106,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     const coolUntil: number = this.acSettings.stopCoolingTemperatur + threshold;
     const heatUntil: number = this.acSettings.stopHeatingTemperatur - threshold;
 
-    if (temp > coolUntil && SettingsService.heatMode !== HeatingMode.Winter) {
+    if (temp > coolUntil && SettingsService.heatMode === HeatingMode.Sommer) {
       desiredMode = AcMode.Cooling;
     } else if (temp < heatUntil && this.acSettings.heatingAllowed && SettingsService.heatMode !== HeatingMode.Sommer) {
       desiredMode = AcMode.Heating;
@@ -172,7 +172,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this._activatedByExcessEnergy;
   }
 
-  private automaticCheck(): void {
+  protected automaticCheck(): void {
     const desiredMode: AcMode = this.calculateDesiredMode();
     if (this.on === (desiredMode !== AcMode.Off)) {
       // Device already in desired state --> do nothing

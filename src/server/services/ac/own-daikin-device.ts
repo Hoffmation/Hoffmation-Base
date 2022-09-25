@@ -15,6 +15,7 @@ export class OwnDaikinDevice extends AcDevice {
   public desiredHum: number | 'AUTO' = 'AUTO';
   public desiredMode: number = Mode.COLD;
   public deviceType: DeviceType = DeviceType.Daikin;
+  private _on: boolean = false;
 
   public constructor(name: string, roomName: string, ip: string, device: DaikinAC | undefined) {
     super(name, roomName, ip, AcDeviceType.Daikin);
@@ -28,6 +29,10 @@ export class OwnDaikinDevice extends AcDevice {
     return this._device;
   }
 
+  public get on(): boolean {
+    return this._on;
+  }
+
   public set device(device: DaikinAC | undefined) {
     this._device = device;
     if (device && SettingsService.settings.daikin?.activateTracingLogger) {
@@ -38,10 +43,7 @@ export class OwnDaikinDevice extends AcDevice {
         ServerLogService.writeLog(LogLevel.Debug, `${this.name}_RequestLogger: ${data}`);
       });
     }
-  }
-
-  public get on(): boolean {
-    return this._device?.currentACControlInfo?.power ?? false;
+    this.updateInfo();
   }
 
   public setDesiredMode(mode: AcMode, writeToDevice: boolean = true): void {
@@ -77,6 +79,13 @@ export class OwnDaikinDevice extends AcDevice {
     this.setDesiredInfo();
   }
 
+  protected automaticCheck(): void {
+    // First Load Device Info, then perform check
+    this.updateInfo().then((_on) => {
+      super.automaticCheck();
+    });
+  }
+
   private setDesiredInfo(retry: boolean = false): void {
     let targetTemp: number = this.desiredTemp;
     if (this.desiredMode == Mode.HOT) {
@@ -103,10 +112,23 @@ export class OwnDaikinDevice extends AcDevice {
       } else if (res) {
         this.log(LogLevel.Info, `Changing Ac ${this.name} Settings was successful`);
         this.log(LogLevel.Debug, `Device Info ${JSON.stringify(res)}`, LogDebugType.DaikinSuccessfullControlInfo);
+        this._on = res.power ?? this.desiredState;
         this.persist();
       } else {
         this.log(LogLevel.Warn, `No Error, but also no response...`);
       }
+    });
+  }
+
+  private updateInfo(): Promise<boolean> {
+    return new Promise<boolean>((res) => {
+      this.device?.getACControlInfo((_err, response) => {
+        if (response) {
+          this.log(LogLevel.Trace, `Getting Ac ${this.name} info was successful`);
+          this._on = response.power ?? this.desiredState;
+        }
+        res(this._on);
+      });
     });
   }
 
