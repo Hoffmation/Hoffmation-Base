@@ -94,24 +94,30 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no room temperature`);
       return AcMode.Off;
     }
+    const acOn: boolean = this.on;
 
-    let threshold: number = this.on ? 0 : 1;
+    let threshold: number = acOn ? 0 : 1;
+    let desiredMode: AcMode = AcMode.Off;
     if (Devices.energymanager?.excessEnergy ?? 0 > 1000) {
       // As there is plenty of energy to spare we plan to overshoot the target by 1 degree
       threshold = -1;
     }
 
-    if (temp > this.acSettings.stopCoolingTemperatur + threshold && SettingsService.heatMode !== HeatingMode.Winter) {
-      return AcMode.Cooling;
+    const coolUntil: number = this.acSettings.stopCoolingTemperatur + threshold;
+    const heatUntil: number = this.acSettings.stopHeatingTemperatur - threshold;
+
+    if (temp > coolUntil && SettingsService.heatMode !== HeatingMode.Winter) {
+      desiredMode = AcMode.Cooling;
+    } else if (temp < heatUntil && this.acSettings.heatingAllowed && SettingsService.heatMode !== HeatingMode.Sommer) {
+      desiredMode = AcMode.Heating;
     }
-    if (
-      temp < this.acSettings.stopHeatingTemperatur - threshold &&
-      this.acSettings.heatingAllowed &&
-      SettingsService.heatMode !== HeatingMode.Sommer
-    ) {
-      return AcMode.Heating;
+    if (acOn === (desiredMode !== AcMode.Off)) {
+      this.log(
+        LogLevel.Info,
+        `Ac (currently on: ${acOn}) not in desired mode. Room Temp ${temp}, coolUntil ${coolUntil}, heatUntil ${heatUntil}.`,
+      );
     }
-    return AcMode.Off;
+    return desiredMode;
   }
 
   /**
