@@ -98,7 +98,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
     let threshold: number = acOn ? 0 : 1;
     let desiredMode: AcMode = AcMode.Off;
-    if (Devices.energymanager?.excessEnergy ?? 0 > (acOn ? 200 : 1000)) {
+    const excessEnergy: number = Devices.energymanager?.excessEnergy ?? -1;
+    if ((acOn ? 200 : 1000) < excessEnergy) {
       // As there is plenty of energy to spare we plan to overshoot the target by 1 degree
       threshold = -1;
     }
@@ -111,10 +112,10 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     } else if (temp < heatUntil && this.acSettings.heatingAllowed && SettingsService.heatMode !== HeatingMode.Sommer) {
       desiredMode = AcMode.Heating;
     }
-    if (acOn === (desiredMode !== AcMode.Off)) {
+    if ((desiredMode === AcMode.Off && !acOn) || (desiredMode !== AcMode.Off && acOn)) {
       this.log(
         LogLevel.Info,
-        `Ac (currently on: ${acOn}) not in desired mode. Room Temp ${temp}, coolUntil ${coolUntil}, heatUntil ${heatUntil}.`,
+        `Ac (currently on: ${acOn}) not in desired mode (${desiredMode}). Room Temp ${temp}, coolUntil ${coolUntil}, heatUntil ${heatUntil}, excessEnergy ${excessEnergy}.`,
       );
     }
     return desiredMode;

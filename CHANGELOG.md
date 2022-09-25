@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Further improve ac logging, to find mistake in ac settings
+
 ## 1.1.33 (2022-09-25)
 
 * (theimo1221) Improve ioBroker Socket Connection, its error handling and logging
