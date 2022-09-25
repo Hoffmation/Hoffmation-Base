@@ -112,7 +112,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     } else if (temp < heatUntil && this.acSettings.heatingAllowed && SettingsService.heatMode === HeatingMode.Winter) {
       desiredMode = AcMode.Heating;
     }
-    if (acOn ? desiredMode !== AcMode.Off : desiredMode === AcMode.Off) {
+    if (acOn ? desiredMode === AcMode.Off : desiredMode !== AcMode.Off) {
       this.log(
         LogLevel.Info,
         `Ac (currently on: ${acOn}) not in desired mode (${desiredMode}). Room Temp ${temp}, coolUntil ${coolUntil}, heatUntil ${heatUntil}, excessEnergy ${excessEnergy}.`,
