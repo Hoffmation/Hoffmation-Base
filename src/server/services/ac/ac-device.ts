@@ -1,4 +1,12 @@
-import { DeviceInfo, Devices, DeviceType, iAcDevice, iExcessEnergyConsumer, iRoomDevice } from '../../devices';
+import {
+  DeviceInfo,
+  Devices,
+  DeviceType,
+  iAcDevice,
+  iExcessEnergyConsumer,
+  iRoomDevice,
+  UNDEFINED_TEMP_VALUE,
+} from '../../devices';
 import { ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
@@ -82,13 +90,13 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public calculateDesiredMode(): AcMode {
     const temp: number | undefined = this.roomTemperature;
-    if (temp === undefined) {
+    if (temp === undefined || temp === UNDEFINED_TEMP_VALUE) {
       this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no room temperature`);
       return AcMode.Off;
     }
 
-    let threshold: number = this.on ? 0 : 0.5;
-    if (Devices.energymanager?.excessEnergy ?? 0 > 500) {
+    let threshold: number = this.on ? 0 : 1;
+    if (Devices.energymanager?.excessEnergy ?? 0 > 1000) {
       // As there is plenty of energy to spare we plan to overshoot the target by 1 degree
       threshold = -1;
     }

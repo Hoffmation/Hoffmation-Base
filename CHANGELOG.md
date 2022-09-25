@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix within Daikin Devices to properly set target Temperature
+
 ## 1.1.29 (2022-09-24)
 
 * (theimo1221) Even More Logging in IoBroker Connection
