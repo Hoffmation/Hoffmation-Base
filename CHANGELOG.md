@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Allow manual testing ioBroker Connection
+* (theimo1221) Samsung TV Device preparations
 
 ## 1.1.30 (2022-09-25)
 

@@ -4,7 +4,8 @@
   "include": [
     "src/**/*.ts",
     "test/**/*.test.ts",
+    "manualTests/**/*test.ts",
     ".eslintrc.js",
-    ".jest.config.js",
+    ".jest.config.js"
   ]
 }

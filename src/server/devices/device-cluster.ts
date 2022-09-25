@@ -29,6 +29,9 @@ export class DeviceCluster {
       case DeviceType.Sonos:
         clusterTypes.push(DeviceClusterType.Speaker);
         break;
+      case DeviceType.SamsungTv:
+        clusterTypes.push(DeviceClusterType.Tv);
+        break;
       case DeviceType.HmIpLampe:
       case DeviceType.ZigbeeIlluDimmer:
       case DeviceType.ZigbeeIlluLampe:

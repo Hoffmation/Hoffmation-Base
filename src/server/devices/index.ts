@@ -17,4 +17,5 @@ export * from './Griffe';
 export * from './Heizgruppen';
 export * from './iDeviceUpdater';
 export * from './IoBrokerBaseDevice';
+export * from './tv';
 export * from './wledDevice';

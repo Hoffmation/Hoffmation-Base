@@ -38,4 +38,5 @@ export enum DeviceType {
   Sonos = 3001,
   Espresense = 4001,
   TrackableDevice = 4002,
+  SamsungTv = 5001,
 }

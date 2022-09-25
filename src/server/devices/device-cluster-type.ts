@@ -18,4 +18,5 @@ export enum DeviceClusterType {
   HumiditySensor = 17,
   Ac = 18,
   WLED = 19,
+  Tv = 20,
 }
