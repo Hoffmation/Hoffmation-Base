@@ -156,11 +156,10 @@ export class HeatGroup extends BaseGroup {
         dev.turnOn();
         continue;
       }
+      dev.turnOff();
       if (force) {
         dev.deactivateAutomaticChange(60 * 60 * 1000);
-        continue;
       }
-      dev.turnOff();
     }
   }
 

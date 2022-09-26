@@ -43,7 +43,7 @@ export class OwnDaikinDevice extends AcDevice {
         ServerLogService.writeLog(LogLevel.Debug, `${this.name}_RequestLogger: ${data}`);
       });
     }
-    this.updateInfo();
+    void this.updateInfo();
   }
 
   public setDesiredMode(mode: AcMode, writeToDevice: boolean = true): void {

@@ -173,8 +173,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   protected automaticCheck(): void {
+    if (!this.on && Utils.nowMS() < this._blockAutomaticTurnOnMS) {
+      // We aren't allowed to trun on anyway --> exit
+      return;
+    }
     const desiredMode: AcMode = this.calculateDesiredMode();
-    if (Utils.nowMS() < this._blockAutomaticTurnOnMS || this.on === (desiredMode !== AcMode.Off)) {
+    if (this.on === (desiredMode !== AcMode.Off)) {
       // Device already in desired state --> do nothing
       return;
     }
