@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix error in acs on forced off
+
 ## 1.1.35 (2022-09-26)
 
 * (theimo1221) Fix error in ac logging
