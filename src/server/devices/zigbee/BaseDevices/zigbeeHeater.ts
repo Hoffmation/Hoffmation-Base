@@ -187,7 +187,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   }
 
   protected getNextPidLevel(): number {
-    if (this.seasonTurnOff) {
+    if (this.seasonTurnOff || this._roomTemperature < 0) {
       return 0;
     }
     this._pidController.setPoint(this.desiredTemperature);

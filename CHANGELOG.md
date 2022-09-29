@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix error with heater in rooms without room Temperatur
+
 ## 1.1.36 (2022-09-26)
 
 * (theimo1221) Fix error in acs on forced off

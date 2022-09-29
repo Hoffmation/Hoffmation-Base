@@ -80,9 +80,10 @@ export class API {
    * Changes the status of a given Lamp
    * @param {string} deviceId The device Id of the lamp
    * @param {boolean} state The desired new state
+   * @param timeout Desired time after which this should be reverted to normal state
    * @returns {Error | null} In case it failed the Error containing the reason
    */
-  public static setLamp(deviceId: string, state: boolean): Error | null {
+  public static setLamp(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
     const d = this.getDevice(deviceId) as iLamp | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -90,7 +91,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.lamp)) {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
-    d.setLight(state, 60 * 60 * 1000, true);
+    d.setLight(state, timeout, true);
     return null;
   }
 
@@ -98,9 +99,10 @@ export class API {
    * Changes the status of a given actuator
    * @param {string} deviceId The device Id of the actuator
    * @param {boolean} state The desired new state
+   * @param timeout Desired time after which this should be reverted to normal state
    * @returns {Error | null} In case it failed the Error containing the reason
    */
-  public static setActuator(deviceId: string, state: boolean): Error | null {
+  public static setActuator(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
     const d = this.getDevice(deviceId) as iActuator | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -108,7 +110,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.actuator)) {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
-    d.setActuator(state, 60 * 60 * 1000, true);
+    d.setActuator(state, timeout, true);
     return null;
   }
 
