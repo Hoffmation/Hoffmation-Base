@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.37 (2022-09-29)
 
 * (theimo1221) Fix error with heater in rooms without room Temperatur
 
