@@ -43,7 +43,7 @@
     "@types/iobroker": "^4.0.4",
     "@types/jest": "^29.0.3",
     "@types/lodash": "^4.14.185",
-    "@types/node": "18.7.19",
+    "@types/node": "18.8.0",
     "@types/node-telegram-bot-api": "^0.57.1",
     "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
