@@ -138,7 +138,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public persist(): void {
-    if (!Utils.anyDboActive) {
+    if (!Utils.anyDboActive || this.on === undefined) {
       return;
     }
     Utils.dbo?.persistAC(this);

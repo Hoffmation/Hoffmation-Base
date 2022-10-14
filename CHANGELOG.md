@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Minor fixes in Postgres DDL Code
+* (theimo1221) Minor fix preventing uninitialized ac persisting
 
 ## 1.1.38 (2022-10-12)
 
