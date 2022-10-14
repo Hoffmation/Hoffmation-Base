@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.40 (2022-10-14)
 
 * (theimo1221) Fix in Euro Heater to correctly set desired mode
 
