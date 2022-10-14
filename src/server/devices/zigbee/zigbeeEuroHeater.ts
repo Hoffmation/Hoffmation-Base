@@ -95,12 +95,9 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
       case 'spz_trv_mode':
         this.log(LogLevel.Trace, `Euro Valve mode Update for ${this.info.customName} to "${state.val}"`);
         this._mode = state.val as 1 | 2;
-        if (!this.settings.seasonalTurnOffActive) {
-          if (this.settings.controlByPid && this._mode == 2) {
-            this.setMode(1);
-          } else if (this._mode == 1) {
-            this.setMode(2);
-          }
+        const desiredMode = this.settings.controlByPid ? 1 : 2;
+        if (!this.settings.seasonalTurnOffActive && this._mode !== desiredMode) {
+          this.setMode(desiredMode);
         }
         break;
       case 'target_temperature':
