@@ -10,6 +10,7 @@
 
 * (theimo1221) Minor fixes in Postgres DDL Code
 * (theimo1221) Minor fix preventing uninitialized ac persisting
+* (theimo1221) Fix in zigbee Heater, which result in persisted level beeing 100 instead of 1.0
 
 ## 1.1.38 (2022-10-12)
 

@@ -77,7 +77,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     switch (idSplit[3]) {
       case 'valve_position':
         this.log(LogLevel.Trace, `Euro Valve valve_position Update for ${this.info.customName} to "${state.val}"`);
-        this._level = state.val as number;
+        this._level = (state.val as number) / 100;
         break;
       case 'local_temp':
         this.log(LogLevel.Trace, `Euro Valve Local_Temp Update for ${this.info.customName} to "${state.val}"`);

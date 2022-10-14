@@ -66,7 +66,7 @@ values ('${device.id}','${device.info.room}','${device.info.allDevicesKey}','${d
     ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${heater.info.customName}`);
     this.query(`
 insert into hoffmation_schema."TemperaturData" ("date", "humidity", "istTemperatur", "level", "name", "sollTemperatur")
-values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel},'${
+values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel / 100},'${
       heater.info.customName
     }',${heater.desiredTemperature});`);
 
