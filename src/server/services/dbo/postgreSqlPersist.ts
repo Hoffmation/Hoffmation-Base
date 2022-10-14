@@ -22,8 +22,7 @@ import {
   iTemperatureSensor,
   UNDEFINED_TEMP_VALUE,
 } from '../../devices';
-import { iPersistenceSettings } from '../../config';
-import { Pool, QueryResultRow } from 'pg';
+import { Pool, PoolConfig, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
@@ -31,10 +30,11 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 export class PostgreSqlPersist implements iPersist {
   initialized: boolean = false;
   private readonly psql: Pool;
+  private readonly config: PoolConfig;
 
-  public constructor(config: iPersistenceSettings) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.psql = new Pool(config.postgreSql!);
+  public constructor(conf: PoolConfig) {
+    this.config = conf;
+    this.psql = new Pool(this.config);
   }
 
   addRoom(room: RoomBase): void {
@@ -139,232 +139,233 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
       `
 DO $$
 BEGIN
-    IF (SELECT to_regclass('hoffmation_schema."BasicRooms"') IS NULL) Then
-create table "BasicRooms"
-(
-    name  varchar(30) not null
-        constraint table_name_pk
-            primary key,
-    etage integer
-);
+  IF (SELECT to_regclass('hoffmation_schema."BasicRooms"') IS NULL) Then
+    create table "BasicRooms"
+    (
+        name  varchar(30) not null
+            constraint table_name_pk
+                primary key,
+        etage integer
+    );
 
-alter table "BasicRooms"
-    owner to postgres;
+    alter table hoffmation_schema."BasicRooms"
+        owner to "${this.config.user}";
 
-create unique index table_name_name_uindex
-    on "BasicRooms" (name);
+    create unique index table_name_name_uindex
+        on "BasicRooms" (name);
 
-    END IF;
-IF (SELECT to_regclass('hoffmation_schema."DeviceInfo"') IS NULL) Then    
+  END IF;
+  
+  IF (SELECT to_regclass('hoffmation_schema."DeviceInfo"') IS NULL) Then    
     create table hoffmation_schema."DeviceInfo"
-(
-    deviceid      varchar(60) not null
-        constraint deviceinfo_pk
-            primary key,
-    roomname      varchar(30)
-        constraint "DeviceInfo_BasicRooms_null_fk"
-            references hoffmation_schema."BasicRooms",
-    alldeviceskey varchar(30),
-    customname    varchar(60),
-    devtype       integer
-);
+    (
+        deviceid      varchar(60) not null
+            constraint deviceinfo_pk
+                primary key,
+        roomname      varchar(30)
+            constraint "DeviceInfo_BasicRooms_null_fk"
+                references hoffmation_schema."BasicRooms",
+        alldeviceskey varchar(30),
+        customname    varchar(60),
+        devtype       integer
+    );
 
-alter table hoffmation_schema."DeviceInfo"
-    owner to postgres;
+    alter table hoffmation_schema."DeviceInfo"
+        owner to "${this.config.user}";
 
-    END IF;
+  END IF;
 
-    IF (SELECT to_regclass('hoffmation_schema."CurrentIllumination"') IS NULL) Then
-create table "CurrentIllumination"
-(
-    "roomName"            varchar(30)
-        constraint currentillumination_basicrooms_name_fk
-            references hoffmation_schema."BasicRooms",
-    "deviceID"            integer not null,
-    "currentIllumination" double precision,
-    date                  timestamp with time zone,
-    "lightIsOn"           boolean
-);
+  IF (SELECT to_regclass('hoffmation_schema."CurrentIllumination"') IS NULL) Then
+    create table hoffmation_schema."CurrentIllumination"
+    (
+        "roomName"            varchar(30)
+            constraint currentillumination_basicrooms_name_fk
+                references hoffmation_schema."BasicRooms",
+        "deviceID"            integer not null,
+        "currentIllumination" double precision,
+        date                  timestamp with time zone,
+        "lightIsOn"           boolean
+    );
 
-alter table "CurrentIllumination"
-    owner to postgres;
-    END IF;
+    alter table hoffmation_schema."CurrentIllumination"
+        owner to "${this.config.user}";
+  END IF;
     
-    IF (SELECT to_regclass('hoffmation_schema."ButtonSwitchPresses"') IS NULL) Then
-create table if not exists hoffmation_schema."ButtonSwitchPresses"
-(
-    "deviceID"         varchar(60) not null
-        constraint "ButtonSwitchPresses_DeviceInfo_null_fk"
-            references hoffmation_schema."DeviceInfo"
-            on delete set null,
-    "pressType" int,
-    "buttonName" varchar(30),
-    date               timestamp   not null,
-    constraint buttonswitchpresses_pk
-        primary key ("deviceID", "pressType", date)
-);
+  IF (SELECT to_regclass('hoffmation_schema."ButtonSwitchPresses"') IS NULL) Then
+    create table if not exists hoffmation_schema."ButtonSwitchPresses"
+    (
+        "deviceID"         varchar(60) not null
+            constraint "ButtonSwitchPresses_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        "pressType" int,
+        "buttonName" varchar(30),
+        date               timestamp   not null,
+        constraint buttonswitchpresses_pk
+            primary key ("deviceID", "pressType", date)
+    );
 
-alter table hoffmation_schema."ButtonSwitchPresses"
-    owner to postgres;
-    END IF;
+    alter table hoffmation_schema."ButtonSwitchPresses"
+        owner to "${this.config.user}";
+  END IF;
     
-    IF (SELECT to_regclass('hoffmation_schema."EnergyCalculation"') IS NULL) Then
-create table "EnergyCalculation"
-(
-    "startDate"           timestamp not null
-        constraint energycalculation_pk
-            primary key,
-    "endDate"             timestamp,
-    "selfConsumedKwH" double precision,
-    "injectedKwH"     double precision,
-    "drawnKwH"        double precision
-);
+  IF (SELECT to_regclass('hoffmation_schema."EnergyCalculation"') IS NULL) Then
+    create table hoffmation_schema."EnergyCalculation"
+    (
+        "startDate"           timestamp not null
+            constraint energycalculation_pk
+                primary key,
+        "endDate"             timestamp,
+        "selfConsumedKwH" double precision,
+        "injectedKwH"     double precision,
+        "drawnKwH"        double precision
+    );
 
-alter table "EnergyCalculation"
-    owner to postgres;
+    alter table hoffmation_schema."EnergyCalculation"
+      owner to "${this.config.user}";
 
-create unique index energycalculation_startdate_uindex
-    on "EnergyCalculation" ("startDate");
+    create unique index energycalculation_startdate_uindex
+      on "EnergyCalculation" ("startDate");
 
-    END IF;
-    IF (SELECT to_regclass('hoffmation_schema."HeatGroupCollection"') IS NULL) Then
-create table "HeatGroupCollection"
-(
-    date             timestamp,
-    humidity         integer,
-    "istTemperatur"  double precision,
-    level            integer,
-    name             varchar(60) not null
-        constraint heatgroupcollection_pk
-            primary key,
-    "sollTemperatur" double precision
-);
+  END IF;
+  IF (SELECT to_regclass('hoffmation_schema."HeatGroupCollection"') IS NULL) Then
+    create table hoffmation_schema."HeatGroupCollection"
+    (
+        date             timestamp,
+        humidity         integer,
+        "istTemperatur"  double precision,
+        level            integer,
+        name             varchar(60) not null
+            constraint heatgroupcollection_pk
+                primary key,
+        "sollTemperatur" double precision
+    );
 
-alter table "HeatGroupCollection"
-    owner to postgres;
+    alter table hoffmation_schema."HeatGroupCollection"
+      owner to "${this.config.user}";
 
-create unique index heatgroupcollection_name_uindex
-    on "HeatGroupCollection" (name);
+    create unique index heatgroupcollection_name_uindex
+      on "HeatGroupCollection" (name);
 
-    END IF;
+  END IF;
 
-IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then    
-  create table hoffmation_schema."AcDeviceData"
-  (
-      "deviceID" varchar(60) not null,
-      "on"       boolean,
-      "istTemperatur"  double precision,
-      date       timestamp   not null,
-      constraint acdevicedata_pk
-          primary key ("deviceID", date)
-  );
+  IF (SELECT to_regclass('hoffmation_schema."AcDeviceData"') IS NULL) Then    
+    create table hoffmation_schema."AcDeviceData"
+    (
+        "deviceID" varchar(60) not null,
+        "on"       boolean,
+        "istTemperatur"  double precision,
+        date       timestamp   not null,
+        constraint acdevicedata_pk
+            primary key ("deviceID", date)
+    );
+  
+    alter table hoffmation_schema."AcDeviceData"
+      owner to "${this.config.user}";
+  END IF;
 
-  alter table hoffmation_schema."AcDeviceData"
-    owner to postgres;
-END IF;
 
+  IF (SELECT to_regclass('hoffmation_schema."ActuatorDeviceData"') IS NULL) Then    
+    create table hoffmation_schema."ActuatorDeviceData"
+    (
+        "deviceID" varchar(60) not null,
+        "on"       boolean,
+        date       timestamp   not null,
+        constraint ActuatorDeviceData_pk
+            primary key ("deviceID", date)
+    );
+  
+    alter table hoffmation_schema."ActuatorDeviceData"
+      owner to "${this.config.user}";
+  END IF;
 
-IF (SELECT to_regclass('hoffmation_schema."ActuatorDeviceData"') IS NULL) Then    
-  create table hoffmation_schema."ActuatorDeviceData"
-  (
-      "deviceID" varchar(60) not null,
-      "on"       boolean,
-      date       timestamp   not null,
-      constraint ActuatorDeviceData_pk
-          primary key ("deviceID", date)
-  );
+  IF (SELECT to_regclass('hoffmation_schema."MotionSensorDeviceData"') IS NULL) Then    
+    create table hoffmation_schema."MotionSensorDeviceData"
+    (
+        "deviceID" varchar(60) not null,
+        "movementDetected"       boolean,
+        date       timestamp   not null,
+        constraint motionsensordevicedata_pk
+            primary key ("deviceID", date)
+    );
+  
+    alter table hoffmation_schema."MotionSensorDeviceData"
+      owner to "${this.config.user}";
+  END IF;
 
-  alter table hoffmation_schema."ActuatorDeviceData"
-    owner to postgres;
-END IF;
+  IF (SELECT to_regclass('hoffmation_schema."ShutterDeviceData"') IS NULL) Then    
+    create table if not exists hoffmation_schema."ShutterDeviceData"
+    (
+        "deviceID"         varchar(60) not null
+            constraint "ShutterDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        "position" double precision,
+        date               timestamp   not null,
+        "desiredPosition" double precision,
+        constraint shutterdevicedata_pk
+            primary key ("deviceID", date)
+    );
+    
+    alter table hoffmation_schema."ShutterDeviceData"
+        owner to "${this.config.user}";
+  END IF;
 
-IF (SELECT to_regclass('hoffmation_schema."MotionSensorDeviceData"') IS NULL) Then    
-  create table hoffmation_schema."MotionSensorDeviceData"
-  (
-      "deviceID" varchar(60) not null,
-      "movementDetected"       boolean,
-      date       timestamp   not null,
-      constraint motionsensordevicedata_pk
-          primary key ("deviceID", date)
-  );
-
-  alter table hoffmation_schema."MotionSensorDeviceData"
-    owner to postgres;
-END IF;
-
-IF (SELECT to_regclass('hoffmation_schema."ShutterDeviceData"') IS NULL) Then    
-  create table if not exists hoffmation_schema."ShutterDeviceData"
-(
-    "deviceID"         varchar(60) not null
-        constraint "ShutterDeviceData_DeviceInfo_null_fk"
-            references hoffmation_schema."DeviceInfo"
-            on delete set null,
-    "position" double precision,
-    date               timestamp   not null,
-    "desiredPosition" double precision,
-    constraint shutterdevicedata_pk
-        primary key ("deviceID", date)
-);
-
-alter table hoffmation_schema."ShutterDeviceData"
-    owner to postgres;
-END IF;
-
-IF (SELECT to_regclass('hoffmation_schema."TemperatureSensorDeviceData"') IS NULL) Then  
-  create table if not exists hoffmation_schema."TemperatureSensorDeviceData"
-(
-    "deviceID"        varchar(60) not null
-        constraint "TemperatureSensorDeviceData_DeviceInfo_null_fk"
-            references hoffmation_schema."DeviceInfo"
-            on delete set null,
-    temperature          double precision,
-    date              timestamp   not null,
-    "roomTemperature" double precision,
-    constraint temperaturesensordevicedata_pk
-        primary key ("deviceID", date)
-);
-
-alter table hoffmation_schema."TemperatureSensorDeviceData"
-    owner to postgres;
-END IF;
+  IF (SELECT to_regclass('hoffmation_schema."TemperatureSensorDeviceData"') IS NULL) Then  
+    create table if not exists hoffmation_schema."TemperatureSensorDeviceData"
+    (
+        "deviceID"        varchar(60) not null
+            constraint "TemperatureSensorDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        temperature          double precision,
+        date              timestamp   not null,
+        "roomTemperature" double precision,
+        constraint temperaturesensordevicedata_pk
+            primary key ("deviceID", date)
+    );
+    
+    alter table hoffmation_schema."TemperatureSensorDeviceData"
+        owner to "${this.config.user}";
+  END IF;
 
   
     
   IF (SELECT to_regclass('hoffmation_schema."HeaterDeviceData"') IS NULL) Then
-create table if not exists hoffmation_schema."HeaterDeviceData"
-(
-    "deviceID"        varchar(60) not null
-        constraint "HeaterDeviceData_DeviceInfo_null_fk"
-            references hoffmation_schema."DeviceInfo",
-    "level"              double precision,
-    date              timestamp   not null,
-    "roomTemperature" double precision,
-    "desiredTemperature" double precision,
-    "seasonTurnOff" boolean,
-    constraint heaterevicedata_pk
-        primary key ("deviceID", date)
-);
-
-alter table hoffmation_schema."HeaterDeviceData"
-    owner to postgres;
-END IF;
+    create table if not exists hoffmation_schema."HeaterDeviceData"
+    (
+        "deviceID"        varchar(60) not null
+            constraint "HeaterDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo",
+        "level"              double precision,
+        date              timestamp   not null,
+        "roomTemperature" double precision,
+        "desiredTemperature" double precision,
+        "seasonTurnOff" boolean,
+        constraint heaterevicedata_pk
+            primary key ("deviceID", date)
+    );
     
-    IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
-create table "TemperaturData"
-(
-    date             timestamp,
-    humidity         integer,
-    "istTemperatur"  double precision,
-    level            integer,
-    name             text,
-    "sollTemperatur" double precision,
-    constraint temperaturdata_pk
-        unique (date, name)
-);
-
-alter table "TemperaturData"
-    owner to postgres;
-    END IF;
+    alter table hoffmation_schema."HeaterDeviceData"
+        owner to "${this.config.user}";
+  END IF;
+    
+  IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
+    create table hoffmation_schema."TemperaturData"
+    (
+        date             timestamp,
+        humidity         integer,
+        "istTemperatur"  double precision,
+        level            integer,
+        name             text,
+        "sollTemperatur" double precision,
+        constraint temperaturdata_pk
+            unique (date, name)
+    );
+    
+    alter table hoffmation_schema."TemperaturData"
+        owner to "${this.config.user}";
+  END IF;
 END
 $$;`,
     );

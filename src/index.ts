@@ -45,7 +45,7 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
     if (initObject.config.persistence) {
       if (initObject.config.persistence.postgreSql) {
-        Utils.dbo = new PostgreSqlPersist(initObject.config.persistence);
+        Utils.dbo = new PostgreSqlPersist(initObject.config.persistence.postgreSql);
       }
       await Utils.dbo?.initialize();
     }
