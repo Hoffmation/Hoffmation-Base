@@ -5,10 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## **WORK IN PROGRESS**
+## 1.1.43 (2022-10-15)
 
 * (nockiro) Add Osram dimmer device
-* 
+*
+
 ## 1.1.42 (2022-10-15)
 
 * (theimo1221) Update packages
