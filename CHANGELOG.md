@@ -5,9 +5,9 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## **WORK IN PROGRESS**
+## 1.1.46 (2022-10-15)
 * (nockiro) Another fix for creating the schema if not existing
-* 
+
 ## 1.1.45 (2022-10-15)
 * (nockiro) Fixes/Adjustments for PostgreSQL to create schema/tables correctly
 
