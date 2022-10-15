@@ -1,9 +1,9 @@
 import { DeviceType } from '../deviceType';
 import { LedSettings, LogLevel, TimeOfDay } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { ZigbeeIlluDimmer } from './zigbeeIlluDimmer';
+import { ZigbeeDimmer } from './BaseDevices/zigbeeDimmer';
 
-export class ZigbeeIlluLedRGBCCT extends ZigbeeIlluDimmer {
+export class ZigbeeIlluLedRGBCCT extends ZigbeeDimmer {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';
   public color: string = '#fcba32';
   public colortemp: number = 500;

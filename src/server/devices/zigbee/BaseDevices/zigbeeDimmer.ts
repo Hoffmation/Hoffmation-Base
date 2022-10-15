@@ -1,31 +1,46 @@
-import { DimmerSettings, LogLevel, TimeOfDay } from '../../../models';
-import { DeviceType } from '../deviceType';
-import { LogDebugType, TimeCallbackService, Utils } from '../../services';
-import { ZigbeeDevice } from './BaseDevices';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { iDimmableLamp } from '../baseDeviceInterfaces/iDimmableLamp';
+import { DimmerSettings, LogLevel, TimeOfDay } from '../../../../models';
+import { DeviceType } from '../../deviceType';
+import { LogDebugType, TimeCallbackService, Utils } from '../../../services';
+import { ZigbeeDevice } from './index';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp';
 
-export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
-  public lightOn: boolean = false;
+export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
   public queuedValue: boolean | null = null;
-  public brightness: number = 0;
-  public transitionTime: number = 0;
   public settings: DimmerSettings = new DimmerSettings();
-  protected readonly stateID: string = 'state';
-  protected readonly brightnessID: string = 'brightness';
-  protected readonly transitionID: string = 'transition_time';
-  private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
-  private turnOffTime: number = 0;
-  private _lastPersist: number = 0;
+  protected stateID: string;
+  protected brightnessID: string;
+  protected transitionID: string;
+  protected _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
+  protected turnOffTime: number = 0;
+  protected _lastPersist: number = 0;
 
-  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeIlluDimmer) {
+  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
     this.stateID = `${this.info.fullID}.state`;
     this.brightnessID = `${this.info.fullID}.brightness`;
     this.transitionID = `${this.info.fullID}.transition_time`;
+  }
+
+  protected _lightOn: boolean = false;
+
+  public get lightOn(): boolean {
+    return this._lightOn;
+  }
+
+  protected _brightness: number = 0;
+
+  public get brightness(): number {
+    return this._brightness;
+  }
+
+  protected _transitionTime: number = 0;
+
+  public get transitionTime(): number {
+    return this._transitionTime;
   }
 
   public get actuatorOn(): boolean {
@@ -39,17 +54,17 @@ export class ZigbeeIlluDimmer extends ZigbeeDevice implements iDimmableLamp {
     switch (idSplit[3]) {
       case 'state':
         this.log(LogLevel.Trace, `Dimmer Update für ${this.info.customName} auf ${state.val}`);
-        this.lightOn = state.val as boolean;
+        this._lightOn = state.val as boolean;
         this.persist();
         break;
       case 'brightness':
         this.log(LogLevel.Trace, `Dimmer Helligkeit Update für ${this.info.customName} auf ${state.val}`);
-        this.brightness = state.val as number;
+        this._brightness = state.val as number;
         this.persist();
         break;
       case 'transition_time':
         this.log(LogLevel.Trace, `Dimmer Transition Time Update für ${this.info.customName} auf ${state.val}`);
-        this.transitionTime = state.val as number;
+        this._transitionTime = state.val as number;
         break;
     }
   }
