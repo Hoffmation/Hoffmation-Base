@@ -6,38 +6,29 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp';
 
-export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
+export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
   public queuedValue: boolean | null = null;
   public settings: DimmerSettings = new DimmerSettings();
-  protected _stateID: string;
-  protected _brightnessID: string;
-  protected _transitionID: string;
-  protected _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
-  protected turnOffTime: number = 0;
+  protected _brightness: number = 0;
   protected _lastPersist: number = 0;
-
-  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
-    super(pInfo, deviceType);
-    this.deviceCapabilities.push(DeviceCapability.lamp);
-    this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
-    this._stateID = `${this.info.fullID}.state`;
-    this._brightnessID = `${this.info.fullID}.brightness`;
-    this._transitionID = `${this.info.fullID}.transition_time`;
-  }
-
   protected _lightOn: boolean = false;
+  protected _transitionTime: number = 0;
+  protected _turnOffTime: number = 0;
+  protected _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
+  protected abstract readonly _stateIdBrightness: string;
+  protected abstract readonly _stateIdState: string;
+  protected abstract readonly _stateIdTransitionTime: string;
+  protected abstract readonly _stateNameBrightness: string;
+  protected abstract readonly _stateNameState: string;
+  protected abstract readonly _stateNameTransitionTime: string;
 
   public get lightOn(): boolean {
     return this._lightOn;
   }
 
-  protected _brightness: number = 0;
-
   public get brightness(): number {
     return this._brightness;
   }
-
-  protected _transitionTime: number = 0;
 
   public get transitionTime(): number {
     return this._transitionTime;
@@ -47,22 +38,28 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
     return this.lightOn;
   }
 
+  protected constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
+    super(pInfo, deviceType);
+    this.deviceCapabilities.push(DeviceCapability.lamp);
+    this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
+  }
+
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.queuedValue = null;
     this.log(LogLevel.DeepTrace, `Dimmer Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
-      case 'state':
+      case this._stateNameState:
         this.log(LogLevel.Trace, `Dimmer Update für ${this.info.customName} auf ${state.val}`);
         this._lightOn = state.val as boolean;
         this.persist();
         break;
-      case 'brightness':
+      case this._stateNameBrightness:
         this.log(LogLevel.Trace, `Dimmer Helligkeit Update für ${this.info.customName} auf ${state.val}`);
         this._brightness = state.val as number;
         this.persist();
         break;
-      case 'transition_time':
+      case this._stateNameTransitionTime:
         this.log(LogLevel.Trace, `Dimmer Transition Time Update für ${this.info.customName} auf ${state.val}`);
         this._transitionTime = state.val as number;
         break;
@@ -109,7 +106,7 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
     brightness: number = -1,
     transitionTime: number = -1,
   ): void {
-    if (this._stateID === '') {
+    if (this._stateIdState === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);
       return;
     }
@@ -120,17 +117,17 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
     }
 
     if (transitionTime > -1) {
-      this.ioConn.setState(this._transitionID, transitionTime, (err) => {
+      this.ioConn.setState(this._stateIdTransitionTime, transitionTime, (err) => {
         if (err) {
           this.log(LogLevel.Error, `Dimmer TransitionTime schalten ergab Fehler: ${err}`);
         }
       });
     }
 
-    if (!force && Utils.nowMS() < this.turnOffTime) {
+    if (!force && Utils.nowMS() < this._turnOffTime) {
       this.log(
         LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(this.turnOffTime).toLocaleTimeString()}`,
+        `Skip automatic command to ${pValue} as it is locked until ${new Date(this._turnOffTime).toLocaleTimeString()}`,
       );
       return;
     }
@@ -143,23 +140,23 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
       `Set Light Acutator to "${pValue}" with brightness ${brightness}`,
       LogDebugType.SetActuator,
     );
-    this.setState(this._stateID, pValue);
+    this.setState(this._stateIdState, pValue);
     this.queuedValue = pValue;
 
     if (brightness > -1) {
       if (brightness < this.settings.turnOnThreshhold) {
-        this.setState(this._brightnessID, this.settings.turnOnThreshhold, () => {
+        this.setState(this._stateIdBrightness, this.settings.turnOnThreshhold, () => {
           Utils.guardedTimeout(
             () => {
               this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
-              this.setState(this._brightnessID, brightness);
+              this.setState(this._stateIdBrightness, brightness);
             },
             1000,
             this,
           );
         });
       } else {
-        this.setState(this._brightnessID, brightness);
+        this.setState(this._stateIdBrightness, brightness);
       }
     }
     if (this._turnOffTimeout !== undefined) {
@@ -171,7 +168,7 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
       return;
     }
 
-    this.turnOffTime = Utils.nowMS() + timeout;
+    this._turnOffTime = Utils.nowMS() + timeout;
     this._turnOffTimeout = Utils.guardedTimeout(
       () => {
         this.log(LogLevel.Debug, `Delayed Turnoff initiated`);

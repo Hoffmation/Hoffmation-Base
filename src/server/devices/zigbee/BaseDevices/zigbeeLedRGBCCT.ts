@@ -3,39 +3,44 @@ import { LedSettings, LogLevel, TimeOfDay } from '../../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { ZigbeeDimmer } from './zigbeeDimmer';
 
-export class ZigbeeLedRGBCCT extends ZigbeeDimmer {
+export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';
   public override settings: LedSettings = new LedSettings();
-  public colortemp: number = 500;
-  protected _colorID: string = '';
-  protected _colorTempID: string = '';
+  protected abstract readonly _stateIdColor: string;
+  protected abstract readonly _stateIdColorTemp: string;
+  protected abstract readonly _stateNameColor: string;
+  protected abstract readonly _stateNameColorTemp: string;
 
-  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
+  protected constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
-    this._colorID = `${this.info.fullID}.color`;
-    this._colorTempID = `${this.info.fullID}.colortemp`;
     // this.effectID = `${this.info.fullID}.effect`;
   }
 
   protected _color: string = '#fcba32';
 
-  // private effectID: string = '';
-
   public get color(): string {
     return this._color;
   }
+
+  protected _colortemp: number = 500;
+
+  public get colortemp(): number {
+    return this._colortemp;
+  }
+
+  // private effectID: string = '';
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `LED Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial);
     switch (idSplit[3]) {
-      case 'color':
+      case this._stateNameColor:
         this.log(LogLevel.Trace, `LED Color Update für ${this.info.customName} auf ${state.val}`);
         this._color = state.val as string;
         break;
-      case 'colortemp':
-        this.log(LogLevel.Trace, `LED Color Update für ${this.info.customName} auf ${state.val}`);
-        this.colortemp = state.val as number;
+      case this._stateNameColorTemp:
+        this.log(LogLevel.Trace, `LED Color Temp Update für ${this.info.customName} auf ${state.val}`);
+        this._colortemp = state.val as number;
         break;
     }
   }
@@ -106,7 +111,7 @@ export class ZigbeeLedRGBCCT extends ZigbeeDimmer {
     color: string = '',
     colorTemp: number = -1,
   ): void {
-    if (this._stateID === '') {
+    if (this._stateIdState === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);
       return;
     }
@@ -126,7 +131,7 @@ export class ZigbeeLedRGBCCT extends ZigbeeDimmer {
     super.setLight(pValue, timeout, force, brightness, transitionTime);
 
     if (color !== '') {
-      this.ioConn.setState(this._colorID, color, (err) => {
+      this.ioConn.setState(this._stateIdColor, color, (err) => {
         if (err) {
           this.log(LogLevel.Error, `LED Farbe schalten ergab Fehler: ${err}`);
         }
@@ -134,14 +139,14 @@ export class ZigbeeLedRGBCCT extends ZigbeeDimmer {
     }
 
     if (colorTemp > -1) {
-      this.ioConn.setState(this._colorTempID, colorTemp, (err) => {
+      this.ioConn.setState(this._stateIdColorTemp, colorTemp, (err) => {
         if (err) {
           this.log(LogLevel.Error, `LED Farbwärme schalten ergab Fehler: ${err}`);
         }
       });
     }
 
-    this.ioConn.setState(this._stateID, pValue, (err) => {
+    this.ioConn.setState(this._stateIdState, pValue, (err) => {
       if (err) {
         this.log(LogLevel.Error, `LED schalten ergab Fehler: ${err}`);
       }
