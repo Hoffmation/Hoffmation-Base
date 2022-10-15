@@ -8,6 +8,7 @@
 
 ## **WORK IN PROGRESS**
 
+* (theimo1221) Update packages
 * (theimo1221) #565 Add Linkind Led Device
 
 ## 1.1.41 (2022-10-15)

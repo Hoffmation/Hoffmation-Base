@@ -181,7 +181,7 @@ export class Devices {
       case 'IlluLedRGBCCT':
         d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
         break;
-      case 'ZigbeeLinkindLedRgbCct':
+      case 'LinkindLedRgbCct':
         d = new ZigbeeLinkindLedRgbCct(zigbeeInfo);
         break;
       case 'SMaBiTMagnet':
