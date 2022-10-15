@@ -5,7 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## **WORK IN PROGRESS**
+## 1.1.48 (2022-10-15)
 * (nockiro) Restructured illumination data table to be device-oriented (and crash-free)
 * (nockiro) Added percentage to the creation of ActuatorDeviceTable parallel to its insertions
 
