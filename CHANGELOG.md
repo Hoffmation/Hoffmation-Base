@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.1.41 (2022-10-15)
 
 * (theimo1221) Respect Long/Lat from Weathersettings for Sunrise/Sunset as well
 * (theimo1221) #565 Dimmer and LedRgbCct are too much bound to Illuminize
