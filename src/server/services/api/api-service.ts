@@ -5,6 +5,7 @@ import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, DaikinService } from '../ac';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
+import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 
 export class API {
   /**
@@ -138,6 +139,37 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
     d.setLight(state, timeout, true, brightness, transitionTime);
+    return null;
+  }
+
+  /**
+   * Changes the status of a given actuator
+   * @param {string} deviceId The device Id of the actuator
+   * @param {boolean} state The desired new state
+   * @param timeout A chosen Timeout after which the light should be reset
+   * @param brightness The desired brightness
+   * @param transitionTime The transition time during turnOn/turnOff
+   * @param {string} color The desired color in 6 digit hex Code
+   * @param {number} colorTemp The desired color Temperature (0 = more White)
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static setLedLamp(
+    deviceId: string,
+    state: boolean,
+    timeout?: number,
+    brightness?: number,
+    transitionTime?: number,
+    color?: string,
+    colorTemp?: number,
+  ): Error | null {
+    const d = this.getDevice(deviceId) as iLedRgbCct | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.ledLamp)) {
+      return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
+    }
+    d.setLight(state, timeout, true, brightness, transitionTime, color, colorTemp);
     return null;
   }
 

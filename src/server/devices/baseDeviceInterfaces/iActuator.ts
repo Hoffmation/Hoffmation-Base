@@ -2,9 +2,19 @@ import { ActuatorSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 
 export interface iActuator extends iRoomDevice {
+  /**
+   * The settings for this Actuator primarily for controlling it's automatic actions
+   */
   settings: ActuatorSettings;
-  actuatorOn: boolean;
 
+  /**
+   * The state value of the device
+   */
+  readonly actuatorOn: boolean;
+
+  /**
+   * Persisting the current states of this device to the database
+   */
   persist(): void;
 
   /**

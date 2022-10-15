@@ -1,9 +1,11 @@
 import { DeviceType } from '../../deviceType';
 import { LedSettings, LogLevel, TimeOfDay } from '../../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct';
 import { ZigbeeDimmer } from './zigbeeDimmer';
 
-export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer {
+export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';
   public override settings: LedSettings = new LedSettings();
   protected abstract readonly _stateIdColor: string;
@@ -13,6 +15,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer {
 
   protected constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
+    this.deviceCapabilities.push(DeviceCapability.ledLamp);
     // this.effectID = `${this.info.fullID}.effect`;
   }
 
@@ -45,6 +48,9 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer {
     }
   }
 
+  /**
+   * @inheritDoc
+   */
   public override setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
     switch (time) {
       case TimeOfDay.Night:
@@ -102,6 +108,9 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer {
     }
   }
 
+  /**
+   * @inheritDoc
+   */
   public override setLight(
     pValue: boolean,
     timeout?: number,
