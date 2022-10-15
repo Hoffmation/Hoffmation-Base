@@ -44,6 +44,7 @@ import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor } from './ba
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
+import { ZigbeeOsramDimmer } from './zigbee/zigbeeOsramDimmer';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -171,6 +172,9 @@ export class Devices {
         break;
       case 'IlluDimmer':
         d = new ZigbeeIlluDimmer(zigbeeInfo);
+        break;
+      case 'OsramDimmer':
+        d = new ZigbeeOsramDimmer(zigbeeInfo);
         break;
       case 'IlluLampe':
         d = new ZigbeeIlluLampe(zigbeeInfo);

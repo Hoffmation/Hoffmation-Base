@@ -34,6 +34,7 @@ export class DeviceCluster {
         break;
       case DeviceType.HmIpLampe:
       case DeviceType.ZigbeeIlluDimmer:
+      case DeviceType.ZigbeeOsramDimmer:
       case DeviceType.ZigbeeIlluLampe:
         clusterTypes.push(DeviceClusterType.Lamps);
         break;
