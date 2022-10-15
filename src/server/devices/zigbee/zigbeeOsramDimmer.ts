@@ -11,7 +11,7 @@ export class ZigbeeOsramDimmer extends ZigbeeDimmer {
   protected _stateIdTransitionTime: string;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
-    super(pInfo, DeviceType.ZigbeeIlluDimmer);
+    super(pInfo, DeviceType.ZigbeeOsramDimmer);
     this._stateIdState = `${this.info.fullID}.state`;
     this._stateIdBrightness = `${this.info.fullID}.brightness`;
     this._stateIdTransitionTime = `${this.info.fullID}.transition_time`;

@@ -5,6 +5,9 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+## 1.1.47 (2022-10-15)
+* (nockiro) Another fix for the Osram dimmer
+
 ## 1.1.46 (2022-10-15)
 * (nockiro) Another fix for creating the schema if not existing
 
