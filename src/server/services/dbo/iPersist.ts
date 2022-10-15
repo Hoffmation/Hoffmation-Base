@@ -4,7 +4,7 @@ import {
   iActuator,
   iBaseDevice,
   iButtonSwitch,
-  iHeater,
+  iHeater, iIlluminationSensor,
   iMotionSensor,
   IoBrokerBaseDevice,
   iShutter,
@@ -12,7 +12,6 @@ import {
 } from '../../devices';
 import {
   CountToday,
-  CurrentIlluminationDataPoint,
   DesiredShutterPosition,
   EnergyCalculation,
   RoomBase,
@@ -39,7 +38,7 @@ export interface iPersist {
 
   persistShutterCalibration(data: ShutterCalibration): void;
 
-  persistCurrentIllumination(data: CurrentIlluminationDataPoint): void;
+  persistIlluminationSensor(device: iIlluminationSensor): void;
 
   persistEnergyManager(energyData: EnergyCalculation): void;
 

@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { CurrentIlluminationDataPoint, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import { iIlluminationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeMotionSensor } from './BaseDevices';
 import { Utils } from '../../services';
@@ -44,15 +44,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
 
   private set currentIllumination(value: number) {
     this._illuminance = value;
-    Utils.dbo?.persistCurrentIllumination(
-      new CurrentIlluminationDataPoint(
-        this.info.room,
-        this.info.devID,
-        value,
-        new Date(),
-        this.room?.LampenGroup?.anyLightsOn() ?? false,
-      ),
-    );
+    Utils.dbo?.persistIlluminationSensor(this);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

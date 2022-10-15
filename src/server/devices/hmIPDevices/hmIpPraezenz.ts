@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday, CurrentIlluminationDataPoint, LogLevel, MotionSensorSettings } from '../../../models';
+import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -64,15 +64,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
 
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
-    Utils.dbo?.persistCurrentIllumination(
-      new CurrentIlluminationDataPoint(
-        this.info.room,
-        this.info.devID,
-        value,
-        new Date(),
-        this.room?.LampenGroup?.anyLightsOn() ?? false,
-      ),
-    );
+    Utils.dbo?.persistIlluminationSensor(this);
   }
 
   public addMovementCallback(pCallback: (pValue: boolean) => void): void {

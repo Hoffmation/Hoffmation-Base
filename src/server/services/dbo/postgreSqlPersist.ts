@@ -1,7 +1,6 @@
 import { iPersist } from './iPersist';
 import {
   CountToday,
-  CurrentIlluminationDataPoint,
   DesiredShutterPosition,
   EnergyCalculation,
   LogLevel,
@@ -15,7 +14,7 @@ import {
   iActuator,
   iBaseDevice,
   iButtonSwitch,
-  iHeater,
+  iHeater, iIlluminationSensor,
   iMotionSensor,
   IoBrokerBaseDevice,
   iShutter,
@@ -171,16 +170,15 @@ BEGIN
 
   END IF;
 
-  IF (SELECT to_regclass('hoffmation_schema."CurrentIllumination"') IS NULL) Then
-    create table hoffmation_schema."CurrentIllumination"
+  IF (SELECT to_regclass('hoffmation_schema."IlluminationSensorDeviceData"') IS NULL) Then
+    create table hoffmation_schema."IlluminationSensorDeviceData"
     (
-        "roomName"            varchar(30)
-            constraint currentillumination_basicrooms_name_fk
-                references hoffmation_schema."BasicRooms",
-        "deviceID"            integer not null,
-        "currentIllumination" double precision,
-        date                  timestamp with time zone,
-        "lightIsOn"           boolean
+        "deviceID"         varchar(60) not null
+            constraint "IlluminationSensorDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        "illumination" int,
+        date               timestamp   not null
     );
 
   END IF;
@@ -415,13 +413,10 @@ values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', $
     `);
   }
 
-  persistCurrentIllumination(data: CurrentIlluminationDataPoint): void {
+  public persistIlluminationSensor(device: iIlluminationSensor): void {
     this.query(`
-insert into hoffmation_schema."CurrentIllumination" ("roomName", "deviceID", "currentIllumination", "date", "lightIsOn")
-values ('${data.roomName}','${data.deviceID}',${data.currentIllumination},'${data.date.toISOString()}',${
-      data.lightIsOn
-    });
-    `);
+insert into hoffmation_schema."IlluminationSensorDeviceData" ("deviceID", "illumination", "date")
+values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString()}');`);
   }
 
   persistShutterCalibration(_data: ShutterCalibration): void {

@@ -5,6 +5,9 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+## **WORK IN PROGRESS**
+* (nockiro) Restructured illumination data table to be device-oriented (and crash-free)
+
 ## 1.1.47 (2022-10-15)
 * (nockiro) Another fix for the Osram dimmer
 
