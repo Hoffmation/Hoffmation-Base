@@ -14,7 +14,8 @@ import {
   iActuator,
   iBaseDevice,
   iButtonSwitch,
-  iHeater, iIlluminationSensor,
+  iHeater,
+  iIlluminationSensor,
   iMotionSensor,
   IoBrokerBaseDevice,
   iShutter,
@@ -178,7 +179,9 @@ BEGIN
                 references hoffmation_schema."DeviceInfo"
                 on delete set null,
         "illumination" int,
-        date               timestamp   not null
+        date               timestamp   not null,
+        constraint IlluminationSensorDeviceData_pk
+          primary key ("deviceID", date)
     );
 
   END IF;
@@ -254,6 +257,7 @@ BEGIN
         "deviceID" varchar(60) not null,
         "on"       boolean,
         date       timestamp   not null,
+        percentage integer,
         constraint ActuatorDeviceData_pk
             primary key ("deviceID", date)
     );
