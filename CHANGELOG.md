@@ -4,11 +4,10 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
---> 
-
-## **WORK IN PROGRESS**
+-->
+## 1.1.44 (2022-10-15)
   * (nockiro) Fixes for Osram dimmer
-  
+
 ## 1.1.43 (2022-10-15)
 
 * (nockiro) Add Osram dimmer device
