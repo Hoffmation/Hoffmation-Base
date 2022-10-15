@@ -5,8 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+* (nockiro) Fixes/Adjustments for PostgreSQL to create schema/tables correctly
+
 ## 1.1.44 (2022-10-15)
-  * (nockiro) Fixes for Osram dimmer
+* (nockiro) Fixes for Osram dimmer
 
 ## 1.1.43 (2022-10-15)
 

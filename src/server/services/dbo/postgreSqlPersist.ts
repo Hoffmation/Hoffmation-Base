@@ -139,8 +139,10 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
       `
 DO $$
 BEGIN
+  CREATE SCHEMA hoffmation_schema;
+  
   IF (SELECT to_regclass('hoffmation_schema."BasicRooms"') IS NULL) Then
-    create table "BasicRooms"
+    create table hoffmation_schema."BasicRooms"
     (
         name  varchar(30) not null
             constraint table_name_pk
@@ -148,11 +150,8 @@ BEGIN
         etage integer
     );
 
-    alter table hoffmation_schema."BasicRooms"
-        owner to "${this.config.user}";
-
     create unique index table_name_name_uindex
-        on "BasicRooms" (name);
+        on hoffmation_schema."BasicRooms" (name);
 
   END IF;
   
@@ -170,9 +169,6 @@ BEGIN
         devtype       integer
     );
 
-    alter table hoffmation_schema."DeviceInfo"
-        owner to "${this.config.user}";
-
   END IF;
 
   IF (SELECT to_regclass('hoffmation_schema."CurrentIllumination"') IS NULL) Then
@@ -187,8 +183,6 @@ BEGIN
         "lightIsOn"           boolean
     );
 
-    alter table hoffmation_schema."CurrentIllumination"
-        owner to "${this.config.user}";
   END IF;
     
   IF (SELECT to_regclass('hoffmation_schema."ButtonSwitchPresses"') IS NULL) Then
@@ -205,8 +199,6 @@ BEGIN
             primary key ("deviceID", "pressType", date)
     );
 
-    alter table hoffmation_schema."ButtonSwitchPresses"
-        owner to "${this.config.user}";
   END IF;
     
   IF (SELECT to_regclass('hoffmation_schema."EnergyCalculation"') IS NULL) Then
@@ -221,11 +213,9 @@ BEGIN
         "drawnKwH"        double precision
     );
 
-    alter table hoffmation_schema."EnergyCalculation"
-      owner to "${this.config.user}";
 
     create unique index energycalculation_startdate_uindex
-      on "EnergyCalculation" ("startDate");
+      on hoffmation_schema."EnergyCalculation" ("startDate");
 
   END IF;
   IF (SELECT to_regclass('hoffmation_schema."HeatGroupCollection"') IS NULL) Then
@@ -241,11 +231,8 @@ BEGIN
         "sollTemperatur" double precision
     );
 
-    alter table hoffmation_schema."HeatGroupCollection"
-      owner to "${this.config.user}";
-
     create unique index heatgroupcollection_name_uindex
-      on "HeatGroupCollection" (name);
+      on hoffmation_schema."HeatGroupCollection" (name);
 
   END IF;
 
@@ -259,9 +246,7 @@ BEGIN
         constraint acdevicedata_pk
             primary key ("deviceID", date)
     );
-  
-    alter table hoffmation_schema."AcDeviceData"
-      owner to "${this.config.user}";
+    
   END IF;
 
 
@@ -275,8 +260,6 @@ BEGIN
             primary key ("deviceID", date)
     );
   
-    alter table hoffmation_schema."ActuatorDeviceData"
-      owner to "${this.config.user}";
   END IF;
 
   IF (SELECT to_regclass('hoffmation_schema."MotionSensorDeviceData"') IS NULL) Then    
@@ -289,8 +272,6 @@ BEGIN
             primary key ("deviceID", date)
     );
   
-    alter table hoffmation_schema."MotionSensorDeviceData"
-      owner to "${this.config.user}";
   END IF;
 
   IF (SELECT to_regclass('hoffmation_schema."ShutterDeviceData"') IS NULL) Then    
@@ -307,8 +288,6 @@ BEGIN
             primary key ("deviceID", date)
     );
     
-    alter table hoffmation_schema."ShutterDeviceData"
-        owner to "${this.config.user}";
   END IF;
 
   IF (SELECT to_regclass('hoffmation_schema."TemperatureSensorDeviceData"') IS NULL) Then  
@@ -325,8 +304,6 @@ BEGIN
             primary key ("deviceID", date)
     );
     
-    alter table hoffmation_schema."TemperatureSensorDeviceData"
-        owner to "${this.config.user}";
   END IF;
 
   
@@ -346,8 +323,6 @@ BEGIN
             primary key ("deviceID", date)
     );
     
-    alter table hoffmation_schema."HeaterDeviceData"
-        owner to "${this.config.user}";
   END IF;
     
   IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
@@ -363,8 +338,6 @@ BEGIN
             unique (date, name)
     );
     
-    alter table hoffmation_schema."TemperaturData"
-        owner to "${this.config.user}";
   END IF;
 END
 $$;`,

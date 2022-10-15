@@ -31,6 +31,7 @@ import {
   ZigbeeIlluLedRGBCCT,
   ZigbeeIlluShutter,
   ZigbeeLinkindLedRgbCct,
+  ZigbeeOsramDimmer,
   ZigbeeSMaBiTMagnetContact,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
@@ -44,7 +45,6 @@ import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor } from './ba
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
-import { ZigbeeOsramDimmer } from './zigbee/zigbeeOsramDimmer';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
