@@ -139,7 +139,7 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
       `
 DO $$
 BEGIN
-  CREATE SCHEMA hoffmation_schema;
+  CREATE SCHEMA IF NOT EXISTS hoffmation_schema;
   
   IF (SELECT to_regclass('hoffmation_schema."BasicRooms"') IS NULL) Then
     create table hoffmation_schema."BasicRooms"
