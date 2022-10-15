@@ -1,4 +1,4 @@
-import { ZigbeeIlluLedRGBCCT } from '../zigbee';
+import { ZigbeeLedRGBCCT } from '../zigbee';
 import { TimeCallbackService } from '../../services';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
@@ -52,8 +52,8 @@ export class LampenGroup extends BaseGroup {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Lamps) as iLamp[];
   }
 
-  public getLED(): ZigbeeIlluLedRGBCCT[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.LED) as ZigbeeIlluLedRGBCCT[];
+  public getLED(): ZigbeeLedRGBCCT[] {
+    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.LED) as ZigbeeLedRGBCCT[];
   }
 
   public getWled(): WledDevice[] {

@@ -26,6 +26,7 @@ import {
   ZigbeeHeimanSmoke,
   ZigbeeIkeaSteckdose,
   ZigbeeIlluActuator,
+  ZigbeeIlluDimmer,
   ZigbeeIlluLampe,
   ZigbeeIlluLedRGBCCT,
   ZigbeeIlluShutter,
@@ -42,7 +43,6 @@ import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor } from './ba
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
-import { ZigbeeIlluDimmer } from './zigbee/ZigbeeIlluDimmer';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';

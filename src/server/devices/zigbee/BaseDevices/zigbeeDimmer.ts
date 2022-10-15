@@ -9,9 +9,9 @@ import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp';
 export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
   public queuedValue: boolean | null = null;
   public settings: DimmerSettings = new DimmerSettings();
-  protected stateID: string;
-  protected brightnessID: string;
-  protected transitionID: string;
+  protected _stateID: string;
+  protected _brightnessID: string;
+  protected _transitionID: string;
   protected _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   protected turnOffTime: number = 0;
   protected _lastPersist: number = 0;
@@ -20,9 +20,9 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
     super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
-    this.stateID = `${this.info.fullID}.state`;
-    this.brightnessID = `${this.info.fullID}.brightness`;
-    this.transitionID = `${this.info.fullID}.transition_time`;
+    this._stateID = `${this.info.fullID}.state`;
+    this._brightnessID = `${this.info.fullID}.brightness`;
+    this._transitionID = `${this.info.fullID}.transition_time`;
   }
 
   protected _lightOn: boolean = false;
@@ -109,7 +109,7 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
     brightness: number = -1,
     transitionTime: number = -1,
   ): void {
-    if (this.stateID === '') {
+    if (this._stateID === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);
       return;
     }
@@ -120,7 +120,7 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
     }
 
     if (transitionTime > -1) {
-      this.ioConn.setState(this.transitionID, transitionTime, (err) => {
+      this.ioConn.setState(this._transitionID, transitionTime, (err) => {
         if (err) {
           this.log(LogLevel.Error, `Dimmer TransitionTime schalten ergab Fehler: ${err}`);
         }
@@ -143,23 +143,23 @@ export class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
       `Set Light Acutator to "${pValue}" with brightness ${brightness}`,
       LogDebugType.SetActuator,
     );
-    this.setState(this.stateID, pValue);
+    this.setState(this._stateID, pValue);
     this.queuedValue = pValue;
 
     if (brightness > -1) {
       if (brightness < this.settings.turnOnThreshhold) {
-        this.setState(this.brightnessID, this.settings.turnOnThreshhold, () => {
+        this.setState(this._brightnessID, this.settings.turnOnThreshhold, () => {
           Utils.guardedTimeout(
             () => {
               this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
-              this.setState(this.brightnessID, brightness);
+              this.setState(this._brightnessID, brightness);
             },
             1000,
             this,
           );
         });
       } else {
-        this.setState(this.brightnessID, brightness);
+        this.setState(this._brightnessID, brightness);
       }
     }
     if (this._turnOffTimeout !== undefined) {
