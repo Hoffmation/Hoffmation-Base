@@ -19,6 +19,26 @@ export class SettingsService {
     return this.settings?.heaterSettings?.mode ?? HeatingMode.None;
   }
 
+  public static get latitude(): number {
+    if (this.settings?.weather?.lattitude !== undefined) {
+      const lat = parseFloat(this.settings.weather.lattitude);
+      if (!Number.isNaN(lat)) {
+        return lat;
+      }
+    }
+    return 51.529556852253826;
+  }
+
+  public static get longitude(): number {
+    if (this.settings?.weather?.longitude !== undefined) {
+      const longitude = parseFloat(this.settings.weather.longitude);
+      if (!Number.isNaN(longitude)) {
+        return longitude;
+      }
+    }
+    return 7.097266042276687;
+  }
+
   /**
    * @deprecated Only use in unit tests
    * @returns {iConfig}

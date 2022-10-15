@@ -197,9 +197,13 @@ export class TimeCallbackService {
   }
 
   public static recalcSunTimes(calculationDate: Date = new Date()): void {
-    TimeCallbackService._todaySunRise = getSunrise(51.529556852253826, 7.097266042276687, calculationDate);
+    TimeCallbackService._todaySunRise = getSunrise(
+      SettingsService.latitude,
+      SettingsService.longitude,
+      calculationDate,
+    );
 
-    TimeCallbackService._todaySunSet = getSunset(51.529556852253826, 7.097266042276687, calculationDate);
+    TimeCallbackService._todaySunSet = getSunset(SettingsService.latitude, SettingsService.longitude, calculationDate);
     TimeCallbackService.updateSunSet();
     TimeCallbackService.updateSunRise();
     ServerLogService.writeLog(
@@ -220,27 +224,23 @@ Nächster Sonnenuntergang um ${TimeCallbackService._nextSunSet.toLocaleTimeStrin
     }
   }
 
-  public static updateSunRise(
-    pDay: Date = new Date(),
-    lat: number = 51.529556852253826,
-    long: number = 7.097266042276687,
-  ): void {
-    TimeCallbackService._nextSunRise = getSunrise(lat, long, pDay);
+  public static updateSunRise(pDay: Date = new Date(), lat?: number, long?: number): void {
+    TimeCallbackService._nextSunRise = getSunrise(
+      lat ?? SettingsService.latitude,
+      long ?? SettingsService.longitude,
+      pDay,
+    );
   }
 
-  public static updateSunSet(
-    pDay: Date = new Date(),
-    lat: number = 51.529556852253826,
-    long: number = 7.097266042276687,
-  ): void {
-    TimeCallbackService._nextSunSet = this.getSunsetForDate(pDay, lat, long);
+  public static updateSunSet(pDay: Date = new Date(), lat?: number, long?: number): void {
+    TimeCallbackService._nextSunSet = this.getSunsetForDate(
+      pDay,
+      lat ?? SettingsService.latitude,
+      long ?? SettingsService.longitude,
+    );
   }
 
-  public static getSunsetForDate(
-    pDay: Date = new Date(),
-    lat: number = 51.529556852253826,
-    long: number = 7.097266042276687,
-  ): Date {
-    return getSunset(lat, long, pDay);
+  public static getSunsetForDate(pDay: Date = new Date(), lat?: number, long?: number): Date {
+    return getSunset(lat ?? SettingsService.latitude, long ?? SettingsService.longitude, pDay);
   }
 }
