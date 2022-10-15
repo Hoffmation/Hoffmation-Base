@@ -30,6 +30,7 @@ import {
   ZigbeeIlluLampe,
   ZigbeeIlluLedRGBCCT,
   ZigbeeIlluShutter,
+  ZigbeeLinkindLedRgbCct,
   ZigbeeSMaBiTMagnetContact,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
@@ -179,6 +180,9 @@ export class Devices {
         break;
       case 'IlluLedRGBCCT':
         d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
+        break;
+      case 'ZigbeeLinkindLedRgbCct':
+        d = new ZigbeeLinkindLedRgbCct(zigbeeInfo);
         break;
       case 'SMaBiTMagnet':
         d = new ZigbeeSMaBiTMagnetContact(zigbeeInfo);

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) #565 Add Linkind Led Device
+
 ## 1.1.41 (2022-10-15)
 
 * (theimo1221) Respect Long/Lat from Weathersettings for Sunrise/Sunset as well

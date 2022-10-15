@@ -13,6 +13,7 @@ export * from './zigbeeIlluDimmer';
 export * from './zigbeeIlluLampe';
 export * from './zigbeeIlluLedRGBCCT';
 export * from './zigbeeIlluShutter';
+export * from './zigbeeLinkindLedRgbCct';
 export * from './zigbeeSMaBiTMagnetContact';
 export * from './zigbeeSonoffMotion';
 export * from './zigbeeSonoffTemp';

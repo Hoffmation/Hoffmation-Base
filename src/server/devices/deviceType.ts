@@ -32,6 +32,7 @@ export enum DeviceType {
   ZigbeeUbisysShutter = 218,
   ZigbeeTuyaValve = 219,
   ZigbeeEuroHeater = 220,
+  ZigbeeLinkindLedRgbCct = 221,
   JsEnergyManager = 301,
   WledDevice = 1001,
   Daikin = 2001,
