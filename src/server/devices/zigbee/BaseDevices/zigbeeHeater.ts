@@ -125,7 +125,6 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       this.checkSeasonTurnOff();
     }
     if (!this.settings.automaticMode || this.seasonTurnOff) {
-      Utils.dbo?.addTemperaturDataPoint(this);
       return;
     }
 
@@ -147,8 +146,6 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       );
       this.desiredTemperature = setting.temperature;
     }
-
-    Utils.dbo?.addTemperaturDataPoint(this);
   }
 
   public deleteAutomaticPoint(name: string): void {

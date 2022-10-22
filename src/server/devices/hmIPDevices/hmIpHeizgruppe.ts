@@ -202,7 +202,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       this.checkSeasonTurnOff();
     }
     if (!this.settings.automaticMode || this.seasonTurnOff) {
-      Utils.dbo?.addTemperaturDataPoint(this);
       return;
     }
 
@@ -224,8 +223,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       );
       this.desiredTemperature = setting.temperature ?? this.settings.automaticFallBackTemperatur;
     }
-
-    Utils.dbo?.addTemperaturDataPoint(this);
   }
 
   public addTempChangeCallback(pCallback: (pValue: number) => void): void {
