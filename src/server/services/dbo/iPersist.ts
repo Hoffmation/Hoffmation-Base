@@ -11,6 +11,7 @@ import {
   iMotionSensor,
   iShutter,
   iTemperatureSensor,
+  ZigbeeDevice,
 } from '../../devices';
 import { CountToday, DesiredShutterPosition, EnergyCalculation, RoomBase, ShutterCalibration } from '../../../models';
 
@@ -52,4 +53,6 @@ export interface iPersist {
   persistHumiditySensor(device: iHumiditySensor): void;
 
   persistBatteryDevice(device: iBatteryDevice): void;
+
+  persistZigbeeDevice(device: ZigbeeDevice): void;
 }

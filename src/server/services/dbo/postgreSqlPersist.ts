@@ -21,6 +21,7 @@ import {
   iShutter,
   iTemperatureSensor,
   UNDEFINED_TEMP_VALUE,
+  ZigbeeDevice,
 } from '../../devices';
 import { Pool, PoolConfig, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
@@ -297,6 +298,23 @@ BEGIN
     
   END IF;
 
+  IF (SELECT to_regclass('hoffmation_schema."ZigbeeDeviceData"') IS NULL) Then
+    create table if not exists hoffmation_schema."ZigbeeDeviceData"
+    (
+        "deviceID"        varchar(60) not null
+            constraint "ZigbeeDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        date              timestamp   not null,
+        available          boolean,
+        linkQuality          double precision,
+        lastUpdate          timestamp,
+        constraint zigbeedevicedata_pk
+            primary key ("deviceID", date)
+    );
+
+  END IF;
+
   
     
   IF (SELECT to_regclass('hoffmation_schema."HeaterDeviceData"') IS NULL) Then
@@ -402,6 +420,14 @@ values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
     this.query(`
 insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
 values ('${device.id}', ${device.battery}, '${new Date().toISOString()}');
+    `);
+  }
+
+  public persistZigbeeDevice(device: ZigbeeDevice): void {
+    const dateValue = device.lastUpdate.getTime() > 0 ? device.lastUpdate.toISOString() : 'null';
+    this.query(`
+insert into hoffmation_schema."ZigbeeDeviceData" ("deviceID", "date", "available", "linkQuality", "lastUpdate")
+values ('${device.id}', '${new Date().toISOString()}', ${device.available}, ${device.linkQuality}, '${dateValue}');
     `);
   }
 

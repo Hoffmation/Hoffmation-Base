@@ -5,6 +5,14 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { iDisposable, Utils } from '../../../services';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
+  protected _available: boolean = false;
+
+  public get available(): boolean {
+    return this._available;
+  }
+
+  protected _linkQuality: number = 0;
+
   public readonly persistZigbeeInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistZigbeeDevice();
@@ -13,8 +21,17 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
     this,
     false,
   );
-  public available: boolean = false;
-  public linkQuality: number = 0;
+
+  public get linkQuality(): number {
+    return this._linkQuality;
+  }
+
+  private _lastUpdate: Date = new Date(0);
+
+  public get lastUpdate(): Date {
+    return this._lastUpdate;
+  }
+
   public stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
@@ -32,18 +49,21 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
         `Keine Update Überschreibung:\n\tID: ${idSplit.join('.')}\n\tData: ${JSON.stringify(state)}`,
       );
     }
+    if (!initial) {
+      this._lastUpdate = new Date();
+    }
 
     switch (idSplit[3]) {
       case 'available':
-        this.available = state.val as boolean;
-        if (!this.available) {
+        this._available = state.val as boolean;
+        if (!this._available) {
           this.log(LogLevel.Debug, `Das Zigbee Gerät ist nicht erreichbar.`);
         }
         break;
       case 'link_quality':
-        this.linkQuality = state.val as number;
-        if (this.linkQuality < 5) {
-          this.log(LogLevel.Debug, `Das Zigbee Gerät hat eine schlechte Verbindung (${this.linkQuality}).`);
+        this._linkQuality = state.val as number;
+        if (this._linkQuality < 5) {
+          this.log(LogLevel.Debug, `Das Zigbee Gerät hat eine schlechte Verbindung (${this._linkQuality}).`);
         }
         break;
     }
@@ -55,5 +75,13 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
         cb(state.val);
       }
     }
+  }
+
+  public dispose(): void {
+    clearInterval(this.persistZigbeeInterval);
+  }
+
+  public persistZigbeeDevice(): void {
+    Utils.dbo?.persistZigbeeDevice(this);
   }
 }
