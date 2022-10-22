@@ -8,23 +8,13 @@ import {
   iHumiditySensor,
   iIlluminationSensor,
   iMotionSensor,
-  IoBrokerBaseDevice,
   iShutter,
   iTemperatureSensor,
 } from '../../devices';
-import {
-  CountToday,
-  DesiredShutterPosition,
-  EnergyCalculation,
-  RoomBase,
-  ShutterCalibration,
-  TemperaturDataPoint,
-} from '../../../models';
+import { CountToday, DesiredShutterPosition, EnergyCalculation, RoomBase, ShutterCalibration } from '../../../models';
 
 export interface iPersist {
   initialized: boolean;
-
-  addTemperaturDataPoint(heater: iHeater): void;
 
   addRoom(room: RoomBase): void;
 
@@ -34,7 +24,7 @@ export interface iPersist {
 
   getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition>;
 
-  getShutterCalibration(device: IoBrokerBaseDevice): Promise<ShutterCalibration>;
+  getShutterCalibration(device: iShutter): Promise<ShutterCalibration>;
 
   initialize(): Promise<void>;
 
@@ -59,6 +49,4 @@ export interface iPersist {
   persistTemperatureSensor(device: iTemperatureSensor): void;
 
   persistHumiditySensor(device: iHumiditySensor): void;
-
-  readTemperaturDataPoint(hzGrp: iHeater, limit: number): Promise<TemperaturDataPoint[]>;
 }

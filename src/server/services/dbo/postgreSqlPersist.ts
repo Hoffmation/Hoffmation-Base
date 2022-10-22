@@ -6,7 +6,6 @@ import {
   LogLevel,
   RoomBase,
   ShutterCalibration,
-  TemperaturDataPoint,
 } from '../../../models';
 import {
   ButtonPressType,
@@ -18,7 +17,6 @@ import {
   iHumiditySensor,
   iIlluminationSensor,
   iMotionSensor,
-  IoBrokerBaseDevice,
   iShutter,
   iTemperatureSensor,
   UNDEFINED_TEMP_VALUE,
@@ -63,30 +61,6 @@ values ('${device.id}','${device.info.room}','${device.info.allDevicesKey}','${d
     `);
   }
 
-  addTemperaturDataPoint(heater: iHeater): void {
-    ServerLogService.writeLog(LogLevel.Trace, `Persisting Temperatur Data for ${heater.info.customName}`);
-    this.query(`
-insert into hoffmation_schema."TemperaturData" ("date", "humidity", "istTemperatur", "level", "name", "sollTemperatur")
-values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel / 100},'${
-      heater.info.customName
-    }',${heater.desiredTemperature});`);
-
-    this.query(`
-insert into hoffmation_schema."HeatGroupCollection" ("date", "humidity", "istTemperatur", "level", "name", "sollTemperatur")
-values ('${new Date().toISOString()}',${heater.humidity},${heater.iTemperature},${heater.iLevel},'${
-      heater.info.customName
-    }',${heater.desiredTemperature})
-    ON CONFLICT (name)
-    DO UPDATE SET
-        "date" = '${new Date().toISOString()}',
-        "humidity" = ${heater.humidity},
-        "istTemperatur" = ${heater.iTemperature},
-        "level" = ${heater.iLevel},
-        "sollTemperatur" = ${heater.desiredTemperature}
-;
-    `);
-  }
-
   async getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition> {
     const dbResult: DesiredShutterPosition[] | null = await this.query<DesiredShutterPosition>(
       `SELECT position
@@ -126,7 +100,7 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
     return new CountToday(0);
   }
 
-  getShutterCalibration(_device: IoBrokerBaseDevice): Promise<ShutterCalibration> {
+  getShutterCalibration(_device: iShutter): Promise<ShutterCalibration> {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
     return new Promise<ShutterCalibration>((_res, reject) => {
       reject('Not Implemented');
@@ -218,23 +192,6 @@ BEGIN
 
     create unique index energycalculation_startdate_uindex
       on hoffmation_schema."EnergyCalculation" ("startDate");
-
-  END IF;
-  IF (SELECT to_regclass('hoffmation_schema."HeatGroupCollection"') IS NULL) Then
-    create table hoffmation_schema."HeatGroupCollection"
-    (
-        date             timestamp,
-        humidity         integer,
-        "istTemperatur"  double precision,
-        level            integer,
-        name             varchar(60) not null
-            constraint heatgroupcollection_pk
-                primary key,
-        "sollTemperatur" double precision
-    );
-
-    create unique index heatgroupcollection_name_uindex
-      on hoffmation_schema."HeatGroupCollection" (name);
 
   END IF;
 
@@ -342,21 +299,6 @@ BEGIN
     );
     
   END IF;
-    
-  IF (SELECT to_regclass('hoffmation_schema."TemperaturData"') IS NULL) Then
-    create table hoffmation_schema."TemperaturData"
-    (
-        date             timestamp,
-        humidity         integer,
-        "istTemperatur"  double precision,
-        level            integer,
-        name             text,
-        "sollTemperatur" double precision,
-        constraint temperaturdata_pk
-            unique (date, name)
-    );
-    
-  END IF;
 END
 $$;`,
     );
@@ -448,19 +390,6 @@ values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString
 
   persistShutterCalibration(_data: ShutterCalibration): void {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
-  }
-
-  async readTemperaturDataPoint(heater: iHeater, limit: number): Promise<TemperaturDataPoint[]> {
-    const dbResult: TemperaturDataPoint[] | null = await this.query<TemperaturDataPoint>(`
-SELECT * FROM hoffmation_schema."TemperaturData" 
-WHERE name = '${heater.info.customName}'
-ORDER BY "date" DESC
-LIMIT ${limit}
-    `);
-    if (dbResult !== null && dbResult.length > 0) {
-      return dbResult;
-    }
-    return [];
   }
 
   persistEnergyManager(calc: EnergyCalculation): void {

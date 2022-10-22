@@ -157,20 +157,6 @@ export class TelegramCommands {
 
     TelegramService.addMessageCallback(
       new TelegramMessageCallback(
-        'HeizungCheckOne',
-        /\/check_1_temperatur.*/,
-        async (m: TelegramBot.Message): Promise<boolean> => {
-          if (m.from === undefined) return false;
-          TelegramService.sendMessage([m.chat.id], await Heizgruppen.getSpecificInfo(m.text));
-          return true;
-        },
-        `Gibt den Verlauf der in \\"\\" übergebenen Heizgruppe aus.`,
-        /\/check_1_temperatur/,
-      ),
-    );
-
-    TelegramService.addMessageCallback(
-      new TelegramMessageCallback(
         'AllRolloDown',
         /\/all_rollo_down/,
         async (m: TelegramBot.Message): Promise<boolean> => {
