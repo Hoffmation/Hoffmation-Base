@@ -5,20 +5,30 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix unit Test
+
 ## 1.1.48 (2022-10-15)
+
 * (nockiro) Restructured illumination data table to be device-oriented (and crash-free)
 * (nockiro) Added percentage to the creation of ActuatorDeviceTable parallel to its insertions
 
 ## 1.1.47 (2022-10-15)
+
 * (nockiro) Another fix for the Osram dimmer
 
 ## 1.1.46 (2022-10-15)
+
 * (nockiro) Another fix for creating the schema if not existing
 
 ## 1.1.45 (2022-10-15)
+
 * (nockiro) Fixes/Adjustments for PostgreSQL to create schema/tables correctly
 
 ## 1.1.44 (2022-10-15)
+
 * (nockiro) Fixes for Osram dimmer
 
 ## 1.1.43 (2022-10-15)

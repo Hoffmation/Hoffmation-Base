@@ -81,7 +81,7 @@ export class TimeCallbackService {
     }
 
     let sunset: Date = new Date(TimeCallbackService._todaySunSet.getTime() + pOffset.sunset * 60 * 1000);
-    const maximumSunset: Date = pOffset.getNextMaximumSunset();
+    const maximumSunset: Date = pOffset.getNextMaximumSunset(now);
     if (maximumSunset.getDate() !== sunset.getDate()) {
       maximumSunset.setDate(maximumSunset.getDate() - 1);
     }
@@ -95,7 +95,7 @@ export class TimeCallbackService {
     if (now > sunset) {
       return TimeOfDay.AfterSunset;
     }
-    const minimumSunrise: Date = pOffset.getNextMinimumSunrise();
+    const minimumSunrise: Date = pOffset.getNextMinimumSunrise(now);
     let sunrise: Date = new Date(TimeCallbackService._todaySunRise.getTime() + pOffset.sunrise * 60 * 1000);
     if (minimumSunrise.getDate() !== sunrise.getDate()) {
       minimumSunrise.setDate(minimumSunrise.getDate() - 1);
