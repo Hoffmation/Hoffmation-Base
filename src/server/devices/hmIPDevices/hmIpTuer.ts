@@ -1,11 +1,11 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Res, SonosService, TelegramService, Utils } from '../../services';
+import { iDisposable, Res, SonosService, TelegramService, Utils } from '../../services';
 import { MagnetPosition } from '../models';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
-export class HmIpTuer extends HmIPDevice {
+export class HmIpTuer extends HmIPDevice implements iDisposable {
   public position: MagnetPosition = MagnetPosition.closed;
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _openCallback: Array<(pValue: boolean) => void> = [];
@@ -98,6 +98,13 @@ export class HmIpTuer extends HmIPDevice {
         60000,
         this,
       );
+    }
+  }
+
+  public dispose(): void {
+    if (this._iOpenTimeout) {
+      clearInterval(this._iOpenTimeout);
+      this._iOpenTimeout = undefined;
     }
   }
 }

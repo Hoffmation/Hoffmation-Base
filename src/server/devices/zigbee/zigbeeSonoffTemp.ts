@@ -127,4 +127,14 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   public persistBatteryDevice(): void {
     Utils.dbo?.persistBatteryDevice(this);
   }
+
+  public dispose(): void {
+    if (this.persistTemperatureSensorInterval) {
+      clearInterval(this.persistTemperatureSensorInterval);
+    }
+    if (this.persistHumiditySensorInterval) {
+      clearInterval(this.persistHumiditySensorInterval);
+    }
+    super.dispose();
+  }
 }

@@ -2,7 +2,7 @@
 import { IncomingMessage } from 'http';
 import io from 'socket.io-client';
 import { iobrokerConnectionLogging, iobrokerConnectionLogLevel } from './iobrokerConnectionLogging';
-import { Utils } from '../services';
+import { iDisposable, Utils } from '../services';
 import { ConnectionCallbacks } from '../../models';
 import { SocketIOVisCommand } from './socketIOVisCommand';
 import { IoBrokerAuthInfo } from './ioBrokerAuthInfo';
@@ -23,7 +23,7 @@ enum ConnectionState {
   connected,
 }
 
-export class IOBrokerConnection {
+export class IOBrokerConnection implements iDisposable {
   private _authInfo: IoBrokerAuthInfo = new IoBrokerAuthInfo();
   private _authRunning: boolean = false;
   private _cmdData: unknown;
@@ -1688,5 +1688,16 @@ export class IOBrokerConnection {
         callback(err);
       },
     );
+  }
+
+  public dispose(): void {
+    if (this._connectInterval) {
+      clearInterval(this._connectInterval);
+      this._connectInterval = undefined;
+    }
+    if (this._countInterval) {
+      clearInterval(this._countInterval);
+      this._countInterval = undefined;
+    }
   }
 }

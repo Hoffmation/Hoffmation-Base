@@ -113,6 +113,14 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice 
     }
   }
 
+  public dispose(): void {
+    if (this._iOpenTimeout) {
+      clearInterval(this._iOpenTimeout);
+      this._iOpenTimeout = undefined;
+    }
+    super.dispose();
+  }
+
   public persistBatteryDevice(): void {
     Utils.dbo?.persistBatteryDevice(this);
   }

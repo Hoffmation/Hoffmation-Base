@@ -2,11 +2,11 @@ import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { iEnergyManager, iExcessEnergyConsumer, PhaseState } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { EnergyCalculation, LogLevel } from '../../../models';
-import { SettingsService, Utils } from '../../services';
+import { iDisposable, SettingsService, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager {
+export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager, iDisposable {
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private _iCalculationInterval: NodeJS.Timeout | null = null;
   private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
@@ -270,5 +270,16 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     this.blockDeviceChangeTime = Utils.nowMS() + potentialDevices[0].energyConsumerSettings.powerReactionTime;
     potentialDevices[0].turnOffDueToMissingEnergy();
     this._lastDeviceChange = { newState: false, device: potentialDevices[0] };
+  }
+
+  public dispose(): void {
+    if (this._iCalculationInterval) {
+      clearInterval(this._iCalculationInterval);
+      this._iCalculationInterval = null;
+    }
+    if (this._iDatabaseLoggerInterval) {
+      clearInterval(this._iDatabaseLoggerInterval);
+      this._iDatabaseLoggerInterval = null;
+    }
   }
 }

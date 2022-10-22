@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { TimeCallbackService, Utils } from '../../services';
+import { iDisposable, TimeCallbackService, Utils } from '../../services';
 import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../models';
 import {
   iHeater,
@@ -13,7 +13,7 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater {
+export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHeater();
@@ -277,5 +277,21 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       this.seasonTurnOff = desiredState;
     }
     this._initialSeasonCheckDone = true;
+  }
+
+  public dispose(): void {
+    if (this.persistTemperatureSensorInterval) {
+      clearInterval(this.persistTemperatureSensorInterval);
+    }
+    if (this.persistHumiditySensorInterval) {
+      clearInterval(this.persistHumiditySensorInterval);
+    }
+    if (this.persistHeaterInterval) {
+      clearInterval(this.persistHeaterInterval);
+    }
+    if (this._iAutomaticInterval) {
+      clearInterval(this._iAutomaticInterval);
+      this._iAutomaticInterval = undefined;
+    }
   }
 }

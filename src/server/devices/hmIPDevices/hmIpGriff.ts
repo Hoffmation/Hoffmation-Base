@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { TelegramService, Utils, WeatherService } from '../../services';
+import { iDisposable, TelegramService, Utils, WeatherService } from '../../services';
 import { WindowPosition } from '../models';
 import { HeatGroup, Window } from '../groups';
 import { LogLevel } from '../../../models';
@@ -10,7 +10,7 @@ import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice {
+export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
   private _battery: number = -99;
 
   public get battery(): number {
@@ -156,6 +156,13 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
 
   public persistBatteryDevice(): void {
     Utils.dbo?.persistBatteryDevice(this);
+  }
+
+  public dispose(): void {
+    if (this._iOpenTimeout) {
+      clearInterval(this._iOpenTimeout);
+      this._iOpenTimeout = undefined;
+    }
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {

@@ -114,4 +114,12 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
   public persistBatteryDevice(): void {
     Utils.dbo?.persistBatteryDevice(this);
   }
+
+  public dispose(): void {
+    if (this.iAlarmTimeout) {
+      clearInterval(this.iAlarmTimeout);
+      this.iAlarmTimeout = undefined;
+    }
+    super.dispose();
+  }
 }

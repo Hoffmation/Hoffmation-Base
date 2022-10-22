@@ -2,11 +2,19 @@ import { DeviceType } from '../../deviceType';
 import { LogLevel } from '../../../../models';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { iDisposable, Utils } from '../../../services';
 
-export class ZigbeeDevice extends IoBrokerBaseDevice {
+export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
+  public readonly persistZigbeeInterval: NodeJS.Timeout = Utils.guardedInterval(
+    () => {
+      this.persistZigbeeDevice();
+    },
+    15 * 60 * 1000,
+    this,
+    false,
+  );
   public available: boolean = false;
   public linkQuality: number = 0;
-  public voltage: string = '';
   public stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
@@ -37,10 +45,6 @@ export class ZigbeeDevice extends IoBrokerBaseDevice {
         if (this.linkQuality < 5) {
           this.log(LogLevel.Debug, `Das Zigbee Gerät hat eine schlechte Verbindung (${this.linkQuality}).`);
         }
-        break;
-
-      case 'voltage':
-        this.voltage = (state.val as string | number).toString();
         break;
     }
     this.stateMap.set(idSplit[3], state);
