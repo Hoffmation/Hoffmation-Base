@@ -8,6 +8,8 @@ import { DeviceCapability } from '../DeviceCapability';
 import { Utils } from '../../services';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDevice {
+  private _battery: number = -99;
+
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
     shortPress: true,
     longPress: true,
@@ -23,7 +25,10 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
   public buttonBotRight: Button;
   public buttonBot: undefined = undefined;
   public buttonTop: undefined = undefined;
-  public battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTaster);
@@ -49,7 +54,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;

@@ -8,6 +8,8 @@ import { DeviceCapability } from '../../DeviceCapability';
 import { PIDController } from '../../../../liquid-pid';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
+  protected _battery: number = -99;
+
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHeater();
@@ -17,7 +19,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     false,
   );
   public settings: HeaterSettings = new HeaterSettings();
-  public battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   protected _automaticPoints: { [name: string]: TemperatureSettings } = {};
   protected _iAutomaticInterval: NodeJS.Timeout | undefined;
   protected _initialSeasonCheckDone: boolean = false;
@@ -174,8 +180,8 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     switch (idSplit[3]) {
       case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
+        this._battery = state.val as number;
+        if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
         break;

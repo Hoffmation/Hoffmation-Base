@@ -7,7 +7,12 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { iBatteryDevice } from '../../baseDeviceInterfaces';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice {
-  public battery: number = -99;
+  protected _battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   public position: MagnetPosition = MagnetPosition.closed;
   public telegramOnOpen: boolean = false;
   public speakOnOpen: boolean = false;
@@ -32,8 +37,8 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice 
     super.update(idSplit, state, initial, pOverrride);
     switch (idSplit[3]) {
       case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
+        this._battery = state.val as number;
+        if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
         break;

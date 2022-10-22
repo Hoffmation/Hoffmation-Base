@@ -5,5 +5,5 @@ export interface iBatteryDevice extends iRoomDevice {
    * The battery status of the device in percentage
    * @type {number}
    */
-  battery: number;
+  readonly battery: number;
 }

@@ -11,7 +11,12 @@ import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice {
-  public battery: number = -99;
+  private _battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   public position: WindowPosition = WindowPosition.geschlossen;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
@@ -50,7 +55,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = 100 * (((state.val as number) - 0.9) / 0.6);
+            this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
             break;
         }
         break;
@@ -60,7 +65,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             this.updatePosition(state.val as WindowPosition);
             break;
           case 'OPERATING_VOLTAGE':
-            this.battery = 100 * (((state.val as number) - 0.9) / 0.6);
+            this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
             break;
         }
         break;

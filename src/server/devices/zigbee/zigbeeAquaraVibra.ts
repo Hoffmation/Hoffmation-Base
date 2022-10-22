@@ -7,7 +7,12 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor, iBatteryDevice {
-  public battery: number = -99;
+  private _battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   public sensitivity: string = '';
   public tiltAngle: number = 0;
   public tiltAngleX: number = 0;
@@ -69,8 +74,8 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
+        this._battery = state.val as number;
+        if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
         break;

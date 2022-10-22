@@ -7,9 +7,15 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
+  private _battery: number = -99;
+
   public settings: MotionSensorSettings = new MotionSensorSettings();
   public movementDetected: boolean = false;
-  public battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   protected _initialized: boolean = false;
   protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
@@ -113,8 +119,8 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     super.update(idSplit, state, initial, pOverride);
     switch (idSplit[3]) {
       case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
+        this._battery = state.val as number;
+        if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
         break;

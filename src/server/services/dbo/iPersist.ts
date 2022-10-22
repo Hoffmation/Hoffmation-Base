@@ -3,6 +3,7 @@ import {
   iAcDevice,
   iActuator,
   iBaseDevice,
+  iBatteryDevice,
   iButtonSwitch,
   iHeater,
   iHumiditySensor,
@@ -49,4 +50,6 @@ export interface iPersist {
   persistTemperatureSensor(device: iTemperatureSensor): void;
 
   persistHumiditySensor(device: iHumiditySensor): void;
+
+  persistBatteryDevice(device: iBatteryDevice): void;
 }

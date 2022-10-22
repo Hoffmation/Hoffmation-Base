@@ -7,6 +7,8 @@ import { LogLevel } from '../../../models';
 import { Utils } from '../../services';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
+  private _battery: number = -99;
+
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistTemperaturSensor();
@@ -23,7 +25,11 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     this,
     false,
   );
-  public battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperaturCallbacks: ((pValue: number) => void)[] = [];
 
@@ -77,8 +83,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
+        this._battery = state.val as number;
+        if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
         break;

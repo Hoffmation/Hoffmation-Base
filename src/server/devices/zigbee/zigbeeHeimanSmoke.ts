@@ -7,7 +7,12 @@ import { iBatteryDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice {
-  public battery: number = -99;
+  private _battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   public smoke: boolean = false;
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
@@ -39,8 +44,8 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
-        this.battery = state.val as number;
-        if (this.battery < 20) {
+        this._battery = state.val as number;
+        if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
         break;

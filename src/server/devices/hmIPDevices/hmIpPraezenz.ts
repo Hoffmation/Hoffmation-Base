@@ -7,13 +7,19 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
+  private _battery: number = -99;
+
   // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   public excludeFromNightAlarm: boolean = false;
   public movementDetected: boolean = false;
-  public battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   public settings: MotionSensorSettings = new MotionSensorSettings();
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   // private presenceStateID: string;
@@ -79,7 +85,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;

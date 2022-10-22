@@ -18,10 +18,15 @@ enum HmIpHeizungAdaptionStates {
 }
 
 export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
+  private _battery: number = -99;
+
   private _temperatur: number = 0;
   private _level: number = 0;
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
-  public battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizung);
@@ -50,7 +55,7 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;

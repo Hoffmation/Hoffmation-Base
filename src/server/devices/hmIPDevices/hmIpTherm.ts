@@ -6,7 +6,11 @@ import { DeviceCapability } from '../DeviceCapability';
 import { iBatteryDevice } from '../baseDeviceInterfaces';
 
 export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
-  public battery: number = -99;
+  private _battery: number = -99;
+
+  public get battery(): number {
+    return this._battery;
+  }
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTherm);
@@ -20,7 +24,7 @@ export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this.battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;

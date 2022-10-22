@@ -12,6 +12,7 @@
 * (theimo1221) Update packages
 * (theimo1221) Add Humidity Sensor Persisting
 * (theimo1221) Clear Persisting from old mixed persisting commands
+* (theimo1221) Make battery readonly to outside
 
 ## 1.1.48 (2022-10-15)
 
