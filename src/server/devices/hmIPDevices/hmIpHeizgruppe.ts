@@ -30,6 +30,14 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     this,
     false,
   );
+  public readonly persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
+    () => {
+      this.persistHumiditySensor();
+    },
+    5 * 60 * 1000,
+    this,
+    false,
+  );
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
@@ -237,6 +245,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   public persistHeater(): void {
     Utils.dbo?.persistHeater(this);
+  }
+
+  public persistHumiditySensor(): void {
+    Utils.dbo?.persistHumiditySensor(this);
   }
 
   private updateBaseInformation(name: string, state: ioBroker.State) {

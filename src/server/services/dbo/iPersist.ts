@@ -5,6 +5,7 @@ import {
   iBaseDevice,
   iButtonSwitch,
   iHeater,
+  iHumiditySensor,
   iIlluminationSensor,
   iMotionSensor,
   IoBrokerBaseDevice,
@@ -56,6 +57,8 @@ export interface iPersist {
   persistShutter(device: iShutter): void;
 
   persistTemperatureSensor(device: iTemperatureSensor): void;
+
+  persistHumiditySensor(device: iHumiditySensor): void;
 
   readTemperaturDataPoint(hzGrp: iHeater, limit: number): Promise<TemperaturDataPoint[]>;
 }

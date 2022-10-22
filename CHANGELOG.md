@@ -10,6 +10,7 @@
 
 * (theimo1221) Fix unit Test
 * (theimo1221) Update packages
+* (theimo1221) Add Humidity Sensor Persisting
 
 ## 1.1.48 (2022-10-15)
 

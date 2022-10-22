@@ -15,6 +15,7 @@ import {
   iBaseDevice,
   iButtonSwitch,
   iHeater,
+  iHumiditySensor,
   iIlluminationSensor,
   iMotionSensor,
   IoBrokerBaseDevice,
@@ -308,6 +309,21 @@ BEGIN
     
   END IF;
 
+  IF (SELECT to_regclass('hoffmation_schema."HumiditySensorDeviceData"') IS NULL) Then  
+    create table if not exists hoffmation_schema."HumiditySensorDeviceData"
+    (
+        "deviceID"        varchar(60) not null
+            constraint "HumiditySensorDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        humidity          double precision,
+        date              timestamp   not null,
+        constraint humiditysensordevicedata_pk
+            primary key ("deviceID", date)
+    );
+    
+  END IF;
+
   
     
   IF (SELECT to_regclass('hoffmation_schema."HeaterDeviceData"') IS NULL) Then
@@ -414,6 +430,13 @@ values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desire
     this.query(`
 insert into hoffmation_schema."TemperatureSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
 values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp ?? 'null'});
+    `);
+  }
+
+  public persistHumiditySensor(device: iHumiditySensor): void {
+    this.query(`
+insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
+values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
     `);
   }
 

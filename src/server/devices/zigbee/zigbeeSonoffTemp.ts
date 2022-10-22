@@ -15,6 +15,14 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     this,
     false,
   );
+  public readonly persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
+    () => {
+      this.persistHumiditySensor();
+    },
+    5 * 60 * 1000,
+    this,
+    false,
+  );
   public battery: number = -99;
   private _humidityCallbacks: ((pValue: number) => void)[] = [];
   private _temperaturCallbacks: ((pValue: number) => void)[] = [];
@@ -103,5 +111,9 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   public persistTemperaturSensor(): void {
     Utils.dbo?.persistTemperatureSensor(this);
+  }
+
+  public persistHumiditySensor(): void {
+    Utils.dbo?.persistHumiditySensor(this);
   }
 }
