@@ -56,6 +56,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -66,6 +67,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             break;
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -150,6 +152,10 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
         this,
       );
     }
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {

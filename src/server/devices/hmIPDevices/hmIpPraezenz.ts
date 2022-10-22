@@ -86,6 +86,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -138,5 +139,9 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
 
   public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

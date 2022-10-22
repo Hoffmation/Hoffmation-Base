@@ -55,6 +55,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -127,5 +128,9 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     }
     result.push('____________');
     return result.join('\n');
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

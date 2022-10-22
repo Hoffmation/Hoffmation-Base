@@ -75,6 +75,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
@@ -192,5 +193,9 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     const message = this._alarmMessage;
     SonosService.speakOnAll(message);
     this.log(LogLevel.Alert, message);
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

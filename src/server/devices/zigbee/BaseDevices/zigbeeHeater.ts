@@ -181,6 +181,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
@@ -213,5 +214,9 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       this.seasonTurnOff = desiredState;
     }
     this._initialSeasonCheckDone = true;
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

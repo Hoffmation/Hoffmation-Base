@@ -46,6 +46,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
@@ -108,5 +109,9 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
     Utils.guardedNewThread(() => {
       SonosService.speakOnAll(message, 80);
     });
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

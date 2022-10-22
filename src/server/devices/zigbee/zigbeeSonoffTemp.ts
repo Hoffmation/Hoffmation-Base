@@ -84,6 +84,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
@@ -121,5 +122,9 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   public persistHumiditySensor(): void {
     Utils.dbo?.persistHumiditySensor(this);
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

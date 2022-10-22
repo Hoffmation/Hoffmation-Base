@@ -12,6 +12,7 @@ import {
   iAcDevice,
   iActuator,
   iBaseDevice,
+  iBatteryDevice,
   iButtonSwitch,
   iHeater,
   iHumiditySensor,
@@ -281,6 +282,21 @@ BEGIN
     
   END IF;
 
+  IF (SELECT to_regclass('hoffmation_schema."BatteryDeviceData"') IS NULL) Then  
+    create table if not exists hoffmation_schema."BatteryDeviceData"
+    (
+        "deviceID"        varchar(60) not null
+            constraint "BatteryDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        battery          double precision,
+        date              timestamp   not null,
+        constraint batterydevicedata_pk
+            primary key ("deviceID", date)
+    );
+    
+  END IF;
+
   
     
   IF (SELECT to_regclass('hoffmation_schema."HeaterDeviceData"') IS NULL) Then
@@ -379,6 +395,13 @@ values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', $
     this.query(`
 insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
 values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
+    `);
+  }
+
+  public persistBatteryDevice(device: iBatteryDevice): void {
+    this.query(`
+insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
+values ('${device.id}', ${device.battery}, '${new Date().toISOString()}');
     `);
   }
 

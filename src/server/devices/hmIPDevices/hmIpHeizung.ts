@@ -4,6 +4,7 @@ import { HmIPDevice } from './hmIpDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { iBatteryDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
+import { Utils } from '../../services';
 
 enum HmIpHeizungAdaptionStates {
   StateNotAvailable = 0,
@@ -56,6 +57,7 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -87,5 +89,9 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
         this._desiredTemperatur = state.val as number;
         break;
     }
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

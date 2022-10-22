@@ -4,6 +4,7 @@ import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { Utils } from '../../services';
 
 export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
   private _battery: number = -99;
@@ -25,9 +26,14 @@ export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this.persistBatteryDevice();
             break;
         }
         break;
     }
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

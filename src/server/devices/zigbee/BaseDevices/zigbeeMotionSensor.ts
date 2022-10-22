@@ -120,6 +120,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
         }
@@ -158,5 +159,9 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       270000,
       this,
     );
+  }
+
+  public persistBatteryDevice(): void {
+    Utils.dbo?.persistBatteryDevice(this);
   }
 }

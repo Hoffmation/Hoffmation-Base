@@ -6,4 +6,6 @@ export interface iBatteryDevice extends iRoomDevice {
    * @type {number}
    */
   readonly battery: number;
+
+  persistBatteryDevice(): void;
 }
