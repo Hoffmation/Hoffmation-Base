@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix unit Test
+* (theimo1221) Update packages
 
 ## 1.1.48 (2022-10-15)
 
