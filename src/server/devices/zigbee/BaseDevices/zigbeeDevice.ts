@@ -6,6 +6,7 @@ import { iDisposable, Utils } from '../../../services';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   protected _available: boolean = false;
+  private readonly _deviceQueryId: string;
 
   public get available(): boolean {
     return this._available;
@@ -36,6 +37,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
+    this._deviceQueryId = `${this.info.fullID}.device_query`;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
@@ -75,6 +77,10 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
         cb(state.val);
       }
     }
+  }
+
+  public triggerDeviceQuery(): void {
+    this.setState(this._deviceQueryId, true);
   }
 
   public dispose(): void {

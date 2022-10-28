@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Round battery value before db entry
+* (theimo1221) Allow zigbee device device query
 
 ## 1.2.0 (2022-10-22)
 
