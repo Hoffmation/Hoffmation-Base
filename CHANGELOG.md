@@ -11,6 +11,7 @@
 * (theimo1221) Round battery value before db entry
 * (theimo1221) Allow zigbee device device query
 * (theimo1221) Trigger device query within EuroHeater from time to time automatically
+* (theimo1221) Update packages
 
 ## 1.2.0 (2022-10-22)
 
