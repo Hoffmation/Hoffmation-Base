@@ -2,19 +2,20 @@ import { ZigbeeHeater } from './BaseDevices';
 import { DeviceType } from '../deviceType';
 import { UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { LogLevel } from '../../../models';
-import { Utils } from '../../services';
+import { iDisposable, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
-export class ZigbeeEuroHeater extends ZigbeeHeater {
-  private _setLocalTempCalibrationId: string;
+export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
+  private readonly _setLocalTempCalibrationId: string;
   private _targetTempVal: number = UNDEFINED_TEMP_VALUE;
   private _localDiffTempVal: number = 0;
-  private _setModeId: string;
-  private _valvePosId: string;
+  private readonly _setModeId: string;
+  private readonly _valvePosId: string;
   private _lastRecalc: number = 0;
 
   private _mode: 1 | 2 = 1;
   private _recalcTimeout: NodeJS.Timeout | null = null;
+  private _forcedRefreshInterval: NodeJS.Timeout;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeEuroHeater);
@@ -22,6 +23,13 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     this._setLocalTempCalibrationId = `${this.info.fullID}.local_temp_calibration`;
     this._setModeId = `${this.info.fullID}.spz_trv_mode`;
     this._valvePosId = `${this.info.fullID}.valve_position`;
+    this._forcedRefreshInterval = Utils.guardedInterval(
+      () => {
+        this.triggerDeviceQuery();
+      },
+      6 * 60 * 60 * 1000,
+      this,
+    );
   }
 
   public get seasonTurnOff(): boolean {
@@ -165,6 +173,14 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
     this.setState(this._setPointTemperaturID, targetTemp);
   }
 
+  public dispose(): void {
+    clearInterval(this._forcedRefreshInterval);
+  }
+
+  private setValve(target: number): void {
+    this.setState(this._valvePosId, target);
+  }
+
   /**
    * Sets the mode (1 = manual valve, 2 = automatic temp based)
    * @param {1 | 2} targetMode
@@ -172,9 +188,12 @@ export class ZigbeeEuroHeater extends ZigbeeHeater {
    */
   private setMode(targetMode: 1 | 2): void {
     this.setState(this._setModeId, targetMode);
-  }
-
-  private setValve(target: number): void {
-    this.setState(this._valvePosId, target);
+    Utils.guardedTimeout(
+      () => {
+        this.triggerDeviceQuery();
+      },
+      10000,
+      this,
+    );
   }
 }
