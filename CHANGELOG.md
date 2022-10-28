@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Round battery value before db entry
+
 ## 1.2.0 (2022-10-22)
 
 * (theimo1221) Fix unit Test

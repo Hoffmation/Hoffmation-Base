@@ -27,6 +27,7 @@ import { Pool, PoolConfig, QueryResultRow } from 'pg';
 import { ServerLogService } from '../log-service';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
+import { Utils } from '../utils';
 
 export class PostgreSqlPersist implements iPersist {
   initialized: boolean = false;
@@ -419,7 +420,7 @@ values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
   public persistBatteryDevice(device: iBatteryDevice): void {
     this.query(`
 insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
-values ('${device.id}', ${device.battery}, '${new Date().toISOString()}');
+values ('${device.id}', ${Utils.round(device.battery, 1)}, '${new Date().toISOString()}');
     `);
   }
 
