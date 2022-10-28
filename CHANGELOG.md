@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.2.1 (2022-10-28)
 
 * (theimo1221) Round battery value before db entry
 * (theimo1221) Allow zigbee device device query
