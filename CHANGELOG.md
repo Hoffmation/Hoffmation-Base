@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.2.2-alpha.0 (2022-10-28)
 
 * (theimo1221) Fix zigbee persist for devices without last update
 
