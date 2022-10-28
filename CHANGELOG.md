@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix zigbee persist for devices without last update
+
 ## 1.2.1 (2022-10-28)
 
 * (theimo1221) Round battery value before db entry

@@ -425,10 +425,10 @@ values ('${device.id}', ${Utils.round(device.battery, 1)}, '${new Date().toISOSt
   }
 
   public persistZigbeeDevice(device: ZigbeeDevice): void {
-    const dateValue = device.lastUpdate.getTime() > 0 ? device.lastUpdate.toISOString() : 'null';
+    const dateValue = device.lastUpdate.getTime() > 0 ? `'${device.lastUpdate.toISOString()}'` : 'null';
     this.query(`
 insert into hoffmation_schema."ZigbeeDeviceData" ("deviceID", "date", "available", "linkQuality", "lastUpdate")
-values ('${device.id}', '${new Date().toISOString()}', ${device.available}, ${device.linkQuality}, '${dateValue}');
+values ('${device.id}', '${new Date().toISOString()}', ${device.available}, ${device.linkQuality}, ${dateValue});
     `);
   }
 
