@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add SceneSettings to interface
+
 ## 1.2.3 (2022-10-30)
 
 * (theimo1221) Minor Tweaks in Room Scene
