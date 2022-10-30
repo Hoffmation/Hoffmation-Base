@@ -17,19 +17,20 @@ export class RoomScene implements iScene {
 
   public constructor(
     name: string,
-    roomName: string,
+    room: RoomBase,
     onSceneStart: () => void,
     onSceneEnd: () => void,
     turnOffTimeout?: number,
   ) {
     this._onSceneStart = onSceneStart;
     this._onSceneEnd = onSceneEnd;
+    this.room = room;
     this.settings.defaultTurnOffTimeout = turnOffTimeout;
     this._info = new DeviceInfo();
-    this._info.fullName = `TV ${name}`;
-    this._info.customName = `${roomName} ${name}`;
-    this._info.room = roomName;
-    this._info.allDevicesKey = `tv-${roomName}-${name}`;
+    this._info.fullName = `Scene ${name}`;
+    this._info.customName = `${room.roomName} ${name}`;
+    this._info.room = room.roomName;
+    this._info.allDevicesKey = `scene-${room.roomName}-${name}`;
     this._deviceType = DeviceType.RoomScene;
     Devices.alLDevices[this._info.allDevicesKey] = this;
     this.persistDeviceInfo();

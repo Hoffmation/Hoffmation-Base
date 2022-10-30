@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Minor Tweaks in Room Scene
+
 ## 1.2.2 (2022-10-30)
 
 * (theimo1221) Fix access to some internal properties
