@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.2.2 (2022-10-30)
 
 * (theimo1221) Fix access to some internal properties
 * (theimo1221) Add Scene Functionality
