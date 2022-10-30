@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to add a description to Room Scene
+
 ## 1.2.4 (2022-10-30)
 
 * (theimo1221) Add SceneSettings to interface

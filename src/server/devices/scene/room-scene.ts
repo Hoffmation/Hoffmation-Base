@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { SceneSettings } from '../../../models/deviceSettings/sceneSettings';
 
 export class RoomScene implements iScene {
+  public description: string = '';
   public room: RoomBase | undefined;
   public settings: SceneSettings = new SceneSettings();
   private readonly _onSceneStart: () => void;

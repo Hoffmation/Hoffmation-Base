@@ -2,6 +2,7 @@ import { iRoomDevice } from './index';
 import { SceneSettings } from '../../../models/deviceSettings/sceneSettings';
 
 export interface iScene extends iRoomDevice {
+  description: string;
   readonly onSceneStart: () => void;
   readonly onSceneEnd: () => void;
   readonly on: boolean;
