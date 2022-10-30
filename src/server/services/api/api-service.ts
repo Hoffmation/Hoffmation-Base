@@ -1,4 +1,4 @@
-import { Devices, iActuator, iBaseDevice, iLamp, iShutter, iSpeaker } from '../../devices';
+import { Devices, iActuator, iBaseDevice, iLamp, iScene, iShutter, iSpeaker } from '../../devices';
 import { LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
@@ -8,6 +8,23 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 
 export class API {
+  /**
+   * Endpoint to end a scene manually (or early if it has automatic turn off)
+   * @param {string} deviceId
+   * @returns {Error | null}
+   */
+  public static endScene(deviceId: string): Error | null {
+    const d = this.getDevice(deviceId) as iScene | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.scene)) {
+      return new Error(`Device with ID ${deviceId} is no scene`);
+    }
+    d.endScene();
+    return null;
+  }
+
   /**
    * Gets the instance of an Ac Device identified by id
    * @param {string} id
@@ -194,6 +211,24 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no speaker`);
     }
     d.speakOnDevice(message, volume);
+    return null;
+  }
+
+  /**
+   * Starts a specified scene
+   * @param {string} deviceId The targeted scene
+   * @param {number} turnOffTimeout If provided the time in ms after which the scene should end automatically
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static startScene(deviceId: string, turnOffTimeout?: number): Error | null {
+    const d = this.getDevice(deviceId) as iScene | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.scene)) {
+      return new Error(`Device with ID ${deviceId} is no scene`);
+    }
+    d.startScene(turnOffTimeout);
     return null;
   }
 }

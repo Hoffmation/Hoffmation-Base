@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix access to some internal properties
+* (theimo1221) Add Scene Functionality
 
 ## 1.2.2-alpha.0 (2022-10-28)
 

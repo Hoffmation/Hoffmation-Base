@@ -35,6 +35,7 @@ export enum DeviceType {
   ZigbeeLinkindLedRgbCct = 221,
   ZigbeeOsramDimmer = 222,
   JsEnergyManager = 301,
+  RoomScene = 401,
   WledDevice = 1001,
   Daikin = 2001,
   Sonos = 3001,

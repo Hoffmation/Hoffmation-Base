@@ -12,6 +12,7 @@ export * from './iIlluminationSensor';
 export * from './iLamp';
 export * from './iMotionSensor';
 export * from './iRoomDevice';
+export * from './iScene';
 export * from './iShutter';
 export * from './iSpeaker';
 export * from './iTemperatureSensor';
