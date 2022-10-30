@@ -7,10 +7,16 @@ import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
+  private _actuatorOn: boolean = false;
+
   public settings: ActuatorSettings = new ActuatorSettings();
   protected readonly actuatorOnSwitchID: string;
   protected queuedValue: boolean | null = null;
-  public actuatorOn: boolean = false;
+
+  public get actuatorOn(): boolean {
+    return this._actuatorOn;
+  }
+
   private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
   private turnOffTime: number = 0;
 
@@ -36,7 +42,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
         if (!handledByChildObject) {
           this.log(LogLevel.Trace, `Aktor Update für ${this.info.customName} auf ${state.val}`);
         }
-        this.actuatorOn = state.val as boolean;
+        this._actuatorOn = state.val as boolean;
         this.persist();
         break;
     }
@@ -56,7 +62,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
       return;
     }
 
-    if (!force && pValue === this.actuatorOn && this.queuedValue === null) {
+    if (!force && pValue === this._actuatorOn && this.queuedValue === null) {
       this.log(
         LogLevel.Debug,
         `Skip actuator command as it is already ${pValue}`,
@@ -101,7 +107,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   }
 
   public toggleActuator(force: boolean = false): boolean {
-    const newVal = this.queuedValue !== null ? !this.queuedValue : !this.actuatorOn;
+    const newVal = this.queuedValue !== null ? !this.queuedValue : !this._actuatorOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
     this.setActuator(newVal, timeout, force);
     return newVal;
