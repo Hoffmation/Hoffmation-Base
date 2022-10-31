@@ -186,7 +186,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
 
   public persist(): void {
     const now: number = Utils.nowMS();
-    if (this._lastPersist + 1000 < now) {
+    if (this._lastPersist + 1000 > now) {
       return;
     }
     Utils.dbo?.persistActuator(this);

@@ -136,7 +136,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
 
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 < now) {
+    if (this._lastBatteryPersist + 60000 > now) {
       return;
     }
     Utils.dbo?.persistBatteryDevice(this);

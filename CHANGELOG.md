@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix persistence delay check.
+
 ## 1.2.5 (2022-10-31)
 
 * (theimo1221) Add option to add a description to Room Scene
