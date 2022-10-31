@@ -9,6 +9,10 @@ import { PIDController } from '../../../../liquid-pid';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   protected _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
