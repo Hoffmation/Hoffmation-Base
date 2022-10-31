@@ -217,7 +217,12 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   }
 
   public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 < now) {
+      return;
+    }
     Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 
   public dispose(): void {

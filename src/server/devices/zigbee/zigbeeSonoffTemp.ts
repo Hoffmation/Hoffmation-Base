@@ -8,6 +8,10 @@ import { Utils } from '../../services';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -125,7 +129,12 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   }
 
   public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 < now) {
+      return;
+    }
     Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 
   public dispose(): void {

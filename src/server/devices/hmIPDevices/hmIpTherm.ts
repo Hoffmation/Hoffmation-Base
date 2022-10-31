@@ -8,6 +8,10 @@ import { Utils } from '../../services';
 
 export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
   private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
   public get battery(): number {
     return this._battery;
@@ -34,6 +38,11 @@ export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
   }
 
   public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 < now) {
+      return;
+    }
     Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 }

@@ -8,6 +8,10 @@ import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
   private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
   // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
@@ -142,6 +146,11 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   }
 
   public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 < now) {
+      return;
+    }
     Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 }

@@ -20,10 +20,13 @@ enum HmIpHeizungAdaptionStates {
 
 export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
   private _battery: number = -99;
-
   private _temperatur: number = 0;
   private _level: number = 0;
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
+  private _lastBatteryPersist: number = 0;
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
   public get battery(): number {
     return this._battery;
@@ -92,6 +95,11 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
   }
 
   public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 < now) {
+      return;
+    }
     Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 }

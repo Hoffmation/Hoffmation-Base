@@ -8,6 +8,10 @@ import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
   private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
   public settings: MotionSensorSettings = new MotionSensorSettings();
   public movementDetected: boolean = false;
@@ -162,6 +166,11 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   }
 
   public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 < now) {
+      return;
+    }
     Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 }
