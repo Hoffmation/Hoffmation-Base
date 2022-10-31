@@ -1,4 +1,4 @@
-import { ServerLogService, SunTimeOffsets, TimeCallbackService } from '../server';
+import { ServerLogService, SunTimeOffsets, TimeCallbackService, Utils } from '../server';
 import { LogLevel } from './logLevel';
 
 export enum TimeCallbackType {
@@ -35,6 +35,7 @@ export class TimeCallback {
     today.setHours(0, 0, 0, 0);
     switch (this.type) {
       case TimeCallbackType.TimeOfDay:
+        // !!WARNING!! Changing to winter time, that day has 25 hours.
         if (this.hours === undefined) {
           this.hours = 0;
         }
@@ -43,18 +44,11 @@ export class TimeCallback {
           this.minutes = 0;
         }
 
-        this.nextToDo = new Date(
-          today.getTime() + this.hours * 60 * 60 * 1000 + (this.minutes + this.minuteOffset) * 60 * 1000,
-        );
-
-        if (this.nextToDo < now) {
-          // Heute ist schon abgelaufen, also morgen festlegen
-          this.nextToDo = new Date(this.nextToDo.getTime() + 24 * 60 * 60 * 1000);
-        }
+        this.nextToDo = Utils.nextMatchingDate(this.hours, this.minutes + this.minuteOffset);
 
         ServerLogService.writeLog(
-          LogLevel.Trace,
-          `Nächste Zeitevent für "${this.name}" um ${this.nextToDo.toLocaleTimeString('de-DE')}`,
+          LogLevel.Debug,
+          `Next Time event for "${this.name}" at ${this.nextToDo.toLocaleString('de-DE')}`,
         );
         break;
       case TimeCallbackType.Sunrise:

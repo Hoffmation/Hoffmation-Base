@@ -208,8 +208,10 @@ export class TimeCallbackService {
     TimeCallbackService.updateSunRise();
     ServerLogService.writeLog(
       LogLevel.Info,
-      `Nächster Sonnenaufgang um ${TimeCallbackService.nextSunRise.toLocaleTimeString('de-DE')}
-Nächster Sonnenuntergang um ${TimeCallbackService._nextSunSet.toLocaleTimeString('de-DE')}`,
+      `Today Sunrise: ${TimeCallbackService._todaySunRise.toLocaleString('de-DE')}
+Today Sunset: ${TimeCallbackService._todaySunSet.toLocaleString('de-DE')}
+Next Sunrise: ${TimeCallbackService._nextSunRise.toLocaleString('de-DE')}
+Next Sunset: ${TimeCallbackService._nextSunSet.toLocaleString('de-DE')}`,
     );
   }
 

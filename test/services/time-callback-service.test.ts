@@ -170,4 +170,12 @@ describe('TimeCallbackService', () => {
     const calculatedTimeOfDay = TimeCallbackService.dayType(offset, calculationDate);
     expect(calculatedTimeOfDay).toBe(TimeOfDay.Daylight);
   });
+  it('calculates time of day correct on daylight savings change day', async () => {
+    SettingsService.settings = SettingsService.testConfig;
+    TimeCallbackService.recalcSunTimes(new Date('10/30/2022, 3:24:00 AM'));
+    const calculationDate: Date = new Date('10/30/2022, 7:24:00 AM');
+    const offset: SunTimeOffsets = new SunTimeOffsets(60, -10, 6, 30, 22, 30);
+    const calculatedTimeOfDay = TimeCallbackService.dayType(offset, calculationDate);
+    expect(calculatedTimeOfDay).toBe(TimeOfDay.Daylight);
+  });
 });

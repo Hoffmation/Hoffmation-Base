@@ -222,4 +222,22 @@ export class Utils {
       result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit) : value;
     });
   }
+
+  public static nextMatchingDate(hours: number = 0, minutes: number = 0, now: Date = new Date()): Date {
+    const todayOption: Date = new Date(now.getTime());
+    todayOption.setHours(hours, minutes, 0, 0);
+
+    if (todayOption > now) {
+      // Today Option is in the future --> valid
+      return todayOption;
+    }
+
+    const todayMidnight: Date = new Date(now.getTime());
+    todayMidnight.setHours(0, 0, 0, 0);
+    // 26 to guarantee matching next day even with time changes
+    const tomorowOption: Date = new Date(todayMidnight.getTime() + 26 * 60 * 60 * 1000);
+    tomorowOption.setHours(hours, minutes, 0, 0);
+
+    return tomorowOption;
+  }
 }

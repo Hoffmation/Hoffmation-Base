@@ -1,4 +1,4 @@
-import { ServerLogService, Utils } from '../src';
+import { ServerLogService, SettingsService, Utils } from '../src';
 
 describe('UtilsTest', () => {
   ServerLogService.settings.logLevel = -1;
@@ -10,5 +10,23 @@ describe('UtilsTest', () => {
   });
   it('Degree in Between Calculates correctly for <0 min Degrees and high degree to Check', async () => {
     expect(Utils.degreeInBetween(-45, 45, 355)).toBe(true);
+  });
+  it('calculates time at daylight savings change correctly', async () => {
+    SettingsService.settings = SettingsService.testConfig;
+    const calculatedNextTodo = Utils.nextMatchingDate(0, 0, new Date('10/30/2022, 3:24:00 AM'));
+    const expectedNextTodo = new Date('10/31/2022, 0:0:00 AM');
+    expect(calculatedNextTodo.getTime()).toBe(expectedNextTodo.getTime());
+  });
+  it('calculates upcoming time correctly', async () => {
+    SettingsService.settings = SettingsService.testConfig;
+    const calculatedNextTodo = Utils.nextMatchingDate(3, 0, new Date('10/31/2022, 1:24:00 AM'));
+    const expectedNextTodo = new Date('10/31/2022, 3:0:00 AM');
+    expect(calculatedNextTodo.getTime()).toBe(expectedNextTodo.getTime());
+  });
+  it('calculates passed time correctly', async () => {
+    SettingsService.settings = SettingsService.testConfig;
+    const calculatedNextTodo = Utils.nextMatchingDate(3, 0, new Date('10/31/2022, 4:24:00 AM'));
+    const expectedNextTodo = new Date('11/01/2022, 3:0:00 AM');
+    expect(calculatedNextTodo.getTime()).toBe(expectedNextTodo.getTime());
   });
 });
