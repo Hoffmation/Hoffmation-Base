@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.2.5 (2022-10-31)
 
 * (theimo1221) Add option to add a description to Room Scene
 * (theimo1221) Fix issues with TimeCallbacks on daylight savings change date
