@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.2.6 (2022-10-31)
 
 * (theimo1221) Fix persistence delay check.
 
