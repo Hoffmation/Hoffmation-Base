@@ -189,8 +189,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return;
     }
 
-    if (desiredMode == AcMode.Off && (this.energyConsumerSettings.priority === -1 || this._activatedByExcessEnergy)) {
+    if (desiredMode == AcMode.Off) {
       this.turnOff();
+      return;
     }
 
     // Check Cooling Turn Off

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Allow acDevice to turn off even if not activated by excess energy
+
 ## 1.2.6 (2022-10-31)
 
 * (theimo1221) Fix persistence delay check.
