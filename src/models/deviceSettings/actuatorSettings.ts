@@ -15,4 +15,16 @@ export class ActuatorSettings extends DeviceSettings {
    * @type {number}
    */
   public stromStossResendTime: number = 180;
+
+  public fromJsonObject(data: Partial<ActuatorSettings>): void {
+    this.dawnOn = data.dawnOn ?? true;
+    this.duskOn = data.duskOn ?? true;
+    this.nightOn = data.nightOn ?? true;
+    this.isStromStoss = data.isStromStoss ?? false;
+    this.stromStossResendTime = data.stromStossResendTime ?? 180;
+  }
+
+  protected toJSON(): string {
+    return JSON.stringify(this);
+  }
 }
