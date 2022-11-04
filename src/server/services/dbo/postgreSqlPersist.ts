@@ -3,6 +3,7 @@ import {
   CountToday,
   DesiredShutterPosition,
   EnergyCalculation,
+  idSettings,
   LogLevel,
   RoomBase,
   ShutterCalibration,
@@ -334,6 +335,17 @@ BEGIN
     );
     
   END IF;
+  
+  IF (SELECT to_regclass('hoffmation_schema."Settings"') IS NULL) Then
+    create table if not exists hoffmation_schema."Settings"
+    (
+        "id"        varchar(60) not null,
+        "settings"  varchar not null,
+        constraint settings_pk
+            primary key ("id")
+    );
+    
+  END IF;
 END
 $$;`,
     );
@@ -451,12 +463,29 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
     `);
   }
 
-  public persistDeviceSettings(_device: iBaseDevice, _settings: string): void {
-    throw new Error('Method not implemented.');
+  public persistDeviceSettings(device: iBaseDevice, settings: string): void {
+    this.query(`
+insert into hoffmation_schema."Settings" (id, settings)
+values ('${device.id}','${settings}')
+    ON CONFLICT (id)
+    DO UPDATE SET
+        settings = '${settings}'
+;
+    `);
   }
 
-  public loadDeviceSettings(_device: iBaseDevice): Promise<string | undefined> {
-    throw new Error('Method not implemented.');
+  public async loadDeviceSettings(device: iBaseDevice): Promise<string | undefined> {
+    const dbResult: idSettings[] | null = await this.query<idSettings>(
+      `SELECT settings
+from hoffmation_schema."Settings" 
+WHERE "id" = '${device.id}'`,
+    );
+    if (dbResult !== null && dbResult.length > 0) {
+      return dbResult[0].settings;
+    }
+
+    device.log(LogLevel.Debug, `No persisted settings found`);
+    return undefined;
   }
 
   private async query<T extends QueryResultRow>(query: string): Promise<T[] | null> {
