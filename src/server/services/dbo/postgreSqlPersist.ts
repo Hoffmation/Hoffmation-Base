@@ -438,17 +438,25 @@ insert into hoffmation_schema."IlluminationSensorDeviceData" ("deviceID", "illum
 values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString()}');`);
   }
 
-  persistShutterCalibration(_data: ShutterCalibration): void {
+  public persistShutterCalibration(_data: ShutterCalibration): void {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
   }
 
-  persistEnergyManager(calc: EnergyCalculation): void {
+  public persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
 insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
                                                    "drawnKwH")
 values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOString()}',
         ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH});
     `);
+  }
+
+  public persistDeviceSettings(_device: iBaseDevice, _settings: string): void {
+    throw new Error('Method not implemented.');
+  }
+
+  public loadDeviceSettings(_device: iBaseDevice): Promise<string | undefined> {
+    throw new Error('Method not implemented.');
   }
 
   private async query<T extends QueryResultRow>(query: string): Promise<T[] | null> {
