@@ -246,7 +246,14 @@ export class API {
     if (d.settings === undefined) {
       return new Error(`Device with ID ${deviceId} has no settings`);
     }
-    d.settings.fromPartialObject(settings, d);
+    d.settings.fromPartialObject(settings);
+    d.settings.persist(d);
     return null;
+  }
+
+  public static persistAllDeviceSettings(): void {
+    for (const device of Object.values(Devices.alLDevices)) {
+      device.settings?.persist(device);
+    }
   }
 }

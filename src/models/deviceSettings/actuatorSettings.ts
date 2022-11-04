@@ -1,5 +1,4 @@
 import { DeviceSettings } from './deviceSettings';
-import { iBaseDevice } from '../../server';
 
 export class ActuatorSettings extends DeviceSettings {
   public dawnOn: boolean = true;
@@ -17,13 +16,13 @@ export class ActuatorSettings extends DeviceSettings {
    */
   public stromStossResendTime: number = 180;
 
-  public fromPartialObject(data: Partial<ActuatorSettings>, device: iBaseDevice): void {
+  public fromPartialObject(data: Partial<ActuatorSettings>): void {
     this.dawnOn = data.dawnOn ?? this.dawnOn;
     this.duskOn = data.duskOn ?? this.duskOn;
     this.nightOn = data.nightOn ?? this.nightOn;
     this.isStromStoss = data.isStromStoss ?? this.isStromStoss;
     this.stromStossResendTime = data.stromStossResendTime ?? this.stromStossResendTime;
-    super.fromPartialObject(data, device);
+    super.fromPartialObject(data);
   }
 
   protected toJSON(): string {

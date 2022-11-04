@@ -1,12 +1,11 @@
 import { DeviceSettings } from './deviceSettings';
-import { iBaseDevice } from '../../server';
 
 export class SonosDeviceSettings extends DeviceSettings {
   public maxPlayOnAllVolume: number = 80;
 
-  public fromPartialObject(data: Partial<SonosDeviceSettings>, device: iBaseDevice): void {
+  public fromPartialObject(data: Partial<SonosDeviceSettings>): void {
     this.maxPlayOnAllVolume = data.maxPlayOnAllVolume ?? this.maxPlayOnAllVolume;
-    super.fromPartialObject(data, device);
+    super.fromPartialObject(data);
   }
 
   protected toJSON(): string {

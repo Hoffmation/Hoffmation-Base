@@ -1,5 +1,4 @@
 import { DeviceSettings } from './deviceSettings';
-import { iBaseDevice } from '../../server';
 
 export class AcSettings extends DeviceSettings {
   public minimumHours: number = 0;
@@ -22,7 +21,7 @@ export class AcSettings extends DeviceSettings {
    */
   public heatingAllowed: boolean = false;
 
-  public fromPartialObject(data: Partial<AcSettings>, device: iBaseDevice): void {
+  public fromPartialObject(data: Partial<AcSettings>): void {
     this.minimumHours = data.minimumHours ?? this.minimumHours;
     this.minimumMinutes = data.minimumMinutes ?? this.minimumMinutes;
     this.maximumHours = data.maximumHours ?? this.maximumHours;
@@ -30,7 +29,7 @@ export class AcSettings extends DeviceSettings {
     this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? this.stopCoolingTemperatur;
     this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? this.stopHeatingTemperatur;
     this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
-    super.fromPartialObject(data, device);
+    super.fromPartialObject(data);
   }
 
   protected toJSON(): string {

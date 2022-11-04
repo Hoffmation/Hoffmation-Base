@@ -1,5 +1,4 @@
 import { DeviceSettings } from './deviceSettings';
-import { iBaseDevice } from '../../server';
 
 export class ShutterSettings extends DeviceSettings {
   public msTilTop: number = -1;
@@ -11,11 +10,11 @@ export class ShutterSettings extends DeviceSettings {
    */
   public triggerPositionUpdateByTime: boolean = false;
 
-  public fromPartialObject(data: Partial<ShutterSettings>, device: iBaseDevice): void {
+  public fromPartialObject(data: Partial<ShutterSettings>): void {
     this.msTilTop = data.msTilTop ?? this.msTilTop;
     this.msTilBot = data.msTilBot ?? this.msTilBot;
     this.triggerPositionUpdateByTime = data.triggerPositionUpdateByTime ?? this.triggerPositionUpdateByTime;
-    super.fromPartialObject(data, device);
+    super.fromPartialObject(data);
   }
 
   protected toJSON(): string {

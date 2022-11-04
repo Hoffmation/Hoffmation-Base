@@ -1,12 +1,11 @@
 import { DeviceSettings } from './deviceSettings';
-import { iBaseDevice } from '../../server';
 
 export class SceneSettings extends DeviceSettings {
   defaultTurnOffTimeout?: number;
 
-  public fromPartialObject(data: Partial<SceneSettings>, device: iBaseDevice): void {
+  public fromPartialObject(data: Partial<SceneSettings>): void {
     this.defaultTurnOffTimeout = data.defaultTurnOffTimeout;
-    super.fromPartialObject(data, device);
+    super.fromPartialObject(data);
   }
 
   protected toJSON(): string {
