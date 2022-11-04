@@ -1,4 +1,5 @@
 import { DimmerSettings } from './dimmerSettings';
+import { Utils } from '../../server';
 
 export class LedSettings extends DimmerSettings {
   public defaultColor: string = '#fbbc32';
@@ -40,7 +41,7 @@ export class LedSettings extends DimmerSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<LedSettings> {
+    return Utils.jsonFilter(this);
   }
 }

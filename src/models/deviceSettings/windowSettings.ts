@@ -12,7 +12,7 @@ export class WindowSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<WindowSettings> {
+    return this;
   }
 }

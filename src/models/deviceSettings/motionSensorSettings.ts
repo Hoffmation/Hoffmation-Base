@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class MotionSensorSettings extends DeviceSettings {
   /**
@@ -15,7 +16,7 @@ export class MotionSensorSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<MotionSensorSettings> {
+    return Utils.jsonFilter(this);
   }
 }

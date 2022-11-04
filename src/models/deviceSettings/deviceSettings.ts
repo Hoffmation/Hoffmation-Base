@@ -3,7 +3,7 @@ import { LogLevel } from '../logLevel';
 
 export abstract class DeviceSettings {
   public persist(device: iBaseDevice) {
-    Utils.dbo?.persistDeviceSettings(device, this.toJSON());
+    Utils.dbo?.persistDeviceSettings(device, JSON.stringify(this));
   }
 
   public initializeFromDb(device: iBaseDevice) {
@@ -32,5 +32,7 @@ export abstract class DeviceSettings {
     // Nothing
   }
 
-  protected abstract toJSON(): string;
+  protected toJSON(): Partial<DeviceSettings> {
+    return Utils.jsonFilter(this);
+  }
 }

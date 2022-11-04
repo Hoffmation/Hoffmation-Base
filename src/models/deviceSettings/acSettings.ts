@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class AcSettings extends DeviceSettings {
   public minimumHours: number = 0;
@@ -32,7 +33,7 @@ export class AcSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<AcSettings> {
+    return Utils.jsonFilter(this);
   }
 }

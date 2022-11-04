@@ -1,4 +1,5 @@
 import { ActuatorSettings } from './actuatorSettings';
+import { Utils } from '../../server';
 
 export class DimmerSettings extends ActuatorSettings {
   public nightBrightness: number = 50;
@@ -16,7 +17,7 @@ export class DimmerSettings extends ActuatorSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<DimmerSettings> {
+    return Utils.jsonFilter(this);
   }
 }
