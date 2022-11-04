@@ -1,5 +1,6 @@
 import { DeviceSettings } from './deviceSettings';
 import { Daytime } from '../daytime';
+import { Utils } from '../../server';
 
 export class TvSettings extends DeviceSettings {
   public automaticTurnOff: Daytime | undefined;
@@ -9,7 +10,7 @@ export class TvSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<TvSettings> {
+    return Utils.jsonFilter(this);
   }
 }

@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class ActuatorSettings extends DeviceSettings {
   public dawnOn: boolean = true;
@@ -25,7 +26,7 @@ export class ActuatorSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<ActuatorSettings> {
+    return Utils.jsonFilter(this);
   }
 }

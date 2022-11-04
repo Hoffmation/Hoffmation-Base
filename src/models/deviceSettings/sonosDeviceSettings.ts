@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class SonosDeviceSettings extends DeviceSettings {
   public maxPlayOnAllVolume: number = 80;
@@ -8,7 +9,7 @@ export class SonosDeviceSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<SonosDeviceSettings> {
+    return Utils.jsonFilter(this);
   }
 }

@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class SceneSettings extends DeviceSettings {
   defaultTurnOffTimeout?: number;
@@ -8,7 +9,7 @@ export class SceneSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<SceneSettings> {
+    return Utils.jsonFilter(this);
   }
 }

@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class ShutterSettings extends DeviceSettings {
   public msTilTop: number = -1;
@@ -17,7 +18,7 @@ export class ShutterSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<ShutterSettings> {
+    return Utils.jsonFilter(this);
   }
 }

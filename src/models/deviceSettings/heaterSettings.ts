@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class HeaterSettings extends DeviceSettings {
   public automaticMode: boolean = true;
@@ -42,7 +43,7 @@ export class HeaterSettings extends DeviceSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<HeaterSettings> {
+    return Utils.jsonFilter(this);
   }
 }

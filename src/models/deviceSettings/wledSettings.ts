@@ -1,4 +1,5 @@
 import { DimmerSettings } from './dimmerSettings';
+import { Utils } from '../../server';
 
 export class WledSettings extends DimmerSettings {
   public dayOn: boolean = false;
@@ -30,7 +31,7 @@ export class WledSettings extends DimmerSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): string {
-    return JSON.stringify(this);
+  protected toJSON(): Partial<WledSettings> {
+    return Utils.jsonFilter(this);
   }
 }
