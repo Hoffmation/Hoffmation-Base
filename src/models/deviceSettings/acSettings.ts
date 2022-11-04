@@ -21,14 +21,14 @@ export class AcSettings extends DeviceSettings {
    */
   public heatingAllowed: boolean = false;
 
-  public fromJsonObject(data: Partial<AcSettings>): void {
-    this.minimumHours = data.minimumHours ?? 0;
-    this.minimumMinutes = data.minimumMinutes ?? 0;
-    this.maximumHours = data.maximumHours ?? 24;
-    this.maximumMinutes = data.maximumMinutes ?? 0;
-    this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? 22;
-    this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? 21;
-    this.heatingAllowed = data.heatingAllowed ?? false;
+  public fromPartialObject(data: Partial<AcSettings>): void {
+    this.minimumHours = data.minimumHours ?? this.minimumHours;
+    this.minimumMinutes = data.minimumMinutes ?? this.minimumMinutes;
+    this.maximumHours = data.maximumHours ?? this.maximumHours;
+    this.maximumMinutes = data.maximumMinutes ?? this.maximumMinutes;
+    this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? this.stopCoolingTemperatur;
+    this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? this.stopHeatingTemperatur;
+    this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
   }
 
   protected toJSON(): string {

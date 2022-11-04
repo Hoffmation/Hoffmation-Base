@@ -21,11 +21,11 @@ export abstract class DeviceSettings {
       if (!obj) {
         return;
       }
-      this.fromJsonObject(obj);
+      this.fromPartialObject(obj);
     });
   }
 
-  public abstract fromJsonObject(obj: Partial<DeviceSettings>): void;
+  public abstract fromPartialObject(obj: Partial<DeviceSettings>): void;
 
   protected abstract toJSON(): string;
 }

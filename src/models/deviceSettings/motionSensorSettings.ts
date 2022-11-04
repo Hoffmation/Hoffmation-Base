@@ -9,9 +9,9 @@ export class MotionSensorSettings extends DeviceSettings {
 
   public excludeFromNightAlarm: boolean = false;
 
-  public fromJsonObject(data: Partial<MotionSensorSettings>): void {
-    this.seesWindow = data.seesWindow ?? true;
-    this.excludeFromNightAlarm = data.excludeFromNightAlarm ?? false;
+  public fromPartialObject(data: Partial<MotionSensorSettings>): void {
+    this.seesWindow = data.seesWindow ?? this.seesWindow;
+    this.excludeFromNightAlarm = data.excludeFromNightAlarm ?? this.excludeFromNightAlarm;
   }
 
   protected toJSON(): string {

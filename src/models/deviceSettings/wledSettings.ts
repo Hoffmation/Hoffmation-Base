@@ -14,20 +14,20 @@ export class WledSettings extends DimmerSettings {
   public duskPreset?: number;
   public nightPreset?: number;
 
-  public fromJsonObject(data: Partial<WledSettings>): void {
-    super.fromJsonObject(data);
-    this.dayOn = data.dayOn ?? false;
-    this.dayBrightness = data.dayBrightness ?? 100;
-    this.dawnOn = data.dawnOn ?? true;
-    this.dawnBrightness = data.dawnBrightness ?? 50;
-    this.duskOn = data.duskOn ?? true;
-    this.duskBrightness = data.duskBrightness ?? 50;
-    this.nightOn = data.nightOn ?? true;
-    this.nightBrightness = data.nightBrightness ?? 2;
-    this.dawnPreset = data.dawnPreset;
-    this.dayPreset = data.dayPreset;
-    this.duskPreset = data.duskPreset;
-    this.nightPreset = data.nightPreset;
+  public fromPartialObject(data: Partial<WledSettings>): void {
+    super.fromPartialObject(data);
+    this.dayOn = data.dayOn ?? this.dayOn;
+    this.dayBrightness = data.dayBrightness ?? this.dayBrightness;
+    this.dawnOn = data.dawnOn ?? this.dawnOn;
+    this.dawnBrightness = data.dawnBrightness ?? this.dawnBrightness;
+    this.duskOn = data.duskOn ?? this.duskOn;
+    this.duskBrightness = data.duskBrightness ?? this.duskBrightness;
+    this.nightOn = data.nightOn ?? this.nightOn;
+    this.nightBrightness = data.nightBrightness ?? this.nightBrightness;
+    this.dawnPreset = data.dawnPreset ?? this.dawnPreset;
+    this.dayPreset = data.dayPreset ?? this.dayPreset;
+    this.duskPreset = data.duskPreset ?? this.duskPreset;
+    this.nightPreset = data.nightPreset ?? this.nightPreset;
   }
 
   protected toJSON(): string {

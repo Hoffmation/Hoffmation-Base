@@ -7,8 +7,8 @@ export class WindowSettings extends DeviceSettings {
    */
   public direction?: number;
 
-  public fromJsonObject(data: Partial<WindowSettings>): void {
-    this.direction = data.direction;
+  public fromPartialObject(data: Partial<WindowSettings>): void {
+    this.direction = data.direction ?? this.direction;
   }
 
   protected toJSON(): string {

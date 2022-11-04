@@ -30,15 +30,15 @@ export class HeaterSettings extends DeviceSettings {
    */
   public seasonTurnOnDay: number = 267;
 
-  public fromJsonObject(data: Partial<HeaterSettings>): void {
-    this.automaticMode = data.automaticMode ?? true;
-    this.automaticFallBackTemperatur = data.automaticFallBackTemperatur ?? 20;
-    this.useOwnTemperatur = data.useOwnTemperatur ?? true;
-    this.controlByPid = data.controlByPid ?? false;
-    this.controlByTempDiff = data.controlByTempDiff ?? false;
-    this.seasonalTurnOffActive = data.seasonalTurnOffActive ?? true;
-    this.seasonTurnOffDay = data.seasonTurnOffDay ?? 99;
-    this.seasonTurnOnDay = data.seasonTurnOnDay ?? 267;
+  public fromPartialObject(data: Partial<HeaterSettings>): void {
+    this.automaticMode = data.automaticMode ?? this.automaticMode;
+    this.automaticFallBackTemperatur = data.automaticFallBackTemperatur ?? this.automaticFallBackTemperatur;
+    this.useOwnTemperatur = data.useOwnTemperatur ?? this.useOwnTemperatur;
+    this.controlByPid = data.controlByPid ?? this.controlByPid;
+    this.controlByTempDiff = data.controlByTempDiff ?? this.controlByTempDiff;
+    this.seasonalTurnOffActive = data.seasonalTurnOffActive ?? this.seasonalTurnOffActive;
+    this.seasonTurnOffDay = data.seasonTurnOffDay ?? this.seasonTurnOffDay;
+    this.seasonTurnOnDay = data.seasonTurnOnDay ?? this.seasonTurnOnDay;
   }
 
   protected toJSON(): string {
