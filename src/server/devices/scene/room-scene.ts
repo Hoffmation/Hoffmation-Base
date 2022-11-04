@@ -1,5 +1,5 @@
 import { iScene } from '../baseDeviceInterfaces';
-import { LogLevel, RoomBase } from '../../../models';
+import { LogLevel, RoomBase, SceneSettings } from '../../../models';
 import { TvDevice } from '../tv';
 import { LogDebugType, ServerLogService, Utils } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
@@ -7,7 +7,6 @@ import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 import { Devices } from '../devices';
 import _ from 'lodash';
-import { SceneSettings } from '../../../models/deviceSettings/sceneSettings';
 
 export class RoomScene implements iScene {
   public description: string = '';
@@ -35,6 +34,7 @@ export class RoomScene implements iScene {
     this._deviceType = DeviceType.RoomScene;
     Devices.alLDevices[this._info.allDevicesKey] = this;
     this.persistDeviceInfo();
+    this.loadDeviceSettings();
   }
 
   protected _deviceType: DeviceType;
@@ -138,6 +138,10 @@ export class RoomScene implements iScene {
       5000,
       this,
     );
+  }
+
+  public loadDeviceSettings(): void {
+    this.settings.initializeFromDb(this);
   }
 
   public toJSON(): Partial<TvDevice> {

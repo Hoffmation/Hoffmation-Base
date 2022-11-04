@@ -1,8 +1,7 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
 import { ServerLogService, TimeCallbackService, Utils } from '../services';
-import { LogLevel, TimeOfDay } from '../../models';
-import { WledSettings } from '../../models/deviceSettings/wledSettings';
+import { LogLevel, TimeOfDay, WledSettings } from '../../models';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp';
 

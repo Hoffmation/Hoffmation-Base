@@ -1,14 +1,13 @@
 import { DeviceInfo, DeviceType } from '../../devices';
-import { LogLevel, RoomBase } from '../../../models';
+import { LogLevel, RoomBase, TvSettings } from '../../../models';
 import _ from 'lodash';
 import { iTvDevice } from '../baseDeviceInterfaces';
-import { TvSettings } from '../../../models/deviceSettings/tvSettings';
 import { DeviceCapability } from '../DeviceCapability';
 import { LogDebugType, ServerLogService, Utils } from '../../services';
 import { TvDeviceType } from './tvDeviceType';
 
 export abstract class TvDevice implements iTvDevice {
-  public tvSettings: TvSettings = new TvSettings();
+  public settings: TvSettings = new TvSettings();
   public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.tv];
 
@@ -76,6 +75,10 @@ export abstract class TvDevice implements iTvDevice {
       5000,
       this,
     );
+  }
+
+  public loadDeviceSettings(): void {
+    this.settings.initializeFromDb(this);
   }
 
   public toJSON(): Partial<TvDevice> {

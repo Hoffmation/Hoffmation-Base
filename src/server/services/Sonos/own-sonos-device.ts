@@ -1,5 +1,5 @@
 import { DeviceInfo, Devices, DeviceType, iSpeaker } from '../../devices';
-import { LogLevel, RoomBase } from '../../../models';
+import { LogLevel, RoomBase, SonosDeviceSettings } from '../../../models';
 import { SonosDevice } from '@svrooij/sonos/lib';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { Utils } from '../utils';
@@ -12,7 +12,7 @@ import { PollyService } from './polly-service';
 import { API } from '../api';
 
 export class OwnSonosDevice implements iSpeaker {
-  public maxPlayOnAllVolume: number = 80;
+  public settings: SonosDeviceSettings = new SonosDeviceSettings();
   public readonly deviceType: DeviceType = DeviceType.Sonos;
   public readonly discoveryName: string;
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.speaker];
@@ -26,6 +26,7 @@ export class OwnSonosDevice implements iSpeaker {
     this._info.allDevicesKey = `sonos-${roomName}-${discoveryName}`;
     Devices.alLDevices[`sonos-${roomName}-${discoveryName}`] = this;
     this.persistDeviceInfo();
+    this.loadDeviceSettings();
   }
 
   protected _info: DeviceInfo;
@@ -145,5 +146,9 @@ export class OwnSonosDevice implements iSpeaker {
       5000,
       this,
     );
+  }
+
+  public loadDeviceSettings(): void {
+    this.settings.initializeFromDb(this);
   }
 }

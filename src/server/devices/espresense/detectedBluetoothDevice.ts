@@ -10,6 +10,7 @@ import { TrackedDistanceData } from './trackedDistanceData';
 import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
 
 export class DetectedBluetoothDevice implements iBaseDevice {
+  public settings: undefined = undefined;
   public distanceMap: Map<string, TrackedDistanceData> = new Map<string, TrackedDistanceData>();
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.trackableDevice];
   public deviceType: DeviceType = DeviceType.TrackableDevice;
@@ -24,6 +25,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
     if (settings.activeTracking) {
       Devices.alLDevices[this.info.allDevicesKey] = this;
       this.persistDeviceInfo();
+      this.loadDeviceSettings();
     }
   }
 
@@ -104,5 +106,9 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       5000,
       this,
     );
+  }
+
+  public loadDeviceSettings(): void {
+    // Nothing
   }
 }

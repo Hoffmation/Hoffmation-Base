@@ -7,11 +7,10 @@ import {
   iRoomDevice,
   UNDEFINED_TEMP_VALUE,
 } from '../../devices';
-import { ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
+import { AcSettings, ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { AcMode } from './ac-mode';
-import { AcSettings } from '../../../models/deviceSettings/acSettings';
 import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
@@ -21,7 +20,7 @@ import { HeatingMode } from '../../config';
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice {
   public currentConsumption: number = -1;
   public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
-  public acSettings: AcSettings = new AcSettings();
+  public settings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac];
 
@@ -40,6 +39,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, true);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.persistDeviceInfo();
+    this.loadDeviceSettings();
   }
 
   private _roomTemperature: number = 0;
@@ -79,8 +79,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     if (Utils.nowMS() < this._blockAutomaticTurnOnMS) {
       return false;
     }
-    const minimumStart: Date = Utils.dateByTimeSpan(this.acSettings.minimumHours, this.acSettings.minimumMinutes);
-    const maximumEnd: Date = Utils.dateByTimeSpan(this.acSettings.maximumHours, this.acSettings.maximumMinutes);
+    const minimumStart: Date = Utils.dateByTimeSpan(this.settings.minimumHours, this.settings.minimumMinutes);
+    const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
     const now: Date = new Date();
     if (now < minimumStart || now > maximumEnd) {
       return false;
@@ -104,12 +104,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       threshold = -1;
     }
 
-    const coolUntil: number = this.acSettings.stopCoolingTemperatur + threshold;
-    const heatUntil: number = this.acSettings.stopHeatingTemperatur - threshold;
+    const coolUntil: number = this.settings.stopCoolingTemperatur + threshold;
+    const heatUntil: number = this.settings.stopHeatingTemperatur - threshold;
 
     if (temp > coolUntil && SettingsService.heatMode === HeatingMode.Sommer) {
       desiredMode = AcMode.Cooling;
-    } else if (temp < heatUntil && this.acSettings.heatingAllowed && SettingsService.heatMode === HeatingMode.Winter) {
+    } else if (temp < heatUntil && this.settings.heatingAllowed && SettingsService.heatMode === HeatingMode.Winter) {
       desiredMode = AcMode.Heating;
     }
     if (acOn ? desiredMode === AcMode.Off : desiredMode !== AcMode.Off) {
@@ -172,6 +172,20 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this._activatedByExcessEnergy;
   }
 
+  public loadDeviceSettings(): void {
+    this.settings.initializeFromDb(this);
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
+  }
+
   protected automaticCheck(): void {
     if (!this.on && Utils.nowMS() < this._blockAutomaticTurnOnMS) {
       // We aren't allowed to trun on anyway --> exit
@@ -195,22 +209,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
 
     // Check Cooling Turn Off
-    const maximumEnd: Date = Utils.dateByTimeSpan(this.acSettings.maximumHours, this.acSettings.maximumMinutes);
+    const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
     const now: Date = new Date();
     if (now > maximumEnd) {
       this.turnOff();
       return;
     }
-  }
-
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Utils.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
   }
 
   public toJSON(): Partial<AcDevice> {

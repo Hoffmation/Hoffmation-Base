@@ -4,7 +4,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export interface iBaseDevice {
-  settings: DeviceSettings;
+  readonly settings: DeviceSettings | undefined;
   deviceType: DeviceType;
   info: DeviceInfo;
   readonly deviceCapabilities: DeviceCapability[];
