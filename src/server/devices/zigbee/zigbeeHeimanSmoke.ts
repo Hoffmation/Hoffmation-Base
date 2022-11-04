@@ -3,10 +3,10 @@ import { PollyService, Res, RoomService, SonosService, Utils } from '../../servi
 import { ZigbeeDevice } from './BaseDevices';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iSmokeDetectorDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
-export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice {
+export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, iSmokeDetectorDevice {
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   public get lastBatteryPersist(): number {
@@ -17,18 +17,23 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice {
     return this._battery;
   }
 
-  public smoke: boolean = false;
+  public constructor(pInfo: IoBrokerDeviceInfo) {
+    super(pInfo, DeviceType.ZigbeeHeimanSmoke);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+    this.deviceCapabilities.push(DeviceCapability.smokeSensor);
+    this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
+    this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
+    this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
+  }
+
+  private _smoke: boolean = false;
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
   private _messageAlarm: string = '';
   private _messageAlarmEnd: string = '';
 
-  public constructor(pInfo: IoBrokerDeviceInfo) {
-    super(pInfo, DeviceType.ZigbeeHeimanSmoke);
-    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
-    this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
-    this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
-    this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
+  public get smoke(): boolean {
+    return this._smoke;
   }
 
   private _roomName: string = '';
@@ -62,7 +67,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice {
         } else if (newVal) {
           this.startAlarm();
         }
-        this.smoke = newVal;
+        this._smoke = newVal;
         break;
     }
   }

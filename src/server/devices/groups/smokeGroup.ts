@@ -3,6 +3,7 @@ import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
+import { iSmokeDetectorDevice } from '../baseDeviceInterfaces';
 
 export class SmokeGroup extends BaseGroup {
   public constructor(roomName: string, smokeDetectorIds: string[]) {
@@ -10,7 +11,7 @@ export class SmokeGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.SmokeDetector, new DeviceList(smokeDetectorIds));
   }
 
-  public getSmokeDetectors(): ZigbeeHeimanSmoke[] {
+  public getSmokeDetectors(): iSmokeDetectorDevice[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.SmokeDetector) as ZigbeeHeimanSmoke[];
   }
 

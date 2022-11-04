@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Implement iSmokeDetectorDevice
+
 ## 1.3.0 (2022-11-04)
 
 * (theimo1221) Add persistence of device settings
