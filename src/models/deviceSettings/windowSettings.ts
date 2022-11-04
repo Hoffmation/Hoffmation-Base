@@ -10,7 +10,7 @@ export class WindowSettings extends DeviceSettings {
 
   public fromPartialObject(data: Partial<WindowSettings>, device: iBaseDevice): void {
     this.direction = data.direction ?? this.direction;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

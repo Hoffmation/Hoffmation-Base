@@ -25,7 +25,9 @@ export abstract class DeviceSettings {
     });
   }
 
-  public abstract fromPartialObject(obj: Partial<DeviceSettings>, device: iBaseDevice): void;
+  public fromPartialObject(_obj: Partial<DeviceSettings>, device: iBaseDevice): void {
+    this.persist(device);
+  }
 
   protected abstract toJSON(): string;
 }

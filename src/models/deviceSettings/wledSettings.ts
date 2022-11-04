@@ -16,7 +16,6 @@ export class WledSettings extends DimmerSettings {
   public nightPreset?: number;
 
   public fromPartialObject(data: Partial<WledSettings>, device: iBaseDevice): void {
-    super.fromPartialObject(data, device, true);
     this.dayOn = data.dayOn ?? this.dayOn;
     this.dayBrightness = data.dayBrightness ?? this.dayBrightness;
     this.dawnOn = data.dawnOn ?? this.dawnOn;
@@ -29,7 +28,7 @@ export class WledSettings extends DimmerSettings {
     this.dayPreset = data.dayPreset ?? this.dayPreset;
     this.duskPreset = data.duskPreset ?? this.duskPreset;
     this.nightPreset = data.nightPreset ?? this.nightPreset;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

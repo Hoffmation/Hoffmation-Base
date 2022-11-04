@@ -6,7 +6,7 @@ export class SonosDeviceSettings extends DeviceSettings {
 
   public fromPartialObject(data: Partial<SonosDeviceSettings>, device: iBaseDevice): void {
     this.maxPlayOnAllVolume = data.maxPlayOnAllVolume ?? this.maxPlayOnAllVolume;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

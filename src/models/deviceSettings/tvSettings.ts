@@ -7,7 +7,7 @@ export class TvSettings extends DeviceSettings {
 
   public fromPartialObject(data: Partial<TvSettings>, device: iBaseDevice): void {
     this.automaticTurnOff = data.automaticTurnOff ?? this.automaticTurnOff;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

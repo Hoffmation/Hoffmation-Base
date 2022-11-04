@@ -30,7 +30,7 @@ export class AcSettings extends DeviceSettings {
     this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? this.stopCoolingTemperatur;
     this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? this.stopHeatingTemperatur;
     this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

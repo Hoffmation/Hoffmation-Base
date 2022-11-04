@@ -40,7 +40,7 @@ export class HeaterSettings extends DeviceSettings {
     this.seasonalTurnOffActive = data.seasonalTurnOffActive ?? this.seasonalTurnOffActive;
     this.seasonTurnOffDay = data.seasonTurnOffDay ?? this.seasonTurnOffDay;
     this.seasonTurnOnDay = data.seasonTurnOnDay ?? this.seasonTurnOnDay;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

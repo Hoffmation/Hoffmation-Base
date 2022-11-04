@@ -15,7 +15,7 @@ export class ShutterSettings extends DeviceSettings {
     this.msTilTop = data.msTilTop ?? this.msTilTop;
     this.msTilBot = data.msTilBot ?? this.msTilBot;
     this.triggerPositionUpdateByTime = data.triggerPositionUpdateByTime ?? this.triggerPositionUpdateByTime;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {

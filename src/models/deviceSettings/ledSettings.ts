@@ -21,7 +21,6 @@ export class LedSettings extends DimmerSettings {
   public nightColorTemp: number = -1;
 
   public fromPartialObject(data: Partial<LedSettings>, device: iBaseDevice): void {
-    super.fromPartialObject(data, device, true);
     this.defaultColor = data.defaultColor ?? this.defaultColor;
     this.dayOn = data.dayOn ?? this.dayOn;
     this.dayBrightness = data.dayBrightness ?? this.dayBrightness;
@@ -39,7 +38,7 @@ export class LedSettings extends DimmerSettings {
     this.nightBrightness = data.nightBrightness ?? this.nightBrightness;
     this.nightColor = data.nightColor ?? this.nightColor;
     this.nightColorTemp = data.nightColorTemp ?? this.nightColorTemp;
-    this.persist(device);
+    super.fromPartialObject(data, device, true);
   }
 
   protected toJSON(): string {

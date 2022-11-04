@@ -6,7 +6,7 @@ export class SceneSettings extends DeviceSettings {
 
   public fromPartialObject(data: Partial<SceneSettings>, device: iBaseDevice): void {
     this.defaultTurnOffTimeout = data.defaultTurnOffTimeout;
-    this.persist(device);
+    super.fromPartialObject(data, device);
   }
 
   protected toJSON(): string {
