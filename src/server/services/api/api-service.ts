@@ -239,7 +239,7 @@ export class API {
    * @returns {Error | null} In case it failed the Error containing the reason
    */
   public static setDeviceSettings(deviceId: string, settings: Partial<DeviceSettings>): Error | null {
-    const d = this.getDevice(deviceId) as iScene | undefined;
+    const d = this.getDevice(deviceId) as iBaseDevice;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }
