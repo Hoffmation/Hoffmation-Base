@@ -1,4 +1,5 @@
 import { iBaseDevice, Utils } from '../../server';
+import { LogLevel } from '../logLevel';
 
 export abstract class DeviceSettings {
   public persist(device: iBaseDevice) {
@@ -8,13 +9,23 @@ export abstract class DeviceSettings {
   public initializeFromDb(device: iBaseDevice) {
     Utils.dbo?.loadDeviceSettings(device).then((data) => {
       if (!data) {
+        // Nothing in db yet
         return;
       }
-      this.fromJSON(data);
+      let obj: Partial<DeviceSettings> | null = null;
+      try {
+        obj = JSON.parse(data);
+      } catch (e: any) {
+        device.log(LogLevel.Error, `Failed to parse Device Setting JSON (${e})`);
+      }
+      if (!obj) {
+        return;
+      }
+      this.fromJsonObject(obj);
     });
   }
 
-  public abstract fromJSON(data: string): void;
+  public abstract fromJsonObject(obj: Partial<DeviceSettings>): void;
 
   protected abstract toJSON(): string;
 }
