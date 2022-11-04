@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { iBaseDevice } from '../../server';
 
 export class MotionSensorSettings extends DeviceSettings {
   /**
@@ -9,9 +10,12 @@ export class MotionSensorSettings extends DeviceSettings {
 
   public excludeFromNightAlarm: boolean = false;
 
-  public fromPartialObject(data: Partial<MotionSensorSettings>): void {
+  public fromPartialObject(data: Partial<MotionSensorSettings>, device: iBaseDevice): void {
     this.seesWindow = data.seesWindow ?? this.seesWindow;
     this.excludeFromNightAlarm = data.excludeFromNightAlarm ?? this.excludeFromNightAlarm;
+    if (device) {
+      this.persist(device);
+    }
   }
 
   protected toJSON(): string {

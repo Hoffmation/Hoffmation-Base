@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { iBaseDevice } from '../../server';
 
 export class WindowSettings extends DeviceSettings {
   /**
@@ -7,8 +8,9 @@ export class WindowSettings extends DeviceSettings {
    */
   public direction?: number;
 
-  public fromPartialObject(data: Partial<WindowSettings>): void {
+  public fromPartialObject(data: Partial<WindowSettings>, device: iBaseDevice): void {
     this.direction = data.direction ?? this.direction;
+    this.persist(device);
   }
 
   protected toJSON(): string {

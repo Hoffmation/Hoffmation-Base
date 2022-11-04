@@ -1,4 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
+import { iBaseDevice } from '../../server';
 
 export class HeaterSettings extends DeviceSettings {
   public automaticMode: boolean = true;
@@ -30,7 +31,7 @@ export class HeaterSettings extends DeviceSettings {
    */
   public seasonTurnOnDay: number = 267;
 
-  public fromPartialObject(data: Partial<HeaterSettings>): void {
+  public fromPartialObject(data: Partial<HeaterSettings>, device: iBaseDevice): void {
     this.automaticMode = data.automaticMode ?? this.automaticMode;
     this.automaticFallBackTemperatur = data.automaticFallBackTemperatur ?? this.automaticFallBackTemperatur;
     this.useOwnTemperatur = data.useOwnTemperatur ?? this.useOwnTemperatur;
@@ -39,6 +40,7 @@ export class HeaterSettings extends DeviceSettings {
     this.seasonalTurnOffActive = data.seasonalTurnOffActive ?? this.seasonalTurnOffActive;
     this.seasonTurnOffDay = data.seasonTurnOffDay ?? this.seasonTurnOffDay;
     this.seasonTurnOnDay = data.seasonTurnOnDay ?? this.seasonTurnOnDay;
+    this.persist(device);
   }
 
   protected toJSON(): string {
