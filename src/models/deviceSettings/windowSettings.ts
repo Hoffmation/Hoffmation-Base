@@ -6,4 +6,13 @@ export class WindowSettings extends DeviceSettings {
    * @type {number}
    */
   public direction?: number;
+
+  public fromPartialObject(data: Partial<WindowSettings>): void {
+    this.direction = data.direction ?? this.direction;
+    super.fromPartialObject(data);
+  }
+
+  protected toJSON(): string {
+    return JSON.stringify(this);
+  }
 }

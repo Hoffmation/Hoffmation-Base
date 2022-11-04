@@ -9,4 +9,15 @@ export class ShutterSettings extends DeviceSettings {
    * @type {boolean}
    */
   public triggerPositionUpdateByTime: boolean = false;
+
+  public fromPartialObject(data: Partial<ShutterSettings>): void {
+    this.msTilTop = data.msTilTop ?? this.msTilTop;
+    this.msTilBot = data.msTilBot ?? this.msTilBot;
+    this.triggerPositionUpdateByTime = data.triggerPositionUpdateByTime ?? this.triggerPositionUpdateByTime;
+    super.fromPartialObject(data);
+  }
+
+  protected toJSON(): string {
+    return JSON.stringify(this);
+  }
 }

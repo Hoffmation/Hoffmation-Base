@@ -55,4 +55,8 @@ export interface iPersist {
   persistBatteryDevice(device: iBatteryDevice): void;
 
   persistZigbeeDevice(device: ZigbeeDevice): void;
+
+  persistDeviceSettings(device: iBaseDevice, settings: string): void;
+
+  loadDeviceSettings(device: iBaseDevice): Promise<string | undefined>;
 }

@@ -115,7 +115,9 @@ export class SonosService {
         this.ownDevices[deviceName].playOnDevice(
           networkPath,
           duration,
-          volumeOverride > -1 ? volumeOverride : Math.min(volume, this.ownDevices[deviceName].maxPlayOnAllVolume),
+          volumeOverride > -1
+            ? volumeOverride
+            : Math.min(volume, this.ownDevices[deviceName].settings.maxPlayOnAllVolume),
         );
       }
     });

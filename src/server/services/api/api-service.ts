@@ -1,5 +1,5 @@
 import { Devices, iActuator, iBaseDevice, iLamp, iScene, iShutter, iSpeaker } from '../../devices';
-import { LogLevel, RoomBase } from '../../../models';
+import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, DaikinService } from '../ac';
@@ -230,5 +230,30 @@ export class API {
     }
     d.startScene(turnOffTimeout);
     return null;
+  }
+
+  /**
+   * Changes the settings of a given device
+   * @param {string} deviceId The id of the device to change the settings
+   * @param settings A partial settings object containing the wanted settings properties
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static setDeviceSettings(deviceId: string, settings: Partial<DeviceSettings>): Error | null {
+    const d = this.getDevice(deviceId) as iBaseDevice;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (d.settings === undefined) {
+      return new Error(`Device with ID ${deviceId} has no settings`);
+    }
+    d.settings.fromPartialObject(settings);
+    d.settings.persist(d);
+    return null;
+  }
+
+  public static persistAllDeviceSettings(): void {
+    for (const device of Object.values(Devices.alLDevices)) {
+      device.settings?.persist(device);
+    }
   }
 }

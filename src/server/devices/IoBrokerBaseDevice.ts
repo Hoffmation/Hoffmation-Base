@@ -1,12 +1,13 @@
 import { iRoomDevice } from './baseDeviceInterfaces';
 import { LogDebugType, ServerLogService, Utils } from '../services';
-import { LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
+import { DeviceSettings, LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { DeviceCapability } from './DeviceCapability';
 
 export abstract class IoBrokerBaseDevice implements iRoomDevice {
+  public settings: DeviceSettings | undefined = undefined;
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [];
@@ -70,6 +71,10 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     for (const rName in this.roomAddingSettings) {
       this.roomAddingSettings[rName].checkMissing();
     }
+  }
+
+  public loadDeviceSettings(): void {
+    this.settings?.initializeFromDb(this);
   }
 
   /**

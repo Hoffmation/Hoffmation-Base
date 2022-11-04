@@ -1,5 +1,5 @@
 import { iRoomDevice } from './index';
-import { SceneSettings } from '../../../models/deviceSettings/sceneSettings';
+import { SceneSettings } from '../../../models';
 
 export interface iScene extends iRoomDevice {
   description: string;

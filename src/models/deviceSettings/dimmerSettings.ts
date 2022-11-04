@@ -6,4 +6,17 @@ export class DimmerSettings extends ActuatorSettings {
   public duskBrightness: number = 75;
   public dayBrightness: number = 100;
   public turnOnThreshhold: number = -1;
+
+  public fromPartialObject(data: Partial<DimmerSettings>): void {
+    this.nightBrightness = data.nightBrightness ?? this.nightBrightness;
+    this.dawnBrightness = data.dawnBrightness ?? this.dawnBrightness;
+    this.duskBrightness = data.duskBrightness ?? this.duskBrightness;
+    this.dayBrightness = data.dayBrightness ?? this.dayBrightness;
+    this.turnOnThreshhold = data.turnOnThreshhold ?? this.turnOnThreshhold;
+    super.fromPartialObject(data);
+  }
+
+  protected toJSON(): string {
+    return JSON.stringify(this);
+  }
 }

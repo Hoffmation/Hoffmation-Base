@@ -18,4 +18,29 @@ export class LedSettings extends DimmerSettings {
   public nightBrightness: number = 2;
   public nightColor: string = '#ff5500';
   public nightColorTemp: number = -1;
+
+  public fromPartialObject(data: Partial<LedSettings>): void {
+    this.defaultColor = data.defaultColor ?? this.defaultColor;
+    this.dayOn = data.dayOn ?? this.dayOn;
+    this.dayBrightness = data.dayBrightness ?? this.dayBrightness;
+    this.dayColor = data.dayColor ?? this.dayColor;
+    this.dayColorTemp = data.dayColorTemp ?? this.dayColorTemp;
+    this.dawnOn = data.dawnOn ?? this.dawnOn;
+    this.dawnBrightness = data.dawnBrightness ?? this.dawnBrightness;
+    this.dawnColor = data.dawnColor ?? this.dawnColor;
+    this.dawnColorTemp = data.dawnColorTemp ?? this.dawnColorTemp;
+    this.duskOn = data.duskOn ?? this.duskOn;
+    this.duskBrightness = data.duskBrightness ?? this.duskBrightness;
+    this.duskColor = data.duskColor ?? this.duskColor;
+    this.duskColorTemp = data.duskColorTemp ?? this.duskColorTemp;
+    this.nightOn = data.nightOn ?? this.nightOn;
+    this.nightBrightness = data.nightBrightness ?? this.nightBrightness;
+    this.nightColor = data.nightColor ?? this.nightColor;
+    this.nightColorTemp = data.nightColorTemp ?? this.nightColorTemp;
+    super.fromPartialObject(data);
+  }
+
+  protected toJSON(): string {
+    return JSON.stringify(this);
+  }
 }

@@ -1,9 +1,9 @@
-import { AcSettings } from '../../../models/deviceSettings/acSettings';
+import { AcSettings } from '../../../models';
 import { AcMode } from '../../services';
 import { iBaseDevice } from './iBaseDevice';
 
 export interface iAcDevice extends iBaseDevice {
-  acSettings: AcSettings;
+  settings: AcSettings;
   readonly on: boolean;
   readonly temperature: number;
 

@@ -11,6 +11,7 @@ import { ProximityCallback } from './proximityCallback';
 import { EspresenseCoordinator } from './espresenseCoordinator';
 
 export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
+  public settings: undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.bluetoothDetector];
   public deviceType: DeviceType = DeviceType.Espresense;
   public readonly name: string;
@@ -27,6 +28,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     Devices.alLDevices[this._info.allDevicesKey] = this;
     EspresenseCoordinator.addDevice(this, name);
     this.persistDeviceInfo();
+    this.loadDeviceSettings();
   }
 
   protected _info: DeviceInfo;
@@ -123,6 +125,10 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
       5000,
       this,
     );
+  }
+
+  public loadDeviceSettings(): void {
+    // Nothing
   }
 
   public addProximityCallback(cb: ProximityCallback): void {

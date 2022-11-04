@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add persistence of device settings
+
 ## 1.2.7 (2022-11-03)
 
 * (theimo1221) Allow acDevice to turn off even if not activated by excess energy
