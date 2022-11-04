@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add persistence of device settings
+* (theimo1221) Update packages
 
 ## 1.2.7 (2022-11-03)
 
