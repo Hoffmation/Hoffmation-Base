@@ -2,10 +2,12 @@ import { Devices, iActuator, iBaseDevice, iLamp, iScene, iShutter, iSpeaker } fr
 import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
-import { AcDevice, DaikinService } from '../ac';
+import { AcDevice, AcMode, DaikinService } from '../ac';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
+import { SettingsService } from '../settings-service';
+import { HeatingMode } from '../../config';
 
 export class API {
   /**
@@ -68,8 +70,9 @@ export class API {
    * Turns on/off one AC identified by it's id
    * @param id The id of the device, if wrong false will be returned
    * @param {boolean} desiredState
+   * @param {AcMode} desiredMode
    */
-  public static setAc(id: string, desiredState: boolean): boolean {
+  public static setAc(id: string, desiredState: boolean, desiredMode?: AcMode): boolean {
     const d = this.getAc(id);
     if (!d) {
       ServerLogService.writeLog(LogLevel.Warn, `AC Device for id ${id} not found`);
@@ -80,7 +83,13 @@ export class API {
       return false;
     }
     if (desiredState) {
+      d.setDesiredMode(
+        desiredMode ?? SettingsService.heatMode == HeatingMode.Winter ? AcMode.Heating : AcMode.Cooling,
+        false,
+      );
       d.turnOn();
+    } else {
+      d.turnOff();
     }
     d.deactivateAutomaticChange(60 * 60 * 1000);
     return true;

@@ -10,6 +10,7 @@
 
 * (theimo1221) Add persistence of device settings
 * (theimo1221) Update packages
+* (theimo1221) Improve ac control api capabilities
 
 ## 1.2.7 (2022-11-03)
 
