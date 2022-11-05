@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Minor fix to prevent uneccessary save of device settings
+
 ## 1.3.5 (2022-11-05)
 
 * (theimo1221) Add Date to Settings, to keep a history

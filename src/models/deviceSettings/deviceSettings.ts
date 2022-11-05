@@ -25,7 +25,7 @@ export abstract class DeviceSettings {
         return;
       }
       this.fromPartialObject(obj);
-      if (this.toJSON() !== data) {
+      if (JSON.stringify(this) !== data) {
         this.persist(device);
       }
     });
