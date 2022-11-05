@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.8 (2022-11-05)
 
 * (theimo1221) Fix ac logic at night when previously off
 
