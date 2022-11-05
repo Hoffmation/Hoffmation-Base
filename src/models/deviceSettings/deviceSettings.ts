@@ -6,11 +6,11 @@ export abstract class DeviceSettings {
   public energySettings: ExcessEnergyConsumerSettings | undefined = undefined;
 
   public persist(device: iBaseDevice) {
-    Utils.dbo?.persistDeviceSettings(device, JSON.stringify(this));
+    Utils.dbo?.persistSettings(device.id, JSON.stringify(this), device.info.customName);
   }
 
   public initializeFromDb(device: iBaseDevice) {
-    Utils.dbo?.loadDeviceSettings(device).then((data) => {
+    Utils.dbo?.loadSettings(device.id).then((data) => {
       if (!data) {
         // Nothing in db yet
         return;

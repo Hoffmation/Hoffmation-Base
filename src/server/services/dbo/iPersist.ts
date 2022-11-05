@@ -56,7 +56,7 @@ export interface iPersist {
 
   persistZigbeeDevice(device: ZigbeeDevice): void;
 
-  persistDeviceSettings(device: iBaseDevice, settings: string): void;
+  persistSettings(id: string, settings: string, customname: string): void;
 
-  loadDeviceSettings(device: iBaseDevice): Promise<string | undefined>;
+  loadSettings(id: string): Promise<string | undefined>;
 }

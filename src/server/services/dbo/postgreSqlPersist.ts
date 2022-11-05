@@ -339,8 +339,9 @@ BEGIN
   IF (SELECT to_regclass('hoffmation_schema."Settings"') IS NULL) Then
     create table if not exists hoffmation_schema."Settings"
     (
-        "id"        varchar(60) not null,
-        "settings"  varchar not null,
+        "id"            varchar(60) not null,
+        "settings"      varchar not null,
+        "customname"    varchar(100) not null,
         constraint settings_pk
             primary key ("id")
     );
@@ -463,28 +464,29 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
     `);
   }
 
-  public persistDeviceSettings(device: iBaseDevice, settings: string): void {
+  public persistSettings(id: string, settings: string, customname: string): void {
     this.query(`
-insert into hoffmation_schema."Settings" (id, settings)
-values ('${device.id}','${settings}')
+insert into hoffmation_schema."Settings" (id, settings, customname)
+values ('${id}','${settings}','${customname}')
     ON CONFLICT (id)
     DO UPDATE SET
-        settings = '${settings}'
+        settings = '${settings}',
+        customname = '${customname}'
 ;
     `);
   }
 
-  public async loadDeviceSettings(device: iBaseDevice): Promise<string | undefined> {
+  public async loadSettings(id: string): Promise<string | undefined> {
     const dbResult: idSettings[] | null = await this.query<idSettings>(
       `SELECT settings
 from hoffmation_schema."Settings" 
-WHERE "id" = '${device.id}'`,
+WHERE "id" = '${id}'`,
     );
     if (dbResult !== null && dbResult.length > 0) {
       return dbResult[0].settings;
     }
 
-    device.log(LogLevel.Debug, `No persisted settings found`);
+    ServerLogService.writeLog(LogLevel.Debug, `No persisted settings for ${id} found`);
     return undefined;
   }
 
