@@ -23,6 +23,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public settings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac];
+  protected _activatedByExcessEnergy: boolean = false;
+  protected _blockAutomaticChangeMS: number = -1;
 
   protected _info: DeviceInfo;
 
@@ -66,9 +68,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this.info.customName;
   }
 
-  protected _activatedByExcessEnergy: boolean = false;
-  protected _blockAutomaticTurnOnMS: number = -1;
-
   public get id(): string {
     return this.info.allDevicesKey ?? `ac-${this.info.room}-${this.info.customName}`;
   }
@@ -76,7 +75,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public abstract get on(): boolean;
 
   public isAvailableForExcessEnergy(): boolean {
-    if (Utils.nowMS() < this._blockAutomaticTurnOnMS) {
+    if (Utils.nowMS() < this._blockAutomaticChangeMS) {
       return false;
     }
     const minimumStart: Date = Utils.dateByTimeSpan(this.settings.minimumHours, this.settings.minimumMinutes);
@@ -94,7 +93,17 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no room temperature`);
       return AcMode.Off;
     }
+
     const acOn: boolean = this.on;
+
+    // Check Turn Off Time
+    const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
+    const minimumStart: Date = Utils.dateByTimeSpan(this.settings.minimumHours, this.settings.minimumMinutes);
+    const now: Date = new Date();
+    if (acOn && (now > maximumEnd || now < minimumStart)) {
+      this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
+      return AcMode.Off;
+    }
 
     let threshold: number = acOn ? 0 : 1;
     let desiredMode: AcMode = AcMode.Off;
@@ -122,11 +131,11 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   /**
-   * Disable automatic Turn-On for given amount of ms and turn off immediately.
+   * Disable automatic Turn-On and Turn-Off for given amount of ms.
    * @param {number} timeout
    */
   public deactivateAutomaticChange(timeout: number = 60 * 60 * 1000): void {
-    this._blockAutomaticTurnOnMS = Utils.nowMS() + timeout;
+    this._blockAutomaticChangeMS = Utils.nowMS() + timeout;
   }
 
   public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
@@ -145,7 +154,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public turnOnForExcessEnergy(): void {
-    if (this._blockAutomaticTurnOnMS > Utils.nowMS()) {
+    if (this._blockAutomaticChangeMS > Utils.nowMS()) {
       return;
     }
     this._activatedByExcessEnergy = true;
@@ -157,6 +166,16 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public turnOffDueToMissingEnergy(): void {
     this.turnOff();
+  }
+
+  public setState(mode: AcMode, forceTime: number = 60 * 60 * 1000): void {
+    this._blockAutomaticChangeMS = Utils.nowMS() + forceTime;
+    if (mode == AcMode.Off) {
+      this.turnOff();
+      return;
+    }
+    this.setDesiredMode(mode, false);
+    this.turnOn();
   }
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
@@ -187,8 +206,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   protected automaticCheck(): void {
-    if (!this.on && Utils.nowMS() < this._blockAutomaticTurnOnMS) {
-      // We aren't allowed to trun on anyway --> exit
+    if (Utils.nowMS() < this._blockAutomaticChangeMS) {
+      // We aren't allowed to turn on or off anyway --> exit
       return;
     }
     const desiredMode: AcMode = this.calculateDesiredMode();
@@ -204,14 +223,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
 
     if (desiredMode == AcMode.Off) {
-      this.turnOff();
-      return;
-    }
-
-    // Check Cooling Turn Off
-    const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
-    const now: Date = new Date();
-    if (now > maximumEnd) {
       this.turnOff();
       return;
     }

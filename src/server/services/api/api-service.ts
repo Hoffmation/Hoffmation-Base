@@ -71,8 +71,14 @@ export class API {
    * @param id The id of the device, if wrong false will be returned
    * @param {boolean} desiredState
    * @param {AcMode} desiredMode
+   * @param forceTime The time in ms this should not change before automatic change is allowed again
    */
-  public static setAc(id: string, desiredState: boolean, desiredMode?: AcMode): boolean {
+  public static setAc(
+    id: string,
+    desiredState: boolean,
+    desiredMode?: AcMode,
+    forceTime: number = 60 * 60 * 1000,
+  ): boolean {
     const d = this.getAc(id);
     if (!d) {
       ServerLogService.writeLog(LogLevel.Warn, `AC Device for id ${id} not found`);
@@ -82,16 +88,14 @@ export class API {
       ServerLogService.writeLog(LogLevel.Warn, `Device for id ${id} is not an ac`);
       return false;
     }
-    if (desiredState) {
-      d.setDesiredMode(
-        desiredMode ?? SettingsService.heatMode == HeatingMode.Winter ? AcMode.Heating : AcMode.Cooling,
-        false,
-      );
-      d.turnOn();
-    } else {
-      d.turnOff();
+    if (desiredMode === undefined) {
+      if (!desiredState) {
+        desiredMode = AcMode.Off;
+      } else {
+        desiredMode = SettingsService.heatMode == HeatingMode.Winter ? AcMode.Heating : AcMode.Cooling;
+      }
     }
-    d.deactivateAutomaticChange(60 * 60 * 1000);
+    d.setState(desiredMode, forceTime);
     return true;
   }
 
