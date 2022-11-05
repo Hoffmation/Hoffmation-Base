@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Delay loadDeviceSettings Call for iobroker devices, due to super constructor call
+
 ## 1.3.6 (2022-11-05)
 
 * (theimo1221) Minor fix to prevent uneccessary save of device settings

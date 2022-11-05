@@ -479,16 +479,17 @@ values ('${id}','${settings}','${customname}', '${new Date().toISOString()}')
 
   public async loadSettings(id: string): Promise<string | undefined> {
     const dbResult: idSettings[] | null = await this.query<idSettings>(
-      `SELECT settings
+      `SELECT settings, id, date
 from hoffmation_schema."Settings" 
 WHERE "id" = '${id}'
-ORDER BY "date" DESC`,
+ORDER BY "date" DESC
+LIMIT 1`,
     );
     if (dbResult !== null && dbResult.length > 0) {
       return dbResult[0].settings;
     }
 
-    ServerLogService.writeLog(LogLevel.Debug, `No persisted settings for ${id} found`);
+    ServerLogService.writeLog(LogLevel.Info, `No persisted settings for ${id} found`);
     return undefined;
   }
 
