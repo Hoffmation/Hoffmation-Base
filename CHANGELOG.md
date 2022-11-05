@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.5 (2022-11-05)
 
 * (theimo1221) Add Date to Settings, to keep a history
 * (theimo1221) Add api-function to force reload of device settings
