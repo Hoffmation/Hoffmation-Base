@@ -342,8 +342,9 @@ BEGIN
         "id"            varchar(60) not null,
         "settings"      varchar not null,
         "customname"    varchar(100) not null,
+        date            timestamp   not null,
         constraint settings_pk
-            primary key ("id")
+            primary key ("id", date)
     );
     
   END IF;
@@ -466,9 +467,9 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
 
   public persistSettings(id: string, settings: string, customname: string): void {
     this.query(`
-insert into hoffmation_schema."Settings" (id, settings, customname)
-values ('${id}','${settings}','${customname}')
-    ON CONFLICT (id)
+insert into hoffmation_schema."Settings" (id, settings, customname, date)
+values ('${id}','${settings}','${customname}', '${new Date().toISOString()}')
+    ON CONFLICT (id, date)
     DO UPDATE SET
         settings = '${settings}',
         customname = '${customname}'
@@ -480,7 +481,8 @@ values ('${id}','${settings}','${customname}')
     const dbResult: idSettings[] | null = await this.query<idSettings>(
       `SELECT settings
 from hoffmation_schema."Settings" 
-WHERE "id" = '${id}'`,
+WHERE "id" = '${id}'
+ORDER BY "date" DESC`,
     );
     if (dbResult !== null && dbResult.length > 0) {
       return dbResult[0].settings;

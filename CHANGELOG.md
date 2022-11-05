@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Date to Settings, to keep a history
+
 ## 1.3.4 (2022-11-05)
 
 * (theimo1221) Add Customname to settings Table and make load/save settings more generic
