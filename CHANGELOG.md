@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.2 (2022-11-05)
 
 * (theimo1221) Fix for sceneSettings Persistence
 * (theimo1221) Respect maximum and minimum Time settings even for AC-Heating
