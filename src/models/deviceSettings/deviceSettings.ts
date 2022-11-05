@@ -3,7 +3,7 @@ import { LogLevel } from '../logLevel';
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 
 export abstract class DeviceSettings {
-  public energyConsumerSettings: ExcessEnergyConsumerSettings | undefined = undefined;
+  public energySettings: ExcessEnergyConsumerSettings | undefined = undefined;
 
   public persist(device: iBaseDevice) {
     Utils.dbo?.persistDeviceSettings(device, JSON.stringify(this));

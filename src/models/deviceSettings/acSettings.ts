@@ -1,7 +1,9 @@
 import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../server';
+import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 
 export class AcSettings extends DeviceSettings {
+  public energySettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   public minimumHours: number = 0;
   public minimumMinutes: number = 0;
   public maximumHours: number = 24;

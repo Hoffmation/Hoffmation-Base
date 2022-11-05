@@ -32,7 +32,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
-    this.settings.energyConsumerSettings = new ExcessEnergyConsumerSettings();
     this._info = new DeviceInfo();
     this._info.fullName = `AC ${name}`;
     this._info.customName = `${roomName} ${name}`;
@@ -45,7 +44,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public get energySettings(): ExcessEnergyConsumerSettings {
-    return this.settings.energyConsumerSettings ?? new ExcessEnergyConsumerSettings();
+    return this.settings.energySettings;
   }
 
   private _roomTemperature: number = 0;
