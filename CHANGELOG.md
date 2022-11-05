@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.6 (2022-11-05)
 
 * (theimo1221) Minor fix to prevent uneccessary save of device settings
 * (theimo1221) Add Device Setting partial set unit test
