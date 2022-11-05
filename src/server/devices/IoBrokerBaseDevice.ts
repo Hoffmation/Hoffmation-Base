@@ -19,6 +19,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
   protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {
     this.addToCorrectRoom();
     this.persistDeviceInfo();
+    this.loadDeviceSettings();
   }
 
   public get id(): string {
