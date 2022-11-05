@@ -103,8 +103,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
     const minimumStart: Date = Utils.dateByTimeSpan(this.settings.minimumHours, this.settings.minimumMinutes);
     const now: Date = new Date();
-    if (acOn && (now > maximumEnd || now < minimumStart)) {
-      this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
+    if (now > maximumEnd || now < minimumStart) {
+      this.on && this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
       return AcMode.Off;
     }
 
