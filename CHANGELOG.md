@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.3 (2022-11-05)
 
 * (theimo1221) Fixes for energy settings
 
