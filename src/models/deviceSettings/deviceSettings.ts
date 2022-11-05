@@ -32,11 +32,11 @@ export abstract class DeviceSettings {
   }
 
   public fromPartialObject(_obj: Partial<DeviceSettings>): void {
-    if (_obj.energyConsumerSettings) {
-      if (this.energyConsumerSettings === undefined) {
-        this.energyConsumerSettings = new ExcessEnergyConsumerSettings();
+    if (_obj.energySettings) {
+      if (this.energySettings === undefined) {
+        this.energySettings = new ExcessEnergyConsumerSettings();
       }
-      this.energyConsumerSettings.fromPartialObject(_obj.energyConsumerSettings);
+      this.energySettings.fromPartialObject(_obj.energySettings);
     }
   }
 
