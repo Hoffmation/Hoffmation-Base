@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix for sceneSettings Persistence
+
 ## 1.3.1 (2022-11-04)
 
 * (theimo1221) Implement iSmokeDetectorDevice
