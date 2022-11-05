@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add Date to Settings, to keep a history
+* (theimo1221) Add api-function to force reload of device settings
 
 ## 1.3.4 (2022-11-05)
 

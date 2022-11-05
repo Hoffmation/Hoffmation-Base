@@ -269,4 +269,10 @@ export class API {
       device.settings?.persist(device);
     }
   }
+
+  public static loadAllDeviceSettingsFromDb(): void {
+    for (const device of Object.values(Devices.alLDevices)) {
+      device.loadDeviceSettings();
+    }
+  }
 }
