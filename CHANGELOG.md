@@ -11,6 +11,7 @@
 * (theimo1221) Minor fix to prevent uneccessary save of device settings
 * (theimo1221) Add Device Setting partial set unit test
 * (theimo1221) Add missing call for loadSettings in ioBrokerBaseDevice
+* (theimo1221) Add missing calls in tvDevice initialization
 
 ## 1.3.5 (2022-11-05)
 

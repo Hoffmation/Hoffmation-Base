@@ -18,6 +18,8 @@ export abstract class TvDevice implements iTvDevice {
     this._info.room = roomName;
     this._info.allDevicesKey = `tv-${roomName}-${name}`;
     Utils.guardedInterval(this.automaticCheck, 60000, this, false);
+    this.persistDeviceInfo();
+    this.loadDeviceSettings();
   }
 
   protected _info: DeviceInfo;
