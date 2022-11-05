@@ -1,8 +1,9 @@
 import { ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
+import { iBaseDevice } from './iBaseDevice';
 
-export interface iExcessEnergyConsumer {
-  // Settings like Priority in comparision to other devices
-  energyConsumerSettings: ExcessEnergyConsumerSettings;
+export interface iExcessEnergyConsumer extends iBaseDevice {
+  readonly energySettings: ExcessEnergyConsumerSettings;
+
   // Consumption in Watts, needed to manage the Excess consumer
   currentConsumption: number;
   // Whether this consumer is currently on or off

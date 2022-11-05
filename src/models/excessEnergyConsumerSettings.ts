@@ -10,4 +10,10 @@ export class ExcessEnergyConsumerSettings {
     // The time before the devices load could be calculated (e.g. Heating needing time to turn on)
     public powerReactionTime: number = 60000,
   ) {}
+
+  public fromPartialObject(obj: Partial<ExcessEnergyConsumerSettings>): void {
+    this.priority = obj.priority ?? this.priority;
+    this.rampUpOnSpareEnergy = obj.rampUpOnSpareEnergy ?? this.rampUpOnSpareEnergy;
+    this.powerReactionTime = obj.powerReactionTime ?? this.powerReactionTime;
+  }
 }

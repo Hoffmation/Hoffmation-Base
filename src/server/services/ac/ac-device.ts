@@ -19,7 +19,6 @@ import { HeatingMode } from '../../config';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice {
   public currentConsumption: number = -1;
-  public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   public settings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac];
@@ -33,6 +32,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
+    this.settings.energyConsumerSettings = new ExcessEnergyConsumerSettings();
     this._info = new DeviceInfo();
     this._info.fullName = `AC ${name}`;
     this._info.customName = `${roomName} ${name}`;
@@ -42,6 +42,10 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.persistDeviceInfo();
     this.loadDeviceSettings();
+  }
+
+  public get energySettings(): ExcessEnergyConsumerSettings {
+    return this.settings.energyConsumerSettings ?? new ExcessEnergyConsumerSettings();
   }
 
   private _roomTemperature: number = 0;

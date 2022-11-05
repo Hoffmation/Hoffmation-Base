@@ -11,6 +11,7 @@
 * (theimo1221) Fix for sceneSettings Persistence
 * (theimo1221) Respect maximum and minimum Time settings even for AC-Heating
 * (theimo1221) Better force controlling of AC-Devices
+* (theimo1221) Include EnergyConsumerSettings in device settings
 
 ## 1.3.1 (2022-11-04)
 

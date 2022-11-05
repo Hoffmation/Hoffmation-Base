@@ -1,7 +1,10 @@
 import { iBaseDevice, Utils } from '../../server';
 import { LogLevel } from '../logLevel';
+import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 
 export abstract class DeviceSettings {
+  public energyConsumerSettings: ExcessEnergyConsumerSettings | undefined = undefined;
+
   public persist(device: iBaseDevice) {
     Utils.dbo?.persistDeviceSettings(device, JSON.stringify(this));
   }
@@ -29,7 +32,12 @@ export abstract class DeviceSettings {
   }
 
   public fromPartialObject(_obj: Partial<DeviceSettings>): void {
-    // Nothing
+    if (_obj.energyConsumerSettings) {
+      if (this.energyConsumerSettings === undefined) {
+        this.energyConsumerSettings = new ExcessEnergyConsumerSettings();
+      }
+      this.energyConsumerSettings.fromPartialObject(_obj.energyConsumerSettings);
+    }
   }
 
   protected toJSON(): Partial<DeviceSettings> {

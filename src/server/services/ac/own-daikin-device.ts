@@ -19,7 +19,6 @@ export class OwnDaikinDevice extends AcDevice {
 
   public constructor(name: string, roomName: string, ip: string, device: DaikinAC | undefined) {
     super(name, roomName, ip, AcDeviceType.Daikin);
-    this.energyConsumerSettings.priority = 50;
     this._device = device;
   }
 

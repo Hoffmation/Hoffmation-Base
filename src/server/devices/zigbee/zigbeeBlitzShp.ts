@@ -31,13 +31,17 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
   }
 
   public settings: ActuatorSettings = new ActuatorSettings();
-  public energyConsumerSettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
   private readonly _availableForExcessEnergy: boolean = true;
   private _activatedByExcessEnergy: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeBlitzShp, `${pInfo.fullID}.state`);
+    this.settings.energyConsumerSettings = new ExcessEnergyConsumerSettings();
     this.deviceCapabilities.push(DeviceCapability.excessEnergyConsumer);
+  }
+
+  public get energySettings(): ExcessEnergyConsumerSettings {
+    return this.settings.energyConsumerSettings ?? new ExcessEnergyConsumerSettings();
   }
 
   public get currentConsumption(): number {
