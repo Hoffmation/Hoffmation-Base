@@ -81,10 +81,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     if (Utils.nowMS() < this._blockAutomaticChangeMS) {
       return false;
     }
-    const minimumStart: Date = Utils.dateByTimeSpan(this.settings.minimumHours, this.settings.minimumMinutes);
-    const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
-    const now: Date = new Date();
-    if (now < minimumStart || now > maximumEnd) {
+    if (
+      !Utils.timeWithinBorders(
+        this.settings.minimumHours,
+        this.settings.minimumMinutes,
+        this.settings.maximumHours,
+        this.settings.maximumMinutes,
+      )
+    ) {
       return false;
     }
     return this.calculateDesiredMode() !== AcMode.Off;
@@ -100,10 +104,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     const acOn: boolean = this.on;
 
     // Check Turn Off Time
-    const maximumEnd: Date = Utils.dateByTimeSpan(this.settings.maximumHours, this.settings.maximumMinutes);
-    const minimumStart: Date = Utils.dateByTimeSpan(this.settings.minimumHours, this.settings.minimumMinutes);
-    const now: Date = new Date();
-    if (now > maximumEnd || now < minimumStart) {
+    if (
+      !Utils.timeWithinBorders(
+        this.settings.minimumHours,
+        this.settings.minimumMinutes,
+        this.settings.maximumHours,
+        this.settings.maximumMinutes,
+      )
+    ) {
       this.on && this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
       return AcMode.Off;
     }

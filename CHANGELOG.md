@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve time ac logic to respect empty max time
+
 ## 1.3.8 (2022-11-05)
 
 * (theimo1221) Fix ac logic at night when previously off

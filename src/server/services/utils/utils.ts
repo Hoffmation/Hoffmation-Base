@@ -171,8 +171,8 @@ export class Utils {
     return { hours: now.getHours(), minutes: now.getMinutes() };
   }
 
-  public static dateByTimeSpan(hours: number, minutes: number): Date {
-    return new Date(new Date().setHours(hours, minutes));
+  public static dateByTimeSpan(hours: number, minutes: number, now: Date = new Date()): Date {
+    return new Date(new Date(now).setHours(hours, minutes));
   }
 
   public static positiveMod(number: number, mod: number): number {
@@ -239,5 +239,20 @@ export class Utils {
     tomorowOption.setHours(hours, minutes, 0, 0);
 
     return tomorowOption;
+  }
+
+  public static timeWithinBorders(
+    minimumHours: number,
+    minimumMinutes: number,
+    maxHours: number,
+    maxMinutes: number,
+    now: Date = new Date(),
+  ): boolean {
+    if ((minimumHours != 0 || minimumMinutes != 0) && now < Utils.dateByTimeSpan(minimumHours, minimumMinutes, now)) {
+      return false;
+    } else if ((maxHours != 0 || maxMinutes != 0) && now > Utils.dateByTimeSpan(maxHours, maxMinutes, now)) {
+      return false;
+    }
+    return true;
   }
 }
