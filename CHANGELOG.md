@@ -10,6 +10,7 @@
 
 * (theimo1221) Improve time ac logic to respect empty max time
 * (theimo1221) Allow setting of PID Minimum Value
+* (theimo1221) Update packages
 
 ## 1.3.8 (2022-11-05)
 
