@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix PID Minimum Value
+
 ## 1.3.9 (2022-11-10)
 
 * (theimo1221) Improve time ac logic to respect empty max time

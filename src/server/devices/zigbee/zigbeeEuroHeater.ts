@@ -126,7 +126,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
       return;
     }
     if (this.settings.controlByPid) {
-      this.setValve(Math.min(this.getNextPidLevel(), this.settings.pidForcedMinimum));
+      this.setValve(Math.max(this.getNextPidLevel(), this.settings.pidForcedMinimum));
       return;
     }
     this.checkTempDiff();
