@@ -30,6 +30,11 @@ export class HeaterSettings extends DeviceSettings {
    * @type {number}
    */
   public seasonTurnOnDay: number = 267;
+  /**
+   * In case of pid Control the forced minimum percentage for this heater valve
+   * @type {number}
+   */
+  public pidForcedMinimum: number = 1;
 
   public fromPartialObject(data: Partial<HeaterSettings>): void {
     this.automaticMode = data.automaticMode ?? this.automaticMode;

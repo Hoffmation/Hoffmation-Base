@@ -48,10 +48,6 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
 
   public override set roomTemperatur(value: number) {
     this._roomTemperature = value;
-    if (this.settings.controlByPid) {
-      //TODO: Implement PID controlling
-      return;
-    }
     if (this.settings.useOwnTemperatur) {
       return;
     }
@@ -130,7 +126,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
       return;
     }
     if (this.settings.controlByPid) {
-      this.setValve(this.getNextPidLevel());
+      this.setValve(Math.min(this.getNextPidLevel(), this.settings.pidForcedMinimum));
       return;
     }
     this.checkTempDiff();
