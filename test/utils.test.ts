@@ -29,4 +29,9 @@ describe('UtilsTest', () => {
     const expectedNextTodo = new Date('11/01/2022, 3:0:00 AM');
     expect(calculatedNextTodo.getTime()).toBe(expectedNextTodo.getTime());
   });
+  it('calculates between days correctly', async () => {
+    SettingsService.settings = SettingsService.testConfig;
+    const today = new Date('11/12/2022, 3:0:00 AM');
+    expect(Utils.beetweenDays(today, 99, 267)).toBeFalsy();
+  });
 });

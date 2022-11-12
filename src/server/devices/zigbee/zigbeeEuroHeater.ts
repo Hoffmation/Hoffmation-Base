@@ -174,7 +174,18 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
   }
 
   private setValve(target: number): void {
+    if (target == this._level) {
+      return;
+    }
+    this.log(LogLevel.Info, `Setting Valve to new value: "${target}%"`);
     this.setState(this._valvePosId, target);
+    Utils.guardedTimeout(
+      () => {
+        this.triggerDeviceQuery();
+      },
+      10000,
+      this,
+    );
   }
 
   /**

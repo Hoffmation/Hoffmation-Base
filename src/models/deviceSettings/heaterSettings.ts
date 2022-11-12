@@ -45,6 +45,7 @@ export class HeaterSettings extends DeviceSettings {
     this.seasonalTurnOffActive = data.seasonalTurnOffActive ?? this.seasonalTurnOffActive;
     this.seasonTurnOffDay = data.seasonTurnOffDay ?? this.seasonTurnOffDay;
     this.seasonTurnOnDay = data.seasonTurnOnDay ?? this.seasonTurnOnDay;
+    this.pidForcedMinimum = data.pidForcedMinimum ?? this.pidForcedMinimum;
     super.fromPartialObject(data);
   }
 

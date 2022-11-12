@@ -267,14 +267,14 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   private checkSeasonTurnOff(): void {
-    const desiredState: boolean = Utils.beetweenDays(
+    const isSummer: boolean = Utils.beetweenDays(
       new Date(),
       this.settings.seasonTurnOffDay,
       this.settings.seasonTurnOnDay,
     );
-    if (desiredState !== this.seasonTurnOff || !this._initialSeasonCheckDone) {
-      this.log(LogLevel.Info, `Switching Seasonal Heating --> New seasonTurnOff: ${desiredState}`);
-      this.seasonTurnOff = desiredState;
+    if (isSummer !== this.seasonTurnOff || !this._initialSeasonCheckDone) {
+      this.log(LogLevel.Info, `Switching Seasonal Heating --> New seasonTurnOff: ${isSummer}`);
+      this.seasonTurnOff = isSummer;
     }
     this._initialSeasonCheckDone = true;
   }
