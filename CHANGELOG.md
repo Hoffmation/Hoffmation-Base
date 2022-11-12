@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.11 (2022-11-12)
 
 * (theimo1221) Correct pidForcedMinimum Setting persisting
 
