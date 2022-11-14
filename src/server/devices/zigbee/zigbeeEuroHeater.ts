@@ -97,7 +97,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
         }
         break;
       case 'spz_trv_mode':
-        this.log(LogLevel.Trace, `Euro Valve mode Update for ${this.info.customName} to "${state.val}"`);
+        this.log(LogLevel.Info, `Received Euro Valve state update for spz_trv_mode to "${state.val}"`);
         this._mode = state.val as 1 | 2;
         const desiredMode = this.settings.controlByPid ? 1 : 2;
         if (this._mode !== desiredMode) {
