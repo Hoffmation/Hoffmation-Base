@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.12 (2022-11-14)
 
 * (theimo1221) Enhance Euro Heater Logging
 * (theimo1221) Enhance Euro Heater Logic for settings correct spz_trv_mode
