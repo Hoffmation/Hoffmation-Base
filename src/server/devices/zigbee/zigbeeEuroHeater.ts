@@ -25,7 +25,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     this._valvePosId = `${this.info.fullID}.valve_position`;
     this._forcedRefreshInterval = Utils.guardedInterval(
       () => {
-        this.triggerDeviceQuery();
+        this.setMode(this.settings.controlByPid || this.seasonTurnOff ? 1 : 2);
       },
       6 * 60 * 60 * 1000,
       this,
@@ -100,7 +100,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
         this.log(LogLevel.Trace, `Euro Valve mode Update for ${this.info.customName} to "${state.val}"`);
         this._mode = state.val as 1 | 2;
         const desiredMode = this.settings.controlByPid ? 1 : 2;
-        if (!this.settings.seasonalTurnOffActive && this._mode !== desiredMode) {
+        if (this._mode !== desiredMode) {
           this.setMode(desiredMode);
         }
         break;
