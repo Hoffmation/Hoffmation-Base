@@ -195,6 +195,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
    */
   private setMode(targetMode: 1 | 2): void {
     this.setState(this._setModeId, targetMode);
+    this.log(LogLevel.Info, `Changing spz_trv_mode to ${targetMode}`);
     Utils.guardedTimeout(
       () => {
         this.triggerDeviceQuery();

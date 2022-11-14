@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Enhance Euro Heater Logging
+
 ## 1.3.11 (2022-11-12)
 
 * (theimo1221) Correct pidForcedMinimum Setting persisting
