@@ -10,6 +10,7 @@
 
 * (theimo1221) Update packages
 * (theimo1221) Even more Euro Heater Logging
+* (theimo1221) Enhance Euro Heater Logic for logging correct level
 
 ## 1.3.12 (2022-11-14)
 
