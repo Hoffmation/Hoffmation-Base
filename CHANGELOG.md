@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Log Forced Device Queries
+* (theimo1221) Update packages
 
 ## 1.3.13 (2022-11-15)
 

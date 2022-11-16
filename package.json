@@ -42,13 +42,13 @@
     "@types/debug": "^4.1.7",
     "@types/iobroker": "^4.0.5",
     "@types/jest": "^29.2.3",
-    "@types/lodash": "^4.14.188",
+    "@types/lodash": "^4.14.189",
     "@types/node": "18.11.9",
     "@types/node-telegram-bot-api": "^0.57.6",
     "@types/pg": "^8.6.5",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.11",
-    "aws-sdk": "2.1254.0",
+    "aws-sdk": "2.1256.0",
     "bson": "^4.7.0",
     "daikin-controller": "^2.1.0",
     "get-mp3-duration": "^1.0.0",
@@ -81,6 +81,6 @@
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.9.3"
   }
 }
