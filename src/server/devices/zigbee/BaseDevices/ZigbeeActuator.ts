@@ -1,13 +1,16 @@
 import { LogDebugType, Utils } from '../../../services';
-import { ActuatorSettings, LogLevel } from '../../../../models';
+import { ActuatorSettings, CollisionSolving, LogLevel } from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iActuator } from '../../baseDeviceInterfaces';
+import { iActuator, iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceCapability } from '../../DeviceCapability';
+import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
 
-export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
+export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporaryDisableAutomatic {
   private _actuatorOn: boolean = false;
+  public readonly blockAutomationHandler;
+  private _targetAutomaticState: boolean = false;
 
   public settings: ActuatorSettings = new ActuatorSettings();
   protected readonly actuatorOnSwitchID: string;
@@ -17,13 +20,17 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     return this._actuatorOn;
   }
 
-  private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
-  private turnOffTime: number = 0;
-
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.actuator);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.actuatorOnSwitchID = actuatorOnSwitchID;
+    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+  }
+
+  public restoreTargetAutomaticValue(): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.setActuator(this._targetAutomaticState);
   }
 
   public update(
@@ -54,11 +61,14 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
       return;
     }
 
-    if (!force && Utils.nowMS() < this.turnOffTime) {
+    if (!force && this.blockAutomationHandler.automaticBlockActive) {
       this.log(
         LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(this.turnOffTime).toLocaleTimeString()}`,
+        `Skip automatic command to ${pValue} as it is locked until ${new Date(
+          this.blockAutomationHandler.automaticBlockedUntil,
+        ).toLocaleTimeString()}`,
       );
+      this._targetAutomaticState = pValue;
       return;
     }
 
@@ -71,35 +81,14 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
       return;
     }
 
-    this.log(LogLevel.Debug, `Set outlet Acutator to "${pValue}"`, LogDebugType.SetActuator);
+    this.log(LogLevel.Debug, `Set Acutator to "${pValue}"`, LogDebugType.SetActuator);
     this.setState(this.actuatorOnSwitchID, pValue, undefined, (err) => {
       this.log(LogLevel.Error, `Switching actuator resulted in error: ${err}`);
     });
     this.queuedValue = pValue;
-
-    if (this._turnOffTimeout !== undefined) {
-      clearTimeout(this._turnOffTimeout);
-      this._turnOffTimeout = undefined;
+    if (timeout > -1) {
+      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
-
-    if (timeout < 0 || !pValue) {
-      return;
-    }
-
-    this.turnOffTime = Utils.nowMS() + timeout;
-    this._turnOffTimeout = Utils.guardedTimeout(
-      () => {
-        this.log(LogLevel.Debug, `Delayed Turnoff initiated`);
-        this._turnOffTimeout = undefined;
-        if (!this.room) {
-          this.setActuator(false, -1, true);
-        } else {
-          this.room.setLightTimeBased(true);
-        }
-      },
-      timeout,
-      this,
-    );
   }
 
   public persist(): void {

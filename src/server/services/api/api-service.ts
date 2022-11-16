@@ -130,7 +130,7 @@ export class API {
    * Changes the status of a given actuator
    * @param {string} deviceId The device Id of the actuator
    * @param {boolean} state The desired new state
-   * @param timeout Desired time after which this should be reverted to normal state
+   * @param timeout Desired time after which this should be reverted to automatic state
    * @returns {Error | null} In case it failed the Error containing the reason
    */
   public static setActuator(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
