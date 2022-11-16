@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.14-alpha.0 (2022-11-16)
 
 * (theimo1221) Log Forced Device Queries
 * (theimo1221) Update packages
