@@ -80,6 +80,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   }
 
   public triggerDeviceQuery(): void {
+    this.log(LogLevel.Info, `Triggering Device Query`);
     this.setState(this._deviceQueryId, true);
   }
 
