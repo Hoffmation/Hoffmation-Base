@@ -22,4 +22,5 @@ export enum DeviceCapability {
   bluetoothDetector = 101,
   trackableDevice = 102,
   scene = 103,
+  blockAutomatic = 104,
 }
