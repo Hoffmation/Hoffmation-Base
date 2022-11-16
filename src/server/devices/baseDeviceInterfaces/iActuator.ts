@@ -3,7 +3,7 @@ import { iRoomDevice } from './iRoomDevice';
 
 export interface iActuator extends iRoomDevice {
   /**
-   * The settings for this Actuator primarily for controlling it's automatic actions
+   * The settings for this Actuator primarily for controlling its automatic actions
    */
   settings: ActuatorSettings;
 
