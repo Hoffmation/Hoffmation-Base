@@ -17,5 +17,6 @@ export * from './iShutter';
 export * from './iSmokeDetectorDevice';
 export * from './iSpeaker';
 export * from './iTemperatureSensor';
+export * from './iTemporaryDisableAutomatic';
 export * from './iTvDevice';
 export * from './iVibrationSensor';

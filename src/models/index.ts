@@ -1,6 +1,7 @@
 export * from './rooms/index';
 export * from './deviceSettings/index';
 export * from './persistence/index';
+export * from './collisionSolving';
 export * from './connectionCallbacks';
 export * from './daytime';
 export * from './deviceConfig';
