@@ -10,7 +10,7 @@
 
 * (theimo1221) Log Forced Device Queries
 * (theimo1221) Update packages
-* (theimo1221) #616 Allow better interaction with forcings
+* (theimo1221) #616 Allow better interaction with forcings in first steop for ZigbeeActuatorOnly
 
 ## 1.3.13 (2022-11-15)
 

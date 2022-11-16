@@ -1,5 +1,14 @@
-import { Devices, iActuator, iBaseDevice, iLamp, iScene, iShutter, iSpeaker } from '../../devices';
-import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
+import {
+  Devices,
+  iActuator,
+  iBaseDevice,
+  iLamp,
+  iScene,
+  iShutter,
+  iSpeaker,
+  iTemporaryDisableAutomatic,
+} from '../../devices';
+import { CollisionSolving, DeviceSettings, LogLevel, RoomBase } from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, AcMode, DaikinService } from '../ac';
@@ -274,5 +283,41 @@ export class API {
     for (const device of Object.values(Devices.alLDevices)) {
       device.loadDeviceSettings();
     }
+  }
+
+  /**
+   * Lifts a previously started Block of automatic
+   * @param {string} deviceId The target device
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static liftAutomaticBlock(deviceId: string): Error | null {
+    const d = this.getDevice(deviceId) as iTemporaryDisableAutomatic | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
+      return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
+    }
+    d.blockAutomationHandler.liftAutomaticBlock();
+    return null;
+  }
+
+  /**
+   * Blocks the automatic of the given device for provided Duration
+   * @param {string} deviceId The target device
+   * @param {number} duration The duration in ms for which the device should remain in current state
+   * @param {CollisionSolving} onCollision The desired Collision Solving strategy, in case the automatic being blocked already
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static blockAutomatic(deviceId: string, duration: number, onCollision?: CollisionSolving): Error | null {
+    const d = this.getDevice(deviceId) as iTemporaryDisableAutomatic | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
+      return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
+    }
+    d.blockAutomationHandler.disableAutomatic(duration, onCollision);
+    return null;
   }
 }
