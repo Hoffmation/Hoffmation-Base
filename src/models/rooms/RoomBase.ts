@@ -19,7 +19,7 @@ import {
   WindowGroup,
 } from '../../server';
 import { LogLevel } from '../logLevel';
-import { RoomDeviceAddingSettings, RoomSettingsController } from './RoomSettings';
+import { RoomSettingsController } from './RoomSettings';
 import { iRoomBase } from './iRoomBase';
 import { RoomInfo } from './roomInfo';
 import _ from 'lodash';
@@ -34,12 +34,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
   public skipNextRolloUp: boolean = false;
   public settings: RoomSettingsController;
 
-  public constructor(
-    public groupMap: Map<GroupType, BaseGroup>,
-    public deviceAddingSettings: RoomDeviceAddingSettings,
-    etage: number = 99,
-  ) {
-    this.info = new RoomInfo(deviceAddingSettings.RoomName, etage);
+  public constructor(public groupMap: Map<GroupType, BaseGroup>, roomName: string, etage: number = 99) {
+    this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
     RoomService.addToRoomList(this);
   }
