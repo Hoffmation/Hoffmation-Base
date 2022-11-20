@@ -23,8 +23,9 @@ import { RoomSettings } from './RoomSettings';
 import { iRoomBase } from './iRoomBase';
 import { RoomInfo } from './roomInfo';
 import _ from 'lodash';
+import { iIdHolder } from '../iIdHolder';
 
-export class RoomBase implements iRoomBase {
+export class RoomBase implements iRoomBase, iIdHolder {
   public info: RoomInfo;
   public sonnenAufgangCallback: TimeCallback | undefined;
   public sonnenUntergangCallback: TimeCallback | undefined;
@@ -37,6 +38,18 @@ export class RoomBase implements iRoomBase {
     settings.roomName = roomName;
     this.settings = settings;
     RoomService.addToRoomList(this);
+  }
+
+  /**
+   * For Rooms the id is itss name
+   * @returns {string} The Roomname
+   */
+  public get id(): string {
+    return this.roomName;
+  }
+
+  public get customName(): string {
+    return this.roomName;
   }
 
   protected _deviceCluster: DeviceCluster = new DeviceCluster();
@@ -209,7 +222,7 @@ export class RoomBase implements iRoomBase {
     return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
   }
 
-  private log(level: LogLevel, message: string): void {
+  public log(level: LogLevel, message: string): void {
     ServerLogService.writeLog(level, message, {
       room: this.roomName,
     });
