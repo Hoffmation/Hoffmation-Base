@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) #621 Make Room Settings Public
+
 ## 1.3.14-alpha.2 (2022-11-20)
 
 * (theimo1221) Exclude RoomDeviceAddingSettings from Room Constructor
