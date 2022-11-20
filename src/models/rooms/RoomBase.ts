@@ -19,7 +19,7 @@ import {
   WindowGroup,
 } from '../../server';
 import { LogLevel } from '../logLevel';
-import { RoomDeviceAddingSettings, RoomSettings } from './RoomSettings';
+import { RoomDeviceAddingSettings, RoomSettingsController } from './RoomSettings';
 import { iRoomBase } from './iRoomBase';
 import { RoomInfo } from './roomInfo';
 import _ from 'lodash';
@@ -32,7 +32,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
   public sonnenUntergangLichtCallback: TimeCallback | undefined;
   public skipNextRolloUp: boolean = false;
-  public settings: RoomSettings = new RoomSettings();
+  public settings: RoomSettingsController;
 
   public constructor(
     public groupMap: Map<GroupType, BaseGroup>,
@@ -40,7 +40,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
     etage: number = 99,
   ) {
     this.info = new RoomInfo(deviceAddingSettings.RoomName, etage);
-    this.settings.roomName = deviceAddingSettings.RoomName;
+    this.settings = new RoomSettingsController(this);
     RoomService.addToRoomList(this);
   }
 

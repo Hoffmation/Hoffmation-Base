@@ -7,7 +7,7 @@ import {
   PraesenzGroup,
   RoomBase,
   RoomInitializationSettings,
-  RoomSettings,
+  RoomSettingsController,
   Utils,
   Window,
   WindowGroup,
@@ -42,7 +42,7 @@ describe('Devices', () => {
     groups.set(GroupType.Presence, new PraesenzGroup('Testroom', ['zigbee-00124b0022cd373c']));
     const room: RoomBase = new RoomBase(
       'Testroom',
-      new RoomSettings(new RoomInitializationSettings('Testroom', 1)),
+      new RoomSettingsController(new RoomInitializationSettings('Testroom', 1)),
       groups,
     );
     const json: string = JSON.stringify(room);

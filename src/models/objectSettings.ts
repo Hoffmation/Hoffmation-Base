@@ -3,6 +3,8 @@ import { LogLevel } from './logLevel';
 import { iIdHolder } from './iIdHolder';
 
 export abstract class ObjectSettings {
+  public onChangeCb?: () => void;
+
   public persist(holder: iIdHolder) {
     Utils.dbo?.persistSettings(holder.id, JSON.stringify(this), holder.customName);
   }
