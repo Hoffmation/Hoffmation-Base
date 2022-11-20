@@ -89,6 +89,10 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     return this.settingsContainer.roomIsAlwaysDark;
   }
 
+  get radioUrl(): string {
+    return this.settingsContainer.radioUrl;
+  }
+
   public get room(): RoomBase | undefined {
     if (!this.roomName) {
       return undefined;
