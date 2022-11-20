@@ -6,8 +6,7 @@ import {
   GroupType,
   PraesenzGroup,
   RoomBase,
-  RoomInitializationSettings,
-  RoomSettingsController,
+  RoomDeviceAddingSettings,
   Utils,
   Window,
   WindowGroup,
@@ -40,11 +39,7 @@ describe('Devices', () => {
     const groups: Map<GroupType, BaseGroup> = new Map<GroupType, BaseGroup>();
     groups.set(GroupType.Window, new WindowGroup('Testroom', [new Window('Testroom', ['hm-rpc-0007DA49A781DF'])]));
     groups.set(GroupType.Presence, new PraesenzGroup('Testroom', ['zigbee-00124b0022cd373c']));
-    const room: RoomBase = new RoomBase(
-      'Testroom',
-      new RoomSettingsController(new RoomInitializationSettings('Testroom', 1)),
-      groups,
-    );
+    const room: RoomBase = new RoomBase(groups, new RoomDeviceAddingSettings('Testroom'), 1);
     const json: string = JSON.stringify(room);
     expect(json !== '').toBeTruthy();
     const newObject: string = JSON.parse(json);
