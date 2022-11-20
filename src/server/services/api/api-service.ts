@@ -273,6 +273,22 @@ export class API {
     return null;
   }
 
+  /**
+   * Changes the settings of a given room
+   * @param {string} roomName The id of the Room to change the settings
+   * @param settings A partial settings object containing the wanted settings properties
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static setRoomSettings(roomName: string, settings: Partial<DeviceSettings>): Error | null {
+    const r = this.getRoom(roomName);
+    if (r === undefined) {
+      return new Error(`Room with ID ${roomName} not found`);
+    }
+    r.settings.settingsContainer.fromPartialObject(settings);
+    r.settings.settingsContainer.persist(r);
+    return null;
+  }
+
   public static persistAllDeviceSettings(): void {
     for (const device of Object.values(Devices.alLDevices)) {
       device.settings?.persist(device);

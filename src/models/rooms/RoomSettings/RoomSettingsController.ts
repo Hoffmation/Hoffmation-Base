@@ -5,11 +5,6 @@ import _ from 'lodash';
 import { RoomSettings } from './roomSettings';
 
 export class RoomSettingsController implements iRoomDefaultSettings {
-  public roomName: string;
-  public rolloOffset: SunTimeOffsets;
-  public lampOffset: SunTimeOffsets;
-  private settingsContainer: RoomSettings = new RoomSettings();
-
   public constructor(room: RoomBase) {
     this.roomName = room.roomName;
     this.rolloOffset = new SunTimeOffsets(
@@ -21,76 +16,86 @@ export class RoomSettingsController implements iRoomDefaultSettings {
       this.sonnenUntergangRolloMaxTime.minutes,
     );
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
-    this.settingsContainer.onChangeCb = this.onSettingChange.bind(this);
-    this.settingsContainer.initializeFromDb(room);
+    this._settingsContainer.onChangeCb = this.onSettingChange.bind(this);
+    this._settingsContainer.initializeFromDb(room);
+  }
+
+  public roomName: string;
+  public rolloOffset: SunTimeOffsets;
+  public lampOffset: SunTimeOffsets;
+
+  private _settingsContainer: RoomSettings = new RoomSettings();
+
+  public get settingsContainer(): RoomSettings {
+    return this._settingsContainer;
   }
 
   get lichtSonnenAufgangAus(): boolean {
-    return this.settingsContainer.lichtSonnenAufgangAus;
+    return this._settingsContainer.lichtSonnenAufgangAus;
   }
 
   get ambientLightAfterSunset(): boolean {
-    return this.settingsContainer.ambientLightAfterSunset;
+    return this._settingsContainer.ambientLightAfterSunset;
   }
 
   get rolloHeatReduction(): boolean {
-    return this.settingsContainer.rolloHeatReduction;
+    return this._settingsContainer.rolloHeatReduction;
   }
 
   get sonnenAufgangRollos(): boolean {
-    return this.settingsContainer.sonnenAufgangRollos;
+    return this._settingsContainer.sonnenAufgangRollos;
   }
 
   get sonnenUntergangRolloMaxTime(): iTimePair {
-    return this.settingsContainer.sonnenUntergangRolloMaxTime;
+    return this._settingsContainer.sonnenUntergangRolloMaxTime;
   }
 
   get sonnenAufgangRolloMinTime(): iTimePair {
-    return this.settingsContainer.sonnenAufgangRolloMinTime;
+    return this._settingsContainer.sonnenAufgangRolloMinTime;
   }
 
   get lightIfNoWindows(): boolean {
-    return this.settingsContainer.lightIfNoWindows;
+    return this._settingsContainer.lightIfNoWindows;
   }
 
   get lampenBeiBewegung(): boolean {
-    return this.settingsContainer.lampenBeiBewegung;
+    return this._settingsContainer.lampenBeiBewegung;
   }
 
   get sonnenUntergangRollos(): boolean {
-    return this.settingsContainer.sonnenUntergangRollos;
+    return this._settingsContainer.sonnenUntergangRollos;
   }
 
   get movementResetTimer(): number {
-    return this.settingsContainer.movementResetTimer;
+    return this._settingsContainer.movementResetTimer;
   }
 
   get sonnenUntergangRolloDelay(): number {
-    return this.settingsContainer.sonnenUntergangRolloDelay;
+    return this._settingsContainer.sonnenUntergangRolloDelay;
   }
 
   get sonnenUntergangLampenDelay(): number {
-    return this.settingsContainer.sonnenUntergangLampenDelay;
+    return this._settingsContainer.sonnenUntergangLampenDelay;
   }
 
   get sonnenUntergangRolloAdditionalOffsetPerCloudiness(): number {
-    return this.settingsContainer.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
+    return this._settingsContainer.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
   }
 
   get sonnenAufgangRolloDelay(): number {
-    return this.settingsContainer.sonnenAufgangRolloDelay;
+    return this._settingsContainer.sonnenAufgangRolloDelay;
   }
 
   get sonnenAufgangLampenDelay(): number {
-    return this.settingsContainer.sonnenAufgangLampenDelay;
+    return this._settingsContainer.sonnenAufgangLampenDelay;
   }
 
   get roomIsAlwaysDark(): boolean {
-    return this.settingsContainer.roomIsAlwaysDark;
+    return this._settingsContainer.roomIsAlwaysDark;
   }
 
   get radioUrl(): string {
-    return this.settingsContainer.radioUrl;
+    return this._settingsContainer.radioUrl;
   }
 
   public get room(): RoomBase | undefined {
