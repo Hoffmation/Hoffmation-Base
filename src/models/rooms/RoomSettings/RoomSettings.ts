@@ -1,26 +1,18 @@
 import { RoomBase } from '../RoomBase';
-import { iRoomInitializationSettings } from './iRoomInitializationSettings';
 import { iRoomDefaultSettings } from './iRoomDefaultSettings';
 import { API, iTimePair, SettingsService, SunTimeOffsets, Utils, WeatherService } from '../../../server';
-import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import _ from 'lodash';
 
-export class RoomSettings implements iRoomDefaultSettings, iRoomInitializationSettings {
+export class RoomSettings implements iRoomDefaultSettings {
   public ambientLightAfterSunset: boolean = false;
-  public shortName: string;
   public defaultSettings: iRoomDefaultSettings = SettingsService.settings.roomDefault;
-  public deviceAddidngSettings?: RoomDeviceAddingSettings;
   public radioUrl: string = 'https://hermes.bcs-systems.de/hitradio-rtl_top40_64k_aac'; // Radio RTL
-  public etage: number = -1;
   public rolloOffset: SunTimeOffsets;
   public lampOffset: SunTimeOffsets;
   public roomName?: string;
   public rolloHeatReduction: boolean = this.defaultSettings.rolloHeatReduction;
 
-  public constructor(initSettings: iRoomInitializationSettings) {
-    this.shortName = initSettings.shortName;
-    this.etage = initSettings.etage;
-    this.deviceAddidngSettings = initSettings.deviceAddidngSettings;
+  public constructor() {
     this.rolloOffset = new SunTimeOffsets(
       this.sonnenAufgangRolloDelay,
       this.sonnenUntergangRolloDelay,

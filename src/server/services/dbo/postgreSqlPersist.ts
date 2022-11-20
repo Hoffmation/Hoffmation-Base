@@ -43,10 +43,10 @@ export class PostgreSqlPersist implements iPersist {
   addRoom(room: RoomBase): void {
     this.query(`
 insert into hoffmation_schema."BasicRooms" (name, etage)
-values ('${room.roomName}',${room.settings.etage})
+values ('${room.roomName}',${room.etage})
     ON CONFLICT (name)
     DO UPDATE SET
-        etage = ${room.settings.etage}
+        etage = ${room.etage}
 ;
     `);
   }
