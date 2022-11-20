@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 1.3.14-alpha.3 (2022-11-20)
 
 * (theimo1221) #621 Make Room Settings Public
 
