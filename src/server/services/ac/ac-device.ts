@@ -31,6 +31,10 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this._roomTemperature;
   }
 
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
     this._info = new DeviceInfo();
     this._info.fullName = `AC ${name}`;

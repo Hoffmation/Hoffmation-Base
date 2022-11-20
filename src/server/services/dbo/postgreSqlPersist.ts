@@ -465,14 +465,14 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
     `);
   }
 
-  public persistSettings(id: string, settings: string, customname: string): void {
+  public persistSettings(id: string, settings: string, customName: string): void {
     this.query(`
 insert into hoffmation_schema."Settings" (id, settings, customname, date)
-values ('${id}','${settings}','${customname}', '${new Date().toISOString()}')
+values ('${id}','${settings}','${customName}', '${new Date().toISOString()}')
     ON CONFLICT (id, date)
     DO UPDATE SET
         settings = '${settings}',
-        customname = '${customname}'
+        customname = '${customName}'
 ;
     `);
   }

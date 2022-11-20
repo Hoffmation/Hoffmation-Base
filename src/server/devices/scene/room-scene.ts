@@ -37,6 +37,10 @@ export class RoomScene implements iScene {
     this.loadDeviceSettings();
   }
 
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   protected _deviceType: DeviceType;
 
   public get deviceType(): DeviceType {

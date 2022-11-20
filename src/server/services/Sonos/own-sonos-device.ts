@@ -17,6 +17,10 @@ export class OwnSonosDevice implements iSpeaker {
   public readonly discoveryName: string;
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.speaker];
 
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   public constructor(discoveryName: string, roomName: string, public device: SonosDevice | undefined) {
     this.discoveryName = discoveryName;
     this._info = new DeviceInfo();

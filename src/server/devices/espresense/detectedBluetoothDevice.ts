@@ -29,6 +29,10 @@ export class DetectedBluetoothDevice implements iBaseDevice {
     }
   }
 
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   public get name(): string {
     return this.info.customName ?? `Unknown ${this.id}`;
   }

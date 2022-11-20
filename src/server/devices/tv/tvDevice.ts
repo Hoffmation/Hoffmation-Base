@@ -42,6 +42,10 @@ export abstract class TvDevice implements iTvDevice {
     return this.info.allDevicesKey ?? `ac-${this.info.room}-${this.info.customName}`;
   }
 
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   public abstract get on(): boolean;
 
   public abstract volumeDown(): void;

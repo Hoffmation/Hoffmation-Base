@@ -11,6 +11,11 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
   public room: RoomBase | undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [];
+
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   protected readonly individualStateCallbacks: Map<string, Array<(val: ioBroker.StateValue) => void>> = new Map<
     string,
     Array<(val: ioBroker.StateValue) => void>

@@ -31,6 +31,10 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     this.loadDeviceSettings();
   }
 
+  public get customName(): string {
+    return this.info.customName;
+  }
+
   protected _info: DeviceInfo;
 
   public get info(): DeviceInfo {
