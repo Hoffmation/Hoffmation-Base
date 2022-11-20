@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.0.0 (2022-11-20)
 
 * (theimo1221) New Major for #621 and #616
 
