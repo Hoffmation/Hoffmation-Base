@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Call setting change cb after setting change or initialization
+
 ## 2.0.0 (2022-11-20)
 
 * (theimo1221) New Major for #621 and #616

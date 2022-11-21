@@ -32,7 +32,9 @@ export abstract class ObjectSettings {
   }
 
   public fromPartialObject(_obj: Partial<ObjectSettings>): void {
-    // nothing yet
+    if (this.onChangeCb) {
+      this.onChangeCb();
+    }
   }
 
   protected toJSON(): Partial<ObjectSettings> {
