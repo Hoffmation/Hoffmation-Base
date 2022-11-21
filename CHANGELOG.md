@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.0.1 (2022-11-21)
 
 * (theimo1221) Call setting change cb after setting change or initialization
 
