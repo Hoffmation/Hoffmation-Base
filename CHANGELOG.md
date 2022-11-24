@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Increase Time Callback Log Level
+
 ## 2.0.2 (2022-11-24)
 
 * (theimo1221) Add/Remove Time Callbacks on setting change (if needed)

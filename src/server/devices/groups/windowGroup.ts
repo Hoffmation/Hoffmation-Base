@@ -136,7 +136,7 @@ export class WindowGroup extends BaseGroup {
     const room: RoomBase = this.getRoom();
     if (!room.settings.sonnenUntergangRollos || !room.settings.rolloOffset) {
       if (this.sunsetShutterCallback !== undefined) {
-        this.log(LogLevel.Trace, `Remove Sunset Shutter callback for ${this.roomName}`);
+        this.log(LogLevel.Debug, `Remove Sunset Shutter callback for ${this.roomName}`);
         TimeCallbackService.removeCallback(this.sunsetShutterCallback);
         this.sunsetShutterCallback = undefined;
       }
@@ -152,6 +152,7 @@ export class WindowGroup extends BaseGroup {
       this.sunsetShutterCallback.recalcNextToDo(new Date());
     }
     if (this.sunsetShutterCallback === undefined) {
+      this.log(LogLevel.Debug, `Add Sunset Shutter callback for ${this.roomName}`);
       this.sunsetShutterCallback = new TimeCallback(
         `${this.roomName} Sunset Shutter`,
         TimeCallbackType.SunSet,
@@ -177,7 +178,7 @@ export class WindowGroup extends BaseGroup {
     const room: RoomBase = this.getRoom();
     if (!room.settings.sonnenAufgangRollos || !room.settings.rolloOffset) {
       if (this.sunriseShutterCallback !== undefined) {
-        this.log(LogLevel.Trace, `Remove Sunrise Shutter callback for ${this.roomName}`);
+        this.log(LogLevel.Debug, `Remove Sunrise Shutter callback for ${this.roomName}`);
         TimeCallbackService.removeCallback(this.sunriseShutterCallback);
         this.sunriseShutterCallback = undefined;
       }
@@ -189,7 +190,7 @@ export class WindowGroup extends BaseGroup {
       this.sunriseShutterCallback.recalcNextToDo(new Date());
     }
     if (this.sunriseShutterCallback === undefined) {
-      this.log(LogLevel.Trace, `Add Sunrise shutter TimeCallback for ${this.roomName}`);
+      this.log(LogLevel.Debug, `Add Sunrise shutter TimeCallback for ${this.roomName}`);
       this.sunriseShutterCallback = new TimeCallback(
         `${this.roomName} Sonnenaufgang Rollos`,
         TimeCallbackType.Sunrise,

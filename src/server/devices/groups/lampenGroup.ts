@@ -181,7 +181,7 @@ export class LampenGroup extends BaseGroup {
     const room: RoomBase = this.getRoom();
     if (!room.settings.lichtSonnenAufgangAus || !room.settings.lampOffset) {
       if (this.sonnenAufgangLichtCallback !== undefined) {
-        this.log(LogLevel.Trace, `Remove Sunrise Lamp callback for ${this.roomName}`);
+        this.log(LogLevel.Debug, `Remove Sunrise Lamp callback for ${this.roomName}`);
         TimeCallbackService.removeCallback(this.sonnenAufgangLichtCallback);
         this.sonnenAufgangLichtCallback = undefined;
       }
@@ -192,7 +192,7 @@ export class LampenGroup extends BaseGroup {
       this.sonnenAufgangLichtCallback.recalcNextToDo(new Date());
     }
     if (this.sonnenAufgangLichtCallback === undefined) {
-      this.log(LogLevel.Trace, `Add Sunrise lamp TimeCallback for ${this.roomName}`);
+      this.log(LogLevel.Debug, `Add Sunrise lamp TimeCallback for ${this.roomName}`);
       const cb: TimeCallback = new TimeCallback(
         `${this.roomName} Morgens Lampe aus`,
         TimeCallbackType.Sunrise,
@@ -210,7 +210,7 @@ export class LampenGroup extends BaseGroup {
     const room: RoomBase = this.getRoom();
     if (!room.settings.ambientLightAfterSunset || !room.settings.lampOffset) {
       if (this.sonnenUntergangLichtCallback !== undefined) {
-        this.log(LogLevel.Trace, `Remove Sunset Lamp callback for ${this.roomName}`);
+        this.log(LogLevel.Debug, `Remove Sunset Lamp callback for ${this.roomName}`);
         TimeCallbackService.removeCallback(this.sonnenUntergangLichtCallback);
         this.sonnenUntergangLichtCallback = undefined;
       }
@@ -221,7 +221,7 @@ export class LampenGroup extends BaseGroup {
       this.sonnenUntergangLichtCallback.recalcNextToDo(new Date());
     }
     if (this.sonnenUntergangLichtCallback === undefined) {
-      this.log(LogLevel.Trace, `Add Sunset Light TimeCallback for ${this.roomName}`);
+      this.log(LogLevel.Debug, `Add Sunset Light TimeCallback for ${this.roomName}`);
       const cb: TimeCallback = new TimeCallback(
         `${this.roomName} Ambient Light after Sunset`,
         TimeCallbackType.SunSet,
