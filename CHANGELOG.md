@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.0.2 (2022-11-24)
 
 * (theimo1221) Add/Remove Time Callbacks on setting change (if needed)
 * (theimo1221) Update packages
