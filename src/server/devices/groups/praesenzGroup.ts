@@ -1,5 +1,5 @@
-import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
-import { RoomService, TimeCallbackService, Utils } from '../../services';
+import { LogLevel } from '../../../models';
+import { RoomService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
@@ -34,18 +34,6 @@ export class PraesenzGroup extends BaseGroup {
         RoomService.movementHistory.add(`${Utils.nowString()}: Raum "${this.roomName}" Gerät "${b.info.fullName}"`);
       });
     });
-    if (this.getRoom().settings.lichtSonnenAufgangAus && this.getRoom().settings.lampOffset) {
-      const cb: TimeCallback = new TimeCallback(
-        `${this.roomName} Morgens Lampe aus`,
-        TimeCallbackType.Sunrise,
-        () => {
-          this.getRoom().LampenGroup?.handleSunriseOff();
-        },
-        this.getRoom().settings.lampOffset.sunrise,
-      );
-      this.getRoom().sonnenAufgangLichtCallback = cb;
-      TimeCallbackService.addCallback(cb);
-    }
 
     this.addLastLeftCallback(() => {
       this.getRoom().LampenGroup?.switchAll(false);

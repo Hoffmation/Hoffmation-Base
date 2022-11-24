@@ -6,6 +6,9 @@ import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 
 export class WindowGroup extends BaseGroup {
+  public sunriseShutterCallback: TimeCallback | undefined;
+  public sunsetShutterCallback: TimeCallback | undefined;
+
   public constructor(roomName: string, public windows: Window[]) {
     super(roomName, GroupType.WindowGroup);
   }
@@ -37,49 +40,7 @@ export class WindowGroup extends BaseGroup {
 
   public initialize(): void {
     const room: RoomBase = this.getRoom();
-    if (room.settings.sonnenAufgangRollos && room.settings.rolloOffset) {
-      this.log(LogLevel.Trace, `Sonnenaufgang TimeCallback für ${this.roomName} hinzufügen`);
-      room.sonnenAufgangCallback = new TimeCallback(
-        `${this.roomName} Sonnenaufgang Rollos`,
-        TimeCallbackType.Sunrise,
-        () => {
-          if (room.skipNextRolloUp) {
-            room.skipNextRolloUp = false;
-            return;
-          }
-          this.sunriseUp();
-        },
-        room.settings.rolloOffset.sunrise,
-        undefined,
-        undefined,
-        room.settings.rolloOffset,
-      );
-      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
-        this.sunriseUp(true);
-      }
-      TimeCallbackService.addCallback(room.sonnenAufgangCallback);
-    }
-
-    if (room.settings.sonnenUntergangRollos && room.settings.rolloOffset) {
-      room.sonnenUntergangCallback = new TimeCallback(
-        `${this.roomName} Sonnenuntergang Rollo`,
-        TimeCallbackType.SunSet,
-        () => {
-          this.sunsetDown();
-        },
-        room.settings.rolloOffset.sunset,
-      );
-      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
-        Utils.guardedTimeout(
-          () => {
-            this.allRolloDown(true, true);
-          },
-          60000,
-          this,
-        );
-      }
-      TimeCallbackService.addCallback(room.sonnenUntergangCallback);
-    }
+    this.recalcTimeCallbacks();
 
     if (room.settings.rolloHeatReduction) {
       Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, false);
@@ -89,6 +50,11 @@ export class WindowGroup extends BaseGroup {
     this.windows.forEach((f) => {
       f.initialize();
     });
+  }
+
+  public recalcTimeCallbacks(): void {
+    this.reconfigureSunriseShutterCallback();
+    this.reconfigureSunsetShutterCallback();
   }
 
   public setRolloByWeatherStatus(): void {
@@ -163,6 +129,86 @@ export class WindowGroup extends BaseGroup {
     const room: RoomBase = this.getRoom();
     if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
       room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
+    }
+  }
+
+  private reconfigureSunsetShutterCallback(): void {
+    const room: RoomBase = this.getRoom();
+    if (!room.settings.sonnenUntergangRollos || !room.settings.rolloOffset) {
+      if (this.sunsetShutterCallback !== undefined) {
+        this.log(LogLevel.Trace, `Remove Sunset Shutter callback for ${this.roomName}`);
+        TimeCallbackService.removeCallback(this.sunsetShutterCallback);
+        this.sunsetShutterCallback = undefined;
+      }
+      return;
+    }
+    if (this.sunsetShutterCallback && room.settings.rolloOffset) {
+      this.sunsetShutterCallback.minuteOffset = room.settings.rolloOffset.sunset;
+      this.sunsetShutterCallback.sunTimeOffset = room.settings.rolloOffset;
+      if (room.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
+        this.sunsetShutterCallback.cloudOffset =
+          WeatherService.getCurrentCloudiness() * room.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
+      }
+      this.sunsetShutterCallback.recalcNextToDo(new Date());
+    }
+    if (this.sunsetShutterCallback === undefined) {
+      this.sunsetShutterCallback = new TimeCallback(
+        `${this.roomName} Sunset Shutter`,
+        TimeCallbackType.SunSet,
+        () => {
+          this.sunsetDown();
+        },
+        room.settings.rolloOffset.sunset,
+      );
+      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
+        Utils.guardedTimeout(
+          () => {
+            this.allRolloDown(true, true);
+          },
+          60000,
+          this,
+        );
+      }
+      TimeCallbackService.addCallback(this.sunsetShutterCallback);
+    }
+  }
+
+  private reconfigureSunriseShutterCallback(): void {
+    const room: RoomBase = this.getRoom();
+    if (!room.settings.sonnenAufgangRollos || !room.settings.rolloOffset) {
+      if (this.sunriseShutterCallback !== undefined) {
+        this.log(LogLevel.Trace, `Remove Sunrise Shutter callback for ${this.roomName}`);
+        TimeCallbackService.removeCallback(this.sunriseShutterCallback);
+        this.sunriseShutterCallback = undefined;
+      }
+      return;
+    }
+    if (this.sunriseShutterCallback && room.settings.rolloOffset) {
+      this.sunriseShutterCallback.minuteOffset = room.settings.rolloOffset.sunrise;
+      this.sunriseShutterCallback.sunTimeOffset = room.settings.rolloOffset;
+      this.sunriseShutterCallback.recalcNextToDo(new Date());
+    }
+    if (this.sunriseShutterCallback === undefined) {
+      this.log(LogLevel.Trace, `Add Sunrise shutter TimeCallback for ${this.roomName}`);
+      this.sunriseShutterCallback = new TimeCallback(
+        `${this.roomName} Sonnenaufgang Rollos`,
+        TimeCallbackType.Sunrise,
+        () => {
+          if (room.skipNextRolloUp) {
+            room.skipNextRolloUp = false;
+            return;
+          }
+          this.sunriseUp();
+        },
+        room.settings.rolloOffset.sunrise,
+        undefined,
+        undefined,
+        room.settings.rolloOffset,
+      );
+      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
+        this.sunriseUp(true);
+      }
+      TimeCallbackService.addCallback(this.sunriseShutterCallback);
     }
   }
 }

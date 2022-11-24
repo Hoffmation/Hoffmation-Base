@@ -33,12 +33,10 @@ export class ShutterService {
         f.getShutter().forEach((shutter) => {
           response.push(
             `Rollo: "${shutter.info.customName}"\t${
-              f.noRolloOnSunrise ? 'Hochfahren inaktiv' : r.sonnenAufgangCallback?.nextToDo?.toLocaleTimeString()
+              f.noRolloOnSunrise ? 'Hochfahren inaktiv' : r.sunriseShutterCallback?.nextToDo?.toLocaleTimeString()
             }`,
           );
-          down.push(
-            `Rollo: "${shutter.info.customName}"\t${r.sonnenUntergangCallback?.nextToDo?.toLocaleTimeString()}`,
-          );
+          down.push(`Rollo: "${shutter.info.customName}"\t${r.sunsetShutterCallback?.nextToDo?.toLocaleTimeString()}`);
         });
       }
     }

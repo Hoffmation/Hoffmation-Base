@@ -1,8 +1,8 @@
 import { TimeCallback } from '../timeCallback';
 
 export interface iRoomBase {
-  sonnenAufgangCallback: TimeCallback | undefined;
-  sonnenUntergangCallback: TimeCallback | undefined;
+  sunriseShutterCallback: TimeCallback | undefined;
+  sunsetShutterCallback: TimeCallback | undefined;
   sonnenAufgangLichtCallback: TimeCallback | undefined;
   sonnenUntergangLichtCallback: TimeCallback | undefined;
   skipNextRolloUp: boolean;

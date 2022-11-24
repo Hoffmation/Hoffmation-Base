@@ -1,4 +1,4 @@
-import { TimeCallback, TimeCallbackType, TimeOfDay } from '../timeCallback';
+import { TimeCallback, TimeOfDay } from '../timeCallback';
 import {
   BaseGroup,
   DeviceCluster,
@@ -15,7 +15,6 @@ import {
   TimeCallbackService,
   Utils,
   WaterGroup,
-  WeatherService,
   WindowGroup,
 } from '../../server';
 import { LogLevel } from '../logLevel';
@@ -27,10 +26,6 @@ import { iIdHolder } from '../iIdHolder';
 
 export class RoomBase implements iRoomBase, iIdHolder {
   public info: RoomInfo;
-  public sonnenAufgangCallback: TimeCallback | undefined;
-  public sonnenUntergangCallback: TimeCallback | undefined;
-  public sonnenAufgangLichtCallback: TimeCallback | undefined;
-  public sonnenUntergangLichtCallback: TimeCallback | undefined;
   public skipNextRolloUp: boolean = false;
   public settings: RoomSettingsController;
 
@@ -38,6 +33,22 @@ export class RoomBase implements iRoomBase, iIdHolder {
     this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
     RoomService.addToRoomList(this);
+  }
+
+  public get sonnenUntergangLichtCallback(): TimeCallback | undefined {
+    return this.LampenGroup?.sonnenUntergangLichtCallback;
+  }
+
+  public get sonnenAufgangLichtCallback(): TimeCallback | undefined {
+    return this.LampenGroup?.sonnenAufgangLichtCallback;
+  }
+
+  public get sunriseShutterCallback(): TimeCallback | undefined {
+    return this.WindowGroup?.sunriseShutterCallback;
+  }
+
+  public get sunsetShutterCallback(): TimeCallback | undefined {
+    return this.WindowGroup?.sunsetShutterCallback;
   }
 
   /**
@@ -103,29 +114,9 @@ export class RoomBase implements iRoomBase, iIdHolder {
     this.recalcTimeCallbacks();
     this.PraesenzGroup?.initCallbacks();
     this.WindowGroup?.initialize();
+    this.LampenGroup?.initialize();
     this.TasterGroup?.initCallbacks();
     this.HeatGroup?.initialize();
-    if (this.settings.ambientLightAfterSunset && this.settings.lampOffset) {
-      const cb: TimeCallback = new TimeCallback(
-        `${this.roomName} Ambient Light after Sunset`,
-        TimeCallbackType.SunSet,
-        () => {
-          this.log(LogLevel.Info, `Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung`);
-          this.LampenGroup?.switchAll(true);
-          Utils.guardedTimeout(
-            () => {
-              this.log(LogLevel.Info, `Ambientenbeleuchtung um Mitternacht abschalten.`);
-              this.LampenGroup?.switchAll(false);
-            },
-            Utils.timeTilMidnight,
-            this,
-          );
-        },
-        this.settings.lampOffset.sunset,
-      );
-      this.sonnenUntergangLichtCallback = cb;
-      TimeCallbackService.addCallback(cb);
-    }
   }
 
   public persist(): void {
@@ -133,29 +124,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
   }
 
   public recalcTimeCallbacks(): void {
-    const now: Date = new Date();
-    if (this.sonnenAufgangCallback && this.settings.rolloOffset) {
-      this.sonnenAufgangCallback.minuteOffset = this.settings.rolloOffset.sunrise;
-      this.sonnenAufgangCallback.sunTimeOffset = this.settings.rolloOffset;
-      this.sonnenAufgangCallback.recalcNextToDo(now);
-    }
-    if (this.sonnenUntergangCallback && this.settings.rolloOffset) {
-      this.sonnenUntergangCallback.minuteOffset = this.settings.rolloOffset.sunset;
-      this.sonnenUntergangCallback.sunTimeOffset = this.settings.rolloOffset;
-      if (this.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
-        this.sonnenUntergangCallback.cloudOffset =
-          WeatherService.getCurrentCloudiness() * this.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
-      }
-      this.sonnenUntergangCallback.recalcNextToDo(now);
-    }
-    if (this.sonnenAufgangLichtCallback && this.settings.lampOffset) {
-      this.sonnenAufgangLichtCallback.minuteOffset = this.settings.lampOffset.sunrise;
-      this.sonnenAufgangLichtCallback.recalcNextToDo(now);
-    }
-    if (this.sonnenUntergangLichtCallback && this.settings.lampOffset) {
-      this.sonnenUntergangLichtCallback.minuteOffset = this.settings.lampOffset.sunset;
-      this.sonnenUntergangLichtCallback.recalcNextToDo(now);
-    }
+    this.WindowGroup?.recalcTimeCallbacks();
+    this.LampenGroup?.recalcTimeCallbacks();
   }
 
   /**

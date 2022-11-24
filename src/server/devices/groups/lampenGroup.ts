@@ -1,14 +1,18 @@
-import { TimeCallbackService } from '../../services';
+import { TimeCallbackService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iActuator, iLamp } from '../baseDeviceInterfaces';
-import { LogLevel, TimeOfDay } from '../../../models';
+import { LogLevel, RoomBase, TimeCallback, TimeCallbackType, TimeOfDay } from '../../../models';
 import { WledDevice } from '../wledDevice';
 import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
+import _ from 'lodash';
 
 export class LampenGroup extends BaseGroup {
+  public sonnenAufgangLichtCallback: TimeCallback | undefined;
+  public sonnenUntergangLichtCallback: TimeCallback | undefined;
+
   public constructor(
     roomName: string,
     lampenIds: string[] = [],
@@ -158,5 +162,85 @@ export class LampenGroup extends BaseGroup {
     this.getWled().forEach((w) => {
       w.setWled(pValue, brightness, preset);
     });
+  }
+
+  public initialize(): void {
+    this.recalcTimeCallbacks();
+  }
+
+  public recalcTimeCallbacks(): void {
+    this.reconfigureSunriseTimeCallback();
+    this.reconfigureSunsetTimeCallback();
+  }
+
+  public toJSON(): Partial<LampenGroup> {
+    return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
+  }
+
+  private reconfigureSunriseTimeCallback(): void {
+    const room: RoomBase = this.getRoom();
+    if (!room.settings.lichtSonnenAufgangAus || !room.settings.lampOffset) {
+      if (this.sonnenAufgangLichtCallback !== undefined) {
+        this.log(LogLevel.Trace, `Remove Sunrise Lamp callback for ${this.roomName}`);
+        TimeCallbackService.removeCallback(this.sonnenAufgangLichtCallback);
+        this.sonnenAufgangLichtCallback = undefined;
+      }
+      return;
+    }
+    if (this.sonnenAufgangLichtCallback && room.settings.lampOffset) {
+      this.sonnenAufgangLichtCallback.minuteOffset = room.settings.lampOffset.sunrise;
+      this.sonnenAufgangLichtCallback.recalcNextToDo(new Date());
+    }
+    if (this.sonnenAufgangLichtCallback === undefined) {
+      this.log(LogLevel.Trace, `Add Sunrise lamp TimeCallback for ${this.roomName}`);
+      const cb: TimeCallback = new TimeCallback(
+        `${this.roomName} Morgens Lampe aus`,
+        TimeCallbackType.Sunrise,
+        () => {
+          this.handleSunriseOff();
+        },
+        this.getRoom().settings.lampOffset.sunrise,
+      );
+      this.sonnenAufgangLichtCallback = cb;
+      TimeCallbackService.addCallback(cb);
+    }
+  }
+
+  private reconfigureSunsetTimeCallback(): void {
+    const room: RoomBase = this.getRoom();
+    if (!room.settings.ambientLightAfterSunset || !room.settings.lampOffset) {
+      if (this.sonnenUntergangLichtCallback !== undefined) {
+        this.log(LogLevel.Trace, `Remove Sunset Lamp callback for ${this.roomName}`);
+        TimeCallbackService.removeCallback(this.sonnenUntergangLichtCallback);
+        this.sonnenUntergangLichtCallback = undefined;
+      }
+      return;
+    }
+    if (this.sonnenUntergangLichtCallback && room.settings.lampOffset) {
+      this.sonnenUntergangLichtCallback.minuteOffset = room.settings.lampOffset.sunset;
+      this.sonnenUntergangLichtCallback.recalcNextToDo(new Date());
+    }
+    if (this.sonnenUntergangLichtCallback === undefined) {
+      this.log(LogLevel.Trace, `Add Sunset Light TimeCallback for ${this.roomName}`);
+      const cb: TimeCallback = new TimeCallback(
+        `${this.roomName} Ambient Light after Sunset`,
+        TimeCallbackType.SunSet,
+        () => {
+          this.log(LogLevel.Info, `Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung`);
+          this.switchAll(true);
+          Utils.guardedTimeout(
+            () => {
+              this.log(LogLevel.Info, `Ambientenbeleuchtung um Mitternacht abschalten.`);
+              this.switchAll(false);
+            },
+            Utils.timeTilMidnight,
+            this,
+          );
+        },
+        this.getRoom().settings.lampOffset.sunset,
+      );
+      this.sonnenUntergangLichtCallback = cb;
+      TimeCallbackService.addCallback(cb);
+    }
   }
 }

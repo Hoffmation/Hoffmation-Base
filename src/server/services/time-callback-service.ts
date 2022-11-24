@@ -38,7 +38,7 @@ export class SunTimeOffsets {
 export class TimeCallbackService {
   private static _todaySunRise: Date;
   private static _todaySunSet: Date;
-  private static _callbacks: TimeCallback[] = [];
+  private static _callbacks: Map<string, TimeCallback> = new Map<string, TimeCallback>();
   private static _iCheckTimeout: NodeJS.Timeout | undefined;
   private static _lastCheck: Date = new Date(0);
 
@@ -162,13 +162,16 @@ export class TimeCallbackService {
   }
 
   public static addCallback(pCallback: TimeCallback): void {
-    TimeCallbackService._callbacks.push(pCallback);
+    if (TimeCallbackService._callbacks.has(pCallback.name)) {
+      ServerLogService.writeLog(LogLevel.Info, `Overwriting existing TimeCallback "${pCallback.name}"`);
+    }
+    TimeCallbackService._callbacks.set(pCallback.name, pCallback);
   }
 
   public static performCheck(): void {
     ServerLogService.writeLog(LogLevel.Trace, `Perform TimeCallBackCheck`);
     const now: Date = new Date();
-    for (const tc of TimeCallbackService._callbacks) {
+    for (const tc of TimeCallbackService._callbacks.values()) {
       if (tc.nextToDo === undefined || tc.nextToDo < tc.lastDone) {
         tc.recalcNextToDo(now);
       }
@@ -178,7 +181,7 @@ export class TimeCallbackService {
       }
 
       if (tc.nextToDo < now && tc.nextToDo > TimeCallbackService._lastCheck) {
-        tc.cFunction();
+        tc.perform();
         tc.lastDone = now;
         tc.nextToDo = undefined;
       }
@@ -216,13 +219,10 @@ Next Sunset: ${TimeCallbackService._nextSunSet.toLocaleString('de-DE')}`,
   }
 
   public static removeCallback(pCallback: TimeCallback): void {
-    for (let i: number = 0; i < TimeCallbackService._callbacks.length; i++) {
-      const cb: TimeCallback = TimeCallbackService._callbacks[i];
-      if (cb.name !== pCallback.name) {
-        continue;
-      }
-      TimeCallbackService._callbacks.splice(i, 1);
-      return;
+    if (TimeCallbackService._callbacks.has(pCallback.name)) {
+      TimeCallbackService._callbacks.delete(pCallback.name);
+    } else {
+      ServerLogService.writeLog(LogLevel.Info, `TimeCallback to remove ("${pCallback.name}") doesn't exist.`);
     }
   }
 

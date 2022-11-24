@@ -21,7 +21,7 @@ export class TimeCallback {
   constructor(
     public name: string,
     public type: TimeCallbackType,
-    public cFunction: () => void,
+    private cFunction: () => void,
     public minuteOffset: number,
     public hours?: number,
     public minutes?: number,
@@ -100,5 +100,10 @@ export class TimeCallback {
         this.nextToDo = fixedSSDate;
         break;
     }
+  }
+
+  public perform(): void {
+    ServerLogService.writeLog(LogLevel.Debug, `Timecallback '${this.name}' fired`);
+    this.cFunction();
   }
 }
