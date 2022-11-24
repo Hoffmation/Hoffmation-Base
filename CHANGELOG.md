@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add OnChange Log Message to RoomSettingsController
+
 ## 2.0.3 (2022-11-24)
 
 * (theimo1221) Increase Time Callback Log Level

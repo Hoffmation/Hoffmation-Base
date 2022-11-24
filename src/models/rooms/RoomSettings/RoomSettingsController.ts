@@ -1,8 +1,9 @@
 import { RoomBase } from '../RoomBase';
 import { iRoomDefaultSettings } from './iRoomDefaultSettings';
-import { API, iTimePair, SunTimeOffsets, Utils, WeatherService } from '../../../server';
+import { API, iTimePair, ServerLogService, SunTimeOffsets, Utils, WeatherService } from '../../../server';
 import _ from 'lodash';
 import { RoomSettings } from './roomSettings';
+import { LogLevel } from '../../logLevel';
 
 export class RoomSettingsController implements iRoomDefaultSettings {
   public constructor(room: RoomBase) {
@@ -111,6 +112,7 @@ export class RoomSettingsController implements iRoomDefaultSettings {
   }
 
   private onSettingChange(): void {
+    ServerLogService.writeLog(LogLevel.Info, `${this.roomName} RoomSettingsController.onSettingChange`);
     this.recalcLampOffset();
     this.recalcRolloOffset();
   }
