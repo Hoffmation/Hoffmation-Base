@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add/Remove Time Callbacks on setting change (if needed)
+* (theimo1221) Update packages
 
 ## 2.0.1 (2022-11-21)
 
