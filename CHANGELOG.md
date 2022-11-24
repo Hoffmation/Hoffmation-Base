@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.0.5 (2022-11-24)
 
 * (theimo1221) Change Log Level on TimeCallback Recalc
 
