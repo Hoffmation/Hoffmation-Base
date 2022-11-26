@@ -188,12 +188,12 @@ export class TimeCallbackService {
     }
 
     if (TimeCallbackService._nextSunRise < now) {
-      const tomorow: Date = new Date(new Date().setHours(2, 0, 0, 0) + 24 * 60 * 60 * 1000);
-      TimeCallbackService.updateSunRise(tomorow);
+      const tomorrow: Date = new Date(new Date().setHours(2, 0, 0, 0) + 24 * 60 * 60 * 1000);
+      TimeCallbackService.updateSunRise(tomorrow);
     }
     if (TimeCallbackService._nextSunSet < now) {
-      const tomorow: Date = new Date(new Date().setHours(2, 0, 0, 0) + 24 * 60 * 60 * 1000);
-      TimeCallbackService.updateSunSet(tomorow);
+      const tomorrow: Date = new Date(new Date().setHours(2, 0, 0, 0) + 24 * 60 * 60 * 1000);
+      TimeCallbackService.updateSunSet(tomorrow);
     }
 
     TimeCallbackService._lastCheck = now;

@@ -19,6 +19,11 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
     this._settingsContainer.onChangeCb = this.onSettingChange.bind(this);
     this._settingsContainer.initializeFromDb(room);
+    WeatherService.addWeatherUpdateCb(`RolloWeatherUpdate${this.roomName}`, () => {
+      if (this.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
+        this.room?.recalcTimeCallbacks();
+      }
+    });
   }
 
   public roomName: string;
@@ -126,11 +131,6 @@ export class RoomSettingsController implements iRoomDefaultSettings {
       this.sonnenUntergangRolloMaxTime.hours,
       this.sonnenUntergangRolloMaxTime.minutes,
     );
-    if (this.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
-      WeatherService.addWeatherUpdateCb(`RolloWeatherUpdate${this.roomName}`, () => {
-        this.room?.recalcTimeCallbacks();
-      });
-    }
     this.room?.recalcTimeCallbacks();
   }
 

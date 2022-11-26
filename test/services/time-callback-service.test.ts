@@ -99,6 +99,27 @@ describe('TimeCallbackService', () => {
     const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
     expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
+  it('Time Callback for Rollo Sunrise respects min hours in winter', async () => {
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 8, 30, 22, 30);
+    const cb: TimeCallback = new TimeCallback(
+      '',
+      TimeCallbackType.Sunrise,
+      () => {
+        /*Nothing*/
+      },
+      offset.sunrise,
+      undefined,
+      undefined,
+      offset,
+    );
+    const sunRiseCalcDate: Date = new Date('11/25/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('11/24/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('11/25/2022, 8:30:00 AM');
+    TimeCallbackService.updateSunRise(sunRiseCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
+  });
   it('Time Callback for Rollo Sunset is calculated correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(

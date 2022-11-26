@@ -2,7 +2,7 @@ import { ZigbeeHeater } from './BaseDevices';
 import { DeviceType } from '../deviceType';
 import { UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { LogLevel } from '../../../models';
-import { iDisposable, Utils } from '../../services';
+import { iDisposable, LogDebugType, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
@@ -97,7 +97,11 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
         }
         break;
       case 'spz_trv_mode':
-        this.log(LogLevel.Info, `Received Euro Valve state update for spz_trv_mode to "${state.val}"`);
+        this.log(
+          LogLevel.Debug,
+          `Received Euro Valve state update for spz_trv_mode to "${state.val}"`,
+          LogDebugType.EuroHeaterValveLogging,
+        );
         this._mode = state.val as 1 | 2;
         const desiredMode = this.settings.controlByPid ? 1 : 2;
         if (this._mode !== desiredMode) {
@@ -196,7 +200,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
    */
   private setMode(targetMode: 1 | 2): void {
     this.setState(this._setModeId, targetMode);
-    this.log(LogLevel.Info, `Changing spz_trv_mode to ${targetMode}`);
+    this.log(LogLevel.Info, `Changing spz_trv_mode to ${targetMode}`, LogDebugType.EuroHeaterValveLogging);
     Utils.guardedTimeout(
       () => {
         this.triggerDeviceQuery();

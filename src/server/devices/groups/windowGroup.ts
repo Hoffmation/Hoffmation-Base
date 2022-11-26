@@ -196,6 +196,7 @@ export class WindowGroup extends BaseGroup {
         TimeCallbackType.Sunrise,
         () => {
           if (room.skipNextRolloUp) {
+            this.log(LogLevel.Info, `${this.roomName} skipped sunrise up due to room.skipNextRolloUp`);
             room.skipNextRolloUp = false;
             return;
           }

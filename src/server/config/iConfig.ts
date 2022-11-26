@@ -95,6 +95,7 @@ export interface iLogSettings {
   debugUchangedShutterPosition?: boolean;
   debugUnchangedActuator?: boolean;
   debugDaikinSuccessfullControlInfo?: boolean;
+  debugEuroHeaterValve?: boolean;
 }
 
 export interface iTimePair {

@@ -129,6 +129,11 @@ export class ServerLogService {
           return false;
         }
         break;
+      case LogDebugType.EuroHeaterValveLogging:
+        if (SettingsService.settings.logSettings?.debugEuroHeaterValve === true) {
+          return false;
+        }
+        break;
     }
     return true;
   }

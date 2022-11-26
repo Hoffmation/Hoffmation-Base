@@ -70,7 +70,7 @@ export class TimeCallback {
 
         ServerLogService.writeLog(
           LogLevel.Debug,
-          `Next Time Event for "${this.name}" at ${fixedSRDate.toLocaleTimeString('de-DE')}`,
+          `Next Time Event for "${this.name}" at ${fixedSRDate.toLocaleString('de-DE')}`,
         );
         this.nextToDo = fixedSRDate;
         break;
@@ -95,7 +95,7 @@ export class TimeCallback {
 
         ServerLogService.writeLog(
           LogLevel.Debug,
-          `Next Time Event for "${this.name}" at ${fixedSSDate.toLocaleTimeString('de-DE')}`,
+          `Next Time Event for "${this.name}" at ${fixedSSDate.toLocaleString('de-DE')}`,
         );
         this.nextToDo = fixedSSDate;
         break;
