@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.0.6 (2022-11-26)
 
 * (theimo1221) Some Logging improvements to narrow down some issues
 
