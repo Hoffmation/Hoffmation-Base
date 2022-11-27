@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.1.3 (2022-11-27)
 
 * (theimo1221) Fix typo in evening restart shutter up prevention
 
