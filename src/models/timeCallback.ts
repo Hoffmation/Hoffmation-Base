@@ -78,7 +78,7 @@ export class TimeCallback {
         break;
       case TimeCallbackType.SunSet:
         if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunset.getDate()) {
-          this._calculationSunset = new Date(TimeCallbackService.nextSunRise.getTime());
+          this._calculationSunset = new Date(TimeCallbackService.nextSunSet.getTime());
         }
         if (this.cloudOffset === undefined) {
           this.cloudOffset = 0;
