@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent exception on fire immediate
+
 ## 2.1.0 (2022-11-27)
 
 * (theimo1221) Fixing some edge cases around sunrise/sunset callbacks in combination with critical recalc times (after

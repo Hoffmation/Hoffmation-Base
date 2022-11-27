@@ -78,7 +78,7 @@ export class TimeCallback {
         break;
       case TimeCallbackType.SunSet:
         if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunset.getDate()) {
-          this._calculationSunrise = new Date(TimeCallbackService.nextSunRise.getTime());
+          this._calculationSunset = new Date(TimeCallbackService.nextSunRise.getTime());
         }
         if (this.cloudOffset === undefined) {
           this.cloudOffset = 0;
@@ -102,10 +102,10 @@ export class TimeCallback {
         `Time Callback recalc results in the past, while previous target is still in future --> fire immediately.`,
       );
       this.perform(now);
-    } else {
-      this.nextToDo = nextCalculatedTime;
+      return;
     }
 
+    this.nextToDo = nextCalculatedTime;
     ServerLogService.writeLog(
       LogLevel.Debug,
       `Next Time event for "${this.name}" at ${this.nextToDo.toLocaleString('de-DE')}`,
