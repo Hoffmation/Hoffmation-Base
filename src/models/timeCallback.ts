@@ -15,8 +15,20 @@ export enum TimeOfDay {
 }
 
 export class TimeCallback {
+  private _calculationSunrise?: Date;
+
+  public get calculationSunrise(): Date {
+    return this._calculationSunrise ?? TimeCallbackService.nextSunRise;
+  }
+
   public lastDone: Date = new Date(0);
   public nextToDo?: Date;
+
+  private _calculationSunset?: Date;
+
+  public get calculationSunset(): Date {
+    return this._calculationSunset ?? TimeCallbackService.nextSunSet;
+  }
 
   constructor(
     public name: string,
@@ -33,6 +45,7 @@ export class TimeCallback {
   public recalcNextToDo(now: Date): void {
     const today: Date = new Date(now.getTime());
     today.setHours(0, 0, 0, 0);
+    let nextCalculatedTime: Date;
     switch (this.type) {
       case TimeCallbackType.TimeOfDay:
         // !!WARNING!! Changing to winter time, that day has 25 hours.
@@ -44,66 +57,67 @@ export class TimeCallback {
           this.minutes = 0;
         }
 
-        this.nextToDo = Utils.nextMatchingDate(this.hours, this.minutes + this.minuteOffset);
-
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Next Time event for "${this.name}" at ${this.nextToDo.toLocaleString('de-DE')}`,
-        );
+        nextCalculatedTime = Utils.nextMatchingDate(this.hours, this.minutes + this.minuteOffset);
         break;
       case TimeCallbackType.Sunrise:
+        if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunrise.getDate()) {
+          this._calculationSunrise = new Date(TimeCallbackService.nextSunRise.getTime());
+        }
         if (this.cloudOffset === undefined) {
           this.cloudOffset = 0;
         }
-        let fixedSRDate: Date = new Date(
-          TimeCallbackService.nextSunRise.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
+        nextCalculatedTime = new Date(
+          this.calculationSunrise.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
         );
         if (this.sunTimeOffset) {
           const nextMinSR: Date = this.sunTimeOffset.getNextMinimumSunrise(now);
-          if (nextMinSR > fixedSRDate && fixedSRDate.getDate() === nextMinSR.getDate()) {
-            fixedSRDate = nextMinSR;
+          if (nextMinSR > nextCalculatedTime && nextCalculatedTime.getDate() === nextMinSR.getDate()) {
+            nextCalculatedTime = nextMinSR;
           }
         }
-        if (now > fixedSRDate) {
-          return;
-        }
-
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Next Time Event for "${this.name}" at ${fixedSRDate.toLocaleString('de-DE')}`,
-        );
-        this.nextToDo = fixedSRDate;
         break;
       case TimeCallbackType.SunSet:
+        if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunset.getDate()) {
+          this._calculationSunrise = new Date(TimeCallbackService.nextSunRise.getTime());
+        }
         if (this.cloudOffset === undefined) {
           this.cloudOffset = 0;
         } else {
           this.cloudOffset = this.cloudOffset * -1;
         }
-        let fixedSSDate: Date = new Date(
-          TimeCallbackService.nextSunSet.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
+        nextCalculatedTime = new Date(
+          this.calculationSunset.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
         );
         if (this.sunTimeOffset) {
           const nextMaxSS: Date = this.sunTimeOffset.getNextMaximumSunset(now);
-          if (nextMaxSS < fixedSSDate && fixedSSDate.getDate() === nextMaxSS.getDate()) {
-            fixedSSDate = nextMaxSS;
+          if (nextMaxSS < nextCalculatedTime && nextCalculatedTime.getDate() === nextMaxSS.getDate()) {
+            nextCalculatedTime = nextMaxSS;
           }
         }
-        if (now > fixedSSDate) {
-          return;
-        }
-
-        ServerLogService.writeLog(
-          LogLevel.Debug,
-          `Next Time Event for "${this.name}" at ${fixedSSDate.toLocaleString('de-DE')}`,
-        );
-        this.nextToDo = fixedSSDate;
         break;
     }
+    if (nextCalculatedTime < now && this.nextToDo && this.nextToDo > now) {
+      ServerLogService.writeLog(
+        LogLevel.Info,
+        `Time Callback recalc results in the past, while previous target is still in future --> fire immediately.`,
+      );
+      this.perform(now);
+    } else {
+      this.nextToDo = nextCalculatedTime;
+    }
+
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Next Time event for "${this.name}" at ${this.nextToDo.toLocaleString('de-DE')}`,
+    );
   }
 
-  public perform(): void {
+  public perform(now: Date = new Date()): void {
     ServerLogService.writeLog(LogLevel.Debug, `Timecallback '${this.name}' fired`);
     this.cFunction();
+    this.lastDone = now;
+    this.nextToDo = undefined;
+    this._calculationSunrise = undefined;
+    this._calculationSunset = undefined;
   }
 }

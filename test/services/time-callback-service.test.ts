@@ -120,6 +120,51 @@ describe('TimeCallbackService', () => {
     const nextToDoDate: Date = cb.nextToDo ?? new Date(0);
     expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
   });
+  it('Time Callback for Rollo Sunrise handles recalculation correctly', async () => {
+    const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 8, 30, 22, 30);
+    const cb: TimeCallback = new TimeCallback(
+      '',
+      TimeCallbackType.Sunrise,
+      () => {
+        /*Nothing*/
+      },
+      offset.sunrise,
+      undefined,
+      undefined,
+      offset,
+    );
+    const sunRiseCalcDate: Date = new Date('11/25/2022, 0:30:00 AM');
+    const nextToDoCalculationDate: Date = new Date('11/24/2022, 10:30:00 PM');
+    const expectedDate: Date = new Date('11/25/2022, 8:30:00 AM');
+    TimeCallbackService.updateSunRise(sunRiseCalcDate, 55, 0);
+    TimeCallbackService.updateSunSet(sunRiseCalcDate, 55, 0);
+    cb.recalcNextToDo(nextToDoCalculationDate);
+    let nextToDoDate: Date = cb.nextToDo ?? new Date(0);
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
+
+    // Until this point everything is as usual.
+    // --> But if we passed the sunrise it will recalc for the next day.
+
+    const criticalRecalcTime: Date = new Date('11/25/2022, 8:27:00 AM');
+    const copyDate: Date = new Date(criticalRecalcTime.getTime());
+    const tomorrow: Date = new Date(copyDate.setHours(2, 0, 0, 0) + 24 * 60 * 60 * 1000);
+    TimeCallbackService.updateSunRise(tomorrow, 55, 0);
+    expect(TimeCallbackService.nextSunRise.getDate()).toBe(26);
+    // Next Sunrise is now calculated for the next day
+
+    cb.recalcNextToDo(criticalRecalcTime);
+    nextToDoDate = cb.nextToDo ?? new Date(0);
+    // We should still have the same callback time, as it is still in the future
+    expect(nextToDoDate.toLocaleString()).toBe(expectedDate.toLocaleString());
+
+    // If we now perform the cb, we should expect the next event at next day:
+    cb.lastDone = expectedDate;
+    const lastDayRecalcTime: Date = new Date('11/25/2022, 8:31:00 AM');
+    cb.recalcNextToDo(lastDayRecalcTime);
+    nextToDoDate = cb.nextToDo ?? new Date(0);
+    const expectedLastDate: Date = new Date('11/26/2022, 8:30:00 AM');
+    expect(nextToDoDate.toLocaleString()).toBe(expectedLastDate.toLocaleString());
+  });
   it('Time Callback for Rollo Sunset is calculated correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 22, 30);
     const cb: TimeCallback = new TimeCallback(

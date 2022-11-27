@@ -181,9 +181,7 @@ export class TimeCallbackService {
       }
 
       if (tc.nextToDo < now && tc.nextToDo > TimeCallbackService._lastCheck) {
-        tc.perform();
-        tc.lastDone = now;
-        tc.nextToDo = undefined;
+        tc.perform(now);
       }
     }
 

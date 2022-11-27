@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fixing some edge cases around sunrise/sunset callbacks in combination with critical recalc times (after
+  Sunrise but before execution)
+
 ## 2.0.6 (2022-11-26)
 
 * (theimo1221) Some Logging improvements to narrow down some issues
