@@ -137,8 +137,8 @@ export class TimeCallbackService {
     }
   }
 
-  public static init(): void {
-    this._startTime = new Date();
+  public static init(startTime: Date = new Date()): void {
+    this._startTime = startTime;
     const dailyRecalc: TimeCallback = new TimeCallback(
       'Midnight Recalc',
       TimeCallbackType.TimeOfDay,

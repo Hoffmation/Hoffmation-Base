@@ -63,6 +63,9 @@ export class TimeCallback {
         if (this.cloudOffset === undefined) {
           this.cloudOffset = 0;
         }
+        if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunrise.getDate()) {
+          this._calculationSunrise = new Date(TimeCallbackService.nextSunRise.getTime());
+        }
         nextCalculatedTime = new Date(
           this.calculationSunrise.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
         );
@@ -71,6 +74,10 @@ export class TimeCallback {
           if (nextMinSR > nextCalculatedTime && nextCalculatedTime.getDate() === nextMinSR.getDate()) {
             nextCalculatedTime = nextMinSR;
           }
+        }
+        if (TimeCallbackService.startTime > nextCalculatedTime && nextCalculatedTime > TimeCallbackService.nextSunSet) {
+          // This combination is typical for a system restart at evening
+          return;
         }
         break;
       case TimeCallbackType.SunSet:
@@ -90,13 +97,6 @@ export class TimeCallback {
           if (nextMaxSS < nextCalculatedTime && nextCalculatedTime.getDate() === nextMaxSS.getDate()) {
             nextCalculatedTime = nextMaxSS;
           }
-        }
-        if (TimeCallbackService.startTime > nextCalculatedTime && nextCalculatedTime > TimeCallbackService.nextSunSet) {
-          // This combination is typical for a system restart at evening
-          return;
-        }
-        if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunrise.getDate()) {
-          this._calculationSunrise = new Date(TimeCallbackService.nextSunRise.getTime());
         }
         break;
     }
