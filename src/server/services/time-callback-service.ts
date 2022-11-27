@@ -36,6 +36,8 @@ export class SunTimeOffsets {
 }
 
 export class TimeCallbackService {
+  private static _startTime: Date;
+
   private static _todaySunRise: Date;
   private static _todaySunSet: Date;
   private static _callbacks: Map<string, TimeCallback> = new Map<string, TimeCallback>();
@@ -43,6 +45,10 @@ export class TimeCallbackService {
   private static _lastCheck: Date = new Date(0);
 
   private static _nextSunRise: Date;
+
+  public static get startTime(): Date {
+    return this._startTime;
+  }
 
   public static get nextSunRise(): Date {
     return TimeCallbackService._nextSunRise;
@@ -132,6 +138,7 @@ export class TimeCallbackService {
   }
 
   public static init(): void {
+    this._startTime = new Date();
     const dailyRecalc: TimeCallback = new TimeCallback(
       'Midnight Recalc',
       TimeCallbackType.TimeOfDay,

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent firing of sunrise callbacks on evening system restarts
+
 ## 2.1.1 (2022-11-27)
 
 * (theimo1221) Prevent exception on fire immediate
