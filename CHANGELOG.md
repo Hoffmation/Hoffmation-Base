@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix typo in evening restart shutter up prevention
+
 ## 2.1.2 (2022-11-27)
 
 * (theimo1221) Prevent firing of sunrise callbacks on evening system restarts

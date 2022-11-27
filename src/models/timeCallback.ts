@@ -75,7 +75,10 @@ export class TimeCallback {
             nextCalculatedTime = nextMinSR;
           }
         }
-        if (TimeCallbackService.startTime > nextCalculatedTime && nextCalculatedTime > TimeCallbackService.nextSunSet) {
+        if (
+          TimeCallbackService.startTime > nextCalculatedTime &&
+          now.getTime() > TimeCallbackService.nextSunSet.getTime() - 3600000
+        ) {
           // This combination is typical for a system restart at evening
           return;
         }
