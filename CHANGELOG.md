@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.1.4 (2022-12-02)
 
 * (nockiro) Fix turning off/on lights on movement if settings change while running
 * (nockiro) Adjusted settings persistence to not store the callback object
