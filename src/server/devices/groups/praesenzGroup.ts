@@ -39,12 +39,13 @@ export class PraesenzGroup extends BaseGroup {
       this.getRoom().LampenGroup?.switchAll(false);
     });
 
-    if (this.getRoom().settings.lampenBeiBewegung) {
-      this.addFirstEnterCallback(() => {
-        this.log(LogLevel.DeepTrace, `Bewegung im Raum ${this.roomName} festgestellt --> Licht einschalten`);
-        this.getRoom().setLightTimeBased();
-      });
-    }
+    this.addFirstEnterCallback(() => {
+      if (!this.getRoom().settings.lampenBeiBewegung) {
+        return;
+      }
+      this.log(LogLevel.DeepTrace, `Bewegung im Raum ${this.roomName} festgestellt --> Licht einschalten`);
+      this.getRoom().setLightTimeBased();
+    });
   }
 
   public presentAmount(): number {
