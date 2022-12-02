@@ -5,6 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+## **WORK IN PROGRESS**
+* (nockiro) Fix turning off/on lights on movement if settings change while running
+* (nockiro) Adjusted settings persistence to not store the callback object
+
 ## 2.1.3 (2022-11-27)
 
 * (theimo1221) Fix typo in evening restart shutter up prevention

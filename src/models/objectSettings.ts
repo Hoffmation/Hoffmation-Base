@@ -1,6 +1,7 @@
 import { Utils } from '../server';
 import { LogLevel } from './logLevel';
 import { iIdHolder } from './iIdHolder';
+import _ from 'lodash';
 
 export abstract class ObjectSettings {
   public onChangeCb?: () => void;
@@ -38,6 +39,6 @@ export abstract class ObjectSettings {
   }
 
   protected toJSON(): Partial<ObjectSettings> {
-    return Utils.jsonFilter(this);
+    return Utils.jsonFilter(_.omit(this, ['onChangeCb']));
   }
 }
