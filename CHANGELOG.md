@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.1.5-alpha.4 (2022-12-04)
 
 * (theimo1221) Make movementDetectionOnPersonOnly changable
 
