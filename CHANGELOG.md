@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.2.3 (2022-12-04)
 
 * (theimo1221) Add BlueIris settings and move settings interface to own files
 * (theimo1221) Add Camera Url Endpoints
