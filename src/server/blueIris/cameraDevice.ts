@@ -12,8 +12,8 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
   protected _lastMotion: number = 0;
   private _initialized: boolean = false;
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
-  private _lastImage: string;
-  private _personDetected: boolean;
+  private _lastImage: string = '';
+  private _personDetected: boolean = false;
 
   public constructor(name: string, roomName: string) {
     this.name = name;
@@ -112,8 +112,12 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
         if (!this.settings.movementDetectionOnPersonOnly) {
           return;
         }
-        this._personDetected = (state.val as string) === '1';
-        this.updateMovement((state.val as string) === '1');
+        const newValue: boolean = (state.val as string) === '1';
+        if (newValue) {
+          this.log(LogLevel.Debug, `Person Detected`);
+        }
+        this._personDetected = newValue;
+        this.updateMovement(newValue);
         break;
       case 'MotionSnapshot':
         this._lastImage = state.val as string;
