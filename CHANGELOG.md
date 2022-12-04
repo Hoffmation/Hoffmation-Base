@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.1.5-alpha.6 (2022-12-04)
 
 * (theimo1221) Set Person Detected properly regardless of
   motion setting
