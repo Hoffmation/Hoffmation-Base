@@ -129,9 +129,12 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
         break;
       case 'MotionSnapshot':
         this._lastImage = state.val as string;
-        if (this.settings.alertPersonOnTelegram && this._personDetected) {
-          TelegramService.sendImage(`${this.name} detected Person`, new Base64Image(this._lastImage, 'person_alert'));
-        }
+        Utils.guardedTimeout(() => {
+          // Give Person Detected Update some time, as otherwise personDetected might still be false
+          if (this.settings.alertPersonOnTelegram && this._personDetected) {
+            TelegramService.sendImage(`${this.name} detected Person`, new Base64Image(this._lastImage, 'person_alert'));
+          }
+        }, 1000);
     }
   }
 
