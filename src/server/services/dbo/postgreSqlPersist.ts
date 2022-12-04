@@ -143,12 +143,15 @@ BEGIN
         roomname      varchar(30)
             constraint "DeviceInfo_BasicRooms_null_fk"
                 references hoffmation_schema."BasicRooms",
-        alldeviceskey varchar(30),
+        alldeviceskey varchar(60),
         customname    varchar(60),
         devtype       integer
     );
 
   END IF;
+  alter table hoffmation_schema."DeviceInfo"
+    alter column alldeviceskey type varchar(60) using alldeviceskey::varchar(60);
+
 
   IF (SELECT to_regclass('hoffmation_schema."IlluminationSensorDeviceData"') IS NULL) Then
     create table hoffmation_schema."IlluminationSensorDeviceData"
