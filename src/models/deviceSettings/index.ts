@@ -1,5 +1,6 @@
 export * from './acSettings';
 export * from './actuatorSettings';
+export * from './cameraSettings';
 export * from './deviceSettings';
 export * from './dimmerSettings';
 export * from './heaterSettings';

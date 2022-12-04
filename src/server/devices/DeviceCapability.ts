@@ -23,4 +23,5 @@ export enum DeviceCapability {
   trackableDevice = 102,
   scene = 103,
   blockAutomatic = 104,
+  camera = 105,
 }

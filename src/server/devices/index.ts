@@ -16,6 +16,7 @@ export * from './deviceType';
 export * from './deviceUpdater';
 export * from './Griffe';
 export * from './Heizgruppen';
+export * from './mqtt';
 export * from './iDeviceUpdater';
 export * from './IoBrokerBaseDevice';
 export * from './tv';

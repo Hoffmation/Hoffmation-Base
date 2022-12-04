@@ -4,7 +4,7 @@ import { ServerLogService } from '../services';
 import { LogLevel } from '../../models';
 import { Devices } from './devices';
 import { iBaseDevice } from './baseDeviceInterfaces';
-import { EspresenseCoordinator } from './espresense';
+import { MqttCoordinator } from './mqtt';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;
@@ -30,8 +30,8 @@ export class DeviceUpdater implements IDeviceUpdater {
     const idSplit: string[] = id.split('.');
     if (idSplit.length < 2) return;
 
-    if (idSplit[0] == 'mqtt' && idSplit[2] == 'espresense') {
-      EspresenseCoordinator.update(idSplit, state);
+    if (idSplit[0] == 'mqtt') {
+      MqttCoordinator.update(idSplit, state);
     }
     const device: undefined | iBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {

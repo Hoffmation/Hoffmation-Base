@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Allow Image Sending in Telegram Service
+* (theimo1221) Add new MQTT Device Type BlueIrisCamera
+
 ## 2.1.4 (2022-12-02)
 
 * (nockiro) Fix turning off/on lights on movement if settings change while running
