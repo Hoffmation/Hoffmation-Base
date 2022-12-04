@@ -24,7 +24,8 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private _lastImage: string = '';
   private _personDetected: boolean = false;
-  public readonly videoStreamLink: string = '';
+  public readonly mpegStreamLink: string = '';
+  public readonly h264IosStreamLink: string = '';
   public readonly currentImageLink: string = '';
 
   public constructor(mqttName: string, roomName: string, blueIrisName: string) {
@@ -41,7 +42,8 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
     this.loadDeviceSettings();
     const blueIrisSettings = SettingsService.settings.blueIris;
     if (blueIrisSettings) {
-      this.videoStreamLink = `${blueIrisSettings.serverAddress}/mjpg/${this.blueIrisName}/video.mjpg?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
+      this.mpegStreamLink = `${blueIrisSettings.serverAddress}/mjpg/${this.blueIrisName}/video.mjpg?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
+      this.h264IosStreamLink = `${blueIrisSettings.serverAddress}/h264/${this.blueIrisName}/temp.m?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
       this.currentImageLink = `${blueIrisSettings.serverAddress}/image/${this.blueIrisName}?q=100&s=100user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
     }
     if (!Utils.anyDboActive) {
