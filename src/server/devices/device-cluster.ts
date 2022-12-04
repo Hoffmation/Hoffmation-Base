@@ -32,6 +32,9 @@ export class DeviceCluster {
       case DeviceType.SamsungTv:
         clusterTypes.push(DeviceClusterType.Tv);
         break;
+      case DeviceType.Camera:
+        clusterTypes.push(DeviceClusterType.Camera);
+        break;
       case DeviceType.HmIpLampe:
       case DeviceType.ZigbeeIlluDimmer:
       case DeviceType.ZigbeeOsramDimmer:
