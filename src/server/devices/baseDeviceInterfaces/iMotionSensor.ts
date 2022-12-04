@@ -3,7 +3,7 @@ import { iRoomDevice } from './iRoomDevice';
 
 export interface iMotionSensor extends iRoomDevice {
   settings: MotionSensorSettings;
-  movementDetected: boolean;
+  readonly movementDetected: boolean;
   readonly timeSinceLastMotion: number;
   detectionsToday: number;
 

@@ -7,6 +7,8 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
+  private _movementDetected: boolean = false;
+
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   public get lastBatteryPersist(): number {
@@ -14,7 +16,10 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   }
 
   public settings: MotionSensorSettings = new MotionSensorSettings();
-  public movementDetected: boolean = false;
+
+  public get movementDetected(): boolean {
+    return this._movementDetected;
+  }
 
   public get battery(): number {
     return this._battery;
@@ -87,7 +92,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       return;
     }
 
-    if (newState === this.movementDetected) {
+    if (newState === this._movementDetected) {
       this.log(
         LogLevel.Debug,
         `Skip movement because state is already ${newState}`,
@@ -103,7 +108,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     }
 
     this.resetFallbackTimeout();
-    this.movementDetected = newState;
+    this._movementDetected = newState;
     this.persistMotionSensor();
     this.log(LogLevel.Debug, `New movement state: ${newState}`, LogDebugType.NewMovementState);
 
