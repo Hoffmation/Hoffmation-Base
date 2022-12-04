@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.2.0 (2022-12-04)
 
 * (theimo1221) Finish Camera Device Implementation
 
