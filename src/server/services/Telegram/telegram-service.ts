@@ -3,7 +3,7 @@ import { TelegramMessageCallback } from './telegramMessageCalback';
 import { ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import { iTelegramSettings } from '../../config';
-import { LogLevel } from '../../../models';
+import { Base64Image, LogLevel } from '../../../models';
 
 export class TelegramService {
   public static subscribedIDs: number[];
@@ -102,6 +102,26 @@ export class TelegramService {
 
   public static inform(message: string): void {
     this.sendMessage(this.subscribedIDs, message);
+  }
+
+  public static sendImage(message: string, image: Base64Image) {
+    for (const id of this.subscribedIDs) {
+      Utils.guardedTimeout(
+        () => {
+          this.bot.sendPhoto(
+            id,
+            image.buffer,
+            { caption: message },
+            {
+              filename: image.name,
+              contentType: image.type,
+            },
+          );
+        },
+        0,
+        this,
+      );
+    }
   }
 
   public static sendMessage(ids: number[], message: string): void {
