@@ -1,9 +1,12 @@
-import { DeviceInfo, Devices, DeviceType, iMotionSensor, iRoomDevice } from '../devices';
-import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../../models';
-import { BlueIrisCoordinator } from './blueIrisCoordinator';
-import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../services';
-import { DeviceCapability } from '../devices/DeviceCapability';
 import _ from 'lodash';
+import { iMotionSensor, iRoomDevice } from '../baseDeviceInterfaces';
+import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../../../models';
+import { BlueIrisCoordinator } from './blueIrisCoordinator';
+import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../../services';
+import { Devices } from '../devices';
+import { DeviceInfo } from '../DeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { DeviceType } from '../deviceType';
 
 export class CameraDevice implements iRoomDevice, iMotionSensor {
   public get lastImage(): string {

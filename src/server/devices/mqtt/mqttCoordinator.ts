@@ -1,5 +1,5 @@
 import { EspresenseCoordinator } from '../espresense';
-import { BlueIrisCoordinator } from '../../blueIris';
+import { BlueIrisCoordinator } from '../blueIris';
 
 export class MqttCoordinator {
   public static update(idSplit: string[], state: ioBroker.State) {

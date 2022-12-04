@@ -17,7 +17,7 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
-import { CameraDevice } from '../../blueIris';
+import { CameraDevice } from '../../devices/blueIris';
 
 export class API {
   /**

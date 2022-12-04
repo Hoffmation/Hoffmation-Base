@@ -1,4 +1,5 @@
 export * from './baseDeviceInterfaces/index';
+export * from './blueIris/index';
 export * from './button/index';
 export * from './espresense/index';
 export * from './groups/index';
