@@ -44,7 +44,7 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
     if (blueIrisSettings !== undefined) {
       this.mpegStreamLink = `${blueIrisSettings.serverAddress}/mjpg/${this.blueIrisName}/video.mjpg?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
       this.h264IosStreamLink = `${blueIrisSettings.serverAddress}/h264/${this.blueIrisName}/temp.m?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
-      this.currentImageLink = `${blueIrisSettings.serverAddress}/image/${this.blueIrisName}.jpg?q=100&s=100user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
+      this.currentImageLink = `${blueIrisSettings.serverAddress}/image/${this.blueIrisName}.jpg?q=100&s=100&user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
     }
     if (!Utils.anyDboActive) {
       this._initialized = true;
