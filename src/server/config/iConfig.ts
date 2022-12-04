@@ -1,44 +1,26 @@
-import { iRoomDefaultSettings, LogLevel } from '../../models';
-import { PoolConfig } from 'pg';
-
-interface iDaikinSettings {
-  active: boolean;
-  activateTracingLogger?: boolean;
-  useGetToPost?: boolean;
-  // Whether Room Default Callbacks should be added to start ac on Bottom Right short and stop on long button press.
-  buttonBotRightForAc?: boolean;
-}
-
-interface iSonosSettings {
-  active: boolean;
-  // Whether Room Default Callbacks should be added to start Radio on Bottom Right long button press.
-  buttonBotRightForRadio?: boolean;
-}
-
-export interface iAsusConfig {
-  address: string;
-  ignoreSSL?: boolean;
-  password: string;
-  username: string;
-}
-
-export interface iRestSettings {
-  active: boolean;
-  port?: number;
-}
-
-export interface iEspresenseSettings {
-  mqttInstance: number;
-  deviceMap: { [folderId: string]: iBluetoothTrackingSettings };
-}
-
-export interface iBluetoothTrackingSettings {
-  customName: string;
-  activeTracking: boolean;
-}
+import { iLogSettings } from './iLogSettings';
+import { iSonosSettings } from './iSonosSettings';
+import { iRoomDefaultSettings } from '../../models';
+import { iNewsSettings } from './iNewsSettings';
+import { iIobrokerSettigns } from './iIobrokerSettigns';
+import { iPollySettings } from './iPollySettings';
+import { iTelegramSettings } from './iTelegramSettings';
+import { iWeatherSettings } from './iWeatherSettings';
+import { iMp3Settings } from './iMp3Settings';
+import { iPersistenceSettings } from './iPersistenceSettings';
+import { iTimeSettings } from './iTimeSettings';
+import { iAsusConfig } from './iAsusConfig';
+import { iTranslationSettings } from './iTranslationSettings';
+import { iMuellSettings } from './iMuellSettings';
+import { iDaikinSettings } from './iDaikinSettings';
+import { iHeaterSettings } from './iHeaterSettings';
+import { iBlueIrisSettings } from './iBlueIrisSettings';
+import { iRestSettings } from './iRestSettings';
+import { iEspresenseSettings } from './iEspresenseSettings';
 
 export interface iConfig {
   asusConfig?: iAsusConfig;
+  blueIris?: iBlueIrisSettings;
   daikin?: iDaikinSettings;
   espresense?: iEspresenseSettings;
   // Earnigs per kWh injecting into the grid
@@ -61,100 +43,4 @@ export interface iConfig {
   // Price per kWh from the grid
   wattagePrice?: number;
   weather?: iWeatherSettings;
-}
-
-export enum HeatingMode {
-  None,
-  Winter,
-  Sommer,
-}
-
-export interface iHeaterSettings {
-  /**
-   * Whether heating with ac is allowed
-   * This normally depends on the cost difference between ac heating and conventional heating
-   */
-  allowAcHeating?: boolean;
-  mode?: HeatingMode;
-}
-
-export interface iIobrokerSettigns {
-  /**
-   * Whether states should be initialized by processing each key on its own.
-   * This allows to detect states which crash the Websocket Payload limit
-   */
-  useSplitInitialization?: boolean;
-}
-
-export interface iLogSettings {
-  logLevel: number;
-  useTimestamp: boolean;
-  debugNewMovementState?: boolean;
-  debugShutterPositionChange?: boolean;
-  debugActuatorChange?: boolean;
-  debugUchangedShutterPosition?: boolean;
-  debugUnchangedActuator?: boolean;
-  debugDaikinSuccessfullControlInfo?: boolean;
-  debugEuroHeaterValve?: boolean;
-}
-
-export interface iTimePair {
-  hours: number;
-  minutes: number;
-}
-
-export interface iTimeSettings {
-  nightStart: iTimePair;
-  nightEnd: iTimePair;
-}
-
-export interface iTelegramSettings {
-  logLevel: LogLevel;
-  telegramToken: string;
-  allowedIDs: number[];
-  subscribedIDs: number[];
-}
-
-export interface iPersistenceSettings {
-  postgreSql?: PoolConfig;
-}
-
-export interface iPollySettings {
-  mp3Path: string;
-  region: string;
-  signatureVersion: string;
-  accessKeyId: string;
-  secretAccessKey: string;
-  voiceID: string;
-}
-
-export interface iMp3Settings {
-  // local path for the mp3 files to store/load
-  path: string;
-  // external reachable adress to access those mp3 files
-  serverAddress: string;
-}
-
-export interface iWeatherSettings {
-  lattitude: string;
-  longitude: string;
-  // App-ID from OpenWeatherMap
-  appid?: string;
-}
-
-export interface iMuellSettings {
-  calendarURL: string;
-}
-
-export interface iNewsSettings {
-  // rss feed url that contains the news information and audio file
-  rssUrl?: string;
-  // request interval in minutes
-  requestInterval?: number;
-  // maximum age in minutes of files cached for playback before they get deleted
-  keepMaxAge?: number;
-}
-
-export interface iTranslationSettings {
-  language: string;
 }

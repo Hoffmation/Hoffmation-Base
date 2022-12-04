@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add BlueIris settings and move settings interface to own files
+
 ## 2.2.2 (2022-12-04)
 
 * (theimo1221) Delay Telegram Sending command to respect person detection
