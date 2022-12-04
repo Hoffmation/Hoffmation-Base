@@ -109,6 +109,7 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
   }
 
   public update(stateName: string, state: ioBroker.State): void {
+    this.log(LogLevel.Debug, `Update for "${stateName}"`);
     switch (stateName) {
       case 'MotionDetected':
         if (this.settings.movementDetectionOnPersonOnly) {
@@ -122,7 +123,7 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
         }
         const newValue: boolean = (state.val as string) === '1';
         if (newValue) {
-          this.log(LogLevel.Debug, `Person Detected`);
+          this.log(LogLevel.Info, `Person Detected`);
         }
         this._personDetected = newValue;
         this.updateMovement(newValue);
