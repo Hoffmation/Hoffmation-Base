@@ -6,7 +6,7 @@ import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { iMotionSensor } from '../baseDeviceInterfaces';
 
-export class PraesenzGroup extends BaseGroup {
+export class PresenceGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
   private _lastLeftTimeout: NodeJS.Timeout | null = null;
 

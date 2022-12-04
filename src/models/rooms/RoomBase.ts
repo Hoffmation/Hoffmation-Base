@@ -5,7 +5,7 @@ import {
   GroupType,
   HeatGroup,
   LampenGroup,
-  PraesenzGroup,
+  PresenceGroup,
   RoomService,
   ServerLogService,
   ShutterService,
@@ -73,8 +73,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
     return this.groupMap.get(GroupType.Window) as WindowGroup | undefined;
   }
 
-  public get PraesenzGroup(): PraesenzGroup | undefined {
-    return this.groupMap.get(GroupType.Presence) as PraesenzGroup | undefined;
+  public get PraesenzGroup(): PresenceGroup | undefined {
+    return this.groupMap.get(GroupType.Presence) as PresenceGroup | undefined;
   }
 
   public get LampenGroup(): LampenGroup | undefined {

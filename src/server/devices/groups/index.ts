@@ -4,7 +4,7 @@ export * from './windowGroup';
 export * from './group-type';
 export * from './heatGroup';
 export * from './lampenGroup';
-export * from './praesenzGroup';
+export * from './presenceGroup';
 export * from './smokeGroup';
 export * from './speakerGroup';
 export * from './tasterGroup';
