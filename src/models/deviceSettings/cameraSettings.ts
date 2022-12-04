@@ -7,6 +7,7 @@ export class CameraSettings extends MotionSensorSettings {
 
   public fromPartialObject(data: Partial<CameraSettings>): void {
     this.alertPersonOnTelegram = data.alertPersonOnTelegram ?? this.alertPersonOnTelegram;
+    this.movementDetectionOnPersonOnly = data.movementDetectionOnPersonOnly ?? this.movementDetectionOnPersonOnly;
     super.fromPartialObject(data);
   }
 
