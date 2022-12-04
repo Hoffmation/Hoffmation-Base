@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.2.4 (2022-12-04)
 
 * (theimo1221) Add H264 Ios Stream Link to Camera Device
 
