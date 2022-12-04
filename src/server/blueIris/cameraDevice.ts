@@ -3,8 +3,13 @@ import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../
 import { BlueIrisCoordinator } from './blueIrisCoordinator';
 import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../services';
 import { DeviceCapability } from '../devices/DeviceCapability';
+import _ from 'lodash';
 
 export class CameraDevice implements iRoomDevice, iMotionSensor {
+  public get lastImage(): string {
+    return this._lastImage;
+  }
+
   public settings: CameraSettings = new CameraSettings();
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.camera, DeviceCapability.motionSensor];
   public deviceType: DeviceType = DeviceType.Camera;
@@ -173,7 +178,12 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
   }
 
   public toJSON(): Partial<iRoomDevice> {
-    return Utils.jsonFilter(this);
+    return Utils.jsonFilter(
+      _.omit(this, [
+        // To reduce Byte-size on cyclic update
+        '_lastImage',
+      ]),
+    );
   }
 
   public persistDeviceInfo(): void {

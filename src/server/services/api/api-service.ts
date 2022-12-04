@@ -17,6 +17,7 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
+import { CameraDevice } from '../../blueIris';
 
 export class API {
   /**
@@ -287,6 +288,17 @@ export class API {
     r.settings.settingsContainer.fromPartialObject(settings);
     r.settings.settingsContainer.persist(r);
     return null;
+  }
+
+  public static getLastCameraImage(deviceId: string): Error | string {
+    const d = this.getDevice(deviceId) as CameraDevice | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.camera)) {
+      return new Error(`Device with ID ${deviceId} is no camera`);
+    }
+    return d.lastImage;
   }
 
   public static persistAllDeviceSettings(): void {
