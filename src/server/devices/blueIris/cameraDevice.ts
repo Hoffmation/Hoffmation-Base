@@ -2,13 +2,15 @@ import _ from 'lodash';
 import { iMotionSensor, iRoomDevice } from '../baseDeviceInterfaces';
 import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../../../models';
 import { BlueIrisCoordinator } from './blueIrisCoordinator';
-import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../../services';
+import { API, LogDebugType, ServerLogService, SettingsService, TelegramService, Utils } from '../../services';
 import { Devices } from '../devices';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 
 export class CameraDevice implements iRoomDevice, iMotionSensor {
+  public readonly blueIrisName: string;
+
   public get lastImage(): string {
     return this._lastImage;
   }
@@ -22,18 +24,26 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private _lastImage: string = '';
   private _personDetected: boolean = false;
+  public readonly videoStreamLink: string = '';
+  public readonly currentImageLink: string = '';
 
-  public constructor(name: string, roomName: string) {
-    this.name = name;
+  public constructor(mqttName: string, roomName: string, blueIrisName: string) {
+    this.blueIrisName = blueIrisName;
+    this.name = mqttName;
     this._info = new DeviceInfo();
-    this._info.fullName = `Camera ${roomName} ${name}`;
-    this._info.customName = `Camera ${name}`;
+    this._info.fullName = `Camera ${roomName} ${mqttName}`;
+    this._info.customName = `Camera ${mqttName}`;
     this._info.room = roomName;
-    this._info.allDevicesKey = `camera-${roomName}-${name}`;
+    this._info.allDevicesKey = `camera-${roomName}-${mqttName}`;
     Devices.alLDevices[this._info.allDevicesKey] = this;
-    BlueIrisCoordinator.addDevice(this, name);
+    BlueIrisCoordinator.addDevice(this, mqttName);
     this.persistDeviceInfo();
     this.loadDeviceSettings();
+    const blueIrisSettings = SettingsService.settings.blueIris;
+    if (blueIrisSettings) {
+      this.videoStreamLink = `${blueIrisSettings.serverAddress}/mjpg/${this.blueIrisName}/video.mjpg?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
+      this.currentImageLink = `${blueIrisSettings.serverAddress}/image/${this.blueIrisName}?q=100&s=100user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
+    }
     if (!Utils.anyDboActive) {
       this._initialized = true;
     } else {
