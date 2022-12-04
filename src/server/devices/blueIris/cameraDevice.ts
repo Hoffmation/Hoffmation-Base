@@ -118,15 +118,14 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
         this.updateMovement((state.val as string) === '1');
         break;
       case 'Person':
-        if (!this.settings.movementDetectionOnPersonOnly) {
-          return;
-        }
         const newValue: boolean = (state.val as string) === '1';
         if (newValue) {
           this.log(LogLevel.Info, `Person Detected`);
         }
         this._personDetected = newValue;
-        this.updateMovement(newValue);
+        if (this.settings.movementDetectionOnPersonOnly) {
+          this.updateMovement(newValue);
+        }
         break;
       case 'MotionSnapshot':
         this._lastImage = state.val as string;

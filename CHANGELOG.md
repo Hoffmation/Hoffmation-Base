@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Set Person Detected properly regardless of
+  motion setting
+
 ## 2.1.5-alpha.5 (2022-12-04)
 
 * (theimo1221) Extend Camera Logging
