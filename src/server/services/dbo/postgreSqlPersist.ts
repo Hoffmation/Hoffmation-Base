@@ -149,8 +149,6 @@ BEGIN
     );
 
   END IF;
-  alter table hoffmation_schema."DeviceInfo"
-    alter column alldeviceskey type varchar(60) using alldeviceskey::varchar(60);
 
 
   IF (SELECT to_regclass('hoffmation_schema."IlluminationSensorDeviceData"') IS NULL) Then
