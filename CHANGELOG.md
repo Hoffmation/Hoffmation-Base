@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Rename Lampengroup to LightGroup
+* (theimo1221) Update packages
 
 ## 2.2.6 (2022-12-04)
 
