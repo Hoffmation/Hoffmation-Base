@@ -4,7 +4,7 @@ import {
   DeviceCluster,
   GroupType,
   HeatGroup,
-  LampenGroup,
+  LightGroup,
   PresenceGroup,
   RoomService,
   ServerLogService,
@@ -36,11 +36,11 @@ export class RoomBase implements iRoomBase, iIdHolder {
   }
 
   public get sonnenUntergangLichtCallback(): TimeCallback | undefined {
-    return this.LampenGroup?.sonnenUntergangLichtCallback;
+    return this.LightGroup?.sonnenUntergangLichtCallback;
   }
 
   public get sonnenAufgangLichtCallback(): TimeCallback | undefined {
-    return this.LampenGroup?.sonnenAufgangLichtCallback;
+    return this.LightGroup?.sonnenAufgangLichtCallback;
   }
 
   public get sunriseShutterCallback(): TimeCallback | undefined {
@@ -77,8 +77,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
     return this.groupMap.get(GroupType.Presence) as PresenceGroup | undefined;
   }
 
-  public get LampenGroup(): LampenGroup | undefined {
-    return this.groupMap.get(GroupType.Light) as LampenGroup | undefined;
+  public get LightGroup(): LightGroup | undefined {
+    return this.groupMap.get(GroupType.Light) as LightGroup | undefined;
   }
 
   public get TasterGroup(): TasterGroup | undefined {
@@ -114,7 +114,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
     this.recalcTimeCallbacks();
     this.PraesenzGroup?.initCallbacks();
     this.WindowGroup?.initialize();
-    this.LampenGroup?.initialize();
+    this.LightGroup?.initialize();
     this.TasterGroup?.initCallbacks();
     this.HeatGroup?.initialize();
   }
@@ -125,7 +125,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
 
   public recalcTimeCallbacks(): void {
     this.WindowGroup?.recalcTimeCallbacks();
-    this.LampenGroup?.recalcTimeCallbacks();
+    this.LightGroup?.recalculateTimeCallbacks();
   }
 
   /**
@@ -133,14 +133,14 @@ export class RoomBase implements iRoomBase, iIdHolder {
    * @param movementDependant Only turn light on if there was a movement in the same room
    */
   public setLightTimeBased(movementDependant: boolean = false): void {
-    if (!this.LampenGroup) {
+    if (!this.LightGroup) {
       this.log(LogLevel.Trace, 'Ignore "setLightTimeBased" as we have no lamps');
       return;
     }
 
     if (movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
       this.log(LogLevel.Trace, 'Turn off lights as no-one is present.');
-      this.LampenGroup.switchAll(false);
+      this.LightGroup.switchAll(false);
       return;
     }
 
@@ -163,7 +163,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
     ) {
       timeOfDay = Utils.nowTime().hours > 16 ? TimeOfDay.AfterSunset : TimeOfDay.BeforeSunrise;
     }
-    this.LampenGroup.switchTimeConditional(timeOfDay);
+    this.LightGroup.switchTimeConditional(timeOfDay);
   }
 
   public isNowLightTime(): boolean {

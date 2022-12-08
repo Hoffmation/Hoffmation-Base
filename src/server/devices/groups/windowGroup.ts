@@ -128,7 +128,7 @@ export class WindowGroup extends BaseGroup {
     this.allRolloToLevel(0, true);
     const room: RoomBase = this.getRoom();
     if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
-      room.LampenGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
+      room.LightGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
     }
   }
 

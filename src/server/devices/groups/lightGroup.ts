@@ -9,7 +9,7 @@ import { WledDevice } from '../wledDevice';
 import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
 import _ from 'lodash';
 
-export class LampenGroup extends BaseGroup {
+export class LightGroup extends BaseGroup {
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
   public sonnenUntergangLichtCallback: TimeCallback | undefined;
 
@@ -29,8 +29,8 @@ export class LampenGroup extends BaseGroup {
 
   public anyLightsOn(): boolean {
     let i: number;
-    for (i = 0; i < this.getLampen().length; i++) {
-      if (this.getLampen()[i].lightOn) {
+    for (i = 0; i < this.getLights().length; i++) {
+      if (this.getLights()[i].lightOn) {
         return true;
       }
     }
@@ -39,8 +39,8 @@ export class LampenGroup extends BaseGroup {
         return true;
       }
     }
-    for (i = 0; i < this.getStecker().length; i++) {
-      if (this.getStecker()[i].actuatorOn) {
+    for (i = 0; i < this.getOutlets().length; i++) {
+      if (this.getOutlets()[i].actuatorOn) {
         return true;
       }
     }
@@ -52,7 +52,7 @@ export class LampenGroup extends BaseGroup {
     return false;
   }
 
-  public getLampen(): iLamp[] {
+  public getLights(): iLamp[] {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Lamps) as iLamp[];
   }
 
@@ -64,7 +64,7 @@ export class LampenGroup extends BaseGroup {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.WLED) as WledDevice[];
   }
 
-  public getStecker(): iActuator[] {
+  public getOutlets(): iActuator[] {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Outlets) as iActuator[];
   }
 
@@ -105,7 +105,7 @@ export class LampenGroup extends BaseGroup {
       this.getLED().forEach((s) => {
         s.setTimeBased(time);
       });
-    } else if (this.getStecker().length > 0) {
+    } else if (this.getOutlets().length > 0) {
       this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[time]}"`);
       resultSteckdosen = darkOutside;
     } else {
@@ -118,7 +118,7 @@ export class LampenGroup extends BaseGroup {
   }
 
   public setAllLampen(pValue: boolean, time?: TimeOfDay, force: boolean = false, timeout?: number): void {
-    this.getLampen().forEach((s) => {
+    this.getLights().forEach((s) => {
       if (
         !pValue ||
         time === undefined ||
@@ -138,7 +138,7 @@ export class LampenGroup extends BaseGroup {
   }
 
   public setAllStecker(pValue: boolean, time?: TimeOfDay, force: boolean = false): void {
-    this.getStecker().forEach((s) => {
+    this.getOutlets().forEach((s) => {
       if (
         !pValue ||
         time === undefined ||
@@ -165,15 +165,15 @@ export class LampenGroup extends BaseGroup {
   }
 
   public initialize(): void {
-    this.recalcTimeCallbacks();
+    this.recalculateTimeCallbacks();
   }
 
-  public recalcTimeCallbacks(): void {
+  public recalculateTimeCallbacks(): void {
     this.reconfigureSunriseTimeCallback();
     this.reconfigureSunsetTimeCallback();
   }
 
-  public toJSON(): Partial<LampenGroup> {
+  public toJSON(): Partial<LightGroup> {
     return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
   }
 

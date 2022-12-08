@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Rename Lampengroup to LightGroup
+
 ## 2.2.6 (2022-12-04)
 
 * (theimo1221) Fix error in image url

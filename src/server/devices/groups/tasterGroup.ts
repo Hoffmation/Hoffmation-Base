@@ -59,7 +59,7 @@ export class TasterGroup extends BaseGroup {
       t.buttonMidLeft?.addCb(
         ButtonPressType.long,
         (pValue) => {
-          pValue && this.getRoom().LampenGroup?.switchAll(true, true);
+          pValue && this.getRoom().LightGroup?.switchAll(true, true);
         },
         `Turn all Lights in this room on`,
       );
@@ -67,7 +67,7 @@ export class TasterGroup extends BaseGroup {
       t.buttonMidRight?.addCb(
         ButtonPressType.long,
         (pValue) => {
-          pValue && this.getRoom().LampenGroup?.switchAll(false, true);
+          pValue && this.getRoom().LightGroup?.switchAll(false, true);
         },
         `Turn all Lights in this room off`,
       );

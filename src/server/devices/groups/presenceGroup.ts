@@ -36,7 +36,7 @@ export class PresenceGroup extends BaseGroup {
     });
 
     this.addLastLeftCallback(() => {
-      this.getRoom().LampenGroup?.switchAll(false);
+      this.getRoom().LightGroup?.switchAll(false);
     });
 
     this.addFirstEnterCallback(() => {

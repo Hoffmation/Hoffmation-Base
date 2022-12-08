@@ -3,7 +3,7 @@ export * from './Window';
 export * from './windowGroup';
 export * from './group-type';
 export * from './heatGroup';
-export * from './lampenGroup';
+export * from './lightGroup';
 export * from './presenceGroup';
 export * from './smokeGroup';
 export * from './speakerGroup';
