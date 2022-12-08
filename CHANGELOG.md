@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.3.1 (2022-12-08)
 
 * (theimo1221) Don't exclude _deviceCluster from JSON in Light Group
 
