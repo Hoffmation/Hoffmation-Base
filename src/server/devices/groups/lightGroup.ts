@@ -7,7 +7,6 @@ import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogLevel, RoomBase, TimeCallback, TimeCallbackType, TimeOfDay } from '../../../models';
 import { WledDevice } from '../wledDevice';
 import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
-import _ from 'lodash';
 
 export class LightGroup extends BaseGroup {
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
@@ -171,10 +170,6 @@ export class LightGroup extends BaseGroup {
   public recalculateTimeCallbacks(): void {
     this.reconfigureSunriseTimeCallback();
     this.reconfigureSunsetTimeCallback();
-  }
-
-  public toJSON(): Partial<LightGroup> {
-    return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
   }
 
   private reconfigureSunriseTimeCallback(): void {

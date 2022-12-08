@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't exclude _deviceCluster from JSON in Light Group
+
 ## 2.3.0 (2022-12-08)
 
 * (theimo1221) Rename Lampengroup to LightGroup
