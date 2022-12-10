@@ -1,5 +1,6 @@
 import { CollisionSolving } from '../../models';
 import { Utils } from './utils';
+import _ from 'lodash';
 
 export class BlockAutomaticHandler {
   private readonly _restoreAutomatic: () => void;
@@ -64,5 +65,9 @@ export class BlockAutomaticHandler {
       this._automaticBlockedUntil.getTime() - Utils.nowMS(),
       this,
     );
+  }
+
+  public toJSON(): Partial<BlockAutomaticHandler> {
+    return Utils.jsonFilter(_.omit(this, ['_restoreAutomatic']));
   }
 }
