@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.3.2 (2022-12-10)
 
 * (theimo1221) Trigger ac heating earlier
 
