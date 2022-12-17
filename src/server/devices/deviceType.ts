@@ -34,6 +34,7 @@ export enum DeviceType {
   ZigbeeEuroHeater = 220,
   ZigbeeLinkindLedRgbCct = 221,
   ZigbeeOsramDimmer = 222,
+  ZigbeeIkeaShutter = 223,
   JsEnergyManager = 301,
   RoomScene = 401,
   WledDevice = 1001,

@@ -24,6 +24,7 @@ import {
   ZigbeeDevice,
   ZigbeeEuroHeater,
   ZigbeeHeimanSmoke,
+  ZigbeeIkeaShutter,
   ZigbeeIkeaSteckdose,
   ZigbeeIlluActuator,
   ZigbeeIlluDimmer,
@@ -199,6 +200,9 @@ export class Devices {
         break;
       case 'UbisysShutter':
         d = new ZigbeeUbisysShutter(zigbeeInfo);
+        break;
+      case 'IkeaShutter':
+        d = new ZigbeeIkeaShutter(zigbeeInfo);
         break;
       case 'TuyaValve':
         d = new ZigbeeTuyaValve(zigbeeInfo);

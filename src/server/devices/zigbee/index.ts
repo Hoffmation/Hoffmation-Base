@@ -8,6 +8,7 @@ export * from './zigbeeBlitzShp';
 export * from './zigbeeEuroHeater';
 export * from './zigbeeHeimanSmoke';
 export * from './zigbeeIkeaSteckdose';
+export * from './zigbeeIkeaShutter';
 export * from './zigbeeIlluActuator';
 export * from './zigbeeIlluDimmer';
 export * from './zigbeeIlluLampe';
