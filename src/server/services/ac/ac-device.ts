@@ -121,7 +121,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
 
     let threshold: number = acOn ? 0 : 1;
-    let thresholdHeating: number = acOn ? 0 : 1;
+    let thresholdHeating: number = acOn ? 0 : 0.5;
     let desiredMode: AcMode = AcMode.Off;
     const excessEnergy: number = Devices.energymanager?.excessEnergy ?? -1;
     if ((acOn ? 200 : 1000) < excessEnergy) {
