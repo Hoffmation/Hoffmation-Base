@@ -57,7 +57,7 @@
     "node-fetch": "3.3.0",
     "node-ical": "^0.15.3",
     "node-merlin-wrt-api": "^0.0.2-alpha.5",
-    "node-telegram-bot-api": "^0.60.0",
+    "node-telegram-bot-api": "^0.61.0",
     "pg": "^8.8.0",
     "rss-parser": "^3.12.0",
     "samsung-tv-control": "^1.13.0",
