@@ -15,6 +15,7 @@ import {
   iBaseDevice,
   iBatteryDevice,
   iButtonSwitch,
+  iHandleSensor,
   iHeater,
   iHumiditySensor,
   iIlluminationSensor,
@@ -255,6 +256,21 @@ BEGIN
     
   END IF;
 
+  IF (SELECT to_regclass('hoffmation_schema."HandleDeviceData"') IS NULL) Then    
+    create table if not exists hoffmation_schema."HandleDeviceData"
+    (
+        "deviceID"         varchar(60) not null
+            constraint "HandleDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        "position" double precision,
+        date               timestamp   not null,
+        constraint handledevicedata_pk
+            primary key ("deviceID", date)
+    );
+    
+  END IF;
+
   IF (SELECT to_regclass('hoffmation_schema."TemperatureSensorDeviceData"') IS NULL) Then  
     create table if not exists hoffmation_schema."TemperatureSensorDeviceData"
     (
@@ -388,6 +404,14 @@ insert into hoffmation_schema."HeaterDeviceData" ("deviceID", "level", "date", "
 values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp ?? 'null'}, ${
       desiredTemperature ?? 'null'
     }, ${device.seasonTurnOff});
+    `);
+  }
+
+  public persistHandleSensor(device: iHandleSensor): void {
+    const currentPos: number = device.position;
+    this.query(`
+insert into hoffmation_schema."HandleDeviceData" ("deviceID", "position", "date")
+values ('${device.id}', ${currentPos}, '${new Date().toISOString()}');
     `);
   }
 

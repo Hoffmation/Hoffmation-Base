@@ -84,6 +84,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     }
 
     this.log(LogLevel.Trace, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
+    this.persistHandleSensor();
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -165,6 +166,10 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     }
     Utils.dbo?.persistBatteryDevice(this);
     this._lastBatteryPersist = now;
+  }
+
+  public persistHandleSensor(): void {
+    Utils.dbo?.persistHandleSensor(this);
   }
 
   public dispose(): void {
