@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.4.0 (2023-01-17)
 
 * (theimo1221) Update packages
 * (theimo1221) Add Handle Persist
