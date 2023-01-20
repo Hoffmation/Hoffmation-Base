@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Persist position for handle
+
 ## 2.4.3 (2023-01-20)
 
 * (theimo1221) Fix Persist position for handle

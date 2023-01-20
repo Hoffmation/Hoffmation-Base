@@ -82,14 +82,13 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
 
   public updatePosition(pValue: WindowPosition): void {
     if (pValue === this.position) {
-      this.persist();
+      this.persistHandleSensor();
       return;
     }
 
     this.log(LogLevel.Trace, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
 
     this.position = pValue;
-    this.persist();
     for (const c1 of this._closedCallback) {
       c1(pValue === 0);
     }
@@ -101,6 +100,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     for (const c3 of this._offenCallback) {
       c3(pValue === 2);
     }
+    this.persistHandleSensor();
 
     if (pValue === WindowPosition.geschlossen) {
       if (this._iOpenTimeout !== undefined) {
@@ -110,56 +110,59 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
         this._iOpenTimeout = undefined;
       }
       return;
-    } else if (this._iOpenTimeout === undefined) {
-      this._iOpenTimeout = Utils.guardedInterval(
-        () => {
-          this.minutesOpen++;
-          const heatgroup: HeatGroup | undefined = this._window?.getRoom().HeatGroup;
-          if (heatgroup !== undefined) {
-            const desiredTemp: number = heatgroup.desiredTemp;
-            const currentTemp: number = heatgroup.temperature;
-            const outSideTemp: number = WeatherService.getCurrentTemp();
+    }
+    if (this._iOpenTimeout !== undefined) {
+      return;
+    }
 
-            // Check if any of these values are unavailable
-            if (desiredTemp > -99 && currentTemp > -99 && outSideTemp > -99) {
-              const wouldHelp: boolean =
-                (desiredTemp < currentTemp && outSideTemp < currentTemp) ||
-                (desiredTemp > currentTemp && outSideTemp > currentTemp);
-              if (!wouldHelp && this._helpingRoomTemp) {
-                const info: string = `Window should be closed, as it doesn't help reaching target temperature.`;
-                this.log(LogLevel.Info, info);
-                TelegramService.inform(info);
-                this._helpingRoomTemp = false;
-              } else if (wouldHelp && !this._helpingRoomTemp) {
-                this._helpingRoomTemp = true;
-                const info: string = `Das Fenster hilft der Innentemperatur ihr Ziel von ${desiredTemp} zu erreichen. Draußen sind es ${outSideTemp}. Du wirst informiert wenn es nicht mehr hilft.`;
-                this.log(LogLevel.Info, info);
-                TelegramService.inform(info);
-                return;
-              } else if (wouldHelp && this._helpingRoomTemp) {
-                return;
-              }
+    this._iOpenTimeout = Utils.guardedInterval(
+      () => {
+        this.minutesOpen++;
+        const heatgroup: HeatGroup | undefined = this._window?.getRoom().HeatGroup;
+        if (heatgroup !== undefined) {
+          const desiredTemp: number = heatgroup.desiredTemp;
+          const currentTemp: number = heatgroup.temperature;
+          const outSideTemp: number = WeatherService.getCurrentTemp();
+
+          // Check if any of these values are unavailable
+          if (desiredTemp > -99 && currentTemp > -99 && outSideTemp > -99) {
+            const wouldHelp: boolean =
+              (desiredTemp < currentTemp && outSideTemp < currentTemp) ||
+              (desiredTemp > currentTemp && outSideTemp > currentTemp);
+            if (!wouldHelp && this._helpingRoomTemp) {
+              const info: string = `Window should be closed, as it doesn't help reaching target temperature.`;
+              this.log(LogLevel.Info, info);
+              TelegramService.inform(info);
+              this._helpingRoomTemp = false;
+            } else if (wouldHelp && !this._helpingRoomTemp) {
+              this._helpingRoomTemp = true;
+              const info: string = `Das Fenster hilft der Innentemperatur ihr Ziel von ${desiredTemp} zu erreichen. Draußen sind es ${outSideTemp}. Du wirst informiert wenn es nicht mehr hilft.`;
+              this.log(LogLevel.Info, info);
+              TelegramService.inform(info);
+              return;
+            } else if (wouldHelp && this._helpingRoomTemp) {
+              return;
             }
           }
-          const message = `Window is in position ${WindowPosition[this.position]} since ${this.minutesOpen} minutes`;
-          switch (this.minutesOpen) {
-            case 15:
-            case 30:
-            case 60:
-            case 120:
-            case 240:
-              this.log(LogLevel.Info, message);
-              TelegramService.inform(`${this.info.room}: ${message}`);
-              break;
-            default:
-              this.log(LogLevel.Trace, message);
-              break;
-          }
-        },
-        60000,
-        this,
-      );
-    }
+        }
+        const message = `Window is in position ${WindowPosition[this.position]} since ${this.minutesOpen} minutes`;
+        switch (this.minutesOpen) {
+          case 15:
+          case 30:
+          case 60:
+          case 120:
+          case 240:
+            this.log(LogLevel.Info, message);
+            TelegramService.inform(`${this.info.room}: ${message}`);
+            break;
+          default:
+            this.log(LogLevel.Trace, message);
+            break;
+        }
+      },
+      60000,
+      this,
+    );
   }
 
   public persist(): void {
@@ -181,6 +184,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     if (this._lastHandlePersist + 2000 > now) {
       return;
     }
+    this.log(LogLevel.Debug, `Persist handle state: ${this.position}`);
     Utils.dbo?.persistHandleSensor(this);
     this._lastHandlePersist = now;
   }
