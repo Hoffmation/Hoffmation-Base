@@ -177,7 +177,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
 
   public persistHandleSensor(): void {
     const now: number = Utils.nowMS();
-    if (this._lastHandlePersist + 60000 > now) {
+    if (this._lastHandlePersist + 2000 > now) {
       return;
     }
     Utils.dbo?.persistHandleSensor(this);

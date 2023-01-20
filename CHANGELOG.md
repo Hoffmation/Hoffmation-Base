@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't limit handle persist too much (Fast window open/close)
+
 ## 2.4.1 (2023-01-20)
 
 * (theimo1221) Increase Handle Persist
