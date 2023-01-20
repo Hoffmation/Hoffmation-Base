@@ -62,7 +62,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
-            this.persist();
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -73,7 +73,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             break;
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
-            this.persist();
+            this.persistBatteryDevice();
             break;
         }
         break;
@@ -82,11 +82,13 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
 
   public updatePosition(pValue: WindowPosition): void {
     if (pValue === this.position) {
-      this.persistHandleSensor();
+      if (this._lastHandlePersist == 0) {
+        this.persistHandleSensor();
+      }
       return;
     }
 
-    this.log(LogLevel.Trace, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
+    this.log(LogLevel.Debug, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
 
     this.position = pValue;
     for (const c1 of this._closedCallback) {
@@ -163,11 +165,6 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       60000,
       this,
     );
-  }
-
-  public persist(): void {
-    this.persistHandleSensor();
-    this.persistBatteryDevice();
   }
 
   public persistBatteryDevice(): void {
