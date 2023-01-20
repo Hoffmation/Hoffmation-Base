@@ -13,6 +13,8 @@ import { DeviceCapability } from '../DeviceCapability';
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  private _lastHandlePersist: number = 0;
+
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
@@ -60,7 +62,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
-            this.persistBatteryDevice();
+            this.persist();
             break;
         }
         break;
@@ -71,7 +73,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             break;
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
-            this.persistBatteryDevice();
+            this.persist();
             break;
         }
         break;
@@ -79,7 +81,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   public updatePosition(pValue: WindowPosition): void {
-    this.persistHandleSensor();
+    this.persist();
     if (pValue === this.position) {
       return;
     }
@@ -159,6 +161,11 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     }
   }
 
+  public persist(): void {
+    this.persistHandleSensor();
+    this.persistBatteryDevice();
+  }
+
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {
@@ -169,7 +176,12 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   public persistHandleSensor(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastHandlePersist + 60000 > now) {
+      return;
+    }
     Utils.dbo?.persistHandleSensor(this);
+    this._lastHandlePersist = now;
   }
 
   public dispose(): void {
