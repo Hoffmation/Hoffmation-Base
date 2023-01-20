@@ -81,14 +81,15 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   public updatePosition(pValue: WindowPosition): void {
-    this.persist();
     if (pValue === this.position) {
+      this.persist();
       return;
     }
 
     this.log(LogLevel.Trace, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
 
     this.position = pValue;
+    this.persist();
     for (const c1 of this._closedCallback) {
       c1(pValue === 0);
     }
