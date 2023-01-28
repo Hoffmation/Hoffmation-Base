@@ -5,8 +5,8 @@ export class TemperatureSettings {
     public start: Daytime,
     public end: Daytime,
     public temperature: number,
-    public active: boolean = true,
     public name: string,
+    public active: boolean = true,
   ) {
   }
 

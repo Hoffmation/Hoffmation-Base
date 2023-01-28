@@ -1,13 +1,13 @@
 import { Daytime, TemperatureSettings } from '../../lib';
 
 describe('TemperatureSettings', () => {
-  const setting: TemperatureSettings = new TemperatureSettings(new Daytime(0, 0), new Daytime(6, 0), 20);
-  const setting2: TemperatureSettings = new TemperatureSettings(new Daytime(22, 0), new Daytime(24, 0), 20);
-  const roomSetting: { [name: string]: TemperatureSettings } = {
-    Nacht: new TemperatureSettings(new Daytime(0), new Daytime(10), 18),
-    Tagsüber: new TemperatureSettings(new Daytime(10), new Daytime(22), 19),
-    Abend: new TemperatureSettings(new Daytime(22), new Daytime(24), 20),
-  };
+  const setting: TemperatureSettings = new TemperatureSettings(new Daytime(0, 0), new Daytime(6, 0), 20, 'Nacht');
+  const setting2: TemperatureSettings = new TemperatureSettings(new Daytime(22, 0), new Daytime(24, 0), 20, 'Abend');
+  const roomSetting: TemperatureSettings[] = [
+    new TemperatureSettings(new Daytime(0), new Daytime(10), 18, 'Nacht'),
+    new TemperatureSettings(new Daytime(10), new Daytime(22), 19, 'Tagsüber'),
+    new TemperatureSettings(new Daytime(22), new Daytime(24), 20, 'Abend'),
+  ];
 
   it('00:00:00.001 should be in range', () => {
     expect(setting.isNowInRange(new Date('2022-03-21 00:00:00.001'))).toBeTruthy();
