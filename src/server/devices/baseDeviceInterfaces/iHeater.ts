@@ -15,7 +15,7 @@ export interface iHeater extends iRoomDevice {
 
   deleteAutomaticPoint(name: string): void;
 
-  setAutomaticPoint(name: string, setting: TemperatureSettings): void;
+  setAutomaticPoint(setting: TemperatureSettings): void;
 
   stopAutomaticCheck(): void;
 

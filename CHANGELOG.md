@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extract automatic points to heater settings
+
 ## 2.4.6 (2023-01-28)
 
 * (theimo1221) Update packages

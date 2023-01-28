@@ -6,18 +6,12 @@ export class TemperatureSettings {
     public end: Daytime,
     public temperature: number,
     public active: boolean = true,
-  ) {}
+    public name: string,
+  ) {
+  }
 
-  public static getActiveSetting(
-    settings: { [name: string]: TemperatureSettings },
-    date: Date,
-  ): TemperatureSettings | undefined {
-    for (const name of Object.keys(settings)) {
-      if (settings[name] === undefined) {
-        continue;
-      }
-
-      const setting: TemperatureSettings = settings[name];
+  public static getActiveSetting(settings: TemperatureSettings[], date: Date): TemperatureSettings | undefined {
+    for (const setting of settings) {
       if (setting.isNowInRange(date)) {
         return setting;
       }

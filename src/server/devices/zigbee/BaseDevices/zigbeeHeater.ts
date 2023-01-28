@@ -139,7 +139,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     }
 
     const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this._automaticPoints,
+      this.settings.automaticPoints,
       new Date(),
     );
 
@@ -159,11 +159,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   }
 
   public deleteAutomaticPoint(name: string): void {
-    if (this._automaticPoints[name] !== undefined) delete this._automaticPoints[name];
+    this.settings.deleteAutomaticPoint(name, this);
   }
 
-  public setAutomaticPoint(name: string, setting: TemperatureSettings): void {
-    this._automaticPoints[name] = setting;
+  public setAutomaticPoint(setting: TemperatureSettings): void {
+    this.settings.setAutomaticPoint(setting, this);
   }
 
   public stopAutomaticCheck(): void {

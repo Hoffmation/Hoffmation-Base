@@ -43,7 +43,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   private _initialSeasonCheckDone: boolean = false;
   private _level: number = 0;
   private _setPointTemperatureID: string = '';
-  private _automaticPoints: { [name: string]: TemperatureSettings } = {};
   private _humidityCallbacks: Array<(pValue: number) => void> = [];
   private _temperatureCallbacks: ((pValue: number) => void)[] = [];
 
@@ -165,7 +164,11 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   public deleteAutomaticPoint(name: string): void {
-    if (this._automaticPoints[name] !== undefined) delete this._automaticPoints[name];
+    this.settings.deleteAutomaticPoint(name, this);
+  }
+
+  public setAutomaticPoint(setting: TemperatureSettings): void {
+    this.settings.setAutomaticPoint(setting, this);
   }
 
   public getBelongingHeizungen(): iHeater[] {
@@ -173,10 +176,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       return [];
     }
     return this.room.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
-  }
-
-  public setAutomaticPoint(name: string, setting: TemperatureSettings): void {
-    this._automaticPoints[name] = setting;
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -206,7 +205,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
 
     const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this._automaticPoints,
+      this.settings.automaticPoints,
       new Date(),
     );
 
