@@ -19,6 +19,7 @@ import {
   SonosService,
   TelegramCommands,
   TelegramService,
+  TibberService,
   TimeCallbackService,
   Utils,
   WeatherService,
@@ -56,6 +57,10 @@ export class HoffmationBase {
     if (SettingsService.settings.telegram) {
       ServerLogService.writeLog(LogLevel.Info, `Telegram settings detected --> initializing`);
       TelegramService.initialize(SettingsService.settings.telegram);
+    }
+    if (SettingsService.settings.tibber) {
+      ServerLogService.writeLog(LogLevel.Info, `Tibber settings detected --> initializing`);
+      TibberService.initialize(SettingsService.settings.tibber);
     }
     if (SettingsService.settings.polly) {
       ServerLogService.writeLog(LogLevel.Info, `Amazon Polly settings detected --> initializing`);

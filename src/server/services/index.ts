@@ -16,4 +16,5 @@ export * from './HTTPSOptions';
 export * from './news-service';
 export * from './settings-service';
 export * from './ShutterService';
+export * from './tibber-service';
 export * from './time-callback-service';

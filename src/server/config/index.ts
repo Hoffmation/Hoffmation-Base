@@ -18,5 +18,6 @@ export * from './iWeatherSettings';
 export * from './iPollySettings';
 export * from './iPersistenceSettings';
 export * from './iTelegramSettings';
+export * from './iTibberSettings';
 export * from './iTimeSettings';
 export * from './iTimePair';
