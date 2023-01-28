@@ -17,6 +17,7 @@ import { iHeaterSettings } from './iHeaterSettings';
 import { iBlueIrisSettings } from './iBlueIrisSettings';
 import { iRestSettings } from './iRestSettings';
 import { iEspresenseSettings } from './iEspresenseSettings';
+import { iTibberSettings } from './iTibberSettings';
 
 export interface iConfig {
   asusConfig?: iAsusConfig;
@@ -38,6 +39,7 @@ export interface iConfig {
   roomDefault: iRoomDefaultSettings;
   sonos?: iSonosSettings;
   telegram?: iTelegramSettings;
+  tibber?: iTibberSettings;
   timeSettings: iTimeSettings;
   translationSettings: iTranslationSettings;
   // Price per kWh from the grid
