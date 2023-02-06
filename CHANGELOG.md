@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Basic Tibber support
+* (theimo1221) Update packages
 
 ## 2.5.0 (2023-01-28)
 
