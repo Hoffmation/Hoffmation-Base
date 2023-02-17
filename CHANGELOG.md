@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.6.0 (2023-02-17)
 
 * (theimo1221) Basic Tibber support
 * (theimo1221) Update packages
