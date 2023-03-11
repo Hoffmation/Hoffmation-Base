@@ -10,16 +10,16 @@ describe('TemperatureSettings', () => {
   ];
 
   it('00:00:00.001 should be in range', () => {
-    expect(setting.isNowInRange(new Date('2022-03-21 00:00:00.001'))).toBeTruthy();
+    expect(TemperatureSettings.isNowInRange(setting, new Date('2022-03-21 00:00:00.001'))).toBeTruthy();
   });
   it('05:59:59.999 should be in range', () => {
-    expect(setting.isNowInRange(new Date('2022-03-21 05:59:59.999'))).toBeTruthy();
+    expect(TemperatureSettings.isNowInRange(setting, new Date('2022-03-21 05:59:59.999'))).toBeTruthy();
   });
   it('06:00:00.001 should not be in range', () => {
-    expect(setting.isNowInRange(new Date('2022-03-21 06:00:00.001'))).toBeFalsy();
+    expect(TemperatureSettings.isNowInRange(setting, new Date('2022-03-21 06:00:00.001'))).toBeFalsy();
   });
   it('23:59:59.999 should be in range of setting2', () => {
-    expect(setting2.isNowInRange(new Date('2022-03-21 23:59:59.999'))).toBeTruthy();
+    expect(TemperatureSettings.isNowInRange(setting2, new Date('2022-03-21 23:59:59.999'))).toBeTruthy();
   });
 
   it('23:59:59.999 should give last range', () => {
