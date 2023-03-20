@@ -22,6 +22,7 @@ import {
   TibberService,
   TimeCallbackService,
   Utils,
+  VictronService,
   WeatherService,
 } from './server';
 import { LogLevel } from './models';
@@ -104,6 +105,12 @@ export class HoffmationBase {
       if (SettingsService.settings.weather) {
         ServerLogService.writeLog(LogLevel.Info, `Weather settings detected --> initializing`);
         WeatherService.initialize(SettingsService.settings.weather);
+      }
+    });
+    Utils.guardedNewThread(() => {
+      if (SettingsService.settings.victron) {
+        ServerLogService.writeLog(LogLevel.Info, `Victron settings detected --> initializing`);
+        VictronService.initialize(SettingsService.settings.victron);
       }
     });
     if (SettingsService.TelegramActive) TelegramService.publishCommands();

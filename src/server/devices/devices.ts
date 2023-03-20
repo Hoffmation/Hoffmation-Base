@@ -293,6 +293,9 @@ export class Devices {
   }
 
   private static createEnergyManager(cDevConf: deviceConfig) {
+    if (Devices.energymanager !== undefined) {
+      return;
+    }
     const devInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf, true);
     const fullName: string = `${Devices.IDENTIFIER_JS}-${devInfo.devID}`;
     devInfo.allDevicesKey = fullName;

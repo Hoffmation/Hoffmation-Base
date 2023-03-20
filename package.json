@@ -64,7 +64,8 @@
     "socket.io-client": "2.5.x",
     "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1",
-    "tibber-api": "^5.1.8"
+    "tibber-api": "^5.1.8",
+    "victron-mqtt-consumer": "^0.0.3"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.9",

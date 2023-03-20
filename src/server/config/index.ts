@@ -21,3 +21,4 @@ export * from './iTelegramSettings';
 export * from './iTibberSettings';
 export * from './iTimeSettings';
 export * from './iTimePair';
+export * from './iVictronSettings';

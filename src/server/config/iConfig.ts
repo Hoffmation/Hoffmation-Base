@@ -18,6 +18,7 @@ import { iBlueIrisSettings } from './iBlueIrisSettings';
 import { iRestSettings } from './iRestSettings';
 import { iEspresenseSettings } from './iEspresenseSettings';
 import { iTibberSettings } from './iTibberSettings';
+import { iVictronSettings } from './iVictronSettings';
 
 export interface iConfig {
   asusConfig?: iAsusConfig;
@@ -45,4 +46,5 @@ export interface iConfig {
   // Price per kWh from the grid
   wattagePrice?: number;
   weather?: iWeatherSettings;
+  victron?: iVictronSettings;
 }
