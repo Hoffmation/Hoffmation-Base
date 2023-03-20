@@ -1,7 +1,5 @@
 import { iVictronSettings } from '../config';
-import { VictronMqttConsumer } from 'victron-mqtt-consumer/build/src/main';
-import { VictronMqttConnectionOptions } from 'victron-mqtt-consumer/build/src/models/VictronMqttConnectionOptions';
-import { VictronDeviceData } from 'victron-mqtt-consumer/build/src/models/VictronDeviceData';
+import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 
 export class VictronService {
   private static _victronConsumer: VictronMqttConsumer | undefined = undefined;
