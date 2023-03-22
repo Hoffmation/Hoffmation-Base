@@ -44,4 +44,5 @@ export enum DeviceType {
   TrackableDevice = 4002,
   SamsungTv = 5001,
   Camera = 6001,
+  Victron = 7001,
 }

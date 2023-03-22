@@ -1,17 +1,18 @@
-import { iVictronSettings } from '../config';
-import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
+import { iVictronSettings } from '../../config';
+import { VictronDeviceData, VictronMqttConnectionOptions } from 'victron-mqtt-consumer';
+import { VictronDevice } from './victron-device';
 
 export class VictronService {
-  private static _victronConsumer: VictronMqttConsumer | undefined = undefined;
-
   private static _settings: iVictronSettings | undefined = undefined;
+
+  private static _victronDevice: VictronDevice | undefined = undefined;
 
   public static get settings(): iVictronSettings | undefined {
     return this._settings;
   }
 
   public static get data(): VictronDeviceData | undefined {
-    return this._victronConsumer?.data;
+    return this._victronDevice?.victronConsumer.data;
   }
 
   private static _active: boolean;
@@ -28,6 +29,6 @@ export class VictronService {
     }
     const opts = new VictronMqttConnectionOptions();
     opts.ip = newSettings.host;
-    this._victronConsumer = new VictronMqttConsumer(opts);
+    this._victronDevice = new VictronDevice(opts);
   }
 }
