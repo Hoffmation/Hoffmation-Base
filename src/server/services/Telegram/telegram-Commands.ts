@@ -215,13 +215,8 @@ export class TelegramCommands {
           /\/get_energy_values/,
           async (m: TelegramBot.Message): Promise<boolean> => {
             if (m.from === undefined) return false;
-            const response: string[] = ['Current Energy Manager values:'];
-            response.push(`Production: ${Devices.energymanager?.currentProduction}W`);
-            response.push(`Total Consumption: ${Devices.energymanager?.totalConsumption}W`);
-            response.push(`Excess Consumption: ${Devices.energymanager?.excessEnergyConsumerConsumption}W`);
-            response.push(`Drawing Wattage: ${Devices.energymanager?.drawingWattage}W`);
-            response.push(`Self Consuming Wattage: ${Devices.energymanager?.selfConsumingWattage}W`);
-            response.push(`Injecting Wattage: ${Devices.energymanager?.injectingWattage}W`);
+            const response: string[] = ['Current Energy Manager report:'];
+            response.push(Devices.energymanager?.getReport() ?? 'No Energy Manager found');
             TelegramService.sendMessage([m.chat.id], response.join('\n'));
             return true;
           },

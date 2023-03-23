@@ -282,4 +282,15 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
       this._iDatabaseLoggerInterval = null;
     }
   }
+
+  public getReport(): string {
+    const response: string[] = [];
+    response.push(`Production: ${this.currentProduction}W`);
+    response.push(`Total Consumption: ${this.totalConsumption}W`);
+    response.push(`Excess Consumption: ${this.excessEnergyConsumerConsumption}W`);
+    response.push(`Drawing Wattage: ${this.drawingWattage}W`);
+    response.push(`Self Consuming Wattage: ${this.selfConsumingWattage}W`);
+    response.push(`Injecting Wattage: ${this.injectingWattage}W`);
+    return response.join('');
+  }
 }
