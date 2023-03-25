@@ -51,9 +51,9 @@ export class RoomService {
     const rooms: IterableIterator<[string, RoomBase]> =
       floor > -1 ? this.getAllRoomsOfFloor(floor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
-      room.LightGroup?.setAllLampen(status, -1, true, timeout);
+      room.LightGroup?.setAllLampen(status, undefined, true, timeout);
       room.LightGroup?.setAllLED(status);
-      room.LightGroup?.setAllStecker(status, -1, true);
+      room.LightGroup?.setAllStecker(status, undefined, true);
       room.LightGroup?.setAllWled(status);
     }
   }

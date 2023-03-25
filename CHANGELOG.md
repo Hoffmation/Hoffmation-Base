@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Victron as energy Manager
+* (theimo1221) Update packages
+
 ## 2.7.0 (2023-03-20)
 
 * (theimo1221) Update packages
