@@ -111,6 +111,14 @@ export class VictronDevice implements iEnergyManager {
     return Utils.jsonFilter(this, ['_victronConsumer']);
   }
 
+  /**
+   * Changes the grid set point of the Victron device, to the desired value.
+   * @param {number} setPoint
+   */
+  public setGridSetPoint(setPoint: number): void {
+    this._victronConsumer.setGridSetPoint(setPoint);
+  }
+
   private calculateExcessEnergy(): void {
     this._excessEnergy = 0;
     if (this.data == undefined) {
