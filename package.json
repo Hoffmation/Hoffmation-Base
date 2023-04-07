@@ -65,13 +65,12 @@
     "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1",
     "tibber-api": "^5.1.8",
-    "victron-mqtt-consumer": "^0.1.2"
+    "victron-mqtt-consumer": "^0.1.4"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.9",
     "@types/node-ssdp": "^4.0.1",
     "@types/suncalc": "^1.9.0",
-    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "autoprefixer": "^10.4.14",
