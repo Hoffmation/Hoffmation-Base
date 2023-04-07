@@ -1,9 +1,9 @@
-import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 import { DeviceInfo, Devices, DeviceType, iEnergyManager, iExcessEnergyConsumer } from '../../devices';
 import { EnergyManagerUtils, Utils } from '../utils';
 import { LogLevel, VictronDeviceSettings } from '../../../models';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { LogDebugType, ServerLogService } from '../log-service';
+import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 
 export class VictronDevice implements iEnergyManager {
   private readonly _victronConsumer: VictronMqttConsumer;

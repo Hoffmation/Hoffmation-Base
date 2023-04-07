@@ -29,6 +29,7 @@ export class VictronService {
     }
     const opts = new VictronMqttConnectionOptions();
     opts.ip = newSettings.host;
+    opts.influxDb = newSettings.influxDb;
     this._victronDevice = new VictronDevice(opts);
   }
 }

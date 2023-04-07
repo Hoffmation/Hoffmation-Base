@@ -10,6 +10,7 @@
 
 * (theimo1221) Update packages
 * (theimo1221) Add Grid Setpoint Changing to Victron Device
+* (theimo1221) Add setting to allow VictronMqtt to store data in influxdb
 
 ## 2.7.1 (2023-03-25)
 
