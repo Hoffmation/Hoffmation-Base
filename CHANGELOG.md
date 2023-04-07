@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.8.0 (2023-04-07)
 
 * (theimo1221) Update packages
 * (theimo1221) Add Grid Setpoint Changing to Victron Device
