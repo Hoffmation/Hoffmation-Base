@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.8.3 (2023-04-15)
 
 * (theimo1221) Usage of "movementDetected" only for active Zigbee Devices
 * (theimo1221) Update packages
