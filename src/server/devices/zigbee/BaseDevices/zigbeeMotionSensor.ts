@@ -18,6 +18,10 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   public settings: MotionSensorSettings = new MotionSensorSettings();
 
   public get movementDetected(): boolean {
+    if (!this.available) {
+      // If the device is not available, there is no active movement
+      return false;
+    }
     return this._movementDetected;
   }
 

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Usage of "movementDetected" only for active Zigbee Devices
+
 ## 2.8.2 (2023-04-09)
 
 * (theimo1221) Update victron package
