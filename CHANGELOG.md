@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.8.4 (2023-04-16)
 
 * (theimo1221) Extract iCameraDevice interface
 * (theimo1221) Add possibility, to block camera detection, by open door handles
