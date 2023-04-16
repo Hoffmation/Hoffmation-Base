@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extract iCameraDevice interface
+* (theimo1221) Add possibility, to block camera detection, by open door handles
+
 ## 2.8.3 (2023-04-15)
 
 * (theimo1221) Usage of "movementDetected" only for active Zigbee Devices

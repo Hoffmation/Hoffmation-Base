@@ -1,11 +1,11 @@
-import { CameraDevice } from './cameraDevice';
 import { ServerLogService } from '../../services';
 import { LogLevel } from '../../../models';
+import { iCameraDevice } from '../baseDeviceInterfaces';
 
 export class BlueIrisCoordinator {
-  private static cameraDeviceMap: Map<string, CameraDevice> = new Map<string, CameraDevice>();
+  private static cameraDeviceMap: Map<string, iCameraDevice> = new Map<string, iCameraDevice>();
 
-  public static addDevice(device: CameraDevice, devName: string) {
+  public static addDevice(device: iCameraDevice, devName: string) {
     this.cameraDeviceMap.set(devName, device);
   }
 

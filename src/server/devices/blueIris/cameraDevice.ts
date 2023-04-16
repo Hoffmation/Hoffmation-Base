@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { iMotionSensor, iRoomDevice } from '../baseDeviceInterfaces';
+import { iCameraDevice, iRoomDevice } from '../baseDeviceInterfaces';
 import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../../../models';
 import { BlueIrisCoordinator } from './blueIrisCoordinator';
 import { API, LogDebugType, ServerLogService, SettingsService, TelegramService, Utils } from '../../services';
@@ -8,7 +8,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 
-export class CameraDevice implements iRoomDevice, iMotionSensor {
+export class CameraDevice implements iCameraDevice {
   public readonly blueIrisName: string;
 
   public get lastImage(): string {
@@ -24,9 +24,19 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private _lastImage: string = '';
   private _personDetected: boolean = false;
+  private _alarmGriffBlockCount: number = 0;
+  private _alarmBlockedByGriffTimeStamp: number = 0;
   public readonly mpegStreamLink: string = '';
   public readonly h264IosStreamLink: string = '';
   public readonly currentImageLink: string = '';
+
+  public get alarmBlockedByGriffTimeStamp(): number {
+    return this._alarmBlockedByGriffTimeStamp;
+  }
+
+  public get alarmBlockedByGriff(): boolean {
+    return this._alarmGriffBlockCount > 0;
+  }
 
   public constructor(mqttName: string, roomName: string, blueIrisName: string) {
     this.blueIrisName = blueIrisName;
@@ -116,6 +126,14 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
     this._movementDetectedCallback.push(pCallback);
   }
 
+  public onGriffUpdate(open: boolean): void {
+    this._alarmGriffBlockCount += open ? 1 : -1;
+    if (this._alarmGriffBlockCount == 1) {
+      this._alarmBlockedByGriffTimeStamp = new Date().getTime();
+    }
+    this.log(LogLevel.Debug, `Handle change to open (${open}), new open amount: ${this._alarmGriffBlockCount}`);
+  }
+
   public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
   }
@@ -143,7 +161,7 @@ export class CameraDevice implements iRoomDevice, iMotionSensor {
         this._lastImage = state.val as string;
         Utils.guardedTimeout(() => {
           // Give Person Detected Update some time, as otherwise personDetected might still be false
-          if (this.settings.alertPersonOnTelegram && this._personDetected) {
+          if (this.settings.alertPersonOnTelegram && this._personDetected && !this.alarmBlockedByGriff) {
             TelegramService.sendImage(`${this.name} detected Person`, new Base64Image(this._lastImage, 'person_alert'));
           }
         }, 1000);

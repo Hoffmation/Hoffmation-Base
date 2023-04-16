@@ -2,6 +2,7 @@ import {
   Devices,
   iActuator,
   iBaseDevice,
+  iCameraDevice,
   iLamp,
   iScene,
   iShutter,
@@ -17,7 +18,6 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
-import { CameraDevice } from '../../devices/blueIris';
 
 export class API {
   /**
@@ -291,7 +291,7 @@ export class API {
   }
 
   public static getLastCameraImage(deviceId: string): Error | string {
-    const d = this.getDevice(deviceId) as CameraDevice | undefined;
+    const d = this.getDevice(deviceId) as iCameraDevice | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }

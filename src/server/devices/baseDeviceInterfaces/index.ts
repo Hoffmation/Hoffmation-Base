@@ -3,6 +3,7 @@ export * from './iActuator';
 export * from './iBaseDevice';
 export * from './iBatteryDevice';
 export * from './iButtonSwitch';
+export * from './iCameraDevice';
 export * from './iEnergyManager';
 export * from './iExcessEnergyConsumer';
 export * from './iHandleSensor';
