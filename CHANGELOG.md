@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update victron package
+
 ## 2.8.4 (2023-04-16)
 
 * (theimo1221) Extract iCameraDevice interface
