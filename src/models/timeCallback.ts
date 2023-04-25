@@ -111,7 +111,10 @@ export class TimeCallback {
       this.perform(now);
       return;
     }
-
+    if (this.nextToDo?.getTime() == nextCalculatedTime.getTime()) {
+      // No change
+      return;
+    }
     this.nextToDo = nextCalculatedTime;
     ServerLogService.writeLog(
       LogLevel.Debug,
