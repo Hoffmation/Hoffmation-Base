@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.8.8 (2023-05-05)
 
 * (theimo1221) Fix prettier error
 
