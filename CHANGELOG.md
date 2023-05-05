@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Reduce Time Event logging, when there is no modification
+* (theimo1221) Update packages
 
 ## 2.8.6 (2023-04-25)
 
