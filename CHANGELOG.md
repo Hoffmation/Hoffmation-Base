@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix prettier error
+
 ## 2.8.7 (2023-05-05)
 
 * (theimo1221) Reduce Time Event logging, when there is no modification
