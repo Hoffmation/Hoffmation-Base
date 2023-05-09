@@ -241,10 +241,12 @@ export class WeatherService {
       result = 30;
     }
 
-    logger(
-      LogLevel.Info,
-      `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${result}`,
-    );
+    if (result !== normalPos) {
+      logger(
+        LogLevel.Info,
+        `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${result}`,
+      );
+    }
     return result;
   }
 
