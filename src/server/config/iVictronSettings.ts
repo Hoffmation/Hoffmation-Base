@@ -3,4 +3,5 @@ import { InfluxDbConnectionOptions } from 'victron-mqtt-consumer/build/models/In
 export interface iVictronSettings {
   host: string;
   influxDb: InfluxDbConnectionOptions;
+  debug: boolean;
 }
