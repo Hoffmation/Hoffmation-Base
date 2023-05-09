@@ -1,7 +1,7 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "2.8.8",
+  "version": "2.8.9",
   "files": [
     "lib/**/*"
   ],
