@@ -5,6 +5,7 @@ import {
   iAcDevice,
   iExcessEnergyConsumer,
   iRoomDevice,
+  iTemporaryDisableAutomatic,
   UNDEFINED_TEMP_VALUE,
 } from '../../devices';
 import { AcSettings, ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
@@ -16,14 +17,15 @@ import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
+import { BlockAutomaticHandler } from '../blockAutomaticHandler';
 
-export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice {
+export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   public currentConsumption: number = -1;
   public settings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac];
+  public readonly blockAutomationHandler;
   protected _activatedByExcessEnergy: boolean = false;
-  protected _blockAutomaticChangeMS: number = -1;
 
   protected _info: DeviceInfo;
 
@@ -45,6 +47,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.persistDeviceInfo();
     this.loadDeviceSettings();
+    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
   public get energySettings(): ExcessEnergyConsumerSettings {
@@ -81,11 +84,16 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public abstract get on(): boolean;
 
+  public restoreTargetAutomaticValue(): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.automaticCheck();
+  }
+
   public isAvailableForExcessEnergy(): boolean {
     if (this.settings.useOwnTemperatureAndAutomatic) {
       return false;
     }
-    if (Utils.nowMS() < this._blockAutomaticChangeMS) {
+    if (this.blockAutomationHandler.automaticBlockActive) {
       return false;
     }
     if (
@@ -161,7 +169,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
    * @param {number} timeout
    */
   public deactivateAutomaticChange(timeout: number = 60 * 60 * 1000): void {
-    this._blockAutomaticChangeMS = Utils.nowMS() + timeout;
+    this.blockAutomationHandler.disableAutomatic(timeout);
   }
 
   public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
@@ -180,7 +188,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public turnOnForExcessEnergy(): void {
-    if (this._blockAutomaticChangeMS > Utils.nowMS()) {
+    if (this.blockAutomationHandler.automaticBlockActive) {
       return;
     }
     this._activatedByExcessEnergy = true;
@@ -195,7 +203,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public setState(mode: AcMode, forceTime: number = 60 * 60 * 1000): void {
-    this._blockAutomaticChangeMS = Utils.nowMS() + forceTime;
+    this.blockAutomationHandler.disableAutomatic(forceTime);
     if (mode == AcMode.Off) {
       this.turnOff();
       return;
@@ -232,7 +240,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   protected automaticCheck(): void {
-    if (Utils.nowMS() < this._blockAutomaticChangeMS) {
+    if (this.blockAutomationHandler.automaticBlockActive) {
       // We aren't allowed to turn on or off anyway --> exit
       return;
     }

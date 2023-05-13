@@ -31,10 +31,10 @@ export class BlockAutomaticHandler {
   }
 
   public disableAutomatic(
-    duration: number,
+    durationMS: number,
     onCollideAction: CollisionSolving = CollisionSolving.overrideIfGreater,
   ): void {
-    this.disableAutomaticUntil(new Date(Utils.nowMS() + duration), onCollideAction);
+    this.disableAutomaticUntil(new Date(Utils.nowMS() + durationMS), onCollideAction);
   }
 
   public disableAutomaticUntil(
@@ -62,7 +62,7 @@ export class BlockAutomaticHandler {
     }
     this._restoreAutomaticStateTimeout = Utils.guardedTimeout(
       this._restoreAutomatic,
-      this._automaticBlockedUntil.getTime() - Utils.nowMS(),
+      this._automaticBlockedUntil.getTime() - Utils.nowMS() + 500,
       this,
     );
   }
