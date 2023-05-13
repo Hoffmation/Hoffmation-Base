@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.4 (2023-05-13)
 
 * Include missing Device Capability for Ac Device
 
