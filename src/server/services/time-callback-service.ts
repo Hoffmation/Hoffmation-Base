@@ -250,4 +250,8 @@ Next Sunset: ${TimeCallbackService._nextSunSet.toLocaleString('de-DE')}`,
   public static getSunsetForDate(pDay: Date = new Date(), lat?: number, long?: number): Date {
     return getSunset(lat ?? SettingsService.latitude, long ?? SettingsService.longitude, pDay);
   }
+
+  public static hoursTilSunset(): number {
+    return (this.nextSunSet.getTime() - Utils.nowMS()) / 1000 / 60;
+  }
 }

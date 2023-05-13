@@ -11,6 +11,7 @@
 * (theimo1221) Add device Cluster to windowGroup
 * (theimo1221) Add settings to HmIp Griff, to allow controlling of telegram informations
 * (theimo1221) Update packages
+* (theimo1221) Allow for better excess Energy Usage with Victron-Energy-Manager
 
 ## 2.8.9 (2023-05-09)
 

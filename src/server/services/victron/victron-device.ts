@@ -4,6 +4,7 @@ import { LogLevel, VictronDeviceSettings } from '../../../models';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
+import { TimeCallbackService } from '../time-callback-service';
 
 export class VictronDevice implements iEnergyManager {
   private readonly _victronConsumer: VictronMqttConsumer;
@@ -77,9 +78,9 @@ export class VictronDevice implements iEnergyManager {
     if (Utils.nowMS() < this.blockDeviceChangeTime) {
       return;
     }
-    if (this.excessEnergy > 400) {
+    if (this.excessEnergy > this.settings.excessEnergyTurnOnThreshold) {
       this.turnOnAdditionalConsumer();
-    } else if (this.excessEnergy < 200) {
+    } else if (this.excessEnergy < this.settings.excessEnergyTurnOffThreshold) {
       this.turnOffAdditionalConsumer();
     }
   }
@@ -127,23 +128,33 @@ export class VictronDevice implements iEnergyManager {
     }
 
     // Step 1: Calculate battery need
+    const hoursTilSunset = TimeCallbackService.hoursTilSunset();
     let neededBatteryWattage: number = 0;
     if (this.settings.hasBattery) {
       if (this.data.battery.soc == null) {
         this.log(LogLevel.Debug, `No battery data available from Victron device.`);
         return;
       }
-      neededBatteryWattage = (1 - this.data.battery.soc) * this.settings.batteryCapacityWattage;
+      neededBatteryWattage = ((1 - this.data.battery.soc) * this.settings.batteryCapacityWattage) / hoursTilSunset;
     }
 
     // Step 2: Calculate expected solar output
     const solarOutput = this.data.pvInverter.power ?? 0;
 
     // Step 3: Calculate expected base consumption
-    const baseConsumption = 0;
+    const baseConsumption = this.settings.normalBaseConsumptionWattage;
 
     // Step 4: Combine to get currently excess energy
     this._excessEnergy = solarOutput - neededBatteryWattage - baseConsumption;
+
+    // Whilst calculated spare energy is more precise, we don't mind using the battery as a buffer, if it is full enough.
+    if (
+      this.data.battery.dcPower !== null &&
+      this.data.battery.soc !== null &&
+      this.data.battery.soc > (hoursTilSunset > 4 ? 0.7 : 0.8)
+    ) {
+      this._excessEnergy = this.settings.maximumBatteryDischargeWattage - Math.max(this.data.battery.dcPower, 0);
+    }
   }
 
   private turnOnAdditionalConsumer(): void {
