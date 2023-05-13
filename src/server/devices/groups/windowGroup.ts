@@ -4,6 +4,8 @@ import { Window } from './Window';
 import { WindowPosition } from '../models';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
+import { DeviceList } from '../device-list';
+import { DeviceClusterType } from '../device-cluster-type';
 
 export class WindowGroup extends BaseGroup {
   public sunriseShutterCallback: TimeCallback | undefined;
@@ -11,6 +13,20 @@ export class WindowGroup extends BaseGroup {
 
   public constructor(roomName: string, public windows: Window[]) {
     super(roomName, GroupType.WindowGroup);
+    const shutterIds: string[] = [];
+    const handleIds: string[] = [];
+    const vibrationIds: string[] = [];
+    const magnetIds: string[] = [];
+    windows.forEach((window) => {
+      shutterIds.push(...window.shutterIds);
+      handleIds.push(...window.handleIds);
+      vibrationIds.push(...window.vibrationIds);
+      magnetIds.push(...window.magnetIds);
+    });
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
+    this.deviceCluster.deviceMap.set(DeviceClusterType.MagnetContact, new DeviceList(magnetIds));
   }
 
   public allRolloDown(initial: boolean = false, savePosition: boolean = false): void {

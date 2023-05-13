@@ -15,10 +15,10 @@ export class Window extends BaseGroup {
 
   public constructor(
     roomName: string,
-    handleIds: string[] = [],
-    vibrationIds: string[] = [],
-    shutterIds: string[] = [],
-    magnetIds: string[] = [],
+    public readonly handleIds: string[] = [],
+    public readonly vibrationIds: string[] = [],
+    public readonly shutterIds: string[] = [],
+    public readonly magnetIds: string[] = [],
     public noRolloOnSunrise: boolean = false,
   ) {
     super(roomName, GroupType.Window);
