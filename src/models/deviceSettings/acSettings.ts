@@ -23,6 +23,11 @@ export class AcSettings extends DeviceSettings {
    * @type {boolean}
    */
   public heatingAllowed: boolean = false;
+  /**
+   * Whether we should ignore the room temperature and let the AC decide on its own
+   * @type {boolean}
+   */
+  public useOwnTemperatureAndAutomatic: boolean = false;
 
   public fromPartialObject(data: Partial<AcSettings>): void {
     this.minimumHours = data.minimumHours ?? this.minimumHours;
@@ -32,6 +37,7 @@ export class AcSettings extends DeviceSettings {
     this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? this.stopCoolingTemperatur;
     this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? this.stopHeatingTemperatur;
     this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
+    this.useOwnTemperatureAndAutomatic = data.useOwnTemperatureAndAutomatic ?? this.useOwnTemperatureAndAutomatic;
     super.fromPartialObject(data);
   }
 

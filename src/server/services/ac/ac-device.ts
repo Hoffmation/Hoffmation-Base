@@ -82,6 +82,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public abstract get on(): boolean;
 
   public isAvailableForExcessEnergy(): boolean {
+    if (this.settings.useOwnTemperatureAndAutomatic) {
+      return false;
+    }
     if (Utils.nowMS() < this._blockAutomaticChangeMS) {
       return false;
     }
@@ -99,12 +102,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public calculateDesiredMode(): AcMode {
-    const temp: number | undefined = this.roomTemperature;
-    if (temp === undefined || temp === UNDEFINED_TEMP_VALUE) {
-      this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no room temperature`);
-      return AcMode.Off;
-    }
-
     const acOn: boolean = this.on;
 
     // Check Turn Off Time
@@ -120,14 +117,26 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
+    if (this.settings.useOwnTemperatureAndAutomatic) {
+      // Device is in automatic mode so ignore energy and room temperature
+      return SettingsService.heatMode === HeatingMode.Sommer ? AcMode.Cooling : AcMode.Heating;
+    }
+
+    const temp: number | undefined = this.roomTemperature;
+    if (temp === undefined || temp === UNDEFINED_TEMP_VALUE) {
+      this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no room temperature`);
+      return AcMode.Off;
+    }
+
     let threshold: number = acOn ? 0 : 1;
     let thresholdHeating: number = acOn ? 0 : 0.5;
     let desiredMode: AcMode = AcMode.Off;
     const excessEnergy: number = Devices.energymanager?.excessEnergy ?? -1;
+
     if ((acOn ? 200 : 1000) < excessEnergy) {
       // As there is plenty of energy to spare we plan to overshoot the target by 1 degree
-      threshold = -1;
-      thresholdHeating = -1;
+      threshold = -0.5;
+      thresholdHeating = -0.5;
     }
 
     const coolUntil: number = this.settings.stopCoolingTemperatur + threshold;
