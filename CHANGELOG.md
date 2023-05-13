@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix workflow error
+
 ## 2.9.6 (2023-05-13)
 
 * (theimo1221) Republish for Workflow trigger
