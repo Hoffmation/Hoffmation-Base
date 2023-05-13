@@ -68,11 +68,13 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   public turnOn(): void {
+    this.log(LogLevel.Info, `Turning on`);
     this.desiredState = Power.ON;
     this.setDesiredInfo();
   }
 
   public turnOff(): void {
+    this.log(LogLevel.Info, `Turning off`);
     this._activatedByExcessEnergy = false;
     this.desiredState = Power.OFF;
     this.setDesiredInfo();

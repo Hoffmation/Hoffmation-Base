@@ -252,6 +252,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       this.turnOff();
       return;
     }
+
+    this.turnOn();
   }
 
   public toJSON(): Partial<AcDevice> {

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Ac Cooling had no turn on anymore
+
 ## 2.9.1 (2023-05-13)
 
 * (theimo1221) Allow Ac's to follow their own temperature if set
