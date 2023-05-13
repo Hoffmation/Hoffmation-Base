@@ -23,7 +23,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public currentConsumption: number = -1;
   public settings: AcSettings = new AcSettings();
   public room: RoomBase | undefined;
-  public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac];
+  public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac, DeviceCapability.blockAutomatic];
   public readonly blockAutomationHandler;
   protected _activatedByExcessEnergy: boolean = false;
 

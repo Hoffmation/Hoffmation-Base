@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* Include missing Device Capability for Ac Device
+
 ## 2.9.3 (2023-05-13)
 
 * (theimo1221) Use normal blockAutomation Handling on AC-Devices
