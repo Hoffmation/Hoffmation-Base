@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.2 (2023-05-13)
 
 * (theimo1221) Ac Cooling had no turn on anymore
 
