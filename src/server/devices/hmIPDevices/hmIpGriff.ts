@@ -9,8 +9,10 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
+import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
+  public settings: HandleSettings = new HandleSettings();
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   private _lastHandlePersist: number = 0;
@@ -134,13 +136,17 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             if (!wouldHelp && this._helpingRoomTemp) {
               const info: string = `Window should be closed, as it doesn't help reaching target temperature.`;
               this.log(LogLevel.Info, info);
-              TelegramService.inform(info);
+              if (this.settings.informNotHelping) {
+                TelegramService.inform(info);
+              }
               this._helpingRoomTemp = false;
             } else if (wouldHelp && !this._helpingRoomTemp) {
               this._helpingRoomTemp = true;
               const info: string = `Das Fenster hilft der Innentemperatur ihr Ziel von ${desiredTemp} zu erreichen. Draußen sind es ${outSideTemp}. Du wirst informiert wenn es nicht mehr hilft.`;
               this.log(LogLevel.Info, info);
-              TelegramService.inform(info);
+              if (this.settings.informIsHelping) {
+                TelegramService.inform(info);
+              }
               return;
             } else if (wouldHelp && this._helpingRoomTemp) {
               return;
@@ -155,7 +161,9 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
           case 120:
           case 240:
             this.log(LogLevel.Info, message);
-            TelegramService.inform(`${this.info.room}: ${message}`);
+            if (this.settings.informOnOpen) {
+              TelegramService.inform(`${this.info.room}: ${message}`);
+            }
             break;
           default:
             this.log(LogLevel.Trace, message);

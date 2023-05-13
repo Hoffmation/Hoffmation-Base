@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add device Cluster to windowGroup
+* (theimo1221) Add settings to HmIp Griff, to allow controlling of telegram informations
+
 ## 2.8.9 (2023-05-09)
 
 * (theimo1221) Update packages
