@@ -33,7 +33,9 @@ export class ShutterService {
         f.getShutter().forEach((shutter) => {
           response.push(
             `Rollo: "${shutter.info.customName}"\t${
-              f.noRolloOnSunrise ? 'Hochfahren inaktiv' : r.sunriseShutterCallback?.nextToDo?.toLocaleTimeString()
+              shutter.room?.settings.sonnenAufgangRollos === true
+                ? r.sunriseShutterCallback?.nextToDo?.toLocaleTimeString()
+                : 'Hochfahren inaktiv'
             }`,
           );
           down.push(`Rollo: "${shutter.info.customName}"\t${r.sunsetShutterCallback?.nextToDo?.toLocaleTimeString()}`);

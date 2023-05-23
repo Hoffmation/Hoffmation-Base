@@ -107,7 +107,7 @@ export class WindowGroup extends BaseGroup {
 
   public sunriseUp(initial: boolean = false): void {
     this.windows.forEach((f) => {
-      if (f.noRolloOnSunrise || f.getShutter().length === 0) {
+      if (!this.getRoom().settings.sonnenAufgangRollos || f.getShutter().length === 0) {
         return;
       }
       this.log(LogLevel.Debug, `Fahre das Rollo zum Sonnenaufgang ${initial ? '(ggf. nachträglich)' : ''} hoch`);

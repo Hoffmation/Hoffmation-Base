@@ -19,7 +19,6 @@ export class Window extends BaseGroup {
     public readonly vibrationIds: string[] = [],
     public readonly shutterIds: string[] = [],
     public readonly magnetIds: string[] = [],
-    public noRolloOnSunrise: boolean = false,
   ) {
     super(roomName, GroupType.Window);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
