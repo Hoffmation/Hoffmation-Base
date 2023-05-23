@@ -213,6 +213,13 @@ export class API {
     return null;
   }
 
+  /**
+   * Changes the position of a given shutter
+   * if needed this updates the window position as well
+   * @param {string} deviceId The device Id of the shutter
+   * @param {number} level The desired new level (0 being open, 100 being closed)
+   * @returns {Error | null} Error if there is no shutter with the given id
+   */
   public static setShutter(deviceId: string, level: number): Error | null {
     const d = this.getDevice(deviceId) as iShutter | undefined;
     if (d === undefined) {
@@ -221,10 +228,11 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.shutter)) {
       return new Error(`Device with ID ${deviceId} is no Shutter`);
     }
-    d.setLevel(level, false);
     if (d.window) {
       // otherwise it will be overridden shortly after
-      d.window.desiredPosition = level;
+      d.window.setDesiredPosition(level);
+    } else {
+      d.setLevel(level, false);
     }
     return null;
   }

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Minor improvement to api-calls for setShutter
+
 ## 2.9.8 (2023-05-23)
 
 * (theimo1221) Setting shutter position via api got overriden by window positioning
