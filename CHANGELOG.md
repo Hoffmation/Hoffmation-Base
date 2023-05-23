@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Minor improvement to api-calls for setShutter
+* (theimo1221) Update packages
 
 ## 2.9.8 (2023-05-23)
 
