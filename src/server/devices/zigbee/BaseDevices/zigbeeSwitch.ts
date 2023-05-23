@@ -1,7 +1,7 @@
 import { iButtonSwitch } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceType } from '../../deviceType';
-import { Button, ButtonPressType } from '../../button';
+import { Button, ButtonPosition, ButtonPressType } from '../../button';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { LogLevel } from '../../../../models';
@@ -40,4 +40,46 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
   }
 
   public abstract getButtonAssignment(): string;
+
+  public pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null {
+    let taste: Button | undefined;
+    switch (position) {
+      case ButtonPosition.topLeft:
+        taste = this.buttonTopLeft;
+        break;
+      case ButtonPosition.topRight:
+        taste = this.buttonTopRight;
+        break;
+      case ButtonPosition.midLeft:
+        taste = this.buttonMidLeft;
+        break;
+      case ButtonPosition.midRight:
+        taste = this.buttonMidRight;
+        break;
+      case ButtonPosition.botLeft:
+        taste = this.buttonBotLeft;
+        break;
+      case ButtonPosition.botRight:
+        taste = this.buttonBotRight;
+        break;
+      case ButtonPosition.top:
+        taste = this.buttonTop;
+        break;
+      case ButtonPosition.bottom:
+        taste = this.buttonBot;
+        break;
+      default:
+        return new Error(`Unknown Button Position: ${position}`);
+    }
+
+    if (taste === undefined) {
+      return new Error(`Switch has no Button at position ${position}`);
+    }
+
+    const result = taste.press(pressType);
+    if (result === null) {
+      this.log(LogLevel.Info, `Simulated ButtonPress for ${taste.name} type: ${pressType}`);
+    }
+    return result;
+  }
 }

@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iBatteryDevice, iButtonSwitch } from '../baseDeviceInterfaces';
-import { Button, ButtonCapabilities, ButtonPressType } from '../button';
+import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
@@ -141,5 +141,47 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     }
     Utils.dbo?.persistBatteryDevice(this);
     this._lastBatteryPersist = now;
+  }
+
+  public pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null {
+    let taste: Button | undefined;
+    switch (position) {
+      case ButtonPosition.topLeft:
+        taste = this.buttonTopLeft;
+        break;
+      case ButtonPosition.topRight:
+        taste = this.buttonTopRight;
+        break;
+      case ButtonPosition.midLeft:
+        taste = this.buttonMidLeft;
+        break;
+      case ButtonPosition.midRight:
+        taste = this.buttonMidRight;
+        break;
+      case ButtonPosition.botLeft:
+        taste = this.buttonBotLeft;
+        break;
+      case ButtonPosition.botRight:
+        taste = this.buttonBotRight;
+        break;
+      case ButtonPosition.top:
+        taste = this.buttonTop;
+        break;
+      case ButtonPosition.bottom:
+        taste = this.buttonBot;
+        break;
+      default:
+        return new Error(`Unknown Button Position: ${position}`);
+    }
+
+    if (taste === undefined) {
+      return new Error(`Switch has no Button at position ${position}`);
+    }
+
+    const result = taste.press(pressType);
+    if (result === null) {
+      this.log(LogLevel.Info, `Simulated ButtonPress for ${taste.name} type: ${pressType}`);
+    }
+    return result;
   }
 }

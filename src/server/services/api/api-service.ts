@@ -1,7 +1,10 @@
 import {
+  ButtonPosition,
+  ButtonPressType,
   Devices,
   iActuator,
   iBaseDevice,
+  iButtonSwitch,
   iCameraDevice,
   iLamp,
   iScene,
@@ -359,5 +362,20 @@ export class API {
     }
     d.blockAutomationHandler.disableAutomatic(duration, onCollision);
     return null;
+  }
+
+  public static pressButtonSwitch(
+    deviceId: string,
+    position: ButtonPosition,
+    pressType: ButtonPressType,
+  ): Error | null {
+    const d = this.getDevice(deviceId) as iButtonSwitch | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.buttonSwitch)) {
+      return new Error(`Device with ID ${deviceId} is no switch`);
+    }
+    return d.pressButton(position, pressType);
   }
 }

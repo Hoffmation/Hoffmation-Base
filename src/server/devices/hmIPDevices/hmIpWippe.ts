@@ -1,6 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { Button, ButtonCapabilities, ButtonPressType } from '../button';
+import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
 import { LogLevel } from '../../../models';
 import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -86,5 +86,17 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
     }
     result.push('____________');
     return result.join('\n');
+  }
+
+  public pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null {
+    if (position !== ButtonPosition.top && position !== ButtonPosition.bottom) {
+      return new Error(`Switch has no Button at position ${position}`);
+    }
+    const taste: Button = position === ButtonPosition.top ? this.buttonTop : this.buttonBot;
+    const result = taste.press(pressType);
+    if (result === null) {
+      this.log(LogLevel.Info, `Simulated ButtonPress for ${taste.name} type: ${pressType}`);
+    }
+    return result;
   }
 }

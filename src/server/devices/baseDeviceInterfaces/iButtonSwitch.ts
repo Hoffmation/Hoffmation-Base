@@ -1,4 +1,4 @@
-import { Button, ButtonPressType } from '../button';
+import { Button, ButtonPosition, ButtonPressType } from '../button';
 import { iRoomDevice } from './iRoomDevice';
 
 export interface iButtonSwitch extends iRoomDevice {
@@ -25,4 +25,6 @@ export interface iButtonSwitch extends iRoomDevice {
   persist(buttonName: string, pressType: ButtonPressType): void;
 
   getButtonAssignment(): string;
+
+  pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null;
 }

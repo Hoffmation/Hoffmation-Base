@@ -107,4 +107,24 @@ export class Button {
   public toJSON(): Partial<Button> {
     return Utils.jsonFilter(this);
   }
+
+  public press(pressType: ButtonPressType): Error | null {
+    if (
+      (pressType === ButtonPressType.long && !this.buttonCapabilities.longPress) ||
+      (pressType === ButtonPressType.short && !this.buttonCapabilities.shortPress) ||
+      (pressType === ButtonPressType.double && !this.buttonCapabilities.doublePress) ||
+      (pressType === ButtonPressType.triple && !this.buttonCapabilities.triplePress)
+    ) {
+      return new Error(`This Button doesn't support press Type ${ButtonPressType[pressType]}`);
+    }
+    this.updateState(pressType, true);
+    Utils.guardedTimeout(
+      () => {
+        this.updateState(pressType, false);
+      },
+      200,
+      this,
+    );
+    return null;
+  }
 }
