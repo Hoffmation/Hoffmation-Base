@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Setting shutter position via api got overriden by window positioning
+
 ## 2.9.7 (2023-05-13)
 
 * (theimo1221) Fix workflow error

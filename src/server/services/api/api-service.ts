@@ -222,6 +222,10 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no Shutter`);
     }
     d.setLevel(level, false);
+    if (d.window) {
+      // otherwise it will be overridden shortly after
+      d.window.desiredPosition = level;
+    }
     return null;
   }
 
