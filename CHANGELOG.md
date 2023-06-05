@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.10 (2023-06-05)
 
 * (theimo1221) Include complete path in warning
 
