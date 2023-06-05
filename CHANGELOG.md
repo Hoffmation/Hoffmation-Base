@@ -12,6 +12,7 @@
 * (theimo1221) Update packages
 * (theimo1221) Remove noShutterOnSunrise from window group (not needed anymore due to room settings)
 * (theimo1221) Add possibility to simulate a button press via api
+* (theimo1221) Add logging for recursive JSON error
 
 ## 2.9.8 (2023-05-23)
 

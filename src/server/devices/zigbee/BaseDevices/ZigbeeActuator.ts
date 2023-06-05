@@ -9,7 +9,7 @@ import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
 
 export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporaryDisableAutomatic {
   private _actuatorOn: boolean = false;
-  public readonly blockAutomationHandler;
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
   private _targetAutomaticState: boolean = false;
 
   public settings: ActuatorSettings = new ActuatorSettings();
