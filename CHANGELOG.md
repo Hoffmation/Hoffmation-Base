@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Include complete path in warning
+
 ## 2.9.9 (2023-06-05)
 
 * (theimo1221) Minor improvement to api-calls for setShutter
@@ -27,7 +32,7 @@
 
 ## 2.9.5 (2023-05-13)
 
-* (theimo1221) Republish
+* (theimo1221) RepublishÏ
 
 ## 2.9.4 (2023-05-13)
 

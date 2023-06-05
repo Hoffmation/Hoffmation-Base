@@ -187,11 +187,8 @@ export class Utils {
   }
 
   private static deepOmit(obj: object, keysToOmit: string[], level: number = 1, currentKey: string = ''): object {
-    if (level > 5) {
+    if (level > 10) {
       ServerLogService.writeLog(LogLevel.Warn, `DeepOmit Loop Level ${level} reached for ${currentKey}`);
-    } else if (level > 8) {
-      ServerLogService.writeLog(LogLevel.Error, `DeepOmit Loop Level ${level} reached for ${currentKey}`);
-      return {};
     }
     // the inner function which will be called recursivley
     return _.transform(obj, (result: { [name: string]: unknown }, value, key: string | number) => {
@@ -213,7 +210,7 @@ export class Utils {
           const map: Map<string | number, unknown> = value as Map<string, unknown>;
           for (const mapName of map.keys()) {
             dict[mapName] = _.isObject(map.get(mapName))
-              ? this.deepOmit(map.get(mapName) as object, keysToOmit, level + 1, `${lowerKey}.${mapName}`)
+              ? this.deepOmit(map.get(mapName) as object, keysToOmit, level + 1, `${currentKey}.${lowerKey}.${mapName}`)
               : map.get(mapName);
           }
           result[newKey] = dict;
@@ -225,7 +222,7 @@ export class Utils {
         return;
       }
       // if the key is an object run it through the inner function - omitFromObject
-      result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit, level + 1, `${key}`) : value;
+      result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit, level + 1, `${currentKey}.${key}`) : value;
     });
   }
 
