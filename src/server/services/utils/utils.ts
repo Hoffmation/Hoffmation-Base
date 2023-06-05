@@ -187,7 +187,7 @@ export class Utils {
   }
 
   private static deepOmit(obj: object, keysToOmit: string[], level: number = 1, currentKey: string = ''): object {
-    if (level > 10) {
+    if (level > 10 && level < 20) {
       ServerLogService.writeLog(LogLevel.Warn, `DeepOmit Loop Level ${level} reached for ${currentKey}`);
     }
     // the inner function which will be called recursivley
@@ -200,7 +200,7 @@ export class Utils {
         // transform to a new object
         for (const checkKey of keysToOmit) {
           // if the key is in the index skip it
-          if (lowerKey.includes(checkKey)) {
+          if (lowerKey.includes(checkKey.toLowerCase())) {
             return;
           }
         }
