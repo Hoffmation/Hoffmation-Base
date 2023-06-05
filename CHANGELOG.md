@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.11 (2023-06-05)
 
 * (theimo1221) Deep Omit should compare case insensetive in regards to keys to omit
 
