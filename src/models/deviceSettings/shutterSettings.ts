@@ -8,7 +8,7 @@ export class ShutterSettings extends DeviceSettings {
    * The direction this shutter is facing (0 = North, 180 = South)
    * @type {number}
    */
-  public direction?: number;
+  public direction: number = 180;
   /**
    * The desired position, when the shutter should perform a heat reduction.
    * @type {number}
