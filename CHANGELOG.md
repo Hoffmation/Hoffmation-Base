@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.13 (2023-06-06)
 
 * (theimo1221) Add default value for window direction
 
