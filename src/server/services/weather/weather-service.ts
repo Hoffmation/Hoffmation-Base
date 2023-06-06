@@ -3,7 +3,7 @@ import { WeatherCurrent } from './weather-current';
 import { WeatherMinutes } from './weather-minutes';
 import { WeatherAlert } from './weather-alert';
 import { iWeatherSettings } from '../../config';
-import { LogLevel } from '../../../models';
+import { LogLevel, ShutterSettings } from '../../../models';
 import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
 import { Utils } from '../utils';
@@ -217,7 +217,7 @@ export class WeatherService {
     desiredTemperatur: number,
     currentTemperatur: number,
     logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
-    windowDirection?: number,
+    shutterSettings: ShutterSettings,
   ): number {
     let result: number = normalPos;
     if (currentTemperatur < desiredTemperatur) {
@@ -230,15 +230,15 @@ export class WeatherService {
       logger(LogLevel.Trace, `RolloWeatherPosition: It's close to or after todays sunset`);
       return result;
     } else if (
-      windowDirection !== undefined &&
-      !Utils.degreeInBetween(windowDirection - 50, windowDirection + 50, this.sunDirection)
+      shutterSettings.direction !== undefined &&
+      !Utils.degreeInBetween(shutterSettings.direction - 50, shutterSettings.direction + 50, this.sunDirection)
     ) {
       logger(LogLevel.Trace, `RolloWeatherPosition: Sun is facing a different direction`);
       return result;
     } else if (this.getCurrentCloudiness() > 40) {
       logger(LogLevel.Trace, `RolloWeatherPosition: It´s cloudy now.`);
     } else if (this.willOutsideBeWarmer(26, logger)) {
-      result = 30;
+      result = shutterSettings.heatReductionPosition;
     }
 
     if (result !== normalPos) {

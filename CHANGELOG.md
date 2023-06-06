@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Move direction setting from Window to the Shutter, to prevent group-settings need
+* (theimo1221) Make heat reduction position controllable
 
 ## 2.9.11 (2023-06-05)
 
