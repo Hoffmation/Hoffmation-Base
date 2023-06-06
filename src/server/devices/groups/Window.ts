@@ -1,7 +1,7 @@
 import { HmIpGriff } from '../hmIPDevices';
 import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services';
 import { WindowPosition } from '../models';
-import { LogLevel, TimeOfDay, WindowSettings } from '../../../models';
+import { LogLevel, TimeOfDay } from '../../../models';
 import { iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
@@ -11,7 +11,6 @@ import { ZigbeeMagnetContact } from '../zigbee';
 
 export class Window extends BaseGroup {
   public desiredPosition: number = 0;
-  public settings: WindowSettings = new WindowSettings();
 
   public constructor(
     roomName: string,

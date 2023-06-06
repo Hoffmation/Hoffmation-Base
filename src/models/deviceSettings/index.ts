@@ -11,5 +11,4 @@ export * from './shutterSettings';
 export * from './sonosDeviceSettings';
 export * from './tvSettings';
 export * from './victronDeviceSettings';
-export * from './windowSettings';
 export * from './wledSettings';

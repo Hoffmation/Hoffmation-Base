@@ -6,6 +6,7 @@ import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { DeviceClusterType } from '../device-cluster-type';
+import { iShutter } from '../baseDeviceInterfaces';
 
 export class WindowGroup extends BaseGroup {
   public sunriseShutterCallback: TimeCallback | undefined;
@@ -78,7 +79,8 @@ export class WindowGroup extends BaseGroup {
     const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
     this.windows.forEach((f) => {
-      if (f.getShutter().length === 0) {
+      const shutter: iShutter[] = f.getShutter();
+      if (shutter.length === 0) {
         return;
       }
       if (darkOutside) {
@@ -92,7 +94,7 @@ export class WindowGroup extends BaseGroup {
           room.HeatGroup?.desiredTemp ?? -99,
           room.HeatGroup?.temperature ?? -99,
           this.log.bind(this),
-          f.settings.direction,
+          shutter[0]?.settings.direction,
         );
       }
       if (f.griffeInPosition(WindowPosition.offen) > 0 && desiredPos < 100) {

@@ -3,7 +3,7 @@ import { DeviceType } from '../deviceType';
 import { LogDebugType, Utils } from '../../services';
 import { Window } from '../groups';
 import { WindowPosition } from '../models';
-import { LogLevel } from '../../../models';
+import { LogLevel, ShutterSettings } from '../../../models';
 import { iShutter } from '../baseDeviceInterfaces';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
@@ -11,6 +11,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
+  public settings: ShutterSettings = new ShutterSettings();
   private _setLevelSwitchID: string;
   private _firstCommandRecieved: boolean = false;
   private _setLevel: number = -1;
