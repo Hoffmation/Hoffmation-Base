@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix settings change for shutter (as it currently ignores changes to heatReductionPosition)
+* (theimo1221) Update packages
 
 ## 2.9.13 (2023-06-06)
 
