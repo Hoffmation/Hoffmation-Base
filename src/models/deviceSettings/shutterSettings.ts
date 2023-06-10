@@ -24,7 +24,7 @@ export class ShutterSettings extends DeviceSettings {
   public fromPartialObject(data: Partial<ShutterSettings>): void {
     this.msTilTop = data.msTilTop ?? this.msTilTop;
     this.msTilBot = data.msTilBot ?? this.msTilBot;
-    this.direction = data.direction ?? this direction;
+    this.direction = data.direction ?? this.direction;
     this.heatReductionPosition = data.heatReductionPosition ?? this.heatReductionPosition;
     this.triggerPositionUpdateByTime = data.triggerPositionUpdateByTime ?? this.triggerPositionUpdateByTime;
     super.fromPartialObject(data);
