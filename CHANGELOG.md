@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add missing Device capability
+
 ## 2.9.15 (2023-06-15)
 
 * (theimo1221) Aufnahme von Ubisys Geräten
