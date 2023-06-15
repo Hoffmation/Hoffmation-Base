@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Aufnahme von Ubisys Geräten
+* (theimo1221) Update packages
 
 ## 2.9.14 (2023-06-10)
 
