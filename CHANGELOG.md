@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Aufnahme von Ubisys Geräten
+
 ## 2.9.14 (2023-06-10)
 
 * (theimo1221) Fix settings change for shutter (as it currently ignores changes to heatReductionPosition)

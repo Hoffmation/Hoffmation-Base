@@ -39,6 +39,7 @@ export class DeviceCluster {
       case DeviceType.ZigbeeIlluDimmer:
       case DeviceType.ZigbeeOsramDimmer:
       case DeviceType.ZigbeeIlluLampe:
+      case DeviceType.ZigbeeUbisysLampe:
         clusterTypes.push(DeviceClusterType.Lamps);
         break;
       case DeviceType.HmIpWippe:
@@ -97,6 +98,7 @@ export class DeviceCluster {
         clusterTypes.push(DeviceClusterType.WLED);
         break;
       case DeviceType.ZigbeeIlluActuator: // Dependent on use case
+      case DeviceType.ZigbeeUbisysActuator: // Dependent on use case
       case DeviceType.HmIpTherm: // Humidity and temperature not yet implemented
       case DeviceType.HmIpHeizung: // Setting/Controlling via HM-Ip Heizgruppe
       case DeviceType.unknown:

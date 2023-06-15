@@ -20,4 +20,6 @@ export * from './zigbeeSMaBiTMagnetContact';
 export * from './zigbeeSonoffMotion';
 export * from './zigbeeSonoffTemp';
 export * from './zigbeeTuyaValve';
+export * from './zigbeeUbisysActuator';
+export * from './zigbeeUbisysLampe';
 export * from './zigbeeUbisysShutter';
