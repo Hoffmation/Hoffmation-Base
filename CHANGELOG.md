@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add missing Device capability
+* (theimo1221) Ubisys Aufnahme finalisieren
 
 ## 2.9.15 (2023-06-15)
 

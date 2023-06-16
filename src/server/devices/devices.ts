@@ -37,6 +37,8 @@ import {
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
   ZigbeeTuyaValve,
+  ZigbeeUbisysActuator,
+  ZigbeeUbisysLampe,
   ZigbeeUbisysShutter,
 } from './zigbee';
 import { DeviceType } from './deviceType';
@@ -197,6 +199,12 @@ export class Devices {
         break;
       case 'SonoffTemp':
         d = new ZigbeeSonoffTemp(zigbeeInfo);
+        break;
+      case 'UbisysActuator':
+        d = new ZigbeeUbisysActuator(zigbeeInfo);
+        break;
+      case 'UbisysLampe':
+        d = new ZigbeeUbisysLampe(zigbeeInfo);
         break;
       case 'UbisysShutter':
         d = new ZigbeeUbisysShutter(zigbeeInfo);
