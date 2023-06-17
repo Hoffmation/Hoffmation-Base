@@ -19,6 +19,7 @@ export enum DeviceCapability {
   tv = 17,
   ledLamp = 18,
   smokeSensor = 19,
+  loadMetering = 20,
   bluetoothDetector = 101,
   trackableDevice = 102,
   scene = 103,

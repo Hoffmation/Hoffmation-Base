@@ -4,8 +4,9 @@ import { ZigbeeActuator } from './BaseDevices';
 import { iExcessEnergyConsumer } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
-export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsumer {
+export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsumer, iLoadMeter {
   private _steckerOn: boolean = false;
 
   public get steckerOn(): boolean {
@@ -38,6 +39,7 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
     super(pInfo, DeviceType.ZigbeeBlitzShp, `${pInfo.fullID}.state`);
     this.settings.energySettings = new ExcessEnergyConsumerSettings();
     this.deviceCapabilities.push(DeviceCapability.excessEnergyConsumer);
+    this.deviceCapabilities.push(DeviceCapability.loadMetering);
   }
 
   public get energySettings(): ExcessEnergyConsumerSettings {

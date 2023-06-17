@@ -2,12 +2,15 @@ import { ZigbeeActuator } from './BaseDevices';
 import { LogLevel } from '../../../models';
 import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
-export class ZigbeeUbisysActuator extends ZigbeeActuator {
+export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   private _loadPower: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeUbisysActuator) {
     super(pInfo, deviceType, `${pInfo.fullID}.state`);
+    this.deviceCapabilities.push(DeviceCapability.loadMetering);
   }
 
   public get isActuatorOn(): boolean {
