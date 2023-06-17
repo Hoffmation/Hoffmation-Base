@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.17 (2023-06-17)
 
 * (theimo1221) Ubisys Actuator as a load-meter
 
