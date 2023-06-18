@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Allow Settings Load CB
+* (theimo1221) Update packages
 
 ## 2.9.17 (2023-06-17)
 
