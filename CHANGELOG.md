@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.9.18 (2023-06-18)
 
 * (theimo1221) Allow Settings Load CB
 * (theimo1221) Update packages
