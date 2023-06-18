@@ -10,7 +10,12 @@ export abstract class ObjectSettings {
     Utils.dbo?.persistSettings(holder.id, JSON.stringify(this), holder.customName);
   }
 
-  public initializeFromDb(holder: iIdHolder) {
+  /**
+   * Loads the settings from the database
+   * @param {iIdHolder} holder The holder of the settings (e.g. a device)
+   * @param {() => void} loadDoneCb Callback when loading is done
+   */
+  public initializeFromDb(holder: iIdHolder, loadDoneCb?: () => void) {
     Utils.dbo?.loadSettings(holder.id).then((data) => {
       if (!data) {
         // Nothing in db yet
@@ -29,6 +34,7 @@ export abstract class ObjectSettings {
       if (JSON.stringify(this) !== data) {
         this.persist(holder);
       }
+      loadDoneCb?.();
     });
   }
 
