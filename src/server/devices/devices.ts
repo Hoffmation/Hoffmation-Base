@@ -48,6 +48,7 @@ import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor } from './ba
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
+import { ZigbeeInnr142C } from './zigbee/zigbeeInnr142C';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -187,6 +188,9 @@ export class Devices {
         break;
       case 'IlluLedRGBCCT':
         d = new ZigbeeIlluLedRGBCCT(zigbeeInfo);
+        break;
+      case 'Innr142C':
+        d = new ZigbeeInnr142C(zigbeeInfo);
         break;
       case 'LinkindLedRgbCct':
         d = new ZigbeeLinkindLedRgbCct(zigbeeInfo);

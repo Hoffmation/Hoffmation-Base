@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Add support for Innr142C LED strip
 
 ## 2.9.18 (2023-06-18)
 

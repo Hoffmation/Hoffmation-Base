@@ -37,6 +37,7 @@ export enum DeviceType {
   ZigbeeIkeaShutter = 223,
   ZigbeeUbisysActuator = 224,
   ZigbeeUbisysLampe = 224,
+  ZigbeeInnr142C = 225,
   JsEnergyManager = 301,
   RoomScene = 401,
   WledDevice = 1001,
