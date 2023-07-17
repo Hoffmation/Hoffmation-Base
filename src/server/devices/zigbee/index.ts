@@ -14,6 +14,7 @@ export * from './zigbeeIlluDimmer';
 export * from './zigbeeIlluLampe';
 export * from './zigbeeIlluLedRGBCCT';
 export * from './zigbeeIlluShutter';
+export * from './zigbeeInnr142C';
 export * from './zigbeeLinkindLedRgbCct';
 export * from './zigbeeOsramDimmer';
 export * from './zigbeeSMaBiTMagnetContact';
