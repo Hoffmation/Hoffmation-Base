@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.10.1 (2023-07-17)
 
 * (theimo1221) Fix Innr142C Export
 
