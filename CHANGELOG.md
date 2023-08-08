@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add BlockAutomaticHandler to zigbeeDimmer and it's children
+
 ## 2.10.1 (2023-07-17)
 
 * (theimo1221) Fix Innr142C Export

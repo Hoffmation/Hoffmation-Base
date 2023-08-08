@@ -1,20 +1,22 @@
-import { DimmerSettings, LogLevel, TimeOfDay } from '../../../../models';
+import { CollisionSolving, DimmerSettings, LogLevel, TimeOfDay } from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { LogDebugType, TimeCallbackService, Utils } from '../../../services';
 import { ZigbeeDevice } from './index';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp';
+import { iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
+import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
 
-export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp {
+export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp, iTemporaryDisableAutomatic {
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
   public queuedValue: boolean | null = null;
   public settings: DimmerSettings = new DimmerSettings();
   protected _brightness: number = 0;
   protected _lastPersist: number = 0;
   protected _lightOn: boolean = false;
   protected _transitionTime: number = 0;
-  protected _turnOffTime: number = 0;
-  protected _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
+  protected _targetAutomaticState: boolean = false;
   protected abstract readonly _stateIdBrightness: string;
   protected abstract readonly _stateIdState: string;
   protected abstract readonly _stateIdTransitionTime: string;
@@ -42,6 +44,13 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
+    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+  }
+
+  public restoreTargetAutomaticValue(): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.setActuator(this._targetAutomaticState);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -124,11 +133,14 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       });
     }
 
-    if (!force && Utils.nowMS() < this._turnOffTime) {
+    if (!force && this.blockAutomationHandler.automaticBlockActive) {
       this.log(
         LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(this._turnOffTime).toLocaleTimeString()}`,
+        `Skip automatic command to ${pValue} as it is locked until ${new Date(
+          this.blockAutomationHandler.automaticBlockedUntil,
+        ).toLocaleTimeString()}`,
       );
+      this._targetAutomaticState = pValue;
       return;
     }
 
@@ -159,29 +171,9 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
         this.setState(this._stateIdBrightness, brightness);
       }
     }
-    if (this._turnOffTimeout !== undefined) {
-      clearTimeout(this._turnOffTimeout);
-      this._turnOffTimeout = undefined;
+    if (timeout > -1) {
+      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
-
-    if (timeout < 0 || !pValue) {
-      return;
-    }
-
-    this._turnOffTime = Utils.nowMS() + timeout;
-    this._turnOffTimeout = Utils.guardedTimeout(
-      () => {
-        this.log(LogLevel.Debug, `Delayed Turnoff initiated`);
-        this._turnOffTimeout = undefined;
-        if (!this.room) {
-          this.setLight(false, -1, true);
-        } else {
-          this.room.setLightTimeBased(true);
-        }
-      },
-      timeout,
-      this,
-    );
   }
 
   public persist(): void {
