@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add BlockAutomaticHandler to zigbeeDimmer and it's children
+* (theimo1221) Update packages
 
 ## 2.10.1 (2023-07-17)
 
