@@ -6,6 +6,7 @@ export interface iCameraDevice extends iMotionSensor {
   readonly lastImage: string;
   readonly mpegStreamLink: string;
   readonly h264IosStreamLink: string;
+  readonly rtspStreamLink: string;
   readonly currentImageLink: string;
   readonly alarmBlockedByGriff: boolean;
   readonly alarmBlockedByGriffTimeStamp: number;

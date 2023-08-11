@@ -28,6 +28,7 @@ export class CameraDevice implements iCameraDevice {
   private _alarmBlockedByGriffTimeStamp: number = 0;
   public readonly mpegStreamLink: string = '';
   public readonly h264IosStreamLink: string = '';
+  public readonly rtspStreamLink: string = '';
   public readonly currentImageLink: string = '';
 
   public get alarmBlockedByGriffTimeStamp(): number {
@@ -54,6 +55,9 @@ export class CameraDevice implements iCameraDevice {
     if (blueIrisSettings !== undefined) {
       this.mpegStreamLink = `${blueIrisSettings.serverAddress}/mjpg/${this.blueIrisName}/video.mjpg?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
       this.h264IosStreamLink = `${blueIrisSettings.serverAddress}/h264/${this.blueIrisName}/temp.m?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
+      this.rtspStreamLink = `rtsp://${blueIrisSettings.username}:${
+        blueIrisSettings.password
+      }@${blueIrisSettings.serverAddress.replace('http://', '')}:80/${this.blueIrisName}`;
       this.currentImageLink = `${blueIrisSettings.serverAddress}/image/${this.blueIrisName}.jpg?q=100&s=100&user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
     }
     if (!Utils.anyDboActive) {
