@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Extend Camera Settings
+* (theimo1221) Correct issue, where a movement could turn-off LEDs even if they were blocked
 
 ## 2.10.3 (2023-08-11)
 

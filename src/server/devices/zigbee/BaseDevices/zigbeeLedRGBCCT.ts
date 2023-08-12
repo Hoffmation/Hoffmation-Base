@@ -137,7 +137,6 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
       LogLevel.Debug,
       `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}`,
     );
-    super.setLight(pValue, timeout, force, brightness, transitionTime);
 
     if (color !== '') {
       this.ioConn.setState(this._stateIdColor, color, (err) => {
@@ -155,10 +154,6 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
       });
     }
 
-    this.ioConn.setState(this._stateIdState, pValue, (err) => {
-      if (err) {
-        this.log(LogLevel.Error, `LED schalten ergab Fehler: ${err}`);
-      }
-    });
+    super.setLight(pValue, timeout, force, brightness, transitionTime);
   }
 }
