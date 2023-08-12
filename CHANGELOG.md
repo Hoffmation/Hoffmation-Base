@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend Camera Settings
+
 ## 2.10.3 (2023-08-11)
 
 * (theimo1221) Add Rtsp Stream Link
