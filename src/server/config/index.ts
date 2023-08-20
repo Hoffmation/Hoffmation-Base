@@ -11,6 +11,7 @@ export * from './iHeaterSettings';
 export * from './iIobrokerSettigns';
 export * from './iLogSettings';
 export * from './iNewsSettings';
+export * from './iNukiSettings';
 export * from './iTranslationSettings';
 export * from './iMuellSettings';
 export * from './iMp3Settings';

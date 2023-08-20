@@ -5,6 +5,7 @@ export * from './espresense/index';
 export * from './groups/index';
 export * from './hmIPDevices/index';
 export * from './jsObject/index';
+export * from './locks/index';
 export * from './models/index';
 export * from './scene/index';
 export * from './zigbee/index';

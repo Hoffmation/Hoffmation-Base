@@ -48,4 +48,5 @@ export enum DeviceType {
   SamsungTv = 5001,
   Camera = 6001,
   Victron = 7001,
+  NukiLock = 8001,
 }

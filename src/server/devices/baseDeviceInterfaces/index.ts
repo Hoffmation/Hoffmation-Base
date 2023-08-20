@@ -11,6 +11,8 @@ export * from './iHeater';
 export * from './iHumiditySensor';
 export * from './iIlluminationSensor';
 export * from './iLamp';
+export * from './iLedRgbCct';
+export * from './iLock';
 export * from './iMotionSensor';
 export * from './iRoomDevice';
 export * from './iScene';

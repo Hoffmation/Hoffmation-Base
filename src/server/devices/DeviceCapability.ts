@@ -25,4 +25,5 @@ export enum DeviceCapability {
   scene = 103,
   blockAutomatic = 104,
   camera = 105,
+  lock = 106,
 }

@@ -34,6 +34,7 @@ export interface iConfig {
   mp3Server?: iMp3Settings;
   muell?: iMuellSettings;
   news?: iNewsSettings;
+  nuki?: iNukiSettings;
   persistence?: iPersistenceSettings;
   polly?: iPollySettings;
   restServer?: iRestSettings;
