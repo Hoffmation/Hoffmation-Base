@@ -10,6 +10,7 @@
 
 * (theimo1221) Extend Camera Settings
 * (theimo1221) Correct issue, where a movement could turn-off LEDs even if they were blocked
+* (theimo1221) Correct issue, where due to some handle open beeing missed, the handle open count was negative.
 
 ## 2.10.3 (2023-08-11)
 

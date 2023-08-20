@@ -132,6 +132,9 @@ export class CameraDevice implements iCameraDevice {
 
   public onGriffUpdate(open: boolean): void {
     this._alarmGriffBlockCount += open ? 1 : -1;
+    if (this._alarmGriffBlockCount < 0) {
+      this._alarmGriffBlockCount = 0;
+    }
     if (this._alarmGriffBlockCount == 1) {
       this._alarmBlockedByGriffTimeStamp = new Date().getTime();
     }
