@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent ambient Light being turned off after movement callback
+
 ## 2.10.4 (2023-08-20)
 
 * (theimo1221) Extend Camera Settings

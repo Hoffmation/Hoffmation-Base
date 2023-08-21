@@ -11,6 +11,7 @@ import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
 export class LightGroup extends BaseGroup {
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
   public sonnenUntergangLichtCallback: TimeCallback | undefined;
+  private _ambientLightOn: boolean = false;
 
   public constructor(
     roomName: string,
@@ -76,6 +77,10 @@ export class LightGroup extends BaseGroup {
   }
 
   public switchAll(target: boolean, force: boolean = false): void {
+    if (!force && !target && this._ambientLightOn) {
+      this.log(LogLevel.Info, `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`);
+      return;
+    }
     this.setAllLampen(target, undefined, force);
     this.setAllStecker(target, undefined, force);
 
@@ -220,22 +225,28 @@ export class LightGroup extends BaseGroup {
       const cb: TimeCallback = new TimeCallback(
         `${this.roomName} Ambient Light after Sunset`,
         TimeCallbackType.SunSet,
-        () => {
-          this.log(LogLevel.Info, `Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung`);
-          this.switchAll(true);
-          Utils.guardedTimeout(
-            () => {
-              this.log(LogLevel.Info, `Ambientenbeleuchtung um Mitternacht abschalten.`);
-              this.switchAll(false);
-            },
-            Utils.timeTilMidnight,
-            this,
-          );
-        },
+        this.ambientLightStartCallback.bind(this),
         this.getRoom().settings.lampOffset.sunset,
       );
       this.sonnenUntergangLichtCallback = cb;
       TimeCallbackService.addCallback(cb);
     }
+  }
+
+  private ambientLightStartCallback(): void {
+    this._ambientLightOn = true;
+    this.log(LogLevel.Info, `Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung`);
+    this.switchAll(true);
+    Utils.guardedTimeout(
+      () => {
+        this.log(LogLevel.Info, `Ambientenbeleuchtung um Mitternacht abschalten.`);
+        this._ambientLightOn = false;
+        if (this.getRoom().PraesenzGroup?.anyPresent() !== true) {
+          this.switchAll(false);
+        }
+      },
+      Utils.timeTilMidnight,
+      this,
+    );
   }
 }
