@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.11.0 (2023-08-24)
 
 * (theimo1221) Basic Dachs implementation (connecting to device and storing to influxdb)
 
