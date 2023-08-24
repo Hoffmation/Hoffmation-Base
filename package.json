@@ -34,7 +34,8 @@
     "release-minor": "npm run pre-release-check && npm run release minor --",
     "release-major": "npm run pre-release-check && npm run release major --",
     "manual-test-iobroker-connection": "tsc && ts-node ./manualTests/io-connection-test.ts",
-    "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts"
+    "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts",
+    "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts"
   },
   "dependencies": {
     "@babel/runtime": "^7.22.10",
@@ -65,7 +66,8 @@
     "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1",
     "tibber-api": "^5.1.9",
-    "victron-mqtt-consumer": "^0.1.12"
+    "victron-mqtt-consumer": "^0.1.12",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.6.0",

@@ -49,6 +49,7 @@ import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
 import { ZigbeeInnr142C } from './zigbee/zigbeeInnr142C';
+import { Dachs } from './dachs';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -57,6 +58,7 @@ export class Devices {
   public static IDENTIFIER_WLED: string = 'wled';
   public static alLDevices: { [id: string]: iBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
+  public static dachs?: Dachs = undefined;
 
   public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.

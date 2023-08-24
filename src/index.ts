@@ -26,6 +26,7 @@ import {
   WeatherService,
 } from './server';
 import { LogLevel } from './models';
+import { Dachs } from './server/devices/dachs';
 
 export * from './models/index';
 export * from './server/index';
@@ -87,6 +88,10 @@ export class HoffmationBase {
     if (SettingsService.settings.daikin?.active) {
       DaikinService.addOwnDevices(OwnAcDevices.ownDevices);
       DaikinService.initialize();
+    }
+
+    if (SettingsService.settings.dachs !== undefined) {
+      Devices.dachs = new Dachs(SettingsService.settings.dachs);
     }
 
     Utils.guardedNewThread(() => {

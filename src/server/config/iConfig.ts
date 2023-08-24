@@ -19,11 +19,13 @@ import { iRestSettings } from './iRestSettings';
 import { iEspresenseSettings } from './iEspresenseSettings';
 import { iTibberSettings } from './iTibberSettings';
 import { iVictronSettings } from './iVictronSettings';
+import { iDachsSettings } from './iDachsSettings';
 
 export interface iConfig {
   asusConfig?: iAsusConfig;
   blueIris?: iBlueIrisSettings;
   daikin?: iDaikinSettings;
+  dachs?: iDachsSettings;
   espresense?: iEspresenseSettings;
   // Earnigs per kWh injecting into the grid
   injectWattagePrice?: number;

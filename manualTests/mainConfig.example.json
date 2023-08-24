@@ -84,5 +84,18 @@
     "lattitude": "xx.xxxxxx",
     "longitude": "xx.xxxxx",
     "appid": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  "dachs": {
+    "connectionOptions": {
+      "host": "xxxxxxxx",
+      "port": 8080,
+      "username": "glt",
+      "resultConfig": {
+        "addRawValue": true,
+        "addKeyObject": true,
+        "flatten": true
+      }
+    },
+    "refreshInterval": 30000
   }
 }

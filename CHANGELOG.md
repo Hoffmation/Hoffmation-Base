@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Basic Dachs implementation (connecting to device and storing to influxdb)
+
 ## 2.10.5 (2023-08-21)
 
 * (theimo1221) Prevent ambient Light being turned off after movement callback
