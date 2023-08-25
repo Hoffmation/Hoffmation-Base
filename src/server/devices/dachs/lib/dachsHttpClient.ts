@@ -82,6 +82,27 @@ export class DachsHttpClient {
     return this.fetchByKeys(...all) as unknown as Promise<iFlattenedCompleteResponse>;
   }
 
+  public setKeys(data: { [key: string]: string }): Promise<string> {
+    return new Promise((resolve, reject) => {
+      axios({
+        auth: {
+          username: this.options.username || 'glt',
+          password: this.options.password || '',
+        },
+        baseURL: this.url,
+        url: `/setKey`,
+        method: 'POST',
+        data: Object.entries(data)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&'),
+      })
+        .then((res: AxiosResponse<string>) => {
+          resolve(res.data);
+        })
+        .catch(reject);
+    });
+  }
+
   /**
    * Parses the RAW HTTP Response from the request into key-value paris
    * @author Trickfilm400

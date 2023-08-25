@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Dachs as iActuator
+* (theimo1221) Warm Water temperature from Dachs
+
 ## 2.11.0 (2023-08-24)
 
 * (theimo1221) Basic Dachs implementation (connecting to device and storing to influxdb)

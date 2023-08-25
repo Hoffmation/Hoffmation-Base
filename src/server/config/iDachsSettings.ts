@@ -4,4 +4,5 @@ export interface iDachsSettings {
   refreshInterval: number;
   connectionOptions: DachsClientOptions;
   influxDb?: InfluxDbConnectionOptions;
+  roomName: string;
 }

@@ -1,7 +1,7 @@
-import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../server';
+import { ActuatorSettings } from './actuatorSettings';
 
-export class DachsDeviceSettings extends DeviceSettings {
+export class DachsDeviceSettings extends ActuatorSettings {
   public refreshInterval: number = 30000;
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
