@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.11.1 (2023-08-25)
 
 * (theimo1221) Dachs as iActuator
 * (theimo1221) Warm Water temperature from Dachs
