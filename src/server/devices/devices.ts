@@ -31,6 +31,7 @@ import {
   ZigbeeIlluLampe,
   ZigbeeIlluLedRGBCCT,
   ZigbeeIlluShutter,
+  ZigbeeInnr142C,
   ZigbeeLinkindLedRgbCct,
   ZigbeeOsramDimmer,
   ZigbeeSMaBiTMagnetContact,
@@ -44,11 +45,10 @@ import {
 import { DeviceType } from './deviceType';
 import { ServerLogService } from '../services';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor } from './baseDeviceInterfaces';
+import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor, iTemperatureSensor } from './baseDeviceInterfaces';
 import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
-import { ZigbeeInnr142C } from './zigbee/zigbeeInnr142C';
 import { Dachs } from './dachs';
 
 export class Devices {
@@ -59,6 +59,7 @@ export class Devices {
   public static alLDevices: { [id: string]: iBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
   public static dachs?: Dachs = undefined;
+  public static temperatureWarmWater?: iTemperatureSensor = undefined;
 
   public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.

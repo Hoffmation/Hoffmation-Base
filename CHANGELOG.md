@@ -10,6 +10,7 @@
 
 * (theimo1221) Fix dachs starting capability
 * (theimo1221) Update packages
+* (theimo1221) Globally add warm Water Sensor from Dachs
 
 ## 2.11.1 (2023-08-25)
 

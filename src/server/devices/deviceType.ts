@@ -49,4 +49,5 @@ export enum DeviceType {
   Camera = 6001,
   Victron = 7001,
   Dachs = 7002,
+  DachsWarmWaterTemperature = 7003,
 }
