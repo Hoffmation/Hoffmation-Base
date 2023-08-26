@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix dachs starting capability
+* (theimo1221) Update packages
+
 ## 2.11.1 (2023-08-25)
 
 * (theimo1221) Dachs as iActuator
