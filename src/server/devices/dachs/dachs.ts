@@ -132,12 +132,14 @@ export class Dachs implements iBaseDevice, iActuator {
       // Dachs can only be turned on, not off
       return;
     }
+    this.log(LogLevel.Debug, `Starting Dachs`);
     this.client
       .setKeys({
         'Stromf_Ew.Anforderung_GLT.bAktiv': '1',
         'Stromf_Ew.Anforderung_GLT.bAnzahlModule': '1',
       })
-      .then(() => {
+      .then((response) => {
+        this.log(LogLevel.Debug, `Dachs started resulted in status: ${response.status}, data: ${response.data}`);
         Utils.guardedTimeout(
           () => {
             this.client

@@ -82,7 +82,7 @@ export class DachsHttpClient {
     return this.fetchByKeys(...all) as unknown as Promise<iFlattenedCompleteResponse>;
   }
 
-  public setKeys(data: { [key: string]: string }): Promise<string> {
+  public setKeys(data: { [key: string]: string }): Promise<AxiosResponse<string>> {
     return new Promise((resolve, reject) => {
       axios({
         auth: {
@@ -90,14 +90,14 @@ export class DachsHttpClient {
           password: this.options.password || '',
         },
         baseURL: this.url,
-        url: `/setKey`,
+        url: `/setKeys`,
         method: 'POST',
         data: Object.entries(data)
           .map(([key, value]) => `${key}=${value}`)
           .join('&'),
       })
         .then((res: AxiosResponse<string>) => {
-          resolve(res.data);
+          resolve(res);
         })
         .catch(reject);
     });

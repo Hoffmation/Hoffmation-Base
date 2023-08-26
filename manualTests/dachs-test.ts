@@ -10,9 +10,13 @@ export class SamsungTvTest {
     init.config.persistence = undefined;
     init.config.muell = undefined;
     await HoffmationBase.initializeBeforeIoBroker(init);
-    // const tv: iTvDevice = new SamsungTv('Test', 'Wohnz', '192.168.178.34', '64:E7:D8:6E:5A:26', '11335123');
     if (!init.config.dachs) throw new Error('No dachs config found');
     const dachs: Dachs = new Dachs(init.config.dachs);
+    // In case you want to test starting the Dachs
+    // setTimeout(() => {
+    //   console.log('Starting Dachs:');
+    //   dachs.setActuator(true);
+    // }, 10000);
 
     setTimeout(() => {
       console.log('shutdown-now');

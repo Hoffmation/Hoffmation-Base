@@ -87,7 +87,7 @@
   },
   "dachs": {
     "connectionOptions": {
-      "host": "xxxxxxxx",
+      "host": "dachs.hoffmation.com",
       "port": 8080,
       "username": "glt",
       "resultConfig": {
@@ -96,6 +96,7 @@
         "flatten": true
       }
     },
-    "refreshInterval": 30000
+    "refreshInterval": 30000,
+    "roomName": "TestRoom"
   }
 }
