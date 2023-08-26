@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.11.2 (2023-08-26)
 
 * (theimo1221) Fix dachs starting capability
 * (theimo1221) Update packages
