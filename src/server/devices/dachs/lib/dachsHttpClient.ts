@@ -61,9 +61,11 @@ export class DachsHttpClient {
         url: `/getKey` + this.urlBuilder(keys),
       })
         .then((res: AxiosResponse<string>) => {
-          return this.parser(res.data);
+          resolve(this.parser(res.data));
         })
-        .then(resolve, reject);
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
 

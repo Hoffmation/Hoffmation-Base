@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Correctly Catch Axios Error
+
 ## 2.11.2 (2023-08-26)
 
 * (theimo1221) Fix dachs starting capability
