@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.11.3 (2023-08-31)
 
 * (theimo1221) Correctly Catch Axios Error
 
