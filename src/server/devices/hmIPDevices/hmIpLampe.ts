@@ -1,27 +1,35 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
-import { ActuatorSettings, LogLevel, TimeOfDay } from '../../../models';
-import { iLamp } from '../baseDeviceInterfaces';
+import { ActuatorSettings, CollisionSolving, LogLevel, TimeOfDay } from '../../../models';
+import { iLamp, iTemporaryDisableAutomatic } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
 
-export class HmIpLampe extends HmIPDevice implements iLamp {
+export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAutomatic {
   public lightOn: boolean = false;
   public queuedLightValue: boolean | null = null;
   public settings: ActuatorSettings = new ActuatorSettings();
   private lightOnSwitchID: string = '';
-  private _turnOffTimeout: NodeJS.Timeout | undefined = undefined;
-  private turnOffTime: number = 0;
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
+  private _targetAutomaticState: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpLampe);
     this.deviceCapabilities.push(DeviceCapability.lamp);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.lightOnSwitchID = `${this.info.fullID}.2.STATE`;
+    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
   public get actuatorOn(): boolean {
     return this.lightOn;
+  }
+
+  public restoreTargetAutomaticValue(): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.setActuator(this._targetAutomaticState);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -48,6 +56,17 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
 
   /** @inheritdoc */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
+    if (!force && this.blockAutomationHandler.automaticBlockActive) {
+      this.log(
+        LogLevel.Debug,
+        `Skip automatic command to ${pValue} as it is locked until ${new Date(
+          this.blockAutomationHandler.automaticBlockedUntil,
+        ).toLocaleTimeString()}`,
+      );
+      this._targetAutomaticState = pValue;
+      return;
+    }
+
     if (!force && pValue === this.lightOn && this.queuedLightValue === null) {
       this.log(
         LogLevel.DeepTrace,
@@ -58,14 +77,6 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
     }
     if (this.lightOnSwitchID === '') {
       this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
-      return;
-    }
-
-    if (!force && Utils.nowMS() < this.turnOffTime) {
-      this.log(
-        LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(this.turnOffTime).toLocaleString()}`,
-      );
       return;
     }
 
@@ -88,29 +99,13 @@ export class HmIpLampe extends HmIPDevice implements iLamp {
       );
     }
 
-    if (this._turnOffTimeout !== undefined) {
-      clearTimeout(this._turnOffTimeout);
-      this._turnOffTimeout = undefined;
-    }
-
     if (timeout < 0 || !pValue) {
       return;
     }
 
-    this.turnOffTime = Utils.nowMS() + timeout;
-    this._turnOffTimeout = Utils.guardedTimeout(
-      () => {
-        this.log(LogLevel.Debug, `Delayed Turnoff initiated`);
-        this._turnOffTimeout = undefined;
-        if (!this.room) {
-          this.setLight(false, -1, true);
-        } else {
-          this.room.setLightTimeBased(true);
-        }
-      },
-      timeout,
-      this,
-    );
+    if (timeout > -1) {
+      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
+    }
   }
 
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {

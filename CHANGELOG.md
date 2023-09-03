@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) HmIpLampe as iTemporaryDisableAutomatic
+
 ## 2.11.3 (2023-08-31)
 
 * (theimo1221) Correctly Catch Axios Error
