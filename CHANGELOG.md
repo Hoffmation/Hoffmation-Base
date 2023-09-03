@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) HmIpLampe as iTemporaryDisableAutomatic
+* (theimo1221) Update packages
 
 ## 2.11.3 (2023-08-31)
 
