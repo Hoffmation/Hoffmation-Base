@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.12.0 (2023-09-05)
 
 * (theimo1221) Update packages
 * (theimo1221) Extend AC setting, to disable cooling on person being present.
