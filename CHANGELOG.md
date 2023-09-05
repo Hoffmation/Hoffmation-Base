@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend json Filter for AC Device
+
 ## 2.12.0 (2023-09-05)
 
 * (theimo1221) Update packages

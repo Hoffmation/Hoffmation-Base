@@ -315,7 +315,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public toJSON(): Partial<AcDevice> {
     // eslint-disable-next-line
-    const result: any = _.omit(this, ['room']);
+    const result: any = _.omit(this, ['room', '_room']);
     result['on'] = this.on;
     return Utils.jsonFilter(result);
   }
