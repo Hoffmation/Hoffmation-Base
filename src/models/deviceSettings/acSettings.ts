@@ -29,6 +29,12 @@ export class AcSettings extends DeviceSettings {
    */
   public useOwnTemperatureAndAutomatic: boolean = false;
 
+  /**
+   * Whether we should turn off AC-Cooling when someone is in the room
+   * @type {boolean}
+   */
+  public noCoolingOnMovement: boolean = false;
+
   public fromPartialObject(data: Partial<AcSettings>): void {
     this.minimumHours = data.minimumHours ?? this.minimumHours;
     this.minimumMinutes = data.minimumMinutes ?? this.minimumMinutes;
@@ -37,6 +43,7 @@ export class AcSettings extends DeviceSettings {
     this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? this.stopCoolingTemperatur;
     this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? this.stopHeatingTemperatur;
     this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
+    this.noCoolingOnMovement = data.noCoolingOnMovement ?? this.noCoolingOnMovement;
     this.useOwnTemperatureAndAutomatic = data.useOwnTemperatureAndAutomatic ?? this.useOwnTemperatureAndAutomatic;
     super.fromPartialObject(data);
   }

@@ -6,6 +6,7 @@ export interface iAcDevice extends iBaseDevice {
   settings: AcSettings;
   readonly on: boolean;
   readonly temperature: number;
+  readonly mode: AcMode;
 
   /**
    * Disable automatic Turn-On for given amount of ms and turn off immediately.

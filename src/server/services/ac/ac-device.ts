@@ -22,12 +22,13 @@ import { BlockAutomaticHandler } from '../blockAutomaticHandler';
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   public currentConsumption: number = -1;
   public settings: AcSettings = new AcSettings();
-  public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac, DeviceCapability.blockAutomatic];
   public readonly blockAutomationHandler;
   protected _activatedByExcessEnergy: boolean = false;
 
   protected _info: DeviceInfo;
+  protected _room: RoomBase | undefined;
+  protected _mode: AcMode = AcMode.Off;
 
   public get temperature(): number {
     return this._roomTemperature;
@@ -37,7 +38,25 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this.info.customName;
   }
 
-  protected constructor(name: string, roomName: string, public ip: string, public acDeviceType: AcDeviceType) {
+  public get room(): RoomBase | undefined {
+    return this._room;
+  }
+
+  public set room(room: RoomBase | undefined) {
+    room?.PraesenzGroup?.addFirstEnterCallback(this.onRoomFirstEnter.bind(this));
+    room?.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
+  }
+
+  public get mode(): AcMode {
+    return this._mode;
+  }
+
+  protected constructor(
+    name: string,
+    roomName: string,
+    public ip: string,
+    public acDeviceType: AcDeviceType,
+  ) {
     this._info = new DeviceInfo();
     this._info.fullName = `AC ${name}`;
     this._info.customName = `${roomName} ${name}`;
@@ -121,13 +140,24 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
         this.settings.maximumMinutes,
       )
     ) {
-      this.on && this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
+      acOn && this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
       return AcMode.Off;
     }
 
     if (this.settings.useOwnTemperatureAndAutomatic) {
       // Device is in automatic mode so ignore energy and room temperature
-      return SettingsService.heatMode === HeatingMode.Sommer ? AcMode.Cooling : AcMode.Heating;
+      if (SettingsService.heatMode !== HeatingMode.Sommer) {
+        return AcMode.Heating;
+      }
+
+      if (!this.settings.noCoolingOnMovement || this.room?.PraesenzGroup?.anyPresent() !== true) {
+        return AcMode.Cooling;
+      }
+      return AcMode.Off;
+    }
+
+    if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent() === true) {
+      return AcMode.Off;
     }
 
     const temp: number | undefined = this.roomTemperature;
@@ -244,6 +274,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       // We aren't allowed to turn on or off anyway --> exit
       return;
     }
+
     const desiredMode: AcMode = this.calculateDesiredMode();
     if (this.on === (desiredMode !== AcMode.Off)) {
       // Device already in desired state --> do nothing
@@ -262,6 +293,24 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
 
     this.turnOn();
+  }
+
+  private onRoomFirstEnter(): void {
+    if (!this.settings.noCoolingOnMovement || !this.on || this.mode !== AcMode.Cooling) {
+      return;
+    }
+
+    this.log(LogLevel.Info, `Someone entered the room. Turning off AC`);
+    this.turnOff();
+  }
+
+  private onRoomLastLeave(): void {
+    if (!this.settings.noCoolingOnMovement) {
+      return;
+    }
+
+    this.log(LogLevel.Info, `Last person left the room. Checking if we should turn on AC`);
+    this.restoreTargetAutomaticValue();
   }
 
   public toJSON(): Partial<AcDevice> {

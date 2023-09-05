@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend AC setting, to disable cooling on person being present.
+
 ## 2.11.4 (2023-09-03)
 
 * (theimo1221) HmIpLampe as iTemporaryDisableAutomatic
