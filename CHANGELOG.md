@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.12.2 (2023-09-06)
 
 * (theimo1221) Improve handling of inactive motion sensors
 
