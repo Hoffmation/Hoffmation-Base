@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve handling of inactive motion sensors
+
 ## 2.12.1 (2023-09-05)
 
 * (theimo1221) Extend json Filter for AC Device

@@ -51,8 +51,10 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
         `Keine Update Überschreibung:\n\tID: ${idSplit.join('.')}\n\tData: ${JSON.stringify(state)}`,
       );
     }
-    if (!initial) {
-      this._lastUpdate = new Date();
+
+    const stateLastUpdate: Date = new Date(state.ts);
+    if (stateLastUpdate > this._lastUpdate) {
+      this._lastUpdate = stateLastUpdate;
     }
 
     switch (idSplit[3]) {
