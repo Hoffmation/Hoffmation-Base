@@ -62,6 +62,7 @@ export class OwnDaikinDevice extends AcDevice {
       return;
     }
     this.desiredMode = newMode;
+    this._mode = mode;
     if (writeToDevice) {
       this.setDesiredInfo();
     }

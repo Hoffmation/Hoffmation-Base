@@ -29,6 +29,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   protected _info: DeviceInfo;
   protected _room: RoomBase | undefined;
   protected _mode: AcMode = AcMode.Off;
+  private _movementCallbackAdded: boolean = false;
 
   public get temperature(): number {
     return this._roomTemperature;
@@ -43,8 +44,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public set room(room: RoomBase | undefined) {
-    room?.PraesenzGroup?.addFirstEnterCallback(this.onRoomFirstEnter.bind(this));
-    room?.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
+    this._room = room;
+    if (room !== undefined && !this._movementCallbackAdded) {
+      this._movementCallbackAdded = true;
+      room?.PraesenzGroup?.addFirstEnterCallback(this.onRoomFirstEnter.bind(this));
+      room?.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
+    }
   }
 
   public get mode(): AcMode {
@@ -234,6 +239,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public setState(mode: AcMode, forceTime: number = 60 * 60 * 1000): void {
     this.blockAutomationHandler.disableAutomatic(forceTime);
+    this._mode = mode;
     if (mode == AcMode.Off) {
       this.turnOff();
       return;
