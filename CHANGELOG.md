@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.12.4 (2023-09-07)
 
 * (theimo1221) Ac Device, sometimes doesn't turn off, when someone enters the room
 * (theimo1221) Extend Victron DB persistence
