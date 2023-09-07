@@ -302,7 +302,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   private onRoomFirstEnter(): void {
-    if (!this.settings.noCoolingOnMovement || !this.on || this.mode !== AcMode.Cooling) {
+    if (!this.settings.noCoolingOnMovement || !this.on || this.mode === AcMode.Heating) {
       return;
     }
 

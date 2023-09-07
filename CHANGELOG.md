@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Ac Device, sometimes doesn't turn off, when someone enters the room
+
 ## 2.12.3 (2023-09-06)
 
 * (theimo1221) Minor fixes for Ac Device
