@@ -2,7 +2,7 @@ import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { iEnergyManager, iExcessEnergyConsumer } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { EnergyCalculation, LogLevel } from '../../../models';
-import { EnergyManagerUtils, iDisposable, SettingsService, Utils } from '../../services';
+import { EnergyManagerUtils, iDisposable, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { PhaseState } from '../models';
@@ -192,23 +192,10 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
 
   private persist() {
     const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
-    if (obj.drawnKwH === 0 && obj.injectedKwH === 0 && obj.selfConsumedKwH === 0) {
-      this.log(LogLevel.Warn, `Not persisting energy Data, as all values are 0.`);
+    if (!EnergyCalculation.persist(obj, this._lastPersistenceCalculation, this.log.bind(this))) {
       return;
     }
-    if (!SettingsService.settings.wattagePrice) {
-      this.log(LogLevel.Warn, `Wattage price not set, assuming average of 34ct.`);
-    }
     this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
-    obj.endMs = this._lastPersistenceCalculation;
-    obj.earnedInjected = Utils.round(obj.injectedKwH * (SettingsService.settings.injectWattagePrice ?? 0.06), 4);
-    obj.savedSelfConsume = Utils.round(obj.selfConsumedKwH * (SettingsService.settings.wattagePrice ?? 0.35), 4);
-    obj.costDrawn = Utils.round(obj.drawnKwH * (SettingsService.settings.wattagePrice ?? 0.35), 4);
-    obj.injectedKwH = Utils.round(obj.injectedKwH, 4);
-    obj.selfConsumedKwH = Utils.round(obj.selfConsumedKwH, 4);
-    obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
-    Utils.dbo?.persistEnergyManager(obj);
-    this.log(LogLevel.Info, `Persisting energy Manager Data.`);
   }
 
   private turnOnAdditionalConsumer(): void {

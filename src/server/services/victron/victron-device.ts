@@ -1,6 +1,6 @@
 import { DeviceInfo, Devices, DeviceType, iEnergyManager, iExcessEnergyConsumer } from '../../devices';
 import { EnergyManagerUtils, Utils } from '../utils';
-import { LogLevel, VictronDeviceSettings } from '../../../models';
+import { EnergyCalculation, LogLevel, VictronDeviceSettings } from '../../../models';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
@@ -14,6 +14,10 @@ export class VictronDevice implements iEnergyManager {
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private blockDeviceChangeTime: number = -1;
   private _lastDeviceChange: undefined | { newState: boolean; device: iExcessEnergyConsumer };
+  private _iCalculationInterval: NodeJS.Timeout | null = null;
+  private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
+  private _lastPersistenceCalculation: number = Utils.nowMS();
+  private _nextPersistEntry: EnergyCalculation;
 
   public constructor(opts: VictronMqttConnectionOptions) {
     this.settings = new VictronDeviceSettings();
@@ -26,6 +30,21 @@ export class VictronDevice implements iEnergyManager {
     this.persistDeviceInfo();
     this.loadDeviceSettings();
     this._victronConsumer = new VictronMqttConsumer(opts);
+    this._iCalculationInterval = Utils.guardedInterval(
+      () => {
+        this.calculateExcessEnergy();
+      },
+      5 * 1000,
+      this,
+    );
+    this._iDatabaseLoggerInterval = Utils.guardedInterval(
+      () => {
+        this.persist();
+      },
+      15 * 60 * 1000,
+      this,
+    );
+    this._nextPersistEntry = new EnergyCalculation(Utils.nowMS());
   }
 
   protected _info: DeviceInfo;
@@ -64,8 +83,28 @@ export class VictronDevice implements iEnergyManager {
     this._excessEnergyConsumer.push(device);
   }
 
+  public get injectingWattage(): number {
+    return Math.min(this.victronConsumer.data.grid.power ?? 0, 0) * -1;
+  }
+
+  public get drawingWattage(): number {
+    return Math.max(this.victronConsumer.data.grid.power ?? 0, 0);
+  }
+
+  public get selfConsumingWattage(): number {
+    return Math.max(this.victronConsumer.data.system.power ?? 0, 0) - this.drawingWattage;
+  }
+
   public cleanup(): void {
     this._victronConsumer.disconnect();
+    if (this._iDatabaseLoggerInterval !== null) {
+      clearInterval(this._iDatabaseLoggerInterval);
+      this._iDatabaseLoggerInterval = null;
+    }
+    if (this._iCalculationInterval !== null) {
+      clearInterval(this._iCalculationInterval);
+      this._iCalculationInterval = null;
+    }
   }
 
   public getReport(): string {
@@ -155,6 +194,7 @@ export class VictronDevice implements iEnergyManager {
     ) {
       this._excessEnergy = this.settings.maximumBatteryDischargeWattage - Math.max(this.data.battery.dcPower, 0);
     }
+    this.calculatePersistenceValues();
   }
 
   private turnOnAdditionalConsumer(): void {
@@ -183,5 +223,22 @@ export class VictronDevice implements iEnergyManager {
       result.device.turnOffDueToMissingEnergy();
       this._lastDeviceChange = result;
     }
+  }
+
+  private persist() {
+    const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
+    if (!EnergyCalculation.persist(obj, this._lastPersistenceCalculation, this.log.bind(this))) {
+      return;
+    }
+    this._nextPersistEntry = new EnergyCalculation(this._lastPersistenceCalculation);
+  }
+
+  private calculatePersistenceValues(): void {
+    const now = Utils.nowMS();
+    const duration = now - this._lastPersistenceCalculation;
+    this._nextPersistEntry.drawnKwH += Utils.kWh(this.drawingWattage, duration);
+    this._nextPersistEntry.injectedKwH += Utils.kWh(this.injectingWattage, duration);
+    this._nextPersistEntry.selfConsumedKwH += Utils.kWh(this.selfConsumingWattage, duration);
+    this._lastPersistenceCalculation = now;
   }
 }
