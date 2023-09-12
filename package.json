@@ -49,7 +49,7 @@
     "@types/pg": "^8.10.2",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.12",
-    "aws-sdk": "2.1451.0",
+    "aws-sdk": "2.1456.0",
     "bson": "^6.0.0",
     "daikin-controller": "^2.1.0",
     "get-mp3-duration": "^1.0.0",
