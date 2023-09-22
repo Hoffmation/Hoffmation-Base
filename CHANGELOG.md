@@ -10,6 +10,7 @@
 
 * (theimo1221) Update packages
 * (theimo1221) Allow disabling of JsObjectEnergyManager
+* (theimo1221) Allow manual disabling of Ac Devices for some time
 
 ## 2.12.4 (2023-09-07)
 

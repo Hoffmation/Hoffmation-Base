@@ -136,6 +136,11 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public calculateDesiredMode(): AcMode {
     const acOn: boolean = this.on;
 
+    if (this.settings.manualDisabled) {
+      acOn && this.log(LogLevel.Info, `We should turn off now, as manual disable force is set.`);
+      return AcMode.Off;
+    }
+
     // Check Turn Off Time
     if (
       !Utils.timeWithinBorders(
