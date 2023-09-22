@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.13.0 (2023-09-22)
 
 * (theimo1221) Update packages
 * (theimo1221) Allow disabling of JsObjectEnergyManager
