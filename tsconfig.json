@@ -36,7 +36,6 @@
       "./types"
     ],
     "types": [
-      "iobroker",
       "jest",
       "node",
       "node-telegram-bot-api",

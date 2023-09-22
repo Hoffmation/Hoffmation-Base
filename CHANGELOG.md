@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update packages
+* (theimo1221) Allow disabling of JsObjectEnergyManager
+
 ## 2.12.4 (2023-09-07)
 
 * (theimo1221) Ac Device, sometimes doesn't turn off, when someone enters the room

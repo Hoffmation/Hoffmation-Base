@@ -27,6 +27,7 @@ import {
 } from './server';
 import { LogLevel } from './models';
 import { Dachs } from './server/devices/dachs';
+import '@iobroker/types';
 
 export * from './models/index';
 export * from './server/index';
