@@ -20,15 +20,15 @@ import { iEspresenseSettings } from './iEspresenseSettings';
 import { iTibberSettings } from './iTibberSettings';
 import { iVictronSettings } from './iVictronSettings';
 import { iDachsSettings } from './iDachsSettings';
+import { iEnergyManagerSettings } from './iEnergyManagerSettings';
 
 export interface iConfig {
   asusConfig?: iAsusConfig;
   blueIris?: iBlueIrisSettings;
   daikin?: iDaikinSettings;
   dachs?: iDachsSettings;
+  energyManager?: iEnergyManagerSettings;
   espresense?: iEspresenseSettings;
-  // Earnigs per kWh injecting into the grid
-  injectWattagePrice?: number;
   ioBrokerUrl: string;
   ioBroker?: iIobrokerSettigns;
   heaterSettings?: iHeaterSettings;
@@ -45,8 +45,6 @@ export interface iConfig {
   tibber?: iTibberSettings;
   timeSettings: iTimeSettings;
   translationSettings: iTranslationSettings;
-  // Price per kWh from the grid
-  wattagePrice?: number;
   weather?: iWeatherSettings;
   victron?: iVictronSettings;
 }

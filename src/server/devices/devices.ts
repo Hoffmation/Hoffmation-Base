@@ -50,6 +50,7 @@ import { JsObjectEnergyManager } from './jsObject';
 import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
 import { Dachs } from './dachs';
+import { iConfig } from '../config';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -61,7 +62,11 @@ export class Devices {
   public static dachs?: Dachs = undefined;
   public static temperatureWarmWater?: iTemperatureSensor = undefined;
 
-  public constructor(pDeviceData: { [id: string]: deviceConfig }, pRoomImportEnforcer?: iRoomImportEnforcer) {
+  public constructor(
+    pDeviceData: { [id: string]: deviceConfig },
+    pRoomImportEnforcer?: iRoomImportEnforcer,
+    config?: iConfig,
+  ) {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.
     pRoomImportEnforcer?.addRoomConstructor();
 
@@ -86,7 +91,11 @@ export class Devices {
         Devices.processZigbeeDevice(cDevConf);
       } else if (cName.indexOf('00-WLED') === 0) {
         Devices.processWledDevice(cDevConf);
-      } else if (cName.indexOf('00-EnergyManager') === 0 && cDevConf.type !== 'folder') {
+      } else if (
+        cName.indexOf('00-EnergyManager') === 0 &&
+        cDevConf.type !== 'folder' &&
+        !config?.energyManager?.disableJsEnergyManager
+      ) {
         ServerLogService.writeLog(LogLevel.Info, `Found Energy-Manager in Device json.`);
         Devices.createEnergyManager(cDevConf);
       }

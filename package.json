@@ -18,6 +18,11 @@
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
   "scripts": {
+    "bun-build": "bun tsc",
+    "bun-full-test": "bun run bun-lint-check-all && bun run bun-jest-coverage",
+    "bun-jest": "bun jest",
+    "bun-lint-fix-all": "bun eslint ./**/{*.ts,*.test.ts} --fix --no-error-on-unmatched-pattern",
+    "bun-test": "bun run bun-lint-check-all && bun run bun-jest",
     "jest": "jest",
     "jest-coverage": "jest --coverage",
     "lint-check-all": "eslint ./**/{*.js,*.ts,*.test.ts} --no-error-on-unmatched-pattern",

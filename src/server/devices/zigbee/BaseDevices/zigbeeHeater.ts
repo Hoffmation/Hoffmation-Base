@@ -28,7 +28,6 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     return this._battery;
   }
 
-  protected _automaticPoints: { [name: string]: TemperatureSettings } = {};
   protected _iAutomaticInterval: NodeJS.Timeout | undefined;
   protected _initialSeasonCheckDone: boolean = false;
   protected _level: number = 0;

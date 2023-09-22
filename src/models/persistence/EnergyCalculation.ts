@@ -21,13 +21,19 @@ export class EnergyCalculation {
       logger(LogLevel.Warn, `Not persisting energy Data, as all values are 0.`);
       return false;
     }
-    if (!SettingsService.settings.wattagePrice) {
+    if (!SettingsService.settings.energyManager?.wattagePrice) {
       logger(LogLevel.Warn, `Wattage price not set, assuming average of 34ct.`);
     }
     obj.endMs = endMs;
-    obj.earnedInjected = Utils.round(obj.injectedKwH * (SettingsService.settings.injectWattagePrice ?? 0.06), 4);
-    obj.savedSelfConsume = Utils.round(obj.selfConsumedKwH * (SettingsService.settings.wattagePrice ?? 0.35), 4);
-    obj.costDrawn = Utils.round(obj.drawnKwH * (SettingsService.settings.wattagePrice ?? 0.35), 4);
+    obj.earnedInjected = Utils.round(
+      obj.injectedKwH * (SettingsService.settings.energyManager?.injectWattagePrice ?? 0.06),
+      4,
+    );
+    obj.savedSelfConsume = Utils.round(
+      obj.selfConsumedKwH * (SettingsService.settings.energyManager?.wattagePrice ?? 0.35),
+      4,
+    );
+    obj.costDrawn = Utils.round(obj.drawnKwH * (SettingsService.settings.energyManager?.wattagePrice ?? 0.35), 4);
     obj.injectedKwH = Utils.round(obj.injectedKwH, 4);
     obj.selfConsumedKwH = Utils.round(obj.selfConsumedKwH, 4);
     obj.drawnKwH = Utils.round(obj.drawnKwH, 4);

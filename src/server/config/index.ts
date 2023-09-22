@@ -5,6 +5,7 @@ export * from './iEspresenseSettings';
 export * from './iRestSettings';
 export * from './iAsusConfig';
 export * from './iDaikinSettings';
+export * from './iEnergyManagerSettings';
 export * from './iSonosSettings';
 export * from './heatingMode';
 export * from './iHeaterSettings';
