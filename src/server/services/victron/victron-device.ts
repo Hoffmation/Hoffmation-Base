@@ -226,8 +226,9 @@ export class VictronDevice implements iEnergyManager {
   }
 
   private persist() {
+    this._nextPersistEntry.batteryLevel = (this.data.battery.soc ?? 0) / 100;
     this._nextPersistEntry.batteryStoredKwH =
-      ((this.data.battery.soc ?? 0) * this.settings.batteryCapacityWattage) / 1000;
+      (this._nextPersistEntry.batteryLevel * this.settings.batteryCapacityWattage) / 1000;
     const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
     if (!EnergyCalculation.persist(obj, this._lastPersistenceCalculation, this.log.bind(this))) {
       return;

@@ -373,6 +373,14 @@ BEGIN
     alter table hoffmation_schema."EnergyCalculation"
       add "batteryStoredKwH" integer;
   END IF;
+  
+  IF (SELECT COUNT(column_name) = 0
+    FROM information_schema.columns
+    WHERE table_name = 'EnergyCalculation'
+      and column_name = 'batteryLevel') Then
+    alter table hoffmation_schema."EnergyCalculation"
+      add "batteryLevel" double precision;
+  END IF;
 END
 $$;`,
     );
@@ -492,9 +500,9 @@ values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString
   public persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
 insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
-                                                   "drawnKwH", "batteryStoredKwH")
+                                                   "drawnKwH", "batteryStoredKwH", "batteryLevel")
 values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOString()}',
-        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.batteryStoredKwH});
+        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.batteryStoredKwH}, ${calc.batteryLevel});
     `);
   }
 
