@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.13.1 (2023-09-24)
 
 * (theimo1221) Add Battery Data to energyCalculation
 
