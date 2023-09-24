@@ -371,7 +371,7 @@ BEGIN
     WHERE table_name = 'EnergyCalculation'
       and column_name = 'batteryStoredKwH') Then
     alter table hoffmation_schema."EnergyCalculation"
-      add "batteryStoredKwH" integer;
+      add "batteryStoredKwH" double precision;
   END IF;
   
   IF (SELECT COUNT(column_name) = 0
