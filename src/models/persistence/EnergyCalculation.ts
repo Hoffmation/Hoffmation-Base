@@ -9,6 +9,7 @@ export class EnergyCalculation {
   public earnedInjected: number = 0;
   public savedSelfConsume: number = 0;
   public endMs: number = 0;
+  public batteryStoredKwH: number = 0;
 
   constructor(public startMs: number) {}
 
@@ -37,6 +38,7 @@ export class EnergyCalculation {
     obj.injectedKwH = Utils.round(obj.injectedKwH, 4);
     obj.selfConsumedKwH = Utils.round(obj.selfConsumedKwH, 4);
     obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
+    obj.batteryStoredKwH = Utils.round(obj.batteryStoredKwH, 3);
     Utils.dbo?.persistEnergyManager(obj);
     logger(LogLevel.Info, `Persisting energy Manager Data.`);
     return true;

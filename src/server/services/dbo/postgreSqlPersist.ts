@@ -365,6 +365,14 @@ BEGIN
     );
     
   END IF;
+  
+  IF (SELECT COUNT(column_name) = 0
+    FROM information_schema.columns
+    WHERE table_name = 'EnergyCalculation'
+      and column_name = 'batteryStoredKwH') Then
+    alter table hoffmation_schema."EnergyCalculation"
+      add "batteryStoredKwH" integer;
+  END IF;
 END
 $$;`,
     );
@@ -484,9 +492,9 @@ values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString
   public persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
 insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
-                                                   "drawnKwH")
+                                                   "drawnKwH", "batteryStoredKwH")
 values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOString()}',
-        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH});
+        ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.batteryStoredKwH});
     `);
   }
 
