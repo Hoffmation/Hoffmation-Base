@@ -7,9 +7,16 @@ export class HeatGroupSettings extends GroupSettings {
   public automaticPoints: TemperatureSettings[] = [];
   public automaticMode: boolean = true;
 
+  /**
+   * Target temperature when automaticMode is disabled
+   * @type {number}
+   */
+  public manualTemperature: number = 20;
+
   public fromPartialObject(data: Partial<HeatGroupSettings>): void {
     this.automaticPoints = data.automaticPoints ?? this.automaticPoints;
     this.automaticMode = data.automaticMode ?? this.automaticMode;
+    this.manualTemperature = data.manualTemperature ?? this.manualTemperature;
     super.fromPartialObject(data);
   }
 

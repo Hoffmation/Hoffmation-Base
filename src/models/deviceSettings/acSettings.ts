@@ -9,16 +9,6 @@ export class AcSettings extends DeviceSettings {
   public maximumHours: number = 24;
   public maximumMinutes: number = 0;
   /**
-   * The temperature below which cooling should be stopped
-   * @type {number}
-   */
-  public stopCoolingTemperatur: number = 22;
-  /**
-   * The temperature above which heating should be stopped
-   * @type {number}
-   */
-  public stopHeatingTemperatur: number = 21.0;
-  /**
    * Heating can be forbidden completly e.g. for summer season
    * @type {boolean}
    */
@@ -46,8 +36,6 @@ export class AcSettings extends DeviceSettings {
     this.minimumMinutes = data.minimumMinutes ?? this.minimumMinutes;
     this.maximumHours = data.maximumHours ?? this.maximumHours;
     this.maximumMinutes = data.maximumMinutes ?? this.maximumMinutes;
-    this.stopCoolingTemperatur = data.stopCoolingTemperatur ?? this.stopCoolingTemperatur;
-    this.stopHeatingTemperatur = data.stopHeatingTemperatur ?? this.stopHeatingTemperatur;
     this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
     this.noCoolingOnMovement = data.noCoolingOnMovement ?? this.noCoolingOnMovement;
     this.useOwnTemperatureAndAutomatic = data.useOwnTemperatureAndAutomatic ?? this.useOwnTemperatureAndAutomatic;

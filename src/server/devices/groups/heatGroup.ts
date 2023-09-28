@@ -189,4 +189,18 @@ export class HeatGroup extends BaseGroup {
       ac.onTemperaturChange(temp);
     });
   }
+
+  public getTargetTemperature(): number {
+    if (!this.settings.automaticMode) {
+      return this.settings.manualTemperature;
+    }
+    const activeSetting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
+      this.settings.automaticPoints,
+      new Date(),
+    );
+    if (!activeSetting) {
+      return this.settings.manualTemperature;
+    }
+    return activeSetting.temperature;
+  }
 }

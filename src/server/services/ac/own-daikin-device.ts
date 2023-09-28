@@ -11,7 +11,6 @@ import { DeviceType } from '../../devices';
 
 export class OwnDaikinDevice extends AcDevice {
   public desiredState: boolean = Power.OFF;
-  public desiredTemp: number = 21;
   public desiredHum: number | 'AUTO' = 'AUTO';
   public desiredMode: number = Mode.COLD;
   public deviceType: DeviceType = DeviceType.Daikin;
@@ -90,11 +89,11 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   private setDesiredInfo(retry: boolean = false): void {
-    let targetTemp: number = this.desiredTemp;
+    let targetTemp: number = this.room?.HeatGroup?.getTargetTemperature() ?? 21;
     if (this.desiredMode == Mode.HOT) {
-      targetTemp = this.settings.useOwnTemperatureAndAutomatic ? this.settings.stopHeatingTemperatur : 29;
+      targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp + 1 : 29;
     } else if (this.desiredMode == Mode.COLD) {
-      targetTemp = this.settings.useOwnTemperatureAndAutomatic ? this.settings.stopCoolingTemperatur : 16;
+      targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp - 1 : 16;
     }
     const changeObject: Partial<ControlInfo> = {
       power: this.desiredState,

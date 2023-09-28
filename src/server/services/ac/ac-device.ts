@@ -176,8 +176,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
-    let threshold: number = acOn ? 0 : 1;
-    let thresholdHeating: number = acOn ? 0 : 0.5;
+    const heatGroup = this.room?.HeatGroup;
+    if (!heatGroup) {
+      this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no heat group`);
+      return AcMode.Off;
+    }
+
+    let threshold: number = acOn ? 0.5 : 1.5;
+    let thresholdHeating: number = acOn ? 0.5 : 1.5;
     let desiredMode: AcMode = AcMode.Off;
     const excessEnergy: number = Devices.energymanager?.excessEnergy ?? -1;
 
@@ -187,8 +193,10 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       thresholdHeating = -0.5;
     }
 
-    const coolUntil: number = this.settings.stopCoolingTemperatur + threshold;
-    const heatUntil: number = this.settings.stopHeatingTemperatur - thresholdHeating;
+    const targetTemp: number = heatGroup.getTargetTemperature();
+
+    const coolUntil: number = targetTemp + threshold;
+    const heatUntil: number = targetTemp - thresholdHeating;
 
     if (temp > coolUntil && SettingsService.heatMode === HeatingMode.Sommer) {
       desiredMode = AcMode.Cooling;
