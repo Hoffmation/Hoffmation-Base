@@ -44,7 +44,7 @@ export class OwnDaikinDevice extends AcDevice {
     void this.updateInfo();
   }
 
-  public setDesiredMode(mode: AcMode, writeToDevice: boolean = true): void {
+  public setDesiredMode(mode: AcMode, writeToDevice: boolean = true, desiredTemp?: number): void {
     let newMode: number = -1;
     switch (mode) {
       case AcMode.Heating:
@@ -63,7 +63,7 @@ export class OwnDaikinDevice extends AcDevice {
     this.desiredMode = newMode;
     this._mode = mode;
     if (writeToDevice) {
-      this.setDesiredInfo();
+      this.setDesiredInfo(false, desiredTemp);
     }
   }
 
@@ -88,7 +88,7 @@ export class OwnDaikinDevice extends AcDevice {
     });
   }
 
-  private setDesiredInfo(retry: boolean = false): void {
+  private setDesiredInfo(retry: boolean = false, forceTemp?: number): void {
     let targetTemp: number = this.room?.HeatGroup?.getTargetTemperature() ?? 21;
     if (this.desiredMode == Mode.HOT) {
       targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp + 1 : 29;
@@ -99,7 +99,7 @@ export class OwnDaikinDevice extends AcDevice {
       power: this.desiredState,
       mode: this.desiredMode,
       targetHumidity: this.desiredHum,
-      targetTemperature: targetTemp,
+      targetTemperature: forceTemp ?? targetTemp,
     };
     this.device?.setACControlInfo(changeObject, (err, res) => {
       if (err !== null) {

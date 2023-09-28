@@ -11,6 +11,7 @@
 * (theimo1221) Update packages
 * (theimo1221) Rebase Automatic Points into HeatGroup Settings
 * (theimo1221) Add target Temperature to HeatGroup Settings and use it for AC-Device as well
+* (theimo1221) Allow setting a specific temp for ac device via api
 
 ## 2.13.2 (2023-09-24)
 

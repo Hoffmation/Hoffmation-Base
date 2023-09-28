@@ -94,12 +94,14 @@ export class API {
    * @param id The id of the device, if wrong false will be returned
    * @param {boolean} desiredState
    * @param {AcMode} desiredMode
+   * @param desiredTemperature
    * @param forceTime The time in ms this should not change before automatic change is allowed again
    */
   public static setAc(
     id: string,
     desiredState: boolean,
     desiredMode?: AcMode,
+    desiredTemperature?: number,
     forceTime: number = 60 * 60 * 1000,
   ): boolean {
     const d = this.getAc(id);
@@ -118,7 +120,7 @@ export class API {
         desiredMode = SettingsService.heatMode == HeatingMode.Winter ? AcMode.Heating : AcMode.Cooling;
       }
     }
-    d.setState(desiredMode, forceTime);
+    d.setState(desiredMode, desiredTemperature, forceTime);
     return true;
   }
 

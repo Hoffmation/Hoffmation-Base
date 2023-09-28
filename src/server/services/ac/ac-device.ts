@@ -154,9 +154,15 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
+    const heatGroup = this.room?.HeatGroup;
+
     if (this.settings.useOwnTemperatureAndAutomatic) {
       // Device is in automatic mode so ignore energy and room temperature
-      if (SettingsService.heatMode !== HeatingMode.Sommer) {
+      if (heatGroup?.settings.automaticMode === false) {
+        return AcMode.Auto;
+      }
+
+      if (SettingsService.heatMode !== HeatingMode.Sommer && this.settings.heatingAllowed) {
         return AcMode.Heating;
       }
 
@@ -176,7 +182,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
-    const heatGroup = this.room?.HeatGroup;
     if (!heatGroup) {
       this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no heat group`);
       return AcMode.Off;
@@ -220,7 +225,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.blockAutomationHandler.disableAutomatic(timeout);
   }
 
-  public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
+  public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean, temp?: number): void;
 
   public abstract turnOn(): void;
 
@@ -250,14 +255,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.turnOff();
   }
 
-  public setState(mode: AcMode, forceTime: number = 60 * 60 * 1000): void {
+  public setState(mode: AcMode, desiredTemp?: number, forceTime: number = 60 * 60 * 1000): void {
     this.blockAutomationHandler.disableAutomatic(forceTime);
     this._mode = mode;
     if (mode == AcMode.Off) {
       this.turnOff();
       return;
     }
-    this.setDesiredMode(mode, false);
+    this.setDesiredMode(mode, false, desiredTemp);
     this.turnOn();
   }
 
@@ -300,17 +305,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return;
     }
 
-    if (desiredMode === AcMode.Heating && SettingsService.settings.heaterSettings?.allowAcHeating) {
-      this.setDesiredMode(AcMode.Heating, false);
-      this.turnOn();
-      return;
-    }
+    this.setDesiredMode(desiredMode, false);
 
     if (desiredMode == AcMode.Off) {
       this.turnOff();
       return;
     }
-
     this.turnOn();
   }
 
