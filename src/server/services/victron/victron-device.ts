@@ -76,7 +76,7 @@ export class VictronDevice implements iEnergyManager {
   }
 
   public get id(): string {
-    return this.info.allDevicesKey ?? `sonos-${this.info.room}-${this.info.customName}`;
+    return this.info.allDevicesKey ?? `victron-${this.info.room}-${this.info.customName}`;
   }
 
   public addExcessConsumer(device: iExcessEnergyConsumer): void {
