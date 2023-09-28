@@ -12,14 +12,14 @@ export class BaseGroup implements iIdHolder {
     return `${GroupType[this.type]} ${this.getRoom().customName}`;
   }
 
-  public get id(): string {
-    return `${this.roomName}-${GroupType[this.type]}`;
-  }
+  public id: string;
 
   public constructor(
     public roomName: string,
     public type: GroupType,
-  ) {}
+  ) {
+    this.id = `${this.roomName}-${GroupType[this.type]}`;
+  }
 
   protected _deviceCluster: DeviceCluster = new DeviceCluster();
 

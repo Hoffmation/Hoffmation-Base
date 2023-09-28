@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Enforce Group-id in group JSON
+
 ## 2.14.0 (2023-09-28)
 
 * (theimo1221) Update packages
