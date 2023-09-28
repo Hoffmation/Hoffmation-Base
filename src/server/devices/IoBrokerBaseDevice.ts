@@ -21,7 +21,10 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     Array<(val: ioBroker.StateValue) => void>
   >();
 
-  protected constructor(protected _info: IoBrokerDeviceInfo, public deviceType: DeviceType) {
+  protected constructor(
+    protected _info: IoBrokerDeviceInfo,
+    public deviceType: DeviceType,
+  ) {
     this.addToCorrectRoom();
     this.persistDeviceInfo();
     Utils.guardedTimeout(this.loadDeviceSettings, 200, this);

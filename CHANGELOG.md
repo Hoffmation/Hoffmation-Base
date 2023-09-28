@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Rebase Automatic Points into HeatGroup Settings
 
 ## 2.13.2 (2023-09-24)
 

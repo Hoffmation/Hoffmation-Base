@@ -29,7 +29,11 @@ export class RoomBase implements iRoomBase, iIdHolder {
   public skipNextRolloUp: boolean = false;
   public settings: RoomSettingsController;
 
-  public constructor(public groupMap: Map<GroupType, BaseGroup>, roomName: string, etage: number = 99) {
+  public constructor(
+    public groupMap: Map<GroupType, BaseGroup>,
+    roomName: string,
+    etage: number = 99,
+  ) {
     this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
     RoomService.addToRoomList(this);
@@ -117,6 +121,9 @@ export class RoomBase implements iRoomBase, iIdHolder {
     this.LightGroup?.initialize();
     this.TasterGroup?.initCallbacks();
     this.HeatGroup?.initialize();
+    for (const group of this.groupMap.values()) {
+      RoomService.Groups.set(group.id, group);
+    }
   }
 
   public persist(): void {

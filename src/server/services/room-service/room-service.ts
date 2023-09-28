@@ -4,10 +4,11 @@ import { ServerLogService } from '../log-service';
 import { SonosService } from '../Sonos';
 import { Res } from '../Translation';
 import { TelegramService } from '../Telegram';
-import { iRoomDevice } from '../../devices';
+import { BaseGroup, iRoomDevice } from '../../devices';
 
 export class RoomService {
   public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
+  public static Groups: Map<string, BaseGroup> = new Map<string, BaseGroup>();
   public static awayModeActive: boolean = false;
   public static nightAlarmActive: boolean = false;
   public static movementHistory: ringStorage<string> = new ringStorage<string>(15);

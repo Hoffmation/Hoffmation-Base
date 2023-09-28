@@ -10,9 +10,12 @@ import {
   UNDEFINED_TEMP_VALUE,
 } from '../baseDeviceInterfaces';
 import { AcDevice, API } from '../../services';
-import { LogLevel, RoomBase } from '../../../models';
+import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
+import { LogLevel, RoomBase, TemperatureSettings } from '../../../models';
 
 export class HeatGroup extends BaseGroup {
+  public settings: HeatGroupSettings = new HeatGroupSettings();
+
   public constructor(
     roomName: string,
     heaterIds: string[],
@@ -161,6 +164,14 @@ export class HeatGroup extends BaseGroup {
         dev.deactivateAutomaticChange(60 * 60 * 1000);
       }
     }
+  }
+
+  public deleteAutomaticPoint(name: string): void {
+    this.settings.deleteAutomaticPoint(name, this);
+  }
+
+  public setAutomaticPoint(setting: TemperatureSettings): void {
+    this.settings.setAutomaticPoint(setting, this);
   }
 
   private recalcRoomTemperatur(): void {

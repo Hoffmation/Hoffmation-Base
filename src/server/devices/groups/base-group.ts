@@ -2,9 +2,24 @@ import { GroupType } from './group-type';
 import { DeviceCluster } from '../device-cluster';
 import { LogLevel, RoomBase } from '../../../models';
 import { API, LogDebugType, ServerLogService, Utils } from '../../services';
+import { iIdHolder } from '../../../models/iIdHolder';
+import { GroupSettings } from '../../../models/groupSettings/groupSettings';
 
-export class BaseGroup {
-  public constructor(public roomName: string, public type: GroupType) {}
+export class BaseGroup implements iIdHolder {
+  public settings: GroupSettings | undefined = undefined;
+
+  public get customName(): string {
+    return `${GroupType[this.type]} ${this.getRoom().customName}`;
+  }
+
+  public get id(): string {
+    return `${this.roomName}-${GroupType[this.type]}`;
+  }
+
+  public constructor(
+    public roomName: string,
+    public type: GroupType,
+  ) {}
 
   protected _deviceCluster: DeviceCluster = new DeviceCluster();
 
@@ -16,7 +31,7 @@ export class BaseGroup {
     return Utils.guard<RoomBase>(API.getRoom(this.roomName));
   }
 
-  protected log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
+  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, message, {
       room: this.roomName,
       groupType: GroupType[this.type],

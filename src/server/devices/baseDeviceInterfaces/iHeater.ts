@@ -1,4 +1,4 @@
-import { HeaterSettings, TemperatureSettings } from '../../../models';
+import { HeaterSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 
 export interface iHeater extends iRoomDevice {
@@ -12,10 +12,6 @@ export interface iHeater extends iRoomDevice {
   readonly persistHeaterInterval: NodeJS.Timeout;
 
   seasonTurnOff: boolean;
-
-  deleteAutomaticPoint(name: string): void;
-
-  setAutomaticPoint(setting: TemperatureSettings): void;
 
   stopAutomaticCheck(): void;
 

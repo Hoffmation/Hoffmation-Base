@@ -1,4 +1,5 @@
 import {
+  BaseGroup,
   ButtonPosition,
   ButtonPressType,
   Devices,
@@ -21,6 +22,7 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
+import { GroupSettings } from '../../../models/groupSettings/groupSettings';
 
 export class API {
   /**
@@ -64,6 +66,14 @@ export class API {
       ServerLogService.writeLog(LogLevel.Warn, `Api.getDevice() --> "${id}" not found`);
     }
     return Devices.alLDevices[id];
+  }
+
+  public static getGroup(id: string): BaseGroup | undefined {
+    const g: BaseGroup | undefined = RoomService.Groups.get(id);
+    if (g === undefined) {
+      ServerLogService.writeLog(LogLevel.Warn, `Api.getGroup() --> "${id}" not found`);
+    }
+    return g;
   }
 
   public static getRooms(): Map<string, RoomBase> {
@@ -286,6 +296,19 @@ export class API {
     }
     d.settings.fromPartialObject(settings);
     d.settings.persist(d);
+    return null;
+  }
+
+  public static setGroupSettings(groupId: string, settings: Partial<GroupSettings>): Error | null {
+    const g = this.getGroup(groupId) as BaseGroup;
+    if (g === undefined) {
+      return new Error(`Group with ID ${groupId} not found`);
+    }
+    if (g.settings === undefined) {
+      return new Error(`Group with ID ${groupId} has no settings`);
+    }
+    g.settings.fromPartialObject(settings);
+    g.settings.persist(g);
     return null;
   }
 

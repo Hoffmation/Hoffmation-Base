@@ -6,6 +6,7 @@ import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { PIDController } from '../../../../liquid-pid';
+import { HeatGroupSettings } from '../../../../models/groupSettings/heatGroupSettings';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   protected _battery: number = -99;
@@ -133,12 +134,13 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
     }
-    if (!this.settings.automaticMode || this.seasonTurnOff) {
+    const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
+    if (!this.settings.automaticMode || this.seasonTurnOff || heatGroupSettings?.automaticMode === false) {
       return;
     }
 
     const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this.settings.automaticPoints,
+      this.room?.HeatGroup?.settings?.automaticPoints ?? [],
       new Date(),
     );
 
@@ -155,14 +157,6 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       );
       this.desiredTemperature = setting.temperature;
     }
-  }
-
-  public deleteAutomaticPoint(name: string): void {
-    this.settings.deleteAutomaticPoint(name, this);
-  }
-
-  public setAutomaticPoint(setting: TemperatureSettings): void {
-    this.settings.setAutomaticPoint(setting, this);
   }
 
   public stopAutomaticCheck(): void {

@@ -12,6 +12,7 @@ import {
 import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
@@ -163,14 +164,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
   }
 
-  public deleteAutomaticPoint(name: string): void {
-    this.settings.deleteAutomaticPoint(name, this);
-  }
-
-  public setAutomaticPoint(setting: TemperatureSettings): void {
-    this.settings.setAutomaticPoint(setting, this);
-  }
-
   public getBelongingHeizungen(): iHeater[] {
     if (!this.room) {
       return [];
@@ -200,12 +193,13 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
     }
-    if (!this.settings.automaticMode || this.seasonTurnOff) {
+    const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
+    if (!this.settings.automaticMode || this.seasonTurnOff || heatGroupSettings?.automaticMode === false) {
       return;
     }
 
     const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this.settings.automaticPoints,
+      this.room?.HeatGroup?.settings?.automaticPoints ?? [],
       new Date(),
     );
 

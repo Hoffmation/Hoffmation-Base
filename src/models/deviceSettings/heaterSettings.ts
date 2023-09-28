@@ -1,10 +1,7 @@
 import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../server';
-import { TemperatureSettings } from '../temperatureSettings';
-import { iIdHolder } from '../iIdHolder';
 
 export class HeaterSettings extends DeviceSettings {
-  public automaticPoints: TemperatureSettings[] = [];
   public automaticMode: boolean = true;
   public automaticFallBackTemperatur: number = 20;
   public useOwnTemperatur: boolean = true;
@@ -40,7 +37,6 @@ export class HeaterSettings extends DeviceSettings {
   public pidForcedMinimum: number = 1;
 
   public fromPartialObject(data: Partial<HeaterSettings>): void {
-    this.automaticPoints = data.automaticPoints ?? this.automaticPoints;
     this.automaticMode = data.automaticMode ?? this.automaticMode;
     this.automaticFallBackTemperatur = data.automaticFallBackTemperatur ?? this.automaticFallBackTemperatur;
     this.useOwnTemperatur = data.useOwnTemperatur ?? this.useOwnTemperatur;
@@ -55,24 +51,5 @@ export class HeaterSettings extends DeviceSettings {
 
   protected toJSON(): Partial<HeaterSettings> {
     return Utils.jsonFilter(this);
-  }
-
-  public deleteAutomaticPoint(name: string, device: iIdHolder): void {
-    const currentIndex = this.automaticPoints.findIndex((v) => v.name === name);
-    if (currentIndex === -1) {
-      return;
-    }
-    this.automaticPoints.splice(currentIndex, 1);
-    this.persist(device);
-  }
-
-  public setAutomaticPoint(setting: TemperatureSettings, device: iIdHolder): void {
-    const currentIndex = this.automaticPoints.findIndex((v) => v.name === setting.name);
-    if (currentIndex === -1) {
-      this.automaticPoints.push(setting);
-    } else {
-      this.automaticPoints[currentIndex] = setting;
-    }
-    this.persist(device);
   }
 }
