@@ -102,7 +102,7 @@ export class Trilateration {
         possibleWinner.push(coordinate);
         continue;
       }
-      if (possibleWinner[0].rating !== coordinate.matchCount) {
+      if (possibleWinner[0].rating > coordinate.rating || possibleWinner[0].matchCount > coordinate.matchCount) {
         break;
       }
       possibleWinner.push(coordinate);

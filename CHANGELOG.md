@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix minor mistake in Trilateration best match calculation
+
 ## 2.15.4 (2023-10-01)
 
 * (theimo1221) Add some more logging to TrilaterationPoint.fillMap
