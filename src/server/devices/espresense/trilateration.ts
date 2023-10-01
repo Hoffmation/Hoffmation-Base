@@ -6,16 +6,16 @@ import { RoomBase } from '../../../models';
 
 export class Trilateration {
   public static readonly basePoints: TrilaterationBasePoint[] = [];
-  private static _possiblePoints: TrilaterationPoint[] = [];
+  public static possiblePoints: TrilaterationPoint[] = [];
 
   public static addRoom(room: RoomBase, startPoint: TrilaterationPoint, endPoint: TrilaterationPoint): void {
     const points = TrilaterationPoint.getPointsInRange(startPoint, endPoint, room.roomName);
-    this._possiblePoints.push(...points);
+    this.possiblePoints.push(...points);
   }
 
   public static initialize(): void {
     for (const basePoint of this.basePoints) {
-      basePoint.fillMap(this._possiblePoints);
+      basePoint.fillMap(this.possiblePoints);
     }
   }
 
@@ -26,7 +26,7 @@ export class Trilateration {
     }
     const bestMatches: TrilaterationPoint[] = [];
     for (const bestRatedCoordinate of bestRatedCoordinates) {
-      const point = this._possiblePoints.find((point) => point.coordinateName === bestRatedCoordinate.coordinateName);
+      const point = this.possiblePoints.find((point) => point.coordinateName === bestRatedCoordinate.coordinateName);
       if (point === undefined) {
         continue;
       }

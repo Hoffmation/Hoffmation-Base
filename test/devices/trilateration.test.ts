@@ -16,7 +16,8 @@ describe('Trilateration', () => {
   Trilateration.basePoints.push(new TrilaterationBasePoint(10, 0, 5, 'ground-floorRightBottom', 15));
   Trilateration.basePoints.push(new TrilaterationBasePoint(4, 4, 10, 'first-floorLeftBottom', 15));
   Trilateration.basePoints.push(new TrilaterationBasePoint(9, 7, 8, 'first-floorRightTop', 15));
-  Trilateration.initialize(trilaterationExamplePoints);
+  Trilateration.possiblePoints = trilaterationExamplePoints;
+  Trilateration.initialize();
 
   it('Should find a specific room', () => {
     const distances: TrilaterationPointDistance[] = [];
