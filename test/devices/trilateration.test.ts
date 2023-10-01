@@ -1,6 +1,14 @@
-import { Trilateration, TrilaterationBasePoint, TrilaterationPoint, TrilaterationPointDistance } from '../../src';
+import {
+  Trilateration,
+  TrilaterationBasePoint,
+  TrilaterationPoint,
+  TrilaterationPointDistance,
+  Utils,
+} from '../../src';
 
 describe('Trilateration', () => {
+  Utils.testInitializeServices();
+  jest.setTimeout(10000);
   const trilaterationExamplePoints: TrilaterationPoint[] = [];
 
   for (let x = 0; x < 10; x = x + 0.5) {
