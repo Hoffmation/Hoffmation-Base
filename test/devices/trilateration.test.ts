@@ -3,9 +3,9 @@ import { Trilateration, TrilaterationBasePoint, TrilaterationPoint, Trilateratio
 describe('Trilateration', () => {
   const trilaterationExamplePoints: TrilaterationPoint[] = [];
 
-  for (let x = 0; x < 10; x++) {
-    for (let y = 0; y < 10; y++) {
-      for (let z = 0; z < 10; z++) {
+  for (let x = 0; x < 10; x = x + 0.5) {
+    for (let y = 0; y < 10; y = y + 0.5) {
+      for (let z = 0; z < 10; z = z + 0.5) {
         addExamplePoint(z, x, y);
       }
     }

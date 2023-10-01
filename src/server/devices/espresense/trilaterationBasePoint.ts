@@ -1,6 +1,8 @@
 import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
 
 import { TrilaterationPoint } from './trilaterationPoint';
+import { ServerLogService } from '../../services';
+import { LogLevel } from '../../../models';
 
 export class TrilaterationBasePoint {
   public readonly ownPoint: TrilaterationPoint;
@@ -38,16 +40,18 @@ export class TrilaterationBasePoint {
   }
 
   public fillMap(points: TrilaterationPoint[]): void {
+    let count: number = 0;
     for (const point of points) {
       const distance: number = point.getDot5Distance(this.ownPoint);
 
       if (distance > this._maximumDistance) {
         continue;
       }
-      if (!this.precalculatedDistances.has(distance)) {
-        this.precalculatedDistances.set(distance, []);
-      }
-      this.precalculatedDistances.get(distance)?.push(point.coordinateName);
+      count++;
+      const distancePoints = this.precalculatedDistances.get(distance) ?? [];
+      distancePoints.push(point.coordinateName);
+      this.precalculatedDistances.set(distance, distancePoints);
     }
+    ServerLogService.writeLog(LogLevel.Info, `Filled ${count} distances for Trilateration in room: ${this.roomName}`);
   }
 }

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add some more logging to TrilaterationPoint.fillMap
+
 ## 2.15.3 (2023-10-01)
 
 * (theimo1221) Correct Trilateration Initialization position
