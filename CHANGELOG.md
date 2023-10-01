@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Correct Trilateration Initialization position
+
 ## 2.15.2 (2023-10-01)
 
 * (theimo1221) Some more tests and additional logging for trilateration Room Adding

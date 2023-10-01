@@ -80,12 +80,12 @@ export class HoffmationBase {
 
   public static initializePostRoomCreationBeforeIoBroker(): void {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post Room Creation`);
-    Trilateration.initialize();
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post Room Creation finished`);
   }
 
   public static initializePostIoBroker(defaultMuellSonos?: iSpeaker): void {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations`);
+    Trilateration.initialize();
     if (SettingsService.TelegramActive) TelegramCommands.initialize();
 
     if (SettingsService.settings.sonos?.active) {
