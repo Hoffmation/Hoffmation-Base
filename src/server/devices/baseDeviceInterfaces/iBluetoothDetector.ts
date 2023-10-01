@@ -1,7 +1,9 @@
 import { iRoomDevice } from './iRoomDevice';
-import { ProximityCallback } from '../espresense';
+import { ProximityCallback, TrilaterationBasePoint } from '../espresense';
 
 export interface iBluetoothDetector extends iRoomDevice {
+  position?: TrilaterationBasePoint;
+
   /**
    * Add callback to react on a specified device entering/leaving a given zone
    * @param cb

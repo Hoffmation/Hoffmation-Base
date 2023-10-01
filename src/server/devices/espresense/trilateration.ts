@@ -14,22 +14,27 @@ export class Trilateration {
     }
   }
 
-  public static getBestMatch(distances: TrilaterationPointDistance[]): TrilaterationPoint | undefined {
-    const bestRatedCoordinate = this.getBestRatedCoordinate(distances);
-    if (bestRatedCoordinate === undefined) {
-      return undefined;
+  public static getBestMatches(distances: TrilaterationPointDistance[]): TrilaterationPoint[] {
+    const bestRatedCoordinates: TrilaterationRatedCoordinate[] = this.getBestRatedCoordinates(distances);
+    if (bestRatedCoordinates.length === 0) {
+      return [];
     }
-    return this._possiblePoints.find((point) => point.coordinateName === bestRatedCoordinate?.coordinateName);
+    const bestMatches: TrilaterationPoint[] = [];
+    for (const bestRatedCoordinate of bestRatedCoordinates) {
+      const point = this._possiblePoints.find((point) => point.coordinateName === bestRatedCoordinate.coordinateName);
+      if (point === undefined) {
+        continue;
+      }
+      bestMatches.push(point);
+    }
+    return bestMatches;
   }
 
-  private static getBestRatedCoordinate(
-    distances: TrilaterationPointDistance[],
-  ): TrilaterationRatedCoordinate | undefined {
+  private static getBestRatedCoordinates(distances: TrilaterationPointDistance[]): TrilaterationRatedCoordinate[] {
     const allRatedCoordinates: Map<string, TrilaterationRatedCoordinate> = new Map<
       string,
       TrilaterationRatedCoordinate
     >();
-    let bestRatedCoordinate: TrilaterationRatedCoordinate | undefined;
     for (const dist of distances) {
       const point = this.basePoints.find((basePoint) => basePoint.ownPoint.coordinateName === dist.pointName);
       if (point === undefined) {
@@ -45,25 +50,49 @@ export class Trilateration {
 
         existingCoordinate.rating += ratedCoordinate.rating;
         existingCoordinate.matchCount++;
-        if (
-          bestRatedCoordinate === undefined ||
-          bestRatedCoordinate.matchCount < existingCoordinate.matchCount ||
-          (bestRatedCoordinate.matchCount === existingCoordinate.matchCount &&
-            bestRatedCoordinate.rating < existingCoordinate.rating)
-        ) {
-          bestRatedCoordinate = existingCoordinate;
-        }
       }
     }
-    if (bestRatedCoordinate === undefined) {
-      // Falls es keine Übereinstimmung gibt, wird die höchste Bewertung zurückgegeben
-      return Array.from(allRatedCoordinates.values()).sort((a, b) => b.rating - a.rating)[0];
-    }
-    return bestRatedCoordinate;
+    return this.getBestRatedCoordinatesFromMap(allRatedCoordinates);
   }
 
   public static checkRoom(distances: TrilaterationPointDistance[]): string | undefined {
-    const bestMatch = this.getBestMatch(distances);
-    return bestMatch?.roomName;
+    const bestMatches = this.getBestMatches(distances);
+    if (bestMatches.length === 0) {
+      return undefined;
+    }
+    if (bestMatches.length === 1) {
+      return bestMatches[0].roomName;
+    }
+    // As we have multiple possible winners, we need to check how often which room occurs
+    const roomCount: Map<string, number> = new Map<string, number>();
+    for (const point of bestMatches) {
+      const room = point.roomName;
+      const existingCount = roomCount.get(room) ?? 0;
+      roomCount.set(room, existingCount + 1);
+    }
+    return Array.from(roomCount.entries()).sort((a, b) => b[1] - a[1])[0][0];
+  }
+
+  private static getBestRatedCoordinatesFromMap(
+    allRatedCoordinates: Map<string, TrilaterationRatedCoordinate>,
+  ): TrilaterationRatedCoordinate[] {
+    const sortedCoordinates = Array.from(allRatedCoordinates.values()).sort((a, b) => {
+      if (a.matchCount !== b.matchCount) {
+        return b.matchCount - a.matchCount;
+      }
+      return b.rating - a.rating;
+    });
+    const possibleWinner: TrilaterationRatedCoordinate[] = [];
+    for (const coordinate of sortedCoordinates) {
+      if (possibleWinner.length === 0) {
+        possibleWinner.push(coordinate);
+        continue;
+      }
+      if (possibleWinner[0].rating !== coordinate.matchCount) {
+        break;
+      }
+      possibleWinner.push(coordinate);
+    }
+    return possibleWinner;
   }
 }

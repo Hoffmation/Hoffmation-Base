@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add Functions for trilateration and distance calculation
+* (theimo1221) Add Trilateration to espresense and detectedBluetoothDevice
 
 ## 2.14.1 (2023-09-28)
 

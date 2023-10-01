@@ -8,6 +8,8 @@ import { API, LogDebugType, ServerLogService, SettingsService, Utils } from '../
 import { Devices } from '../devices';
 import { TrackedDistanceData } from './trackedDistanceData';
 import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
+import { Trilateration } from './trilateration';
+import { TrilaterationPointDistance } from './trilaterationPointDistance';
 
 export class DetectedBluetoothDevice implements iBaseDevice {
   public settings: undefined = undefined;
@@ -15,8 +17,12 @@ export class DetectedBluetoothDevice implements iBaseDevice {
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.trackableDevice];
   public deviceType: DeviceType = DeviceType.TrackableDevice;
   public info: DeviceInfo = new DeviceInfo();
+  public lastRoom: string | undefined = undefined;
 
-  constructor(public id: string, settings?: iBluetoothTrackingSettings) {
+  constructor(
+    public id: string,
+    settings?: iBluetoothTrackingSettings,
+  ) {
     if (settings === undefined) {
       return;
     }
@@ -114,5 +120,21 @@ export class DetectedBluetoothDevice implements iBaseDevice {
 
   public loadDeviceSettings(): void {
     // Nothing
+  }
+
+  public guessRoom(): void {
+    const distances: TrilaterationPointDistance[] = [];
+    for (const key of this.distanceMap.keys()) {
+      const tracker = API.getDevice(key) as iBluetoothDetector | undefined;
+      if (tracker === undefined || tracker.position === undefined) {
+        continue;
+      }
+      const distance = this.getDistance(key);
+      if (distance?.distance === undefined) {
+        continue;
+      }
+      distances.push(new TrilaterationPointDistance(tracker.position.ownPoint.coordinateName, distance.distance));
+    }
+    this.lastRoom = Trilateration.checkRoom(distances);
   }
 }

@@ -9,8 +9,11 @@ import { Devices } from '../devices';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
 import { EspresenseCoordinator } from './espresenseCoordinator';
+import { TrilaterationBasePoint } from './trilaterationBasePoint';
+import { Trilateration } from './trilateration';
 
 export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
+  public readonly position: TrilaterationBasePoint;
   public settings: undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.bluetoothDetector];
   public deviceType: DeviceType = DeviceType.Espresense;
@@ -18,7 +21,8 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   private deviceMap: Map<string, DetectedBluetoothDevice> = new Map<string, DetectedBluetoothDevice>();
   private proximityCallback: Map<string, ProximityCallback[]> = new Map<string, ProximityCallback[]>();
 
-  public constructor(name: string, roomName: string) {
+  public constructor(name: string, roomName: string, x: number, y: number, z: number) {
+    this.position = new TrilaterationBasePoint(x, y, z, roomName);
     this.name = name;
     this._info = new DeviceInfo();
     this._info.fullName = `Espresense ${roomName} ${name}`;
@@ -29,6 +33,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     EspresenseCoordinator.addDevice(this, name);
     this.persistDeviceInfo();
     this.loadDeviceSettings();
+    Trilateration.basePoints.push(this.position);
   }
 
   public get customName(): string {
@@ -81,6 +86,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
       dev = this.addDeviceTracking(devName);
     }
     dev.updateDistance(this, data.distance);
+    dev.guessRoom();
     const cbs = this.proximityCallback.get(dev.name);
     if (cbs === undefined) {
       return;
