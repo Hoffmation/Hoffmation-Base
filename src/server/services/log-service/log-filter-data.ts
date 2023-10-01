@@ -10,6 +10,7 @@ export enum LogDebugType {
   SkipUnchangedMovementState,
   DaikinSuccessfullControlInfo,
   EuroHeaterValveLogging,
+  Trilateration,
 }
 
 export class LogFilterData {

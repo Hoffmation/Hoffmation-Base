@@ -8,4 +8,5 @@ export interface iLogSettings {
   debugUnchangedActuator?: boolean;
   debugDaikinSuccessfullControlInfo?: boolean;
   debugEuroHeaterValve?: boolean;
+  debugTrilateration?: boolean;
 }

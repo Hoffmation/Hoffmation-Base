@@ -3,7 +3,7 @@ import { TrilaterationPoint } from './trilaterationPoint';
 import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
 import { LogLevel, RoomBase } from '../../../models';
-import { ServerLogService } from '../../services';
+import { LogDebugType, ServerLogService } from '../../services';
 
 export class Trilateration {
   public static readonly basePoints: TrilaterationBasePoint[] = [];
@@ -31,6 +31,9 @@ export class Trilateration {
   public static getBestMatches(distances: TrilaterationPointDistance[]): TrilaterationPoint[] {
     const bestRatedCoordinates: TrilaterationRatedCoordinate[] = this.getBestRatedCoordinates(distances);
     if (bestRatedCoordinates.length === 0) {
+      ServerLogService.writeLog(LogLevel.Debug, `No best rated coordinates found for ${distances.length} distances.`, {
+        debugType: LogDebugType.Trilateration,
+      });
       return [];
     }
     const bestMatches: TrilaterationPoint[] = [];
@@ -52,6 +55,14 @@ export class Trilateration {
     for (const dist of distances) {
       const point = this.basePoints.find((basePoint) => basePoint.ownPoint.coordinateName === dist.pointName);
       if (point === undefined) {
+        const possiblePoints: string[] = [];
+        for (const basePoint of this.basePoints) {
+          possiblePoints.push(basePoint.ownPoint.coordinateName);
+        }
+        ServerLogService.writeLog(
+          LogLevel.Warn,
+          `Could not find base point for ${dist.pointName}, possible points: ${possiblePoints.join(', ')}`,
+        );
         continue;
       }
       const ratedCoordinates = point.getRatedCoordinates(dist.distance);
@@ -71,6 +82,11 @@ export class Trilateration {
 
   public static checkRoom(distances: TrilaterationPointDistance[]): string | undefined {
     const bestMatches = this.getBestMatches(distances);
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Found ${bestMatches.length} best matches for ${distances.length} distances.`,
+      { debugType: LogDebugType.Trilateration },
+    );
     if (bestMatches.length === 0) {
       return undefined;
     }
@@ -84,6 +100,7 @@ export class Trilateration {
       const existingCount = roomCount.get(room) ?? 0;
       roomCount.set(room, existingCount + 1);
     }
+
     return Array.from(roomCount.entries()).sort((a, b) => b[1] - a[1])[0][0];
   }
 
@@ -95,6 +112,9 @@ export class Trilateration {
         return b.matchCount - a.matchCount;
       }
       return b.rating - a.rating;
+    });
+    ServerLogService.writeLog(LogLevel.Debug, `First sorted coordinate: ${JSON.stringify(sortedCoordinates[0])}`, {
+      debugType: LogDebugType.Trilateration,
     });
     const possibleWinner: TrilaterationRatedCoordinate[] = [];
     for (const coordinate of sortedCoordinates) {

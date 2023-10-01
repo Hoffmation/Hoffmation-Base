@@ -27,7 +27,6 @@ export class TrilaterationPoint {
     public y: number,
     public z: number,
     public roomName: string,
-    public matchPoints: number = 0,
   ) {
     this.coordinateName = `${this.x}-${this.y}-${this.z}`;
   }

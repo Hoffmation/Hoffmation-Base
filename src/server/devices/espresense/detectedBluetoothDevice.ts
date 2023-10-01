@@ -126,7 +126,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
     const distances: TrilaterationPointDistance[] = [];
     for (const key of this.distanceMap.keys()) {
       const tracker = API.getDevice(key) as iBluetoothDetector | undefined;
-      if (tracker === undefined) {
+      if (tracker === undefined || tracker.position === undefined) {
         continue;
       }
       const distance = this.getDistance(key);
@@ -135,6 +135,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       }
       distances.push(new TrilaterationPointDistance(tracker.position.ownPoint.coordinateName, distance.distance));
     }
+    this.log(LogLevel.Debug, `Guessing room from ${distances.length} distance(s).`, LogDebugType.Trilateration);
     this.lastRoom = Trilateration.checkRoom(distances);
   }
 }

@@ -134,6 +134,11 @@ export class ServerLogService {
           return false;
         }
         break;
+      case LogDebugType.Trilateration:
+        if (SettingsService.settings.logSettings?.debugTrilateration === true) {
+          return false;
+        }
+        break;
     }
     return true;
   }

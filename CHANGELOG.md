@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add much more Trilateration Logging
+
 ## 2.15.5 (2023-10-01)
 
 * (theimo1221) Fix minor mistake in Trilateration best match calculation
