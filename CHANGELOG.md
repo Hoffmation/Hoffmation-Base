@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Functions for trilateration and distance calculation
+
 ## 2.14.1 (2023-09-28)
 
 * (theimo1221) Enforce Group-id in group JSON

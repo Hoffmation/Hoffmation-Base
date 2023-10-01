@@ -158,6 +158,12 @@ export class Utils {
     return Math.round(number * factor) / factor;
   }
 
+  public static roundDot5(number: number): number {
+    const x: number = Math.round(number * 10);
+    const roundToClosest5: number = x % 5 >= 2.5 ? Math.floor(x / 5) * 5 + 5 : Math.floor(x / 5) * 5;
+    return roundToClosest5 / 10;
+  }
+
   public static beetweenDays(date: Date, startDay: number, endDay: number): boolean {
     const yearStart = new Date(date.getTime());
     yearStart.setMonth(0, 1);

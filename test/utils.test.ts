@@ -34,4 +34,10 @@ describe('UtilsTest', () => {
     const today = new Date('11/12/2022, 3:0:00 AM');
     expect(Utils.beetweenDays(today, 99, 267)).toBeFalsy();
   });
+  it('rounds Dot5 correctly up', async () => {
+    expect(Utils.roundDot5(4.3)).toBe(4.5);
+  });
+  it('rounds Dot5 correctly down', async () => {
+    expect(Utils.roundDot5(4.2)).toBe(4.0);
+  });
 });

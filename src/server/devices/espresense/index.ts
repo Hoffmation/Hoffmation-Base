@@ -3,3 +3,8 @@ export * from './espresenseCoordinator';
 export * from './espresenseDevice';
 export * from './proximityCallback';
 export * from './trackedDistanceData';
+export * from './trilateration';
+export * from './trilaterationBasePoint';
+export * from './trilaterationRatedCoordinate';
+export * from './trilaterationPoint';
+export * from './trilaterationPointDistance';
