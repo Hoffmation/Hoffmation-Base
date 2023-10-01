@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add flag to detect if a trackedDevice is currently present
+
 ## 2.15.7 (2023-10-01)
 
 * (theimo1221) Further extension of Trilateration logging

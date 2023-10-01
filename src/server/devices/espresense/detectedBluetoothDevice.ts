@@ -18,6 +18,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
   public deviceType: DeviceType = DeviceType.TrackableDevice;
   public info: DeviceInfo = new DeviceInfo();
   public lastRoom: string | undefined = undefined;
+  public present: boolean = false;
 
   constructor(
     public id: string,
@@ -135,6 +136,11 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       }
       distances.push(new TrilaterationPointDistance(tracker.position.ownPoint.coordinateName, distance.distance));
     }
+    if (distances.length === 0) {
+      this.present = false;
+      return; // No distances, no guess
+    }
+    this.present = true;
     this.log(LogLevel.Debug, `Guessing room from ${distances.length} distance(s).`, LogDebugType.Trilateration);
     this.lastRoom = Trilateration.checkRoom(distances);
   }
