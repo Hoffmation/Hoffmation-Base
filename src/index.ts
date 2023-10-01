@@ -74,9 +74,14 @@ export class HoffmationBase {
       ServerLogService.writeLog(LogLevel.Info, `Asus Router settings detected --> initializing`);
       new AsusRouter(SettingsService.settings.asusConfig);
     }
-    Trilateration.initialize();
     TimeCallbackService.init();
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base First Initializations finished`);
+  }
+
+  public static initializePostRoomCreationBeforeIoBroker(): void {
+    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post Room Creation`);
+    Trilateration.initialize();
+    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post Room Creation finished`);
   }
 
   public static initializePostIoBroker(defaultMuellSonos?: iSpeaker): void {

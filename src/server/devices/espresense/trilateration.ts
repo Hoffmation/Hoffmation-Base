@@ -2,7 +2,8 @@ import { TrilaterationBasePoint } from './trilaterationBasePoint';
 import { TrilaterationPoint } from './trilaterationPoint';
 import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
-import { RoomBase } from '../../../models';
+import { LogLevel, RoomBase } from '../../../models';
+import { ServerLogService } from '../../services';
 
 export class Trilateration {
   public static readonly basePoints: TrilaterationBasePoint[] = [];
@@ -14,6 +15,10 @@ export class Trilateration {
   }
 
   public static initialize(): void {
+    ServerLogService.writeLog(
+      LogLevel.Info,
+      `Initializing Trilateration for ${this.basePoints.length} base points, with ${this.possiblePoints.length} possible points.`,
+    );
     for (const basePoint of this.basePoints) {
       basePoint.fillMap(this.possiblePoints);
     }

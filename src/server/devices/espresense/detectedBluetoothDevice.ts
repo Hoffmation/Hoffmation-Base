@@ -126,7 +126,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
     const distances: TrilaterationPointDistance[] = [];
     for (const key of this.distanceMap.keys()) {
       const tracker = API.getDevice(key) as iBluetoothDetector | undefined;
-      if (tracker === undefined || tracker.position === undefined) {
+      if (tracker === undefined) {
         continue;
       }
       const distance = this.getDistance(key);
