@@ -129,7 +129,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       if (tracker === undefined || tracker.position === undefined) {
         continue;
       }
-      const distance = this.getDistance(key);
+      const distance = this.getDistance(key, 60);
       if (distance?.distance === undefined) {
         continue;
       }
