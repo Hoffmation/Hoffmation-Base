@@ -10,9 +10,9 @@ export class TrilaterationPoint {
     if (a.x > b.x || a.y > b.y || a.z > b.z) {
       throw new Error('Room Coordinates are not in order left-front-bottom to right-back-top');
     }
-    for (let x = a.x; x <= b.x; x++) {
-      for (let y = a.y; y <= b.y; y++) {
-        for (let z = a.z; z <= b.z; z++) {
+    for (let x = a.x; x <= b.x; x = x + 0.5) {
+      for (let y = a.y; y <= b.y; y = y + 0.5) {
+        for (let z = a.z; z <= b.z; z = z + 0.5) {
           points.push(new TrilaterationPoint(x, y, z, roomName));
         }
       }

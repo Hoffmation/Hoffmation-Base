@@ -38,6 +38,14 @@ describe('Trilateration', () => {
     expect(result).toBe('First-floorLeftTop');
   });
 
+  it('TrilaterationPoint.getPointsInRange, should generate some points', () => {
+    const a = new TrilaterationPoint(0, 0, 0, 'test');
+    const b = new TrilaterationPoint(5, 5, 2, 'test');
+
+    const result = TrilaterationPoint.getPointsInRange(a, b, 'test');
+    expect(result.length).toBe(605);
+  });
+
   it('Should find a specific room with some deviation', () => {
     const distances: TrilaterationPointDistance[] = [];
     distances.push(new TrilaterationPointDistance('10-10-5', 8.5));

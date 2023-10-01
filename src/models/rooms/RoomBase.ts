@@ -41,7 +41,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
     this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
     RoomService.addToRoomList(this);
-    if (startPoint && endPoint) {
+    if (startPoint !== undefined && endPoint !== undefined) {
       Trilateration.addRoom(this, startPoint, endPoint);
     }
   }

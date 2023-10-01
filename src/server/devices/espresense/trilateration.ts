@@ -11,6 +11,10 @@ export class Trilateration {
 
   public static addRoom(room: RoomBase, startPoint: TrilaterationPoint, endPoint: TrilaterationPoint): void {
     const points = TrilaterationPoint.getPointsInRange(startPoint, endPoint, room.roomName);
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Adding ${points.length} trilateration points for room ${room.roomName} from ${startPoint.coordinateName} to ${endPoint.coordinateName}`,
+    );
     this.possiblePoints.push(...points);
   }
 
