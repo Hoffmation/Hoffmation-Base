@@ -11,6 +11,7 @@
 * (theimo1221) Add Functions for trilateration and distance calculation
 * (theimo1221) Add Trilateration to espresense and detectedBluetoothDevice
 * (theimo1221) Register Rooms in Trilateration
+* (theimo1221) Initialize Trilateration on startup
 
 ## 2.14.1 (2023-09-28)
 

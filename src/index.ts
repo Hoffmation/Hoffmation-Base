@@ -21,6 +21,7 @@ import {
   TelegramService,
   TibberService,
   TimeCallbackService,
+  Trilateration,
   Utils,
   VictronService,
   WeatherService,
@@ -73,6 +74,7 @@ export class HoffmationBase {
       ServerLogService.writeLog(LogLevel.Info, `Asus Router settings detected --> initializing`);
       new AsusRouter(SettingsService.settings.asusConfig);
     }
+    Trilateration.initialize();
     TimeCallbackService.init();
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base First Initializations finished`);
   }

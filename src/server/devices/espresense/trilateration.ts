@@ -13,8 +13,7 @@ export class Trilateration {
     this._possiblePoints.push(...points);
   }
 
-  public static initialize(possiblePoints: TrilaterationPoint[]): void {
-    this._possiblePoints = possiblePoints;
+  public static initialize(): void {
     for (const basePoint of this.basePoints) {
       basePoint.fillMap(this._possiblePoints);
     }
