@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Further extension of Trilateration logging
+
 ## 2.15.6 (2023-10-01)
 
 * (theimo1221) Add much more Trilateration Logging

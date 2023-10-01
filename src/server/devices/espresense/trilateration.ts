@@ -66,6 +66,11 @@ export class Trilateration {
         continue;
       }
       const ratedCoordinates = point.getRatedCoordinates(dist.distance);
+      ServerLogService.writeLog(
+        LogLevel.Debug,
+        `Found ${ratedCoordinates.length} rated coordinates for ${dist.pointName} within distance of ${dist.distance}m`,
+        { debugType: LogDebugType.Trilateration },
+      );
       for (const ratedCoordinate of ratedCoordinates) {
         const existingCoordinate = allRatedCoordinates.get(ratedCoordinate.coordinateName);
         if (existingCoordinate === undefined) {
