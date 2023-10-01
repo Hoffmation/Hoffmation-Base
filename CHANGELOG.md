@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.15.4 (2023-10-01)
 
 * (theimo1221) Add some more logging to TrilaterationPoint.fillMap
 
