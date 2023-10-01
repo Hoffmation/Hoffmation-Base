@@ -2,10 +2,16 @@ import { TrilaterationBasePoint } from './trilaterationBasePoint';
 import { TrilaterationPoint } from './trilaterationPoint';
 import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
+import { RoomBase } from '../../../models';
 
 export class Trilateration {
   public static readonly basePoints: TrilaterationBasePoint[] = [];
   private static _possiblePoints: TrilaterationPoint[] = [];
+
+  public static addRoom(room: RoomBase, startPoint: TrilaterationPoint, endPoint: TrilaterationPoint): void {
+    const points = TrilaterationPoint.getPointsInRange(startPoint, endPoint, room.roomName);
+    this._possiblePoints.push(...points);
+  }
 
   public static initialize(possiblePoints: TrilaterationPoint[]): void {
     this._possiblePoints = possiblePoints;

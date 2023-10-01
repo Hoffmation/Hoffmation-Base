@@ -13,6 +13,8 @@ import {
   SpeakerGroup,
   TasterGroup,
   TimeCallbackService,
+  Trilateration,
+  TrilaterationPoint,
   Utils,
   WaterGroup,
   WindowGroup,
@@ -33,10 +35,15 @@ export class RoomBase implements iRoomBase, iIdHolder {
     public groupMap: Map<GroupType, BaseGroup>,
     roomName: string,
     etage: number = 99,
+    startPoint?: TrilaterationPoint,
+    endPoint?: TrilaterationPoint,
   ) {
     this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
     RoomService.addToRoomList(this);
+    if (startPoint && endPoint) {
+      Trilateration.addRoom(this, startPoint, endPoint);
+    }
   }
 
   public get sonnenUntergangLichtCallback(): TimeCallback | undefined {
