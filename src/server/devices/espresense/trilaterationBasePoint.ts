@@ -1,7 +1,7 @@
 import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
 
 import { TrilaterationPoint } from './trilaterationPoint';
-import { ServerLogService } from '../../services';
+import { ServerLogService, Utils } from '../../services';
 import { LogLevel } from '../../../models';
 
 export class TrilaterationBasePoint {
@@ -19,14 +19,15 @@ export class TrilaterationBasePoint {
   }
 
   public getRatedCoordinates(distance: number): TrilaterationRatedCoordinate[] {
+    const roundedDistance: number = Utils.roundDot5(distance);
     const result: TrilaterationRatedCoordinate[] = [];
-    this.rateCoordinates(distance, result, 100);
-    this.rateCoordinates(distance - 0.5, result, 30);
-    this.rateCoordinates(distance + 0.5, result, 30);
-    this.rateCoordinates(distance + 1, result, 15);
-    this.rateCoordinates(distance - 1, result, 15);
-    this.rateCoordinates(distance + 1.5, result, 7.5);
-    this.rateCoordinates(distance - 1.5, result, 7.5);
+    this.rateCoordinates(roundedDistance, result, 100);
+    this.rateCoordinates(roundedDistance - 0.5, result, 30);
+    this.rateCoordinates(roundedDistance + 0.5, result, 30);
+    this.rateCoordinates(roundedDistance + 1, result, 15);
+    this.rateCoordinates(roundedDistance - 1, result, 15);
+    this.rateCoordinates(roundedDistance + 1.5, result, 7.5);
+    this.rateCoordinates(roundedDistance - 1.5, result, 7.5);
     return result;
   }
 

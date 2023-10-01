@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Further extension of Trilateration logging
+* (theimo1221) Add vital .5 rounding within trilateration calculation
 
 ## 2.15.6 (2023-10-01)
 
