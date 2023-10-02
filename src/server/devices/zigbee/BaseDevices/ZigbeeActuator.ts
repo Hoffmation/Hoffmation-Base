@@ -61,6 +61,17 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporar
       return;
     }
 
+    let dontBlock: boolean = false;
+    if (
+      this.settings.resetToAutomaticOnForceOffAfterForceOn &&
+      !pValue &&
+      this.blockAutomationHandler.automaticBlockActive
+    ) {
+      dontBlock = true;
+      this.log(LogLevel.Debug, `Reset Automatic Block as we are turning off manually after a force on`);
+      this.blockAutomationHandler.liftAutomaticBlock();
+    }
+
     if (!force && this.blockAutomationHandler.automaticBlockActive) {
       this.log(
         LogLevel.Debug,
@@ -86,7 +97,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporar
       this.log(LogLevel.Error, `Switching actuator resulted in error: ${err}`);
     });
     this.queuedValue = pValue;
-    if (timeout > -1) {
+    if (timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
   }

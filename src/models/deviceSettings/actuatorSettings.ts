@@ -10,6 +10,14 @@ export class ActuatorSettings extends DeviceSettings {
    * @type {boolean}
    */
   public isStromStoss: boolean = false;
+
+  /**
+   * Whether after manually turning off a previously manually turned on device, fall back to automatic mode.
+   * Instead of switching to a forced off state.
+   * @type {boolean}
+   */
+  public resetToAutomaticOnForceOffAfterForceOn: boolean = true;
+
   /**
    * If this is an Actuator controling a time based relais,
    * this indicates the time after which we retrigger the relais.
@@ -23,6 +31,8 @@ export class ActuatorSettings extends DeviceSettings {
     this.nightOn = data.nightOn ?? this.nightOn;
     this.isStromStoss = data.isStromStoss ?? this.isStromStoss;
     this.stromStossResendTime = data.stromStossResendTime ?? this.stromStossResendTime;
+    this.resetToAutomaticOnForceOffAfterForceOn =
+      data.resetToAutomaticOnForceOffAfterForceOn ?? this.resetToAutomaticOnForceOffAfterForceOn;
     super.fromPartialObject(data);
   }
 

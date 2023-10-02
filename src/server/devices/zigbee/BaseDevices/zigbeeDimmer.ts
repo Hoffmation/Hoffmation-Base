@@ -133,6 +133,17 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       });
     }
 
+    let dontBlock: boolean = false;
+    if (
+      this.settings.resetToAutomaticOnForceOffAfterForceOn &&
+      !pValue &&
+      this.blockAutomationHandler.automaticBlockActive
+    ) {
+      dontBlock = true;
+      this.log(LogLevel.Debug, `Reset Automatic Block as we are turning off manually after a force on`);
+      this.blockAutomationHandler.liftAutomaticBlock();
+    }
+
     if (!force && this.blockAutomationHandler.automaticBlockActive) {
       this.log(
         LogLevel.Debug,
@@ -171,7 +182,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
         this.setState(this._stateIdBrightness, brightness);
       }
     }
-    if (timeout > -1) {
+    if (timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
   }
