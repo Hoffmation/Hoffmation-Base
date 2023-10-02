@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.15.8 (2023-10-02)
 
 * (theimo1221) Add flag to detect if a trackedDevice is currently present
 * (theimo1221) Add option to fall back to automatic mode after manual turn-on followed by a manual turn-off
