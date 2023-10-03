@@ -135,6 +135,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
 
     let dontBlock: boolean = false;
     if (
+      force &&
       this.settings.resetToAutomaticOnForceOffAfterForceOn &&
       !pValue &&
       this.blockAutomationHandler.automaticBlockActive

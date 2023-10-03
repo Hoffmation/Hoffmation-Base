@@ -63,6 +63,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporar
 
     let dontBlock: boolean = false;
     if (
+      force &&
       this.settings.resetToAutomaticOnForceOffAfterForceOn &&
       !pValue &&
       this.blockAutomationHandler.automaticBlockActive
