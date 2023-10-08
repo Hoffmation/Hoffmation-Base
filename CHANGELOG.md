@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Shelly-Trv should respect HeatGroupSetting.automaticMode = false
+* (theimo1221) Update packages
 
 ## 2.16.0 (2023-10-08)
 
