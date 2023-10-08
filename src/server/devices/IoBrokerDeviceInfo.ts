@@ -12,6 +12,18 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
   public valueName?: string;
   public devConf: deviceConfig;
 
+  public static idSplitter(id: string): string[] {
+    const split = id.split('.');
+    if (split[2] !== undefined) {
+      split[2] = this.replaceInvalidIdChars(split[2]);
+    }
+    return split;
+  }
+
+  private static replaceInvalidIdChars(idPart: string): string {
+    return idPart.replace(/[#\-]/g, '_');
+  }
+
   /**
    * Extracts the relevant infos from the passed deviceConfig and combines them in a new Info object
    * @param {deviceConfig} pDevConf The device Config based on the extracted devices.json from ioBroker
@@ -23,7 +35,7 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
     this.devConf = pDevConf;
     this.type = pDevConf.type as 'device' | 'channel' | 'state';
 
-    const idSplit: string[] = pDevConf._id.split('.');
+    const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pDevConf._id);
     this.fullID = pDevConf._id;
     this.devID = idSplit[2];
     this.fullName = pDevConf.common.name;

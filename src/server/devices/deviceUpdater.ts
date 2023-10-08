@@ -5,6 +5,7 @@ import { LogLevel } from '../../models';
 import { Devices } from './devices';
 import { iBaseDevice } from './baseDeviceInterfaces';
 import { MqttCoordinator } from './mqtt';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public devices: Devices;
@@ -14,7 +15,7 @@ export class DeviceUpdater implements IDeviceUpdater {
   }
 
   public updateObject(pId: string, pObj: ioBroker.Object): void {
-    const idSplit: string[] = pId.split('.');
+    const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pId);
     if (idSplit.length < 2) return;
 
     if (idSplit[0] === Devices.IDENTIFIER_HOMEMATIC) {
@@ -27,7 +28,7 @@ export class DeviceUpdater implements IDeviceUpdater {
       // Ignore null states
       return;
     }
-    const idSplit: string[] = id.split('.');
+    const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(id);
     if (idSplit.length < 2) return;
 
     if (idSplit[0] == 'mqtt') {

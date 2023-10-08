@@ -10,6 +10,7 @@
 
 * (theimo1221) Shelly-Trv should respect HeatGroupSetting.automaticMode = false
 * (theimo1221) Update packages
+* (theimo1221) Add proper handling for ioBroker Devices with some invalid chars within 3rd Id Block
 
 ## 2.16.0 (2023-10-08)
 
