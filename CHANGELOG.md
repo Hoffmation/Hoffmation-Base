@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.15.10 (2023-10-08)
 
 * (theimo1221) Add option to not send commands to unavailable Zigbee Devices
 
