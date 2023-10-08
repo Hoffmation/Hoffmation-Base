@@ -7,6 +7,7 @@ export * from './hmIPDevices/index';
 export * from './jsObject/index';
 export * from './models/index';
 export * from './scene/index';
+export * from './shelly/index';
 export * from './zigbee/index';
 export * from './device-cluster';
 export * from './device-cluster-type';

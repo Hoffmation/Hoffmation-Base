@@ -51,10 +51,12 @@ import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
 import { Dachs } from './dachs';
 import { iConfig } from '../config';
+import { ShellyDevice, ShellyTrv } from './shelly';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
   public static IDENTIFIER_JS: string = 'javascript';
+  public static IDENTIFIER_Shelly: string = 'shelly';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
   public static IDENTIFIER_WLED: string = 'wled';
   public static alLDevices: { [id: string]: iBaseDevice } = {};
@@ -91,6 +93,8 @@ export class Devices {
         Devices.processZigbeeDevice(cDevConf);
       } else if (cName.indexOf('00-WLED') === 0) {
         Devices.processWledDevice(cDevConf);
+      } else if (cName.indexOf('00-Shelly') === 0) {
+        Devices.processShellyDevice(cDevConf);
       } else if (
         cName.indexOf('00-EnergyManager') === 0 &&
         cDevConf.type !== 'folder' &&
@@ -103,6 +107,7 @@ export class Devices {
 
     HmIPDevice.checkMissing();
     ZigbeeDevice.checkMissing();
+    ShellyDevice.checkMissing();
   }
 
   public static midnightReset(): void {
@@ -142,6 +147,31 @@ export class Devices {
       result.push(`${data[i].amount}\t${data[i].name}`);
     }
     return result.join('\n');
+  }
+
+  private static processShellyDevice(cDevConf: deviceConfig) {
+    const shellyInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const fullName: string = `${Devices.IDENTIFIER_Shelly}-${shellyInfo.devID}`;
+    shellyInfo.allDevicesKey = fullName;
+
+    if (typeof Devices.alLDevices[fullName] !== 'undefined') {
+      return;
+    }
+
+    ServerLogService.writeLog(
+      LogLevel.Trace,
+      `Shelly ${shellyInfo.devID} with Type "${shellyInfo.deviceType}" doesn't exists --> create it`,
+    );
+    let d: ShellyDevice;
+    switch (shellyInfo.deviceType) {
+      case 'Trv':
+        d = new ShellyTrv(shellyInfo);
+        break;
+      default:
+        ServerLogService.writeLog(LogLevel.Warn, `No shelly Device Type for ${shellyInfo.deviceType} defined`);
+        d = new ShellyDevice(shellyInfo, DeviceType.unknown);
+    }
+    Devices.alLDevices[fullName] = d;
   }
 
   private static processZigbeeDevice(cDevConf: deviceConfig) {
