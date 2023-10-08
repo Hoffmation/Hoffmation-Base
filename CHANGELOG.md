@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Shelly-Trv should respect HeatGroupSetting.automaticMode = false
+
 ## 2.16.0 (2023-10-08)
 
 * (theimo1221) Add Shelly device handling

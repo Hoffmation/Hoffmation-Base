@@ -169,13 +169,23 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
     }
-    const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
-    if (!this.settings.automaticMode || this.seasonTurnOff || heatGroupSettings?.automaticMode === false) {
+
+    if (this.seasonTurnOff) {
       return;
     }
 
     if (!this.settings.useOwnTemperatur && !this.settings.controlByPid) {
       this.setExternalTemperatureEnabled(true);
+    }
+
+    const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
+    if (heatGroupSettings?.automaticMode == false) {
+      this.desiredTemperature = heatGroupSettings.manualTemperature;
+      return;
+    }
+
+    if (!this.settings.automaticMode) {
+      return;
     }
 
     const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
@@ -213,7 +223,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     Utils.dbo?.persistHeater(this);
   }
 
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     const fullId = idSplit.join('.');
     switch (fullId) {
       case this._valvePosId:
@@ -244,7 +254,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
         }
         break;
     }
-    super.update(idSplit, state, initial, pOverride);
+    super.update(idSplit, state, initial, true);
   }
 
   protected getNextPidLevel(): number {
