@@ -19,6 +19,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeEuroHeater);
+    this._dontSendOnUnavailable = true;
     this._setPointTemperaturID = `${this.info.fullID}.heating_setpnt_current`;
     this._setLocalTempCalibrationId = `${this.info.fullID}.local_temp_calibration`;
     this._setModeId = `${this.info.fullID}.spz_trv_mode`;

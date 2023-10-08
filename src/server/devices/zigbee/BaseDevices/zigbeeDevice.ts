@@ -6,6 +6,7 @@ import { iDisposable, Utils } from '../../../services';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   protected _available: boolean = false;
+  protected _dontSendOnUnavailable: boolean = false;
   private readonly _deviceQueryId: string;
 
   public get available(): boolean {
@@ -92,5 +93,19 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
 
   public persistZigbeeDevice(): void {
     Utils.dbo?.persistZigbeeDevice(this);
+  }
+
+  protected override setState(
+    pointId: string,
+    state: string | number | boolean | ioBroker.State | ioBroker.SettableState | null,
+    onSuccess: (() => void) | undefined = undefined,
+    onError: ((error: Error) => void) | undefined = undefined,
+  ): void {
+    if (this._dontSendOnUnavailable && !this._available) {
+      this.log(LogLevel.Warn, `Device unavailable --> Not changing ${pointId} to ${state}`);
+      return;
+    }
+
+    super.setState(pointId, state, onSuccess, onError);
   }
 }
