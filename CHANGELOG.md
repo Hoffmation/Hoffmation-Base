@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Minor corrections to Shelly Trv State Id's
+
 ## 2.16.1 (2023-10-08)
 
 * (theimo1221) Shelly-Trv should respect HeatGroupSetting.automaticMode = false

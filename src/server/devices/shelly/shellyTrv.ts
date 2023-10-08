@@ -67,8 +67,8 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this._setAutomaticModeId = `${this.info.fullID}.tmp.automaticTemperatureControl`;
     this._setExternalTempId = `${this.info.fullID}.ext.temperature`;
     this._setEnableExternalTempId = `${this.info.fullID}.ext.enabled`;
-    this._setPointTemperaturID = `${this.info.fullID}.tmp.temperatureC`;
-    this._temperatureId = `${this.info.fullID}.tmp.valvePosition`;
+    this._setPointTemperaturID = `${this.info.fullID}.tmp.shelly.temperatureTargetC`;
+    this._temperatureId = `${this.info.fullID}.tmp..temperatureC`;
     this._valvePosId = `${this.info.fullID}.tmp.valvePosition`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(
