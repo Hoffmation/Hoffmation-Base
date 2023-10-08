@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.16.0 (2023-10-08)
 
 * (theimo1221) Add Shelly device handling
 * (theimo1221) Add first Shelly Device (Shelly TRV)
