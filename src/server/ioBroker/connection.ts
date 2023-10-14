@@ -27,7 +27,13 @@ export class IOBrokerConnection implements iDisposable {
   private _authInfo: IoBrokerAuthInfo = new IoBrokerAuthInfo();
   private _authRunning: boolean = false;
   private _cmdData: unknown;
-  private _cmdQueue?: Array<{ func: string; args: IArguments }> = new Array<{ func: string; args: IArguments }>();
+  private _cmdQueue?: Array<{
+    func: string;
+    args: IArguments;
+  }> = new Array<{
+    func: string;
+    args: IArguments;
+  }>();
   private _connCallbacks: ConnectionCallbacks = new ConnectionCallbacks();
   private _cmdInstance: string = '';
   private _countDown: number = 0;
@@ -361,19 +367,13 @@ export class IOBrokerConnection implements iDisposable {
     return this._isExecutedInBrowser;
   }
 
-  private _enums?: {
-    [groupName: string]: Record<string, ioBroker.Enum>;
-  }; // used if _useStorage === true
+  private _enums?: Record<string, ioBroker.EnumObject>; // used if _useStorage === true
 
   /**
    * Getter enums
    * @return {unknown}
    */
-  public get enums():
-    | {
-        [groupName: string]: Record<string, ioBroker.Enum>;
-      }
-    | undefined {
+  public get enums(): Record<string, ioBroker.EnumObject> | undefined {
     return this._enums;
   }
 
@@ -381,13 +381,7 @@ export class IOBrokerConnection implements iDisposable {
    * Setter enums
    * @param {unknown} value
    */
-  public set enums(
-    value:
-      | {
-          [groupName: string]: Record<string, ioBroker.Enum>;
-        }
-      | undefined,
-  ) {
+  public set enums(value: Record<string, ioBroker.EnumObject> | undefined) {
     this._enums = value;
   }
 
@@ -916,17 +910,22 @@ export class IOBrokerConnection implements iDisposable {
         'system',
         'enum',
         { startkey: 'enum.', endkey: 'enum.\u9999' },
-        (err: Error, res: { rows: ioBroker.GetObjectViewItem<ioBroker.Object>[] }) => {
+        (
+          err: Error,
+          res: {
+            rows: ioBroker.GetObjectViewItem<ioBroker.Object>[];
+          },
+        ) => {
           if (err) {
             callback(err);
             return;
           }
-          const enums: Record<string, ioBroker.Object> = {};
+          const enums: Record<string, ioBroker.EnumObject> = {};
           for (const row of res.rows) {
             const currentId = row.id;
             if (row.value !== null) {
               data[currentId] = row.value;
-              enums[currentId] = row.value;
+              enums[currentId] = row.value as ioBroker.EnumObject;
             }
           }
 
@@ -936,7 +935,12 @@ export class IOBrokerConnection implements iDisposable {
             'system',
             'instance',
             { startkey: 'system.adapter.', endkey: 'system.adapter.\u9999' },
-            (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
+            (
+              err: Error,
+              res: {
+                rows: ioBroker.GetObjectViewItem<any>[];
+              },
+            ) => {
               if (err) {
                 callback(err);
                 return;
@@ -961,7 +965,12 @@ export class IOBrokerConnection implements iDisposable {
                 'system',
                 'channel',
                 { startkey: '', endkey: '\u9999' },
-                (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
+                (
+                  err: Error,
+                  res: {
+                    rows: ioBroker.GetObjectViewItem<any>[];
+                  },
+                ) => {
                   if (err) {
                     callback(err);
                     return;
@@ -979,7 +988,12 @@ export class IOBrokerConnection implements iDisposable {
                     'system',
                     'device',
                     { startkey: '', endkey: '\u9999' },
-                    (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
+                    (
+                      err: Error,
+                      res: {
+                        rows: ioBroker.GetObjectViewItem<any>[];
+                      },
+                    ) => {
                       if (err) {
                         callback(err);
                         return;
@@ -1054,7 +1068,12 @@ export class IOBrokerConnection implements iDisposable {
       'system',
       'device',
       { startkey: id + '.', endkey: id + '.\u9999' },
-      (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
+      (
+        err: Error,
+        res: {
+          rows: ioBroker.GetObjectViewItem<any>[];
+        },
+      ) => {
         if (err) {
           callback(err);
           return;
@@ -1071,7 +1090,12 @@ export class IOBrokerConnection implements iDisposable {
           'system',
           'channel',
           { startkey: id + '.', endkey: id + '.\u9999' },
-          (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
+          (
+            err: Error,
+            res: {
+              rows: ioBroker.GetObjectViewItem<any>[];
+            },
+          ) => {
             if (err) {
               callback(err);
               return;
@@ -1089,7 +1113,12 @@ export class IOBrokerConnection implements iDisposable {
               'system',
               'state',
               { startkey: id + '.', endkey: id + '.\u9999' },
-              (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
+              (
+                err: Error,
+                res: {
+                  rows: ioBroker.GetObjectViewItem<any>[];
+                },
+              ) => {
                 if (err) {
                   callback(err);
                   return;
@@ -1186,51 +1215,6 @@ export class IOBrokerConnection implements iDisposable {
       }
       return callback(null, obj);
     });
-  }
-
-  public getEnums(enumName: string, useCache: boolean, callback: ioBroker.GetEnumsCallback): void {
-    // If cache used
-    if (this._useStorage && useCache) {
-      if (typeof storage !== 'undefined') {
-        // @ts-ignore
-        const enums: { [id: string]: ioBroker.Enum } = this._enums || storage.get('enums');
-        if (enums) return callback(null, enums);
-      } else if (this._enums) {
-        return callback(null, this._enums);
-      }
-    }
-
-    if (this._type === 'local') {
-      return callback(null, {});
-    }
-
-    enumName = enumName ? enumName + '.' : '';
-
-    // Read all enums
-    this._socket.emit(
-      'getObjectView',
-      'system',
-      'enum',
-      { startkey: 'enum.' + enumName, endkey: 'enum.' + enumName + '\u9999' },
-      (err: Error, res: { rows: ioBroker.GetObjectViewItem<any>[] }) => {
-        if (err) {
-          callback(err);
-          return;
-        }
-        const enums: Record<string, ioBroker.Object> = {};
-        for (const row of res.rows) {
-          if (row.value !== null) {
-            enums[row.id] = row.value;
-          }
-        }
-
-        if (this._useStorage && typeof storage !== 'undefined') {
-          // @ts-ignore
-          storage.set('enums', enums);
-        }
-        callback(null, enums);
-      },
-    );
   }
 
   // return time when the objects were synchronized
@@ -1370,11 +1354,19 @@ export class IOBrokerConnection implements iDisposable {
   public readProjects(
     callback: (
       err?: NodeJS.ErrnoException | null,
-      objects?: Array<{ name: string; readOnly: undefined | boolean; mode: number }>,
+      objects?: Array<{
+        name: string;
+        readOnly: undefined | boolean;
+        mode: number;
+      }>,
     ) => void,
   ): void {
     this.readDir('/' + this.namespace, (err?: NodeJS.ErrnoException | null, dirs?: ioBroker.ReadDirResult[]) => {
-      const result: Array<{ name: string; readOnly: undefined | boolean; mode: number }> = [];
+      const result: Array<{
+        name: string;
+        readOnly: undefined | boolean;
+        mode: number;
+      }> = [];
       let count = 0;
       if (err) {
         callback(err);
@@ -1431,7 +1423,9 @@ export class IOBrokerConnection implements iDisposable {
 
   public getHistory(
     id: string,
-    options: ioBroker.GetHistoryOptions & { timeout?: number },
+    options: ioBroker.GetHistoryOptions & {
+      timeout?: number;
+    },
     callback: ioBroker.GetHistoryCallback,
     // @ts-ignore
     ...args: unknown[]
@@ -1576,7 +1570,11 @@ export class IOBrokerConnection implements iDisposable {
   }
 
   // TODO: check if ioBroker.Object is correct
-  private _fillChildren(objects: { [id: string]: ioBroker.Object & { children?: string[] } }): void {
+  private _fillChildren(objects: {
+    [id: string]: ioBroker.Object & {
+      children?: string[];
+    };
+  }): void {
     const items: Array<string> = [];
 
     for (const id in objects) {
@@ -1659,7 +1657,11 @@ export class IOBrokerConnection implements iDisposable {
     projectDir: string,
     callback: (
       err?: NodeJS.ErrnoException | null,
-      obj?: { name: string; readOnly: undefined | boolean; mode: number },
+      obj?: {
+        name: string;
+        readOnly: undefined | boolean;
+        mode: number;
+      },
     ) => void,
   ) {
     this.readDir(
