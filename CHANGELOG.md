@@ -11,6 +11,7 @@
 * (theimo1221) Add Tuya device handling
 * (theimo1221) Add first Tuya device (Tuya Garage Door Opener)
 * (theimo1221) Update packages
+* (theimo1221) Add Api function to open/close garage door
 
 ## 2.16.2 (2023-10-08)
 

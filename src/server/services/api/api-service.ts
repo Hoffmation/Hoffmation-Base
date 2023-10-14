@@ -7,6 +7,7 @@ import {
   iBaseDevice,
   iButtonSwitch,
   iCameraDevice,
+  iGarageDoorOpener,
   iLamp,
   iScene,
   iShutter,
@@ -279,6 +280,22 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no scene`);
     }
     d.startScene(turnOffTimeout);
+    return null;
+  }
+
+  public static switchGarageDoor(deviceId: string, open: boolean): Error | null {
+    const d = this.getDevice(deviceId) as iGarageDoorOpener | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.garageDoorOpener)) {
+      return new Error(`Device with ID ${deviceId} is no Garage Door Opener`);
+    }
+    if (open) {
+      d.open();
+    } else {
+      d.close();
+    }
     return null;
   }
 
