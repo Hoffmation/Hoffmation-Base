@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.17.1 (2023-10-14)
 
 * (theimo1221) Add Log Message and check to prevent toJson Failure on not maps named map
 
