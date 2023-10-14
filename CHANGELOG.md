@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Log Message and check to prevent toJson Failure on not maps named map
+
 ## 2.17.0 (2023-10-14)
 
 * (theimo1221) Add Tuya device handling

@@ -6,7 +6,7 @@ import { LogLevel } from '../../../models';
 
 export class TrilaterationBasePoint {
   public readonly ownPoint: TrilaterationPoint;
-  public readonly precalculatedDistances: Map<number, string[]> = new Map<number, string[]>();
+  public readonly precalculatedDistancesMap: Map<number, string[]> = new Map<number, string[]>();
 
   constructor(
     public readonly x: number,
@@ -32,7 +32,7 @@ export class TrilaterationBasePoint {
   }
 
   private rateCoordinates(distance: number, result: TrilaterationRatedCoordinate[], rating: number): void {
-    const possiblePoints: string[] | undefined = this.precalculatedDistances.get(distance);
+    const possiblePoints: string[] | undefined = this.precalculatedDistancesMap.get(distance);
     if (possiblePoints !== undefined) {
       for (const point of possiblePoints) {
         result.push(new TrilaterationRatedCoordinate(point, rating));
@@ -49,9 +49,9 @@ export class TrilaterationBasePoint {
         continue;
       }
       count++;
-      const distancePoints = this.precalculatedDistances.get(distance) ?? [];
+      const distancePoints = this.precalculatedDistancesMap.get(distance) ?? [];
       distancePoints.push(point.coordinateName);
-      this.precalculatedDistances.set(distance, distancePoints);
+      this.precalculatedDistancesMap.set(distance, distancePoints);
     }
     ServerLogService.writeLog(LogLevel.Info, `Filled ${count} distances for Trilateration in room: ${this.roomName}`);
   }

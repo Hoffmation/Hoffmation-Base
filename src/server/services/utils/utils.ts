@@ -214,6 +214,10 @@ export class Utils {
           const newKey: string = lowerKey.replace('map', 'dict');
           const dict: { [key: string | number]: unknown } = {};
           const map: Map<string | number, unknown> = value as Map<string, unknown>;
+          if (typeof map.keys !== 'function') {
+            ServerLogService.writeLog(LogLevel.Error, `Map ${currentKey}.${lowerKey} is not a map`);
+            return;
+          }
           for (const mapName of map.keys()) {
             dict[mapName] = _.isObject(map.get(mapName))
               ? this.deepOmit(map.get(mapName) as object, keysToOmit, level + 1, `${currentKey}.${lowerKey}.${mapName}`)

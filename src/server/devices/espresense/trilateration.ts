@@ -48,7 +48,7 @@ export class Trilateration {
   }
 
   private static getBestRatedCoordinates(distances: TrilaterationPointDistance[]): TrilaterationRatedCoordinate[] {
-    const allRatedCoordinates: Map<string, TrilaterationRatedCoordinate> = new Map<
+    const allRatedCoordinatesMap: Map<string, TrilaterationRatedCoordinate> = new Map<
       string,
       TrilaterationRatedCoordinate
     >();
@@ -72,9 +72,9 @@ export class Trilateration {
         { debugType: LogDebugType.Trilateration },
       );
       for (const ratedCoordinate of ratedCoordinates) {
-        const existingCoordinate = allRatedCoordinates.get(ratedCoordinate.coordinateName);
+        const existingCoordinate = allRatedCoordinatesMap.get(ratedCoordinate.coordinateName);
         if (existingCoordinate === undefined) {
-          allRatedCoordinates.set(ratedCoordinate.coordinateName, ratedCoordinate);
+          allRatedCoordinatesMap.set(ratedCoordinate.coordinateName, ratedCoordinate);
           continue;
         }
 
@@ -82,7 +82,7 @@ export class Trilateration {
         existingCoordinate.matchCount++;
       }
     }
-    return this.getBestRatedCoordinatesFromMap(allRatedCoordinates);
+    return this.getBestRatedCoordinatesFromMap(allRatedCoordinatesMap);
   }
 
   public static checkRoom(distances: TrilaterationPointDistance[]): string | undefined {
@@ -99,14 +99,14 @@ export class Trilateration {
       return bestMatches[0].roomName;
     }
     // As we have multiple possible winners, we need to check how often which room occurs
-    const roomCount: Map<string, number> = new Map<string, number>();
+    const roomCountMap: Map<string, number> = new Map<string, number>();
     for (const point of bestMatches) {
       const room = point.roomName;
-      const existingCount = roomCount.get(room) ?? 0;
-      roomCount.set(room, existingCount + 1);
+      const existingCount = roomCountMap.get(room) ?? 0;
+      roomCountMap.set(room, existingCount + 1);
     }
 
-    return Array.from(roomCount.entries()).sort((a, b) => b[1] - a[1])[0][0];
+    return Array.from(roomCountMap.entries()).sort((a, b) => b[1] - a[1])[0][0];
   }
 
   private static getBestRatedCoordinatesFromMap(

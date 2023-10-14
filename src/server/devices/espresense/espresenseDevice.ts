@@ -19,7 +19,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   public deviceType: DeviceType = DeviceType.Espresense;
   public readonly name: string;
   private deviceMap: Map<string, DetectedBluetoothDevice> = new Map<string, DetectedBluetoothDevice>();
-  private proximityCallback: Map<string, ProximityCallback[]> = new Map<string, ProximityCallback[]>();
+  private proximityCallbackMap: Map<string, ProximityCallback[]> = new Map<string, ProximityCallback[]>();
 
   public constructor(name: string, roomName: string, x: number, y: number, z: number) {
     this.position = new TrilaterationBasePoint(x, y, z, roomName);
@@ -87,7 +87,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     }
     dev.updateDistance(this, data.distance);
     dev.guessRoom();
-    const cbs = this.proximityCallback.get(dev.name);
+    const cbs = this.proximityCallbackMap.get(dev.name);
     if (cbs === undefined) {
       return;
     }
@@ -142,12 +142,12 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   }
 
   public addProximityCallback(cb: ProximityCallback): void {
-    let currentValue: ProximityCallback[] | undefined = this.proximityCallback.get(cb.deviceName);
+    let currentValue: ProximityCallback[] | undefined = this.proximityCallbackMap.get(cb.deviceName);
     if (currentValue == undefined) {
       currentValue = [];
     }
     currentValue.push(cb);
-    this.proximityCallback.set(cb.deviceName, currentValue);
+    this.proximityCallbackMap.set(cb.deviceName, currentValue);
   }
 
   private addDeviceTracking(devName: string): DetectedBluetoothDevice {
