@@ -6,6 +6,7 @@ export * from './iButtonSwitch';
 export * from './iCameraDevice';
 export * from './iEnergyManager';
 export * from './iExcessEnergyConsumer';
+export * from './iGarageDoorOpener';
 export * from './iHandleSensor';
 export * from './iHeater';
 export * from './iHumiditySensor';

@@ -52,11 +52,13 @@ import { DeviceCapability } from './DeviceCapability';
 import { Dachs } from './dachs';
 import { iConfig } from '../config';
 import { ShellyDevice, ShellyTrv } from './shelly';
+import { TuyaDevice, TuyaGarageOpener } from './tuya';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
   public static IDENTIFIER_JS: string = 'javascript';
   public static IDENTIFIER_Shelly: string = 'shelly';
+  public static IDENTIFIER_TUYA: string = 'tuya';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
   public static IDENTIFIER_WLED: string = 'wled';
   public static alLDevices: { [id: string]: iBaseDevice } = {};
@@ -95,6 +97,8 @@ export class Devices {
         Devices.processWledDevice(cDevConf);
       } else if (cName.indexOf('00-Shelly') === 0) {
         Devices.processShellyDevice(cDevConf);
+      } else if (cName.indexOf('00-Tuya') === 0) {
+        Devices.processTuyaDevice(cDevConf);
       } else if (
         cName.indexOf('00-EnergyManager') === 0 &&
         cDevConf.type !== 'folder' &&
@@ -108,6 +112,7 @@ export class Devices {
     HmIPDevice.checkMissing();
     ZigbeeDevice.checkMissing();
     ShellyDevice.checkMissing();
+    TuyaDevice.checkMissing();
   }
 
   public static midnightReset(): void {
@@ -170,6 +175,31 @@ export class Devices {
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No shelly Device Type for ${shellyInfo.deviceType} defined`);
         d = new ShellyDevice(shellyInfo, DeviceType.unknown);
+    }
+    Devices.alLDevices[fullName] = d;
+  }
+
+  private static processTuyaDevice(cDevConf: deviceConfig) {
+    const tuyaInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const fullName: string = `${Devices.IDENTIFIER_TUYA}-${tuyaInfo.devID}`;
+    tuyaInfo.allDevicesKey = fullName;
+
+    if (typeof Devices.alLDevices[fullName] !== 'undefined') {
+      return;
+    }
+
+    ServerLogService.writeLog(
+      LogLevel.Trace,
+      `Tuya ${tuyaInfo.devID} with Type "${tuyaInfo.deviceType}" doesn't exists --> create it`,
+    );
+    let d: TuyaDevice;
+    switch (tuyaInfo.deviceType) {
+      case 'Opener':
+        d = new TuyaGarageOpener(tuyaInfo);
+        break;
+      default:
+        ServerLogService.writeLog(LogLevel.Warn, `No Tuya Device Type for ${tuyaInfo.deviceType} defined`);
+        d = new TuyaDevice(tuyaInfo, DeviceType.unknown);
     }
     Devices.alLDevices[fullName] = d;
   }

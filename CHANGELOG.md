@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Tuya device handling
+* (theimo1221) Add first Tuya device (Tuya Garage Door Opener)
+
 ## 2.16.2 (2023-10-08)
 
 * (theimo1221) Minor corrections to Shelly Trv State Id's
