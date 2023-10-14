@@ -99,7 +99,7 @@ export class Utils {
   }
 
   public static jsonFilter(object: object, additionalOmitKeys: string[] = []): Partial<object> {
-    const keysToOmit: string[] = ['timeout', 'interval', 'timeouts', 'callback'];
+    const keysToOmit: string[] = ['timeout', 'interval', 'timeouts', 'callback', 'otaInfo'];
     keysToOmit.push(...additionalOmitKeys);
     return this.deepOmit(object, keysToOmit);
   }
