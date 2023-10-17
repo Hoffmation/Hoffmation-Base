@@ -56,7 +56,7 @@
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.12",
     "@iobroker/types": "^5.0.13",
-    "aws-sdk": "2.1473.0",
+    "aws-sdk": "2.1475.0",
     "axios": "^1.5.1",
     "bson": "^6.1.0",
     "daikin-controller": "^2.1.0",
