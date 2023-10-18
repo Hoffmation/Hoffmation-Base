@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.17.4 (2023-10-18)
 
 * (theimo1221) Add includeInAmbientLight in fromPartialObject back-channel
 
