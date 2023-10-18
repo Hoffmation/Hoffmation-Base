@@ -39,6 +39,7 @@ export class ActuatorSettings extends DeviceSettings {
     this.stromStossResendTime = data.stromStossResendTime ?? this.stromStossResendTime;
     this.resetToAutomaticOnForceOffAfterForceOn =
       data.resetToAutomaticOnForceOffAfterForceOn ?? this.resetToAutomaticOnForceOffAfterForceOn;
+    this.includeInAmbientLight = data.includeInAmbientLight ?? this.includeInAmbientLight;
     super.fromPartialObject(data);
   }
 

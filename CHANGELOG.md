@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add includeInAmbientLight in fromPartialObject back-channel
+
 ## 2.17.3 (2023-10-18)
 
 * (theimo1221) Add option to include actuators in ambient light mode
