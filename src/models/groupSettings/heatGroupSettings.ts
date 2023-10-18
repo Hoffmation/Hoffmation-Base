@@ -6,7 +6,7 @@ import { GroupSettings } from './groupSettings';
 export class HeatGroupSettings extends GroupSettings {
   public automaticPoints: TemperatureSettings[] = [];
   public automaticMode: boolean = true;
-
+  public automaticFallBackTemperatur: number = 20;
   /**
    * Target temperature when automaticMode is disabled
    * @type {number}
@@ -17,6 +17,7 @@ export class HeatGroupSettings extends GroupSettings {
     this.automaticPoints = data.automaticPoints ?? this.automaticPoints;
     this.automaticMode = data.automaticMode ?? this.automaticMode;
     this.manualTemperature = data.manualTemperature ?? this.manualTemperature;
+    this.automaticFallBackTemperatur = data.automaticFallBackTemperatur ?? this.automaticFallBackTemperatur;
     super.fromPartialObject(data);
   }
 

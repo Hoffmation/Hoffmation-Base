@@ -203,18 +203,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       new Date(),
     );
 
-    if (setting === undefined) {
-      this.log(LogLevel.Warn, `Undefined Heating Timestamp.`);
-      this.desiredTemperature = this.settings.automaticFallBackTemperatur;
-      return;
-    }
-
-    if (this._desiredTemperature !== setting.temperature) {
-      this.log(
-        LogLevel.Debug,
-        `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperature}°C`,
-      );
-      this.desiredTemperature = setting.temperature ?? this.settings.automaticFallBackTemperatur;
+    const targetTemp = setting?.temperature ?? heatGroupSettings?.automaticFallBackTemperatur ?? 20;
+    if (this._desiredTemperature !== targetTemp) {
+      this.log(LogLevel.Debug, `Automatische Temperaturanpassung für ${this.info.customName} auf ${targetTemp}°C`);
+      this.desiredTemperature = targetTemp;
     }
   }
 

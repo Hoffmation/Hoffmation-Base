@@ -3,7 +3,6 @@ import { Utils } from '../../server';
 
 export class HeaterSettings extends DeviceSettings {
   public automaticMode: boolean = true;
-  public automaticFallBackTemperatur: number = 20;
   public useOwnTemperatur: boolean = true;
   /**
    * Whether this device should be controlled using only valve position
@@ -38,7 +37,6 @@ export class HeaterSettings extends DeviceSettings {
 
   public fromPartialObject(data: Partial<HeaterSettings>): void {
     this.automaticMode = data.automaticMode ?? this.automaticMode;
-    this.automaticFallBackTemperatur = data.automaticFallBackTemperatur ?? this.automaticFallBackTemperatur;
     this.useOwnTemperatur = data.useOwnTemperatur ?? this.useOwnTemperatur;
     this.controlByPid = data.controlByPid ?? this.controlByPid;
     this.controlByTempDiff = data.controlByTempDiff ?? this.controlByTempDiff;

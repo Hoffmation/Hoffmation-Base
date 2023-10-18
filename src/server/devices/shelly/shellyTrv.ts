@@ -193,18 +193,13 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
       new Date(),
     );
 
-    if (setting === undefined) {
-      this.log(LogLevel.Warn, `Undefined Heating Timestamp.`);
-      this.desiredTemperature = this.settings.automaticFallBackTemperatur;
-      return;
-    }
-
-    if (this._desiredTemperatur !== setting.temperature) {
+    const targetTemperature: number = setting?.temperature ?? heatGroupSettings?.automaticFallBackTemperatur ?? 20;
+    if (this._desiredTemperatur !== targetTemperature) {
       this.log(
         LogLevel.Debug,
-        `Automatische Temperaturanpassung für ${this.info.customName} auf ${setting.temperature}°C`,
+        `Automatische Temperaturanpassung für ${this.info.customName} auf ${targetTemperature}°C`,
       );
-      this.desiredTemperature = setting.temperature;
+      this.desiredTemperature = targetTemperature;
     }
   }
 
