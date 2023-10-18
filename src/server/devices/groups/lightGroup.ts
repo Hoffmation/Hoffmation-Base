@@ -236,7 +236,30 @@ export class LightGroup extends BaseGroup {
   private ambientLightStartCallback(): void {
     this._ambientLightOn = true;
     this.log(LogLevel.Info, `Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung`);
-    this.switchAll(true);
+
+    this.getLights().forEach((l) => {
+      if (l.settings.includeInAmbientLight) {
+        l.setLight(true, -1, false);
+      }
+    });
+
+    this.getOutlets().forEach((o) => {
+      if (o.settings.includeInAmbientLight) {
+        o.setActuator(true);
+      }
+    });
+
+    this.getLED().forEach((s) => {
+      if (s.settings.includeInAmbientLight) {
+        s.setLight(true, -1, false);
+      }
+    });
+
+    this.getWled().forEach((wled) => {
+      if (wled.settings.includeInAmbientLight) {
+        wled.setLight(true);
+      }
+    });
     Utils.guardedTimeout(
       () => {
         this.log(LogLevel.Info, `Ambientenbeleuchtung um Mitternacht abschalten.`);

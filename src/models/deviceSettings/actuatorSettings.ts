@@ -25,6 +25,12 @@ export class ActuatorSettings extends DeviceSettings {
    */
   public stromStossResendTime: number = 180;
 
+  /**
+   * Whether to include this device in the ambient light option.
+   * @type {boolean}
+   */
+  public includeInAmbientLight: boolean = false;
+
   public fromPartialObject(data: Partial<ActuatorSettings>): void {
     this.dawnOn = data.dawnOn ?? this.dawnOn;
     this.duskOn = data.duskOn ?? this.duskOn;

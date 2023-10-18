@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to include actuators in ambient light mode
+
 ## 2.17.2 (2023-10-14)
 
 * (theimo1221) Exclude otaInfo from any Jsons
