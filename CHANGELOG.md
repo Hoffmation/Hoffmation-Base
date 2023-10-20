@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.18.4 (2023-10-20)
 
 * (theimo1221) Fix Zigbee2Mqtt Device state updates
 
