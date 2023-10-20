@@ -28,12 +28,17 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     return this._battery;
   }
 
+  public get minimumLevel(): number {
+    return this._minimumValveLevel;
+  }
+
   private _automaticMode: boolean = false;
   private _battery: number = -99;
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
   private _lastRecalc: number = 0;
   private _level: number = 0;
+  private _minimumValveLevel: number = 0;
   private _recalcTimeout: NodeJS.Timeout | null = null;
   private _temperatur: number = UNDEFINED_TEMP_VALUE;
   private _targetTempVal: number = UNDEFINED_TEMP_VALUE;
@@ -52,6 +57,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
   });
   private _lastBatteryPersist: number = 0;
   private readonly _batteryId: string;
+  private readonly _minumumLevelId: string;
   private readonly _setAutomaticModeId: string;
   private readonly _setExternalTempId: string;
   private readonly _setEnableExternalTempId: string;
@@ -68,7 +74,8 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this._setExternalTempId = `${this.info.fullID}.ext.temperature`;
     this._setEnableExternalTempId = `${this.info.fullID}.ext.enabled`;
     this._setPointTemperaturID = `${this.info.fullID}.tmp.shelly.temperatureTargetC`;
-    this._temperatureId = `${this.info.fullID}.tmp..temperatureC`;
+    this._minumumLevelId = `${this.info.fullID}.tmp.minimumValvePosition`;
+    this._temperatureId = `${this.info.fullID}.tmp.temperatureC`;
     this._valvePosId = `${this.info.fullID}.tmp.valvePosition`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(
@@ -174,6 +181,10 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
       return;
     }
 
+    if (this.settings.pidForcedMinimum !== this.minimumLevel) {
+      this.setMinimumLevel(this.settings.pidForcedMinimum);
+    }
+
     if (!this.settings.useOwnTemperatur && !this.settings.controlByPid) {
       this.setExternalTemperatureEnabled(true);
     }
@@ -227,6 +238,9 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
         break;
       case this._setEnableExternalTempId:
         this._useExternalTemperatureEnabled = state.val as boolean;
+        break;
+      case this._minumumLevelId:
+        this._minimumValveLevel = state.val as number;
         break;
       case this._temperatureId:
         this._temperatur = state.val as number;
@@ -334,5 +348,9 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this._level = target;
     this.log(LogLevel.Info, `Setting Valve to new value: "${target}%"`);
     this.setState(this._valvePosId, target);
+  }
+
+  private setMinimumLevel(pidForcedMinimum: number): void {
+    this.setState(this._minumumLevelId, pidForcedMinimum);
   }
 }

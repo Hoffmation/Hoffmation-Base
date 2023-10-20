@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Shelly TRV Minimum Valve handling
+
 ## 2.18.5 (2023-10-20)
 
 * (theimo1221) Fix Aqara Opple Mapping
