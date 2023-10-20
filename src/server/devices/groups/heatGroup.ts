@@ -9,7 +9,7 @@ import {
   UNDEFINED_HUMIDITY_VALUE,
   UNDEFINED_TEMP_VALUE,
 } from '../baseDeviceInterfaces';
-import { AcDevice, API } from '../../services';
+import { AcDevice, API, Utils } from '../../services';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 import { LogLevel, RoomBase, TemperatureSettings } from '../../../models';
 
@@ -139,6 +139,13 @@ export class HeatGroup extends BaseGroup {
   }
 
   public initialize(): void {
+    Utils.guardedTimeout(
+      () => {
+        this.settings.initializeFromDb(this);
+      },
+      200,
+      this,
+    );
     this.getTempSensors().forEach((sensor) => {
       sensor.addTempChangeCallback((_newVal) => {
         this.recalcRoomTemperatur();
