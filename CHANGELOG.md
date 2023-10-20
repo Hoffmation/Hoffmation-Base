@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Use raw value instead of enum
+
 ## 2.18.9 (2023-10-20)
 
 * (theimo1221) Ignore substitute initial values from ioBroker

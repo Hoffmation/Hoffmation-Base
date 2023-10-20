@@ -28,7 +28,7 @@ export class DeviceUpdater implements IDeviceUpdater {
       // Ignore null states
       return;
     }
-    if (state.q === ioBroker.STATE_QUALITY.SUBSTITUTE_INITIAL_VALUE) {
+    if (state.q === 0x20) {
       // Ignore substitute default values
       return;
     }
