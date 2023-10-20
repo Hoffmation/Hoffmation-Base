@@ -13,5 +13,5 @@ export interface iCameraDevice extends iMotionSensor {
 
   onGriffUpdate(open: boolean): void;
 
-  update(stateName: string, state: ioBroker.State): void;
+  update(idSplit: string[], state: ioBroker.State): void;
 }

@@ -19,6 +19,6 @@ export class BlueIrisCoordinator {
       ServerLogService.writeLog(LogLevel.Warn, `Unknown Blue Iris Device "${devName}"`);
       return;
     }
-    dev.update(idSplit[4], state);
+    dev.update(idSplit, state);
   }
 }

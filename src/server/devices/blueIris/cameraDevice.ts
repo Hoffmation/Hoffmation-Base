@@ -7,9 +7,14 @@ import { Devices } from '../devices';
 import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
+import { ioBrokerMain } from '../../ioBroker';
 
 export class CameraDevice implements iCameraDevice {
   public readonly blueIrisName: string;
+  private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
+  private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
+  private _personDetectedStateId: string | undefined = undefined;
+  private _movementDetectedStateId: string | undefined = undefined;
 
   public get lastImage(): string {
     return this._lastImage;
@@ -145,19 +150,27 @@ export class CameraDevice implements iCameraDevice {
     Utils.dbo?.persistMotionSensor(this);
   }
 
-  public update(stateName: string, state: ioBroker.State): void {
+  public update(idSplit: string[], state: ioBroker.State): void {
+    const stateName = idSplit[4];
     this.log(LogLevel.Debug, `Update for "${stateName}"`);
     switch (stateName) {
       case 'MotionDetected':
+        this._movementDetectedStateId = idSplit.join('.');
         if (this.settings.movementDetectionOnPersonOnly) {
           return;
         }
-        this.updateMovement((state.val as number) === 1);
+        const movementDetected: boolean = (state.val as number) === 1;
+        this.updateMovement(movementDetected);
+        if (movementDetected) {
+          this.resetMovementFallbackTimer();
+        }
         break;
       case 'PersonDetected':
+        this._personDetectedStateId = idSplit.join('.');
         const newValue: boolean = (state.val as number) === 1;
         if (newValue) {
           this.log(LogLevel.Info, `Person Detected`);
+          this.resetPersonDetectFallbackTimer();
         }
         this._personDetected = newValue;
         if (this.settings.movementDetectionOnPersonOnly) {
@@ -241,5 +254,45 @@ export class CameraDevice implements iCameraDevice {
 
   public loadDeviceSettings(): void {
     this.settings?.initializeFromDb(this);
+  }
+
+  private resetPersonDetectFallbackTimer(): void {
+    if (this._personDetectFallbackTimeout !== null) {
+      clearTimeout(this._personDetectFallbackTimeout);
+      this._personDetectFallbackTimeout = null;
+    }
+    this._personDetectFallbackTimeout = Utils.guardedTimeout(
+      () => {
+        this._personDetectFallbackTimeout = null;
+        this._personDetected = false;
+        if (this.settings.movementDetectionOnPersonOnly) {
+          this.updateMovement(false);
+        }
+        if (this._personDetectedStateId !== undefined) {
+          ioBrokerMain.iOConnection?.setState(this._personDetectedStateId, { val: 0, ack: true });
+        }
+      },
+      120000,
+      this,
+    );
+  }
+
+  private resetMovementFallbackTimer(): void {
+    if (this._movementDetectFallbackTimeout !== null) {
+      clearTimeout(this._movementDetectFallbackTimeout);
+      this._movementDetectFallbackTimeout = null;
+    }
+    this._movementDetectFallbackTimeout = Utils.guardedTimeout(
+      () => {
+        this._movementDetectFallbackTimeout = null;
+        this._movementDetected = false;
+        this.updateMovement(false);
+        if (this._movementDetectedStateId !== undefined) {
+          ioBrokerMain.iOConnection?.setState(this._movementDetectedStateId, { val: 0, ack: true });
+        }
+      },
+      120000,
+      this,
+    );
   }
 }

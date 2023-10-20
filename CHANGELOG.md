@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Fallback Timer to reset movement/person detection for camera devices.
+
 ## 2.18.6 (2023-10-20)
 
 * (theimo1221) Add Shelly TRV Minimum Valve handling
