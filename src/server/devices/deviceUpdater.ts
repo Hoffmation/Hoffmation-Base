@@ -31,12 +31,15 @@ export class DeviceUpdater implements IDeviceUpdater {
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(id);
     if (idSplit.length < 2) return;
 
+    let classifier: string = idSplit[0];
+    let devId: string = idSplit[2];
     if (idSplit[0] == 'mqtt') {
       MqttCoordinator.update(idSplit, state);
+    } else if (idSplit[0] == Devices.IDENTIFIER_ZIGBEE2MQTT) {
+      classifier = Devices.IDENTIFIER_ZIGBEE;
+      devId = idSplit[2].substring(2);
     }
-    const device: undefined | iBaseDevice =
-      Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`] ??
-      Devices.alLDevices[`${idSplit[0]}-${idSplit[2].substring(2)}`];
+    const device: undefined | iBaseDevice = Devices.alLDevices[`${classifier}-${devId}`];
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
       return;
     }

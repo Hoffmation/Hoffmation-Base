@@ -60,6 +60,7 @@ export class Devices {
   public static IDENTIFIER_Shelly: string = 'shelly';
   public static IDENTIFIER_TUYA: string = 'tuya';
   public static IDENTIFIER_ZIGBEE: string = 'zigbee';
+  public static IDENTIFIER_ZIGBEE2MQTT: string = 'zigbee2mqtt';
   public static IDENTIFIER_WLED: string = 'wled';
   public static alLDevices: { [id: string]: iBaseDevice } = {};
   public static energymanager?: iEnergyManager = undefined;
@@ -207,7 +208,7 @@ export class Devices {
   private static processZigbeeDevice(cDevConf: deviceConfig) {
     const zigbeeInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
     const apiDevId: string = zigbeeInfo.devID.startsWith('0x') ? zigbeeInfo.devID.substring(2) : zigbeeInfo.devID;
-    const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${apiDevId}`;
+    const fullName: string = `zigbee-${apiDevId}`;
     zigbeeInfo.allDevicesKey = fullName;
 
     if (typeof Devices.alLDevices[fullName] !== 'undefined') {
