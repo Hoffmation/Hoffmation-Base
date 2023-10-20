@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.18.7 (2023-10-20)
 
 * (theimo1221) Add Fallback Timer to reset movement/person detection for camera devices.
 
