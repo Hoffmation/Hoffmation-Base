@@ -28,6 +28,10 @@ export class DeviceUpdater implements IDeviceUpdater {
       // Ignore null states
       return;
     }
+    if (state.q === ioBroker.STATE_QUALITY.SUBSTITUTE_INITIAL_VALUE) {
+      // Ignore substitute default values
+      return;
+    }
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(id);
     if (idSplit.length < 2) return;
 
