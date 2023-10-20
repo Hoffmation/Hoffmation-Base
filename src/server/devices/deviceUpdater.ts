@@ -34,7 +34,9 @@ export class DeviceUpdater implements IDeviceUpdater {
     if (idSplit[0] == 'mqtt') {
       MqttCoordinator.update(idSplit, state);
     }
-    const device: undefined | iBaseDevice = Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`];
+    const device: undefined | iBaseDevice =
+      Devices.alLDevices[`${idSplit[0]}-${idSplit[2]}`] ??
+      Devices.alLDevices[`${idSplit[0]}-${idSplit[2].substring(2)}`];
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
       return;
     }

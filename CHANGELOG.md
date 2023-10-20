@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update zigbee devices properly
+
 ## 2.18.2 (2023-10-20)
 
 * (theimo1221) Fix zigbee2mqtt device id to match legacy device id
