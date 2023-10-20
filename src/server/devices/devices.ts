@@ -206,7 +206,8 @@ export class Devices {
 
   private static processZigbeeDevice(cDevConf: deviceConfig) {
     const zigbeeInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
-    const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${zigbeeInfo.devID}`;
+    const apiDevId: string = zigbeeInfo.devID.startsWith('0x') ? zigbeeInfo.devID.substring(2) : zigbeeInfo.devID;
+    const fullName: string = `${Devices.IDENTIFIER_ZIGBEE}-${apiDevId}`;
     zigbeeInfo.allDevicesKey = fullName;
 
     if (typeof Devices.alLDevices[fullName] !== 'undefined') {

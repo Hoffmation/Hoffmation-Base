@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix zigbee2mqtt device id to match legacy device id
+
 ## 2.18.1 (2023-10-20)
 
 * (theimo1221) Minor tweaks to heating temperature handling
