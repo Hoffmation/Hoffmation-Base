@@ -73,7 +73,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this._setAutomaticModeId = `${this.info.fullID}.tmp.automaticTemperatureControl`;
     this._setExternalTempId = `${this.info.fullID}.ext.temperature`;
     this._setEnableExternalTempId = `${this.info.fullID}.ext.enabled`;
-    this._setPointTemperaturID = `${this.info.fullID}.tmp.shelly.temperatureTargetC`;
+    this._setPointTemperaturID = `${this.info.fullID}.tmp.temperatureTargetC`;
     this._minumumLevelId = `${this.info.fullID}.tmp.minimumValvePosition`;
     this._temperatureId = `${this.info.fullID}.tmp.temperatureC`;
     this._valvePosId = `${this.info.fullID}.tmp.valvePosition`;
