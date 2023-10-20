@@ -90,7 +90,7 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
 
     let pressType: ButtonPressType | undefined = undefined;
     switch (parts[2]) {
-      case 'click':
+      case 'single':
         pressType = ButtonPressType.short;
         break;
       case 'hold':
