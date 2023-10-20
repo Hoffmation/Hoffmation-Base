@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.18.3 (2023-10-20)
 
 * (theimo1221) Update zigbee devices properly
 
