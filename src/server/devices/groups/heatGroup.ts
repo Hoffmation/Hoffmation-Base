@@ -90,14 +90,17 @@ export class HeatGroup extends BaseGroup {
   }
 
   public get desiredTemp(): number {
-    if (this.getHeater().length === 0) {
-      return -99;
+    if (!this.settings.automaticMode) {
+      return this.settings.manualTemperature;
     }
-    let value: number = 0;
-    for (const h of this.getHeater()) {
-      value += h.desiredTemperature;
+    const activeSetting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
+      this.settings.automaticPoints,
+      new Date(),
+    );
+    if (!activeSetting) {
+      return this.settings.automaticFallBackTemperatur;
     }
-    return Math.round((value / this.getHeater().length) * 10) / 10;
+    return activeSetting.temperature;
   }
 
   public static getInfo(): string {
@@ -188,19 +191,5 @@ export class HeatGroup extends BaseGroup {
     this.getOwnAcDevices().forEach((ac) => {
       ac.onTemperaturChange(temp);
     });
-  }
-
-  public getTargetTemperature(): number {
-    if (!this.settings.automaticMode) {
-      return this.settings.manualTemperature;
-    }
-    const activeSetting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this.settings.automaticPoints,
-      new Date(),
-    );
-    if (!activeSetting) {
-      return this.settings.manualTemperature;
-    }
-    return activeSetting.temperature;
   }
 }

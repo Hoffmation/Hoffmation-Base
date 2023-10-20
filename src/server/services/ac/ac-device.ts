@@ -25,6 +25,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac, DeviceCapability.blockAutomatic];
   public readonly blockAutomationHandler;
   protected _activatedByExcessEnergy: boolean = false;
+  protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
 
   protected _info: DeviceInfo;
   protected _room: RoomBase | undefined;
@@ -135,6 +136,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public calculateDesiredMode(): AcMode {
     const acOn: boolean = this.on;
+    this._desiredTemperatur = this.room?.HeatGroup?.desiredTemp ?? 0;
 
     if (this.settings.manualDisabled) {
       acOn && this.log(LogLevel.Info, `We should turn off now, as manual disable force is set.`);
@@ -158,6 +160,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
     if (this.settings.useOwnTemperatureAndAutomatic) {
       // Device is in automatic mode so ignore energy and room temperature
+
       if (heatGroup?.settings.automaticMode === false) {
         return AcMode.Auto;
       }
@@ -169,10 +172,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       if (!this.settings.noCoolingOnMovement || this.room?.PraesenzGroup?.anyPresent() !== true) {
         return AcMode.Cooling;
       }
-      return AcMode.Off;
-    }
-
-    if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent() === true) {
       return AcMode.Off;
     }
 
@@ -198,13 +197,16 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       thresholdHeating = -0.5;
     }
 
-    const targetTemp: number = heatGroup.getTargetTemperature();
+    const targetTemp: number = heatGroup.desiredTemp;
 
     const coolUntil: number = targetTemp + threshold;
     const heatUntil: number = targetTemp - thresholdHeating;
 
     if (temp > coolUntil && SettingsService.heatMode === HeatingMode.Sommer) {
       desiredMode = AcMode.Cooling;
+      if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent() === true) {
+        return AcMode.Off;
+      }
     } else if (temp < heatUntil && this.settings.heatingAllowed && SettingsService.heatMode === HeatingMode.Winter) {
       desiredMode = AcMode.Heating;
     }

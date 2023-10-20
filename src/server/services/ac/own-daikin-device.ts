@@ -89,7 +89,7 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   private setDesiredInfo(retry: boolean = false, forceTemp?: number): void {
-    let targetTemp: number = this.room?.HeatGroup?.getTargetTemperature() ?? 21;
+    let targetTemp: number = this._desiredTemperatur;
     if (this.desiredMode == Mode.HOT) {
       targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp + 1 : 29;
     } else if (this.desiredMode == Mode.COLD) {
