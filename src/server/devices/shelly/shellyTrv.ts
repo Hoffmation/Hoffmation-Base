@@ -1,7 +1,7 @@
 import { ShellyDevice } from './shellyDevice';
 import { iHeater, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
-import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../models';
+import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { PIDController } from '../../../liquid-pid';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
@@ -185,22 +185,22 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
       this.setExternalTemperatureEnabled(true);
     }
 
-    const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
+    const heatGroup = this.room?.HeatGroup;
+    if (heatGroup === undefined) {
+      this.log(LogLevel.Warn, `HeatGroup is undefined for ${this.info.customName}`);
+      return;
+    }
+
+    const heatGroupSettings: HeatGroupSettings | undefined = heatGroup.settings;
     if (heatGroupSettings?.automaticMode == false) {
       this.desiredTemperature = heatGroupSettings.manualTemperature;
       return;
     }
-
     if (!this.settings.automaticMode) {
       return;
     }
 
-    const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this.room?.HeatGroup?.settings?.automaticPoints ?? [],
-      new Date(),
-    );
-
-    const targetTemperature: number = setting?.temperature ?? heatGroupSettings?.automaticFallBackTemperatur ?? 20;
+    const targetTemperature: number = heatGroup.desiredTemp ?? 20;
     if (this._desiredTemperatur !== targetTemperature) {
       this.log(
         LogLevel.Debug,
