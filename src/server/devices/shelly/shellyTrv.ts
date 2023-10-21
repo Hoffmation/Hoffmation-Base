@@ -56,26 +56,22 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     Kd: 9, // PID: Kd in 1/1000
   });
   private _lastBatteryPersist: number = 0;
-  private readonly _batteryId: string;
   private readonly _minumumLevelId: string;
   private readonly _setAutomaticModeId: string;
   private readonly _setExternalTempId: string;
   private readonly _setEnableExternalTempId: string;
   private readonly _setPointTemperaturID: string;
-  private readonly _temperatureId: string;
   private readonly _valvePosId: string;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ShellyTrv);
     this.deviceCapabilities.push(DeviceCapability.heater);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
-    this._batteryId = `${this.info.fullID}.bat.value`;
     this._setAutomaticModeId = `${this.info.fullID}.tmp.automaticTemperatureControl`;
     this._setExternalTempId = `${this.info.fullID}.ext.temperature`;
     this._setEnableExternalTempId = `${this.info.fullID}.ext.enabled`;
     this._setPointTemperaturID = `${this.info.fullID}.tmp.temperatureTargetC`;
     this._minumumLevelId = `${this.info.fullID}.tmp.minimumValvePosition`;
-    this._temperatureId = `${this.info.fullID}.tmp.temperatureC`;
     this._valvePosId = `${this.info.fullID}.tmp.valvePosition`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(
