@@ -120,6 +120,11 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
   }
 
   public recalcLevel(): void {
+    if (this.seasonTurnOff || this.settings.manualDisabled) {
+      this.setValve(0);
+      this.setMode(1);
+      return;
+    }
     if (this.settings.useOwnTemperatur || this.seasonTurnOff) {
       return;
     }

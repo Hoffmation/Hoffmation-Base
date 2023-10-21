@@ -174,7 +174,9 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
       this.checkSeasonTurnOff();
     }
 
-    if (this.seasonTurnOff) {
+    if (this.seasonTurnOff || this.settings.manualDisabled) {
+      this.setValve(0);
+      this.setMode(false);
       return;
     }
 

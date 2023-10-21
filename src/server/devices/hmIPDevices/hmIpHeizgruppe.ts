@@ -190,6 +190,11 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
     }
+
+    if (this.seasonTurnOff || this.settings.manualDisabled) {
+      this.seasonTurnOff = true;
+      return;
+    }
     const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
     if (!this.settings.automaticMode || this.seasonTurnOff || heatGroupSettings?.automaticMode === false) {
       return;

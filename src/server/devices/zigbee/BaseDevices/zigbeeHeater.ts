@@ -135,6 +135,10 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       this.checkSeasonTurnOff();
     }
     const heatGroup: HeatGroup | undefined = this.room.HeatGroup;
+    if (this.seasonTurnOff || this.settings.manualDisabled) {
+      this.desiredTemperature = 0;
+      return;
+    }
     if (!this.settings.automaticMode || this.seasonTurnOff || heatGroup?.settings?.automaticMode === false) {
       return;
     }

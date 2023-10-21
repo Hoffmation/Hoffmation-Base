@@ -35,6 +35,12 @@ export class HeaterSettings extends DeviceSettings {
    */
   public pidForcedMinimum: number = 1;
 
+  /**
+   * Whether this AC should be turned off for some time manually
+   * @type {boolean}
+   */
+  public manualDisabled: boolean = false;
+
   public fromPartialObject(data: Partial<HeaterSettings>): void {
     this.automaticMode = data.automaticMode ?? this.automaticMode;
     this.useOwnTemperatur = data.useOwnTemperatur ?? this.useOwnTemperatur;
@@ -44,6 +50,7 @@ export class HeaterSettings extends DeviceSettings {
     this.seasonTurnOffDay = data.seasonTurnOffDay ?? this.seasonTurnOffDay;
     this.seasonTurnOnDay = data.seasonTurnOnDay ?? this.seasonTurnOnDay;
     this.pidForcedMinimum = data.pidForcedMinimum ?? this.pidForcedMinimum;
+    this.manualDisabled = data.manualDisabled ?? this.manualDisabled;
     super.fromPartialObject(data);
   }
 
