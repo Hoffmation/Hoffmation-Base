@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add 'manualDisabled' to heater settings (parallel to AC-Devices)
+* (theimo1221) Update packages
 
 ## 2.19.0 (2023-10-21)
 
