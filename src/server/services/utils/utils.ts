@@ -215,8 +215,14 @@ export class Utils {
       }
       if (typeof key == 'string') {
         const lowerKey: string = key.toLowerCase();
+        for (const checkKey of keysToOmit) {
+          // if the key is in the index skip it
+          if (lowerKey.includes(checkKey)) {
+            return;
+          }
+        }
         // transform to a new object
-        if (keysToOmit.includes(lowerKey) || (level === 1 && topLevelOmitKeys.includes(lowerKey))) {
+        if (level === 1 && topLevelOmitKeys.includes(lowerKey)) {
           return;
         }
         if (lowerKey.endsWith('map')) {
