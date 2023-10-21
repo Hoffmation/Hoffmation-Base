@@ -7,6 +7,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
+import { HeatGroup } from '../groups';
 
 export class ShellyTrv extends ShellyDevice implements iHeater {
   public settings: HeaterSettings = new HeaterSettings();
@@ -185,7 +186,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
       this.setExternalTemperatureEnabled(true);
     }
 
-    const heatGroup = this.room?.HeatGroup;
+    const heatGroup: HeatGroup | undefined = this.room.HeatGroup;
     if (heatGroup === undefined) {
       this.log(LogLevel.Warn, `HeatGroup is undefined for ${this.info.customName}`);
       return;

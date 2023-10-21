@@ -140,8 +140,8 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
 
   public toggleLight(time?: TimeOfDay, _force: boolean = false, calculateTime: boolean = false): boolean {
     const newVal = !this.lightOn;
-    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
-      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
+    if (newVal && time === undefined && calculateTime) {
+      time = TimeCallbackService.dayType(this.room.settings.lampOffset);
     }
     if (newVal && time !== undefined) {
       this.setTimeBased(time);

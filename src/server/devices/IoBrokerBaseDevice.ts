@@ -1,5 +1,5 @@
 import { iRoomDevice } from './baseDeviceInterfaces';
-import { LogDebugType, ServerLogService, Utils } from '../services';
+import { API, LogDebugType, ServerLogService, Utils } from '../services';
 import { DeviceSettings, LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
@@ -9,11 +9,18 @@ import { DeviceCapability } from './DeviceCapability';
 export abstract class IoBrokerBaseDevice implements iRoomDevice {
   public settings: DeviceSettings | undefined = undefined;
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
-  public room: RoomBase | undefined = undefined;
+  private _room: RoomBase | undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [];
 
   public get customName(): string {
     return this.info.customName;
+  }
+
+  public get room(): RoomBase {
+    if (this._room === undefined) {
+      this._room = Utils.guard<RoomBase>(API.getRoom(this.info.room));
+    }
+    return this._room;
   }
 
   protected readonly individualStateCallbacks: Map<string, Array<(val: ioBroker.StateValue) => void>> = new Map<
@@ -125,7 +132,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return Utils.jsonFilter(this, ['individualStateCallbacks']);
+    return Utils.jsonFilter(this, ['individualStateCallbacks'], ['_room']);
   }
 
   public persistDeviceInfo(): void {
@@ -162,7 +169,10 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
         );
         return;
       }
-      this.room = deviceSettings.setID(this.info.allDevicesKey);
+      const room = deviceSettings.setID(this.info.allDevicesKey);
+      if (room !== undefined) {
+        this._room = room;
+      }
       deviceSettings.added = true;
       ServerLogService.addedDeviceToRoom(settings.RoomName, this.deviceType, this.info.deviceRoomIndex);
       return;

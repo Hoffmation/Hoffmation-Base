@@ -98,10 +98,16 @@ export class Utils {
     return object;
   }
 
-  public static jsonFilter(object: object, additionalOmitKeys: string[] = []): Partial<object> {
+  public static jsonFilter(
+    object: object,
+    additionalOmitKeys: string[] = [],
+    topLevelOmmitKeys: string[] = [],
+  ): Partial<object> {
     const keysToOmit: string[] = ['timeout', 'interval', 'timeouts', 'callback', 'otaInfo'];
     keysToOmit.push(...additionalOmitKeys);
-    return this.deepOmit(object, keysToOmit);
+    const loweredOmitKeys: string[] = keysToOmit.map((key) => key.toLowerCase());
+    const loweredTopLevelOmitKeys: string[] = topLevelOmmitKeys.map((key) => key.toLowerCase());
+    return this.deepOmit(object, loweredOmitKeys, loweredTopLevelOmitKeys);
   }
 
   public static testInitializeServices(): void {
@@ -192,7 +198,13 @@ export class Utils {
     return modMin < modMax ? modToCheck <= modMax && modToCheck >= modMin : modToCheck > modMin || modToCheck < modMax;
   }
 
-  private static deepOmit(obj: object, keysToOmit: string[], level: number = 1, currentKey: string = ''): object {
+  private static deepOmit(
+    obj: object,
+    keysToOmit: string[],
+    topLevelOmitKeys: string[],
+    level: number = 1,
+    currentKey: string = '',
+  ): object {
     if (level > 10 && level < 20) {
       ServerLogService.writeLog(LogLevel.Warn, `DeepOmit Loop Level ${level} reached for ${currentKey}`);
     }
@@ -204,11 +216,8 @@ export class Utils {
       if (typeof key == 'string') {
         const lowerKey: string = key.toLowerCase();
         // transform to a new object
-        for (const checkKey of keysToOmit) {
-          // if the key is in the index skip it
-          if (lowerKey.includes(checkKey.toLowerCase())) {
-            return;
-          }
+        if (keysToOmit.includes(lowerKey) || (level === 1 && topLevelOmitKeys.includes(lowerKey))) {
+          return;
         }
         if (lowerKey.endsWith('map')) {
           const newKey: string = lowerKey.replace('map', 'dict');
@@ -220,7 +229,13 @@ export class Utils {
           }
           for (const mapName of map.keys()) {
             dict[mapName] = _.isObject(map.get(mapName))
-              ? this.deepOmit(map.get(mapName) as object, keysToOmit, level + 1, `${currentKey}.${lowerKey}.${mapName}`)
+              ? this.deepOmit(
+                  map.get(mapName) as object,
+                  keysToOmit,
+                  [],
+                  level + 1,
+                  `${currentKey}.${lowerKey}.${mapName}`,
+                )
               : map.get(mapName);
           }
           result[newKey] = dict;
@@ -232,7 +247,7 @@ export class Utils {
         return;
       }
       // if the key is an object run it through the inner function - omitFromObject
-      result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit, level + 1, `${currentKey}.${key}`) : value;
+      result[key] = _.isObject(value) ? this.deepOmit(value, keysToOmit, [], level + 1, `${currentKey}.${key}`) : value;
     });
   }
 

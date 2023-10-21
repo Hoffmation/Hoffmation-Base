@@ -1,12 +1,12 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
-import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../../models';
+import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { PIDController } from '../../../../liquid-pid';
-import { HeatGroupSettings } from '../../../../models/groupSettings/heatGroupSettings';
+import { HeatGroup } from '../../groups';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   protected _battery: number = -99;
@@ -134,16 +134,16 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
     }
-    const heatGroupSettings: HeatGroupSettings | undefined = this.room?.HeatGroup?.settings;
-    if (!this.settings.automaticMode || this.seasonTurnOff || heatGroupSettings?.automaticMode === false) {
+    const heatGroup: HeatGroup | undefined = this.room.HeatGroup;
+    if (!this.settings.automaticMode || this.seasonTurnOff || heatGroup?.settings?.automaticMode === false) {
+      return;
+    }
+    if (heatGroup === undefined) {
+      this.log(LogLevel.Warn, `Heat-Group is undefined for ${this.info.customName}.`);
       return;
     }
 
-    const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this.room?.HeatGroup?.settings?.automaticPoints ?? [],
-      new Date(),
-    );
-    const targetTemperature: number = setting?.temperature ?? heatGroupSettings?.automaticFallBackTemperatur ?? 20;
+    const targetTemperature: number = heatGroup.desiredTemp;
     if (this._desiredTemperatur !== targetTemperature) {
       this.log(
         LogLevel.Debug,

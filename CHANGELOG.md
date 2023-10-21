@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Enhance stability of ioBroker Devices to correctly have a room.
+
 ## 2.18.13 (2023-10-21)
 
 * (theimo1221) Correct shelly TRV target temp handling.

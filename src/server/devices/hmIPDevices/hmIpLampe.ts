@@ -90,7 +90,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
       timeout = 3000;
       Utils.guardedTimeout(
         () => {
-          if (this.room && this.room.PraesenzGroup?.anyPresent()) {
+          if (this.room.PraesenzGroup?.anyPresent()) {
             this.setLight(true, -1, true);
           }
         },
@@ -111,8 +111,8 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
     const newVal = this.queuedLightValue !== null ? !this.queuedLightValue : !this.lightOn;
     const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
-    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
-      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
+    if (newVal && time === undefined && calculateTime) {
+      time = TimeCallbackService.dayType(this.room.settings.lampOffset);
     }
     if (newVal && time !== undefined) {
       this.setTimeBased(time, timeout, force);

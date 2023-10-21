@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iDisposable, TimeCallbackService, Utils } from '../../services';
-import { HeaterSettings, LogLevel, TemperatureSettings, TimeCallback, TimeCallbackType } from '../../../models';
+import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import {
   iHeater,
   iHumiditySensor,
@@ -165,9 +165,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   public getBelongingHeizungen(): iHeater[] {
-    if (!this.room) {
-      return [];
-    }
     return this.room.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
   }
 
@@ -198,12 +195,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       return;
     }
 
-    const setting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
-      this.room?.HeatGroup?.settings?.automaticPoints ?? [],
-      new Date(),
-    );
-
-    const targetTemp = setting?.temperature ?? heatGroupSettings?.automaticFallBackTemperatur ?? 20;
+    const targetTemp = this.room.HeatGroup?.desiredTemp ?? 20;
     if (this._desiredTemperature !== targetTemp) {
       this.log(LogLevel.Debug, `Automatische Temperaturanpassung für ${this.info.customName} auf ${targetTemp}°C`);
       this.desiredTemperature = targetTemp;

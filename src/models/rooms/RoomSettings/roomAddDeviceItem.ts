@@ -3,7 +3,11 @@ import { LogLevel } from '../../logLevel';
 import { RoomBase } from '../RoomBase';
 
 export class RoomAddDeviceItem {
-  constructor(public setID: (value: string) => RoomBase, public index: number, public customName: string) {}
+  constructor(
+    public setID: (value: string) => RoomBase | undefined,
+    public index: number,
+    public customName: string,
+  ) {}
 
   private _added: boolean = false;
 
