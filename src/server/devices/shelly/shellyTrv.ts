@@ -230,38 +230,29 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    const fullId = idSplit.join('.');
-    switch (fullId) {
-      case this._valvePosId:
-        this.log(LogLevel.Trace, `Valve position update for ${this.info.customName} to "${state.val}"`);
-        this._level = (state.val as number) / 100;
-        break;
-      case this._setEnableExternalTempId:
-        this._useExternalTemperatureEnabled = state.val as boolean;
-        break;
-      case this._minumumLevelId:
-        this._minimumValveLevel = state.val as number;
-        break;
-      case this._temperatureId:
-        this._temperatur = state.val as number;
-        break;
-      case this._setAutomaticModeId:
-        this._automaticMode = state.val as boolean;
-        const desiredMode = !this.settings.controlByPid;
-        if (this._automaticMode !== desiredMode) {
-          this.setMode(desiredMode);
-        }
-        break;
-      case this._setPointTemperaturID:
-        this._targetTempVal = state.val as number;
-        break;
-      case this._batteryId:
-        this._battery = state.val as number;
-        this.persistBatteryDevice();
-        if (this._battery < 20) {
-          this.log(LogLevel.Warn, `Das Shelly Gerät hat unter 20% Batterie.`);
-        }
-        break;
+    if (idSplit[3] === 'tmp' && idSplit[4] === 'valvePosition') {
+      this.log(LogLevel.Trace, `Valve position update for ${this.info.customName} to "${state.val}"`);
+      this._level = (state.val as number) / 100;
+    } else if (idSplit[3] === 'ext' && idSplit[4] === 'enabled') {
+      this._useExternalTemperatureEnabled = state.val as boolean;
+    } else if (idSplit[3] === 'tmp' && idSplit[4] === 'minimumValvePosition') {
+      this._minimumValveLevel = state.val as number;
+    } else if (idSplit[3] === 'tmp' && idSplit[4] === 'temperatureC') {
+      this._temperatur = state.val as number;
+    } else if (idSplit[3] === 'tmp' && idSplit[4] === 'automaticTemperatureControl') {
+      this._automaticMode = state.val as boolean;
+      const desiredMode = !this.settings.controlByPid;
+      if (this._automaticMode !== desiredMode) {
+        this.setMode(desiredMode);
+      }
+    } else if (idSplit[3] === 'tmp' && idSplit[4] === 'temperatureTargetC') {
+      this._targetTempVal = state.val as number;
+    } else if (idSplit[3] === 'bat' && idSplit[4] === 'value') {
+      this._battery = state.val as number;
+      this.persistBatteryDevice();
+      if (this._battery < 20) {
+        this.log(LogLevel.Warn, `Das Shelly Gerät hat unter 20% Batterie.`);
+      }
     }
     super.update(idSplit, state, initial, true);
   }

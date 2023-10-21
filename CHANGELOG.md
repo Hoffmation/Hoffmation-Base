@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Correct shelly TRV device update handling
+
 ## 2.18.11 (2023-10-20)
 
 * (theimo1221) Correct shelly target temperature state id.
