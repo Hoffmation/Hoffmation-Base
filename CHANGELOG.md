@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.19.2 (2023-10-22)
 
 * (theimo1221) Extend dachs to include a heat-storage sensor as well.
 
