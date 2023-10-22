@@ -13,7 +13,9 @@ export class CameraDevice implements iCameraDevice {
   public readonly blueIrisName: string;
   private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
+  private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _personDetectedStateId: string | undefined = undefined;
+  private _dogDetectedStateId: string | undefined = undefined;
   private _movementDetectedStateId: string | undefined = undefined;
 
   public get lastImage(): string {
@@ -29,12 +31,21 @@ export class CameraDevice implements iCameraDevice {
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private _lastImage: string = '';
   private _personDetected: boolean = false;
+  private _dogDetected: boolean = false;
   private _alarmGriffBlockCount: number = 0;
   private _alarmBlockedByGriffTimeStamp: number = 0;
   public readonly mpegStreamLink: string = '';
   public readonly h264IosStreamLink: string = '';
   public readonly rtspStreamLink: string = '';
   public readonly currentImageLink: string = '';
+
+  public get dogDetected(): boolean {
+    return this._dogDetected;
+  }
+
+  public get personDetected(): boolean {
+    return this._personDetected;
+  }
 
   public get alarmBlockedByGriffTimeStamp(): number {
     return this._alarmBlockedByGriffTimeStamp;
@@ -177,6 +188,18 @@ export class CameraDevice implements iCameraDevice {
           this.updateMovement(newValue);
         }
         break;
+      case 'DogDetected':
+        this._dogDetectedStateId = idSplit.join('.');
+        const newDogDetectionVal: boolean = (state.val as number) === 1;
+        if (newDogDetectionVal) {
+          this.log(LogLevel.Info, `Dog Detected`);
+          this.resetDogDetectFallbackTimer();
+        }
+        this._dogDetected = newDogDetectionVal;
+        if (this.settings.movementDetectionOnDogsToo) {
+          this.updateMovement(newDogDetectionVal);
+        }
+        break;
       case 'MotionSnapshot':
         this._lastImage = state.val as string;
         Utils.guardedTimeout(() => {
@@ -270,6 +293,27 @@ export class CameraDevice implements iCameraDevice {
         }
         if (this._personDetectedStateId !== undefined) {
           ioBrokerMain.iOConnection?.setState(this._personDetectedStateId, { val: 0, ack: true });
+        }
+      },
+      120000,
+      this,
+    );
+  }
+
+  private resetDogDetectFallbackTimer(): void {
+    if (this._dogDetectFallbackTimeout !== null) {
+      clearTimeout(this._dogDetectFallbackTimeout);
+      this._dogDetectFallbackTimeout = null;
+    }
+    this._dogDetectFallbackTimeout = Utils.guardedTimeout(
+      () => {
+        this._dogDetectFallbackTimeout = null;
+        this._dogDetected = false;
+        if (this.settings.movementDetectionOnDogsToo) {
+          this.updateMovement(false);
+        }
+        if (this._dogDetectedStateId !== undefined) {
+          ioBrokerMain.iOConnection?.setState(this._dogDetectedStateId, { val: 0, ack: true });
         }
       },
       120000,
