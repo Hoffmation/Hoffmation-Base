@@ -68,6 +68,15 @@ export class LightGroup extends BaseGroup {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Outlets) as iActuator[];
   }
 
+  public getAllAsActuator(): iActuator[] {
+    const result: iActuator[] = [];
+    result.push(...this.getLights());
+    result.push(...this.getOutlets());
+    result.push(...this.getLED());
+    result.push(...this.getWled());
+    return result;
+  }
+
   public handleSunriseOff(): void {
     if (!this.anyLightsOn()) {
       return;
@@ -77,19 +86,12 @@ export class LightGroup extends BaseGroup {
   }
 
   public switchAll(target: boolean, force: boolean = false): void {
-    if (!force && !target && this._ambientLightOn) {
-      this.log(LogLevel.Info, `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`);
-      return;
-    }
-    this.setAllLampen(target, undefined, force);
-    this.setAllStecker(target, undefined, force);
-
-    this.getLED().forEach((s) => {
-      s.setLight(target);
-    });
-
-    this.getWled().forEach((wled) => {
-      wled.setLight(target);
+    this.getAllAsActuator().forEach((a) => {
+      if (a.settings.includeInAmbientLight && !force && !target && this._ambientLightOn) {
+        a.log(LogLevel.Info, `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`);
+        return;
+      }
+      a.setActuator(target, undefined, force);
     });
   }
 
@@ -237,27 +239,9 @@ export class LightGroup extends BaseGroup {
     this._ambientLightOn = true;
     this.log(LogLevel.Info, `Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung`);
 
-    this.getLights().forEach((l) => {
-      if (l.settings.includeInAmbientLight) {
-        l.setLight(true, -1, false);
-      }
-    });
-
-    this.getOutlets().forEach((o) => {
-      if (o.settings.includeInAmbientLight) {
-        o.setActuator(true);
-      }
-    });
-
-    this.getLED().forEach((s) => {
-      if (s.settings.includeInAmbientLight) {
-        s.setLight(true, -1, false);
-      }
-    });
-
-    this.getWled().forEach((wled) => {
-      if (wled.settings.includeInAmbientLight) {
-        wled.setLight(true);
+    this.getAllAsActuator().forEach((a) => {
+      if (a.settings.includeInAmbientLight) {
+        a.setActuator(true);
       }
     });
     Utils.guardedTimeout(
