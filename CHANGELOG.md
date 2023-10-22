@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.19.5 (2023-10-22)
 
 * (theimo1221) Non ambient light didn't got turn-off in last-left callback
 
