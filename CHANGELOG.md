@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Retrigger publish
+
 ## 2.19.3 (2023-10-22)
 
 * (theimo1221) Add option to handle detected dogs for camera devices e.g. to turn on lights.
