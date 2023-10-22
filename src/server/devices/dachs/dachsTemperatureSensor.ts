@@ -7,7 +7,7 @@ import { Devices } from '../devices';
 import _ from 'lodash';
 import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
 
-export class DachsWarmWaterTemperature implements iTemperatureSensor {
+export class DachsTemperatureSensor implements iTemperatureSensor {
   public settings: DeviceSettings | undefined = undefined;
   public readonly deviceType: DeviceType = DeviceType.DachsWarmWaterTemperature;
   public readonly deviceCapabilities: DeviceCapability[] = [];
@@ -25,12 +25,12 @@ export class DachsWarmWaterTemperature implements iTemperatureSensor {
   private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
   protected _info: DeviceInfo;
 
-  public constructor(roomName: string) {
+  public constructor(roomName: string, shortKey: string, longKey: string) {
     this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
     this._info = new DeviceInfo();
-    this._info.fullName = `Water Temperature`;
-    this._info.customName = `Water Temperature ${roomName}`;
-    this._info.allDevicesKey = `dachs-ww-${roomName}`;
+    this._info.fullName = longKey;
+    this._info.customName = `${longKey} ${roomName}`;
+    this._info.allDevicesKey = `dachs-${shortKey}-${roomName}`;
     this._info.room = roomName;
     Devices.alLDevices[this._info.allDevicesKey] = this;
     Devices.temperatureWarmWater = this;
@@ -51,7 +51,7 @@ export class DachsWarmWaterTemperature implements iTemperatureSensor {
   }
 
   public get id(): string {
-    return this.info.allDevicesKey ?? `sonos-${this.info.room}-${this.info.customName}`;
+    return this.info.allDevicesKey ?? `dachs-${this.info.room}-${this.info.customName}`;
   }
 
   public get name(): string {

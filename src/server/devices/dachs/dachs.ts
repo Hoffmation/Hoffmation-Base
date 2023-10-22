@@ -7,19 +7,21 @@ import { iDachsSettings } from '../../config/iDachsSettings';
 import { DachsDeviceSettings } from '../../../models/deviceSettings/dachsSettings';
 import { DachsHttpClient, DachsInfluxClient } from './lib';
 import { iFlattenedCompleteResponse } from './interfaces';
-import { DachsWarmWaterTemperature } from './dachsWarmWaterTemperature';
+import { DachsTemperatureSensor } from './dachsTemperatureSensor';
 
 export class Dachs implements iBaseDevice, iActuator {
   public settings: DachsDeviceSettings = new DachsDeviceSettings();
   public readonly deviceType: DeviceType = DeviceType.Dachs;
   public readonly deviceCapabilities: DeviceCapability[] = [];
-  public readonly warmWaterSensor: DachsWarmWaterTemperature;
+  public readonly warmWaterSensor: DachsTemperatureSensor;
+  public readonly heatStorageTempSensor: DachsTemperatureSensor;
   private readonly client: DachsHttpClient;
   private readonly config: iDachsSettings;
   public fetchedData: iFlattenedCompleteResponse | undefined;
   private readonly _influxClient: DachsInfluxClient | undefined;
   private _dachsOn: boolean = false;
   private _tempWarmWater: number = 0;
+  private _tempHeatStorage: number = 0;
 
   public get customName(): string {
     return this.info.customName;
@@ -52,7 +54,8 @@ export class Dachs implements iBaseDevice, iActuator {
     };
     this.config = modifiedOptions;
     this.client = new DachsHttpClient(this.config.connectionOptions);
-    this.warmWaterSensor = new DachsWarmWaterTemperature(this.config.roomName);
+    this.warmWaterSensor = new DachsTemperatureSensor(this.config.roomName, 'ww', 'Water Temperature');
+    this.heatStorageTempSensor = new DachsTemperatureSensor(this.config.roomName, 'hs', 'Heat Storage Temperature');
     Utils.guardedInterval(this.loadData, this.config.refreshInterval, this);
   }
 
@@ -88,7 +91,9 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   public toJSON(): Partial<OwnSonosDevice> {
-    return Utils.jsonFilter(_.omit(this, ['room', 'client', 'config', '_influxClient', 'warmWaterSensor']));
+    return Utils.jsonFilter(
+      _.omit(this, ['room', 'client', 'config', '_influxClient', 'warmWaterSensor', 'heatStorageTempSensor']),
+    );
   }
 
   public persistDeviceInfo(): void {
@@ -123,6 +128,8 @@ export class Dachs implements iBaseDevice, iActuator {
       this._dachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
       this._tempWarmWater = this.fetchedData['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
       this.warmWaterSensor.update(this._tempWarmWater);
+      this._tempHeatStorage = this.fetchedData['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
+      this.heatStorageTempSensor.update(this._tempHeatStorage);
       this.persist();
     });
   }

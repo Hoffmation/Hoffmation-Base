@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend dachs to include a heat-storage sensor as well.
+
 ## 2.19.1 (2023-10-21)
 
 * (theimo1221) Add 'manualDisabled' to heater settings (parallel to AC-Devices)
