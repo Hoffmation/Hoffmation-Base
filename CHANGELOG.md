@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.19.4 (2023-10-22)
 
 * (theimo1221) Retrigger publish
 
