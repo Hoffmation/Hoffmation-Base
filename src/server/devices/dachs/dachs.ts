@@ -35,6 +35,10 @@ export class Dachs implements iBaseDevice, iActuator {
     return this._tempWarmWater;
   }
 
+  public get tempHeatStorage(): number {
+    return this._tempHeatStorage;
+  }
+
   public constructor(options: iDachsSettings) {
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this._info = new DeviceInfo();
