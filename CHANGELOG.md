@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.19.7 (2023-11-15)
 
 * (theimo1221) Update packages
 * (theimo1221) Intercept Axios Errors
