@@ -2,7 +2,7 @@ import config from './mainConfig.example.json';
 import { HoffmationBase, HoffmationInitializationObject } from '../src';
 import { Dachs } from '../src/server/devices/dachs';
 
-export class SamsungTvTest {
+export class DachsTest {
   public static async start(): Promise<void> {
     const init = new HoffmationInitializationObject(config);
     init.config.telegram = undefined;
@@ -22,11 +22,11 @@ export class SamsungTvTest {
       console.log('shutdown-now');
       console.log('dachs-Data:', dachs.toJSON());
       process.exit(1);
-    }, 65000);
+    }, 15000);
   }
 }
 
-void SamsungTvTest.start();
+void DachsTest.start();
 
 process.on('uncaughtException', (err) => {
   console.log(`Uncaught Exception: ${err.message}\n${err.stack}`);
