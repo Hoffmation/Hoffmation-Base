@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import ReadKeyList from './ReadKeyList';
 import * as _ from 'lodash';
-import { DachsClientOptions, KeyListEntityResponse } from '../interfaces';
-import { iFlattenedCompleteResponse } from '../interfaces/iFlattenedCompleteResponse';
+import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse } from '../interfaces';
 import keyTemplates from './keyTemplates';
+import { ServerLogService } from '../../../services';
+import { LogLevel } from '../../../../models';
 
 /**
  * axios HTTP Client Class
@@ -16,6 +17,7 @@ export class DachsHttpClient {
   private options: DachsClientOptions;
   //baseURL
   private url: string;
+  private axiosInstance: AxiosInstance;
 
   constructor(options: DachsClientOptions) {
     this.options = options;
@@ -25,6 +27,23 @@ export class DachsHttpClient {
     this.options.host = this.options.host.startsWith('http') ? this.options.host : `${protocol}://${this.options.host}`;
     //combine all parameter for url
     this.url = `${this.options.host}:${this.options.port ?? 8080}`;
+    this.axiosInstance = axios.create({
+      auth: {
+        username: this.options.username || 'glt',
+        password: this.options.password || '',
+      },
+      baseURL: this.url,
+    });
+
+    // Interceptor for error handling
+    this.axiosInstance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        ServerLogService.writeLog(LogLevel.Error, `DachsHttpClient: ${error.message}`);
+      },
+    );
   }
 
   /**
@@ -52,14 +71,8 @@ export class DachsHttpClient {
    */
   fetchByKeys(...keys: string[]): Promise<{ [id: string]: KeyListEntityResponse<string | number | boolean> }> {
     return new Promise((resolve, reject) => {
-      axios({
-        auth: {
-          username: this.options.username || 'glt',
-          password: this.options.password || '',
-        },
-        baseURL: this.url,
-        url: `/getKey` + this.urlBuilder(keys),
-      })
+      this.axiosInstance
+        .get(`/getKey` + this.urlBuilder(keys))
         .then((res: AxiosResponse<string>) => {
           resolve(this.parser(res.data));
         })
@@ -86,18 +99,13 @@ export class DachsHttpClient {
 
   public setKeys(data: { [key: string]: string }): Promise<AxiosResponse<string>> {
     return new Promise((resolve, reject) => {
-      axios({
-        auth: {
-          username: this.options.username || 'glt',
-          password: this.options.password || '',
-        },
-        baseURL: this.url,
-        url: `/setKeys`,
-        method: 'POST',
-        data: Object.entries(data)
-          .map(([key, value]) => `${key}=${value}`)
-          .join('&'),
-      })
+      this.axiosInstance
+        .post(
+          `/setKeys`,
+          Object.entries(data)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('&'),
+        )
         .then((res: AxiosResponse<string>) => {
           resolve(res);
         })
