@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.20.0-beta.3 (2023-11-19)
 
 * (theimo1221) Exclude external govee device from JSON
 
