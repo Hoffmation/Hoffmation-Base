@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Properly export govee
+
 ## 2.20.0-beta.1 (2023-11-19)
 
 * (theimo1221) Add govee lights to correct device cluster

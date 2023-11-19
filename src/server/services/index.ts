@@ -2,6 +2,7 @@ export * from './ac/index';
 export * from './api/index';
 export * from './calendar/index';
 export * from './dbo/index';
+export * from './govee/index';
 export * from './log-service/index';
 export * from './network/index';
 export * from './room-service/index';
