@@ -101,7 +101,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public toJSON(): Partial<OwnGoveeDevice> {
-    return Utils.jsonFilter(_.omit(this, ['room']));
+    return Utils.jsonFilter(_.omit(this, ['room', 'device']));
   }
 
   public persistDeviceInfo(): void {
