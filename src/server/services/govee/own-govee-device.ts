@@ -15,6 +15,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   public readonly deviceType: DeviceType = DeviceType.GoveeLed;
   public readonly deviceId: string;
   public readonly deviceCapabilities: DeviceCapability[] = [
+    DeviceCapability.ledLamp,
     DeviceCapability.lamp,
     DeviceCapability.dimmablelamp,
     DeviceCapability.blockAutomatic,

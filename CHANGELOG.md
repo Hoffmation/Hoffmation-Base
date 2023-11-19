@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add proper capabilities to govee
+
 ## 2.20.0-beta.4 (2023-11-19)
 
 * (theimo1221) Correct govee on/off
