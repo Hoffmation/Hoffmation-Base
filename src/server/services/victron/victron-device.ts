@@ -187,13 +187,20 @@ export class VictronDevice implements iEnergyManager {
       this._excessEnergy = solarOutput - neededBatteryWattage - baseConsumption;
     }
 
+    let isSocTooLow: boolean = false;
+    if (this.data.battery.dcPower !== null && this.data.battery.soc !== null) {
+      if (timeOfDay === TimeOfDay.Night) {
+        isSocTooLow = this.data.battery.soc < 0.5;
+      } else if (timeOfDay === TimeOfDay.AfterSunset) {
+        isSocTooLow = this.data.battery.soc < 0.75;
+      } else if (hoursTilSunset > 4) {
+        isSocTooLow = this.data.battery.soc < 0.7;
+      } else {
+        isSocTooLow = this.data.battery.soc < 0.8;
+      }
+    }
     // Whilst calculated spare energy is more precise, we don't mind using the battery as a buffer, if it is full enough.
-    if (
-      this.data.battery.dcPower !== null &&
-      this.data.battery.soc !== null &&
-      this.data.battery.soc >
-        (hoursTilSunset > 4 && timeOfDay !== TimeOfDay.AfterSunset && timeOfDay !== TimeOfDay.Night ? 0.7 : 0.8)
-    ) {
+    if (this.data.battery.dcPower !== null && this.data.battery.soc !== null && !isSocTooLow) {
       this._excessEnergy = this.settings.maximumBatteryDischargeWattage - Math.max(this.data.battery.dcPower, 0);
     }
     this.calculatePersistenceValues();
