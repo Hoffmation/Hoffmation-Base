@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add proper capabilities to govee
+* (theimo1221) Correct victron limitis in regards to moments after sunset
 
 ## 2.20.0-beta.4 (2023-11-19)
 
