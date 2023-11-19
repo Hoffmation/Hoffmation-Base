@@ -5,7 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 2.20.0 (2023-11-19)
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Optimize Battery Usage during nights
 
 * (theimo1221) Add proper capabilities to govee
 * (theimo1221) Correct victron limitis in regards to moments after sunset
