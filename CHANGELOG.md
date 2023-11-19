@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.20.1 (2023-11-19)
 
 * (theimo1221) Optimize Battery Usage during nights
 
