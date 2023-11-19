@@ -42,10 +42,12 @@
     "release-major": "npm run pre-release-check && npm run release major --",
     "manual-test-iobroker-connection": "tsc && ts-node ./manualTests/io-connection-test.ts",
     "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts",
-    "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts"
+    "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts",
+    "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts"
   },
   "dependencies": {
     "@babel/runtime": "^7.23.2",
+    "@iobroker/types": "^5.0.16",
     "@svrooij/sonos": "^2.5.0",
     "@types/debug": "^4.1.12",
     "@types/jest": "^29.5.8",
@@ -55,12 +57,12 @@
     "@types/pg": "^8.10.9",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.14",
-    "@iobroker/types": "^5.0.16",
     "aws-sdk": "2.1496.0",
     "axios": "^1.6.2",
     "bson": "^6.2.0",
     "daikin-controller": "^2.1.0",
     "get-mp3-duration": "^1.0.0",
+    "theimo1221-govee-lan-control": "^3.0.2-1",
     "https": "^1.0.0",
     "lodash": "^4.17.21",
     "node-fetch": "3.3.2",

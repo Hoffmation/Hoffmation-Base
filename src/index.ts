@@ -29,6 +29,7 @@ import {
 import { LogLevel } from './models';
 import { Dachs } from './server/devices/dachs';
 import '@iobroker/types';
+import { GooveeService, OwnGoveeDevices } from './server/services/govee';
 
 export * from './models/index';
 export * from './server/index';
@@ -91,6 +92,11 @@ export class HoffmationBase {
     if (SettingsService.settings.sonos?.active) {
       SonosService.addOwnDevices(OwnSonosDevices.ownDevices);
       SonosService.initialize();
+    }
+
+    if (SettingsService.settings.goveeDevicesPresent) {
+      GooveeService.addOwnDevices(OwnGoveeDevices.ownDevices);
+      GooveeService.initialize();
     }
 
     if (SettingsService.settings.daikin?.active) {

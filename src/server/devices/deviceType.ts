@@ -43,6 +43,7 @@ export enum DeviceType {
   ShellyTrv = 402,
   TuyaGarageDoorOpener = 501,
   WledDevice = 1001,
+  GoveeLed = 1002,
   Daikin = 2001,
   Sonos = 3001,
   Espresense = 4001,

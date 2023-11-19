@@ -6,8 +6,6 @@ export interface iLedRgbCct extends iDimmableLamp {
   readonly color: string;
   readonly colortemp: number;
 
-  update(idSplit: string[], state: ioBroker.State, initial: boolean): void;
-
   /**
    * @inheritDoc
    */

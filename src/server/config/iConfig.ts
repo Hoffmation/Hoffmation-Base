@@ -31,6 +31,7 @@ export interface iConfig {
   espresense?: iEspresenseSettings;
   ioBrokerUrl: string;
   ioBroker?: iIobrokerSettigns;
+  goveeDevicesPresent?: boolean;
   heaterSettings?: iHeaterSettings;
   logSettings?: iLogSettings;
   mp3Server?: iMp3Settings;

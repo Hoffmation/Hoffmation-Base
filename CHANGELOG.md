@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add first support for govee lights
+
 ## 2.19.7 (2023-11-15)
 
 * (theimo1221) Update packages
