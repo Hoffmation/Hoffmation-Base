@@ -240,7 +240,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     } else {
       this.turnOff();
     }
-    this.device?.actions.setOn();
     if (timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
@@ -295,9 +294,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private turnOff(): void {
-    if (!this.on) {
-      return;
-    }
     this.device?.actions
       .setOff()
       .then(() => {
