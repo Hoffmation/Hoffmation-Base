@@ -81,6 +81,7 @@ export class DeviceCluster {
       case DeviceType.ZigbeeIlluLedRGBCCT:
       case DeviceType.ZigbeeLinkindLedRgbCct:
       case DeviceType.ZigbeeInnr142C:
+      case DeviceType.GoveeLed:
         clusterTypes.push(DeviceClusterType.LED);
         break;
       case DeviceType.ZigbeeAquaraVibra:
