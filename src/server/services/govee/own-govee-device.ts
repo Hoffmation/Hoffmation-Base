@@ -95,7 +95,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
-      room: this.room?.roomName ?? '',
+      room: this._room?.roomName ?? '',
       deviceId: this.name,
       deviceName: this.name,
     });

@@ -1,6 +1,5 @@
-import { HoffmationBase, HoffmationInitializationObject } from '../src';
+import { GooveeService, HoffmationBase, HoffmationInitializationObject, OwnGoveeDevice, OwnGoveeDevices } from '../src';
 import config from './mainConfig.example.json';
-import { GooveeService, OwnGoveeDevice, OwnGoveeDevices } from '../src/server/services/govee';
 
 export class GoveeTestTest {
   public static async start(): Promise<void> {
@@ -15,6 +14,9 @@ export class GoveeTestTest {
     OwnGoveeDevices.addDevice(device);
     GooveeService.addOwnDevices(OwnGoveeDevices.ownDevices);
     GooveeService.initialize();
+    setTimeout(() => {
+      device.setLight(true, -1, true, 100, undefined, '#ff6a00', -1);
+    }, 5000);
     setTimeout(() => {
       console.log('shutdown-now');
       process.exit(1);
