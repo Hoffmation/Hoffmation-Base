@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Extend camera device logging
+* (theimo1221) Update packages
 
 ## 2.20.1 (2023-11-19)
 
