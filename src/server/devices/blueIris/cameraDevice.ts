@@ -163,7 +163,7 @@ export class CameraDevice implements iCameraDevice {
 
   public update(idSplit: string[], state: ioBroker.State): void {
     const stateName = idSplit[4];
-    this.log(LogLevel.Debug, `Update for "${stateName}"`);
+    this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
     switch (stateName) {
       case 'MotionDetected':
         this._movementDetectedStateId = idSplit.join('.');
