@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't log base 64 image data
+
 ## 2.20.2 (2023-11-22)
 
 * (theimo1221) Extend camera device logging

@@ -163,13 +163,13 @@ export class CameraDevice implements iCameraDevice {
 
   public update(idSplit: string[], state: ioBroker.State): void {
     const stateName = idSplit[4];
-    this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
     switch (stateName) {
       case 'MotionDetected':
         this._movementDetectedStateId = idSplit.join('.');
         if (this.settings.movementDetectionOnPersonOnly) {
           return;
         }
+        this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
         const movementDetected: boolean = (state.val as number) === 1;
         this.updateMovement(movementDetected);
         if (movementDetected) {
@@ -179,6 +179,7 @@ export class CameraDevice implements iCameraDevice {
       case 'PersonDetected':
         this._personDetectedStateId = idSplit.join('.');
         const newValue: boolean = (state.val as number) === 1;
+        this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
         if (newValue) {
           this.log(LogLevel.Info, `Person Detected`);
           this.resetPersonDetectFallbackTimer();
@@ -191,6 +192,7 @@ export class CameraDevice implements iCameraDevice {
       case 'DogDetected':
         this._dogDetectedStateId = idSplit.join('.');
         const newDogDetectionVal: boolean = (state.val as number) === 1;
+        this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
         if (newDogDetectionVal) {
           this.log(LogLevel.Info, `Dog Detected`);
           this.resetDogDetectFallbackTimer();
