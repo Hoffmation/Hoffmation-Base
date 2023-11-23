@@ -92,11 +92,12 @@ export class PresenceGroup extends BaseGroup {
       () => {
         timeAfterReset =
           Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
+        const presentAmount: number = this.presentAmount();
         this.log(
           LogLevel.Debug,
           `Delayed Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
         );
-        if (!this.anyPresent() && timeAfterReset > 0) {
+        if (presentAmount <= 0 && timeAfterReset > 0) {
           this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
           cb();
         }

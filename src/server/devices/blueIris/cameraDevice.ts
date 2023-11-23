@@ -331,6 +331,10 @@ export class CameraDevice implements iCameraDevice {
     this._movementDetectFallbackTimeout = Utils.guardedTimeout(
       () => {
         this._movementDetectFallbackTimeout = null;
+        if (!this._movementDetected) {
+          // Der Fallback wird nicht benötigt, da bereits das Movement zurückgesetzt wurde
+          return;
+        }
         this._movementDetected = false;
         this.updateMovement(false);
         if (this._movementDetectedStateId !== undefined) {

@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Govee not restoring persisted settings properly
+* (theimo1221) Stabilize movement handling within camera devices
 
 ## 2.20.3 (2023-11-22)
 
