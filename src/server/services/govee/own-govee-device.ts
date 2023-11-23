@@ -39,7 +39,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     Devices.alLDevices[`govee-${roomName}-${deviceId}`] = this;
     this.persistDeviceInfo();
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
-    this.loadDeviceSettings();
+    Utils.guardedTimeout(this.loadDeviceSettings, 300, this);
   }
 
   private _color: string = '#fcba32';
@@ -199,7 +199,8 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}`,
     );
 
-    if (color !== '') {
+    const formattedColor: string | null = Utils.formatHex(color);
+    if (formattedColor !== null) {
       this.setColor(color);
     }
 

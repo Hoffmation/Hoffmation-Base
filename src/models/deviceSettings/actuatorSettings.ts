@@ -31,7 +31,7 @@ export class ActuatorSettings extends DeviceSettings {
    */
   public includeInAmbientLight: boolean = false;
 
-  public fromPartialObject(data: Partial<ActuatorSettings>): void {
+  public override fromPartialObject(data: Partial<ActuatorSettings>): void {
     this.dawnOn = data.dawnOn ?? this.dawnOn;
     this.duskOn = data.duskOn ?? this.duskOn;
     this.nightOn = data.nightOn ?? this.nightOn;

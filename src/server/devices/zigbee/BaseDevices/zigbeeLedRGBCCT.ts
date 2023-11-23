@@ -4,6 +4,7 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct';
 import { ZigbeeDimmer } from './zigbeeDimmer';
+import { Utils } from '../../../services';
 
 export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct {
   public static DEFAULT_COLOR_WARM: string = '#f2b200';
@@ -138,7 +139,8 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
       `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}`,
     );
 
-    if (color !== '') {
+    const formattedColor: string | null = Utils.formatHex(color);
+    if (formattedColor !== null) {
       this.ioConn.setState(this._stateIdColor, color, (err) => {
         if (err) {
           this.log(LogLevel.Error, `LED Farbe schalten ergab Fehler: ${err}`);

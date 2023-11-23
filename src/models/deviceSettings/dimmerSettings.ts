@@ -8,7 +8,7 @@ export class DimmerSettings extends ActuatorSettings {
   public dayBrightness: number = 100;
   public turnOnThreshhold: number = -1;
 
-  public fromPartialObject(data: Partial<DimmerSettings>): void {
+  public override fromPartialObject(data: Partial<DimmerSettings>): void {
     this.nightBrightness = data.nightBrightness ?? this.nightBrightness;
     this.dawnBrightness = data.dawnBrightness ?? this.dawnBrightness;
     this.duskBrightness = data.duskBrightness ?? this.duskBrightness;

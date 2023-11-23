@@ -289,4 +289,14 @@ export class Utils {
     }
     return true;
   }
+
+  public static formatHex(hex: string): string | null {
+    if (hex === undefined || hex === null || hex === '') {
+      return null;
+    }
+    if (!hex.startsWith('#')) {
+      return `#${hex}`;
+    }
+    return hex;
+  }
 }

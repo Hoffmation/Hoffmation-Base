@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Govee not restoring persisted settings properly
+
 ## 2.20.3 (2023-11-22)
 
 * (theimo1221) Don't log base 64 image data
