@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Multiple Last Left CB's resulted in some cb's being skipped.
+
 ## 2.20.4 (2023-11-23)
 
 * (theimo1221) Govee not restoring persisted settings properly

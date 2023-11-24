@@ -9,6 +9,8 @@ import { iMotionSensor } from '../baseDeviceInterfaces';
 export class PresenceGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);
   private _lastLeftTimeout: NodeJS.Timeout | null = null;
+  private _lastLeftCbs: (() => void)[] = [];
+  private _firstEnterCbs: (() => void)[] = [];
 
   public constructor(roomName: string, motionSensorIds: string[]) {
     super(roomName, GroupType.Presence);
@@ -36,6 +38,7 @@ export class PresenceGroup extends BaseGroup {
     });
 
     this.addLastLeftCallback(() => {
+      this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
       this.getRoom().LightGroup?.switchAll(false);
     });
 
@@ -45,6 +48,18 @@ export class PresenceGroup extends BaseGroup {
       }
       this.log(LogLevel.DeepTrace, `Bewegung im Raum ${this.roomName} festgestellt --> Licht einschalten`);
       this.getRoom().setLightTimeBased();
+    });
+
+    this.getMotionDetector().forEach((b) => {
+      b.addMovementCallback((val) => {
+        this.motionSensorOnFirstEnter(val);
+      });
+    });
+
+    this.getMotionDetector().forEach((b) => {
+      b.addMovementCallback((val) => {
+        this.motionSensorOnLastLeft(val);
+      });
     });
   }
 
@@ -69,7 +84,15 @@ export class PresenceGroup extends BaseGroup {
     return false;
   }
 
-  public lastLeftCB(val: boolean, cb: () => void): void {
+  public addLastLeftCallback(cb: () => void): void {
+    this._lastLeftCbs.push(cb);
+  }
+
+  public addFirstEnterCallback(cb: () => void): void {
+    this._firstEnterCbs.push(cb);
+  }
+
+  private motionSensorOnLastLeft(val: boolean): void {
     if (val || this.anyPresent()) {
       this.resetLastLeftTimeout();
       return;
@@ -82,8 +105,7 @@ export class PresenceGroup extends BaseGroup {
         LogLevel.Debug,
         `Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
       );
-      this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
-      cb();
+      this.executeLastLeftCbs();
       return;
     }
     this.log(LogLevel.Debug, `Movement reset in ${this.roomName} delayed.`);
@@ -98,29 +120,12 @@ export class PresenceGroup extends BaseGroup {
           `Delayed Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,
         );
         if (presentAmount <= 0 && timeAfterReset > 0) {
-          this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
-          cb();
+          this.executeLastLeftCbs();
         }
       },
       Math.abs(timeAfterReset) + 500,
       this,
     );
-  }
-
-  public addLastLeftCallback(cb: () => void): void {
-    this.getMotionDetector().forEach((b) => {
-      b.addMovementCallback((val) => {
-        this.lastLeftCB(val, cb);
-      });
-    });
-  }
-
-  public addFirstEnterCallback(cb: () => void): void {
-    this.getMotionDetector().forEach((b) => {
-      b.addMovementCallback((val) => {
-        this.firstEnterCallback(val, cb);
-      });
-    });
   }
 
   /**
@@ -133,7 +138,7 @@ export class PresenceGroup extends BaseGroup {
     }
   }
 
-  private firstEnterCallback(val: boolean, cb: () => void): void {
+  private motionSensorOnFirstEnter(val: boolean): void {
     if (!val) {
       return;
     }
@@ -142,6 +147,14 @@ export class PresenceGroup extends BaseGroup {
       return;
     }
 
-    cb();
+    for (const cb of this._firstEnterCbs) {
+      cb();
+    }
+  }
+
+  private executeLastLeftCbs(): void {
+    for (const cb of this._lastLeftCbs) {
+      cb();
+    }
   }
 }
