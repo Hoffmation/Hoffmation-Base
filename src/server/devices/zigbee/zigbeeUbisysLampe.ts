@@ -1,10 +1,11 @@
 import { DeviceType } from '../deviceType';
 import { LogLevel, TimeOfDay } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
-import { LogDebugType, TimeCallbackService, Utils } from '../../services';
+import { LogDebugType, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { ZigbeeUbisysActuator } from './zigbeeUbisysActuator';
+import { LampUtils } from '../sharedFunctions';
 
 export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
   public constructor(pInfo: IoBrokerDeviceInfo) {
@@ -28,43 +29,19 @@ export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
   /** @inheritdoc */
   public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
     this.log(LogLevel.Debug, `Set Light Acutator to "${pValue}"`, LogDebugType.SetActuator);
-    if (this.settings.isStromStoss) {
+    if (this.settings.isStromStoss && pValue) {
       timeout = 3000;
-      Utils.guardedTimeout(
-        () => {
-          if (this.room && this.room.PraesenzGroup?.anyPresent()) {
-            this.setLight(true, -1, true);
-          }
-        },
-        this.settings.stromStossResendTime * 1000,
-        this,
-      );
+      LampUtils.stromStossOn(this);
     }
     super.setActuator(pValue, timeout, force);
   }
 
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
-    const newVal = this.queuedValue !== null ? !this.queuedValue : !this.lightOn;
-    const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
-    if (newVal && time === undefined && calculateTime && this.room !== undefined) {
-      time = TimeCallbackService.dayType(this.room?.settings.lampOffset);
-    }
-    if (newVal && time !== undefined) {
-      this.setTimeBased(time, timeout, force);
-      return true;
-    }
-    this.setLight(newVal, timeout, force);
-    return newVal;
+    return LampUtils.toggleLight(this, time, force, calculateTime);
   }
 
   public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
-    if (
-      (time === TimeOfDay.Night && this.settings.nightOn) ||
-      (time === TimeOfDay.BeforeSunrise && this.settings.dawnOn) ||
-      (time === TimeOfDay.AfterSunset && this.settings.duskOn)
-    ) {
-      this.setLight(true, timeout, force);
-    }
+    LampUtils.setTimeBased(this, time, timeout, force);
   }
 
   public persist(): void {

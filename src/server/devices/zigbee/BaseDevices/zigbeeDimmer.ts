@@ -1,44 +1,26 @@
 import { CollisionSolving, DimmerSettings, LogLevel, TimeOfDay } from '../../../../models';
 import { DeviceType } from '../../deviceType';
-import { LogDebugType, TimeCallbackService, Utils } from '../../../services';
+import { LogDebugType, Utils } from '../../../services';
 import { ZigbeeDevice } from './index';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp';
 import { iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
 import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
+import { LampUtils } from '../../sharedFunctions';
 
 export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp, iTemporaryDisableAutomatic {
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   public queuedValue: boolean | null = null;
   public settings: DimmerSettings = new DimmerSettings();
-  protected _brightness: number = 0;
+  public targetAutomaticState: boolean = false;
   protected _lastPersist: number = 0;
-  protected _lightOn: boolean = false;
-  protected _transitionTime: number = 0;
-  protected _targetAutomaticState: boolean = false;
   protected abstract readonly _stateIdBrightness: string;
   protected abstract readonly _stateIdState: string;
   protected abstract readonly _stateIdTransitionTime: string;
   protected abstract readonly _stateNameBrightness: string;
   protected abstract readonly _stateNameState: string;
   protected abstract readonly _stateNameTransitionTime: string;
-
-  public get lightOn(): boolean {
-    return this._lightOn;
-  }
-
-  public get brightness(): number {
-    return this._brightness;
-  }
-
-  public get transitionTime(): number {
-    return this._transitionTime;
-  }
-
-  public get actuatorOn(): boolean {
-    return this.lightOn;
-  }
 
   protected constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
@@ -48,9 +30,31 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
+  protected _brightness: number = 0;
+
+  public get brightness(): number {
+    return this._brightness;
+  }
+
+  protected _lightOn: boolean = false;
+
+  public get lightOn(): boolean {
+    return this._lightOn;
+  }
+
+  protected _transitionTime: number = 0;
+
+  public get transitionTime(): number {
+    return this._transitionTime;
+  }
+
+  public get actuatorOn(): boolean {
+    return this.lightOn;
+  }
+
   public restoreTargetAutomaticValue(): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this._targetAutomaticState);
+    this.setActuator(this.targetAutomaticState);
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -133,26 +137,9 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       });
     }
 
-    let dontBlock: boolean = false;
-    if (
-      force &&
-      this.settings.resetToAutomaticOnForceOffAfterForceOn &&
-      !pValue &&
-      this.blockAutomationHandler.automaticBlockActive
-    ) {
-      dontBlock = true;
-      this.log(LogLevel.Debug, `Reset Automatic Block as we are turning off manually after a force on`);
-      this.blockAutomationHandler.liftAutomaticBlock();
-    }
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
 
-    if (!force && this.blockAutomationHandler.automaticBlockActive) {
-      this.log(
-        LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(
-          this.blockAutomationHandler.automaticBlockedUntil,
-        ).toLocaleTimeString()}`,
-      );
-      this._targetAutomaticState = pValue;
+    if (LampUtils.checkBlockActive(this, force, pValue)) {
       return;
     }
 
@@ -198,16 +185,6 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
   }
 
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
-    const newVal = this.queuedValue !== null ? !this.queuedValue : !this.lightOn;
-    const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
-    if (newVal && time === undefined && calculateTime && this.room) {
-      time = TimeCallbackService.dayType(this.room.settings.lampOffset);
-    }
-    if (newVal && time !== undefined) {
-      this.setTimeBased(time, timeout, force);
-      return true;
-    }
-    this.setLight(newVal, timeout, force);
-    return newVal;
+    return LampUtils.toggleLight(this, time, force, calculateTime);
   }
 }

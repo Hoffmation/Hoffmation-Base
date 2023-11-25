@@ -1,4 +1,4 @@
-import { DeviceInfo, Devices, DeviceType, iTemporaryDisableAutomatic } from '../../devices';
+import { DeviceInfo, Devices, DeviceType, iTemporaryDisableAutomatic, LampUtils } from '../../devices';
 import { CollisionSolving, LedSettings, LogLevel, RoomBase, TimeOfDay } from '../../../models';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { Utils } from '../utils';
@@ -8,7 +8,6 @@ import { API } from '../api';
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 import { Device as GoveeDevice, DeviceState as GoveeDeviceState } from 'theimo1221-govee-lan-control';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { TimeCallbackService } from '../time-callback-service';
 
 export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   public settings: LedSettings = new LedSettings();
@@ -22,7 +21,9 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   ];
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   public on: boolean = false;
+  public queuedValue: boolean | null = null;
   public brightness: number = -1;
+  public targetAutomaticState: boolean = false;
 
   public constructor(
     deviceId: string,
@@ -43,16 +44,24 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private _color: string = '#fcba32';
-  private _colortemp: number = 500;
-  private _targetAutomaticState: boolean = false;
-  private _room: RoomBase | undefined = undefined;
 
   public get color(): string {
     return this._color;
   }
 
+  private _colortemp: number = 500;
+
   public get colortemp(): number {
     return this._colortemp;
+  }
+
+  private _room: RoomBase | undefined = undefined;
+
+  public get room(): RoomBase {
+    if (this._room === undefined) {
+      this._room = Utils.guard<RoomBase>(API.getRoom(this.info.room));
+    }
+    return this._room;
   }
 
   public get customName(): string {
@@ -75,13 +84,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   public set info(info: DeviceInfo) {
     this._info = info;
-  }
-
-  public get room(): RoomBase {
-    if (this._room === undefined) {
-      this._room = Utils.guard<RoomBase>(API.getRoom(this.info.room));
-    }
-    return this._room;
   }
 
   public get id(): string {
@@ -204,26 +206,9 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       this.setColor(color);
     }
 
-    let dontBlock: boolean = false;
-    if (
-      force &&
-      this.settings.resetToAutomaticOnForceOffAfterForceOn &&
-      !pValue &&
-      this.blockAutomationHandler.automaticBlockActive
-    ) {
-      dontBlock = true;
-      this.log(LogLevel.Debug, `Reset Automatic Block as we are turning off manually after a force on`);
-      this.blockAutomationHandler.liftAutomaticBlock();
-    }
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
 
-    if (!force && this.blockAutomationHandler.automaticBlockActive) {
-      this.log(
-        LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(
-          this.blockAutomationHandler.automaticBlockedUntil,
-        ).toLocaleTimeString()}`,
-      );
-      this._targetAutomaticState = pValue;
+    if (LampUtils.checkBlockActive(this, force, pValue)) {
       return;
     }
 
@@ -253,7 +238,28 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   public restoreTargetAutomaticValue(): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this._targetAutomaticState);
+    this.setActuator(this.targetAutomaticState);
+  }
+
+  public persist(): void {
+    Utils.dbo?.persistActuator(this);
+  }
+
+  public toggleActuator(_force: boolean): boolean {
+    this.setLight(!this.on);
+    return this.on;
+  }
+
+  public toggleLight(time?: TimeOfDay, _force: boolean = false, calculateTime: boolean = false): boolean {
+    return LampUtils.toggleLight(this, time, _force, calculateTime);
+  }
+
+  public update(data: GoveeDeviceState): void {
+    this.queuedValue = null;
+    this.on = data.isOn === 1;
+    this.brightness = data.brightness;
+    this._color = `#${data.color.r.toString(16)}${data.color.g.toString(16)}${data.color.b.toString(16)}`;
+    this._colortemp = data.colorKelvin;
   }
 
   private setBrightness(brightness: number, cb: () => void): void {
@@ -285,6 +291,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (this.on) {
       return;
     }
+    this.queuedValue = true;
     this.device?.actions
       .setOn()
       .then(() => {
@@ -296,6 +303,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private turnOff(): void {
+    this.queuedValue = false;
     this.device?.actions
       .setOff()
       .then(() => {
@@ -304,34 +312,5 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       .catch((error) => {
         this.log(LogLevel.Error, `Govee turn off resulted in error: ${error}`);
       });
-  }
-
-  public persist(): void {
-    Utils.dbo?.persistActuator(this);
-  }
-
-  public toggleActuator(_force: boolean): boolean {
-    this.setLight(!this.on);
-    return this.on;
-  }
-
-  public toggleLight(time?: TimeOfDay, _force: boolean = false, calculateTime: boolean = false): boolean {
-    const newVal = !this.lightOn;
-    if (newVal && time === undefined && calculateTime) {
-      time = TimeCallbackService.dayType(this.room.settings.lampOffset);
-    }
-    if (newVal && time !== undefined) {
-      this.setTimeBased(time);
-      return true;
-    }
-    this.setLight(newVal);
-    return newVal;
-  }
-
-  public update(data: GoveeDeviceState): void {
-    this.on = data.isOn === 1;
-    this.brightness = data.brightness;
-    this._color = `#${data.color.r.toString(16)}${data.color.g.toString(16)}${data.color.b.toString(16)}`;
-    this._colortemp = data.colorKelvin;
   }
 }

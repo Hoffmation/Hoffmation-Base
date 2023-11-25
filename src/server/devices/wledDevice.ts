@@ -1,17 +1,20 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
-import { ServerLogService, TimeCallbackService, Utils } from '../services';
-import { LogLevel, TimeOfDay, WledSettings } from '../../models';
+import { ServerLogService, Utils } from '../services';
+import { CollisionSolving, LogLevel, TimeOfDay, WledSettings } from '../../models';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp';
+import { BlockAutomaticHandler } from '../services/blockAutomaticHandler';
+import { LampUtils } from './sharedFunctions';
 
 export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   public on: boolean = false;
   public brightness: number = -1;
-  public linkQuality: number = 0;
   public battery: number = -1;
-  public voltage: string = '';
+  public queuedValue: boolean | null = null;
   public settings: WledSettings = new WledSettings();
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
+  public targetAutomaticState: boolean = false;
   private readonly _onID: string;
   private readonly _presetID: string;
   private readonly _brightnessID: string;
@@ -21,6 +24,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     this._onID = `${this.info.fullID}.on`;
     this._presetID = `${this.info.fullID}.ps`;
     this._brightnessID = `${this.info.fullID}.bri`;
+    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
   public get actuatorOn(): boolean {
@@ -31,12 +35,18 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     return this.on;
   }
 
+  public restoreTargetAutomaticValue(): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.setActuator(this.targetAutomaticState);
+  }
+
   public override update(
     idSplit: string[],
     state: ioBroker.State,
     initial: boolean = false,
     _pOverride: boolean = false,
   ): void {
+    this.queuedValue = null;
     ServerLogService.writeLog(
       LogLevel.DeepTrace,
       `Wled: ${initial ? 'Initiales ' : ''}Update für "${this.info.customName}": ID: ${idSplit.join(
@@ -56,15 +66,15 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
 
   public setLight(
     pValue: boolean,
-    _timeout?: number,
-    _force?: boolean,
+    timeout?: number,
+    force?: boolean,
     brightness?: number,
     _transitionTime?: number,
   ): void {
-    this.setWled(pValue, brightness);
+    this.setWled(pValue, brightness, undefined, timeout, force);
   }
 
-  public setWled(pValue: boolean, brightness: number = -1, preset?: number): void {
+  public setWled(pValue: boolean, brightness: number = -1, preset?: number, timeout?: number, force?: boolean): void {
     if (this._onID === '') {
       ServerLogService.writeLog(LogLevel.Error, `Keine On ID für "${this.info.customName}" bekannt.`);
       return;
@@ -72,6 +82,12 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
 
     if (!this.ioConn) {
       ServerLogService.writeLog(LogLevel.Error, `Keine Connection für "${this.info.customName}" bekannt.`);
+      return;
+    }
+
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
+
+    if (LampUtils.checkBlockActive(this, force, pValue)) {
       return;
     }
 
@@ -84,6 +100,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       `WLED Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%`,
     );
 
+    this.queuedValue = pValue;
     this.setState(this._onID, pValue, undefined, (err) => {
       ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
     });
@@ -96,6 +113,10 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       this.setState(this._brightnessID, brightness, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
       });
+    }
+
+    if (timeout !== undefined && timeout > -1 && !dontBlock) {
+      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
   }
 
@@ -138,16 +159,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     return this.on;
   }
 
-  public toggleLight(time?: TimeOfDay, _force: boolean = false, calculateTime: boolean = false): boolean {
-    const newVal = !this.lightOn;
-    if (newVal && time === undefined && calculateTime) {
-      time = TimeCallbackService.dayType(this.room.settings.lampOffset);
-    }
-    if (newVal && time !== undefined) {
-      this.setTimeBased(time);
-      return true;
-    }
-    this.setLight(newVal);
-    return newVal;
+  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
+    return LampUtils.toggleLight(this, time, force, calculateTime);
   }
 }

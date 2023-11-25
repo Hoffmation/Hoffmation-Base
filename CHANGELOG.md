@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Reduce code duplications on lamp/actuator devices
+
 ## 2.20.5 (2023-11-24)
 
 * (theimo1221) Multiple Last Left CB's resulted in some cb's being skipped.

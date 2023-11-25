@@ -2,19 +2,20 @@ import { LogDebugType, Utils } from '../../../services';
 import { ActuatorSettings, CollisionSolving, LogLevel } from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iActuator, iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
+import { iActuator } from '../../baseDeviceInterfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { DeviceCapability } from '../../DeviceCapability';
 import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
+import { LampUtils } from '../../sharedFunctions';
 
-export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporaryDisableAutomatic {
+export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   private _actuatorOn: boolean = false;
   public readonly blockAutomationHandler: BlockAutomaticHandler;
-  private _targetAutomaticState: boolean = false;
+  public targetAutomaticState: boolean = false;
 
   public settings: ActuatorSettings = new ActuatorSettings();
   protected readonly actuatorOnSwitchID: string;
-  protected queuedValue: boolean | null = null;
+  public queuedValue: boolean | null = null;
 
   public get actuatorOn(): boolean {
     return this._actuatorOn;
@@ -30,7 +31,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporar
 
   public restoreTargetAutomaticValue(): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this._targetAutomaticState);
+    this.setActuator(this.targetAutomaticState);
   }
 
   public update(
@@ -61,35 +62,13 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator, iTemporar
       return;
     }
 
-    let dontBlock: boolean = false;
-    if (
-      force &&
-      this.settings.resetToAutomaticOnForceOffAfterForceOn &&
-      !pValue &&
-      this.blockAutomationHandler.automaticBlockActive
-    ) {
-      dontBlock = true;
-      this.log(LogLevel.Debug, `Reset Automatic Block as we are turning off manually after a force on`);
-      this.blockAutomationHandler.liftAutomaticBlock();
-    }
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
 
-    if (!force && this.blockAutomationHandler.automaticBlockActive) {
-      this.log(
-        LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(
-          this.blockAutomationHandler.automaticBlockedUntil,
-        ).toLocaleTimeString()}`,
-      );
-      this._targetAutomaticState = pValue;
+    if (LampUtils.checkBlockActive(this, force, pValue)) {
       return;
     }
 
-    if (!force && pValue === this._actuatorOn && this.queuedValue === null) {
-      this.log(
-        LogLevel.Debug,
-        `Skip actuator command as it is already ${pValue}`,
-        LogDebugType.SkipUnchangedActuatorCommand,
-      );
+    if (LampUtils.checkUnchanged(this, force, pValue)) {
       return;
     }
 

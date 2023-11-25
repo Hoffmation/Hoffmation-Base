@@ -1,5 +1,5 @@
-import { DeviceInfo, Devices, DeviceType, iActuator, iBaseDevice } from '../../devices';
-import { LogLevel, RoomBase } from '../../../models';
+import { DeviceInfo, Devices, DeviceType, iActuator, iBaseDevice, LampUtils } from '../../devices';
+import { CollisionSolving, LogLevel, RoomBase } from '../../../models';
 import { DeviceCapability } from '../DeviceCapability';
 import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
 import _ from 'lodash';
@@ -8,9 +8,11 @@ import { DachsDeviceSettings } from '../../../models/deviceSettings/dachsSetting
 import { DachsHttpClient, DachsInfluxClient } from './lib';
 import { iFlattenedCompleteResponse } from './interfaces';
 import { DachsTemperatureSensor } from './dachsTemperatureSensor';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
 
 export class Dachs implements iBaseDevice, iActuator {
   public settings: DachsDeviceSettings = new DachsDeviceSettings();
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
   public readonly deviceType: DeviceType = DeviceType.Dachs;
   public readonly deviceCapabilities: DeviceCapability[] = [];
   public readonly warmWaterSensor: DachsTemperatureSensor;
@@ -18,10 +20,12 @@ export class Dachs implements iBaseDevice, iActuator {
   private readonly client: DachsHttpClient;
   private readonly config: iDachsSettings;
   public fetchedData: iFlattenedCompleteResponse | undefined;
+  public queuedValue: boolean | null = null;
   private readonly _influxClient: DachsInfluxClient | undefined;
   private _dachsOn: boolean = false;
   private _tempWarmWater: number = 0;
   private _tempHeatStorage: number = 0;
+  public targetAutomaticState: boolean = false;
 
   public get customName(): string {
     return this.info.customName;
@@ -61,6 +65,12 @@ export class Dachs implements iBaseDevice, iActuator {
     this.warmWaterSensor = new DachsTemperatureSensor(this.config.roomName, 'ww', 'Water Temperature');
     this.heatStorageTempSensor = new DachsTemperatureSensor(this.config.roomName, 'hs', 'Heat Storage Temperature');
     Utils.guardedInterval(this.loadData, this.config.refreshInterval, this);
+    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+  }
+
+  public restoreTargetAutomaticValue(): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.setActuator(this.targetAutomaticState);
   }
 
   protected _info: DeviceInfo;
@@ -116,6 +126,7 @@ export class Dachs implements iBaseDevice, iActuator {
 
   private loadData(): void {
     this.client.fetchAllKeys().then((data) => {
+      this.queuedValue = null;
       this.fetchedData = data;
       if (this._influxClient === undefined) {
         return;
@@ -142,12 +153,20 @@ export class Dachs implements iBaseDevice, iActuator {
     Utils.dbo?.persistActuator(this);
   }
 
-  public setActuator(pValue: boolean, _timeout?: number, _force?: boolean): void {
+  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
     if (!pValue || this._dachsOn) {
       // Dachs can only be turned on, not off
       return;
     }
+
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
+
+    if (LampUtils.checkBlockActive(this, force, pValue)) {
+      return;
+    }
+
     this.log(LogLevel.Debug, `Starting Dachs`);
+    this.queuedValue = pValue;
     this.client
       .setKeys({
         'Stromf_Ew.Anforderung_GLT.bAktiv': '1',
@@ -173,6 +192,10 @@ export class Dachs implements iBaseDevice, iActuator {
       .catch((error) => {
         this.log(LogLevel.Error, `Error while turning on Dachs: ${error}`);
       });
+
+    if (timeout !== undefined && timeout > -1 && !dontBlock) {
+      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
+    }
   }
 
   public toggleActuator(_force: boolean): boolean {
