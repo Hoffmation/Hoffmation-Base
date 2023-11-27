@@ -57,7 +57,7 @@
     "@types/pg": "^8.10.9",
     "@types/socket.io-client": "^1.4.36",
     "@types/xml2js": "^0.4.14",
-    "aws-sdk": "2.1501.0",
+    "aws-sdk": "2.1504.0",
     "axios": "^1.6.2",
     "bson": "^6.2.0",
     "daikin-controller": "^2.1.0",
