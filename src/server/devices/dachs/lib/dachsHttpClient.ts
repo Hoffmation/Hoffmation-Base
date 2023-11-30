@@ -74,6 +74,7 @@ export class DachsHttpClient {
       this.axiosInstance
         .get(`/getKey` + this.urlBuilder(keys))
         .then((res: AxiosResponse<string>) => {
+          if (!res.data) reject('No data received');
           resolve(this.parser(res.data));
         })
         .catch((err) => {

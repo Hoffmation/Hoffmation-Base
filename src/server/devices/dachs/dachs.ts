@@ -125,28 +125,33 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   private loadData(): void {
-    this.client.fetchAllKeys().then((data) => {
-      this.queuedValue = null;
-      this.fetchedData = data;
-      if (this._influxClient === undefined) {
-        return;
-      }
-      for (const key in data) {
-        const value = data[key as keyof iFlattenedCompleteResponse];
-        if (typeof value === 'number') {
-          this._influxClient.addMeasurementToQueue(key, value);
-          continue;
+    this.client
+      .fetchAllKeys()
+      .then((data) => {
+        this.queuedValue = null;
+        this.fetchedData = data;
+        if (this._influxClient === undefined) {
+          return;
         }
-        this._influxClient.addMeasurementToQueue(key, value ? '1' : '0');
-      }
-      this._influxClient.flush();
-      this._dachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
-      this._tempWarmWater = this.fetchedData['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
-      this.warmWaterSensor.update(this._tempWarmWater);
-      this._tempHeatStorage = this.fetchedData['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
-      this.heatStorageTempSensor.update(this._tempHeatStorage);
-      this.persist();
-    });
+        for (const key in data) {
+          const value = data[key as keyof iFlattenedCompleteResponse];
+          if (typeof value === 'number') {
+            this._influxClient.addMeasurementToQueue(key, value);
+            continue;
+          }
+          this._influxClient.addMeasurementToQueue(key, value ? '1' : '0');
+        }
+        this._influxClient.flush();
+        this._dachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
+        this._tempWarmWater = this.fetchedData['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
+        this.warmWaterSensor.update(this._tempWarmWater);
+        this._tempHeatStorage = this.fetchedData['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
+        this.heatStorageTempSensor.update(this._tempHeatStorage);
+        this.persist();
+      })
+      .catch((error) => {
+        this.log(LogLevel.Error, `Error while fetching data: ${error}`);
+      });
   }
 
   public persist(): void {
