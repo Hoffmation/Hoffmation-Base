@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.21.1 (2023-11-30)
 
 * (theimo1221) Prevent crash in dachs Communication
 * (theimo1221) Prevent govee log flooding
