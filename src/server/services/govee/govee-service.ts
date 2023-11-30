@@ -1,10 +1,6 @@
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
-import Govee, {
-  default as GoveeDefault,
-  Device as GoveeDevice,
-  DeviceState as GoveeDeviceState,
-} from 'theimo1221-govee-lan-control';
+import Govee, { Device as GoveeDevice, DeviceState as GoveeDeviceState } from 'theimo1221-govee-lan-control';
 import { OwnGoveeDevice } from './own-govee-device';
 
 export class GooveeService {
@@ -20,7 +16,18 @@ export class GooveeService {
   public static initialize(): void {
     ServerLogService.writeLog(LogLevel.Debug, `Initializing Goovee-Service`);
     this.all = [];
-    this.goveeApi = new GoveeDefault();
+    this.goveeApi = new Govee({
+      discoverInterval: 10 * 60 * 1000, // 10 minutes is enough
+      logger: (message) => {
+        ServerLogService.writeLog(LogLevel.Debug, `Govee: ${message}`);
+      },
+      errorLogger: (message) => {
+        if (message.startsWith('UDP Socket was not')) {
+          return;
+        }
+        ServerLogService.writeLog(LogLevel.Error, `Govee: ${message}`);
+      },
+    });
     this.goveeApi.on('deviceAdded', (device: GoveeDevice) => {
       ServerLogService.writeLog(LogLevel.Info, `GoveeDevice ${device.deviceID} joined`);
       GooveeService.initializeDevice(device);

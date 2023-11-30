@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Prevent crash in dachs Communication
+* (theimo1221) Prevent govee log flooding
 
 ## 2.21.0 (2023-11-25)
 
