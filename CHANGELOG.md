@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) !!Breaking!! Outlets within lightgroups are now on the same level as LEDs, so Hoffmation would turn on
+  both on movement
+
 ## 2.21.1 (2023-11-30)
 
 * (theimo1221) Prevent crash in dachs Communication

@@ -100,21 +100,27 @@ export class LightGroup extends BaseGroup {
 
     let resultLampen = false;
     let resultSteckdosen = false;
+    let activatedGroups = 0;
     if (this.getWled().length > 0) {
+      activatedGroups++;
       this.log(LogLevel.Debug, `Set Wled time based for time "${TimeOfDay[time]}"`);
       this.getWled().forEach((wled) => {
         wled.setTimeBased(time);
       });
     }
     if (this.getLED().length > 0) {
+      activatedGroups++;
       this.log(LogLevel.Trace, `Set LEDs time based for time "${TimeOfDay[time]}"`);
       this.getLED().forEach((s) => {
         s.setTimeBased(time);
       });
-    } else if (this.getOutlets().length > 0) {
+    }
+    if (this.getOutlets().length > 0) {
+      activatedGroups++;
       this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[time]}"`);
       resultSteckdosen = darkOutside;
-    } else {
+    }
+    if (activatedGroups === 0) {
       this.log(LogLevel.Trace, `Set Lamps time based for time "${TimeOfDay[time]}"`);
       resultLampen = darkOutside;
     }

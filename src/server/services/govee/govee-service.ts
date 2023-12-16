@@ -17,7 +17,6 @@ export class GooveeService {
     ServerLogService.writeLog(LogLevel.Debug, `Initializing Goovee-Service`);
     this.all = [];
     this.goveeApi = new Govee({
-      discoverInterval: 10 * 60 * 1000, // 10 minutes is enough
       logger: (message) => {
         ServerLogService.writeLog(LogLevel.Debug, `Govee: ${message}`);
       },
