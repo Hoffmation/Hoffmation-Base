@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.4 (2023-12-18)
 
 * (theimo1221) Reduce direct ioConn set State calls
 
