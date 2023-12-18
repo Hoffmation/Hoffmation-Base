@@ -7,6 +7,9 @@ import { iDisposable, Utils } from '../../../services';
 export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   protected _available: boolean = false;
   protected _dontSendOnUnavailable: boolean = false;
+  // If configured > 0, this indicates the minimum time between state writes in ms
+  protected _debounceStateDelay: number = 0;
+  private _lastWrite: number = 0;
   private readonly _deviceQueryId: string;
 
   public get available(): boolean {
@@ -106,6 +109,19 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
       return;
     }
 
-    super.setState(pointId, state, onSuccess, onError);
+    if (this._debounceStateDelay === 0 || Utils.nowMS() - this._lastWrite > this._debounceStateDelay) {
+      this._lastWrite = Utils.nowMS();
+      super.setState(pointId, state, onSuccess, onError);
+      return;
+    }
+
+    Utils.guardedTimeout(
+      () => {
+        this.log(LogLevel.Trace, `Debounced write to ${pointId} to ${state}`);
+        this.setState(pointId, state, onSuccess, onError);
+      },
+      this._debounceStateDelay,
+      this,
+    );
   }
 }

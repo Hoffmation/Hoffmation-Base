@@ -13,6 +13,7 @@ export class ZigbeeInnr142C extends ZigbeeLedRGBCCT {
   protected readonly _stateNameTransitionTime: string = 'transition_time';
   protected readonly _stateNameColor: string = 'color';
   protected readonly _stateNameColorTemp: string = 'colortemp';
+  protected readonly _debounceStateDelay: number = 2500;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeInnr142C);

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to debounce Zigbee Writes on same device
+
 ## 2.22.2 (2023-12-18)
 
 * (theimo1221) Zigbee2Mqtt only needs brightness for turn on (prevents FW bug on OFL 142c)
