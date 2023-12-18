@@ -1,6 +1,6 @@
 import { CollisionSolving, DimmerSettings, LogLevel, TimeOfDay } from '../../../../models';
 import { DeviceType } from '../../deviceType';
-import { LogDebugType, Utils } from '../../../services';
+import { LogDebugType, SettingsService, Utils } from '../../../services';
 import { ZigbeeDevice } from './index';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
@@ -151,29 +151,31 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       `Set Light Acutator to "${pValue}" with brightness ${brightness}`,
       LogDebugType.SetActuator,
     );
-    this.setState(this._stateIdState, pValue);
-    this.queuedValue = pValue;
-
-    if (brightness > -1) {
-      if (brightness < this.settings.turnOnThreshhold) {
-        this.setState(this._stateIdBrightness, this.settings.turnOnThreshhold, () => {
-          Utils.guardedTimeout(
-            () => {
-              this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
-              this.setState(this._stateIdBrightness, brightness);
-            },
-            1000,
-            this,
-          );
-        });
-      } else if (this._brightness !== brightness) {
-        // Only set brightness if it is different from the current one
-        this.setState(this._stateIdBrightness, brightness);
-      }
-    }
     if (timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
     }
+    if (SettingsService.settings.ioBroker?.useZigbee2mqtt && !pValue) {
+      // With zigbee2mqtt to turn on only setting brighness>0 is needed, so we need state only for turning off
+      this.setState(this._stateIdState, pValue);
+      this.queuedValue = pValue;
+      return;
+    }
+
+    if (brightness >= this.settings.turnOnThreshhold) {
+      this.setState(this._stateIdBrightness, brightness);
+      return;
+    }
+
+    this.setState(this._stateIdBrightness, this.settings.turnOnThreshhold, () => {
+      Utils.guardedTimeout(
+        () => {
+          this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
+          this.setState(this._stateIdBrightness, brightness);
+        },
+        1000,
+        this,
+      );
+    });
   }
 
   public persist(): void {

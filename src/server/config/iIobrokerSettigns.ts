@@ -4,4 +4,8 @@ export interface iIobrokerSettigns {
    * This allows to detect states which crash the Websocket Payload limit
    */
   useSplitInitialization?: boolean;
+  /**
+   * Whether the new/advanced zigbee2mqtt adapter is used
+   */
+  useZigbee2mqtt?: boolean;
 }
