@@ -140,11 +140,11 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
     );
 
     const formattedColor: string | null = Utils.formatHex(color);
-    if (formattedColor !== null) {
-      this.setState(this._stateIdColor, color);
+    if (formattedColor !== null && pValue) {
+      this.setState(this._stateIdColor, formattedColor);
     }
 
-    if (colorTemp > -1) {
+    if (colorTemp > -1 && pValue) {
       this.setState(this._stateIdColorTemp, colorTemp);
     }
 

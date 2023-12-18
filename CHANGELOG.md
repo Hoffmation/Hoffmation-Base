@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Further optimizing timing with zigbee-innr142c
+
 ## 2.22.4 (2023-12-18)
 
 * (theimo1221) Reduce direct ioConn set State calls
