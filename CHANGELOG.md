@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.3 (2023-12-18)
 
 * (theimo1221) Add option to debounce Zigbee Writes on same device
 
