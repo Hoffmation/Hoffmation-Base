@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Optimize Turn-On Handling for ZigbeeInnr142C
+
 ## 2.22.0 (2023-12-16)
 
 * (theimo1221) !!Breaking!! Outlets within lightgroups are now on the same level as LEDs, so Hoffmation would turn on

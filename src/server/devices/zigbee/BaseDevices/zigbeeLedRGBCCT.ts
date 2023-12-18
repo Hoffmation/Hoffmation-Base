@@ -136,7 +136,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
     }
     this.log(
       LogLevel.Debug,
-      `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}`,
+      `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}\tTransition Time: ${transitionTime}`,
     );
 
     const formattedColor: string | null = Utils.formatHex(color);

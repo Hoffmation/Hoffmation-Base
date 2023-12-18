@@ -166,7 +166,8 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
             this,
           );
         });
-      } else {
+      } else if (this._brightness !== brightness) {
+        // Only set brightness if it is different from the current one
         this.setState(this._stateIdBrightness, brightness);
       }
     }
