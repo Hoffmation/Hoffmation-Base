@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Optimizing innr142c handling on color change only
+
 ## 2.22.5 (2023-12-18)
 
 * (theimo1221) Further optimizing timing with zigbee-innr142c

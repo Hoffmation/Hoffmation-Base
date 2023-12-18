@@ -56,7 +56,9 @@ export class ZigbeeInnr142C extends ZigbeeLedRGBCCT {
       `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}\tTransition Time: ${transitionTime}`,
     );
 
-    super.setLight(pValue, timeout, force, brightness, transitionTime);
+    if (this._lightOn !== pValue || this._brightness !== brightness) {
+      super.setLight(pValue, timeout, force, brightness, transitionTime);
+    }
 
     const formattedColor: string | null = Utils.formatHex(color);
     if (!pValue) {
