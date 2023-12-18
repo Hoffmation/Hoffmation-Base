@@ -141,19 +141,11 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
 
     const formattedColor: string | null = Utils.formatHex(color);
     if (formattedColor !== null) {
-      this.ioConn.setState(this._stateIdColor, color, (err) => {
-        if (err) {
-          this.log(LogLevel.Error, `LED Farbe schalten ergab Fehler: ${err}`);
-        }
-      });
+      this.setState(this._stateIdColor, color);
     }
 
     if (colorTemp > -1) {
-      this.ioConn.setState(this._stateIdColorTemp, colorTemp, (err) => {
-        if (err) {
-          this.log(LogLevel.Error, `LED Farbwärme schalten ergab Fehler: ${err}`);
-        }
-      });
+      this.setState(this._stateIdColorTemp, colorTemp);
     }
 
     super.setLight(pValue, timeout, force, brightness, transitionTime);

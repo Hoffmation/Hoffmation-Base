@@ -130,11 +130,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     }
 
     if (transitionTime > -1) {
-      this.ioConn.setState(this._stateIdTransitionTime, transitionTime, (err) => {
-        if (err) {
-          this.log(LogLevel.Error, `Dimmer TransitionTime schalten ergab Fehler: ${err}`);
-        }
-      });
+      this.setState(this._stateIdTransitionTime, transitionTime);
     }
 
     const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
