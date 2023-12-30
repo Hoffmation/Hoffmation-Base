@@ -68,6 +68,7 @@ export class SettingsService {
         sonnenUntergangRolloAdditionalOffsetPerCloudiness: 0.25,
         lightIfNoWindows: false,
         ambientLightAfterSunset: false,
+        includeLampsInNormalMovementLightning: false,
       },
       timeSettings: {
         nightStart: {

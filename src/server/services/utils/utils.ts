@@ -150,6 +150,7 @@ export class Utils {
         sonnenUntergangRolloAdditionalOffsetPerCloudiness: 0.25,
         lightIfNoWindows: false,
         ambientLightAfterSunset: false,
+        includeLampsInNormalMovementLightning: false,
       },
     });
     Res.initialize(SettingsService.settings.translationSettings);
