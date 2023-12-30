@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.7 (2023-12-30)
 
 * (theimo1221) Minor fix for Tuya
 * (theimo1221) Update packages
