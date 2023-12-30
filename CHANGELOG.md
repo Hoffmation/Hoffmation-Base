@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Optimizing innr142c handling on color change only
+* (theimo1221) Tuya Garage Door was not including invertSensor in TargetState
 
 ## 2.22.5 (2023-12-18)
 
