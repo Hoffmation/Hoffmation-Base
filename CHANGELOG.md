@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Minor fix for Tuya
+* (theimo1221) Update packages
+
 ## 2.22.6 (2023-12-30)
 
 * (theimo1221) Optimizing innr142c handling on color change only
