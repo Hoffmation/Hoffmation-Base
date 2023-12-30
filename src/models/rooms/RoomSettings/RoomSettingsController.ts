@@ -104,6 +104,10 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     return this._settingsContainer.radioUrl;
   }
 
+  get includeLampsInNormalMovementLightning(): boolean {
+    return this._settingsContainer.includeLampsInNormalMovementLightning;
+  }
+
   public get room(): RoomBase | undefined {
     if (!this.roomName) {
       return undefined;

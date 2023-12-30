@@ -57,4 +57,7 @@ export interface iRoomDefaultSettings {
 
   // Wether this room should always have ambient light on after sunset (regardless of motion e.g. Gardenlights).
   readonly ambientLightAfterSunset: boolean;
+
+  // Whether normal ceiling lights should also be turned on by movement, even if there are LEDs and outlets
+  readonly includeLampsInNormalMovementLightning: boolean;
 }

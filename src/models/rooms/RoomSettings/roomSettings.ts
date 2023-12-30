@@ -20,6 +20,8 @@ export class RoomSettings extends ObjectSettings {
   public sonnenUntergangRolloDelay: number = SettingsService.settings.roomDefault.sonnenUntergangRolloDelay;
   public sonnenUntergangLampenDelay: number = SettingsService.settings.roomDefault.sonnenUntergangLampenDelay;
   public sonnenUntergangRollos: boolean = SettingsService.settings.roomDefault.sonnenUntergangRollos;
+  public includeLampsInNormalMovementLightning: boolean =
+    SettingsService.settings.roomDefault.includeLampsInNormalMovementLightning;
 
   public fromPartialObject(_obj: Partial<RoomSettings>): void {
     this.ambientLightAfterSunset = _obj.ambientLightAfterSunset ?? this.ambientLightAfterSunset;
@@ -40,6 +42,8 @@ export class RoomSettings extends ObjectSettings {
     this.sonnenUntergangRolloDelay = _obj.sonnenUntergangRolloDelay ?? this.sonnenUntergangRolloDelay;
     this.sonnenUntergangLampenDelay = _obj.sonnenUntergangLampenDelay ?? this.sonnenUntergangLampenDelay;
     this.sonnenUntergangRollos = _obj.sonnenUntergangRollos ?? this.sonnenUntergangRollos;
+    this.includeLampsInNormalMovementLightning =
+      _obj.includeLampsInNormalMovementLightning ?? this.includeLampsInNormalMovementLightning;
     super.fromPartialObject(_obj);
   }
 }
