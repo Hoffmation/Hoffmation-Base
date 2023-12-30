@@ -35,9 +35,9 @@ export class TuyaGarageOpener extends TuyaDevice implements iGarageDoorOpener {
         break;
       case this._switchId:
         if (this.settings.invertSensor) {
-          this._switchState = state.val === true;
-        } else {
           this._switchState = state.val === false;
+        } else {
+          this._switchState = state.val === true;
         }
         break;
     }
