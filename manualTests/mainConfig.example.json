@@ -40,7 +40,8 @@
     "sonnenAufgangLampenDelay": 15,
     "sonnenUntergangRolloAdditionalOffsetPerCloudiness": 0.25,
     "lightIfNoWindows": false,
-    "ambientLightAfterSunset": false
+    "ambientLightAfterSunset": false,
+    "includeLampsInNormalMovementLightning": false
   },
   "telegram": {
     "logLevel": 1,

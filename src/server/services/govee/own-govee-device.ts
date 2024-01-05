@@ -6,8 +6,9 @@ import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { API } from '../api';
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
-import { Device as GoveeDevice, DeviceState as GoveeDeviceState } from 'theimo1221-govee-lan-control';
+import { Device as GoveeDevice, DeviceStateInfo as GoveeDeviceStateInfo } from '@j3lte/govee-lan-controller';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
+import { DeviceState as GoveeDeviceState } from '@j3lte/govee-lan-controller/build/types/device';
 
 export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   public settings: LedSettings = new LedSettings();
@@ -254,17 +255,17 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     return LampUtils.toggleLight(this, time, _force, calculateTime);
   }
 
-  public update(data: GoveeDeviceState): void {
+  public update(data: GoveeDeviceState & GoveeDeviceStateInfo): void {
     this.queuedValue = null;
-    this.on = data.isOn === 1;
+    this.on = data.onOff === 1;
     this.brightness = data.brightness;
     this._color = `#${data.color.r.toString(16)}${data.color.g.toString(16)}${data.color.b.toString(16)}`;
-    this._colortemp = data.colorKelvin;
+    this._colortemp = data.colorTemInKelvin;
   }
 
   private setBrightness(brightness: number, cb: () => void): void {
-    this.device?.actions
-      .setBrightness(brightness)
+    this.device
+      ?.setBrightness(brightness)
       .then(() => {
         cb();
       })
@@ -277,8 +278,13 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (color === this._color) {
       return;
     }
-    this.device?.actions
-      .setColor({ hex: color })
+    const colors: { r: number; g: number; b: number } | null = Utils.hexToRgb(color);
+    if (colors === null) {
+      this.log(LogLevel.Error, `Govee set color resulted in error: ${color} is not a valid color`);
+      return;
+    }
+    this.device
+      ?.setColorRGB(colors)
       .then(() => {
         this.log(LogLevel.Debug, `Govee set color to ${color}`, LogDebugType.SetActuator);
       })
@@ -292,8 +298,8 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       return;
     }
     this.queuedValue = true;
-    this.device?.actions
-      .setOn()
+    this.device
+      ?.turnOn()
       .then(() => {
         this.log(LogLevel.Debug, `Govee turned on`, LogDebugType.SetActuator);
       })
@@ -304,8 +310,8 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   private turnOff(): void {
     this.queuedValue = false;
-    this.device?.actions
-      .setOff()
+    this.device
+      ?.turnOff()
       .then(() => {
         this.log(LogLevel.Debug, `Govee turned off`, LogDebugType.SetActuator);
       })

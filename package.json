@@ -48,6 +48,7 @@
   "dependencies": {
     "@babel/runtime": "^7.23.7",
     "@iobroker/types": "^5.0.17",
+    "@j3lte/govee-lan-controller": "^1.0.2",
     "@svrooij/sonos": "^2.5.0",
     "@types/debug": "^4.1.12",
     "@types/jest": "^29.5.11",
@@ -62,7 +63,6 @@
     "bson": "^6.2.0",
     "daikin-controller": "^2.1.0",
     "get-mp3-duration": "^1.0.0",
-    "theimo1221-govee-lan-control": "^3.0.2-2",
     "https": "^1.0.0",
     "lodash": "^4.17.21",
     "node-fetch": "3.3.2",

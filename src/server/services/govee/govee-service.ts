@@ -1,7 +1,14 @@
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
-import Govee, { Device as GoveeDevice, DeviceState as GoveeDeviceState } from 'theimo1221-govee-lan-control';
 import { OwnGoveeDevice } from './own-govee-device';
+import {
+  Device as GoveeDevice,
+  DeviceStateInfo as GoveeDeviceStateInfo,
+  Govee,
+  GoveeDeviceEventTypes,
+  GoveeEventTypes,
+} from '@j3lte/govee-lan-controller';
+import { DeviceState as GoveeDeviceState } from '@j3lte/govee-lan-controller/build/types/device';
 
 export class GooveeService {
   public static all: GoveeDevice[] = [];
@@ -17,40 +24,43 @@ export class GooveeService {
     ServerLogService.writeLog(LogLevel.Debug, `Initializing Goovee-Service`);
     this.all = [];
     this.goveeApi = new Govee({
-      logger: (message) => {
-        ServerLogService.writeLog(LogLevel.Debug, `Govee: ${message}`);
-      },
-      errorLogger: (message) => {
-        if (message.startsWith('UDP Socket was not')) {
-          return;
-        }
-        ServerLogService.writeLog(LogLevel.Error, `Govee: ${message}`);
-      },
+      discover: true,
+      discoverInterval: 300_000,
     });
-    this.goveeApi.on('deviceAdded', (device: GoveeDevice) => {
-      ServerLogService.writeLog(LogLevel.Info, `GoveeDevice ${device.deviceID} joined`);
+    this.goveeApi.on(GoveeEventTypes.Ready, () => {
+      ServerLogService.writeLog(LogLevel.Info, `Govee ready`);
+    });
+    this.goveeApi.on(GoveeEventTypes.Error, (err) => {
+      ServerLogService.writeLog(LogLevel.Error, `Govee-Error: ${err}`);
+    });
+    this.goveeApi.on(GoveeEventTypes.NewDevice, (device: GoveeDevice) => {
+      ServerLogService.writeLog(LogLevel.Trace, `GoveeDevice ${device.id} joined`);
       GooveeService.initializeDevice(device);
-    });
-    this.goveeApi.on('updatedStatus', (device: GoveeDevice, data: GoveeDeviceState, _stateChanged: unknown) => {
-      GooveeService.updateDevice(device, data);
     });
   }
 
   private static initializeDevice(d: GoveeDevice) {
-    this.devicesDict[d.deviceID] = d;
-    if (this.ownDevices[d.deviceID] === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, `Unknown Govee Device "${d.deviceID}"`);
+    this.devicesDict[d.id] = d;
+    if (this.ownDevices[d.id] === undefined) {
+      ServerLogService.writeLog(LogLevel.Alert, `Unknown Govee Device "${d.id}"`);
       return;
     }
-    this.ownDevices[d.deviceID].device = d;
-    ServerLogService.writeLog(LogLevel.Debug, `Govee ${d.deviceID} found at address ${d.ip}`);
+    const ownDevice = this.ownDevices[d.id];
+    ownDevice.device = d;
+    ownDevice.update(d.getState());
+
+    d.on(GoveeDeviceEventTypes.StateChange, (data: GoveeDeviceState & GoveeDeviceStateInfo) => {
+      ServerLogService.writeLog(LogLevel.Debug, `Govee ${d.id} state changed`);
+      this.updateDevice(d, data);
+    });
+    ServerLogService.writeLog(LogLevel.Debug, `Govee ${d.id} found at address ${d.ipAddr}`);
   }
 
-  private static updateDevice(device: GoveeDevice, data: GoveeDeviceState): void {
-    if (this.ownDevices[device.deviceID] === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, `Unknown Govee Device "${device.deviceID}"`);
+  private static updateDevice(device: GoveeDevice, data: GoveeDeviceState & GoveeDeviceStateInfo): void {
+    if (this.ownDevices[device.id] === undefined) {
+      ServerLogService.writeLog(LogLevel.Alert, `Unknown Govee Device "${device.id}"`);
       return;
     }
-    this.ownDevices[device.deviceID].update(data);
+    this.ownDevices[device.id].update(data);
   }
 }
