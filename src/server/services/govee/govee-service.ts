@@ -9,6 +9,7 @@ import {
   GoveeEventTypes,
 } from '@j3lte/govee-lan-controller';
 import { DeviceState as GoveeDeviceState } from '@j3lte/govee-lan-controller/build/types/device';
+import { GoveeDeviceData, GoveeDeviceStatusData } from '@j3lte/govee-lan-controller/build/types/types';
 
 export class GooveeService {
   public static all: GoveeDevice[] = [];
@@ -27,6 +28,9 @@ export class GooveeService {
       discover: true,
       discoverInterval: 300_000,
     });
+    this.goveeApi.on(GoveeEventTypes.Scan, (data: GoveeDeviceData) => {
+      ServerLogService.writeLog(LogLevel.Info, `GoveeDevice ${data.ip} scanned`);
+    });
     this.goveeApi.on(GoveeEventTypes.Ready, () => {
       ServerLogService.writeLog(LogLevel.Info, `Govee ready`);
     });
@@ -37,6 +41,10 @@ export class GooveeService {
       ServerLogService.writeLog(LogLevel.Trace, `GoveeDevice ${device.id} joined`);
       GooveeService.initializeDevice(device);
     });
+    this.goveeApi.on(GoveeEventTypes.UnknownDevice, (_data: GoveeDeviceStatusData) => {
+      ServerLogService.writeLog(LogLevel.Warn, `GoveeDevice unknown`);
+    });
+    this.goveeApi.discover();
   }
 
   private static initializeDevice(d: GoveeDevice) {
