@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.9 (2024-01-05)
 
 * (theimo1221) Extend Logging for all API calls
 * (theimo1221) Update packages
