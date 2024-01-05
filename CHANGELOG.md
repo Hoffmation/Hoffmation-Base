@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Extend Logging for all API calls
+* (theimo1221) Update packages
 
 ## 2.22.8 (2023-12-30)
 
