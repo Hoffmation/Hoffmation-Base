@@ -39,6 +39,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.scene)) {
       return new Error(`Device with ID ${deviceId} is no scene`);
     }
+    d.log(LogLevel.Info, `API Call to end this.`);
     d.endScene();
     return null;
   }
@@ -121,6 +122,7 @@ export class API {
         desiredMode = SettingsService.heatMode == HeatingMode.Winter ? AcMode.Heating : AcMode.Cooling;
       }
     }
+    d.log(LogLevel.Info, `API Call to set AC to ${desiredState} with mode ${desiredMode} for ${forceTime}ms`);
     d.setState(desiredMode, desiredTemperature, forceTime);
     return true;
   }
@@ -131,6 +133,7 @@ export class API {
    */
   public static setAllAc(desiredState: boolean): void {
     DaikinService.setAll(desiredState, true);
+    ServerLogService.writeLog(LogLevel.Info, `API Call to set all AC´s to ${desiredState}`);
   }
 
   /**
@@ -148,6 +151,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.lamp)) {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
+    d.log(LogLevel.Info, `API Call to set Lamp to ${state} for ${timeout}ms`);
     d.setLight(state, timeout, true);
     return null;
   }
@@ -167,6 +171,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.actuator)) {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
+    d.log(LogLevel.Info, `API Call to set Actuator to ${state} for ${timeout}ms`);
     d.setActuator(state, timeout, true);
     return null;
   }
@@ -194,6 +199,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.dimmablelamp)) {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
+    d.log(LogLevel.Info, `API Call to set Dimmer to ${state} with brightness ${brightness} for ${timeout}ms`);
     d.setLight(state, timeout, true, brightness, transitionTime);
     return null;
   }
@@ -225,6 +231,10 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.ledLamp)) {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
+    d.log(
+      LogLevel.Info,
+      `API Call to set LED to ${state} with brightness ${brightness} and color ${color} for ${timeout}ms`,
+    );
     d.setLight(state, timeout, true, brightness, transitionTime, color, colorTemp);
     return null;
   }
@@ -250,6 +260,7 @@ export class API {
     } else {
       d.setLevel(level, false);
     }
+    d.log(LogLevel.Info, `API Call to set Shutter to ${level}`);
     return null;
   }
 
@@ -261,6 +272,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.speaker)) {
       return new Error(`Device with ID ${deviceId} is no speaker`);
     }
+    d.log(LogLevel.Info, `API Call to speak "${message}" on device with volume ${volume}`);
     d.speakOnDevice(message, volume);
     return null;
   }
@@ -279,6 +291,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.scene)) {
       return new Error(`Device with ID ${deviceId} is no scene`);
     }
+    d.log(LogLevel.Info, `API Call to start this.`);
     d.startScene(turnOffTimeout);
     return null;
   }
@@ -292,8 +305,10 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no Garage Door Opener`);
     }
     if (open) {
+      d.log(LogLevel.Info, `API Call to open Garage Door`);
       d.open();
     } else {
+      d.log(LogLevel.Info, `API Call to close Garage Door`);
       d.close();
     }
     return null;
@@ -313,6 +328,7 @@ export class API {
     if (d.settings === undefined) {
       return new Error(`Device with ID ${deviceId} has no settings`);
     }
+    d.log(LogLevel.Info, `API Call to change settings to ${JSON.stringify(settings)})}`);
     d.settings.fromPartialObject(settings);
     d.settings.persist(d);
     return null;
@@ -326,6 +342,7 @@ export class API {
     if (g.settings === undefined) {
       return new Error(`Group with ID ${groupId} has no settings`);
     }
+    g.log(LogLevel.Info, `API Call to change settings to ${JSON.stringify(settings)})}`);
     g.settings.fromPartialObject(settings);
     g.settings.persist(g);
     return null;
@@ -342,6 +359,7 @@ export class API {
     if (r === undefined) {
       return new Error(`Room with ID ${roomName} not found`);
     }
+    r.log(LogLevel.Info, `API Call to change settings to ${JSON.stringify(settings)})}`);
     r.settings.settingsContainer.fromPartialObject(settings);
     r.settings.settingsContainer.persist(r);
     return null;
@@ -359,12 +377,14 @@ export class API {
   }
 
   public static persistAllDeviceSettings(): void {
+    ServerLogService.writeLog(LogLevel.Info, `API Call to persist all device settings`);
     for (const device of Object.values(Devices.alLDevices)) {
       device.settings?.persist(device);
     }
   }
 
   public static loadAllDeviceSettingsFromDb(): void {
+    ServerLogService.writeLog(LogLevel.Info, `API Call to load all device settings`);
     for (const device of Object.values(Devices.alLDevices)) {
       device.loadDeviceSettings();
     }
@@ -383,6 +403,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
       return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
+    d.log(LogLevel.Info, `API Call to lift automatic block`);
     d.blockAutomationHandler.liftAutomaticBlock();
     return null;
   }
@@ -402,6 +423,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
       return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
+    d.log(LogLevel.Info, `API Call to block automatic for ${duration}ms with ${onCollision} on collision`);
     d.blockAutomationHandler.disableAutomatic(duration, onCollision);
     return null;
   }
@@ -418,6 +440,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.buttonSwitch)) {
       return new Error(`Device with ID ${deviceId} is no switch`);
     }
+    d.log(LogLevel.Info, `API Call to press button ${position} with ${pressType}`);
     return d.pressButton(position, pressType);
   }
 }

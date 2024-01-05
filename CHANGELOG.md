@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend Logging for all API calls
+
 ## 2.22.8 (2023-12-30)
 
 * (theimo1221) Allow lightgroups to turn on ceiling lights on movement, even if there are LEDs or outlets (new option)
