@@ -9,7 +9,11 @@ import {
   GoveeEventTypes,
 } from '@j3lte/govee-lan-controller';
 import { DeviceState as GoveeDeviceState } from '@j3lte/govee-lan-controller/build/types/device';
-import { GoveeDeviceData, GoveeDeviceStatusData } from '@j3lte/govee-lan-controller/build/types/types';
+import {
+  GoveeDeviceData,
+  GoveeDeviceStatusData,
+  GoveeResponseMessage,
+} from '@j3lte/govee-lan-controller/build/types/types';
 
 export class GooveeService {
   public static all: GoveeDevice[] = [];
@@ -43,6 +47,9 @@ export class GooveeService {
     });
     this.goveeApi.on(GoveeEventTypes.UnknownDevice, (_data: GoveeDeviceStatusData) => {
       ServerLogService.writeLog(LogLevel.Warn, `GoveeDevice unknown`);
+    });
+    this.goveeApi.on(GoveeEventTypes.UnknownMessage, (data: GoveeResponseMessage) => {
+      ServerLogService.writeLog(LogLevel.Warn, `GoveeDevice unknown message: ${data}`);
     });
     this.goveeApi.discover();
   }

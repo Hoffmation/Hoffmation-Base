@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent negative numbers on brightness state
+
 ## 2.22.10 (2024-01-05)
 
 * (theimo1221) Exchange Govee-Lan-Controller

@@ -16,11 +16,11 @@ export class GoveeTestTest {
     GooveeService.initialize();
     setTimeout(() => {
       device.setLight(true, -1, true, 100, undefined, '#ff6a00', -1);
-    }, 5000);
+    }, 15000);
     setTimeout(() => {
       console.log('shutdown-now');
       process.exit(1);
-    }, 15000);
+    }, 55000);
   }
 }
 

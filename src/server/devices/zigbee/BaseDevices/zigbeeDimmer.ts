@@ -139,7 +139,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       return;
     }
 
-    if (pValue && brightness === -1 && this.brightness < 10) {
+    if (pValue && brightness <= 0 && this.brightness < 10) {
       brightness = 10;
     }
     this.log(
@@ -158,15 +158,15 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     }
 
     if (brightness >= this.settings.turnOnThreshhold) {
-      this.setState(this._stateIdBrightness, brightness);
+      this.setBrightnessState(brightness);
       return;
     }
 
-    this.setState(this._stateIdBrightness, this.settings.turnOnThreshhold, () => {
+    this.setBrightnessState(this.settings.turnOnThreshhold, () => {
       Utils.guardedTimeout(
         () => {
           this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
-          this.setState(this._stateIdBrightness, brightness);
+          this.setBrightnessState(brightness);
         },
         1000,
         this,
@@ -185,5 +185,9 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
 
   public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
     return LampUtils.toggleLight(this, time, force, calculateTime);
+  }
+
+  private setBrightnessState(brightness: number, onSuccess?: () => void): void {
+    this.setState(this._stateIdBrightness, Math.max(0, Math.min(brightness, 100)), onSuccess);
   }
 }
