@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.12 (2024-01-13)
 
 * (theimo1221) Update packages
 * (theimo1221) Correct time comparison on motion Sensor guard.
