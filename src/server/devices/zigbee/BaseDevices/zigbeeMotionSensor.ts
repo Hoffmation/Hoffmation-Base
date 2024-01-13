@@ -23,7 +23,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       return false;
     }
 
-    if (this.lastUpdate.getTime() - Utils.nowMS() > 3600000) {
+    if (Utils.nowMS() - this.lastUpdate.getTime() > 3600000) {
       // If the device has not been updated for more than an hour, there is no active movement
       return false;
     }
