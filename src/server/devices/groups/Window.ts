@@ -1,7 +1,14 @@
 import { HmIpGriff } from '../hmIPDevices';
 import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services';
 import { WindowPosition } from '../models';
-import { LogLevel, TimeOfDay } from '../../../models';
+import {
+  CommandSource,
+  LogLevel,
+  ShutterSetLevelCommand,
+  TimeOfDay,
+  WindowRestoreDesiredPositionCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 import { iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
@@ -28,11 +35,10 @@ export class Window extends BaseGroup {
 
   /**
    * sets the desired Pos and moves rollo to this level
-   * @param {number} value
    */
-  public setDesiredPosition(value: number): void {
-    this.desiredPosition = value;
-    this.restoreDesiredPosition();
+  public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {
+    this.desiredPosition = c.position;
+    this.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));
   }
 
   public getHandle(): HmIpGriff[] {
@@ -71,11 +77,14 @@ export class Window extends BaseGroup {
           element.vibrationBlockedByGriff = true;
         });
         const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().settings.rolloOffset);
-        if (TimeCallbackService.darkOutsideOrNight(timeOfDay)) {
-          ShutterService.windowAllMiddle(this);
-        } else {
-          ShutterService.windowAllUp(this);
-        }
+        ShutterService.windowAllToPosition(
+          this,
+          new ShutterSetLevelCommand(
+            CommandSource.Automatic,
+            TimeCallbackService.darkOutsideOrNight(timeOfDay) ? 50 : 100,
+            'Window ajar by handle',
+          ),
+        );
       });
 
       griff.addOffenCallback((offen: boolean) => {
@@ -83,7 +92,10 @@ export class Window extends BaseGroup {
           this.getVibration().forEach((element) => {
             element.vibrationBlockedByGriff = true;
           });
-          ShutterService.windowAllUp(this);
+          ShutterService.windowAllToPosition(
+            this,
+            new ShutterSetLevelCommand(CommandSource.Automatic, 100, 'Window opened by handle'),
+          );
           return;
         }
       });
@@ -103,7 +115,9 @@ export class Window extends BaseGroup {
               }
             }, 12000);
           });
-          this.restoreDesiredPosition();
+          this.restoreDesiredPosition(
+            new WindowRestoreDesiredPositionCommand(CommandSource.Automatic, 'Last window Handle closed'),
+          );
         }
       });
     });
@@ -133,7 +147,7 @@ export class Window extends BaseGroup {
     }
   }
 
-  public restoreDesiredPosition(): void {
-    ShutterService.windowAllToPosition(this, this.desiredPosition, false);
+  public restoreDesiredPosition(c: WindowRestoreDesiredPositionCommand): void {
+    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this.desiredPosition));
   }
 }

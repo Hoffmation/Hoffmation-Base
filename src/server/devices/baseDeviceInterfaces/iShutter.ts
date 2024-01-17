@@ -1,6 +1,6 @@
 import { Window } from '../groups';
 import { iRoomDevice } from './iRoomDevice';
-import { ShutterSettings } from '../../../models';
+import { ShutterSetLevelCommand, ShutterSettings } from '../../../models';
 
 export interface iShutter extends iRoomDevice {
   settings: ShutterSettings;
@@ -10,5 +10,5 @@ export interface iShutter extends iRoomDevice {
 
   persist(): void;
 
-  setLevel(pPosition: number, initial: boolean, skipOpenWarning?: boolean): void;
+  setLevel(command: ShutterSetLevelCommand): void;
 }

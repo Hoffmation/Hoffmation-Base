@@ -1,5 +1,13 @@
 import { ringStorage, Utils } from '../utils';
-import { iRoomBase, LogLevel, RoomBase } from '../../../models';
+import {
+  CommandSource,
+  FloorSetAllShuttersCommand,
+  iRoomBase,
+  LogLevel,
+  RoomBase,
+  RoomRestoreShutterPositionCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 import { ServerLogService } from '../log-service';
 import { SonosService } from '../Sonos';
 import { Res } from '../Translation';
@@ -27,16 +35,13 @@ export class RoomService {
   }
 
   /**
-   * Set ALl Roolos of a specific floor
-   * !!floor -1 sets all rollos in house instead!!
-   * @param floor the level on which all rollos shall be changed -1 equals all rooms
-   * @param position (0 equals down, 100 up)
+   * Moves all shutters of the desired floor(s) to the desired position
    */
-  public static setAllRolloOfFloor(floor: number = -1, position: number = 0): void {
+  public static setAllShutterOfFloor(c: FloorSetAllShuttersCommand): void {
     const rooms: IterableIterator<[string, RoomBase]> =
-      floor > -1 ? this.getAllRoomsOfFloor(floor) : this.Rooms.entries();
+      c.specificFloor != undefined ? this.getAllRoomsOfFloor(c.specificFloor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
-      room.WindowGroup?.allRolloToLevel(position, true);
+      room.WindowGroup?.setDesiredPosition(new WindowSetDesiredPositionCommand(c, c.position));
     }
   }
 
@@ -69,7 +74,7 @@ export class RoomService {
       }
     }
     this.stopIntrusionAlarm();
-    this.restoreRolloPosition();
+    this.restoreShutterPositions();
     this.restoreLight();
   }
 
@@ -160,7 +165,7 @@ export class RoomService {
     this._intrusionAlarmActive = false;
     this._intrusionAlarmLevel = 0;
     ServerLogService.writeLog(LogLevel.Alert, `Alarm wurde beendet --> Fahre Rollos in Ausgangsposition.`);
-    this.restoreRolloPosition();
+    this.restoreShutterPositions();
     this.restoreLight();
   }
 
@@ -180,7 +185,9 @@ export class RoomService {
     } else if (this._intrusionAlarmLevel === 2) {
       speakMessage = Res.intruderShutterUpPleaseLeave();
       Utils.guardedNewThread(() => {
-        this.setAllRolloOfFloor(-1, 100);
+        this.setAllShutterOfFloor(
+          new FloorSetAllShuttersCommand(CommandSource.Automatic, 100, undefined, 'Intrusion alarm level 2'),
+        );
         this.setAllLampsOfFloor(-1, true);
       }, this);
     } else if (this._intrusionAlarmLevel === 3) {
@@ -212,9 +219,15 @@ export class RoomService {
     }, this);
   }
 
-  private static restoreRolloPosition(): void {
+  private static restoreShutterPositions(): void {
     for (const room of this.Rooms.values()) {
-      room.WindowGroup?.restoreRolloPosition();
+      room.WindowGroup?.restoreRolloPosition(
+        new RoomRestoreShutterPositionCommand(
+          CommandSource.Automatic,
+          false,
+          'Resetting all shutter in all Rooms to last known position',
+        ),
+      );
     }
   }
 

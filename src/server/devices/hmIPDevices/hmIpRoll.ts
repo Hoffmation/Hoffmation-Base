@@ -3,7 +3,13 @@ import { DeviceType } from '../deviceType';
 import { LogDebugType, Utils } from '../../services';
 import { Window } from '../groups';
 import { WindowPosition } from '../models';
-import { LogLevel, ShutterSettings } from '../../../models';
+import {
+  CommandSource,
+  LogLevel,
+  ShutterSetLevelCommand,
+  ShutterSettings,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 import { iShutter } from '../baseDeviceInterfaces';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
@@ -25,7 +31,13 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       if (val.desiredPosition === -1) {
         return;
       }
-      this._window?.setDesiredPosition(val.desiredPosition);
+      this._window?.setDesiredPosition(
+        new WindowSetDesiredPositionCommand(
+          CommandSource.Automatic,
+          val.desiredPosition,
+          'Found persisted last desired position in DB',
+        ),
+      );
     });
   }
 
@@ -84,18 +96,20 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     }
   }
 
-  public setLevel(pPosition: number, initial: boolean = false, skipOpenWarning: boolean = false): void {
-    if (!this._firstCommandRecieved && !initial) {
+  public setLevel(command: ShutterSetLevelCommand): void {
+    this.log(LogLevel.Debug, command.logMessage);
+    let targetLevel: number = command.level;
+    if (!this._firstCommandRecieved && !command.isInitial) {
       this._firstCommandRecieved = true;
     }
-    if (this._firstCommandRecieved && initial) {
-      this.log(LogLevel.Debug, `Skipped initial Rollo to ${pPosition} as we recieved a command already`);
+    if (this._firstCommandRecieved && command.isInitial) {
+      this.log(LogLevel.Debug, `Skipped initial Rollo to ${targetLevel} as we recieved a command already`);
       return;
     }
-    if (this.currentLevel === pPosition) {
+    if (this.currentLevel === targetLevel && !command.isUserAction) {
       this.log(
         LogLevel.Debug,
-        `Skip Rollo command to Position ${pPosition} as this is the current one`,
+        `Skip Rollo command to Position ${targetLevel} as this is the current one`,
         LogDebugType.SkipUnchangedRolloPosition,
       );
       return;
@@ -110,23 +124,23 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     }
 
     if (this._window !== undefined) {
-      if (this._window.griffeInPosition(WindowPosition.offen) > 0 && pPosition < 100) {
-        if (!skipOpenWarning) {
+      if (this._window.griffeInPosition(WindowPosition.offen) > 0 && command.level < 100) {
+        if (!command.skipOpenWarning) {
           this.log(LogLevel.Alert, `Not closing the shutter, as the window is open!`);
         }
         return;
       }
-      if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && pPosition < 50) {
-        pPosition = 50;
-        if (!skipOpenWarning) {
+      if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && targetLevel < 50) {
+        targetLevel = 50;
+        if (!command.skipOpenWarning) {
           this.log(LogLevel.Alert, `Not closing the shutter, as the window is half open!`);
         }
       }
     }
 
-    this._setLevel = pPosition;
-    this.log(LogLevel.Debug, `Fahre Rollo auf Position ${pPosition}`);
-    this.setState(this._setLevelSwitchID, pPosition);
+    this._setLevel = targetLevel;
+    this.log(LogLevel.Debug, `Fahre Rollo auf Position ${targetLevel}`);
+    this.setState(this._setLevelSwitchID, targetLevel);
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {

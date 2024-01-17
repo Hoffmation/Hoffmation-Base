@@ -1,7 +1,7 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, RoomService, SonosService, Utils } from '../../services';
 import { ZigbeeDevice } from './BaseDevices';
-import { LogLevel } from '../../../models';
+import { CommandSource, FloorSetAllShuttersCommand, LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { iBatteryDevice, iSmokeDetectorDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
@@ -112,7 +112,9 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     });
     Utils.guardedNewThread(() => {
       // Roll all Rollos up, to ensure free sight for firefighters
-      RoomService.setAllRolloOfFloor(-1, 100);
+      RoomService.setAllShutterOfFloor(
+        new FloorSetAllShuttersCommand(CommandSource.Force, 100, undefined, 'Fire alarm'),
+      );
     });
   }
 

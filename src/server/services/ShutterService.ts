@@ -1,5 +1,6 @@
 import { Devices, DeviceType, iShutter, Window } from '../devices';
 import { API } from './api';
+import { ShutterSetLevelCommand } from '../../models';
 
 export class ShutterService {
   public static anyRolloDown(rollo: iShutter[]): boolean {
@@ -61,44 +62,9 @@ export class ShutterService {
     return rollos;
   }
 
-  public static down(shutter: iShutter, initial: boolean = false): void {
-    shutter.setLevel(0, initial);
-  }
-
-  public static middle(shutter: iShutter): void {
-    shutter.setLevel(50, false);
-  }
-
-  public static up(shutter: iShutter, initial: boolean = false): void {
-    shutter.setLevel(100, initial);
-  }
-
-  public static windowAllDown(f: Window, initial: boolean = false): void {
+  public static windowAllToPosition(f: Window, c: ShutterSetLevelCommand): void {
     f.getShutter().forEach((s) => {
-      s.setLevel(0, initial);
-    });
-  }
-
-  public static windowAllMiddle(f: Window, initial: boolean = false): void {
-    f.getShutter().forEach((s) => {
-      s.setLevel(50, initial);
-    });
-  }
-
-  public static windowAllUp(f: Window, initial: boolean = false): void {
-    f.getShutter().forEach((s) => {
-      s.setLevel(100, initial);
-    });
-  }
-
-  public static windowAllToPosition(
-    f: Window,
-    position: number,
-    initial: boolean = false,
-    skipOpenWarning: boolean = false,
-  ): void {
-    f.getShutter().forEach((s) => {
-      s.setLevel(position, initial, skipOpenWarning);
+      s.setLevel(c);
     });
   }
 }

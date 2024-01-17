@@ -1,6 +1,13 @@
 import { DeviceType } from '../../deviceType';
 import { LogDebugType, Utils } from '../../../services';
-import { LogLevel, ShutterCalibration, ShutterSettings } from '../../../../models';
+import {
+  CommandSource,
+  LogLevel,
+  ShutterCalibration,
+  ShutterSetLevelCommand,
+  ShutterSettings,
+  WindowSetDesiredPositionCommand,
+} from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter } from '../../baseDeviceInterfaces';
 import { Window } from '../../groups';
@@ -32,7 +39,13 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       });
     Utils.dbo?.getLastDesiredPosition(this).then((val) => {
       if (val.desiredPosition >= -1) {
-        this._window?.setDesiredPosition(val.desiredPosition);
+        this._window?.setDesiredPosition(
+          new WindowSetDesiredPositionCommand(
+            CommandSource.Automatic,
+            val.desiredPosition,
+            'Found persisted last desired position in DB',
+          ),
+        );
       }
     });
   }
@@ -84,14 +97,16 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     super.update(idSplit, state, initial, pOverride);
   }
 
-  public setLevel(pPosition: number, initial: boolean = false, skipOpenWarning: boolean = false): void {
-    if (!this._firstCommandRecieved && !initial) {
+  public setLevel(c: ShutterSetLevelCommand): void {
+    this.log(LogLevel.Debug, c.logMessage);
+    let pPosition: number = c.level;
+    if (!this._firstCommandRecieved && !c.isInitial) {
       this._firstCommandRecieved = true;
-    } else if (this._firstCommandRecieved && initial) {
+    } else if (this._firstCommandRecieved && c.isInitial) {
       this.log(LogLevel.Debug, `Skipped initial Rollo  to ${pPosition} as we recieved a command already`);
       return;
     }
-    if (this.currentLevel === pPosition) {
+    if (this.currentLevel === pPosition && !c.isUserAction) {
       this.log(
         LogLevel.Debug,
         `Skip Rollo command to Position ${pPosition} as this is the current one`,
@@ -102,14 +117,14 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
     if (this._window !== undefined) {
       if (this._window.griffeInPosition(WindowPosition.offen) > 0 && pPosition < 100) {
-        if (!skipOpenWarning) {
+        if (!c.skipOpenWarning) {
           this.log(LogLevel.Alert, `Not closing the shutter, as the window is open!`);
         }
         return;
       }
       if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && pPosition < 50) {
         pPosition = 50;
-        if (!skipOpenWarning) {
+        if (!c.skipOpenWarning) {
           this.log(LogLevel.Alert, `Not closing the shutter, as the window is half open!`);
         }
       }

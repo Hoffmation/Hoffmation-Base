@@ -4,6 +4,7 @@ import { TelegramMessageCallback } from './telegramMessageCalback';
 import { ShutterService } from '../ShutterService';
 import { TelegramService } from './telegram-service';
 import { RoomService } from '../room-service';
+import { CommandSource, FloorSetAllShuttersCommand } from '../../../models';
 
 export class TelegramCommands {
   public static initialize(): void {
@@ -161,7 +162,9 @@ export class TelegramCommands {
         /\/all_rollo_down/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          RoomService.setAllRolloOfFloor(-1, 0);
+          RoomService.setAllShutterOfFloor(
+            new FloorSetAllShuttersCommand(CommandSource.Manual, 0, undefined, 'Telegram command AllRolloDown'),
+          );
           TelegramService.sendMessage([m.chat.id], `Es werden alle Rollos heruntergefahren`);
           return true;
         },

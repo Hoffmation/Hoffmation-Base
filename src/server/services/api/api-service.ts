@@ -14,7 +14,15 @@ import {
   iSpeaker,
   iTemporaryDisableAutomatic,
 } from '../../devices';
-import { CollisionSolving, DeviceSettings, LogLevel, RoomBase } from '../../../models';
+import {
+  CollisionSolving,
+  CommandSource,
+  DeviceSettings,
+  LogLevel,
+  RoomBase,
+  ShutterSetLevelCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, AcMode, DaikinService } from '../ac';
@@ -256,9 +264,9 @@ export class API {
     }
     if (d.window) {
       // otherwise it will be overridden shortly after
-      d.window.setDesiredPosition(level);
+      d.window.setDesiredPosition(new WindowSetDesiredPositionCommand(CommandSource.API, level));
     } else {
-      d.setLevel(level, false);
+      d.setLevel(new ShutterSetLevelCommand(CommandSource.API, level));
     }
     d.log(LogLevel.Info, `API Call to set Shutter to ${level}`);
     return null;
