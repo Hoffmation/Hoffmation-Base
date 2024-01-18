@@ -1,5 +1,6 @@
 export { BaseCommand } from './baseCommand';
 export { CommandSource } from './commandSource';
+export { CommandType } from './commandType';
 export { FloorSetAllShuttersCommand } from './floorSetAllShuttersCommand';
 export { RoomRestoreShutterPositionCommand } from './roomRestoreShutterPositionCommand';
 export { ShutterSetLevelCommand } from './ShutterSetLevelCommand';

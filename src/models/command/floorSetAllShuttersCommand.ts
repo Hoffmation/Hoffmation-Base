@@ -1,7 +1,10 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource } from './commandSource';
+import { CommandType } from './commandType';
 
 export class FloorSetAllShuttersCommand extends BaseCommand {
+  public override _commandType: CommandType = CommandType.FloorSetAllShuttersCommand;
+
   /**
    * Creates an instance of FloorSetAllShuttersCommand.
    * @param {CommandSource | BaseCommand} source
@@ -15,6 +18,6 @@ export class FloorSetAllShuttersCommand extends BaseCommand {
     public readonly specificFloor: number | undefined = undefined,
     reason: string = '',
   ) {
-    super('FloorSetAllShuttersCommand', source, reason);
+    super(source, reason);
   }
 }

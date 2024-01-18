@@ -1,10 +1,11 @@
 import { CommandSource } from './commandSource';
+import { CommandType } from './commandType';
 
-export class BaseCommand {
+export abstract class BaseCommand {
   public readonly timestamp: Date;
+  abstract _commandType: CommandType;
 
   public constructor(
-    private readonly _commandName: string,
     public readonly source: CommandSource | BaseCommand = CommandSource.Unknown,
     private readonly _reason: string = '',
   ) {
@@ -33,8 +34,8 @@ export class BaseCommand {
       reason = this.source.reasonTrace;
     }
     if (this._reason === '') {
-      return `${reason} -> ${this._commandName}`;
+      return `${reason} -> ${this._commandType}`;
     }
-    return `${reason} -> ${this._commandName}(${this._reason})`;
+    return `${reason} -> ${this._commandType}(${this._reason})`;
   }
 }
