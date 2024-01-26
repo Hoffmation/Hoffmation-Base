@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Reduce json payload from daikin ac devices
+
 ## 2.22.14 (2024-01-26)
 
 * (theimo1221) Further reduce json Payload
