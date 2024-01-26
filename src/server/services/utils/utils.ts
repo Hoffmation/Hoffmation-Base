@@ -103,7 +103,15 @@ export class Utils {
     additionalOmitKeys: string[] = [],
     topLevelOmmitKeys: string[] = [],
   ): Partial<object> {
-    const keysToOmit: string[] = ['timeout', 'interval', 'timeouts', 'callback', 'otaInfo'];
+    const keysToOmit: string[] = [
+      'timeout',
+      'interval',
+      'timeouts',
+      'callback',
+      'otaInfo',
+      'precalculatedDistancesMap',
+      'statedict',
+    ];
     keysToOmit.push(...additionalOmitKeys);
     const loweredOmitKeys: string[] = keysToOmit.map((key) => key.toLowerCase());
     const loweredTopLevelOmitKeys: string[] = topLevelOmmitKeys.map((key) => key.toLowerCase());

@@ -10,6 +10,11 @@
 
 * (theimo1221) Start rework of commands especially with focus on command source and the stacked reason
 
+## 2.22.13 (2024-01-26)
+
+* (theimo1221) Update packages
+* (theimo1221) Reduce json Payload
+
 ## 2.22.12 (2024-01-13)
 
 * (theimo1221) Update packages
