@@ -110,7 +110,7 @@ export class Utils {
       'callback',
       'otaInfo',
       'precalculatedDistancesMap',
-      'statedict',
+      'stateMap',
     ];
     keysToOmit.push(...additionalOmitKeys);
     const loweredOmitKeys: string[] = keysToOmit.map((key) => key.toLowerCase());
