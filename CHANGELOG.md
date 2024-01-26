@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) Reduce json Payload
 
 ## 2.22.12 (2024-01-13)
 
