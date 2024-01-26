@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.13 (2024-01-26)
 
 * (theimo1221) Update packages
 * (theimo1221) Reduce json Payload
