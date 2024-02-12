@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend unifi Logging
+
 ## 2.22.15 (2024-02-12)
 
 * (theimo1221) Reduce json payload from daikin ac devices
