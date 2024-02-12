@@ -5,6 +5,15 @@ import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 
 export class AsusRouter extends Router {
+  public authorizeDevice(
+    _mac: string,
+    _minutes: number,
+    _uploadLimit: number,
+    _downloadLimit: number,
+  ): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
   private _api: NodeMerlinWrtApi;
 
   public constructor(config: iAsusConfig) {

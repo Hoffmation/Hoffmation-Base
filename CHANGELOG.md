@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Unifi: Add option to authorize guest devices by mac address
+
 ## 2.22.16 (2024-02-12)
 
 * (theimo1221) Extend unifi Logging

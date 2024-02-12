@@ -21,6 +21,28 @@ export class UnifiRouter extends Router {
     this.login();
   }
 
+  public authorizeDevice(mac: string, minutes: number, uploadLimit: number, downloadLimit: number): Promise<boolean> {
+    ServerLogService.writeLog(
+      LogLevel.Info,
+      `Unifi: AuthorizeDevice Device "${mac}" for ${minutes} minutes with ${uploadLimit} kbps upload and ${downloadLimit} kbps download`,
+    );
+    return new Promise(async (resolve, _reject) => {
+      if (!this.loggedIn && !(await this.login())) {
+        ServerLogService.writeLog(LogLevel.Warn, `Unifi: Can't AuthorizeDevice Device "${mac}" as we can't log in`);
+        resolve(false);
+      }
+      const result = await this._api
+        .authorizeGuest(mac, minutes, uploadLimit, downloadLimit)
+        .catch((error: unknown) => {
+          ServerLogService.writeLog(LogLevel.Warn, `Unifi: Failed to AuthorizeDevice "${mac}" due to: ${error}`);
+          resolve(false);
+          return;
+        });
+      ServerLogService.writeLog(LogLevel.Trace, `Unifi: AuthorizeDevice ${mac} resulted in ${result}`);
+      resolve(true);
+    });
+  }
+
   public reconnectDeviceByMac(mac: string): Promise<boolean> {
     ServerLogService.writeLog(LogLevel.Info, `Unifi: Reconnecting Device "${mac}"`);
     return new Promise(async (resolve, _reject) => {
