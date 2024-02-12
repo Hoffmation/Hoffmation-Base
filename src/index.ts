@@ -3,6 +3,7 @@ import {
   DaikinService,
   Devices,
   DeviceUpdater,
+  GooveeService,
   iConfig,
   ioBrokerMain,
   iSpeaker,
@@ -10,6 +11,7 @@ import {
   MuellService,
   NewsService,
   OwnAcDevices,
+  OwnGoveeDevices,
   OwnSonosDevices,
   PollyService,
   PostgreSqlPersist,
@@ -22,6 +24,7 @@ import {
   TibberService,
   TimeCallbackService,
   Trilateration,
+  UnifiRouter,
   Utils,
   VictronService,
   WeatherService,
@@ -29,7 +32,6 @@ import {
 import { LogLevel } from './models';
 import { Dachs } from './server/devices/dachs';
 import '@iobroker/types';
-import { GooveeService, OwnGoveeDevices } from './server/services/govee';
 
 export * from './models/index';
 export * from './server/index';
@@ -74,6 +76,9 @@ export class HoffmationBase {
     if (SettingsService.settings.asusConfig) {
       ServerLogService.writeLog(LogLevel.Info, `Asus Router settings detected --> initializing`);
       new AsusRouter(SettingsService.settings.asusConfig);
+    } else if (SettingsService.settings.unifiSettings) {
+      ServerLogService.writeLog(LogLevel.Info, `Unifi Router settings detected --> initializing`);
+      new UnifiRouter(SettingsService.settings.unifiSettings);
     }
     TimeCallbackService.init();
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base First Initializations finished`);

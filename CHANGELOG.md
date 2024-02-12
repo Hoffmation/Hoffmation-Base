@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Reduce json payload from daikin ac devices
+* (theimo1221) Add unifi-router
 
 ## 2.22.14 (2024-01-26)
 
