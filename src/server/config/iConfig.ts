@@ -21,6 +21,7 @@ import { iTibberSettings } from './iTibberSettings';
 import { iVictronSettings } from './iVictronSettings';
 import { iDachsSettings } from './iDachsSettings';
 import { iEnergyManagerSettings } from './iEnergyManagerSettings';
+import { iUnifiSettings } from './iUnifiSettings';
 
 export interface iConfig {
   asusConfig?: iAsusConfig;
@@ -46,6 +47,7 @@ export interface iConfig {
   tibber?: iTibberSettings;
   timeSettings: iTimeSettings;
   translationSettings: iTranslationSettings;
+  unifiSettings?: iUnifiSettings;
   weather?: iWeatherSettings;
   victron?: iVictronSettings;
 }

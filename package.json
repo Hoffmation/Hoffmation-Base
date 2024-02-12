@@ -1,7 +1,7 @@
 {
   "name": "hoffmation-base",
   "description": "Base Libraries and functions for own Hoffmation projects",
-  "version": "2.22.13",
+  "version": "2.22.15",
   "files": [
     "lib/**/*"
   ],
@@ -43,7 +43,8 @@
     "manual-test-iobroker-connection": "tsc && ts-node ./manualTests/io-connection-test.ts",
     "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts",
     "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts",
-    "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts"
+    "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts",
+    "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts"
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
@@ -69,6 +70,7 @@
     "node-ical": "^0.17.1",
     "node-merlin-wrt-api": "^0.0.2-alpha.5",
     "node-telegram-bot-api": "^0.64.0",
+    "node-unifi": "2.5.1",
     "pg": "^8.11.3",
     "rss-parser": "^3.13.0",
     "samsung-tv-control": "^1.14.0",

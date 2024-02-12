@@ -5,10 +5,18 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Start rework of commands especially with focus on command source and the stacked reason
+
+## 2.22.15 (2024-02-12)
+
+* (theimo1221) Reduce json payload from daikin ac devices
+* (theimo1221) Add unifi-router
+
+## 2.22.14 (2024-01-26)
+
+* (theimo1221) Further reduce json Payload
 
 ## 2.22.13 (2024-01-26)
 

@@ -8,6 +8,7 @@ import { AcDevice } from './ac-device';
 import { AcMode } from './ac-mode';
 import { AcDeviceType } from './acDeviceType';
 import { DeviceType } from '../../devices';
+import _ from 'lodash';
 
 export class OwnDaikinDevice extends AcDevice {
   public desiredState: boolean = Power.OFF;
@@ -166,5 +167,12 @@ export class OwnDaikinDevice extends AcDevice {
         this.setDesiredInfo(true);
       }
     });
+  }
+
+  public override toJSON(): Partial<OwnDaikinDevice> {
+    // eslint-disable-next-line
+    const result: any = _.omit(this, ['room', '_room', 'device', '_device']);
+    result['on'] = this.on;
+    return Utils.jsonFilter(result);
   }
 }
