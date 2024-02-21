@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 2.22.18 (2024-02-21)
 
 * (theimo1221) Harden Daikin reconect
 
