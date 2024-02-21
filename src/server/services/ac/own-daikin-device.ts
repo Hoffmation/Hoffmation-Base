@@ -137,16 +137,20 @@ export class OwnDaikinDevice extends AcDevice {
 
   private handleDeviceUnreach(): void {
     this.log(LogLevel.Warn, `Detected EHOSTUNREACH for ${this.name}(${this.ip}), will try reconecting`);
-    DaikinService.reconnect(this.name, this.ip).then((device) => {
-      this.device = device;
-      Utils.guardedTimeout(
-        () => {
-          this.setDesiredInfo(true);
-        },
-        5000,
-        this,
-      );
-    });
+    DaikinService.reconnect(this.name, this.ip)
+      .then((device) => {
+        this.device = device;
+        Utils.guardedTimeout(
+          () => {
+            this.setDesiredInfo(true);
+          },
+          5000,
+          this,
+        );
+      })
+      .catch((err) => {
+        this.log(LogLevel.Error, `Reconnecting failed for ${this.name}(${this.ip}): ${err}`);
+      });
   }
 
   private handleParamNg(changeObject: Partial<ControlInfo>): void {
