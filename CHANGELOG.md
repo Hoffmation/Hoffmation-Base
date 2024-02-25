@@ -8,6 +8,7 @@
 
 ## **WORK IN PROGRESS**
 
+* (theimo1221) Update packages
 * (theimo1221) Add support for Mac-Address with Daikin devices.
 
 ## 2.22.18 (2024-02-21)
