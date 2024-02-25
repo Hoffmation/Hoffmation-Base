@@ -17,12 +17,15 @@ export class OwnDaikinDevice extends AcDevice {
   public deviceType: DeviceType = DeviceType.Daikin;
   private _on: boolean = false;
 
-  public constructor(name: string, roomName: string, ip: string, device: DaikinAC | undefined) {
+  public constructor(
+    name: string,
+    roomName: string,
+    ip: string,
+    private _device: DaikinAC | undefined,
+    private _mac: string | undefined = undefined,
+  ) {
     super(name, roomName, ip, AcDeviceType.Daikin);
-    this._device = device;
   }
-
-  private _device: DaikinAC | undefined;
 
   public get device(): DaikinAC | undefined {
     return this._device;
@@ -137,7 +140,7 @@ export class OwnDaikinDevice extends AcDevice {
 
   private handleDeviceUnreach(): void {
     this.log(LogLevel.Warn, `Detected EHOSTUNREACH for ${this.name}(${this.ip}), will try reconecting`);
-    DaikinService.reconnect(this.name, this.ip)
+    DaikinService.reconnect(this.name, this.ip, this._mac)
       .then((device) => {
         this.device = device;
         Utils.guardedTimeout(
