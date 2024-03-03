@@ -4,6 +4,7 @@ import { WindowPosition } from '../models';
 import {
   CommandSource,
   LogLevel,
+  RoomSetLightTimeBasedCommand,
   ShutterSetLevelCommand,
   TimeOfDay,
   WindowRestoreDesiredPositionCommand,
@@ -143,7 +144,9 @@ export class Window extends BaseGroup {
     );
 
     if (pValue === 0 || pValue === 100) {
-      this.getRoom().setLightTimeBased(true);
+      this.getRoom().setLightTimeBased(
+        new RoomSetLightTimeBasedCommand(CommandSource.Automatic, true, 'Window.rolloPositionChange'),
+      );
     }
   }
 

@@ -1,4 +1,4 @@
-import { LogLevel } from '../../../models';
+import { ActuatorSetStateCommand, CommandSource, LogLevel, RoomSetLightTimeBasedCommand } from '../../../models';
 import { RoomService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
@@ -39,7 +39,9 @@ export class PresenceGroup extends BaseGroup {
 
     this.addLastLeftCallback(() => {
       this.getRoom().WindowGroup?.changeVibrationMotionBlock(false);
-      this.getRoom().LightGroup?.switchAll(false);
+      this.getRoom().LightGroup?.switchAll(
+        new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Presence Group LastLeftCallback'),
+      );
     });
 
     this.addFirstEnterCallback(() => {
@@ -47,7 +49,9 @@ export class PresenceGroup extends BaseGroup {
         return;
       }
       this.log(LogLevel.DeepTrace, `Bewegung im Raum ${this.roomName} festgestellt --> Licht einschalten`);
-      this.getRoom().setLightTimeBased();
+      this.getRoom().setLightTimeBased(
+        new RoomSetLightTimeBasedCommand(CommandSource.Automatic, true, 'Motion detected'),
+      );
     });
 
     this.getMotionDetector().forEach((b) => {

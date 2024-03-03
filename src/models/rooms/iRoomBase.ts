@@ -1,4 +1,5 @@
 import { TimeCallback } from '../timeCallback';
+import { RoomSetLightTimeBasedCommand } from '../command';
 
 export interface iRoomBase {
   sunriseShutterCallback: TimeCallback | undefined;
@@ -14,11 +15,7 @@ export interface iRoomBase {
 
   recalcTimeCallbacks(): void;
 
-  /**
-   * Sets the light based on the current time, rollo Position and room Settings
-   * @param movementDependant Only turn light on if there was a movement in the same room
-   */
-  setLightTimeBased(movementDependant: boolean): void;
+  setLightTimeBased(c: RoomSetLightTimeBasedCommand): void;
 
   isNowLightTime(): boolean;
 }

@@ -7,7 +7,7 @@ import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { SettingsService } from '../../services';
 import { HeatGroup } from './heatGroup';
 import { ButtonPressType } from '../button';
-import { CommandSource, WindowSetDesiredPositionCommand } from '../../../models';
+import { ActuatorSetStateCommand, CommandSource, WindowSetDesiredPositionCommand } from '../../../models';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {
@@ -76,7 +76,12 @@ export class TasterGroup extends BaseGroup {
       t.buttonMidLeft?.addCb(
         ButtonPressType.long,
         (pValue) => {
-          pValue && this.getRoom().LightGroup?.switchAll(true, true);
+          if (!pValue) {
+            return;
+          }
+          this.getRoom().LightGroup?.switchAll(
+            new ActuatorSetStateCommand(CommandSource.Manual, true, 'Button press to turn all lights on'),
+          );
         },
         `Turn all Lights in this room on`,
       );
@@ -84,7 +89,12 @@ export class TasterGroup extends BaseGroup {
       t.buttonMidRight?.addCb(
         ButtonPressType.long,
         (pValue) => {
-          pValue && this.getRoom().LightGroup?.switchAll(false, true);
+          if (!pValue) {
+            return;
+          }
+          this.getRoom().LightGroup?.switchAll(
+            new ActuatorSetStateCommand(CommandSource.Manual, false, 'Button press to turn all lights off'),
+          );
         },
         `Turn all Lights in this room off`,
       );

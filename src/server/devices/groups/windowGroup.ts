@@ -3,6 +3,7 @@ import {
   LogLevel,
   RoomBase,
   RoomRestoreShutterPositionCommand,
+  RoomSetLightTimeBasedCommand,
   ShutterSetLevelCommand,
   ShutterSettings,
   ShutterSunriseUpCommand,
@@ -159,9 +160,7 @@ export class WindowGroup extends BaseGroup {
   private sunsetDown(c: ShutterSunsetDownCommand): void {
     this.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
     const room: RoomBase = this.getRoom();
-    if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
-      room.LightGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
-    }
+    room.setLightTimeBased(new RoomSetLightTimeBasedCommand(c, true, 'sunsetDown'));
   }
 
   private reconfigureSunsetShutterCallback(): void {

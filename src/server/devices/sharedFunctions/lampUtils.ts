@@ -57,7 +57,7 @@ export class LampUtils {
 
   public static toggleLight(device: iLamp, c: LampToggleLightCommand): boolean {
     const newVal: boolean = device.queuedValue !== null ? !device.queuedValue : !device.lightOn;
-    const timeout: number = newVal && c.force ? 30 * 60 * 1000 : -1;
+    const timeout: number = newVal && c.isForceAction ? 30 * 60 * 1000 : -1;
     if (newVal && c.time === undefined && c.calculateTime && device.room !== undefined) {
       c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }

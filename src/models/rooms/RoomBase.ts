@@ -25,6 +25,11 @@ import { iRoomBase } from './iRoomBase';
 import { RoomInfo } from './roomInfo';
 import _ from 'lodash';
 import { iIdHolder } from '../iIdHolder';
+import {
+  ActuatorSetStateCommand,
+  LightGroupSwitchTimeConditionalCommand,
+  RoomSetLightTimeBasedCommand,
+} from '../command';
 
 export class RoomBase implements iRoomBase, iIdHolder {
   public info: RoomInfo;
@@ -144,17 +149,16 @@ export class RoomBase implements iRoomBase, iIdHolder {
 
   /**
    * Sets the light based on the current time, rollo Position and room Settings
-   * @param movementDependant Only turn light on if there was a movement in the same room
    */
-  public setLightTimeBased(movementDependant: boolean = false): void {
+  public setLightTimeBased(c: RoomSetLightTimeBasedCommand): void {
     if (!this.LightGroup) {
       this.log(LogLevel.Trace, 'Ignore "setLightTimeBased" as we have no lamps');
       return;
     }
 
-    if (movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
+    if (c.movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
       this.log(LogLevel.Trace, 'Turn off lights as no-one is present.');
-      this.LightGroup.switchAll(false);
+      this.LightGroup.switchAll(new ActuatorSetStateCommand(c, false, 'Room.setLightTimeBased but no one is present'));
       return;
     }
 
@@ -177,7 +181,9 @@ export class RoomBase implements iRoomBase, iIdHolder {
     ) {
       timeOfDay = Utils.nowTime().hours > 16 ? TimeOfDay.AfterSunset : TimeOfDay.BeforeSunrise;
     }
-    this.LightGroup.switchTimeConditional(timeOfDay);
+    this.LightGroup.switchTimeConditional(
+      new LightGroupSwitchTimeConditionalCommand(c, timeOfDay, 'Roombase.setLightTimeBased'),
+    );
   }
 
   public isNowLightTime(): boolean {
