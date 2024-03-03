@@ -15,9 +15,13 @@ import {
   iTemporaryDisableAutomatic,
 } from '../../devices';
 import {
+  ActuatorSetStateCommand,
   CollisionSolving,
   CommandSource,
   DeviceSettings,
+  DimmerSetLightCommand,
+  LampSetLightCommand,
+  LedSetLightCommand,
   LogLevel,
   RoomBase,
   ShutterSetLevelCommand,
@@ -160,7 +164,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
     d.log(LogLevel.Info, `API Call to set Lamp to ${state} for ${timeout}ms`);
-    d.setLight(state, timeout, true);
+    d.setLight(new LampSetLightCommand(CommandSource.API, state, '', timeout));
     return null;
   }
 
@@ -180,7 +184,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
     d.log(LogLevel.Info, `API Call to set Actuator to ${state} for ${timeout}ms`);
-    d.setActuator(state, timeout, true);
+    d.setActuator(new ActuatorSetStateCommand(CommandSource.API, state, '', timeout));
     return null;
   }
 
@@ -208,7 +212,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
     d.log(LogLevel.Info, `API Call to set Dimmer to ${state} with brightness ${brightness} for ${timeout}ms`);
-    d.setLight(state, timeout, true, brightness, transitionTime);
+    d.setLight(new DimmerSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime));
     return null;
   }
 
@@ -243,7 +247,9 @@ export class API {
       LogLevel.Info,
       `API Call to set LED to ${state} with brightness ${brightness} and color ${color} for ${timeout}ms`,
     );
-    d.setLight(state, timeout, true, brightness, transitionTime, color, colorTemp);
+    d.setLight(
+      new LedSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime, color, colorTemp),
+    );
     return null;
   }
 
