@@ -15,4 +15,5 @@ export enum CommandType {
   WindowRestoreDesiredPositionCommand = 'WindowRestoreDesiredPositionCommand',
   WindowSetDesiredPositionCommand = 'WindowSetDesiredPositionCommand',
   WindowSetRolloByWeatherStatusCommand = 'WindowSetRolloByWeatherStatusCommand',
+  WledSetLightCommand = 'WledSetLightCommand',
 }

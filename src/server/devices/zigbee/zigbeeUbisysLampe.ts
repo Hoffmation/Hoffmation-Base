@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { LogLevel, TimeOfDay } from '../../../models';
+import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand, LogLevel } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -27,21 +27,21 @@ export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
   }
 
   /** @inheritdoc */
-  public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
-    this.log(LogLevel.Debug, `Set Light Acutator to "${pValue}"`, LogDebugType.SetActuator);
-    if (this.settings.isStromStoss && pValue) {
-      timeout = 3000;
+  public setLight(c: LampSetLightCommand): void {
+    this.log(LogLevel.Debug, `Set Light Acutator to "${c.on}"`, LogDebugType.SetActuator);
+    if (this.settings.isStromStoss && c.on) {
+      c.timeout = 3000;
       LampUtils.stromStossOn(this);
     }
-    super.setActuator(pValue, timeout, force);
+    super.setActuator(c);
   }
 
-  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
-    return LampUtils.toggleLight(this, time, force, calculateTime);
+  public toggleLight(c: LampToggleLightCommand): boolean {
+    return LampUtils.toggleLight(this, c);
   }
 
-  public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
-    LampUtils.setTimeBased(this, time, timeout, force);
+  public setTimeBased(c: LampSetTimeBasedCommand): void {
+    LampUtils.setTimeBased(this, c);
   }
 
   public persist(): void {

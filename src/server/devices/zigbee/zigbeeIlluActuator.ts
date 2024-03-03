@@ -23,12 +23,4 @@ export class ZigbeeIlluActuator extends ZigbeeActuator {
     }
     super.update(idSplit, state, initial, true);
   }
-
-  public setActuator(pValue: boolean, timeout: number = -1, force: boolean = false): void {
-    super.setActuator(pValue, timeout, force);
-  }
-
-  public toggleActuator(force: boolean = false): boolean {
-    return super.toggleActuator(force);
-  }
 }

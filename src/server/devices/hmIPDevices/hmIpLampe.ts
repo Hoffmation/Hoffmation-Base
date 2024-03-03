@@ -61,8 +61,10 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     this.setLight(command);
   }
 
-  public toggleActuator(command: ActuatorToggleCommand): boolean {
-    return this.toggleLight(new LampToggleLightCommand(command, 'Toggle light for toggleActuator'));
+  public toggleActuator(c: ActuatorToggleCommand): boolean {
+    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    this.setActuator(setActuatorCommand);
+    return setActuatorCommand.on;
   }
 
   /** @inheritdoc */

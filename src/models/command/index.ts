@@ -17,3 +17,4 @@ export { ShutterSunsetDownCommand } from './shutterSunsetDownCommand';
 export { WindowRestoreDesiredPositionCommand } from './WindowRestoreDesiredPositionCommand';
 export { WindowSetDesiredPositionCommand } from './WindowSetDesiredPositionCommand';
 export { WindowSetRolloByWeatherStatusCommand } from './WindowSetRolloByWeatherStatusCommand';
+export { WledSetLightCommand } from './wledSetLightCommand';

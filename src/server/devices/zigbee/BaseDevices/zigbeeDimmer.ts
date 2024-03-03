@@ -102,8 +102,10 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     this.setLight(new DimmerSetLightCommand(c, c.on, 'Set dimmer due to set ActuactorCommand', c.timeout));
   }
 
-  public toggleActuator(command: ActuatorToggleCommand): boolean {
-    return this.toggleLight(new LampToggleLightCommand(command.source, 'Toggle light due to toggle ActuactorCommand'));
+  public toggleActuator(c: ActuatorToggleCommand): boolean {
+    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    this.setActuator(setActuatorCommand);
+    return setActuatorCommand.on;
   }
 
   /**

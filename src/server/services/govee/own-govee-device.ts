@@ -194,8 +194,9 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public toggleActuator(c: ActuatorToggleCommand): boolean {
-    this.setActuator(new ActuatorSetStateCommand(c, !this.on, 'Toggle Actuator'));
-    return this.on;
+    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    this.setActuator(setActuatorCommand);
+    return setActuatorCommand.on;
   }
 
   public toggleLight(c: LampToggleLightCommand): boolean {

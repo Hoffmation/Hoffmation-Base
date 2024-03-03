@@ -211,10 +211,8 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   public toggleActuator(c: ActuatorToggleCommand): boolean {
-    if (!this._dachsOn) {
-      this.setActuator(new ActuatorSetStateCommand(c, true, 'Toggle Dachs'));
-      return true;
-    }
-    return false;
+    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    this.setActuator(setActuatorCommand);
+    return setActuatorCommand.on;
   }
 }
