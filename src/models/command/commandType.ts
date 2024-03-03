@@ -4,6 +4,7 @@ export enum CommandType {
   ActuatorRestoreTargetAutomaticValueCommand = 'ActuatorRestoreTargetAutomaticValueCommand',
   FloorSetAllShuttersCommand = 'FloorSetAllShuttersCommand',
   LampSetLightCommand = 'LampSetLightCommand',
+  LampToggleLightCommand = 'LampToggleLightCommand',
   RoomRestoreShutterPositionCommand = 'RoomRestoreShutterPositionCommand',
   ShutterSetLevelCommand = 'ShutterSetLevelCommand',
   ShutterSunriseUpCommand = 'ShutterSunriseUpCommand',

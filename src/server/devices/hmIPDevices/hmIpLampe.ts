@@ -1,7 +1,17 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { LogDebugType, Utils } from '../../services';
-import { ActuatorSettings, CollisionSolving, LogLevel, TimeOfDay } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorSettings,
+  ActuatorToggleCommand,
+  CollisionSolving,
+  LampSetLightCommand,
+  LampToggleLightCommand,
+  LogLevel,
+  RestoreTargetAutomaticValueCommand,
+  TimeOfDay,
+} from '../../../models';
 import { iLamp, iTemporaryDisableAutomatic } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
@@ -28,9 +38,9 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     return this.lightOn;
   }
 
-  public restoreTargetAutomaticValue(): void {
-    this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this.targetAutomaticState);
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
+    this.log(LogLevel.Debug, c.logMessage);
+    this.setLight(new LampSetLightCommand(c.source, this.targetAutomaticState, 'Lampen RestoreTargetAutomaticValue'));
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -47,20 +57,20 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     }
   }
 
-  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
-    this.setLight(pValue, timeout, force);
+  public setActuator(command: ActuatorSetStateCommand): void {
+    this.setLight(command);
   }
 
-  public toggleActuator(force: boolean): boolean {
-    return this.toggleLight(undefined, force);
+  public toggleActuator(command: ActuatorToggleCommand): boolean {
+    return this.toggleLight(new LampToggleLightCommand(command.source, '', command.force));
   }
 
   /** @inheritdoc */
-  public setLight(pValue: boolean, timeout: number = -1, force: boolean = false): void {
-    if (LampUtils.checkBlockActive(this, force, pValue)) {
+  public setLight(c: LampSetLightCommand): void {
+    if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
-    if (LampUtils.checkUnchanged(this, force, pValue)) {
+    if (LampUtils.checkUnchanged(this, c)) {
       return;
     }
     if (this.lightOnSwitchID === '') {
@@ -68,28 +78,28 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
       return;
     }
 
-    this.log(LogLevel.Debug, `Set Light Acutator to "${pValue}"`, LogDebugType.SetActuator);
-    this.queuedValue = pValue;
-    this.setState(this.lightOnSwitchID, pValue, undefined, (err) => {
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.queuedValue = c.on;
+    this.setState(this.lightOnSwitchID, c.on, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
 
-    if (this.settings.isStromStoss && pValue) {
-      timeout = 3000;
+    if (this.settings.isStromStoss && c.on) {
+      c.timeout = 3000;
       LampUtils.stromStossOn(this);
     }
 
-    if (timeout < 0 || !pValue) {
+    if (c.timeout < 0 || !c.on) {
       return;
     }
 
-    if (timeout > -1) {
-      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
+    if (c.timeout > -1) {
+      this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
   }
 
-  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
-    return LampUtils.toggleLight(this, time, force, calculateTime);
+  public toggleLight(c: LampToggleLightCommand): boolean {
+    return LampUtils.toggleLight(this, c);
   }
 
   public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {

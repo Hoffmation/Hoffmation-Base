@@ -1,6 +1,12 @@
 import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
-import { ActuatorSetStateCommand, LogLevel, TimeOfDay } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  LampSetLightCommand,
+  LampToggleLightCommand,
+  LogLevel,
+  TimeOfDay,
+} from '../../../models';
 
 export class LampUtils {
   public static stromStossOn(lamp: iLamp) {
@@ -47,22 +53,17 @@ export class LampUtils {
     return dontBlock;
   }
 
-  public static toggleLight(
-    device: iLamp,
-    time: TimeOfDay | undefined,
-    force: boolean,
-    calculateTime: boolean,
-  ): boolean {
+  public static toggleLight(device: iLamp, c: LampToggleLightCommand): boolean {
     const newVal: boolean = device.queuedValue !== null ? !device.queuedValue : !device.lightOn;
-    const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
-    if (newVal && time === undefined && calculateTime && device.room !== undefined) {
-      time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
+    const timeout: number = newVal && c.force ? 30 * 60 * 1000 : -1;
+    if (newVal && c.time === undefined && c.calculateTime && device.room !== undefined) {
+      c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }
-    if (newVal && time !== undefined) {
-      device.setTimeBased(time, timeout, force);
+    if (newVal && c.time !== undefined) {
+      device.setTimeBased(c.time, timeout, c.force);
       return true;
     }
-    device.setLight(newVal, timeout, force);
+    device.setLight(new LampSetLightCommand(c.source, newVal, 'SetLight Due to toggle Light', timeout, c.force));
     return newVal;
   }
 
@@ -80,11 +81,11 @@ export class LampUtils {
     return false;
   }
 
-  public static checkUnchanged(device: iActuator, force: boolean, pValue: boolean): boolean {
-    if (!force && pValue === device.actuatorOn && device.queuedValue === null) {
+  public static checkUnchanged(device: iActuator, c: ActuatorSetStateCommand): boolean {
+    if (!c.force && c.on === device.actuatorOn && device.queuedValue === null) {
       device.log(
         LogLevel.DeepTrace,
-        `Skip light command as it is already ${pValue}`,
+        `Skip light command as it is already ${c.on}`,
         LogDebugType.SkipUnchangedActuatorCommand,
       );
       return true;

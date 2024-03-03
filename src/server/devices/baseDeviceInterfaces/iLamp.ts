@@ -1,4 +1,4 @@
-import { TimeOfDay } from '../../../models';
+import { LampSetLightCommand, LampToggleLightCommand, TimeOfDay } from '../../../models';
 import { iActuator } from './iActuator';
 
 export interface iLamp extends iActuator {
@@ -17,18 +17,14 @@ export interface iLamp extends iActuator {
 
   /**
    * Toggles the state of the lamp
-   * @param {TimeOfDay} time The time to use for calculation of desired state
-   * @param {boolean} force To indicate a higher priority than automatic actions (e.g. a user pressing a button)
-   * @param {boolean} calculateTime Alternative to "time", if set the time will be calculated by the lamps room and its settings
+   * @param command
    */
-  toggleLight(time?: TimeOfDay, force?: boolean, calculateTime?: boolean): void;
+  toggleLight(command: LampToggleLightCommand): void;
 
   /**
    * This function sets the light to a specific value
-   * @param pValue The desired value
-   * @param timeout A chosen Timeout after which the light should be reset
-   * @param force Wether it is a action based on a user action, to override certain rules
    * Accessible in API
+   * @param command
    */
-  setLight(pValue: boolean, timeout: number, force: boolean): void;
+  setLight(command: LampSetLightCommand): void;
 }

@@ -7,7 +7,7 @@ export abstract class BaseCommand {
 
   public constructor(
     public readonly source: CommandSource | BaseCommand = CommandSource.Unknown,
-    private readonly _reason: string = '',
+    public readonly reason: string = '',
   ) {
     this.timestamp = new Date();
   }
@@ -33,9 +33,9 @@ export abstract class BaseCommand {
     if (this.source instanceof BaseCommand) {
       reason = this.source.reasonTrace;
     }
-    if (this._reason === '') {
+    if (this.reason === '') {
       return `${reason} -> ${this._commandType}`;
     }
-    return `${reason} -> ${this._commandType}(${this._reason})`;
+    return `${reason} -> ${this._commandType}(${this.reason})`;
   }
 }
