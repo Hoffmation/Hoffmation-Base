@@ -1,4 +1,4 @@
-import { ActuatorSettings } from '../../../models';
+import { ActuatorSetStateCommand, ActuatorSettings, ActuatorToggleCommand } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 
@@ -27,12 +27,10 @@ export interface iActuator extends iRoomDevice, iTemporaryDisableAutomatic {
 
   /**
    * Controls the power state of this actuator
-   * @param {boolean} pValue the new desired State
-   * @param {number} timeout if positive the time in ms, after which state should reset to automatic
-   * @param {boolean} force if true, this command isn't overwritten by automatic actions
    * Accessible in API
+   * @param command
    */
-  setActuator(pValue: boolean, timeout?: number, force?: boolean): void;
+  setActuator(command: ActuatorSetStateCommand): void;
 
-  toggleActuator(force: boolean): boolean;
+  toggleActuator(command: ActuatorToggleCommand): boolean;
 }

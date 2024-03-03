@@ -1,6 +1,6 @@
 import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
-import { LogLevel, TimeOfDay } from '../../../models';
+import { ActuatorSetStateCommand, LogLevel, TimeOfDay } from '../../../models';
 
 export class LampUtils {
   public static stromStossOn(lamp: iLamp) {
@@ -32,12 +32,12 @@ export class LampUtils {
     }
   }
 
-  public static checkUnBlock(device: iActuator, force: boolean | undefined, pValue: boolean): boolean {
+  public static checkUnBlock(device: iActuator, command: ActuatorSetStateCommand): boolean {
     let dontBlock: boolean = false;
     if (
-      force &&
+      command.force &&
       device.settings.resetToAutomaticOnForceOffAfterForceOn &&
-      !pValue &&
+      !command.on &&
       device.blockAutomationHandler.automaticBlockActive
     ) {
       dontBlock = true;
@@ -66,15 +66,15 @@ export class LampUtils {
     return newVal;
   }
 
-  public static checkBlockActive(device: iActuator, force: boolean | undefined, pValue: boolean): boolean {
-    if (!force && device.blockAutomationHandler.automaticBlockActive) {
+  public static checkBlockActive(device: iActuator, c: ActuatorSetStateCommand): boolean {
+    if (!c.force && device.blockAutomationHandler.automaticBlockActive) {
       device.log(
         LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(
+        `Skip automatic command to ${c.on} as it is locked until ${new Date(
           device.blockAutomationHandler.automaticBlockedUntil,
         ).toLocaleTimeString()}`,
       );
-      device.targetAutomaticState = pValue;
+      device.targetAutomaticState = c.on;
       return true;
     }
     return false;

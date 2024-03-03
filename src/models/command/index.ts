@@ -1,7 +1,11 @@
+export { RestoreTargetAutomaticValueCommand } from './restoreTargetAutomaticValueCommand';
+export { ActuatorSetStateCommand } from './actuatorSetStateCommand';
+export { ActuatorToggleCommand } from './actuatorToggleCommand';
 export { BaseCommand } from './baseCommand';
 export { CommandSource } from './commandSource';
 export { CommandType } from './commandType';
 export { FloorSetAllShuttersCommand } from './floorSetAllShuttersCommand';
+export { LampSetLightCommand } from './lampSetLightCommand';
 export { RoomRestoreShutterPositionCommand } from './roomRestoreShutterPositionCommand';
 export { ShutterSetLevelCommand } from './ShutterSetLevelCommand';
 export { ShutterSunriseUpCommand } from './shutterSunriseUpCommand';
