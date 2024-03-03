@@ -9,6 +9,23 @@
 
 * (theimo1221) Start rework of commands especially with focus on command source and the stacked reason
 
+## 2.23.0 (2024-02-25)
+
+* (theimo1221) Update packages
+* (theimo1221) Add support for Mac-Address with Daikin devices.
+
+## 2.22.18 (2024-02-21)
+
+* (theimo1221) Harden Daikin reconect
+
+## 2.22.17 (2024-02-12)
+
+* (theimo1221) Unifi: Add option to authorize guest devices by mac address
+
+## 2.22.16 (2024-02-12)
+
+* (theimo1221) Extend unifi Logging
+
 ## 2.22.15 (2024-02-12)
 
 * (theimo1221) Reduce json payload from daikin ac devices

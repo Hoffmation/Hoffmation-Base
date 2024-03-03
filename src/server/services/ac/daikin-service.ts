@@ -108,13 +108,17 @@ export class DaikinService {
     }
   }
 
-  public static async reconnect(name: string, ip: string): Promise<DaikinAC | undefined> {
+  public static async reconnect(name: string, ip: string, mac?: string): Promise<DaikinAC | undefined> {
     ServerLogService.writeLog(LogLevel.Debug, `Reconnecting Daikin AC "${name}"`);
     const router: Router | undefined = Router.getRouter();
     if (router === undefined) {
       return this.reconstructDaikinAc(ip, name);
     }
-    await router.reconnectDeviceByIp(ip);
+    if (mac !== undefined) {
+      await router.reconnectDeviceByMac(mac);
+    } else {
+      await router.reconnectDeviceByIp(ip);
+    }
     await Utils.delay(5000);
     return this.reconstructDaikinAc(ip, name);
   }
