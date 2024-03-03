@@ -106,7 +106,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       this.log(LogLevel.Debug, `Skipped initial Rollo to ${targetLevel} as we recieved a command already`);
       return;
     }
-    if (this.currentLevel === targetLevel && !command.isUserAction) {
+    if (this.currentLevel === targetLevel && !command.isForceAction) {
       this.log(
         LogLevel.Debug,
         `Skip Rollo command to Position ${targetLevel} as this is the current one`,

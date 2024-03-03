@@ -7,10 +7,10 @@ import {
   ActuatorToggleCommand,
   CollisionSolving,
   LampSetLightCommand,
+  LampSetTimeBasedCommand,
   LampToggleLightCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-  TimeOfDay,
 } from '../../../models';
 import { iLamp, iTemporaryDisableAutomatic } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -102,8 +102,8 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     return LampUtils.toggleLight(this, c);
   }
 
-  public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
-    LampUtils.setTimeBased(this, time, timeout, force);
+  public setTimeBased(c: LampSetTimeBasedCommand): void {
+    LampUtils.setTimeBased(this, c);
   }
 
   public persist(): void {

@@ -106,7 +106,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       this.log(LogLevel.Debug, `Skipped initial Rollo  to ${pPosition} as we recieved a command already`);
       return;
     }
-    if (this.currentLevel === pPosition && !c.isUserAction) {
+    if (this.currentLevel === pPosition && !c.isForceAction) {
       this.log(
         LogLevel.Debug,
         `Skip Rollo command to Position ${pPosition} as this is the current one`,

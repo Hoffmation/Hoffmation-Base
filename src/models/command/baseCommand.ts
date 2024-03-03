@@ -12,9 +12,9 @@ export abstract class BaseCommand {
     this.timestamp = new Date();
   }
 
-  public get isUserAction(): boolean {
+  public get isForceAction(): boolean {
     if (this.source instanceof BaseCommand) {
-      return this.source.isUserAction;
+      return this.source.isForceAction;
     }
     return (
       this.source === CommandSource.Manual || this.source === CommandSource.API || this.source === CommandSource.Force

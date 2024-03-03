@@ -2,7 +2,9 @@ import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import {
   ActuatorSetStateCommand,
+  CommandSource,
   LampSetLightCommand,
+  LampSetTimeBasedCommand,
   LampToggleLightCommand,
   LogLevel,
   TimeOfDay,
@@ -13,7 +15,7 @@ export class LampUtils {
     Utils.guardedTimeout(
       () => {
         if (lamp.room?.PraesenzGroup?.anyPresent()) {
-          lamp.setLight(true, -1, true);
+          lamp.setLight(new LampSetLightCommand(CommandSource.Force, true, 'StromStoss On due to Presence'));
         }
       },
       lamp.settings.stromStossResendTime * 1000,
@@ -21,27 +23,27 @@ export class LampUtils {
     );
     Utils.guardedTimeout(
       () => {
-        lamp.setLight(false, -1, true);
+        lamp.setLight(new LampSetLightCommand(CommandSource.Force, false, 'StromStoss Off'));
       },
       3000,
       this,
     );
   }
 
-  public static setTimeBased(device: iLamp, time: TimeOfDay, timeout: number, force: boolean): void {
+  public static setTimeBased(device: iLamp, c: LampSetTimeBasedCommand): void {
     if (
-      (time === TimeOfDay.Night && device.settings.nightOn) ||
-      (time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
-      (time === TimeOfDay.AfterSunset && device.settings.duskOn)
+      (c.time === TimeOfDay.Night && device.settings.nightOn) ||
+      (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
+      (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)
     ) {
-      device.setLight(true, timeout, force);
+      device.setLight(new LampSetLightCommand(c.source, true, `SetLight due to TimeBased ${c.time}`, c.timeout));
     }
   }
 
   public static checkUnBlock(device: iActuator, command: ActuatorSetStateCommand): boolean {
     let dontBlock: boolean = false;
     if (
-      command.force &&
+      command.isForceAction &&
       device.settings.resetToAutomaticOnForceOffAfterForceOn &&
       !command.on &&
       device.blockAutomationHandler.automaticBlockActive
@@ -60,15 +62,15 @@ export class LampUtils {
       c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }
     if (newVal && c.time !== undefined) {
-      device.setTimeBased(c.time, timeout, c.force);
+      device.setTimeBased(new LampSetTimeBasedCommand(c.source, c.time, 'SetLight Due to toggle Light', timeout));
       return true;
     }
-    device.setLight(new LampSetLightCommand(c.source, newVal, 'SetLight Due to toggle Light', timeout, c.force));
+    device.setLight(new LampSetLightCommand(c.source, newVal, 'SetLight Due to toggle Light', timeout));
     return newVal;
   }
 
   public static checkBlockActive(device: iActuator, c: ActuatorSetStateCommand): boolean {
-    if (!c.force && device.blockAutomationHandler.automaticBlockActive) {
+    if (!c.isForceAction && device.blockAutomationHandler.automaticBlockActive) {
       device.log(
         LogLevel.Debug,
         `Skip automatic command to ${c.on} as it is locked until ${new Date(
@@ -82,7 +84,7 @@ export class LampUtils {
   }
 
   public static checkUnchanged(device: iActuator, c: ActuatorSetStateCommand): boolean {
-    if (!c.force && c.on === device.actuatorOn && device.queuedValue === null) {
+    if (!c.isForceAction && c.on === device.actuatorOn && device.queuedValue === null) {
       device.log(
         LogLevel.DeepTrace,
         `Skip light command as it is already ${c.on}`,
