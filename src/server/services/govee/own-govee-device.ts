@@ -1,5 +1,16 @@
 import { DeviceInfo, Devices, DeviceType, iTemporaryDisableAutomatic, LampUtils } from '../../devices';
-import { CollisionSolving, LedSettings, LogLevel, RoomBase, TimeOfDay } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorToggleCommand,
+  CollisionSolving,
+  LampSetTimeBasedCommand,
+  LampToggleLightCommand,
+  LedSetLightCommand,
+  LedSettings,
+  LogLevel,
+  RestoreTargetAutomaticValueCommand,
+  RoomBase,
+} from '../../../models';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { Utils } from '../utils';
 import _ from 'lodash';
@@ -125,134 +136,72 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /**
    * @inheritDoc
    */
-  public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
-    switch (time) {
-      case TimeOfDay.Night:
-        if (this.settings.nightOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.nightBrightness,
-            undefined,
-            this.settings.nightColor,
-            this.settings.nightColorTemp,
-          );
-        }
-        break;
-      case TimeOfDay.AfterSunset:
-        if (this.settings.duskOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.duskBrightness,
-            undefined,
-            this.settings.duskColor,
-            this.settings.duskColorTemp,
-          );
-        }
-        break;
-      case TimeOfDay.BeforeSunrise:
-        if (this.settings.dawnOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.dawnBrightness,
-            undefined,
-            this.settings.dawnColor,
-            this.settings.dawnColorTemp,
-          );
-        }
-        break;
-      case TimeOfDay.Daylight:
-        if (this.settings.dayOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.dayBrightness,
-            undefined,
-            this.settings.dayColor,
-            this.settings.dayColorTemp,
-          );
-        }
-        break;
-    }
+  public setTimeBased(c: LampSetTimeBasedCommand): void {
+    this.setLight(LedSetLightCommand.byTimeBased(this.settings, c));
   }
 
   /**
    * @inheritDoc
    */
-  public setLight(
-    pValue: boolean,
-    timeout: number = -1,
-    force?: boolean,
-    brightness: number = -1,
-    _transitionTime?: number,
-    color: string = '',
-    colorTemp: number = -1,
-  ): void {
-    if (pValue && brightness === -1 && this.brightness < 10) {
-      brightness = 10;
+  public setLight(c: LedSetLightCommand): void {
+    if (c.on && c.brightness === -1 && this.brightness < 10) {
+      c.brightness = 10;
     }
-    this.log(
-      LogLevel.Debug,
-      `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}`,
-    );
+    this.log(LogLevel.Debug, c.logMessage);
 
-    const formattedColor: string | null = Utils.formatHex(color);
+    const formattedColor: string | null = Utils.formatHex(c.color);
     if (formattedColor !== null) {
-      this.setColor(color);
+      this.setColor(c.color);
     }
 
-    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, c);
 
-    if (LampUtils.checkBlockActive(this, force, pValue)) {
+    if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
 
     this.log(
       LogLevel.Debug,
-      `Set Light Acutator to "${pValue}" with brightness ${brightness}`,
+      `Set Light Acutator to "${c.on}" with brightness ${c.brightness}`,
       LogDebugType.SetActuator,
     );
-    if (brightness > -1 && pValue) {
-      this.setBrightness(brightness, () => {
-        this.log(LogLevel.Debug, `Brightness set to ${brightness}`);
+    if (c.brightness > -1 && c.on) {
+      this.setBrightness(c.brightness, () => {
+        this.log(LogLevel.Debug, `Brightness set to ${c.brightness}`);
         this.turnOn();
       });
-    } else if (pValue) {
+    } else if (c.on) {
       this.turnOn();
     } else {
       this.turnOff();
     }
-    if (timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
+    if (c.timeout > -1 && !dontBlock) {
+      this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
   }
 
-  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
-    this.setLight(pValue, timeout, force);
+  public setActuator(c: ActuatorSetStateCommand): void {
+    this.setLight(new LedSetLightCommand(c.source, c.on, c.reason));
   }
 
-  public restoreTargetAutomaticValue(): void {
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this.targetAutomaticState);
+    this.setActuator(
+      new ActuatorSetStateCommand(c.source, this.targetAutomaticState, 'Restore Target Automatic value'),
+    );
   }
 
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }
 
-  public toggleActuator(_force: boolean): boolean {
-    this.setLight(!this.on);
+  public toggleActuator(c: ActuatorToggleCommand): boolean {
+    this.setActuator(new ActuatorSetStateCommand(c.source, !this.on, 'Toggle Actuator'));
     return this.on;
   }
 
-  public toggleLight(time?: TimeOfDay, _force: boolean = false, calculateTime: boolean = false): boolean {
-    return LampUtils.toggleLight(this, time, _force, calculateTime);
+  public toggleLight(c: LampToggleLightCommand): boolean {
+    return LampUtils.toggleLight(this, c);
   }
 
   public update(data: GoveeDeviceState & GoveeDeviceStateInfo): void {

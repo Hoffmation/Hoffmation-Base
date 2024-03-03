@@ -10,7 +10,6 @@ export class ActuatorSetStateCommand extends BaseCommand {
     public readonly on: boolean,
     reason: string = '',
     public timeout: number = -1,
-    public force: boolean = false,
   ) {
     super(source, reason);
   }

@@ -1,4 +1,4 @@
-import { LampSetLightCommand, LampToggleLightCommand, TimeOfDay } from '../../../models';
+import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models';
 import { iActuator } from './iActuator';
 
 export interface iLamp extends iActuator {
@@ -7,13 +7,7 @@ export interface iLamp extends iActuator {
    */
   readonly lightOn: boolean;
 
-  /**
-   * Set's the lamp based on lamp settings for the current time
-   * @param {TimeOfDay} time The time to use for calculation of desired state
-   * @param {number} timeout If > 0 this is the time after which the lamp reverts to its original state
-   * @param {boolean} force To indicate a higher priority than automatic actions (e.g. a user pressing a button)
-   */
-  setTimeBased(time: TimeOfDay, timeout?: number, force?: boolean): void;
+  setTimeBased(command: LampSetTimeBasedCommand): void;
 
   /**
    * Toggles the state of the lamp
