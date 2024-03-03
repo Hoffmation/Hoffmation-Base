@@ -1,5 +1,5 @@
 import { DeviceType } from '../../deviceType';
-import { LedSettings, LogLevel, TimeOfDay } from '../../../../models';
+import { LampSetTimeBasedCommand, LedSetLightCommand, LedSettings, LogLevel } from '../../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct';
@@ -52,75 +52,14 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
   /**
    * @inheritDoc
    */
-  public override setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
-    switch (time) {
-      case TimeOfDay.Night:
-        if (this.settings.nightOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.nightBrightness,
-            undefined,
-            this.settings.nightColor,
-            this.settings.nightColorTemp,
-          );
-        }
-        break;
-      case TimeOfDay.AfterSunset:
-        if (this.settings.duskOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.duskBrightness,
-            undefined,
-            this.settings.duskColor,
-            this.settings.duskColorTemp,
-          );
-        }
-        break;
-      case TimeOfDay.BeforeSunrise:
-        if (this.settings.dawnOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.dawnBrightness,
-            undefined,
-            this.settings.dawnColor,
-            this.settings.dawnColorTemp,
-          );
-        }
-        break;
-      case TimeOfDay.Daylight:
-        if (this.settings.dayOn) {
-          this.setLight(
-            true,
-            timeout,
-            force,
-            this.settings.dayBrightness,
-            undefined,
-            this.settings.dayColor,
-            this.settings.dayColorTemp,
-          );
-        }
-        break;
-    }
+  public override setTimeBased(c: LampSetTimeBasedCommand): void {
+    this.setLight(LedSetLightCommand.byTimeBased(this.settings, c));
   }
 
   /**
    * @inheritDoc
    */
-  public override setLight(
-    pValue: boolean,
-    timeout?: number,
-    force?: boolean,
-    brightness: number = -1,
-    transitionTime?: number,
-    color: string = '',
-    colorTemp: number = -1,
-  ): void {
+  public override setLight(c: LedSetLightCommand): void {
     if (this._stateIdState === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);
       return;
@@ -131,23 +70,23 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
       return;
     }
 
-    if (pValue && brightness === -1 && this.brightness < 10) {
-      brightness = 10;
+    if (c.on && c.brightness === -1 && this.brightness < 10) {
+      c.brightness = 10;
     }
     this.log(
       LogLevel.Debug,
-      `LED Schalten An: ${pValue}\tHelligkeit: ${brightness}%\tFarbe: "${color}"\tColorTemperatur: ${colorTemp}\tTransition Time: ${transitionTime}`,
+      `LED Schalten An: ${c.on}\tHelligkeit: ${c.brightness}%\tFarbe: "${c.color}"\tColorTemperatur: ${c.colorTemp}\tTransition Time: ${c.transitionTime}`,
     );
 
-    const formattedColor: string | null = Utils.formatHex(color);
-    if (formattedColor !== null && pValue) {
+    const formattedColor: string | null = Utils.formatHex(c.color);
+    if (formattedColor !== null && c.on) {
       this.setState(this._stateIdColor, formattedColor);
     }
 
-    if (colorTemp > -1 && pValue) {
-      this.setState(this._stateIdColorTemp, colorTemp);
+    if (c.colorTemp > -1 && c.on) {
+      this.setState(this._stateIdColorTemp, c.colorTemp);
     }
 
-    super.setLight(pValue, timeout, force, brightness, transitionTime);
+    super.setLight(c);
   }
 }

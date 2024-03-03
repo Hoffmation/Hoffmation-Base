@@ -11,18 +11,16 @@ export class LampToggleLightCommand extends ActuatorToggleCommand {
    *
    * @param {CommandSource | BaseCommand} source
    * @param {string} reason
-   * @param {boolean} force To indicate a higher priority than automatic actions (e.g. a user pressing a button)
    * @param {TimeOfDay} time The time to use for calculation of desired state
    * @param {boolean} calculateTime Alternative to "time", if set the time will be calculated by the lamps room and its settings
    */
   public constructor(
     source: CommandSource | BaseCommand,
     reason: string = '',
-    force: boolean = false,
     public time?: TimeOfDay,
     public readonly calculateTime: boolean = false,
   ) {
-    super(source, force, reason);
+    super(source, reason);
   }
 
   public override get logMessage(): string {

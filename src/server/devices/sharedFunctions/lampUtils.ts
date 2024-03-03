@@ -36,7 +36,7 @@ export class LampUtils {
       (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
       (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)
     ) {
-      device.setLight(new LampSetLightCommand(c.source, true, `SetLight due to TimeBased ${c.time}`, c.timeout));
+      device.setLight(new LampSetLightCommand(c, true, `SetLight due to TimeBased ${c.time}`, c.timeout));
     }
   }
 
@@ -62,10 +62,10 @@ export class LampUtils {
       c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }
     if (newVal && c.time !== undefined) {
-      device.setTimeBased(new LampSetTimeBasedCommand(c.source, c.time, 'SetLight Due to toggle Light', timeout));
+      device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, 'SetLight Due to toggle Light', timeout));
       return true;
     }
-    device.setLight(new LampSetLightCommand(c.source, newVal, 'SetLight Due to toggle Light', timeout));
+    device.setLight(new LampSetLightCommand(c, newVal, 'SetLight Due to toggle Light', timeout));
     return newVal;
   }
 

@@ -181,14 +181,12 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public setActuator(c: ActuatorSetStateCommand): void {
-    this.setLight(new LedSetLightCommand(c.source, c.on, c.reason));
+    this.setLight(new LedSetLightCommand(c, c.on, c.reason));
   }
 
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(
-      new ActuatorSetStateCommand(c.source, this.targetAutomaticState, 'Restore Target Automatic value'),
-    );
+    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
   }
 
   public persist(): void {
@@ -196,7 +194,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public toggleActuator(c: ActuatorToggleCommand): boolean {
-    this.setActuator(new ActuatorSetStateCommand(c.source, !this.on, 'Toggle Actuator'));
+    this.setActuator(new ActuatorSetStateCommand(c, !this.on, 'Toggle Actuator'));
     return this.on;
   }
 

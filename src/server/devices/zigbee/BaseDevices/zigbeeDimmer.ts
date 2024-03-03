@@ -1,4 +1,14 @@
-import { CollisionSolving, DimmerSettings, LogLevel, TimeOfDay } from '../../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorToggleCommand,
+  CollisionSolving,
+  DimmerSetLightCommand,
+  DimmerSettings,
+  LampSetTimeBasedCommand,
+  LampToggleLightCommand,
+  LogLevel,
+  RestoreTargetAutomaticValueCommand,
+} from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { LogDebugType, SettingsService, Utils } from '../../../services';
 import { ZigbeeDevice } from './index';
@@ -52,9 +62,14 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     return this.lightOn;
   }
 
-  public restoreTargetAutomaticValue(): void {
-    this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this.targetAutomaticState);
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
+    this.setActuator(
+      new ActuatorSetStateCommand(
+        c,
+        this.targetAutomaticState,
+        'Restore targetAutomaticState due to BlockAutomaticHandler',
+      ),
+    );
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -79,46 +94,22 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     }
   }
 
-  public setTimeBased(time: TimeOfDay, timeout: number = -1, force: boolean = false): void {
-    switch (time) {
-      case TimeOfDay.Night:
-        this.setLight(true, timeout, force, this.settings.nightBrightness);
-        break;
-      case TimeOfDay.AfterSunset:
-        this.setLight(true, timeout, force, this.settings.dawnBrightness);
-        break;
-      case TimeOfDay.BeforeSunrise:
-        this.setLight(true, timeout, force, this.settings.duskBrightness);
-        break;
-      case TimeOfDay.Daylight:
-        this.setLight(true, timeout, force, this.settings.dayBrightness);
-        break;
-    }
+  public setTimeBased(c: LampSetTimeBasedCommand): void {
+    this.setLight(DimmerSetLightCommand.byTimeBased(this.settings, c));
   }
 
-  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
-    this.setLight(pValue, timeout, force);
+  public setActuator(c: ActuatorSetStateCommand): void {
+    this.setLight(new DimmerSetLightCommand(c, c.on, 'Set dimmer due to set ActuactorCommand', c.timeout));
   }
 
-  public toggleActuator(force: boolean): boolean {
-    return this.toggleLight(undefined, force);
+  public toggleActuator(command: ActuatorToggleCommand): boolean {
+    return this.toggleLight(new LampToggleLightCommand(command.source, 'Toggle light due to toggle ActuactorCommand'));
   }
 
   /**
    * @inheritDoc
-   * @param pValue The desired value
-   * @param timeout If > 0 time at which this should be turned off again
-   * @param force if it is an user based action which should override automatic ones
-   * @param {number} brightness The desired brightness in percent
-   * @param {number} transitionTime The transition time for the brightness, to switch smoothly
    */
-  public setLight(
-    pValue: boolean,
-    timeout: number = -1,
-    force: boolean = false,
-    brightness: number = -1,
-    transitionTime: number = -1,
-  ): void {
+  public setLight(c: DimmerSetLightCommand): void {
     if (this._stateIdState === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);
       return;
@@ -129,36 +120,36 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       return;
     }
 
-    if (transitionTime > -1) {
-      this.setState(this._stateIdTransitionTime, transitionTime);
+    if (c.transitionTime > -1) {
+      this.setState(this._stateIdTransitionTime, c.transitionTime);
     }
 
-    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, c);
 
-    if (LampUtils.checkBlockActive(this, force, pValue)) {
+    if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
 
-    if (pValue && brightness <= 0 && this.brightness < 10) {
-      brightness = 10;
+    if (c.on && c.brightness <= 0 && this.brightness < 10) {
+      c.brightness = 10;
     }
     this.log(
       LogLevel.Debug,
-      `Set Light Acutator to "${pValue}" with brightness ${brightness}`,
+      `Set Light Acutator to "${c.on}" with brightness ${c.brightness}`,
       LogDebugType.SetActuator,
     );
-    if (timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
+    if (c.timeout > -1 && !dontBlock) {
+      this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
-    if (SettingsService.settings.ioBroker?.useZigbee2mqtt && !pValue) {
+    if (SettingsService.settings.ioBroker?.useZigbee2mqtt && !c.on) {
       // With zigbee2mqtt to turn on only setting brighness>0 is needed, so we need state only for turning off
-      this.setState(this._stateIdState, pValue);
-      this.queuedValue = pValue;
+      this.setState(this._stateIdState, c.on);
+      this.queuedValue = c.on;
       return;
     }
 
-    if (brightness >= this.settings.turnOnThreshhold) {
-      this.setBrightnessState(brightness);
+    if (c.brightness >= this.settings.turnOnThreshhold) {
+      this.setBrightnessState(c.brightness);
       return;
     }
 
@@ -166,7 +157,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       Utils.guardedTimeout(
         () => {
           this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
-          this.setBrightnessState(brightness);
+          this.setBrightnessState(c.brightness);
         },
         1000,
         this,
@@ -183,8 +174,8 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     this._lastPersist = now;
   }
 
-  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
-    return LampUtils.toggleLight(this, time, force, calculateTime);
+  public toggleLight(c: LampToggleLightCommand): boolean {
+    return LampUtils.toggleLight(this, c);
   }
 
   private setBrightnessState(brightness: number, onSuccess?: () => void): void {

@@ -5,11 +5,7 @@ import { CommandSource } from './commandSource';
 export class ActuatorToggleCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorToggleCommand;
 
-  public constructor(
-    source: CommandSource | BaseCommand,
-    public readonly force: boolean,
-    reason: string = '',
-  ) {
+  public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }
 

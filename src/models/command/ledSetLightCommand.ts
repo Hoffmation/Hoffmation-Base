@@ -28,7 +28,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
     brightness?: number,
     transitionTime?: number,
     public color: string = '',
-    public colorTemp?: number,
+    public colorTemp: number = -1,
   ) {
     super(source, on, reason, timeout, brightness, transitionTime);
   }
@@ -41,7 +41,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
     switch (c.time) {
       case TimeOfDay.Daylight:
         return new LedSetLightCommand(
-          c.source,
+          c,
           settings.dayOn,
           '',
           c.timeout,
@@ -52,7 +52,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         );
       case TimeOfDay.BeforeSunrise:
         return new LedSetLightCommand(
-          c.source,
+          c,
           settings.dawnOn,
           '',
           c.timeout,
@@ -63,7 +63,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         );
       case TimeOfDay.AfterSunset:
         return new LedSetLightCommand(
-          c.source,
+          c,
           settings.duskOn,
           '',
           c.timeout,
@@ -74,7 +74,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         );
       case TimeOfDay.Night:
         return new LedSetLightCommand(
-          c.source,
+          c,
           settings.nightOn,
           '',
           c.timeout,
