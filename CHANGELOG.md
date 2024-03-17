@@ -9,9 +9,6 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Change led change action order to improve change speed for e.g. innr led strips
-
-## **WORK IN PROGRESS**
-
 * (theimo1221) Correct logging for Ambient Light mode active skip
 
 ## 3.0.0-alpha.10 (2024-03-17)
