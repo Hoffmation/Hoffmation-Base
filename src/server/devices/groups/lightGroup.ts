@@ -140,20 +140,14 @@ export class LightGroup extends BaseGroup {
     }
 
     if (resultLampen) {
-      this.setAllLampenTimeBased(
-        new LampSetTimeBasedCommand(CommandSource.Automatic, c.time, 'LightGroup switchTimeConditional'),
-      );
+      this.setAllLampenTimeBased(new LampSetTimeBasedCommand(c, c.time, 'LightGroup switchTimeConditional'));
     } else {
-      this.setAllLampen(
-        new LampSetLightCommand(CommandSource.Automatic, false, 'LightGroup switchTimeConditional --> off'),
-      );
+      this.setAllLampen(new LampSetLightCommand(c, false, 'LightGroup switchTimeConditional --> off'));
     }
     if (resultSteckdosen) {
       this.setAllActuatorsTimeBased(c.time);
     } else {
-      this.setAllOutlets(
-        new ActuatorSetStateCommand(CommandSource.Automatic, false, 'LightGroup switchTimeConditional --> off'),
-      );
+      this.setAllOutlets(new ActuatorSetStateCommand(c, false, 'LightGroup switchTimeConditional --> off'));
     }
   }
 

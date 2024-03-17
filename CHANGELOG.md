@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix wrong command stack within lightGroup
+
 ## 3.0.0-alpha.5 (2024-03-17)
 
 * (theimo1221) Harmonize constructor parameter order for ActuatorWriteStateToDevice
