@@ -15,6 +15,6 @@ export class ShutterSetLevelCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
-    return `Shutter setLevel to ${this.level} from ${this.source} for reason: ${this.reasonTrace}`;
+    return `Shutter setLevel to ${this.level} for reason: ${this.reasonTrace}`;
   }
 }

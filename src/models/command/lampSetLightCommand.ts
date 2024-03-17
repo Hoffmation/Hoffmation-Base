@@ -11,6 +11,6 @@ export class LampSetLightCommand extends ActuatorSetStateCommand {
   }
 
   public override get logMessage(): string {
-    return `Lamp setLight to ${this.on} from ${this.source} for reason: ${this.reasonTrace}`;
+    return `Lamp setLight to ${this.on} for reason: ${this.reasonTrace}`;
   }
 }

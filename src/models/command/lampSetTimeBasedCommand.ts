@@ -23,6 +23,6 @@ export class LampSetTimeBasedCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
-    return `Lamp setTimeBased to ${TimeOfDay[this.time]} from ${this.source}`;
+    return `Lamp setTimeBased to ${TimeOfDay[this.time]} for reason: ${this.reasonTrace}`;
   }
 }

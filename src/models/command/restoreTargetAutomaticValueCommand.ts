@@ -10,6 +10,6 @@ export class RestoreTargetAutomaticValueCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
-    return `Actuator restore target automatic value from ${this.source} for reason: ${this.reasonTrace}`;
+    return `Actuator restore target automatic value due to reason: ${this.reasonTrace}`;
   }
 }

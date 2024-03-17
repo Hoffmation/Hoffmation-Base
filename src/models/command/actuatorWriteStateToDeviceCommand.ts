@@ -14,6 +14,6 @@ export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
-    return `Actuator writeStateToDevice(${this.stateValue}) due to ${this.source} for reason: ${this.reasonTrace}`;
+    return `Actuator writeStateToDevice(${this.stateValue}) for reason: ${this.reasonTrace}`;
   }
 }
