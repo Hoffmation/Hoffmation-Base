@@ -97,7 +97,6 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   }
 
   public setLevel(command: ShutterSetLevelCommand): void {
-    this.log(LogLevel.Debug, command.logMessage);
     let targetLevel: number = command.level;
     if (!this._firstCommandRecieved && !command.isInitial) {
       this._firstCommandRecieved = true;
@@ -109,7 +108,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     if (this.currentLevel === targetLevel && !command.isForceAction) {
       this.log(
         LogLevel.Debug,
-        `Skip Rollo command to Position ${targetLevel} as this is the current one`,
+        `Skip Rollo command to Position ${targetLevel} as this is the current one, commandLog: ${command.logMessage}`,
         LogDebugType.SkipUnchangedRolloPosition,
       );
       return;
@@ -122,6 +121,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     if (!this.checkIoConnection(true)) {
       return;
     }
+    this.log(LogLevel.Debug, command.logMessage);
 
     if (this._window !== undefined) {
       if (this._window.griffeInPosition(WindowPosition.offen) > 0 && command.level < 100) {

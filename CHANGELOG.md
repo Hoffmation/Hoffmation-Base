@@ -10,6 +10,7 @@
 
 * (theimo1221) Improve command log messages
 * (theimo1221) Improve command reason-stack readability
+* (theimo1221) Reduce logging within Shutter
 
 ## 3.0.0-alpha.3 (2024-03-17)
 
