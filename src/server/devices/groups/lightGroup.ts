@@ -101,7 +101,10 @@ export class LightGroup extends BaseGroup {
   public switchAll(c: ActuatorSetStateCommand): void {
     this.getAllAsActuator().forEach((a) => {
       if (a.settings.includeInAmbientLight && !c.isForceAction && !c.on && this._ambientLightOn) {
-        a.log(LogLevel.Info, `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`);
+        a.log(
+          LogLevel.Info,
+          `Ambient light mode is active --> Skip non force light off command in ${this.roomName}; command: ${c.logMessage}`,
+        );
         return;
       }
       a.setActuator(c);
