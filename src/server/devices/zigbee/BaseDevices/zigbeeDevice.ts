@@ -63,16 +63,18 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
 
     switch (idSplit[3]) {
       case 'available':
-        this._available = state.val as boolean;
-        if (!this._available) {
-          this.log(LogLevel.Debug, `Das Zigbee Gerät ist nicht erreichbar.`);
+        const newAvailability: boolean = state.val as boolean;
+        if (this._available && !newAvailability) {
+          this.log(LogLevel.Debug, `Device became unavailable.`);
         }
+        this._available = newAvailability;
         break;
       case 'link_quality':
-        this._linkQuality = state.val as number;
-        if (this._linkQuality < 5) {
-          this.log(LogLevel.Debug, `Das Zigbee Gerät hat eine schlechte Verbindung (${this._linkQuality}).`);
+        const newValue: number = state.val as number;
+        if (this._linkQuality > 5 && newValue <= 5) {
+          this.log(LogLevel.Debug, `The link-quality dropped to a critical level: ${newValue}`);
         }
+        this._linkQuality = state.val as number;
         break;
     }
     this.stateMap.set(idSplit[3], state);

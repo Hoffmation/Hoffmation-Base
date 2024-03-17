@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Reduce Zigbee bad Connection Logging
+
 ## 3.0.0-alpha.6 (2024-03-17)
 
 * (theimo1221) Fix wrong command stack within lightGroup
