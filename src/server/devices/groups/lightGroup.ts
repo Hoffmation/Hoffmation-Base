@@ -151,7 +151,7 @@ export class LightGroup extends BaseGroup {
     if (resultSteckdosen) {
       this.setAllActuatorsTimeBased(c.time);
     } else {
-      this.setAllactuator(
+      this.setAllOutlets(
         new ActuatorSetStateCommand(CommandSource.Automatic, false, 'LightGroup switchTimeConditional --> off'),
       );
     }
@@ -169,7 +169,7 @@ export class LightGroup extends BaseGroup {
     });
   }
 
-  public setAllactuator(c: ActuatorSetStateCommand): void {
+  public setAllOutlets(c: ActuatorSetStateCommand): void {
     this.getOutlets().forEach((s) => {
       s.setActuator(c);
     });

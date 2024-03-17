@@ -63,7 +63,7 @@ export class RoomService {
     for (const [_name, room] of rooms) {
       room.LightGroup?.setAllLampen(command);
       room.LightGroup?.setAllLED(new LedSetLightCommand(command, command.on));
-      room.LightGroup?.setAllactuator(command);
+      room.LightGroup?.setAllOutlets(command);
       room.LightGroup?.setAllWled(new WledSetLightCommand(command, command.on));
     }
   }
