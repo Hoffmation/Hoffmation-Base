@@ -68,7 +68,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._info.customName = `${roomName} ${name}`;
     this._info.room = roomName;
     this._info.allDevicesKey = `ac-${roomName}-${name}`;
-    Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, true);
+    Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, false);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.persistDeviceInfo();
     this.loadDeviceSettings();
@@ -136,7 +136,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public calculateDesiredMode(): AcMode {
     const acOn: boolean = this.on;
-    this._desiredTemperatur = this.room?.HeatGroup?.desiredTemp ?? 0;
+    const heatGroup = this.room?.HeatGroup;
+    if (!heatGroup) {
+      this.log(LogLevel.Warn, `Can't calculate AC Mode as we have no heat group`);
+      return AcMode.Off;
+    }
+    this._desiredTemperatur = heatGroup.desiredTemp;
 
     if (this.settings.manualDisabled) {
       acOn && this.log(LogLevel.Info, `We should turn off now, as manual disable force is set.`);
@@ -155,8 +160,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       acOn && this.log(LogLevel.Info, `We should turn off now, to respect night settings.`);
       return AcMode.Off;
     }
-
-    const heatGroup = this.room?.HeatGroup;
 
     if (this.settings.useOwnTemperatureAndAutomatic) {
       // Device is in automatic mode so ignore energy and room temperature

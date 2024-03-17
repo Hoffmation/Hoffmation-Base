@@ -7,7 +7,7 @@ import { Utils } from '../utils';
 import { AcDevice } from './ac-device';
 import { AcMode } from './ac-mode';
 import { AcDeviceType } from './acDeviceType';
-import { DeviceType } from '../../devices';
+import { DeviceType, UNDEFINED_TEMP_VALUE } from '../../devices';
 import _ from 'lodash';
 
 export class OwnDaikinDevice extends AcDevice {
@@ -93,6 +93,14 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   private setDesiredInfo(retry: boolean = false, forceTemp?: number): void {
+    if (this._desiredTemperatur === UNDEFINED_TEMP_VALUE) {
+      if (this.room?.HeatGroup === undefined) {
+        this.log(LogLevel.Error, `Neither desired temperature nor HeatGroup is set for ${this.name}(${this.ip})`);
+        return;
+      }
+      this._desiredTemperatur = this.room.HeatGroup.desiredTemp;
+      return;
+    }
     let targetTemp: number = this._desiredTemperatur;
     if (this.desiredMode == Mode.HOT) {
       targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp + 1 : 29;
