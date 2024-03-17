@@ -4,6 +4,7 @@ export * from './persistence/index';
 export * from './base64Image';
 export * from './collisionSolving';
 export * from './connectionCallbacks';
+export * from './command';
 export * from './daytime';
 export * from './deviceConfig';
 export * from './excessEnergyConsumerSettings';

@@ -1,4 +1,20 @@
-import { LogLevel, RoomBase, ShutterSettings, TimeCallback, TimeCallbackType, TimeOfDay } from '../../../models';
+import {
+  CommandSource,
+  LogLevel,
+  RoomBase,
+  RoomRestoreShutterPositionCommand,
+  RoomSetLightTimeBasedCommand,
+  ShutterSetLevelCommand,
+  ShutterSettings,
+  ShutterSunriseUpCommand,
+  ShutterSunsetDownCommand,
+  TimeCallback,
+  TimeCallbackType,
+  TimeOfDay,
+  WindowRestoreDesiredPositionCommand,
+  WindowSetDesiredPositionCommand,
+  WindowSetRolloByWeatherStatusCommand,
+} from '../../../models';
 import { ShutterService, TimeCallbackService, Utils, WeatherService } from '../../services';
 import { Window } from './Window';
 import { WindowPosition } from '../models';
@@ -11,7 +27,10 @@ export class WindowGroup extends BaseGroup {
   public sunriseShutterCallback: TimeCallback | undefined;
   public sunsetShutterCallback: TimeCallback | undefined;
 
-  public constructor(roomName: string, public windows: Window[]) {
+  public constructor(
+    roomName: string,
+    public windows: Window[],
+  ) {
     super(roomName, GroupType.WindowGroup);
     const shutterIds: string[] = [];
     const handleIds: string[] = [];
@@ -29,28 +48,9 @@ export class WindowGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.MagnetContact, new DeviceList(magnetIds));
   }
 
-  public allRolloDown(initial: boolean = false, savePosition: boolean = false): void {
+  public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {
     this.windows.forEach((f) => {
-      if (savePosition) f.desiredPosition = 0;
-      ShutterService.windowAllDown(f, initial);
-    });
-  }
-
-  public allRolloUp(savePosition: boolean = false): void {
-    this.windows.forEach((f) => {
-      if (savePosition) {
-        f.desiredPosition = 100;
-      }
-      ShutterService.windowAllUp(f);
-    });
-  }
-
-  public allRolloToLevel(level: number, savePosition: boolean = false): void {
-    this.windows.forEach((f) => {
-      if (savePosition) {
-        f.desiredPosition = level;
-      }
-      ShutterService.windowAllToPosition(f, level, false);
+      f.setDesiredPosition(c);
     });
   }
 
@@ -59,8 +59,25 @@ export class WindowGroup extends BaseGroup {
     this.recalcTimeCallbacks();
 
     if (room.settings.rolloHeatReduction) {
-      Utils.guardedInterval(this.setRolloByWeatherStatus, 15 * 60 * 1000, this, false);
-      Utils.guardedTimeout(this.setRolloByWeatherStatus, 2 * 60 * 1000, this);
+      Utils.guardedInterval(
+        () => {
+          this.setRolloByWeatherStatus(
+            new WindowSetRolloByWeatherStatusCommand(CommandSource.Automatic, 'Regular interval'),
+          );
+        },
+        15 * 60 * 1000,
+        this,
+        false,
+      );
+      Utils.guardedTimeout(
+        () => {
+          this.setRolloByWeatherStatus(
+            new WindowSetRolloByWeatherStatusCommand(CommandSource.Automatic, 'Delayed initial check'),
+          );
+        },
+        2 * 60 * 1000,
+        this,
+      );
     }
 
     this.windows.forEach((f) => {
@@ -73,7 +90,7 @@ export class WindowGroup extends BaseGroup {
     this.reconfigureSunsetShutterCallback();
   }
 
-  public setRolloByWeatherStatus(): void {
+  public setRolloByWeatherStatus(c: WindowSetRolloByWeatherStatusCommand): void {
     const room: RoomBase = this.getRoom();
     const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
@@ -83,7 +100,7 @@ export class WindowGroup extends BaseGroup {
         return;
       }
       if (darkOutside) {
-        f.restoreDesiredPosition();
+        f.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c, `It's dark outside.`));
         return;
       }
       let desiredPos: number = f.desiredPosition;
@@ -102,31 +119,30 @@ export class WindowGroup extends BaseGroup {
       if (f.griffeInPosition(WindowPosition.kipp) > 0) {
         desiredPos = Math.max(30, desiredPos);
       }
-      ShutterService.windowAllToPosition(f, desiredPos, false, true);
+      ShutterService.windowAllToPosition(f, new ShutterSetLevelCommand(c, desiredPos, '', true));
     });
   }
 
-  public sunriseUp(initial: boolean = false): void {
+  public sunriseUp(c: ShutterSunriseUpCommand): void {
     this.windows.forEach((f) => {
       if (!this.getRoom().settings.sonnenAufgangRollos || f.getShutter().length === 0) {
         return;
       }
-      this.log(LogLevel.Debug, `Fahre das Rollo zum Sonnenaufgang ${initial ? '(ggf. nachträglich)' : ''} hoch`);
-      f.setDesiredPosition(100);
+      f.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 100));
     });
   }
 
-  public restoreRolloPosition(recalc: boolean = false): void {
-    if (!recalc) {
+  public restoreRolloPosition(c: RoomRestoreShutterPositionCommand): void {
+    if (!c.recalc) {
       this.windows.forEach((f) => {
-        f.restoreDesiredPosition();
+        f.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));
       });
       return;
     }
     if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(this.getRoom().settings.rolloOffset))) {
-      this.sunriseUp(true);
+      this.sunriseUp(new ShutterSunriseUpCommand(c, 'It is daytime'));
     } else {
-      this.sunsetDown();
+      this.sunsetDown(new ShutterSunsetDownCommand(c, 'It is dark outside or nighttime'));
     }
   }
 
@@ -141,12 +157,10 @@ export class WindowGroup extends BaseGroup {
     });
   }
 
-  private sunsetDown(): void {
-    this.allRolloToLevel(0, true);
+  private sunsetDown(c: ShutterSunsetDownCommand): void {
+    this.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
     const room: RoomBase = this.getRoom();
-    if (room.PraesenzGroup?.anyPresent() && room.settings.lampOffset) {
-      room.LightGroup?.switchTimeConditional(TimeCallbackService.dayType(room.settings.lampOffset));
-    }
+    room.setLightTimeBased(new RoomSetLightTimeBasedCommand(c, true, 'sunsetDown'));
   }
 
   private reconfigureSunsetShutterCallback(): void {
@@ -174,14 +188,16 @@ export class WindowGroup extends BaseGroup {
         `${this.roomName} Sunset Shutter`,
         TimeCallbackType.SunSet,
         () => {
-          this.sunsetDown();
+          this.sunsetDown(new ShutterSunsetDownCommand(CommandSource.Automatic, 'Time-Callback fired'));
         },
         room.settings.rolloOffset.sunset,
       );
       if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
         Utils.guardedTimeout(
           () => {
-            this.allRolloDown(true, true);
+            this.setDesiredPosition(
+              new WindowSetDesiredPositionCommand(CommandSource.Initial, 0, 'It is dark outside'),
+            );
           },
           60000,
           this,
@@ -217,7 +233,7 @@ export class WindowGroup extends BaseGroup {
             room.skipNextRolloUp = false;
             return;
           }
-          this.sunriseUp();
+          this.sunriseUp(new ShutterSunriseUpCommand(CommandSource.Automatic, 'Time-Callback fired'));
         },
         room.settings.rolloOffset.sunrise,
         undefined,
@@ -225,7 +241,7 @@ export class WindowGroup extends BaseGroup {
         room.settings.rolloOffset,
       );
       if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
-        this.sunriseUp(true);
+        this.sunriseUp(new ShutterSunriseUpCommand(CommandSource.Initial, 'Initial sunrise up as it is day'));
       }
       TimeCallbackService.addCallback(this.sunriseShutterCallback);
     }

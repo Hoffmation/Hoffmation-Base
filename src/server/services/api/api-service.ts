@@ -14,7 +14,19 @@ import {
   iSpeaker,
   iTemporaryDisableAutomatic,
 } from '../../devices';
-import { CollisionSolving, DeviceSettings, LogLevel, RoomBase } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  CollisionSolving,
+  CommandSource,
+  DeviceSettings,
+  DimmerSetLightCommand,
+  LampSetLightCommand,
+  LedSetLightCommand,
+  LogLevel,
+  RoomBase,
+  ShutterSetLevelCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, AcMode, DaikinService } from '../ac';
@@ -152,7 +164,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
     d.log(LogLevel.Info, `API Call to set Lamp to ${state} for ${timeout}ms`);
-    d.setLight(state, timeout, true);
+    d.setLight(new LampSetLightCommand(CommandSource.API, state, '', timeout));
     return null;
   }
 
@@ -172,7 +184,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
     d.log(LogLevel.Info, `API Call to set Actuator to ${state} for ${timeout}ms`);
-    d.setActuator(state, timeout, true);
+    d.setActuator(new ActuatorSetStateCommand(CommandSource.API, state, '', timeout));
     return null;
   }
 
@@ -200,7 +212,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
     d.log(LogLevel.Info, `API Call to set Dimmer to ${state} with brightness ${brightness} for ${timeout}ms`);
-    d.setLight(state, timeout, true, brightness, transitionTime);
+    d.setLight(new DimmerSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime));
     return null;
   }
 
@@ -235,7 +247,9 @@ export class API {
       LogLevel.Info,
       `API Call to set LED to ${state} with brightness ${brightness} and color ${color} for ${timeout}ms`,
     );
-    d.setLight(state, timeout, true, brightness, transitionTime, color, colorTemp);
+    d.setLight(
+      new LedSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime, color, colorTemp),
+    );
     return null;
   }
 
@@ -256,9 +270,9 @@ export class API {
     }
     if (d.window) {
       // otherwise it will be overridden shortly after
-      d.window.setDesiredPosition(level);
+      d.window.setDesiredPosition(new WindowSetDesiredPositionCommand(CommandSource.API, level));
     } else {
-      d.setLevel(level, false);
+      d.setLevel(new ShutterSetLevelCommand(CommandSource.API, level));
     }
     d.log(LogLevel.Info, `API Call to set Shutter to ${level}`);
     return null;

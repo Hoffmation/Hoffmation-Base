@@ -1,7 +1,19 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
-import { ServerLogService, Utils } from '../services';
-import { CollisionSolving, LogLevel, TimeOfDay, WledSettings } from '../../models';
+import { LogDebugType, ServerLogService, Utils } from '../services';
+import {
+  ActuatorSetStateCommand,
+  ActuatorToggleCommand,
+  ActuatorWriteStateToDeviceCommand,
+  CollisionSolving,
+  DimmerSetLightCommand,
+  LampSetTimeBasedCommand,
+  LampToggleLightCommand,
+  LogLevel,
+  RestoreTargetAutomaticValueCommand,
+  WledSetLightCommand,
+  WledSettings,
+} from '../../models';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp';
 import { BlockAutomaticHandler } from '../services/blockAutomaticHandler';
@@ -35,9 +47,9 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     return this.on;
   }
 
-  public restoreTargetAutomaticValue(): void {
-    this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this.targetAutomaticState);
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
+    this.log(LogLevel.Debug, c.logMessage);
+    this.setLight(new WledSetLightCommand(c, this.targetAutomaticState, 'Lampen RestoreTargetAutomaticValue'));
   }
 
   public override update(
@@ -64,17 +76,22 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     }
   }
 
-  public setLight(
-    pValue: boolean,
-    timeout?: number,
-    force?: boolean,
-    brightness?: number,
-    _transitionTime?: number,
-  ): void {
-    this.setWled(pValue, brightness, undefined, timeout, force);
+  public setLight(c: DimmerSetLightCommand): void {
+    this.setWled(
+      new WledSetLightCommand(
+        c,
+        c.on,
+        'Set Wled due to DimmerSetLightCommand',
+        c.timeout,
+        c.brightness,
+        c.transitionTime,
+        undefined,
+      ),
+    );
   }
 
-  public setWled(pValue: boolean, brightness: number = -1, preset?: number, timeout?: number, force?: boolean): void {
+  public setWled(c: WledSetLightCommand): void {
+    this.log(LogLevel.Debug, c.logMessage);
     if (this._onID === '') {
       ServerLogService.writeLog(LogLevel.Error, `Keine On ID für "${this.info.customName}" bekannt.`);
       return;
@@ -85,81 +102,66 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       return;
     }
 
-    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
+    const dontBlock: boolean = LampUtils.checkUnBlock(this, c);
 
-    if (LampUtils.checkBlockActive(this, force, pValue)) {
+    if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
 
-    if (pValue && brightness !== -1 && this.brightness < 10) {
-      brightness = 10;
+    if (c.on && c.brightness !== -1 && this.brightness < 10) {
+      c.brightness = 10;
     }
 
     ServerLogService.writeLog(
       LogLevel.Debug,
-      `WLED Schalten: "${this.info.customName}" An: ${pValue}\tHelligkeit: ${brightness}%`,
+      `WLED Schalten: "${this.info.customName}" An: ${c.on}\tHelligkeit: ${c.brightness}%`,
     );
 
-    this.queuedValue = pValue;
-    this.setState(this._onID, pValue, undefined, (err) => {
-      ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
-    });
+    this.queuedValue = c.on;
+    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c.on, c, 'WLED Schalten'));
 
-    if (preset !== undefined) {
-      this.setState(this._presetID, preset, undefined, (err) => {
+    if (c.preset !== undefined) {
+      this.setState(this._presetID, c.preset, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
       });
-    } else if (brightness > -1) {
-      this.setState(this._brightnessID, brightness, undefined, (err) => {
+    } else if (c.brightness > -1) {
+      this.setState(this._brightnessID, c.brightness, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
       });
     }
 
-    if (timeout !== undefined && timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
+    if (c.timeout !== undefined && c.timeout > -1 && !dontBlock) {
+      this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
   }
 
-  public setTimeBased(time: TimeOfDay): void {
-    this.log(LogLevel.Debug, `Wled setTimeBased ${time}`);
-    switch (time) {
-      case TimeOfDay.Night:
-        if (this.settings.nightOn) {
-          this.setWled(true, this.settings.nightBrightness, this.settings.nightPreset);
-        }
-        break;
-      case TimeOfDay.AfterSunset:
-        if (this.settings.duskOn) {
-          this.setWled(true, this.settings.duskBrightness, this.settings.duskPreset);
-        }
-        break;
-      case TimeOfDay.BeforeSunrise:
-        if (this.settings.dawnOn) {
-          this.setWled(true, this.settings.dawnBrightness, this.settings.dawnPreset);
-        }
-        break;
-      case TimeOfDay.Daylight:
-        if (this.settings.dayOn) {
-          this.setWled(true, this.settings.dayBrightness, this.settings.dayPreset);
-        }
-        break;
-    }
+  public setTimeBased(c: LampSetTimeBasedCommand): void {
+    this.log(LogLevel.Debug, `Wled setTimeBased ${c.time}`);
+    this.setWled(WledSetLightCommand.byTimeBased(this.settings, c));
   }
 
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }
 
-  public setActuator(pValue: boolean, _timeout?: number, _force?: boolean): void {
-    this.setLight(pValue);
+  public setActuator(command: ActuatorSetStateCommand): void {
+    this.setWled(new WledSetLightCommand(command, command.on, 'Set Wled due to ActuatorSetStateCommand'));
   }
 
-  public toggleActuator(_force: boolean): boolean {
-    this.setLight(!this.on);
-    return this.on;
+  public toggleActuator(c: ActuatorToggleCommand): boolean {
+    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    this.setActuator(setActuatorCommand);
+    return setActuatorCommand.on;
   }
 
-  public toggleLight(time?: TimeOfDay, force: boolean = false, calculateTime: boolean = false): boolean {
-    return LampUtils.toggleLight(this, time, force, calculateTime);
+  public toggleLight(c: LampToggleLightCommand): boolean {
+    return LampUtils.toggleLight(this, c);
+  }
+
+  public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.setState(this._onID, c.stateValue, undefined, (err) => {
+      ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
+    });
   }
 }

@@ -1,5 +1,11 @@
 import { DeviceType } from '../deviceType';
-import { ActuatorSettings, ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorSettings,
+  CommandSource,
+  ExcessEnergyConsumerSettings,
+  LogLevel,
+} from '../../../models';
 import { ZigbeeActuator } from './BaseDevices';
 import { iExcessEnergyConsumer } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -99,11 +105,11 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
 
   public turnOnForExcessEnergy(): void {
     this._activatedByExcessEnergy = true;
-    this.setActuator(true);
+    this.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, true, 'Turn on for excess energy'));
   }
 
   public turnOffDueToMissingEnergy(): void {
-    this.setActuator(false);
+    this.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Turn off due to missing energy'));
   }
 
   public wasActivatedByExcessEnergy(): boolean {

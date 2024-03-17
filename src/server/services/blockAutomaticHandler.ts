@@ -1,11 +1,11 @@
-import { CollisionSolving } from '../../models';
+import { CollisionSolving, CommandSource, RestoreTargetAutomaticValueCommand } from '../../models';
 import { Utils } from './utils';
 import _ from 'lodash';
 
 export class BlockAutomaticHandler {
-  private readonly _restoreAutomatic: () => void;
+  private readonly _restoreAutomatic: (c: RestoreTargetAutomaticValueCommand) => void;
 
-  public constructor(restoreAutomaticCb: () => void) {
+  public constructor(restoreAutomaticCb: (c: RestoreTargetAutomaticValueCommand) => void) {
     this._restoreAutomatic = restoreAutomaticCb;
   }
 
@@ -49,11 +49,11 @@ export class BlockAutomaticHandler {
     ) {
       return;
     }
-    this._automaticBlockedUntil = targetDate;
+    this.automaticBlockedUntil = targetDate;
   }
 
   public liftAutomaticBlock(): void {
-    this._automaticBlockedUntil = new Date(0);
+    this.automaticBlockedUntil = new Date(0);
   }
 
   private updateRestoreTimeout(): void {
@@ -61,7 +61,11 @@ export class BlockAutomaticHandler {
       clearTimeout(this._restoreAutomaticStateTimeout);
     }
     this._restoreAutomaticStateTimeout = Utils.guardedTimeout(
-      this._restoreAutomatic,
+      () => {
+        this._restoreAutomatic(
+          new RestoreTargetAutomaticValueCommand(CommandSource.Unknown, 'Automatic block restore timeout'),
+        );
+      },
       this._automaticBlockedUntil.getTime() - Utils.nowMS() + 500,
       this,
     );

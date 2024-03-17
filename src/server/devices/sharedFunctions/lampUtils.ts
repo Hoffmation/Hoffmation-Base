@@ -1,43 +1,53 @@
 import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
-import { LogLevel, TimeOfDay } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorWriteStateToDeviceCommand,
+  CollisionSolving,
+  CommandSource,
+  LampSetLightCommand,
+  LampSetTimeBasedCommand,
+  LampToggleLightCommand,
+  LogLevel,
+  TimeOfDay,
+} from '../../../models';
 
 export class LampUtils {
-  public static stromStossOn(lamp: iLamp) {
+  public static stromStossOn(actuator: iActuator) {
     Utils.guardedTimeout(
       () => {
-        if (lamp.room?.PraesenzGroup?.anyPresent()) {
-          lamp.setLight(true, -1, true);
+        if (actuator.room?.PraesenzGroup?.anyPresent()) {
+          actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, true, 'StromStoss On due to Presence'));
         }
       },
-      lamp.settings.stromStossResendTime * 1000,
+      actuator.settings.stromStossResendTime * 1000,
       this,
     );
     Utils.guardedTimeout(
       () => {
-        lamp.setLight(false, -1, true);
+        actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, false, 'StromStoss Off'));
       },
       3000,
       this,
     );
   }
 
-  public static setTimeBased(device: iLamp, time: TimeOfDay, timeout: number, force: boolean): void {
+  public static setTimeBased(device: iLamp, c: LampSetTimeBasedCommand): void {
     if (
-      (time === TimeOfDay.Night && device.settings.nightOn) ||
-      (time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
-      (time === TimeOfDay.AfterSunset && device.settings.duskOn)
+      (c.time === TimeOfDay.Night && device.settings.nightOn) ||
+      (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
+      (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)
     ) {
-      device.setLight(true, timeout, force);
+      device.setLight(new LampSetLightCommand(c, true, `SetLight due to TimeBased ${c.time}`, c.timeout));
     }
   }
 
-  public static checkUnBlock(device: iActuator, force: boolean | undefined, pValue: boolean): boolean {
+  public static checkUnBlock(device: iActuator, command: ActuatorSetStateCommand): boolean {
     let dontBlock: boolean = false;
     if (
-      force &&
+      command.isForceAction &&
       device.settings.resetToAutomaticOnForceOffAfterForceOn &&
-      !pValue &&
+      !command.on &&
       device.blockAutomationHandler.automaticBlockActive
     ) {
       dontBlock = true;
@@ -47,48 +57,68 @@ export class LampUtils {
     return dontBlock;
   }
 
-  public static toggleLight(
-    device: iLamp,
-    time: TimeOfDay | undefined,
-    force: boolean,
-    calculateTime: boolean,
-  ): boolean {
+  public static toggleLight(device: iLamp, c: LampToggleLightCommand): boolean {
     const newVal: boolean = device.queuedValue !== null ? !device.queuedValue : !device.lightOn;
-    const timeout: number = newVal && force ? 30 * 60 * 1000 : -1;
-    if (newVal && time === undefined && calculateTime && device.room !== undefined) {
-      time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
+    const timeout: number = newVal && c.isForceAction ? 30 * 60 * 1000 : -1;
+    if (newVal && c.time === undefined && c.calculateTime && device.room !== undefined) {
+      c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }
-    if (newVal && time !== undefined) {
-      device.setTimeBased(time, timeout, force);
+    if (newVal && c.time !== undefined) {
+      device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, 'SetLight Due to toggle Light', timeout));
       return true;
     }
-    device.setLight(newVal, timeout, force);
+    device.setLight(new LampSetLightCommand(c, newVal, 'SetLight Due to toggle Light', timeout));
     return newVal;
   }
 
-  public static checkBlockActive(device: iActuator, force: boolean | undefined, pValue: boolean): boolean {
-    if (!force && device.blockAutomationHandler.automaticBlockActive) {
+  public static checkBlockActive(device: iActuator, c: ActuatorSetStateCommand): boolean {
+    if (!c.isForceAction && device.blockAutomationHandler.automaticBlockActive) {
       device.log(
         LogLevel.Debug,
-        `Skip automatic command to ${pValue} as it is locked until ${new Date(
+        `Skip automatic command to ${c.on} as it is locked until ${new Date(
           device.blockAutomationHandler.automaticBlockedUntil,
         ).toLocaleTimeString()}`,
       );
-      device.targetAutomaticState = pValue;
+      device.targetAutomaticState = c.on;
       return true;
     }
     return false;
   }
 
-  public static checkUnchanged(device: iActuator, force: boolean, pValue: boolean): boolean {
-    if (!force && pValue === device.actuatorOn && device.queuedValue === null) {
+  public static checkUnchanged(device: iActuator, c: ActuatorSetStateCommand): boolean {
+    if (!c.isForceAction && c.on === device.actuatorOn && device.queuedValue === null) {
       device.log(
         LogLevel.DeepTrace,
-        `Skip light command as it is already ${pValue}`,
+        `Skip light command as it is already ${c.on}`,
         LogDebugType.SkipUnchangedActuatorCommand,
       );
       return true;
     }
     return false;
+  }
+
+  public static setActuator(device: iActuator, c: ActuatorSetStateCommand): void {
+    if (LampUtils.checkBlockActive(device, c)) {
+      return;
+    }
+    if (LampUtils.checkUnchanged(device, c)) {
+      return;
+    }
+
+    device.queuedValue = c.on;
+    device.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c.on, c));
+
+    if (device.settings.isStromStoss && c.on) {
+      c.timeout = 3000;
+      LampUtils.stromStossOn(device);
+    }
+
+    if (c.timeout < 0 || !c.on) {
+      return;
+    }
+
+    if (c.timeout > -1 && device.blockAutomationHandler !== undefined) {
+      device.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
+    }
   }
 }

@@ -1,5 +1,12 @@
 import { DeviceInfo, Devices, DeviceType, iActuator, iBaseDevice, LampUtils } from '../../devices';
-import { CollisionSolving, LogLevel, RoomBase } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorToggleCommand,
+  ActuatorWriteStateToDeviceCommand,
+  LogLevel,
+  RestoreTargetAutomaticValueCommand,
+  RoomBase,
+} from '../../../models';
 import { DeviceCapability } from '../DeviceCapability';
 import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
 import _ from 'lodash';
@@ -68,9 +75,9 @@ export class Dachs implements iBaseDevice, iActuator {
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
-  public restoreTargetAutomaticValue(): void {
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(this.targetAutomaticState);
+    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
   }
 
   protected _info: DeviceInfo;
@@ -158,20 +165,21 @@ export class Dachs implements iBaseDevice, iActuator {
     Utils.dbo?.persistActuator(this);
   }
 
-  public setActuator(pValue: boolean, timeout?: number, force?: boolean): void {
-    if (!pValue || this._dachsOn) {
-      // Dachs can only be turned on, not off
+  public setActuator(c: ActuatorSetStateCommand): void {
+    LampUtils.setActuator(this, c);
+  }
+
+  public toggleActuator(c: ActuatorToggleCommand): boolean {
+    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    this.setActuator(setActuatorCommand);
+    return setActuatorCommand.on;
+  }
+
+  public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    if (!c.stateValue) {
       return;
     }
-
-    const dontBlock: boolean = LampUtils.checkUnBlock(this, force, pValue);
-
-    if (LampUtils.checkBlockActive(this, force, pValue)) {
-      return;
-    }
-
-    this.log(LogLevel.Debug, `Starting Dachs`);
-    this.queuedValue = pValue;
     this.client
       .setKeys({
         'Stromf_Ew.Anforderung_GLT.bAktiv': '1',
@@ -197,17 +205,5 @@ export class Dachs implements iBaseDevice, iActuator {
       .catch((error) => {
         this.log(LogLevel.Error, `Error while turning on Dachs: ${error}`);
       });
-
-    if (timeout !== undefined && timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(timeout, CollisionSolving.overrideIfGreater);
-    }
-  }
-
-  public toggleActuator(_force: boolean): boolean {
-    if (!this._dachsOn) {
-      this.setActuator(true);
-      return true;
-    }
-    return false;
   }
 }

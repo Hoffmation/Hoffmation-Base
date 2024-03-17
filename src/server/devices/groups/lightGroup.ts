@@ -4,7 +4,20 @@ import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { iActuator, iLamp } from '../baseDeviceInterfaces';
-import { LogLevel, RoomBase, TimeCallback, TimeCallbackType, TimeOfDay } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  CommandSource,
+  LampSetLightCommand,
+  LampSetTimeBasedCommand,
+  LedSetLightCommand,
+  LightGroupSwitchTimeConditionalCommand,
+  LogLevel,
+  RoomBase,
+  TimeCallback,
+  TimeCallbackType,
+  TimeOfDay,
+  WledSetLightCommand,
+} from '../../../models';
 import { WledDevice } from '../wledDevice';
 import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
 
@@ -82,97 +95,109 @@ export class LightGroup extends BaseGroup {
       return;
     }
     this.log(LogLevel.Info, `Es ist hell genug --> Schalte Lampen im ${this.roomName} aus`);
-    this.switchAll(false);
+    this.switchAll(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'LightGroup handleSunriseOff'));
   }
 
-  public switchAll(target: boolean, force: boolean = false): void {
+  public switchAll(c: ActuatorSetStateCommand): void {
     this.getAllAsActuator().forEach((a) => {
-      if (a.settings.includeInAmbientLight && !force && !target && this._ambientLightOn) {
+      if (a.settings.includeInAmbientLight && !c.isForceAction && !c.on && this._ambientLightOn) {
         a.log(LogLevel.Info, `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`);
         return;
       }
-      a.setActuator(target, undefined, force);
+      a.setActuator(c);
     });
   }
 
-  public switchTimeConditional(time: TimeOfDay): void {
-    const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(time);
+  public switchTimeConditional(c: LightGroupSwitchTimeConditionalCommand): void {
+    const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(c.time);
 
     let resultLampen = false;
     let resultSteckdosen = false;
     let activatedGroups = 0;
+    const command: LampSetTimeBasedCommand = new LampSetTimeBasedCommand(c, c.time, 'LightGroup switchTimeConditional');
     if (this.getWled().length > 0) {
       activatedGroups++;
-      this.log(LogLevel.Debug, `Set Wled time based for time "${TimeOfDay[time]}"`);
+      this.log(LogLevel.Debug, `Set Wled time based for time "${TimeOfDay[c.time]}"`);
       this.getWled().forEach((wled) => {
-        wled.setTimeBased(time);
+        wled.setTimeBased(command);
       });
     }
     if (this.getLED().length > 0) {
       activatedGroups++;
-      this.log(LogLevel.Trace, `Set LEDs time based for time "${TimeOfDay[time]}"`);
+      this.log(LogLevel.Trace, `Set LEDs time based for time "${TimeOfDay[c.time]}"`);
       this.getLED().forEach((s) => {
-        s.setTimeBased(time);
+        s.setTimeBased(command);
       });
     }
     if (this.getOutlets().length > 0) {
       activatedGroups++;
-      this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[time]}"`);
+      this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[c.time]}"`);
       resultSteckdosen = darkOutside;
     }
     if (activatedGroups === 0 || this.getRoom().settings.includeLampsInNormalMovementLightning) {
-      this.log(LogLevel.Trace, `Set Lamps time based for time "${TimeOfDay[time]}"`);
+      this.log(LogLevel.Trace, `Set Lamps time based for time "${TimeOfDay[c.time]}"`);
       resultLampen = darkOutside;
     }
 
-    this.setAllLampen(resultLampen, time);
-    this.setAllStecker(resultSteckdosen, time);
+    if (resultLampen) {
+      this.setAllLampenTimeBased(
+        new LampSetTimeBasedCommand(CommandSource.Automatic, c.time, 'LightGroup switchTimeConditional'),
+      );
+    } else {
+      this.setAllLampen(
+        new LampSetLightCommand(CommandSource.Automatic, false, 'LightGroup switchTimeConditional --> off'),
+      );
+    }
+    if (resultSteckdosen) {
+      this.setAllActuatorsTimeBased(c.time);
+    } else {
+      this.setAllactuator(
+        new ActuatorSetStateCommand(CommandSource.Automatic, false, 'LightGroup switchTimeConditional --> off'),
+      );
+    }
   }
 
-  public setAllLampen(pValue: boolean, time?: TimeOfDay, force: boolean = false, timeout?: number): void {
+  public setAllLampen(c: LampSetLightCommand): void {
     this.getLights().forEach((s) => {
-      if (
-        !pValue ||
-        time === undefined ||
-        (time === TimeOfDay.Night && s.settings.nightOn) ||
-        (time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
-        (time === TimeOfDay.AfterSunset && s.settings.duskOn)
-      ) {
-        timeout ??= pValue && force ? 30 * 60 * 1000 : -1;
-
-        if (pValue && time !== undefined) {
-          s.setTimeBased(time, timeout, force);
-        } else {
-          s.setLight(pValue, timeout, force);
-        }
-      }
+      s.setLight(c);
     });
   }
 
-  public setAllStecker(pValue: boolean, time?: TimeOfDay, force: boolean = false): void {
+  public setAllLampenTimeBased(c: LampSetTimeBasedCommand): void {
+    this.getLights().forEach((s) => {
+      s.setTimeBased(c);
+    });
+  }
+
+  public setAllactuator(c: ActuatorSetStateCommand): void {
+    this.getOutlets().forEach((s) => {
+      s.setActuator(c);
+    });
+  }
+
+  public setAllActuatorsTimeBased(time: TimeOfDay): void {
     this.getOutlets().forEach((s) => {
       if (
-        !pValue ||
-        time === undefined ||
         (time === TimeOfDay.Night && s.settings.nightOn) ||
         (time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
         (time === TimeOfDay.AfterSunset && s.settings.duskOn)
       ) {
-        const timeout: number = pValue && force ? 30 * 60 * 1000 : -1;
-        s.setActuator(pValue, timeout, force);
+        s.setActuator(
+          new ActuatorSetStateCommand(CommandSource.Automatic, true, `LightGroup setAllActuatorsTimeBased`),
+        );
       }
     });
   }
 
-  public setAllLED(pValue: boolean, brightness: number = -1, color: string = '', colortemp: number = -1): void {
+  public setAllLED(c: LedSetLightCommand): void {
     this.getLED().forEach((s) => {
-      s.setLight(pValue, undefined, true, brightness, undefined, color, colortemp);
+      s.setLight(c);
     });
   }
 
-  public setAllWled(pValue: boolean, brightness: number = -1, preset?: number): void {
+  public setAllWled(c: WledSetLightCommand): void {
     this.getWled().forEach((w) => {
-      w.setWled(pValue, brightness, preset);
+      w.setWled(c);
     });
   }
 
@@ -247,7 +272,7 @@ export class LightGroup extends BaseGroup {
 
     this.getAllAsActuator().forEach((a) => {
       if (a.settings.includeInAmbientLight) {
-        a.setActuator(true);
+        a.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, true, 'Ambient Light Start Callback'));
       }
     });
     Utils.guardedTimeout(
@@ -255,7 +280,7 @@ export class LightGroup extends BaseGroup {
         this.log(LogLevel.Info, `Ambientenbeleuchtung um Mitternacht abschalten.`);
         this._ambientLightOn = false;
         if (this.getRoom().PraesenzGroup?.anyPresent() !== true) {
-          this.switchAll(false);
+          this.switchAll(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Ambient Light End Callback'));
         }
       },
       Utils.timeTilMidnight,
