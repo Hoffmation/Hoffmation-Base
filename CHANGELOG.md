@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.2 (2024-03-17)
 
 * (theimo1221) Correct unblock on manual actuator off
 
