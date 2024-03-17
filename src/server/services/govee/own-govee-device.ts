@@ -148,7 +148,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (c.on && c.brightness === -1 && this.brightness < 10) {
       c.brightness = 10;
     }
-    this.log(LogLevel.Debug, c.logMessage);
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
 
     const formattedColor: string | null = Utils.formatHex(c.color);
     if (formattedColor !== null) {
@@ -160,15 +160,8 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
-
-    this.log(
-      LogLevel.Debug,
-      `Set Light Acutator to "${c.on}" with brightness ${c.brightness}`,
-      LogDebugType.SetActuator,
-    );
     if (c.brightness > -1 && c.on) {
       this.setBrightness(c.brightness, () => {
-        this.log(LogLevel.Debug, `Brightness set to ${c.brightness}`);
         this.turnOn();
       });
     } else if (c.on) {

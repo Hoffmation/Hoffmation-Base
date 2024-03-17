@@ -136,7 +136,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     if (c.on && c.brightness <= 0 && this.brightness < 10) {
       c.brightness = 10;
     }
-    this.log(LogLevel.Debug, c.logMessage);
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     if (c.timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }

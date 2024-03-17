@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix wrong command stack within lightGroup
+* (theimo1221) Add Proper LogDebugType
 
 ## 3.0.0-alpha.5 (2024-03-17)
 
