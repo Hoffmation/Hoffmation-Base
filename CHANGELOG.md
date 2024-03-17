@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.14 (2024-03-17)
 
 * (theimo1221) Fix edge case, where a manual time based toggle would not turn on the device at it would be off by it's
   time settings
