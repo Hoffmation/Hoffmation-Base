@@ -143,14 +143,14 @@ export class LightGroup extends BaseGroup {
     }
 
     if (resultLampen) {
-      this.setAllLampenTimeBased(new LampSetTimeBasedCommand(c, c.time, 'LightGroup switchTimeConditional'));
+      this.setAllLampenTimeBased(new LampSetTimeBasedCommand(c, c.time));
     } else {
-      this.setAllLampen(new LampSetLightCommand(c, false, 'LightGroup switchTimeConditional --> off'));
+      this.setAllLampen(new LampSetLightCommand(c, false));
     }
     if (resultSteckdosen) {
-      this.setAllActuatorsTimeBased(c.time);
+      this.setAllActuatorsTimeBased(new LampSetTimeBasedCommand(c, c.time));
     } else {
-      this.setAllOutlets(new ActuatorSetStateCommand(c, false, 'LightGroup switchTimeConditional --> off'));
+      this.setAllOutlets(new ActuatorSetStateCommand(c, false));
     }
   }
 
@@ -172,16 +172,14 @@ export class LightGroup extends BaseGroup {
     });
   }
 
-  public setAllActuatorsTimeBased(time: TimeOfDay): void {
+  public setAllActuatorsTimeBased(c: LampSetTimeBasedCommand): void {
     this.getOutlets().forEach((s) => {
       if (
-        (time === TimeOfDay.Night && s.settings.nightOn) ||
-        (time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
-        (time === TimeOfDay.AfterSunset && s.settings.duskOn)
+        (c.time === TimeOfDay.Night && s.settings.nightOn) ||
+        (c.time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
+        (c.time === TimeOfDay.AfterSunset && s.settings.duskOn)
       ) {
-        s.setActuator(
-          new ActuatorSetStateCommand(CommandSource.Automatic, true, `LightGroup setAllActuatorsTimeBased`),
-        );
+        s.setActuator(new ActuatorSetStateCommand(c, true, `LightGroup setAllActuatorsTimeBased`, c.timeout));
       }
     });
   }

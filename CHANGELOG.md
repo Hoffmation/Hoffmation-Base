@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add missing command stack for setActuatorTimeBased
+
 ## 3.0.0-alpha.11 (2024-03-17)
 
 * (theimo1221) Change led change action order to improve change speed for e.g. innr led strips
