@@ -98,6 +98,7 @@ export class LampUtils {
   }
 
   public static setActuator(device: iActuator, c: ActuatorSetStateCommand): void {
+    const dontBlock: boolean = LampUtils.checkUnBlock(device, c);
     if (LampUtils.checkBlockActive(device, c)) {
       return;
     }
@@ -112,12 +113,7 @@ export class LampUtils {
       c.timeout = 3000;
       LampUtils.stromStossOn(device);
     }
-
-    if (c.timeout < 0 || !c.on) {
-      return;
-    }
-
-    if (c.timeout > -1 && device.blockAutomationHandler !== undefined) {
+    if (c.timeout > -1 && !dontBlock) {
       device.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
   }

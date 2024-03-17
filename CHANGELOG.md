@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Correct unblock on manual actuator off
+
 ## 3.0.0-alpha.1 (2024-03-17)
 
 * (theimo1221) Change Lightgroup method name
