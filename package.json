@@ -39,6 +39,7 @@
     "release-patch-pre": "npm run pre-release-check && npm run release prerelease --",
     "release-patch": "npm run pre-release-check && npm run release patch --",
     "release-minor": "npm run pre-release-check && npm run release minor --",
+    "release-premajor": "npm run pre-release-check && npm run release premajor --",
     "release-major": "npm run pre-release-check && npm run release major --",
     "manual-test-iobroker-connection": "tsc && ts-node ./manualTests/io-connection-test.ts",
     "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts",
