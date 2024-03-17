@@ -1,6 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandType } from './commandType';
 import { CommandSource } from './commandSource';
+import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
@@ -14,6 +15,9 @@ export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
+    if (this.source instanceof ActuatorSetStateCommand) {
+      return `Actuator Write StateToDevice original Log-message: ${this.source.logMessage}`;
+    }
     return `Actuator writeStateToDevice(${this.stateValue}) for reason: ${this.reasonTrace}`;
   }
 }
