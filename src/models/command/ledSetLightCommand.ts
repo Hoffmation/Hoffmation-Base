@@ -34,7 +34,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
   }
 
   public override get logMessage(): string {
-    return `Led setLight to ${this.on} for reason: ${this.reasonTrace}`;
+    return `Led setLight to state: ${this.on}, timeout: ${this.timeout}, brightness: ${this.brightness}, color: ${this.color}, colorTemp: ${this.colorTemp} for reason: ${this.reasonTrace}`;
   }
 
   public static byTimeBased(settings: LedSettings, c: LampSetTimeBasedCommand): LedSetLightCommand {

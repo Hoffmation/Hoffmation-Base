@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Harmonize constructor parameter order for ActuatorWriteStateToDevice
+* (theimo1221) Improve logging for ZigbeeLed and Dimmer
 
 ## 3.0.0-alpha.4 (2024-03-17)
 

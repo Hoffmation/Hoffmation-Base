@@ -75,9 +75,9 @@ export class LampUtils {
     if (!c.isForceAction && device.blockAutomationHandler.automaticBlockActive) {
       device.log(
         LogLevel.Debug,
-        `Skip automatic command to ${c.on} as it is locked until ${new Date(
+        `Skip command to ${c.on} as it is locked until ${new Date(
           device.blockAutomationHandler.automaticBlockedUntil,
-        ).toLocaleTimeString()}`,
+        ).toLocaleTimeString()}; command Log: ${c.logMessage}`,
       );
       device.targetAutomaticState = c.on;
       return true;

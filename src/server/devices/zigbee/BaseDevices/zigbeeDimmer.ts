@@ -123,24 +123,20 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       return;
     }
 
-    if (c.transitionTime > -1) {
-      this.setState(this._stateIdTransitionTime, c.transitionTime);
-    }
-
     const dontBlock: boolean = LampUtils.checkUnBlock(this, c);
 
     if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
 
+    if (c.transitionTime > -1) {
+      this.setState(this._stateIdTransitionTime, c.transitionTime);
+    }
+
     if (c.on && c.brightness <= 0 && this.brightness < 10) {
       c.brightness = 10;
     }
-    this.log(
-      LogLevel.Debug,
-      `Set Light Acutator to "${c.on}" with brightness ${c.brightness}`,
-      LogDebugType.SetActuator,
-    );
+    this.log(LogLevel.Debug, c.logMessage);
     if (c.timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }

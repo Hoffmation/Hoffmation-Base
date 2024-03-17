@@ -73,10 +73,6 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
     if (c.on && c.brightness === -1 && this.brightness < 10) {
       c.brightness = 10;
     }
-    this.log(
-      LogLevel.Debug,
-      `LED Schalten An: ${c.on}\tHelligkeit: ${c.brightness}%\tFarbe: "${c.color}"\tColorTemperatur: ${c.colorTemp}\tTransition Time: ${c.transitionTime}`,
-    );
 
     const formattedColor: string | null = Utils.formatHex(c.color);
     if (formattedColor !== null && c.on) {
