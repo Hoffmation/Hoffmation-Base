@@ -164,7 +164,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     if (this.settings.useOwnTemperatureAndAutomatic) {
       // Device is in automatic mode so ignore energy and room temperature
 
-      if (heatGroup?.settings.automaticMode === false) {
+      if (heatGroup?.settings.automaticMode) {
         return AcMode.Auto;
       }
 
