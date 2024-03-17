@@ -33,15 +33,16 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
   }
 
   public static byTimeBased(s: DimmerSettings, c: LampSetTimeBasedCommand): DimmerSetLightCommand {
+    const manual: boolean = c.isForceAction;
     switch (c.time) {
       case TimeOfDay.Daylight:
-        return new DimmerSetLightCommand(c, true, 'By TimeBased Daylight', c.timeout, s.dayBrightness);
+        return new DimmerSetLightCommand(c, true, 'Daylight', c.timeout, s.dayBrightness);
       case TimeOfDay.BeforeSunrise:
-        return new DimmerSetLightCommand(c, s.dawnOn, '', c.timeout, s.dawnBrightness, undefined);
+        return new DimmerSetLightCommand(c, manual || s.dawnOn, 'Dawn', c.timeout, s.dawnBrightness, undefined);
       case TimeOfDay.AfterSunset:
-        return new DimmerSetLightCommand(c, s.duskOn, '', c.timeout, s.duskBrightness, undefined);
+        return new DimmerSetLightCommand(c, manual || s.duskOn, 'Dusk', c.timeout, s.duskBrightness, undefined);
       case TimeOfDay.Night:
-        return new DimmerSetLightCommand(c, s.nightOn, '', c.timeout, s.nightBrightness, undefined);
+        return new DimmerSetLightCommand(c, manual || s.nightOn, 'Night', c.timeout, s.nightBrightness, undefined);
       default:
         throw new Error(`TimeOfDay ${c.time} not supported`);
     }

@@ -34,6 +34,7 @@ export class LampUtils {
 
   public static setTimeBased(device: iLamp, c: LampSetTimeBasedCommand): void {
     if (
+      c.isManual ||
       (c.time === TimeOfDay.Night && device.settings.nightOn) ||
       (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
       (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)
@@ -64,10 +65,10 @@ export class LampUtils {
       c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }
     if (newVal && c.time !== undefined) {
-      device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, 'SetLight Due to toggle Light', timeout));
+      device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, '', timeout));
       return true;
     }
-    device.setLight(new LampSetLightCommand(c, newVal, 'SetLight Due to toggle Light', timeout));
+    device.setLight(new LampSetLightCommand(c, newVal, '', timeout));
     return newVal;
   }
 

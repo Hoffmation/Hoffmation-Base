@@ -28,6 +28,13 @@ export abstract class BaseCommand {
     );
   }
 
+  public get isManual(): boolean {
+    if (this.source instanceof BaseCommand) {
+      return this.source.isManual;
+    }
+    return this.source === CommandSource.Manual || this.source === CommandSource.API;
+  }
+
   public get isInitial(): boolean {
     if (this.source instanceof BaseCommand) {
       return this.source.isInitial;
