@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.0 (2024-03-17)
 
 * (theimo1221) Start rework of commands especially with focus on command source and the stacked reason
 * (theimo1221) Update packages
