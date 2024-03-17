@@ -12,6 +12,13 @@ export abstract class BaseCommand {
     this.timestamp = new Date();
   }
 
+  public get isAutomaticAction(): boolean {
+    if (this.source instanceof BaseCommand) {
+      return this.source.isAutomaticAction;
+    }
+    return this.source === CommandSource.Automatic;
+  }
+
   public get isForceAction(): boolean {
     if (this.source instanceof BaseCommand) {
       return this.source.isForceAction;

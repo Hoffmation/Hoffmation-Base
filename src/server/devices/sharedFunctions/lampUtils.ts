@@ -38,7 +38,7 @@ export class LampUtils {
       (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
       (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)
     ) {
-      device.setLight(new LampSetLightCommand(c, true, `SetLight due to TimeBased ${c.time}`, c.timeout));
+      device.setLight(new LampSetLightCommand(c, true, `SetLight due to TimeBased ${TimeOfDay[c.time]}`, c.timeout));
     }
   }
 
@@ -101,6 +101,10 @@ export class LampUtils {
     const dontBlock: boolean = LampUtils.checkUnBlock(device, c);
     if (LampUtils.checkBlockActive(device, c)) {
       return;
+    }
+    if (c.isAutomaticAction) {
+      // Preserve the target state for the automatic handler, as
+      device.targetAutomaticState = c.on;
     }
     if (LampUtils.checkUnchanged(device, c)) {
       return;

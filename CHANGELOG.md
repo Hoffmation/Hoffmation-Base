@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) TargetAutomaticState might be wrong, if the automatic action fired before the manual action overwrote it.
+
 ## 3.0.0-alpha.12 (2024-03-17)
 
 * (theimo1221) Add missing command stack for setActuatorTimeBased
