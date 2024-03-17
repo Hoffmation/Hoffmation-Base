@@ -84,15 +84,16 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
       c.brightness = 10;
     }
 
+    super.setLight(c);
+
     const formattedColor: string | null = Utils.formatHex(c.color);
-    if (formattedColor !== null && c.on) {
+
+    if (formattedColor !== null && c.on && (c.color !== this.color || c.isForceAction)) {
       this.setState(this._stateIdColor, formattedColor);
     }
 
-    if (c.colorTemp > -1 && c.on) {
+    if (c.colorTemp > -1 && c.on && (c.colorTemp !== this.colortemp || c.isForceAction)) {
       this.setState(this._stateIdColorTemp, c.colorTemp);
     }
-
-    super.setLight(c);
   }
 }
