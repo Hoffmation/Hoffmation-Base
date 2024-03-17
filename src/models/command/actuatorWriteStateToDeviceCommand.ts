@@ -6,8 +6,8 @@ export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
 
   public constructor(
-    public readonly stateValue: boolean,
     source: CommandSource | BaseCommand,
+    public readonly stateValue: boolean,
     reason: string = '',
   ) {
     super(source, reason);

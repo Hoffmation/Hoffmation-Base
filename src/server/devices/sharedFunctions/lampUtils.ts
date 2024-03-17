@@ -107,7 +107,7 @@ export class LampUtils {
     }
 
     device.queuedValue = c.on;
-    device.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c.on, c));
+    device.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on));
 
     if (device.settings.isStromStoss && c.on) {
       c.timeout = 3000;

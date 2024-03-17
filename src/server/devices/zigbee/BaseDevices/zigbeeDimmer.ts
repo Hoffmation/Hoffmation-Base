@@ -147,7 +147,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     if (SettingsService.settings.ioBroker?.useZigbee2mqtt && !c.on) {
       // With zigbee2mqtt to turn on only setting brighness>0 is needed, so we need state only for turning off
       this.writeActuatorStateToDevice(
-        new ActuatorWriteStateToDeviceCommand(c.on, c, 'Set dimmer due to set ActuactorCommand'),
+        new ActuatorWriteStateToDeviceCommand(c, c.on, 'Set dimmer due to set ActuactorCommand'),
       );
       this.queuedValue = c.on;
       return;

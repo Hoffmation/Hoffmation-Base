@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Harmonize constructor parameter order for ActuatorWriteStateToDevice
+
 ## 3.0.0-alpha.4 (2024-03-17)
 
 * (theimo1221) Improve command log messages

@@ -118,7 +118,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     );
 
     this.queuedValue = c.on;
-    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c.on, c, 'WLED Schalten'));
+    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on, 'WLED Schalten'));
 
     if (c.preset !== undefined) {
       this.setState(this._presetID, c.preset, undefined, (err) => {
