@@ -29,16 +29,11 @@ export abstract class BaseCommand {
   }
 
   public get reasonTrace(): string {
-    let reason: string = '';
-    if (this.source instanceof BaseCommand) {
-      reason = this.source.reasonTrace;
+    const ownPart: string = this.reason !== '' ? `${this._commandType}("${this.reason}")` : `${this._commandType}`;
+    if (typeof this.source === 'object') {
+      return `${this.source.reasonTrace} -> ${ownPart}`;
     }
-    if (this.reason === '') {
-      if (reason === '') {
-        return `${this._commandType}`;
-      }
-      return `${reason} -> ${this._commandType}`;
-    }
-    return `${reason} -> ${this._commandType}(${this.reason})`;
+
+    return `CommandType("${CommandSource[this.source]}") stack => ${ownPart}`;
   }
 }

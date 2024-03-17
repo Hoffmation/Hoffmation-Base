@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Improve command log messages
+* (theimo1221) Improve command reason-stack readability
 
 ## 3.0.0-alpha.3 (2024-03-17)
 
