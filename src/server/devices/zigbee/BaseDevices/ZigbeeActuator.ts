@@ -3,7 +3,7 @@ import {
   ActuatorSetStateCommand,
   ActuatorSettings,
   ActuatorToggleCommand,
-  CollisionSolving,
+  ActuatorWriteStateToDeviceCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
 } from '../../../../models';
@@ -69,24 +69,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
       return;
     }
 
-    const dontBlock: boolean = LampUtils.checkUnBlock(this, command);
-
-    if (LampUtils.checkBlockActive(this, command)) {
-      return;
-    }
-
-    if (LampUtils.checkUnchanged(this, command)) {
-      return;
-    }
-
-    this.log(LogLevel.Debug, `Set Acutator to "${command.on}"`, LogDebugType.SetActuator);
-    this.setState(this.actuatorOnSwitchID, command.on, undefined, (err) => {
-      this.log(LogLevel.Error, `Switching actuator resulted in error: ${err}`);
-    });
-    this.queuedValue = command.on;
-    if (command.timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(command.timeout, CollisionSolving.overrideIfGreater);
-    }
+    LampUtils.setActuator(this, command);
   }
 
   public persist(): void {
@@ -98,5 +81,12 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     const timeout: number = newVal && command.isForceAction ? 30 * 60 * 1000 : -1;
     this.setActuator(new ActuatorSetStateCommand(command, newVal, 'Due to ZigbeeActuatorToggle', timeout));
     return newVal;
+  }
+
+  public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.setState(this.actuatorOnSwitchID, c.stateValue, undefined, (err) => {
+      this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
+    });
   }
 }

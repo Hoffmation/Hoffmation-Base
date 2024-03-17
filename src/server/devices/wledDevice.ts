@@ -1,9 +1,10 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { DeviceType } from './deviceType';
-import { ServerLogService, Utils } from '../services';
+import { LogDebugType, ServerLogService, Utils } from '../services';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
+  ActuatorWriteStateToDeviceCommand,
   CollisionSolving,
   DimmerSetLightCommand,
   LampSetTimeBasedCommand,
@@ -117,9 +118,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     );
 
     this.queuedValue = c.on;
-    this.setState(this._onID, c.on, undefined, (err) => {
-      ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
-    });
+    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c.on, c, 'WLED Schalten'));
 
     if (c.preset !== undefined) {
       this.setState(this._presetID, c.preset, undefined, (err) => {
@@ -157,5 +156,12 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
 
   public toggleLight(c: LampToggleLightCommand): boolean {
     return LampUtils.toggleLight(this, c);
+  }
+
+  public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.setState(this._onID, c.stateValue, undefined, (err) => {
+      ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
+    });
   }
 }

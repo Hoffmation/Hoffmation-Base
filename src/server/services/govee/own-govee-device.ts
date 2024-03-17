@@ -2,6 +2,7 @@ import { DeviceInfo, Devices, DeviceType, iTemporaryDisableAutomatic, LampUtils 
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
+  ActuatorWriteStateToDeviceCommand,
   CollisionSolving,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
@@ -201,6 +202,15 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   public toggleLight(c: LampToggleLightCommand): boolean {
     return LampUtils.toggleLight(this, c);
+  }
+
+  public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    if (c.stateValue) {
+      this.turnOn();
+    } else {
+      this.turnOff();
+    }
   }
 
   public update(data: GoveeDeviceState & GoveeDeviceStateInfo): void {

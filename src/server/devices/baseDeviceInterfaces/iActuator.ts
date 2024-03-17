@@ -1,4 +1,9 @@
-import { ActuatorSetStateCommand, ActuatorSettings, ActuatorToggleCommand } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  ActuatorSettings,
+  ActuatorToggleCommand,
+  ActuatorWriteStateToDeviceCommand,
+} from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 
@@ -33,4 +38,6 @@ export interface iActuator extends iRoomDevice, iTemporaryDisableAutomatic {
   setActuator(command: ActuatorSetStateCommand): void;
 
   toggleActuator(command: ActuatorToggleCommand): boolean;
+
+  writeActuatorStateToDevice(command: ActuatorWriteStateToDeviceCommand): void;
 }

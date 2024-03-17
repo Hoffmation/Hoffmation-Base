@@ -1,6 +1,7 @@
 export { RestoreTargetAutomaticValueCommand } from './restoreTargetAutomaticValueCommand';
 export { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 export { ActuatorToggleCommand } from './actuatorToggleCommand';
+export { ActuatorWriteStateToDeviceCommand } from './actuatorWriteStateToDeviceCommand';
 export { BaseCommand } from './baseCommand';
 export { CommandSource } from './commandSource';
 export { CommandType } from './commandType';

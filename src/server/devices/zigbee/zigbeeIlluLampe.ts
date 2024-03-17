@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { ZigbeeIlluActuator } from './zigbeeIlluActuator';
 import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand, LogLevel } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
-import { LogDebugType, Utils } from '../../services';
+import { Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { LampUtils } from '../sharedFunctions';
@@ -28,11 +28,6 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
 
   /** @inheritdoc */
   public setLight(c: LampSetLightCommand): void {
-    this.log(LogLevel.Debug, `Set Light Acutator to "${c.on}"`, LogDebugType.SetActuator);
-    if (this.settings.isStromStoss && c.on) {
-      c.timeout = 3000;
-      LampUtils.stromStossOn(this);
-    }
     super.setActuator(c);
   }
 

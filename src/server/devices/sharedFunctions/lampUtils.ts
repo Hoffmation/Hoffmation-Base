@@ -2,6 +2,8 @@ import { iActuator, iLamp } from '../baseDeviceInterfaces';
 import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import {
   ActuatorSetStateCommand,
+  ActuatorWriteStateToDeviceCommand,
+  CollisionSolving,
   CommandSource,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
@@ -11,19 +13,19 @@ import {
 } from '../../../models';
 
 export class LampUtils {
-  public static stromStossOn(lamp: iLamp) {
+  public static stromStossOn(actuator: iActuator) {
     Utils.guardedTimeout(
       () => {
-        if (lamp.room?.PraesenzGroup?.anyPresent()) {
-          lamp.setLight(new LampSetLightCommand(CommandSource.Force, true, 'StromStoss On due to Presence'));
+        if (actuator.room?.PraesenzGroup?.anyPresent()) {
+          actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, true, 'StromStoss On due to Presence'));
         }
       },
-      lamp.settings.stromStossResendTime * 1000,
+      actuator.settings.stromStossResendTime * 1000,
       this,
     );
     Utils.guardedTimeout(
       () => {
-        lamp.setLight(new LampSetLightCommand(CommandSource.Force, false, 'StromStoss Off'));
+        actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, false, 'StromStoss Off'));
       },
       3000,
       this,
@@ -93,5 +95,30 @@ export class LampUtils {
       return true;
     }
     return false;
+  }
+
+  public static setActuator(device: iActuator, c: ActuatorSetStateCommand): void {
+    if (LampUtils.checkBlockActive(device, c)) {
+      return;
+    }
+    if (LampUtils.checkUnchanged(device, c)) {
+      return;
+    }
+
+    device.queuedValue = c.on;
+    device.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c.on, c));
+
+    if (device.settings.isStromStoss && c.on) {
+      c.timeout = 3000;
+      LampUtils.stromStossOn(device);
+    }
+
+    if (c.timeout < 0 || !c.on) {
+      return;
+    }
+
+    if (c.timeout > -1 && device.blockAutomationHandler !== undefined) {
+      device.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
+    }
   }
 }

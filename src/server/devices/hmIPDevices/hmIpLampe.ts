@@ -5,7 +5,7 @@ import {
   ActuatorSetStateCommand,
   ActuatorSettings,
   ActuatorToggleCommand,
-  CollisionSolving,
+  ActuatorWriteStateToDeviceCommand,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
@@ -69,35 +69,18 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
 
   /** @inheritdoc */
   public setLight(c: LampSetLightCommand): void {
-    if (LampUtils.checkBlockActive(this, c)) {
-      return;
-    }
-    if (LampUtils.checkUnchanged(this, c)) {
-      return;
-    }
     if (this.lightOnSwitchID === '') {
       this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
       return;
     }
+    LampUtils.setActuator(this, c);
+  }
 
+  public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
-    this.queuedValue = c.on;
-    this.setState(this.lightOnSwitchID, c.on, undefined, (err) => {
+    this.setState(this.lightOnSwitchID, c.stateValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
-
-    if (this.settings.isStromStoss && c.on) {
-      c.timeout = 3000;
-      LampUtils.stromStossOn(this);
-    }
-
-    if (c.timeout < 0 || !c.on) {
-      return;
-    }
-
-    if (c.timeout > -1) {
-      this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
-    }
   }
 
   public toggleLight(c: LampToggleLightCommand): boolean {

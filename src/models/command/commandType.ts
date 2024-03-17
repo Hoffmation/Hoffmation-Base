@@ -2,6 +2,7 @@ export enum CommandType {
   ActuatorToggleCommand = 'ActuatorToggleCommand',
   ActuatorSetStateCommand = 'ActuatorSetStateCommand',
   ActuatorRestoreTargetAutomaticValueCommand = 'ActuatorRestoreTargetAutomaticValueCommand',
+  ActuatorWriteStateToDeviceCommand = 'ActuatorWriteStateToDeviceCommand',
   DimmerSetLightCommand = 'DimmerSetLightCommand',
   FloorSetAllShuttersCommand = 'FloorSetAllShuttersCommand',
   LampSetLightCommand = 'LampSetLightCommand',
