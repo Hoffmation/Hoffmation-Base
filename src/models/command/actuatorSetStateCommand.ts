@@ -5,7 +5,7 @@ import { ActuatorToggleCommand } from './actuatorToggleCommand';
 import { iActuator } from '../../server';
 
 export class ActuatorSetStateCommand extends BaseCommand {
-  public override _commandType: CommandType = CommandType.ShutterSetLevelCommand;
+  public override _commandType: CommandType = CommandType.ActuatorSetStateCommand;
 
   public constructor(
     source: CommandSource | BaseCommand,
