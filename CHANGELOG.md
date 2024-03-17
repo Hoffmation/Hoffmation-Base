@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.12 (2024-03-17)
 
 * (theimo1221) Add missing command stack for setActuatorTimeBased
 * (theimo1221) Prevent actuator write log message shadowing
