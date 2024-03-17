@@ -37,8 +37,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   }
 
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
-    this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
+    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState));
   }
 
   public update(

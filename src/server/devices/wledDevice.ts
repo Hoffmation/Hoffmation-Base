@@ -48,8 +48,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   }
 
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
-    this.log(LogLevel.Debug, c.logMessage);
-    this.setLight(new WledSetLightCommand(c, this.targetAutomaticState, 'Lampen RestoreTargetAutomaticValue'));
+    this.setLight(new WledSetLightCommand(c, this.targetAutomaticState));
   }
 
   public override update(

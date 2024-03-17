@@ -64,13 +64,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
   }
 
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
-    this.setActuator(
-      new ActuatorSetStateCommand(
-        c,
-        this.targetAutomaticState,
-        'Restore targetAutomaticState due to BlockAutomaticHandler',
-      ),
-    );
+    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState));
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

@@ -39,8 +39,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
   }
 
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
-    this.log(LogLevel.Debug, c.logMessage);
-    this.setLight(new LampSetLightCommand(c, this.targetAutomaticState, 'Lampen RestoreTargetAutomaticValue'));
+    this.setLight(new LampSetLightCommand(c, this.targetAutomaticState));
   }
 
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
