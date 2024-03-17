@@ -8,7 +8,7 @@
 
 ## **WORK IN PROGRESS**
 
-* (theimo1221) Fix edge case, where a manual timebased toggle would not turn on the device at it would be off by it's
+* (theimo1221) Fix edge case, where a manual time based toggle would not turn on the device at it would be off by it's
   time settings
 * (theimo1221) Prevent AC-Device Param-NG in case of not yet calculated desired temperature
 
