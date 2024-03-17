@@ -34,6 +34,9 @@ export abstract class BaseCommand {
       reason = this.source.reasonTrace;
     }
     if (this.reason === '') {
+      if (reason === '') {
+        return `${this._commandType}`;
+      }
       return `${reason} -> ${this._commandType}`;
     }
     return `${reason} -> ${this._commandType}(${this.reason})`;

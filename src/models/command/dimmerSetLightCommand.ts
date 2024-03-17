@@ -29,7 +29,7 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
   }
 
   public override get logMessage(): string {
-    return `Dimmer setLight to ${this.on} from ${this.source} for reason: ${this.reasonTrace}`;
+    return `Dimmer setLight to ${this.on} for reason: ${this.reasonTrace}`;
   }
 
   public static byTimeBased(s: DimmerSettings, c: LampSetTimeBasedCommand): DimmerSetLightCommand {
