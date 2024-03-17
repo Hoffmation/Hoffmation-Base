@@ -158,7 +158,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
 
     if (c.movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
       this.log(LogLevel.Trace, 'Turn off lights as no-one is present.');
-      this.LightGroup.switchAll(new ActuatorSetStateCommand(c, false, 'Room.setLightTimeBased but no one is present'));
+      this.LightGroup.switchAll(new ActuatorSetStateCommand(c, false, 'No one is present --> Turn off lights.'));
       return;
     }
 

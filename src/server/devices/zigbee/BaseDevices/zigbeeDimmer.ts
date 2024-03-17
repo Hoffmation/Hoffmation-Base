@@ -100,7 +100,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
   }
 
   public setActuator(c: ActuatorSetStateCommand): void {
-    this.setLight(new DimmerSetLightCommand(c, c.on, 'Set dimmer due to set ActuactorCommand', c.timeout));
+    this.setLight(new DimmerSetLightCommand(c, c.on, '', c.timeout));
   }
 
   public toggleActuator(c: ActuatorToggleCommand): boolean {
@@ -136,19 +136,17 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     if (c.on && c.brightness <= 0 && this.brightness < 10) {
       c.brightness = 10;
     }
-    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     if (c.timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
     if (SettingsService.settings.ioBroker?.useZigbee2mqtt && !c.on) {
       // With zigbee2mqtt to turn on only setting brighness>0 is needed, so we need state only for turning off
-      this.writeActuatorStateToDevice(
-        new ActuatorWriteStateToDeviceCommand(c, c.on, 'Set dimmer due to set ActuactorCommand'),
-      );
+      this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on));
       this.queuedValue = c.on;
       return;
     }
 
+    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     if (c.brightness >= this.settings.turnOnThreshhold) {
       this.setBrightnessState(c.brightness);
       return;

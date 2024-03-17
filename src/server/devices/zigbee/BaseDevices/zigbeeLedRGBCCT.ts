@@ -1,5 +1,11 @@
 import { DeviceType } from '../../deviceType';
-import { LampSetTimeBasedCommand, LedSetLightCommand, LedSettings, LogLevel } from '../../../../models';
+import {
+  ActuatorSetStateCommand,
+  LampSetTimeBasedCommand,
+  LedSetLightCommand,
+  LedSettings,
+  LogLevel,
+} from '../../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct';
@@ -54,6 +60,10 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
    */
   public override setTimeBased(c: LampSetTimeBasedCommand): void {
     this.setLight(LedSetLightCommand.byTimeBased(this.settings, c));
+  }
+
+  public override setActuator(c: ActuatorSetStateCommand): void {
+    this.setLight(new LedSetLightCommand(c, c.on, '', c.timeout));
   }
 
   /**
