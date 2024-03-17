@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.5 (2024-03-17)
 
 * (theimo1221) Harmonize constructor parameter order for ActuatorWriteStateToDevice
 * (theimo1221) Improve logging for ZigbeeLed and Dimmer
