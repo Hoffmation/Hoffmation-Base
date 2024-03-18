@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 export class BlockAutomaticHandler {
   private readonly _restoreAutomatic: (c: RestoreTargetAutomaticValueCommand) => void;
+  private _delayedLiftTimeout: NodeJS.Timeout | null = null;
 
   public constructor(restoreAutomaticCb: (c: RestoreTargetAutomaticValueCommand) => void) {
     this._restoreAutomatic = restoreAutomaticCb;
@@ -52,8 +53,26 @@ export class BlockAutomaticHandler {
     this.automaticBlockedUntil = targetDate;
   }
 
-  public liftAutomaticBlock(): void {
-    this.automaticBlockedUntil = new Date(0);
+  // TODO: Missing conversion to command
+  public liftAutomaticBlock(delay: number = 0): void {
+    if (delay <= 0) {
+      this.automaticBlockedUntil = new Date(0);
+      return;
+    }
+    if (this._delayedLiftTimeout !== null) {
+      return;
+    }
+    const currentBlockedUntil = this._automaticBlockedUntil;
+    this._delayedLiftTimeout = Utils.guardedTimeout(
+      () => {
+        this._delayedLiftTimeout = null;
+        if (this.automaticBlockActive && this._automaticBlockedUntil.getTime() === currentBlockedUntil.getTime()) {
+          this.liftAutomaticBlock(0);
+        }
+      },
+      delay,
+      this,
+    );
   }
 
   private updateRestoreTimeout(): void {

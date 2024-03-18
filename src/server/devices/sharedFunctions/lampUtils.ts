@@ -5,6 +5,7 @@ import {
   ActuatorWriteStateToDeviceCommand,
   CollisionSolving,
   CommandSource,
+  CommandType,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
@@ -13,16 +14,26 @@ import {
 } from '../../../models';
 
 export class LampUtils {
+  private static stromStossContinueTimeouts: Map<string, NodeJS.Timeout> = new Map<string, NodeJS.Timeout>();
+
   public static stromStossOn(actuator: iActuator) {
-    Utils.guardedTimeout(
-      () => {
-        if (actuator.room?.PraesenzGroup?.anyPresent()) {
-          actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, true, 'StromStoss On due to Presence'));
-        }
-      },
-      actuator.settings.stromStossResendTime * 1000,
-      this,
-    );
+    if (!LampUtils.stromStossContinueTimeouts.has(actuator.id)) {
+      LampUtils.stromStossContinueTimeouts.set(
+        actuator.id,
+        Utils.guardedTimeout(
+          () => {
+            LampUtils.stromStossContinueTimeouts.delete(actuator.id);
+            if (actuator.room?.PraesenzGroup?.anyPresent()) {
+              actuator.setActuator(
+                new ActuatorSetStateCommand(CommandSource.Automatic, true, 'StromStoss On due to Presence'),
+              );
+            }
+          },
+          actuator.settings.stromStossResendTime * 1000,
+          this,
+        ),
+      );
+    }
     Utils.guardedTimeout(
       () => {
         actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, false, 'StromStoss Off'));
@@ -99,6 +110,14 @@ export class LampUtils {
   }
 
   public static setActuator(device: iActuator, c: ActuatorSetStateCommand): void {
+    if (
+      device.settings.isStromStoss &&
+      c.on &&
+      c.containsType(CommandType.ActuatorRestoreTargetAutomaticValueCommand)
+    ) {
+      // Don't restore automatic state on Strommstoss-Relais as this might result in a loop.
+      return;
+    }
     const dontBlock: boolean = LampUtils.checkUnBlock(device, c);
     if (LampUtils.checkBlockActive(device, c)) {
       return;

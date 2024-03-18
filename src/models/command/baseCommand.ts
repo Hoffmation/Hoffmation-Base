@@ -50,4 +50,14 @@ export abstract class BaseCommand {
 
     return `CommandType("${CommandSource[this.source]}") stack => ${ownPart}`;
   }
+
+  public containsType(type: CommandType): boolean {
+    if (this._commandType === type) {
+      return true;
+    }
+    if (this.source instanceof BaseCommand) {
+      return this.source.containsType(type);
+    }
+    return false;
+  }
 }
