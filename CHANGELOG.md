@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix logic issue in ac-device
+* (theimo1221) Add Wled Device Capabilities
 
 ## 3.0.0-alpha.14 (2024-03-17)
 

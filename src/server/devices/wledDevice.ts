@@ -18,6 +18,7 @@ import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp';
 import { BlockAutomaticHandler } from '../services/blockAutomaticHandler';
 import { LampUtils } from './sharedFunctions';
+import { DeviceCapability } from './DeviceCapability';
 
 export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   public on: boolean = false;
@@ -37,6 +38,8 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     this._presetID = `${this.info.fullID}.ps`;
     this._brightnessID = `${this.info.fullID}.bri`;
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+    this.deviceCapabilities.push(DeviceCapability.lamp);
+    this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
   }
 
   public get actuatorOn(): boolean {
