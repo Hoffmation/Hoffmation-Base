@@ -46,6 +46,7 @@ export class LampUtils {
   public static setTimeBased(device: iLamp, c: LampSetTimeBasedCommand): void {
     if (
       c.isManual ||
+      (c.time === TimeOfDay.Daylight && device.settings.dayOn) ||
       (c.time === TimeOfDay.Night && device.settings.nightOn) ||
       (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
       (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)

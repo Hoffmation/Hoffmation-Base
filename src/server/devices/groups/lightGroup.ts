@@ -175,6 +175,7 @@ export class LightGroup extends BaseGroup {
   public setAllActuatorsTimeBased(c: LampSetTimeBasedCommand): void {
     this.getOutlets().forEach((s) => {
       if (
+        (c.time === TimeOfDay.Daylight && s.settings.dayOn) ||
         (c.time === TimeOfDay.Night && s.settings.nightOn) ||
         (c.time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
         (c.time === TimeOfDay.AfterSunset && s.settings.duskOn)

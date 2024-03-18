@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Improve behaviour of Strom-Stoss-Relais to prevent loops.
+* (theimo1221) Prepare Actuator "DayOn"-Setting
 
 ## 3.0.0-alpha.15 (2024-03-18)
 

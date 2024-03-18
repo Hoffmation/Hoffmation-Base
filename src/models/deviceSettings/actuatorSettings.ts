@@ -2,9 +2,26 @@ import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../server';
 
 export class ActuatorSettings extends DeviceSettings {
+  /**
+   * Whether to turn on the device at dawn in time-based commands or automatic.
+   * @type {boolean}
+   */
   public dawnOn: boolean = true;
+  /**
+   * Whether to turn on the device at dusk in time-based commands or automatic.
+   * @type {boolean}
+   */
   public duskOn: boolean = true;
+  /**
+   * Whether to turn on the device at night in time-based commands or automatic.
+   * @type {boolean}
+   */
   public nightOn: boolean = true;
+  /**
+   * Whether to turn on the device at day in time-based commands or automatic.
+   * @type {boolean}
+   */
+  public dayOn: boolean = false;
   /**
    * Indicates if this device controls e.g. an Eltako, which has it's own Turn Off Time logic.
    * @type {boolean}
@@ -35,6 +52,7 @@ export class ActuatorSettings extends DeviceSettings {
     this.dawnOn = data.dawnOn ?? this.dawnOn;
     this.duskOn = data.duskOn ?? this.duskOn;
     this.nightOn = data.nightOn ?? this.nightOn;
+    this.dayOn = data.dayOn ?? this.dayOn;
     this.isStromStoss = data.isStromStoss ?? this.isStromStoss;
     this.stromStossResendTime = data.stromStossResendTime ?? this.stromStossResendTime;
     this.resetToAutomaticOnForceOffAfterForceOn =

@@ -36,7 +36,7 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
     const manual: boolean = c.isForceAction;
     switch (c.time) {
       case TimeOfDay.Daylight:
-        return new DimmerSetLightCommand(c, true, 'Daylight', c.timeout, s.dayBrightness);
+        return new DimmerSetLightCommand(c, manual || s.dayOn, 'Daylight', c.timeout, s.dayBrightness);
       case TimeOfDay.BeforeSunrise:
         return new DimmerSetLightCommand(c, manual || s.dawnOn, 'Dawn', c.timeout, s.dawnBrightness, undefined);
       case TimeOfDay.AfterSunset:
