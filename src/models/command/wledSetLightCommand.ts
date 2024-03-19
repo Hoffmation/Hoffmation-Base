@@ -21,6 +21,10 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
     super(source, on, reason, timeout, brightness, transitionTime);
   }
 
+  public override get logMessage(): string {
+    return `Dimmer setLight to ${this.on} with Brightness ${this.brightness}, timeout ${this.timeout} and preset ${this.preset} for reason: ${this.reasonTrace}`;
+  }
+
   public static override byTimeBased(settings: WledSettings, c: LampSetTimeBasedCommand): WledSetLightCommand {
     switch (c.time) {
       case TimeOfDay.Daylight:

@@ -17,7 +17,7 @@ export class ActuatorSetStateCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
-    return `Actuator setState to ${this.on} for reason: ${this.reasonTrace}`;
+    return `Actuator setState to ${this.on} with timeout ${this.timeout} for reason: ${this.reasonTrace}`;
   }
 
   public static byActuatorAndToggleCommand(device: iActuator, c: ActuatorToggleCommand): ActuatorSetStateCommand {
