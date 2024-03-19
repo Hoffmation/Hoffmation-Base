@@ -94,7 +94,6 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   }
 
   public setWled(c: WledSetLightCommand): void {
-    this.log(LogLevel.Debug, c.logMessage);
     if (this._onID === '') {
       ServerLogService.writeLog(LogLevel.Error, `Keine On ID für "${this.info.customName}" bekannt.`);
       return;
@@ -111,14 +110,11 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       return;
     }
 
+    this.log(LogLevel.Debug, c.logMessage);
+
     if (c.on && c.brightness !== -1 && this.brightness < 10) {
       c.brightness = 10;
     }
-
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `WLED Schalten: "${this.info.customName}" An: ${c.on}\tHelligkeit: ${c.brightness}%`,
-    );
 
     this.queuedValue = c.on;
 

@@ -7,7 +7,7 @@ describe('Commands', () => {
 
     const result = c2.logMessage;
     expect(result).toBe(
-      'Actuator setState to true for reason: CommandType("Force") stack => LampSetLightCommand("Testreason Lamp") -> ActuatorSetStateCommand("Testreason Actuator")',
+      'Actuator setState to true with timeout -1 for reason: CommandType("Force") stack => LampSetLightCommand("Testreason Lamp") -> ActuatorSetStateCommand("Testreason Actuator")',
     );
   });
 });
