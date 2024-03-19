@@ -12,6 +12,10 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
   private _room: RoomBase | undefined = undefined;
   public readonly deviceCapabilities: DeviceCapability[] = [];
 
+  // If configured > 0, this indicates the minimum time between state writes in ms
+  protected _debounceStateDelay: number = 0;
+  protected _lastWrite: number = 0;
+
   public get customName(): string {
     return this.info.customName;
   }
@@ -197,7 +201,19 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     if (!this.checkIoConnection(true)) {
       return;
     }
+    if (this._debounceStateDelay > 0 && Utils.nowMS() - this._lastWrite < this._debounceStateDelay) {
+      Utils.guardedTimeout(
+        () => {
+          this.log(LogLevel.Trace, `Debounced write for ${pointId} to ${state}`);
+          this.setState(pointId, state, onSuccess, onError);
+        },
+        this._debounceStateDelay,
+        this,
+      );
+      return;
+    }
 
+    this._lastWrite = Utils.nowMS();
     this.ioConn?.setState(pointId, state, (err) => {
       if (err) {
         if (onError) {
