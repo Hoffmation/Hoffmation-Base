@@ -28,6 +28,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   public settings: WledSettings = new WledSettings();
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   public targetAutomaticState: boolean = false;
+  protected override readonly _debounceStateDelay: number = 500;
   private readonly _onID: string;
   private readonly _presetID: string;
   private readonly _brightnessID: string;
@@ -120,9 +121,9 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     );
 
     this.queuedValue = c.on;
-    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on, 'WLED Schalten'));
 
     if (c.preset !== undefined) {
+      // Warning: This also turns the device on
       this.setState(this._presetID, c.preset, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
       });
@@ -132,13 +133,14 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       });
     }
 
+    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on, 'WLED Schalten'));
+
     if (c.timeout !== undefined && c.timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
     }
   }
 
   public setTimeBased(c: LampSetTimeBasedCommand): void {
-    this.log(LogLevel.Debug, `Wled setTimeBased ${c.time}`);
     this.setWled(WledSetLightCommand.byTimeBased(this.settings, c));
   }
 
