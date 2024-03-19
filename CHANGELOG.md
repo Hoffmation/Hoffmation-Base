@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.17 (2024-03-19)
 
 * (theimo1221) Improve IoBrokerDevice set State Error Logging
 * (theimo1221) Improve Lamp/Dimmer/WLed Command Logging
