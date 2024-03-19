@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve IoBrokerDevice set State Error Logging
+
 ## 3.0.0-alpha.16 (2024-03-18)
 
 * (theimo1221) Improve behaviour of Strom-Stoss-Relais to prevent loops.

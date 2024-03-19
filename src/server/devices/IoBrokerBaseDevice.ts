@@ -203,7 +203,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
         if (onError) {
           onError(err);
         } else {
-          console.log(`Error occured while setting state "${pointId}" to "${state}": ${err}`);
+          this.log(LogLevel.Error, `Error occured while setting state "${pointId}" to "${state}": ${err}`);
         }
 
         return;
