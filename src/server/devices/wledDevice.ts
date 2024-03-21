@@ -118,18 +118,19 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
 
     this.queuedValue = c.on;
 
-    if (c.preset !== undefined) {
-      // Warning: This also turns the device on
+    if (!c.on) {
+      this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on, 'WLED ausschalten'));
+    } else if (c.preset !== undefined) {
+      // This also turns the device on
       this.setState(this._presetID, c.preset, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
       });
     } else if (c.brightness > -1) {
+      // This also turns the device on
       this.setState(this._brightnessID, c.brightness, undefined, (err) => {
         ServerLogService.writeLog(LogLevel.Error, `Dimmer Helligkeit schalten ergab Fehler: ${err}`);
       });
     }
-
-    this.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on, 'WLED Schalten'));
 
     if (c.timeout !== undefined && c.timeout > -1 && !dontBlock) {
       this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
