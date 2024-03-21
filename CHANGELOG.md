@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.18 (2024-03-21)
 
 * (theimo1221) Fix WLED turn on/off process
 
