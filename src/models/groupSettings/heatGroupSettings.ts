@@ -5,6 +5,10 @@ import { GroupSettings } from './groupSettings';
 
 export class HeatGroupSettings extends GroupSettings {
   public automaticPoints: TemperatureSettings[] = [];
+  /**
+   * Whether the temperature should be calculated automatically, or the manualTemperature should be used
+   * @type {boolean}
+   */
   public automaticMode: boolean = true;
   public automaticFallBackTemperatur: number = 20;
   /**

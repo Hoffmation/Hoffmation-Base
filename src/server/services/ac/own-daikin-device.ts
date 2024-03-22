@@ -103,9 +103,9 @@ export class OwnDaikinDevice extends AcDevice {
     }
     let targetTemp: number = this._desiredTemperatur;
     if (this.desiredMode == Mode.HOT) {
-      targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp + 1 : 29;
+      targetTemp = this.settings.useOwnTemperature ? targetTemp : 29;
     } else if (this.desiredMode == Mode.COLD) {
-      targetTemp = this.settings.useOwnTemperatureAndAutomatic ? targetTemp - 1 : 16;
+      targetTemp = this.settings.useOwnTemperature ? targetTemp : 16;
     }
     const changeObject: Partial<ControlInfo> = {
       power: this.desiredState,

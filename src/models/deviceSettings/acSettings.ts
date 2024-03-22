@@ -17,7 +17,13 @@ export class AcSettings extends DeviceSettings {
    * Whether we should ignore the room temperature and let the AC decide on its own
    * @type {boolean}
    */
-  public useOwnTemperatureAndAutomatic: boolean = false;
+  public useOwnTemperature: boolean = false;
+  /**
+   * Whether the AC should use automatic mode to decide on its own whether to heat or cool
+   * !!Warning!! This can result in excessive energy consumption, as overshooting the temperature can result in the AC switching to the opposite mode
+   * @type {boolean}
+   */
+  public useAutomatic: boolean = false;
 
   /**
    * Whether we should turn off AC-Cooling when someone is in the room
@@ -38,7 +44,8 @@ export class AcSettings extends DeviceSettings {
     this.maximumMinutes = data.maximumMinutes ?? this.maximumMinutes;
     this.heatingAllowed = data.heatingAllowed ?? this.heatingAllowed;
     this.noCoolingOnMovement = data.noCoolingOnMovement ?? this.noCoolingOnMovement;
-    this.useOwnTemperatureAndAutomatic = data.useOwnTemperatureAndAutomatic ?? this.useOwnTemperatureAndAutomatic;
+    this.useOwnTemperature = data.useOwnTemperature ?? this.useOwnTemperature;
+    this.useAutomatic = data.useAutomatic ?? this.useAutomatic;
     this.manualDisabled = data.manualDisabled ?? this.manualDisabled;
     super.fromPartialObject(data);
   }

@@ -115,7 +115,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public isAvailableForExcessEnergy(): boolean {
-    if (this.settings.useOwnTemperatureAndAutomatic) {
+    if (this.settings.useAutomatic || (this.room?.HeatGroup?.settings.automaticMode && this.settings.heatingAllowed)) {
       return false;
     }
     if (this.blockAutomationHandler.automaticBlockActive) {
@@ -161,10 +161,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return AcMode.Off;
     }
 
-    if (this.settings.useOwnTemperatureAndAutomatic) {
+    if (this.settings.useOwnTemperature) {
       // Device is in automatic mode so ignore energy and room temperature
-
-      if (heatGroup?.settings.automaticMode) {
+      if (this.settings.useAutomatic) {
         return AcMode.Auto;
       }
 
