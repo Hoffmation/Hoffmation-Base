@@ -1,6 +1,7 @@
 import { iExcessEnergyConsumer } from './iExcessEnergyConsumer';
 import { iBaseDevice } from './iBaseDevice';
 
+// TODO: Add missing Comments
 export interface iEnergyManager extends iBaseDevice {
   excessEnergy: number;
 

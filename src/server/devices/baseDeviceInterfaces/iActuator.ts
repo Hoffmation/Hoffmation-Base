@@ -7,6 +7,7 @@ import {
 import { iRoomDevice } from './iRoomDevice';
 import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 
+// TODO: Add missing Comments
 export interface iActuator extends iRoomDevice, iTemporaryDisableAutomatic {
   /**
    * The settings for this Actuator primarily for controlling its automatic actions

@@ -1,6 +1,7 @@
 import { WindowPosition } from '../models';
 import { iRoomDevice } from './iRoomDevice';
 
+// TODO: Add missing Comments
 export interface iHandleSensor extends iRoomDevice {
   position: WindowPosition;
   minutesOpen: number;

@@ -2,6 +2,7 @@ import { iRoomDevice } from './iRoomDevice';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
+// TODO: Add missing Comments
 export interface iTemperatureSensor extends iRoomDevice {
   readonly persistTemperatureSensorInterval: NodeJS.Timeout;
   roomTemperature: number;

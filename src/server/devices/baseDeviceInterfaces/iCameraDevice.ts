@@ -1,6 +1,7 @@
 import { iMotionSensor } from './iMotionSensor';
 import { CameraSettings } from '../../../models';
 
+// TODO: Add missing Comments
 export interface iCameraDevice extends iMotionSensor {
   settings: CameraSettings;
   readonly lastImage: string;

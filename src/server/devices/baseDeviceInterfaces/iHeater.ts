@@ -1,6 +1,7 @@
 import { HeaterSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 
+// TODO: Add missing Comments
 export interface iHeater extends iRoomDevice {
   settings: HeaterSettings;
   desiredTemperature: number;

@@ -3,6 +3,7 @@ import { AcMode } from '../../services';
 import { iBaseDevice } from './iBaseDevice';
 
 // TODO: Migrate to new Command-Based System
+// TODO: Add missing Comments
 export interface iAcDevice extends iBaseDevice {
   settings: AcSettings;
   readonly on: boolean;

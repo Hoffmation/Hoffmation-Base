@@ -1,6 +1,7 @@
 import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models';
 import { iActuator } from './iActuator';
 
+// TODO: Add missing Comments
 export interface iLamp extends iActuator {
   /**
    * The state value of the device

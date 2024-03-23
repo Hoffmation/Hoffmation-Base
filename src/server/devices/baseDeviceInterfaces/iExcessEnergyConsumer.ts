@@ -1,6 +1,7 @@
 import { ExcessEnergyConsumerSettings, LogLevel } from '../../../models';
 import { iBaseDevice } from './iBaseDevice';
 
+// TODO: Add missing Comments
 export interface iExcessEnergyConsumer extends iBaseDevice {
   readonly energySettings: ExcessEnergyConsumerSettings;
 

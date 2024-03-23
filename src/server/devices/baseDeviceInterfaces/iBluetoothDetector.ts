@@ -1,6 +1,7 @@
 import { iRoomDevice } from './iRoomDevice';
 import { ProximityCallback, TrilaterationBasePoint } from '../espresense';
 
+// TODO: Add missing Comments
 export interface iBluetoothDetector extends iRoomDevice {
   position: TrilaterationBasePoint;
 

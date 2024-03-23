@@ -1,6 +1,7 @@
 import { Button, ButtonPosition, ButtonPressType } from '../button';
 import { iRoomDevice } from './iRoomDevice';
 
+// TODO: Add missing Comments
 export interface iButtonSwitch extends iRoomDevice {
   // Primarily in 4-6 Button switches
   buttonTopLeft: Button | undefined;

@@ -1,6 +1,7 @@
 import { MotionSensorSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 
+// TODO: Add missing Comments
 export interface iMotionSensor extends iRoomDevice {
   settings: MotionSensorSettings;
   readonly movementDetected: boolean;

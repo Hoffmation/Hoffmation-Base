@@ -1,6 +1,7 @@
 import { iLamp } from './iLamp';
 import { DimmerSetLightCommand, DimmerSettings, LampToggleLightCommand } from '../../../models';
 
+// TODO: Add missing Comments
 export interface iDimmableLamp extends iLamp {
   settings: DimmerSettings;
 
