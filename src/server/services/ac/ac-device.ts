@@ -10,7 +10,7 @@ import {
 } from '../../devices';
 import {
   AcSettings,
-  AutomaticBlockDisableCommand,
+  BlockAutomaticCommand,
   CommandSource,
   ExcessEnergyConsumerSettings,
   LogLevel,
@@ -260,7 +260,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   // TODO: Migrate to new command system
   public setState(mode: AcMode, desiredTemp?: number, forceTime: number = 60 * 60 * 1000): void {
-    this.blockAutomationHandler.disableAutomatic(new AutomaticBlockDisableCommand(CommandSource.Unknown, forceTime));
+    this.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Unknown, forceTime));
     this._mode = mode;
     if (mode == AcMode.Off) {
       this.turnOff();

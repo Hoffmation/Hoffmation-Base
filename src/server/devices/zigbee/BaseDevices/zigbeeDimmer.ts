@@ -2,7 +2,7 @@ import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
-  AutomaticBlockDisableCommand,
+  BlockAutomaticCommand,
   DimmerSetLightCommand,
   DimmerSettings,
   LampSetTimeBasedCommand,
@@ -131,7 +131,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
       c.brightness = 10;
     }
     if (c.timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(new AutomaticBlockDisableCommand(c, c.timeout));
+      this.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(c, c.timeout));
     }
     if (SettingsService.settings.ioBroker?.useZigbee2mqtt && !c.on) {
       // With zigbee2mqtt to turn on only setting brighness>0 is needed, so we need state only for turning off

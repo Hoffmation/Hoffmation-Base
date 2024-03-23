@@ -1,6 +1,6 @@
 import { DaikinAC, DaikinManager } from 'daikin-controller';
 import { ServerLogService } from '../log-service';
-import { AutomaticBlockDisableCommand, CommandSource, LogLevel } from '../../../models';
+import { BlockAutomaticCommand, CommandSource, LogLevel } from '../../../models';
 import { OwnDaikinDevice } from './own-daikin-device';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import TelegramBot from 'node-telegram-bot-api';
@@ -104,9 +104,7 @@ export class DaikinService {
         dev.turnOff();
       }
       if (force) {
-        dev.blockAutomationHandler.disableAutomatic(
-          new AutomaticBlockDisableCommand(CommandSource.Unknown, 180 * 60 * 1000),
-        );
+        dev.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Unknown, 180 * 60 * 1000));
       }
     }
   }

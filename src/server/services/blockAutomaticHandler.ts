@@ -1,7 +1,7 @@
 import {
-  AutomaticBlockDisableCommand,
-  AutomaticBlockDisableUntilCommand,
-  AutomaticBlockLiftBlockCommand,
+  BlockAutomaticCommand,
+  BlockAutomaticLiftBlockCommand,
+  BlockAutomaticUntilCommand,
   CollisionSolving,
   RestoreTargetAutomaticValueCommand,
 } from '../../models';
@@ -29,13 +29,13 @@ export class BlockAutomaticHandler {
     return this._automaticBlockedUntil > new Date();
   }
 
-  public disableAutomatic(c: AutomaticBlockDisableCommand): void {
+  public disableAutomatic(c: BlockAutomaticCommand): void {
     this.disableAutomaticUntil(
-      new AutomaticBlockDisableUntilCommand(c, new Date(Utils.nowMS() + c.durationMS), '', c.onCollideAction),
+      new BlockAutomaticUntilCommand(c, new Date(Utils.nowMS() + c.durationMS), '', c.onCollideAction),
     );
   }
 
-  public disableAutomaticUntil(c: AutomaticBlockDisableUntilCommand): void {
+  public disableAutomaticUntil(c: BlockAutomaticUntilCommand): void {
     const now = new Date();
     if (
       this._automaticBlockedUntil > now &&
@@ -48,7 +48,7 @@ export class BlockAutomaticHandler {
     this.updateRestoreTimeout(new RestoreTargetAutomaticValueCommand(c, 'Restore to automatic state after block.'));
   }
 
-  public liftAutomaticBlock(c: AutomaticBlockLiftBlockCommand): void {
+  public liftAutomaticBlock(c: BlockAutomaticLiftBlockCommand): void {
     this._restoreAutomatic(new RestoreTargetAutomaticValueCommand(c));
   }
 

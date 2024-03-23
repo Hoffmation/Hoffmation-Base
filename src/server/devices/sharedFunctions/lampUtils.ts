@@ -3,8 +3,8 @@ import { LogDebugType, TimeCallbackService, Utils } from '../../services';
 import {
   ActuatorSetStateCommand,
   ActuatorWriteStateToDeviceCommand,
-  AutomaticBlockDisableCommand,
-  AutomaticBlockLiftBlockCommand,
+  BlockAutomaticCommand,
+  BlockAutomaticLiftBlockCommand,
   CollisionSolving,
   CommandSource,
   CommandType,
@@ -67,7 +67,7 @@ export class LampUtils {
     ) {
       dontBlock = true;
       device.blockAutomationHandler.liftAutomaticBlock(
-        new AutomaticBlockLiftBlockCommand(
+        new BlockAutomaticLiftBlockCommand(
           command,
           'Reset Automatic Block as we are turning off manually after a force on',
         ),
@@ -146,7 +146,7 @@ export class LampUtils {
     }
     if (c.timeout > -1 && !dontBlock) {
       device.blockAutomationHandler.disableAutomatic(
-        new AutomaticBlockDisableCommand(c, c.timeout, '', CollisionSolving.overrideIfGreater),
+        new BlockAutomaticCommand(c, c.timeout, '', CollisionSolving.overrideIfGreater),
       );
     }
   }

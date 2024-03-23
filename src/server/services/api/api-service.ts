@@ -16,8 +16,8 @@ import {
 } from '../../devices';
 import {
   ActuatorSetStateCommand,
-  AutomaticBlockDisableCommand,
-  AutomaticBlockLiftBlockCommand,
+  BlockAutomaticCommand,
+  BlockAutomaticLiftBlockCommand,
   CollisionSolving,
   CommandSource,
   DeviceSettings,
@@ -33,11 +33,11 @@ import { RoomService } from '../room-service';
 import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, AcMode, DaikinService } from '../ac';
 import { DeviceCapability } from '../../devices/DeviceCapability';
-import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
 import { GroupSettings } from '../../../models/groupSettings/groupSettings';
+import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 
 export class API {
   /**
@@ -158,12 +158,24 @@ export class API {
 
   /**
    * Changes the status of a given Lamp
+   * @deprecated Use "API.lampSetLight" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The device Id of the lamp
    * @param {boolean} state The desired new state
    * @param timeout Desired time after which this should be reverted to normal state
    * @returns {Error | null} In case it failed the Error containing the reason
    */
   public static setLamp(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
+    return this.lampSetLight(deviceId, new LampSetLightCommand(CommandSource.API, state, '', timeout));
+  }
+
+  /**
+   * Changes the status of a given Lamp
+   * @param {string} deviceId The device Id of the lamp
+   * @param {LampSetLightCommand} c The command(stack) to perform on the lamp
+   * @returns {Error | null} In case it failed the Error containing the reason.
+   */
+  public static lampSetLight(deviceId: string, c: LampSetLightCommand): Error | null {
     const d = this.getDevice(deviceId) as iLamp | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -171,19 +183,31 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.lamp)) {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
-    d.log(LogLevel.Info, `API Call to set Lamp to ${state} for ${timeout}ms`);
-    d.setLight(new LampSetLightCommand(CommandSource.API, state, '', timeout));
+    d.log(LogLevel.Info, `Received LampSetLightCommand API call.`);
+    d.setLight(c);
     return null;
   }
 
   /**
    * Changes the status of a given actuator
+   * @deprecated Use "API.actuatorSetState" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The device Id of the actuator
    * @param {boolean} state The desired new state
    * @param timeout Desired time after which this should be reverted to automatic state
    * @returns {Error | null} In case it failed the Error containing the reason
    */
   public static setActuator(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
+    return this.actuatorSetState(deviceId, new ActuatorSetStateCommand(CommandSource.API, state, '', timeout));
+  }
+
+  /**
+   * Changes the status of a given actuator
+   * @param {string} deviceId The device Id of the actuator
+   * @param {ActuatorSetStateCommand} c The command(stack) to perform on the actuator
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static actuatorSetState(deviceId: string, c: ActuatorSetStateCommand): Error | null {
     const d = this.getDevice(deviceId) as iActuator | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -191,13 +215,15 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.actuator)) {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
-    d.log(LogLevel.Info, `API Call to set Actuator to ${state} for ${timeout}ms`);
-    d.setActuator(new ActuatorSetStateCommand(CommandSource.API, state, '', timeout));
+    d.log(LogLevel.Info, `Received ActuatorSetStateCommand API call.`);
+    d.setActuator(c);
     return null;
   }
 
   /**
-   * Changes the status of a given actuator
+   * Changes the status of the given dimmer
+   * @deprecated Use "API.dimmerSetLight" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The device Id of the actuator
    * @param {boolean} state The desired new state
    * @param timeout A chosen Timeout after which the light should be reset
@@ -212,6 +238,19 @@ export class API {
     brightness?: number,
     transitionTime?: number,
   ): Error | null {
+    return this.dimmerSetLight(
+      deviceId,
+      new DimmerSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime),
+    );
+  }
+
+  /**
+   * Changes the status of the given dimmer
+   * @param {string} deviceId The device Id of the dimmable device.
+   * @param {DimmerSetLightCommand} command The command(stack) to perform on the dimmer
+   * @returns {Error | null} In case it failed the Error containing the reason.
+   */
+  public static dimmerSetLight(deviceId: string, command: DimmerSetLightCommand): Error | null {
     const d = this.getDevice(deviceId) as iDimmableLamp | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -219,13 +258,15 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.dimmablelamp)) {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
-    d.log(LogLevel.Info, `API Call to set Dimmer to ${state} with brightness ${brightness} for ${timeout}ms`);
-    d.setLight(new DimmerSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime));
+    d.log(LogLevel.Info, `Received dimmerSetLight API call.`);
+    d.setLight(command);
     return null;
   }
 
   /**
-   * Changes the status of a given actuator
+   * Changes the status of a given led-device
+   * @deprecated Use "API.ledSetLight" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The device Id of the actuator
    * @param {boolean} state The desired new state
    * @param timeout A chosen Timeout after which the light should be reset
@@ -244,31 +285,51 @@ export class API {
     color?: string,
     colorTemp?: number,
   ): Error | null {
+    return this.ledSetLight(
+      deviceId,
+      new LedSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime, color, colorTemp),
+    );
+  }
+
+  /**
+   * Changes the status of a given led-device
+   * @param {string} deviceId The device Id of the LED-Device
+   * @param {LedSetLightCommand} command The command(stack) to perform on the led-device
+   */
+  public static ledSetLight(deviceId: string, command: LedSetLightCommand): Error | null {
     const d = this.getDevice(deviceId) as iLedRgbCct | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
     }
     if (!d.deviceCapabilities.includes(DeviceCapability.ledLamp)) {
-      return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
+      return new Error(`Device with ID ${deviceId} is no LED`);
     }
-    d.log(
-      LogLevel.Info,
-      `API Call to set LED to ${state} with brightness ${brightness} and color ${color} for ${timeout}ms`,
-    );
-    d.setLight(
-      new LedSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime, color, colorTemp),
-    );
+    d.log(LogLevel.Info, `Received ledSetLight API call.`);
+    d.setLight(command);
     return null;
   }
 
   /**
    * Changes the position of a given shutter
    * if needed this updates the window position as well
+   * @deprecated Use "API.shutterSetLevel" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The device Id of the shutter
    * @param {number} level The desired new level (0 being open, 100 being closed)
    * @returns {Error | null} Error if there is no shutter with the given id
    */
   public static setShutter(deviceId: string, level: number): Error | null {
+    return this.shutterSetLevel(deviceId, new ShutterSetLevelCommand(CommandSource.API, level));
+  }
+
+  /**
+   * Changes the position of a given shutter
+   * if needed this updates the window position as well
+   * @param {string} deviceId The device Id of the shutter
+   * @param {ShutterSetLevelCommand} command The command(stack) to perform on the shutter
+   * @returns {Error | null} Error if there is no shutter with the given id
+   */
+  public static shutterSetLevel(deviceId: string, command: ShutterSetLevelCommand): Error | null {
     const d = this.getDevice(deviceId) as iShutter | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -278,11 +339,11 @@ export class API {
     }
     if (d.window) {
       // otherwise it will be overridden shortly after
-      d.window.setDesiredPosition(new WindowSetDesiredPositionCommand(CommandSource.API, level));
+      d.window.setDesiredPosition(new WindowSetDesiredPositionCommand(command, command.level));
     } else {
-      d.setLevel(new ShutterSetLevelCommand(CommandSource.API, level));
+      d.setLevel(command);
     }
-    d.log(LogLevel.Info, `API Call to set Shutter to ${level}`);
+    d.log(LogLevel.Info, `Received shutterSetLevel API call.`);
     return null;
   }
 
@@ -419,10 +480,25 @@ export class API {
 
   /**
    * Lifts a previously started Block of automatic
+   * @deprecated Use "API.blockAutomaticLiftAutomaticBlock" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The target device
    * @returns {Error | null} In case it failed the Error containing the reason
    */
   public static liftAutomaticBlock(deviceId: string): Error | null {
+    return this.blockAutomaticLiftAutomaticBlock(deviceId, new BlockAutomaticLiftBlockCommand(CommandSource.API));
+  }
+
+  /**
+   * Lifts a previously started Block of automatic
+   * @param {string} deviceId The target device
+   * @param {BlockAutomaticLiftBlockCommand} command The command to lift the automatic block
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static blockAutomaticLiftAutomaticBlock(
+    deviceId: string,
+    command: BlockAutomaticLiftBlockCommand,
+  ): Error | null {
     const d = this.getDevice(deviceId) as iTemporaryDisableAutomatic | undefined;
     if (d === undefined) {
       return new Error(`Device with ID ${deviceId} not found`);
@@ -430,42 +506,41 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
       return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
-    d.log(LogLevel.Info, `API Call to lift automatic block`);
-    d.blockAutomationHandler.liftAutomaticBlock(new AutomaticBlockLiftBlockCommand(CommandSource.API));
+    d.log(LogLevel.Info, `Received API Call to lift automatic block.`);
+    d.blockAutomationHandler.liftAutomaticBlock(command);
     return null;
   }
 
   /**
    * Blocks the automatic of the given device for provided Duration
+   * @deprecated Use "API.blockAutomaticDisable" instead
+   * TODO: Remove deprecated API method
    * @param {string} deviceId The target device
    * @param {number} duration The duration in ms for which the device should remain in current state
    * @param {CollisionSolving} onCollision The desired Collision Solving strategy, in case the automatic being blocked already
    * @returns {Error | null} In case it failed the Error containing the reason
    */
   public static blockAutomatic(deviceId: string, duration: number, onCollision?: CollisionSolving): Error | null {
+    this.blockAutomaticSetBlock(deviceId, new BlockAutomaticCommand(CommandSource.API, duration, '', onCollision));
+    return null;
+  }
+
+  /**
+   * Blocks the automatic of the given device for provided Duration
+   * @param {string} deviceId The target device
+   * @param {BlockAutomaticCommand} command The command to block the automatic
+   * @returns {Error | null} In case it failed the Error containing the reason
+   */
+  public static blockAutomaticSetBlock(deviceId: string, command: BlockAutomaticCommand): Error | null {
     const d = this.getDevice(deviceId) as iTemporaryDisableAutomatic | undefined;
     if (d === undefined) {
-      return this.respondWithError(
-        `blockAutomatic(${deviceId}, ${duration}, ${onCollision})`,
-        `Device with ID ${deviceId} not found`,
-      );
+      return new Error(`Device with ID ${deviceId} not found`);
     }
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
-      return this.respondWithError(
-        `blockAutomatic(${deviceId}, ${duration}, ${onCollision})`,
-        `Device with ID ${deviceId} is not capable of blocking automatic`,
-      );
+      return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
-    if (duration < 0) {
-      return this.respondWithError(
-        `blockAutomatic(${deviceId}, ${duration}, ${onCollision})`,
-        `Duration must be greater than 0`,
-      );
-    }
-    d.log(LogLevel.Info, `API Call to block automatic for ${duration}ms with ${onCollision} on collision`);
-    d.blockAutomationHandler.disableAutomatic(
-      new AutomaticBlockDisableCommand(CommandSource.API, duration, '', onCollision),
-    );
+    d.log(LogLevel.Info, `Received API Call to block automatic.`);
+    d.blockAutomationHandler.disableAutomatic(command);
     return null;
   }
 
@@ -484,10 +559,5 @@ export class API {
     }
     d.log(LogLevel.Info, `API Call to press button ${position} with ${pressType}`);
     return d.pressButton(position, pressType);
-  }
-
-  private static respondWithError(contextInfo: string, message: string): Error {
-    ServerLogService.writeLog(LogLevel.Warn, `API Call to ${contextInfo} failed: ${message}`);
-    return new Error(message);
   }
 }

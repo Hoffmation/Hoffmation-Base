@@ -2,8 +2,8 @@ import { CommandType } from './commandType';
 import { CommandSource } from './commandSource';
 import { BaseCommand } from './baseCommand';
 
-export class AutomaticBlockLiftBlockCommand extends BaseCommand {
-  public _commandType: CommandType = CommandType.AutomaticBlockLiftBlockCommand;
+export class BlockAutomaticLiftBlockCommand extends BaseCommand {
+  public _commandType: CommandType = CommandType.BlockAutomaticLiftBlockCommand;
 
   /**
    * Command to lift a block --> Restore the automatic actions.

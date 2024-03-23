@@ -11,7 +11,7 @@ import {
 } from '../baseDeviceInterfaces';
 import { AcDevice, API, Utils } from '../../services';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
-import { AutomaticBlockDisableCommand, CommandSource, LogLevel, RoomBase, TemperatureSettings } from '../../../models';
+import { BlockAutomaticCommand, CommandSource, LogLevel, RoomBase, TemperatureSettings } from '../../../models';
 
 export class HeatGroup extends BaseGroup {
   public settings: HeatGroupSettings = new HeatGroupSettings();
@@ -172,7 +172,7 @@ export class HeatGroup extends BaseGroup {
       }
       dev.turnOff();
       dev.blockAutomationHandler.disableAutomatic(
-        new AutomaticBlockDisableCommand(force ? CommandSource.Force : CommandSource.Unknown, 60 * 60 * 1000),
+        new BlockAutomaticCommand(force ? CommandSource.Force : CommandSource.Unknown, 60 * 60 * 1000),
       );
     }
   }

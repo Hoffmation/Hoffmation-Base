@@ -3,19 +3,19 @@ import { CommandSource } from './commandSource';
 import { CollisionSolving } from '../collisionSolving';
 import { BaseCommand } from './baseCommand';
 
-export class AutomaticBlockDisableCommand extends BaseCommand {
-  public _commandType: CommandType = CommandType.AutomaticBlockDisableCommand;
+export class BlockAutomaticUntilCommand extends BaseCommand {
+  public _commandType: CommandType = CommandType.BlockAutomaticUntilCommand;
 
   /**
-   * Command to disable automatic actions for a specific duration.
+   * Command to disable automatic actions until a specific date.
    * @param {CommandSource} source The source of the command.
-   * @param {number} durationMS The duration in milliseconds for the automatic actions to be disabled.
+   * @param {Date} targetDate The date until the automatic actions will be disabled.
    * @param reason You can provide an individual reason here for debugging purpose.
    * @param {CollisionSolving} onCollideAction The action to take if a block is already active. --> Default: overrideIfGreater
    */
   public constructor(
     source: CommandSource | BaseCommand,
-    public durationMS: number,
+    public targetDate: Date,
     reason: string = '',
     public onCollideAction: CollisionSolving = CollisionSolving.overrideIfGreater,
   ) {
