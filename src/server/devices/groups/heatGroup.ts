@@ -11,7 +11,7 @@ import {
 } from '../baseDeviceInterfaces';
 import { AcDevice, API, Utils } from '../../services';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
-import { LogLevel, RoomBase, TemperatureSettings } from '../../../models';
+import { AutomaticBlockDisableCommand, CommandSource, LogLevel, RoomBase, TemperatureSettings } from '../../../models';
 
 export class HeatGroup extends BaseGroup {
   public settings: HeatGroupSettings = new HeatGroupSettings();
@@ -158,6 +158,7 @@ export class HeatGroup extends BaseGroup {
 
   /**
    * Sets all ACs to new desired Value
+   * TODO: Migrate to new Command System
    * @param {boolean} newDesiredState
    * @param {boolean} force Whether this was a manual trigger, thus blocking automatic changes for 1 hour
    */
@@ -170,9 +171,9 @@ export class HeatGroup extends BaseGroup {
         continue;
       }
       dev.turnOff();
-      if (force) {
-        dev.deactivateAutomaticChange(60 * 60 * 1000);
-      }
+      dev.blockAutomationHandler.disableAutomatic(
+        new AutomaticBlockDisableCommand(force ? CommandSource.Force : CommandSource.Unknown, 60 * 60 * 1000),
+      );
     }
   }
 

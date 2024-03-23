@@ -16,6 +16,8 @@ import {
 } from '../../devices';
 import {
   ActuatorSetStateCommand,
+  AutomaticBlockDisableCommand,
+  AutomaticBlockLiftBlockCommand,
   CollisionSolving,
   CommandSource,
   DeviceSettings,
@@ -418,7 +420,7 @@ export class API {
       return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
     d.log(LogLevel.Info, `API Call to lift automatic block`);
-    d.blockAutomationHandler.liftAutomaticBlock();
+    d.blockAutomationHandler.liftAutomaticBlock(new AutomaticBlockLiftBlockCommand(CommandSource.API));
     return null;
   }
 
@@ -432,13 +434,27 @@ export class API {
   public static blockAutomatic(deviceId: string, duration: number, onCollision?: CollisionSolving): Error | null {
     const d = this.getDevice(deviceId) as iTemporaryDisableAutomatic | undefined;
     if (d === undefined) {
-      return new Error(`Device with ID ${deviceId} not found`);
+      return this.respondWithError(
+        `blockAutomatic(${deviceId}, ${duration}, ${onCollision})`,
+        `Device with ID ${deviceId} not found`,
+      );
     }
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
-      return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
+      return this.respondWithError(
+        `blockAutomatic(${deviceId}, ${duration}, ${onCollision})`,
+        `Device with ID ${deviceId} is not capable of blocking automatic`,
+      );
+    }
+    if (duration < 0) {
+      return this.respondWithError(
+        `blockAutomatic(${deviceId}, ${duration}, ${onCollision})`,
+        `Duration must be greater than 0`,
+      );
     }
     d.log(LogLevel.Info, `API Call to block automatic for ${duration}ms with ${onCollision} on collision`);
-    d.blockAutomationHandler.disableAutomatic(duration, onCollision);
+    d.blockAutomationHandler.disableAutomatic(
+      new AutomaticBlockDisableCommand(CommandSource.API, duration, '', onCollision),
+    );
     return null;
   }
 
@@ -456,5 +472,10 @@ export class API {
     }
     d.log(LogLevel.Info, `API Call to press button ${position} with ${pressType}`);
     return d.pressButton(position, pressType);
+  }
+
+  private static respondWithError(contextInfo: string, message: string): Error {
+    ServerLogService.writeLog(LogLevel.Warn, `API Call to ${contextInfo} failed: ${message}`);
+    return new Error(message);
   }
 }

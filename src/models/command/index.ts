@@ -1,3 +1,6 @@
+export { AutomaticBlockDisableCommand } from './automaticBlockDisableCommand';
+export { AutomaticBlockDisableUntilCommand } from './automaticBlockDisableUntilCommand';
+export { AutomaticBlockLiftBlockCommand } from './automaticBlockLiftBlockCommand';
 export { RestoreTargetAutomaticValueCommand } from './restoreTargetAutomaticValueCommand';
 export { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 export { ActuatorToggleCommand } from './actuatorToggleCommand';

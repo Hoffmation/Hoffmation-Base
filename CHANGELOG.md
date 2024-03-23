@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Migrate "blockAutomaticHandler" to new command-structure
+
 ## 3.0.0-alpha.19 (2024-03-22)
 
 * (theimo1221) Allow AC "useOwnTemperature" without using Mode.Auto by splitting the settings.

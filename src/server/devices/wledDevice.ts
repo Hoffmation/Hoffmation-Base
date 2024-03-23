@@ -5,6 +5,7 @@ import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
+  AutomaticBlockDisableCommand,
   CollisionSolving,
   DimmerSetLightCommand,
   LampSetTimeBasedCommand,
@@ -133,7 +134,9 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     }
 
     if (c.timeout !== undefined && c.timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(c.timeout, CollisionSolving.overrideIfGreater);
+      this.blockAutomationHandler.disableAutomatic(
+        new AutomaticBlockDisableCommand(c, c.timeout, '', CollisionSolving.overrideIfGreater),
+      );
     }
   }
 

@@ -1,4 +1,7 @@
 export enum CommandType {
+  AutomaticBlockLiftBlockCommand = 'AutomaticBlockLiftBlockCommand',
+  AutomaticBlockDisableCommand = 'AutomaticBlockDisableCommand',
+  AutomaticBlockDisableUntilCommand = 'AutomaticBlockDisableUntilCommand',
   ActuatorToggleCommand = 'ActuatorToggleCommand',
   ActuatorSetStateCommand = 'ActuatorSetStateCommand',
   ActuatorRestoreTargetAutomaticValueCommand = 'ActuatorRestoreTargetAutomaticValueCommand',

@@ -8,7 +8,14 @@ import {
   iTemporaryDisableAutomatic,
   UNDEFINED_TEMP_VALUE,
 } from '../../devices';
-import { AcSettings, ExcessEnergyConsumerSettings, LogLevel, RoomBase } from '../../../models';
+import {
+  AcSettings,
+  AutomaticBlockDisableCommand,
+  CommandSource,
+  ExcessEnergyConsumerSettings,
+  LogLevel,
+  RoomBase,
+} from '../../../models';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { AcMode } from './ac-mode';
@@ -23,7 +30,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public currentConsumption: number = -1;
   public settings: AcSettings = new AcSettings();
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac, DeviceCapability.blockAutomatic];
-  public readonly blockAutomationHandler;
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
   protected _activatedByExcessEnergy: boolean = false;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
 
@@ -221,14 +228,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return desiredMode;
   }
 
-  /**
-   * Disable automatic Turn-On and Turn-Off for given amount of ms.
-   * @param {number} timeout
-   */
-  public deactivateAutomaticChange(timeout: number = 60 * 60 * 1000): void {
-    this.blockAutomationHandler.disableAutomatic(timeout);
-  }
-
   public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean, temp?: number): void;
 
   public abstract turnOn(): void;
@@ -259,8 +258,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.turnOff();
   }
 
+  // TODO: Migrate to new command system
   public setState(mode: AcMode, desiredTemp?: number, forceTime: number = 60 * 60 * 1000): void {
-    this.blockAutomationHandler.disableAutomatic(forceTime);
+    this.blockAutomationHandler.disableAutomatic(new AutomaticBlockDisableCommand(CommandSource.Unknown, forceTime));
     this._mode = mode;
     if (mode == AcMode.Off) {
       this.turnOff();
