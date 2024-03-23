@@ -24,7 +24,7 @@ export abstract class ObjectSettings {
       let obj: Partial<ObjectSettings> | null = null;
       try {
         obj = JSON.parse(data);
-      } catch (e: any) {
+      } catch (e: unknown) {
         holder.log(LogLevel.Error, `Failed to parse Device Setting JSON (${e})`);
       }
       if (!obj) {

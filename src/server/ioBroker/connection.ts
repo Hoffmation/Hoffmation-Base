@@ -96,9 +96,9 @@ export class IOBrokerConnection implements iDisposable {
 
     this._connCallbacks = connCallbacks;
 
-    let connLink = connOptions.connLink;
+    let connLink: string | undefined = connOptions.connLink;
     if (!connOptions.connLink && this._isExecutedInBrowser) {
-      connLink = window.localStorage.getItem('connLink');
+      connLink = window.localStorage.getItem('connLink') ?? undefined;
     }
 
     // Connection data from "/_socket/info.js"
@@ -110,7 +110,7 @@ export class IOBrokerConnection implements iDisposable {
 
     connOptions.socketSession = connOptions.socketSession || 'nokey';
 
-    let url;
+    let url: string;
     if (connLink) {
       url = connLink;
       if (typeof connLink !== 'undefined') {
@@ -304,7 +304,13 @@ export class IOBrokerConnection implements iDisposable {
         // @ts-ignore
         if (state.val && typeof state.val === 'object' && (state.val as unknown).instance) {
           // vis only:
-          const visCommand: SocketIOVisCommand = new SocketIOVisCommand(state.val as unknown);
+          const visCommand: SocketIOVisCommand = new SocketIOVisCommand(
+            state.val as {
+              command: string;
+              data: string;
+              instance: string;
+            },
+          );
           if (this._connCallbacks.onCommand(visCommand.instance, visCommand.command, visCommand.data)) {
             // clear state
             this.setState(id, { val: '', ack: true });
@@ -347,7 +353,8 @@ export class IOBrokerConnection implements iDisposable {
         iobrokerConnectionLogLevel.Error,
         `Recieved socket error: ${err.message}\nStack:${err.stack}`,
       );
-      const innerErr: Error = (reason as any).description as Error;
+      // @ts-ignore
+      const innerErr: Error = (reason as unknown).description as Error;
       if (innerErr) {
         iobrokerConnectionLogging.writeLog(
           iobrokerConnectionLogLevel.Error,
@@ -938,7 +945,8 @@ export class IOBrokerConnection implements iDisposable {
             (
               err: Error,
               res: {
-                rows: ioBroker.GetObjectViewItem<any>[];
+                // @ts-ignore
+                rows: ioBroker.GetObjectViewItem<unknown>[];
               },
             ) => {
               if (err) {
@@ -947,6 +955,7 @@ export class IOBrokerConnection implements iDisposable {
               }
               for (const row of res.rows) {
                 if (row.value !== null) {
+                  // @ts-ignore
                   data[row.id] = row.value;
                 }
               }
@@ -968,7 +977,8 @@ export class IOBrokerConnection implements iDisposable {
                 (
                   err: Error,
                   res: {
-                    rows: ioBroker.GetObjectViewItem<any>[];
+                    // @ts-ignore
+                    rows: ioBroker.GetObjectViewItem<unknown>[];
                   },
                 ) => {
                   if (err) {
@@ -978,6 +988,7 @@ export class IOBrokerConnection implements iDisposable {
 
                   for (const row of res.rows) {
                     if (row.value !== null) {
+                      // @ts-ignore
                       data[row.id] = row.value;
                     }
                   }
@@ -991,7 +1002,8 @@ export class IOBrokerConnection implements iDisposable {
                     (
                       err: Error,
                       res: {
-                        rows: ioBroker.GetObjectViewItem<any>[];
+                        // @ts-ignore
+                        rows: ioBroker.GetObjectViewItem<unknown>[];
                       },
                     ) => {
                       if (err) {
@@ -1001,6 +1013,7 @@ export class IOBrokerConnection implements iDisposable {
 
                       for (const row of res.rows) {
                         if (row.value !== null) {
+                          // @ts-ignore
                           data[row.id] = row.value;
                         }
                       }
@@ -1038,7 +1051,7 @@ export class IOBrokerConnection implements iDisposable {
     useCache: boolean,
     callback: (err?: Error | null, children?: string[]) => void,
     // @ts-ignore
-    ...args: unknown[]
+    ..._args: unknown[]
   ): void {
     if (this._checkConnection('getChildren', arguments) != ConnectionState.connected) return;
 
@@ -1071,7 +1084,8 @@ export class IOBrokerConnection implements iDisposable {
       (
         err: Error,
         res: {
-          rows: ioBroker.GetObjectViewItem<any>[];
+          // @ts-ignore
+          rows: ioBroker.GetObjectViewItem<unknown>[];
         },
       ) => {
         if (err) {
@@ -1081,6 +1095,7 @@ export class IOBrokerConnection implements iDisposable {
 
         for (const row of res.rows) {
           if (row.value !== null) {
+            // @ts-ignore
             data[row.id] = row.value;
           }
         }
@@ -1093,7 +1108,8 @@ export class IOBrokerConnection implements iDisposable {
           (
             err: Error,
             res: {
-              rows: ioBroker.GetObjectViewItem<any>[];
+              // @ts-ignore
+              rows: ioBroker.GetObjectViewItem<unknown>[];
             },
           ) => {
             if (err) {
@@ -1103,6 +1119,7 @@ export class IOBrokerConnection implements iDisposable {
 
             for (const row of res.rows) {
               if (row.value !== null) {
+                // @ts-ignore
                 data[row.id] = row.value;
               }
             }
@@ -1116,7 +1133,8 @@ export class IOBrokerConnection implements iDisposable {
               (
                 err: Error,
                 res: {
-                  rows: ioBroker.GetObjectViewItem<any>[];
+                  // @ts-ignore
+                  rows: ioBroker.GetObjectViewItem<unknown>[];
                 },
               ) => {
                 if (err) {
@@ -1126,6 +1144,7 @@ export class IOBrokerConnection implements iDisposable {
 
                 for (const row of res.rows) {
                   if (row.value !== null) {
+                    // @ts-ignore
                     data[row.id] = row.value;
                   }
                 }
@@ -1300,7 +1319,7 @@ export class IOBrokerConnection implements iDisposable {
 
   public getConfig(
     useCache: boolean,
-    callback: (error: Error | null, conf?: Record<string, any>) => void,
+    callback: (error: Error | null, conf?: Record<string, unknown>) => void,
     // @ts-ignore
     ..._args: unknown[]
   ): void {
@@ -1342,7 +1361,7 @@ export class IOBrokerConnection implements iDisposable {
   public sendCommand(
     instance: string,
     command: string,
-    data: string | number | boolean | unknown[] | Record<string, any> | null,
+    data: string | number | boolean | unknown[] | Record<string, unknown> | null,
     ack: boolean = true,
   ): void {
     this.setState(this.namespace + '.control.instance', { val: instance || 'notdefined', ack: true });
@@ -1428,7 +1447,7 @@ export class IOBrokerConnection implements iDisposable {
     },
     callback: ioBroker.GetHistoryCallback,
     // @ts-ignore
-    ...args: unknown[]
+    ..._args: unknown[]
   ): void {
     if (this._checkConnection('getHistory', arguments) != ConnectionState.connected) return;
 
@@ -1443,7 +1462,7 @@ export class IOBrokerConnection implements iDisposable {
         timeout = undefined;
         callback(new Error('timeout'));
       },
-      (options as any).timeout,
+      options.timeout,
       this,
     );
     this._socket.emit('getHistory', id, options, (err: Error, result: ioBroker.GetHistoryResult) => {

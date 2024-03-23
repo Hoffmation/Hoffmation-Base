@@ -3,7 +3,7 @@ export class SocketIOVisCommand {
   public data: string;
   public instance: string;
 
-  constructor(pObject: any) {
+  constructor(pObject: { command: string; data: string; instance: string }) {
     this.command = pObject.command;
     this.data = pObject.data;
     this.instance = pObject.instance;

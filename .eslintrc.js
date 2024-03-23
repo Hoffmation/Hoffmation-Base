@@ -25,6 +25,18 @@ module.exports = {
       },
     ],
     'unused-imports/no-unused-imports': 'error',
+    // 'require-jsdoc': [
+    //   'error',
+    //   {
+    //     require: {
+    //       FunctionDeclaration: true,
+    //       MethodDefinition: true,
+    //       ClassDeclaration: true,
+    //       ArrowFunctionExpression: false,
+    //       FunctionExpression: false,
+    //     },
+    //   },
+    // ],
   },
   overrides: [
     {

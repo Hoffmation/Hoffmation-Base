@@ -1,6 +1,6 @@
 export class SocketIOConnectOpts {
   public name?: string;
-  public connLink?: any;
-  public socketSession?: any;
+  public connLink?: string;
+  public socketSession?: unknown;
   public socketForceWebSockets?: boolean;
 }

@@ -73,7 +73,7 @@ export class ioBrokerMain {
       }, this);
     };
 
-    this.connectionCallbacks.onError = (err: any) => {
+    this.connectionCallbacks.onError = (err: { command: string; arg: string }) => {
       console.log(`Cannot execute ${err.command} for ${err.arg}, because of insufficient permissions`);
     };
   }
