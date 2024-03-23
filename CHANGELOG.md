@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.20 (2024-03-23)
 
 * (theimo1221) Migrate "blockAutomaticHandler" to new command-structure
 * (theimo1221) Update API-Service to migrate to new Command Structure
