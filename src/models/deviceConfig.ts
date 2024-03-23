@@ -3,6 +3,6 @@ export interface deviceConfig {
   _id: string;
   ts?: number;
   from?: string;
-  native?: any;
-  common?: any & { name: string };
+  native?: unknown;
+  common?: unknown & { name: string };
 }

@@ -11,7 +11,12 @@ export abstract class TvDevice implements iTvDevice {
   public room: RoomBase | undefined;
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.tv];
 
-  protected constructor(name: string, roomName: string, public ip: string, public tvDeviceType: TvDeviceType) {
+  protected constructor(
+    name: string,
+    roomName: string,
+    public ip: string,
+    public tvDeviceType: TvDeviceType,
+  ) {
     this._info = new DeviceInfo();
     this._info.fullName = `TV ${name}`;
     this._info.customName = `${roomName} ${name}`;

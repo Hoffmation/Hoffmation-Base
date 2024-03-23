@@ -1,13 +1,19 @@
 export class ConnectionCallbacks {
-  public onAuth?: any;
+  public onAuth?: unknown;
+
   public onCommand?(
     pInstance: string,
-    pCommand: string | number | boolean | any[] | Record<string, any> | null,
-    pData: any,
+    pCommand: string | number | boolean | unknown[] | Record<string, unknown> | null,
+    pData: unknown,
   ): boolean;
+
   public onConnChange?(pState: boolean): void;
-  public onError?: any;
+
+  public onError?(error: unknown): void;
+
   public onObjectChange?(pId: string, pObj: ioBroker.Object): void;
-  public onRefresh?: any;
+
+  public onRefresh?: unknown;
+
   public onUpdate?(id: string, state: ioBroker.State): void;
 }

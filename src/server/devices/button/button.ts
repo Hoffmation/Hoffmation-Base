@@ -11,7 +11,10 @@ export class Button {
   >();
   private _timeouts: Map<ButtonPressType, null | NodeJS.Timeout> = new Map<ButtonPressType, NodeJS.Timeout | null>();
 
-  public constructor(public name: string, public buttonCapabilities: ButtonCapabilities) {
+  public constructor(
+    public name: string,
+    public buttonCapabilities: ButtonCapabilities,
+  ) {
     if (buttonCapabilities.shortPress) {
       this._callbacksMap.set(ButtonPressType.short, []);
       this._timeouts.set(ButtonPressType.short, null);

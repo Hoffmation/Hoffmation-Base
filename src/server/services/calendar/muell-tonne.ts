@@ -8,7 +8,10 @@ export class MuellTonne {
   public nextDate: Date | undefined = undefined;
   public dates: Date[] = [];
 
-  public constructor(public name: string, public ownSpeaker?: iSpeaker) {}
+  public constructor(
+    public name: string,
+    public ownSpeaker?: iSpeaker,
+  ) {}
 
   public sortDates(): void {
     this.dates = this.dates.sort((a, b) => a.getTime() - b.getTime());

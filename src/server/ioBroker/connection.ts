@@ -705,7 +705,7 @@ export class IOBrokerConnection implements iDisposable {
     mode: number,
     callback: ioBroker.ErrnoCallback,
     // @ts-ignore
-    ...args: unknown[]
+    ..._args: unknown[]
   ): void {
     if (this._type === 'local') {
       // @ts-ignore
@@ -1228,7 +1228,7 @@ export class IOBrokerConnection implements iDisposable {
   }
 
   // @ts-ignore
-  public addObject(objId: unknown, obj: unknown, callback: unknown): void {
+  public addObject(_objId: unknown, _obj: unknown, _callback: unknown): void {
     if (!this._isConnected) {
       iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'No connection!');
       return;
@@ -1302,7 +1302,7 @@ export class IOBrokerConnection implements iDisposable {
     useCache: boolean,
     callback: (error: Error | null, conf?: Record<string, any>) => void,
     // @ts-ignore
-    ...args: unknown[]
+    ..._args: unknown[]
   ): void {
     if (this._checkConnection('getConfig', arguments) != ConnectionState.connected) return;
 

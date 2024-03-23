@@ -4,7 +4,10 @@ export class PhaseState {
   private readonly _selfConsumingWattage: number = 0;
   private readonly _totalConsumption: number = 0;
 
-  public constructor(private readonly _meterValue: number, private readonly _production: number) {
+  public constructor(
+    private readonly _meterValue: number,
+    private readonly _production: number,
+  ) {
     this._injectingWattage = Math.max(0, this._meterValue);
     this._selfConsumingWattage = this._production - Math.max(0, this._meterValue);
     this._drawingWattage = Math.min(0, this._meterValue) * -1;
