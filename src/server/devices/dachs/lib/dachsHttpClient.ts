@@ -16,7 +16,7 @@ import { LogLevel } from '../../../../models';
 export class DachsHttpClient {
   private options: DachsClientOptions;
   //baseURL
-  private url: string;
+  private readonly url: string;
   private axiosInstance: AxiosInstance;
 
   constructor(options: DachsClientOptions) {

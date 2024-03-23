@@ -84,7 +84,7 @@ describe('Trilateration', () => {
   });
 
   function addExamplePoint(z: number, x: number, y: number): void {
-    let roomName: string = 'unbekannt';
+    let roomName: string;
     if (z < 3) {
       roomName = 'basement';
     } else if (z < 6) {

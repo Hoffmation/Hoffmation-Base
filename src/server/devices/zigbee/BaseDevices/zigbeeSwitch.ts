@@ -18,7 +18,7 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
   public abstract buttonTopLeft: Button | undefined;
   public abstract buttonTopRight: Button | undefined;
 
-  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
+  protected constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven, DeviceCapability.buttonSwitch);
   }

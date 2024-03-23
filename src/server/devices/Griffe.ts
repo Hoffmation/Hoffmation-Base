@@ -7,7 +7,6 @@ export class Griffe {
   public static getGriffPosition(): string {
     const griffe: HmIpGriff[] = Griffe.getAllGriffe();
     griffe.sort((a, b): number => {
-      a.position;
       return b.position - a.position;
     });
 

@@ -604,7 +604,7 @@ export class IOBrokerConnection implements iDisposable {
       const regMatch = ext.toLowerCase().match(/\.[^.]+$/);
       ext = regMatch !== null && regMatch.length > 0 ? regMatch[0] : '';
     }
-    let _mimeType = '';
+    let _mimeType;
     if (ext === '.css') {
       _mimeType = 'text/css';
     } else if (ext === '.bmp') {

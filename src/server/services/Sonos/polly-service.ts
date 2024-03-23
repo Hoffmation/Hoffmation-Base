@@ -33,8 +33,7 @@ export class PollyService {
     const fPath: string = path.join(this._mp3Path, filename);
     try {
       if (fs.existsSync(fPath)) {
-        const duration: number = getMP3Duration(fs.readFileSync(fPath));
-        return duration;
+        return getMP3Duration(fs.readFileSync(fPath));
       }
     } catch (err) {
       console.error(err);
