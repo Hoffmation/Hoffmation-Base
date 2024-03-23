@@ -6,6 +6,7 @@ import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
 
+  // TODO: Missing Comment
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly stateValue: boolean,

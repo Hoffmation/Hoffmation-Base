@@ -7,6 +7,7 @@ import { iActuator } from '../../server';
 export class ActuatorSetStateCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorSetStateCommand;
 
+  // TODO: Missing Comment
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly on: boolean,

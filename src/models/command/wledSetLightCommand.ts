@@ -9,6 +9,7 @@ import { TimeOfDay } from '../timeCallback';
 export class WledSetLightCommand extends DimmerSetLightCommand {
   public override _commandType: CommandType = CommandType.WledSetLightCommand;
 
+  // TODO: Missing Comment
   public constructor(
     source: CommandSource | BaseCommand,
     on: boolean,

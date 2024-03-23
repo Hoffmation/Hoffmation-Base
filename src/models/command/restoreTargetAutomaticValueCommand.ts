@@ -5,6 +5,7 @@ import { CommandType } from './commandType';
 export class RestoreTargetAutomaticValueCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorRestoreTargetAutomaticValueCommand;
 
+  // TODO: Missing Comment
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }

@@ -5,6 +5,7 @@ import { CommandSource } from './commandSource';
 export class RoomRestoreLightCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.RoomRestoreLightCommand;
 
+  // TODO: Missing Comment
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }

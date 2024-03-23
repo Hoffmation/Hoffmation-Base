@@ -5,6 +5,7 @@ import { CommandType } from './commandType';
 export class ShutterSunsetDownCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.SunsetDownCommand;
 
+  // TODO: Missing Comment
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }

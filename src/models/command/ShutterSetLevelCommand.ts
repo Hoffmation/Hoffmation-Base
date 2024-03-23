@@ -5,6 +5,7 @@ import { CommandType } from './commandType';
 export class ShutterSetLevelCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ShutterSetLevelCommand;
 
+  // TODO: Missing Comment
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly level: number,

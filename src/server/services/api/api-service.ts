@@ -71,11 +71,13 @@ export class API {
     return result as AcDevice;
   }
 
+  // TODO: Missing Comment
   public static getDevices(): { [id: string]: iBaseDevice } {
     // console.log(Util.inspect(Devices.alLDevices, false, 5));
     return Devices.alLDevices;
   }
 
+  // TODO: Missing Comment
   public static getDevice(id: string): iBaseDevice {
     const d: iBaseDevice | undefined = Devices.alLDevices[id];
     if (d === undefined) {
@@ -84,6 +86,7 @@ export class API {
     return Devices.alLDevices[id];
   }
 
+  // TODO: Missing Comment
   public static getGroup(id: string): BaseGroup | undefined {
     const g: BaseGroup | undefined = RoomService.Groups.get(id);
     if (g === undefined) {
@@ -92,15 +95,18 @@ export class API {
     return g;
   }
 
+  // TODO: Missing Comment
   public static getRooms(): Map<string, RoomBase> {
     // console.log(inspect(Object.fromEntries(RoomService.Rooms)));
     return RoomService.Rooms;
   }
 
+  // TODO: Missing Comment
   public static getRoom(id: string): RoomBase | undefined {
     return RoomService.Rooms.get(id);
   }
 
+  // TODO: Missing Comment
   public static getLog(): LogObject[] {
     return ServerLogService.getLog();
   }
@@ -280,6 +286,7 @@ export class API {
     return null;
   }
 
+  // TODO: Missing Comment
   public static speakOnDevice(deviceId: string, message: string, volume: number = 30): Error | null {
     const d = this.getDevice(deviceId) as iSpeaker | undefined;
     if (d === undefined) {
@@ -350,6 +357,7 @@ export class API {
     return null;
   }
 
+  // TODO: Missing Comment
   public static setGroupSettings(groupId: string, settings: Partial<GroupSettings>): Error | null {
     const g = this.getGroup(groupId) as BaseGroup;
     if (g === undefined) {
@@ -381,6 +389,7 @@ export class API {
     return null;
   }
 
+  // TODO: Missing Comment
   public static getLastCameraImage(deviceId: string): Error | string {
     const d = this.getDevice(deviceId) as iCameraDevice | undefined;
     if (d === undefined) {
@@ -392,6 +401,7 @@ export class API {
     return d.lastImage;
   }
 
+  // TODO: Missing Comment
   public static persistAllDeviceSettings(): void {
     ServerLogService.writeLog(LogLevel.Info, `API Call to persist all device settings`);
     for (const device of Object.values(Devices.alLDevices)) {
@@ -399,6 +409,7 @@ export class API {
     }
   }
 
+  // TODO: Missing Comment
   public static loadAllDeviceSettingsFromDb(): void {
     ServerLogService.writeLog(LogLevel.Info, `API Call to load all device settings`);
     for (const device of Object.values(Devices.alLDevices)) {
@@ -458,6 +469,7 @@ export class API {
     return null;
   }
 
+  // TODO: Missing Comment
   public static pressButtonSwitch(
     deviceId: string,
     position: ButtonPosition,

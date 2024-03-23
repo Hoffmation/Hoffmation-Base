@@ -5,7 +5,8 @@ export abstract class BaseCommand {
   public readonly timestamp: Date;
   abstract _commandType: CommandType;
 
-  public constructor(
+  // TODO: Missing Comment
+  protected constructor(
     public readonly source: CommandSource | BaseCommand = CommandSource.Unknown,
     public readonly reason: string = '',
   ) {
