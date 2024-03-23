@@ -9,7 +9,16 @@ import { TimeOfDay } from '../timeCallback';
 export class WledSetLightCommand extends DimmerSetLightCommand {
   public override _commandType: CommandType = CommandType.WledSetLightCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to set the light state of a WLED device
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {boolean} on The desired state of the light
+   * @param {string} reason You can provide a reason for clarification
+   * @param {number} timeout The duration in milliseconds this should block automatic changes --> Reverse to automatic after this time
+   * @param {number} brightness The brightness of the light
+   * @param {number} transitionTime The time in milliseconds the transition should take
+   * @param {number} preset The preset to use
+   */
   public constructor(
     source: CommandSource | BaseCommand,
     on: boolean,

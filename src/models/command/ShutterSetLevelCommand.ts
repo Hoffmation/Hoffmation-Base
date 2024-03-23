@@ -5,7 +5,13 @@ import { CommandType } from './commandType';
 export class ShutterSetLevelCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ShutterSetLevelCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to set the level of a shutter
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {number} level The level to set the shutter to (0: close, 100: completely open)
+   * @param {string} reason You can provide a reason for clarification
+   * @param {boolean} skipOpenWarning Whether to skip the warning of window being open
+   */
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly level: number,

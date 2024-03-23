@@ -6,7 +6,12 @@ import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to write the state of an actuator to the device
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {boolean} stateValue The new state of the actuator
+   * @param {string} reason You can provide a reason for clarification
+   */
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly stateValue: boolean,

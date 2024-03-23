@@ -5,7 +5,11 @@ import { CommandSource } from './commandSource';
 export class ActuatorToggleCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorToggleCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to toggle the state of an actuator
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {string} reason You can provide a reason for clarification
+   */
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }

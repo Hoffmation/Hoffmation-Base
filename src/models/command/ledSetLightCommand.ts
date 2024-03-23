@@ -37,7 +37,12 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
     return `Led setLight to state: ${this.on}, timeout: ${this.timeout}, brightness: ${this.brightness}, color: ${this.color}, colorTemp: ${this.colorTemp} for reason: ${this.reasonTrace}`;
   }
 
-  // TODO: Missing Comment
+  /**
+   * Create a LedSetLightCommand based on a LampSetTimeBasedCommand and LedSettings by respecting the time of day
+   * @param {LedSettings} settings The settings for the Led
+   * @param {LampSetTimeBasedCommand} c The command to base the LedSetLightCommand on
+   * @returns {LedSetLightCommand} The created LedSetLightCommand
+   */
   public static byTimeBased(settings: LedSettings, c: LampSetTimeBasedCommand): LedSetLightCommand {
     switch (c.time) {
       case TimeOfDay.Daylight:

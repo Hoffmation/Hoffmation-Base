@@ -7,7 +7,13 @@ import { iActuator } from '../../server';
 export class ActuatorSetStateCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorSetStateCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to set the state of an actuator
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {boolean} on The new state of the actuator
+   * @param {string} reason You can provide a reason for clarification
+   * @param {number} timeout If provided, the device automatic will be turned off for the given time in ms
+   */
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly on: boolean,

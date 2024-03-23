@@ -6,7 +6,12 @@ import { TimeOfDay } from '../timeCallback';
 export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.LightGroupSwitchTimeConditional;
 
-  // TODO: Missing Comment
+  /**
+   * Command to switch a light group in accordance to a specific time of the day
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {TimeOfDay} time The time of the day to switch the light group
+   * @param {string} reason You can provide a reason for clarification
+   */
   public constructor(
     source: CommandSource | BaseCommand,
     public readonly time: TimeOfDay,

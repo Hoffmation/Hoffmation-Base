@@ -7,13 +7,20 @@ import {
 import { iRoomDevice } from './iRoomDevice';
 import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 
-// TODO: Add missing Comments
+/**
+ * Interface for Actuators.
+ * An actuator can be any device whos primary function is to be on or off e.g a light, an outlet, a fan, etc.
+ */
 export interface iActuator extends iRoomDevice, iTemporaryDisableAutomatic {
   /**
    * The settings for this Actuator primarily for controlling its automatic actions
    */
   settings: ActuatorSettings;
 
+  /**
+   * The target automatic state of the device.
+   * This is used to store the state the device should be in to fall back to it after automatic was blocked e.g. by a user.
+   */
   targetAutomaticState: boolean;
 
   /**
@@ -38,7 +45,15 @@ export interface iActuator extends iRoomDevice, iTemporaryDisableAutomatic {
    */
   setActuator(command: ActuatorSetStateCommand): void;
 
+  /**
+   * Toggles the power state of this actuator
+   * @param command
+   */
   toggleActuator(command: ActuatorToggleCommand): boolean;
 
+  /**
+   * Writes the desired actuator state to the device
+   * @param command
+   */
   writeActuatorStateToDevice(command: ActuatorWriteStateToDeviceCommand): void;
 }

@@ -5,7 +5,11 @@ import { CommandType } from './commandType';
 export class RestoreTargetAutomaticValueCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ActuatorRestoreTargetAutomaticValueCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to restore the target automatic value of an actuator
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {string} reason You can provide a reason for clarification
+   */
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }

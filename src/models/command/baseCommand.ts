@@ -5,7 +5,11 @@ export abstract class BaseCommand {
   public readonly timestamp: Date;
   abstract _commandType: CommandType;
 
-  // TODO: Missing Comment
+  /**
+   * Base class for all commands
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {string} reason You can provide a reason for clarification
+   */
   protected constructor(
     public readonly source: CommandSource | BaseCommand = CommandSource.Unknown,
     public readonly reason: string = '',

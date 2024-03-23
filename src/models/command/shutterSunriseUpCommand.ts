@@ -5,7 +5,11 @@ import { CommandType } from './commandType';
 export class ShutterSunriseUpCommand extends BaseCommand {
   public override _commandType: CommandType = CommandType.ShutterSunriseUpCommand;
 
-  // TODO: Missing Comment
+  /**
+   * Command to perform actions when the shutter should be opened due to sunrise
+   * @param {CommandSource | BaseCommand} source The source of the command
+   * @param {string} reason You can provide a reason for clarification
+   */
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }
