@@ -3,8 +3,6 @@ import { WeatherItem } from './weather-item';
 export interface WeatherCurrent {
   /**
    * Zeit der Anfrage
-   * @type {number}
-   * @memberof WeatherCurrent
    */
   dt: number;
   sunrise: number;

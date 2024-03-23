@@ -191,7 +191,6 @@ export class NewsService {
    * Deletes all files in the given directory that are older than the given age.
    * @param rootDir Directory to search in
    * @param keepMaxAge Maximum age in minutes until a file gets deleted
-   * @private
    */
   private static cleanOldFiles(rootDir: string, keepMaxAge: number): void {
     let deleteCount: number = 0;

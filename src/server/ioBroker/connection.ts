@@ -1,4 +1,4 @@
-/* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment */
+/* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment,jsdoc/require-returns-description,jsdoc/require-param-description */
 import { IncomingMessage } from 'http';
 import io from 'socket.io-client';
 import { iobrokerConnectionLogging, iobrokerConnectionLogLevel } from './iobrokerConnectionLogging';
@@ -368,7 +368,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter isExecutedInBrowser
-   * @return {boolean }
+   * @returns
    */
   public get isExecutedInBrowser(): boolean {
     return this._isExecutedInBrowser;
@@ -378,7 +378,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter enums
-   * @return {unknown}
+   * @returns
    */
   public get enums(): Record<string, ioBroker.EnumObject> | undefined {
     return this._enums;
@@ -386,7 +386,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Setter enums
-   * @param {unknown} value
+   * @param value
    */
   public set enums(value: Record<string, ioBroker.EnumObject> | undefined) {
     this._enums = value;
@@ -396,7 +396,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter isAuthDone
-   * @return {boolean }
+   * @returns
    */
   public get isAuthDone(): boolean {
     return this._isAuthDone;
@@ -408,7 +408,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter namespace
-   * @return {string }
+   * @returns
    */
   public get namespace(): string {
     return this._namespace;
@@ -416,7 +416,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Setter namespace
-   * @param {string } value
+   * @param value
    */
   public set namespace(value: string) {
     this._namespace = value;
@@ -426,7 +426,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter objects
-   * @return {unknown}
+   * @returns
    */
   public get objects(): Record<string, ioBroker.Object> | undefined {
     return this._objects;
@@ -434,7 +434,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Setter objects
-   * @param {unknown} value
+   * @param value
    */
   public set objects(value: Record<string, ioBroker.Object> | undefined) {
     this._objects = value;
@@ -444,7 +444,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter type
-   * @return {string }
+   * @returns
    */
   public get type(): string {
     return this._type;
@@ -452,7 +452,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Setter type
-   * @param {string } value
+   * @param value
    */
   public set type(value: string) {
     this._type = value;
@@ -462,7 +462,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter timeout
-   * @return {number }
+   * @returns
    */
   public get timeout(): number {
     return this._timeout;
@@ -470,7 +470,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Setter timeout
-   * @param {number } value
+   * @param value
    */
   public set timeout(value: number) {
     this._timeout = value;
@@ -480,7 +480,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Getter user
-   * @return {unknown}
+   * @returns
    */
   public get user(): string {
     return this._user;
@@ -490,7 +490,7 @@ export class IOBrokerConnection implements iDisposable {
 
   /**
    * Setter user
-   * @param {unknown} value
+   * @param value
    */
   public set user(value: string) {
     this._user = value;

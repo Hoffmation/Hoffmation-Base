@@ -12,10 +12,10 @@ export interface KeyListEntityResponse<V> {
 }
 
 /**
-
+ 
  "key": "",
  "doc": "",
  "unit": Number
-
-
+ 
+ 
  */

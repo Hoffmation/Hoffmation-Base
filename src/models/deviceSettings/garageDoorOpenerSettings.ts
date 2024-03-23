@@ -4,7 +4,6 @@ import { Utils } from '../../server';
 export class GarageDoorOpenerSettings extends DeviceSettings {
   /**
    * In case the sensor detects open door instead of closed
-   * @type {boolean}
    */
   public invertSensor: boolean = false;
 

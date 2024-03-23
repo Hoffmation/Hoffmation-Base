@@ -7,9 +7,9 @@ export class RoomSetLightTimeBasedCommand extends BaseCommand {
 
   /**
    * Sets the light based on the current time, rollo Position and room Settings
-   * @param source
+   * @param source The source of the command
    * @param movementDependant Only turn light on if there was a movement in the same room
-   * @param reason
+   * @param reason You can provide a reason for clarity
    */
   public constructor(
     source: CommandSource | BaseCommand,

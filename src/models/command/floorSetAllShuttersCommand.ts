@@ -7,10 +7,10 @@ export class FloorSetAllShuttersCommand extends BaseCommand {
 
   /**
    * Creates an instance of FloorSetAllShuttersCommand.
-   * @param {CommandSource | BaseCommand} source
-   * @param {number} position (0 closed, 100 open)
-   * @param {number | undefined} specificFloor  undefined = all floors
-   * @param {string} reason
+   * @param source The source of the command
+   * @param position (0 closed, 100 open)
+   * @param specificFloor  undefined = all floors
+   * @param reason You can provide a reason for clarity
    */
   public constructor(
     source: CommandSource | BaseCommand,

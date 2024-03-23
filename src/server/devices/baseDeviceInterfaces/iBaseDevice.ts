@@ -6,7 +6,6 @@ import { iIdHolder } from '../../../models/iIdHolder';
 
 /**
  * This is the main interface for all devices as it ensures certain base functionality.
- * @interface
  */
 export interface iBaseDevice extends iIdHolder {
   /**

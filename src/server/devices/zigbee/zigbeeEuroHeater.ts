@@ -200,9 +200,8 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
   }
 
   /**
-   * Sets the mode (1 = manual valve, 2 = automatic temp based)
-   * @param {1 | 2} targetMode
-   * @private
+   * Sets the mode
+   * @param targetMode (1 = manual valve, 2 = automatic temp based)
    */
   private setMode(targetMode: 1 | 2): void {
     this.setState(this._setModeId, targetMode);

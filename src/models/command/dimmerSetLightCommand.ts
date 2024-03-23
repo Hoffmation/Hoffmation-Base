@@ -10,12 +10,12 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
   public override _commandType: CommandType = CommandType.DimmerSetLightCommand;
 
   /**
-   * @param {CommandSource | BaseCommand} source
-   * @param {boolean} on The desired value
-   * @param {string} reason
-   * @param {number} timeout  A chosen Timeout after which the light should be reset
-   * @param {number} brightness The desired brightness
-   * @param {number} transitionTime The transition time during turnOn/turnOff
+   * @param source The source of the command
+   * @param on The desired value
+   * @param reason You can provide a reason for clarity
+   * @param timeout  A chosen Timeout after which the light should be reset
+   * @param brightness The desired brightness
+   * @param transitionTime The transition time during turnOn/turnOff
    */
   public constructor(
     source: CommandSource | BaseCommand,

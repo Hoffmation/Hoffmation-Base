@@ -31,7 +31,6 @@ export class WeatherService {
   public static lastResponse: WeatherResponse;
   /**
    * The sun horizontal degree (0 is North)
-   * @type {number}
    */
   public static sunDirection: number;
   private static _dataUpdateCbs: { [name: string]: () => void } = {};
@@ -331,6 +330,10 @@ export class WeatherService {
       (180 / Math.PI) * SunCalc.getPosition(new Date(), parseFloat(this.latitude), parseFloat(this.longitude)).azimuth;
   }
 
+  /**
+   * Method to calculate the hours until sunset based on the current location
+   * @returns - The hours until sunset
+   */
   private static hoursTilSunset(): number {
     const now: Date = new Date();
     const sunset: Date = TimeCallbackService.getSunsetForDate(

@@ -9,10 +9,10 @@ export class ActuatorSetStateCommand extends BaseCommand {
 
   /**
    * Command to set the state of an actuator
-   * @param {CommandSource | BaseCommand} source The source of the command
-   * @param {boolean} on The new state of the actuator
-   * @param {string} reason You can provide a reason for clarification
-   * @param {number} timeout If provided, the device automatic will be turned off for the given time in ms
+   * @param source The source of the command
+   * @param on The new state of the actuator
+   * @param reason You can provide a reason for clarification
+   * @param timeout If provided, the device automatic will be turned off for the given time in ms
    */
   public constructor(
     source: CommandSource | BaseCommand,

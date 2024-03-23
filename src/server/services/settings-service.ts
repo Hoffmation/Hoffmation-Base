@@ -41,7 +41,7 @@ export class SettingsService {
 
   /**
    * @deprecated Only use in unit tests
-   * @returns {iConfig}
+   * @returns A test configuration
    */
   public static get testConfig(): iConfig {
     return {

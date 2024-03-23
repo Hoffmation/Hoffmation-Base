@@ -94,7 +94,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
    * | drawing       |    0W |  100W | 1000W |
    * | selfConsume   |  900W | 1000W |    0W |
    * ________________________________________
-   **/
+   */
 
   public get excessEnergyConsumerConsumption(): number {
     return this._excessEnergyConsumerConsumption;

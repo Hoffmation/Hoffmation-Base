@@ -12,8 +12,8 @@ export abstract class ObjectSettings {
 
   /**
    * Loads the settings from the database
-   * @param {iIdHolder} holder The holder of the settings (e.g. a device)
-   * @param {() => void} loadDoneCb Callback when loading is done
+   * @param holder The holder of the settings (e.g. a device)
+   * @param loadDoneCb Callback when loading is done
    */
   public initializeFromDb(holder: iIdHolder, loadDoneCb?: () => void) {
     Utils.dbo?.loadSettings(holder.id).then((data) => {

@@ -7,8 +7,8 @@ export class BlockAutomaticLiftBlockCommand extends BaseCommand {
 
   /**
    * Command to lift a block --> Restore the automatic actions.
-   * @param {CommandSource | BaseCommand} source The source of the command.
-   * @param {string} reason You can provide an individual reason here for debugging purpose.
+   * @param source The source of the command.
+   * @param reason You can provide an individual reason here for debugging purpose.
    */
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);

@@ -7,8 +7,8 @@ export class RoomRestoreLightCommand extends BaseCommand {
 
   /**
    * Command to restore the normal automatic light-state of a room
-   * @param {CommandSource | BaseCommand} source The source of the command
-   * @param {string} reason You can provide a reason for clarification
+   * @param source The source of the command
+   * @param reason You can provide a reason for clarification
    */
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);

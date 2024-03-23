@@ -26,8 +26,8 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
 
   /**
    * Extracts the relevant infos from the passed deviceConfig and combines them in a new Info object
-   * @param {deviceConfig} pDevConf The device Config based on the extracted devices.json from ioBroker
-   * @param {boolean} isJsStateChildObject Within JS Objects, creating devices is limited,
+   * @param pDevConf The device Config based on the extracted devices.json from ioBroker
+   * @param isJsStateChildObject Within JS Objects, creating devices is limited,
    * so we name the first child state for the object creation (e.g. javascript.0.00-EnergyManager.CurrentProduction)
    */
   public constructor(pDevConf: deviceConfig, isJsStateChildObject: boolean = false) {
@@ -57,7 +57,8 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
       if (idSplit.length > 4) {
         this.valueName = idSplit[4];
       }
-      /** Name-Split
+      /**
+       * Name-Split
        * 0: Indikator own "00"
        * 1: "HmIP"
        * 2: Raum
@@ -71,7 +72,8 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
       this.deviceRoomIndex = Number(nameSplit[4].split(':')[0]);
       return;
     } else {
-      /** Name-Split
+      /**
+       * Name-Split
        * 0: Indikator own "00"
        * 1: "EnergyManager"
        * 2: Raum

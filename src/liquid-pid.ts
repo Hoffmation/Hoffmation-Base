@@ -4,12 +4,9 @@
  *
  * I'm a NodeJS guy not a scientist, so please be a careful!!!
  * FYI: http://en.wikipedia.org/wiki/PID_controller
- *
- * @module controller
- *
  * @author https://github.com/hekike/liquid-pid
- * @licence MIT
- **/
+ * licence: MIT
+ */
 export class PIDController {
   private _Tref: number;
   private readonly _Pmax: number;

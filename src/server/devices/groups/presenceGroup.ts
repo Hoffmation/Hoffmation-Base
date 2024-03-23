@@ -134,7 +134,6 @@ export class PresenceGroup extends BaseGroup {
 
   /**
    * In case of an existing delayed last left callback timeout, this removes it.
-   * @private
    */
   private resetLastLeftTimeout() {
     if (this._lastLeftTimeout !== null) {

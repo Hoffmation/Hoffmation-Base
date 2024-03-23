@@ -69,7 +69,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
 
   /**
    * For Rooms the id is itss name
-   * @returns {string} The Roomname
+   * @returns The Roomname
    */
   public get id(): string {
     return this.roomName;
@@ -149,6 +149,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
 
   /**
    * Sets the light based on the current time, rollo Position and room Settings
+   * @param c The command to execute
    */
   public setLightTimeBased(c: RoomSetLightTimeBasedCommand): void {
     if (!this.LightGroup) {

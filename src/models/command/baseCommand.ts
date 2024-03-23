@@ -7,8 +7,8 @@ export abstract class BaseCommand {
 
   /**
    * Base class for all commands
-   * @param {CommandSource | BaseCommand} source The source of the command
-   * @param {string} reason You can provide a reason for clarification
+   * @param source The source of the command
+   * @param reason You can provide a reason for clarification
    */
   protected constructor(
     public readonly source: CommandSource | BaseCommand = CommandSource.Unknown,

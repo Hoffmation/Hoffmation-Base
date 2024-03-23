@@ -6,8 +6,6 @@ import { iBaseDevice } from './iBaseDevice';
  * Interface for normal air-conditioning devices
  * TODO: Migrate to new Command-Based System
  * TODO: Extend from iActuator
- * @extends iBaseDevice
- * @interface
  */
 export interface iAcDevice extends iBaseDevice {
   /**

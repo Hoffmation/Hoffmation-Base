@@ -119,8 +119,7 @@ export class CameraDevice implements iCameraDevice {
   }
 
   /**
-   * Time since Last Motion in seconds
-   * @returns {number}
+   * @returns Time since Last Motion in seconds
    */
   public get timeSinceLastMotion(): number {
     return Math.round((Utils.nowMS() - this._lastMotion) / 1000);

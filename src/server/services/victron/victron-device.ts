@@ -153,7 +153,7 @@ export class VictronDevice implements iEnergyManager {
 
   /**
    * Changes the grid set point of the Victron device, to the desired value.
-   * @param {number} setPoint
+   * @param setPoint The desired watt point the system should aim for.
    */
   public setGridSetPoint(setPoint: number): void {
     this._victronConsumer.setGridSetPoint(setPoint);

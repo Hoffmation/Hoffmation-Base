@@ -54,24 +54,16 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
 
   /**
    * Getter info
-   * @return {IoBrokerDeviceInfo}
+   * @returns The device info
    */
   public get info(): IoBrokerDeviceInfo {
     return this._info;
   }
 
-  /**
-   * Setter info
-   * @param {IoBrokerDeviceInfo} value
-   */
   public set info(value: IoBrokerDeviceInfo) {
     this._info = value;
   }
 
-  /**
-   * Getter ioConn
-   * @return {IOBrokerConnection}
-   */
   public get ioConn(): IOBrokerConnection | undefined {
     return ioBrokerMain.iOConnection;
   }
@@ -99,8 +91,8 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
 
   /**
    * Allows to react on the state change of a given state with the passed cb
-   * @param {string} stateName Last part of the id e.g. "available" not "zigbee.0.00158d00053d3e4b.available"
-   * @param {(val: ioBroker.StateValue) => void} cb Desired Callback Action, with passed ioBroker.StateValue
+   * @param stateName Last part of the id e.g. "available" not "zigbee.0.00158d00053d3e4b.available"
+   * @param cb Desired Callback Action, with passed ioBroker.StateValue
    */
   public addIndividualStateCallback(stateName: string, cb: (val: ioBroker.StateValue) => void): void {
     let arr: Array<(val: ioBroker.StateValue) => void> | undefined = this.individualStateCallbacks.get(stateName);
@@ -115,6 +107,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
   /**
    * Returns whether a connection to ioBroker is established or not
    * @param showError If true, an error message will be written to the log if the connection is not established
+   * @returns Whether a connection exists
    */
   public checkIoConnection(showError: boolean = false): boolean {
     if (!this.ioConn && showError) {

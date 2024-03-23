@@ -8,11 +8,11 @@ export class LampToggleLightCommand extends ActuatorToggleCommand {
   public override _commandType: CommandType = CommandType.LampToggleLightCommand;
 
   /**
-   *
-   * @param {CommandSource | BaseCommand} source
-   * @param {string} reason
-   * @param {TimeOfDay} time The time to use for calculation of desired state
-   * @param {boolean} calculateTime Alternative to "time", if set the time will be calculated by the lamps room and its settings
+   * Command to toggle the light-state of a lamp
+   * @param source The source of the command
+   * @param reason You can provide a reason for clarity
+   * @param time The time to use for calculation of desired state
+   * @param calculateTime Alternative to "time", if set the time will be calculated by the lamps room and its settings
    */
   public constructor(
     source: CommandSource | BaseCommand,

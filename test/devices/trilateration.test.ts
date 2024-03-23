@@ -83,6 +83,12 @@ describe('Trilateration', () => {
     expect(result).toBe('basement');
   });
 
+  /**
+   * Function to add a point to the example points
+   * @param z - The z coordinate
+   * @param x - The x coordinate
+   * @param y - The y coordinate
+   */
   function addExamplePoint(z: number, x: number, y: number): void {
     let roomName: string;
     if (z < 3) {

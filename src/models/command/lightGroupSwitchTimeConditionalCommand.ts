@@ -8,9 +8,9 @@ export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
 
   /**
    * Command to switch a light group in accordance to a specific time of the day
-   * @param {CommandSource | BaseCommand} source The source of the command
-   * @param {TimeOfDay} time The time of the day to switch the light group
-   * @param {string} reason You can provide a reason for clarification
+   * @param source The source of the command
+   * @param time The time of the day to switch the light group
+   * @param reason You can provide a reason for clarification
    */
   public constructor(
     source: CommandSource | BaseCommand,
