@@ -5,104 +5,32 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
 ## 3.0.0-alpha.20 (2024-03-23)
 
 * (theimo1221) Migrate "blockAutomaticHandler" to new command-structure
 * (theimo1221) Update API-Service to migrate to new Command Structure
 
-## 3.0.0-alpha.19 (2024-03-22)
+## 3.0.0
 
-* (theimo1221) Allow AC "useOwnTemperature" without using Mode.Auto by splitting the settings.
-
-## 3.0.0-alpha.18 (2024-03-21)
-
-* (theimo1221) Fix WLED turn on/off process
-
-## 3.0.0-alpha.17 (2024-03-19)
-
-* (theimo1221) Improve IoBrokerDevice set State Error Logging
-* (theimo1221) Improve Lamp/Dimmer/WLed Command Logging
-* (theimo1221) Pull up debounceStateDelay to IoBrokerDevice
-* (theimo1221) Fix Order within wled to not turn on with preset selection after turning off
-
-## 3.0.0-alpha.16 (2024-03-18)
-
-* (theimo1221) Improve behaviour of Strom-Stoss-Relais to prevent loops.
-* (theimo1221) Prepare Actuator "DayOn"-Setting
-
-## 3.0.0-alpha.15 (2024-03-18)
-
-* (theimo1221) Fix logic issue in ac-device
-* (theimo1221) Add Wled Device Capabilities
-
-## 3.0.0-alpha.14 (2024-03-17)
-
+* (theimo1221) Rework of commands especially with focus on command source and the stacked reason
+* (theimo1221) Correct unblock on manual actuator off
+* (theimo1221) Update packages
+* (theimo1221) Reduce Zigbee bad Connection Logging
+* (theimo1221) Change led change action order to improve change speed for e.g. innr led strips
+* (theimo1221) TargetAutomaticState might have been wrong, if the automatic action fired before the manual action
+  overwrote it.
+* (theimo1221) Prevent AC-Device Param-NG in case of not yet calculated desired temperature
 * (theimo1221) Fix edge case, where a manual time based toggle would not turn on the device at it would be off by it's
   time settings
-* (theimo1221) Prevent AC-Device Param-NG in case of not yet calculated desired temperature
-
-## 3.0.0-alpha.13 (2024-03-17)
-
-* (theimo1221) TargetAutomaticState might be wrong, if the automatic action fired before the manual action overwrote it.
-
-## 3.0.0-alpha.12 (2024-03-17)
-
-* (theimo1221) Add missing command stack for setActuatorTimeBased
-* (theimo1221) Prevent actuator write log message shadowing
-
-## 3.0.0-alpha.11 (2024-03-17)
-
-* (theimo1221) Change led change action order to improve change speed for e.g. innr led strips
-* (theimo1221) Correct logging for Ambient Light mode active skip
-
-## 3.0.0-alpha.10 (2024-03-17)
-
-* (theimo1221) Reduce duplicate logging
-
-## 3.0.0-alpha.9 (2024-03-17)
-
-* (theimo1221) Correct actuatorSetStateCommand Type
-
-## 3.0.0-alpha.8 (2024-03-17)
-
-* (theimo1221) Improve dimmer and led Command logging
-
-## 3.0.0-alpha.7 (2024-03-17)
-
-* (theimo1221) Reduce Zigbee bad Connection Logging
-
-## 3.0.0-alpha.6 (2024-03-17)
-
-* (theimo1221) Fix wrong command stack within lightGroup
-* (theimo1221) Add Proper LogDebugType
-
-## 3.0.0-alpha.5 (2024-03-17)
-
-* (theimo1221) Harmonize constructor parameter order for ActuatorWriteStateToDevice
-* (theimo1221) Improve logging for ZigbeeLed and Dimmer
-
-## 3.0.0-alpha.4 (2024-03-17)
-
-* (theimo1221) Improve command log messages
-* (theimo1221) Improve command reason-stack readability
-* (theimo1221) Reduce logging within Shutter
-
-## 3.0.0-alpha.3 (2024-03-17)
-
-* (theimo1221) Fix Reason Trace starting with arrow
-
-## 3.0.0-alpha.2 (2024-03-17)
-
-* (theimo1221) Correct unblock on manual actuator off
-
-## 3.0.0-alpha.1 (2024-03-17)
-
-* (theimo1221) Change Lightgroup method name
-
-## 3.0.0-alpha.0 (2024-03-17)
-
-* (theimo1221) Start rework of commands especially with focus on command source and the stacked reason
-* (theimo1221) Update packages
+* (theimo1221) Fix logic issue in ac-device
+* (theimo1221) Add Wled Device Capabilities
+* (theimo1221) Actuator "DayOn"-Setting
+* (theimo1221) Improve behaviour of Strom-Stoss-Relais to prevent loops.
+* (theimo1221) Pull up debounceStateDelay to IoBrokerDevice
+* (theimo1221) Fix Order within wled to not turn on with preset selection after turning off
+* (theimo1221) Improve IoBrokerDevice set State Error Logging
+* (theimo1221) Allow AC "useOwnTemperature" without using Mode.Auto by splitting the settings.
 
 ## 2.23.0 (2024-02-25)
 
