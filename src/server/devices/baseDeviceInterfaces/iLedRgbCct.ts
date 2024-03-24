@@ -3,8 +3,17 @@ import { iDimmableLamp } from './iDimmableLamp';
 
 // TODO: Add missing Comments
 export interface iLedRgbCct extends iDimmableLamp {
+  /**
+   * The settings of the LED-Device (e.g. brightness, color, colortemp) for different times of the day
+   */
   settings: LedSettings;
+  /**
+   * The currently active color in HEX representation
+   */
   readonly color: string;
+  /**
+   * The currently active color temperature
+   */
   readonly colortemp: number;
 
   /**

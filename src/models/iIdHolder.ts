@@ -2,7 +2,15 @@ import { LogLevel } from './logLevel';
 import { LogDebugType } from '../server';
 
 export interface iIdHolder {
+  /**
+   * The id of the object.
+   * !!Warning!! This should be unique across all objects
+   */
   readonly id: string;
+  /**
+   * The custom name of the object --> This can be a duplicate to other objects
+   * This should be the human-readable name of the object.
+   */
   readonly customName: string;
 
   /**

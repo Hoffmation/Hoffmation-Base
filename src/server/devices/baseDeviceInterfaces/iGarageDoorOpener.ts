@@ -3,8 +3,14 @@ import { iRoomDevice } from './iRoomDevice';
 
 // TODO: Migrate to new Command Structure
 export interface iGarageDoorOpener extends iRoomDevice {
+  /**
+   * The settings of the garage door opener
+   */
   settings: GarageDoorOpenerSettings;
 
+  /**
+   * Whether the garage door is currently closed
+   */
   readonly isClosed: boolean;
 
   /**

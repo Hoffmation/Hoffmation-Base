@@ -1,7 +1,5 @@
-export interface IRessourceObject {
-  de?: string;
-  en: string;
-}
+/* eslint-disable jsdoc/require-jsdoc */
+import { IRessourceObject } from './IRessourceObject';
 
 export interface IRessources {
   alarmArmed: IRessourceObject;

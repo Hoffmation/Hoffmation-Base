@@ -163,7 +163,7 @@ export class API {
    * @param state - The desired new state
    * @param timeout - Desired time after which this should be reverted to normal state
    * @returns In case it failed the Error containing the reason
-   * @deprecated Use "API.lampSetLight" instead
+   * @deprecated Use {@link API.lampSetLight} instead
    * TODO: Remove deprecated API method
    */
   public static setLamp(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
@@ -195,7 +195,7 @@ export class API {
    * @param state - The desired new state
    * @param timeout - Desired time after which this should be reverted to automatic state
    * @returns In case it failed the Error containing the reason
-   * @deprecated Use "API.actuatorSetState" instead
+   * @deprecated Use {@link API.actuatorSetState} instead
    * TODO: Remove deprecated API method
    */
   public static setActuator(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
@@ -229,7 +229,7 @@ export class API {
    * @param brightness - The desired brightness
    * @param transitionTime - The transition time during turnOn/turnOff
    * @returns In case it failed the Error containing the reason
-   * @deprecated Use "API.dimmerSetLight" instead
+   * @deprecated Use {@link API.dimmerSetLight} instead
    * TODO: Remove deprecated API method
    */
   public static setDimmer(
@@ -274,7 +274,7 @@ export class API {
    * @param color - The desired color in 6 digit hex Code
    * @param colorTemp - The desired color Temperature (0 = more White)
    * @returns In case it failed the Error containing the reason
-   * @deprecated Use "API.ledSetLight" instead
+   * @deprecated Use {@link API.ledSetLight} instead
    * TODO: Remove deprecated API method
    */
   public static setLedLamp(
@@ -317,7 +317,7 @@ export class API {
    * @param deviceId - The device Id of the shutter
    * @param level - The desired new level (0 being open, 100 being closed)
    * @returns Error if there is no shutter with the given id
-   * @deprecated Use "API.shutterSetLevel" instead
+   * @deprecated Use {@link API.shutterSetLevel} instead
    * TODO: Remove deprecated API method
    */
   public static setShutter(deviceId: string, level: number): Error | null {
@@ -484,8 +484,8 @@ export class API {
    * Lifts a previously started Block of automatic
    * @param deviceId - The target device
    * @returns In case it failed the Error containing the reason
-   * @deprecated Use "API.blockAutomaticLiftAutomaticBlock" instead
-   * TODO: Remove deprecated API method
+   * @deprecated Use {@link API.blockAutomaticLiftAutomaticBlock} instead
+   * TODO: V4 Remove deprecated API method
    */
   public static liftAutomaticBlock(deviceId: string): Error | null {
     return this.blockAutomaticLiftAutomaticBlock(deviceId, new BlockAutomaticLiftBlockCommand(CommandSource.API));
@@ -519,7 +519,7 @@ export class API {
    * @param duration - The duration in ms for which the device should remain in current state
    * @param onCollision - The desired Collision Solving strategy, in case the automatic being blocked already
    * @returns In case it failed the Error containing the reason
-   * @deprecated Use "API.blockAutomaticDisable" instead
+   * @deprecated Use {@link API.blockAutomaticSetBlock} instead
    * TODO: Remove deprecated API method
    */
   public static blockAutomatic(deviceId: string, duration: number, onCollision?: CollisionSolving): Error | null {

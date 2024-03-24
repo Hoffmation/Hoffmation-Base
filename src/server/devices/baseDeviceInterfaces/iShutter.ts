@@ -4,9 +4,21 @@ import { ShutterSetLevelCommand, ShutterSettings } from '../../../models';
 
 // TODO: Add missing Comments
 export interface iShutter extends iRoomDevice {
+  /**
+   * The settings for the shutter
+   */
   settings: ShutterSettings;
+  /**
+   * The current level of the shutter (0 = closed, 100 = open)
+   */
   currentLevel: number;
+  /**
+   * The desired level of the shutter for this window (this might be different from the current level due to the desired level being set by the user)
+   */
   desiredWindowShutterLevel: number;
+  /**
+   * The window this shutter is located within
+   */
   window: Window | undefined;
 
   /**

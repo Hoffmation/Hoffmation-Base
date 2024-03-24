@@ -2,11 +2,29 @@ import { TimeCallback } from '../timeCallback';
 import { RoomSetLightTimeBasedCommand } from '../command';
 
 export interface iRoomBase {
+  /**
+   * The time-callback for controlling shutters at sunrise
+   */
   sunriseShutterCallback: TimeCallback | undefined;
+  /**
+   * The time-callback for controlling shutters at sunset
+   */
   sunsetShutterCallback: TimeCallback | undefined;
+  /**
+   * The time-callback for controlling light at sunrise
+   */
   sonnenAufgangLichtCallback: TimeCallback | undefined;
+  /**
+   * The time-callback for controlling light at sunset
+   */
   sonnenUntergangLichtCallback: TimeCallback | undefined;
+  /**
+   * Whether the next sunset shutter-up should be skipped (afterwards this resets to false)
+   */
   skipNextRolloUp: boolean;
+  /**
+   * The name of the room
+   */
   roomName: string;
 
   /**

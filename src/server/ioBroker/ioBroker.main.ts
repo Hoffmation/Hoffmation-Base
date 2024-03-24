@@ -75,13 +75,11 @@ export class ioBrokerMain {
 
     this.connectionCallbacks.onError = (err: {
       /**
-       *
+       * Command that was executed
        */
-      command: string /**
-       *
-       */;
+      command: string;
       /**
-       *
+       * Argument that was passed to the command
        */
       arg: string;
     }) => {

@@ -3,11 +3,11 @@ import { iRoomDevice } from './iRoomDevice';
 
 export interface iHandleSensor extends iRoomDevice {
   /**
-   *
+   * The current position of the handle
    */
   position: WindowPosition;
   /**
-   *
+   * The time the handle was open in minutes
    */
   minutesOpen: number;
 

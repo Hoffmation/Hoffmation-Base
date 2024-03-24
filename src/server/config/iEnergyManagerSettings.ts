@@ -1,8 +1,14 @@
 export interface iEnergyManagerSettings {
-  // Disable JS energy manager
+  /**
+   * Disable ioBroker JS-EnergyManager
+   */
   disableJsEnergyManager?: boolean;
-  // Earnings per kWh injecting into the grid
+  /**
+   * The price per kWh injecting into the grid
+   */
   injectWattagePrice?: number;
-  // Price per kWh from the grid
+  /**
+   * The price per kWh from the grid
+   */
   wattagePrice?: number;
 }

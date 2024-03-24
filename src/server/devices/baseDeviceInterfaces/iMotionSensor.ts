@@ -3,12 +3,21 @@ import { iRoomDevice } from './iRoomDevice';
 
 // TODO: Add missing Comments
 export interface iMotionSensor extends iRoomDevice {
+  /**
+   * The settings of the MotionSensor
+   */
   settings: MotionSensorSettings;
+  /**
+   * Whether motion is currently detected
+   */
   readonly movementDetected: boolean;
   /**
    * Time since the last motion was detected in seconds
    */
   readonly timeSinceLastMotion: number;
+  /**
+   * The number of detections today so far
+   */
   detectionsToday: number;
 
   /**

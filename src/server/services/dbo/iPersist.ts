@@ -18,7 +18,7 @@ import { CountToday, DesiredShutterPosition, EnergyCalculation, RoomBase, Shutte
 
 export interface iPersist {
   /**
-   *
+   * Whether persistence is properly initialized
    */
   initialized: boolean;
 

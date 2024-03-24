@@ -2,9 +2,15 @@ import { iRoomDevice } from './iRoomDevice';
 
 export const UNDEFINED_HUMIDITY_VALUE = -1;
 
-// TODO: Add missing Comments
 export interface iHumiditySensor extends iRoomDevice {
+  /**
+   * The interval to persist the humidity sensor information
+   * This mainly enforces the interval to be implemented.
+   */
   readonly persistHumiditySensorInterval: NodeJS.Timeout;
+  /**
+   * The current humidity in percent
+   */
   readonly humidity: number;
 
   /**

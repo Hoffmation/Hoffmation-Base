@@ -1,17 +1,5 @@
 import { LogSource } from '../../../models/logSource';
-
-export enum LogDebugType {
-  None,
-  SkipUnchangedActuatorCommand,
-  SkipUnchangedRolloPosition,
-  SetActuator,
-  ShutterPositionChange,
-  NewMovementState,
-  SkipUnchangedMovementState,
-  DaikinSuccessfullControlInfo,
-  EuroHeaterValveLogging,
-  Trilateration,
-}
+import { LogDebugType } from './log-debug-type';
 
 export class LogFilterData {
   room?: string;

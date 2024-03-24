@@ -3,11 +3,18 @@ import { iBaseDevice } from './iBaseDevice';
 
 // TODO: Add missing Comments
 export interface iExcessEnergyConsumer extends iBaseDevice {
+  /**
+   * The energy consuming settings for this device
+   */
   readonly energySettings: ExcessEnergyConsumerSettings;
 
-  // Consumption in Watts, needed to manage the Excess consumer
+  /**
+   * Consumption in Watts, needed to manage the Excess consumer
+   */
   currentConsumption: number;
-  // Whether this consumer is currently on or off
+  /**
+   * Whether this consumer is currently on or off
+   */
   on: boolean;
 
   /**

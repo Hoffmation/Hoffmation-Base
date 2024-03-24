@@ -45,7 +45,7 @@ export class NewsService {
 
   /**
    * Stops the regular check for new news feed items.
-   * @deprecated Use stopInterval instead
+   * @deprecated Use {@link stopInterval} instead
    */
   public static stopHourlyInterval(): void {
     NewsService.stopInterval();

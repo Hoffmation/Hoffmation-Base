@@ -72,7 +72,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     if (this.roomAddingSettings[shortName] !== undefined) {
       ServerLogService.writeLog(
         LogLevel.Alert,
-        `Es gibt bereits ein Registrat für HmIpRoomsettings für den Raumnamen "${shortName}"`,
+        `Es gibt bereits ein Registrat für Roomsetings für den Raumnamen "${shortName}"`,
       );
       return;
     }
