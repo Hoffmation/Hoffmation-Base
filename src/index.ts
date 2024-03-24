@@ -54,7 +54,7 @@ export class HoffmationBase {
     if (initObject.config.logSettings) {
       ServerLogService.initialize(initObject.config.logSettings);
     }
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Startup`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Startup');
     if (initObject.config.persistence) {
       if (initObject.config.persistence.postgreSql) {
         Utils.dbo = new PostgreSqlPersist(initObject.config.persistence.postgreSql);
@@ -62,39 +62,39 @@ export class HoffmationBase {
       await Utils.dbo?.initialize();
     }
     if (SettingsService.settings.mp3Server) {
-      ServerLogService.writeLog(LogLevel.Info, `Mp3Server settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'Mp3Server settings detected --> initializing');
       new MP3Server(SettingsService.settings.mp3Server);
     }
     if (SettingsService.settings.telegram) {
-      ServerLogService.writeLog(LogLevel.Info, `Telegram settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'Telegram settings detected --> initializing');
       TelegramService.initialize(SettingsService.settings.telegram);
     }
     if (SettingsService.settings.tibber) {
-      ServerLogService.writeLog(LogLevel.Info, `Tibber settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'Tibber settings detected --> initializing');
       TibberService.initialize(SettingsService.settings.tibber);
     }
     if (SettingsService.settings.polly) {
-      ServerLogService.writeLog(LogLevel.Info, `Amazon Polly settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'Amazon Polly settings detected --> initializing');
       PollyService.initialize(SettingsService.settings.polly);
     }
     if (SettingsService.settings.asusConfig) {
-      ServerLogService.writeLog(LogLevel.Info, `Asus Router settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'Asus Router settings detected --> initializing');
       new AsusRouter(SettingsService.settings.asusConfig);
     } else if (SettingsService.settings.unifiSettings) {
-      ServerLogService.writeLog(LogLevel.Info, `Unifi Router settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'Unifi Router settings detected --> initializing');
       new UnifiRouter(SettingsService.settings.unifiSettings);
     }
     TimeCallbackService.init();
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base First Initializations finished`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base First Initializations finished');
   }
 
   public static initializePostRoomCreationBeforeIoBroker(): void {
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post Room Creation`);
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post Room Creation finished`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Post Room Creation');
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Post Room Creation finished');
   }
 
   public static initializePostIoBroker(defaultMuellSonos?: iSpeaker): void {
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Post ioBrokerInitializations');
     Trilateration.initialize();
     if (SettingsService.TelegramActive) TelegramCommands.initialize();
 
@@ -119,35 +119,35 @@ export class HoffmationBase {
 
     Utils.guardedNewThread(() => {
       if (SettingsService.settings.muell) {
-        ServerLogService.writeLog(LogLevel.Info, `Muell settings detected --> initializing`);
+        ServerLogService.writeLog(LogLevel.Info, 'Muell settings detected --> initializing');
         MuellService.intialize(SettingsService.settings.muell, defaultMuellSonos);
       }
     });
 
     Utils.guardedNewThread(() => {
-      ServerLogService.writeLog(LogLevel.Info, `News settings detected --> initializing`);
+      ServerLogService.writeLog(LogLevel.Info, 'News settings detected --> initializing');
       NewsService.initialize(SettingsService.settings.news);
     });
 
     Utils.guardedNewThread(() => {
       if (SettingsService.settings.weather) {
-        ServerLogService.writeLog(LogLevel.Info, `Weather settings detected --> initializing`);
+        ServerLogService.writeLog(LogLevel.Info, 'Weather settings detected --> initializing');
         WeatherService.initialize(SettingsService.settings.weather);
       }
     });
     Utils.guardedNewThread(() => {
       if (SettingsService.settings.victron) {
-        ServerLogService.writeLog(LogLevel.Info, `Victron settings detected --> initializing`);
+        ServerLogService.writeLog(LogLevel.Info, 'Victron settings detected --> initializing');
         VictronService.initialize(SettingsService.settings.victron);
       }
     });
     if (SettingsService.TelegramActive) TelegramService.publishCommands();
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations finished`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Post ioBrokerInitializations finished');
   }
 
   public static startIoBroker(_devices: Devices): void {
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base: Starting ioBroker Connection`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base: Starting ioBroker Connection');
     this.ioMain = new ioBrokerMain(new DeviceUpdater());
-    ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base: ioBroker Connection established`);
+    ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base: ioBroker Connection established');
   }
 }

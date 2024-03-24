@@ -20,7 +20,7 @@ export class NewsService {
   public static lastNewsAudioFile: string;
 
   // prefix for all downloaded files of the news service
-  private static readonly newsFilePrefix: string = `news$`;
+  private static readonly newsFilePrefix: string = 'news$';
 
   // node interval that contains the ongoing fetch cycle
   private static interval: NodeJS.Timeout | undefined;
@@ -35,7 +35,7 @@ export class NewsService {
 
   public static initialize(config?: Partial<iNewsSettings>): void {
     if (config === undefined) {
-      ServerLogService.writeLog(LogLevel.Warn, `Service disabled.`, { source: LogSource.News });
+      ServerLogService.writeLog(LogLevel.Warn, 'Service disabled.', { source: LogSource.News });
       return;
     }
 
@@ -85,7 +85,7 @@ export class NewsService {
    */
   public static getLatestNews(): void {
     if (SettingsService.settings.mp3Server === undefined) {
-      ServerLogService.writeLog(LogLevel.Warn, `Not checking for newest news file, no download directory defined.`, {
+      ServerLogService.writeLog(LogLevel.Warn, 'Not checking for newest news file, no download directory defined.', {
         source: LogSource.News,
       });
       return;
@@ -94,7 +94,7 @@ export class NewsService {
     NewsService.cleanOldFiles(SettingsService.settings.mp3Server.path, NewsService.keepMaxAge);
 
     if (NewsService.rssUrl === undefined) {
-      ServerLogService.writeLog(LogLevel.Warn, `No rss feed set, not searching for new news.`, {
+      ServerLogService.writeLog(LogLevel.Warn, 'No rss feed set, not searching for new news.', {
         source: LogSource.News,
       });
       return;
@@ -119,7 +119,7 @@ export class NewsService {
           NewsService.playLastNews(speaker, volume, retries - 1);
         }, 1000);
       } else {
-        ServerLogService.writeLog(LogLevel.Error, `Service not ready despite waiting --> Abort.`, {
+        ServerLogService.writeLog(LogLevel.Error, 'Service not ready despite waiting --> Abort.', {
           source: LogSource.News,
         });
       }
@@ -145,7 +145,7 @@ export class NewsService {
           ServerLogService.writeLog(LogLevel.Debug, `Most recent news on ${feed.title} is "${currentFeedItem.title}"`);
 
           if (currentFeedItem.enclosure === undefined) {
-            ServerLogService.writeLog(LogLevel.Warn, `Couldn't find audio in last item of the rss feed.`, {
+            ServerLogService.writeLog(LogLevel.Warn, "Couldn't find audio in last item of the rss feed.", {
               source: LogSource.News,
             });
             return;
@@ -159,7 +159,7 @@ export class NewsService {
           // check for both path and pubdate in case the file name is always the same one
           if (fs.existsSync(filePath) && NewsService.lastFetchedPubDate == currentFeedItem.pubDate) {
             NewsService.lastNewsAudioFile = path.basename(filePath);
-            ServerLogService.writeLog(LogLevel.Debug, `Newest file already downloaded.`, { source: LogSource.News });
+            ServerLogService.writeLog(LogLevel.Debug, 'Newest file already downloaded.', { source: LogSource.News });
             return;
           }
 
@@ -167,7 +167,7 @@ export class NewsService {
           HTTPSService.downloadFile(currentFeedItem.enclosure.url, filePath)
             .then((success: boolean) => {
               if (!success) {
-                ServerLogService.writeLog(LogLevel.Debug, `Error while downloading audio file.`, {
+                ServerLogService.writeLog(LogLevel.Debug, 'Error while downloading audio file.', {
                   source: LogSource.News,
                 });
                 return;

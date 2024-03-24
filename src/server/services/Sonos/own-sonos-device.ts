@@ -67,7 +67,7 @@ export class OwnSonosDevice implements iSpeaker {
     resolveAfterRevert: boolean | undefined = false,
   ): void {
     if (SettingsService.settings.mp3Server?.serverAddress === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, `Sonos: Can't speak as we have no mp3Server`);
+      ServerLogService.writeLog(LogLevel.Alert, "Sonos: Can't speak as we have no mp3Server");
       return;
     }
     const specificTimeout: number = Math.ceil(duration / 1000) + 5;

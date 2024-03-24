@@ -42,7 +42,7 @@ export class ioBrokerMain {
   }
 
   private static initRooms(): void {
-    ServerLogService.writeLog(LogLevel.Info, `Recieved ioConnection initializing rooms now.`);
+    ServerLogService.writeLog(LogLevel.Info, 'Recieved ioConnection initializing rooms now.');
     for (const key in ioBrokerMain.roomConstructors) {
       new ioBrokerMain.roomConstructors[key]();
     }
@@ -93,7 +93,7 @@ export class ioBrokerMain {
   private async retrieveAllStates(): Promise<void> {
     const allStates: Record<string, ioBroker.State> = {};
     if (SettingsService.settings.ioBroker?.useSplitInitialization !== true) {
-      this.processAllStates((await this.getStatesRange(`*`)) ?? {});
+      this.processAllStates((await this.getStatesRange('*')) ?? {});
       return;
     }
     for (const char of ioBrokerMain.SplitKeys) {

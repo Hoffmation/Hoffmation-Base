@@ -22,7 +22,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   public constructor(info: IoBrokerDeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
     this.deviceCapabilities.push(DeviceCapability.energyManager);
-    this.log(LogLevel.Info, `Creating Energy Manager Device`);
+    this.log(LogLevel.Info, 'Creating Energy Manager Device');
     this._iCalculationInterval = Utils.guardedInterval(
       () => {
         this.calculateExcessEnergy();
@@ -221,7 +221,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     }
     if (!result.newState) {
       this.blockDeviceChangeTime = Utils.nowMS() + result.device.energySettings.powerReactionTime;
-      result.device.log(LogLevel.Info, `Turning off, as we don't have energy to spare...`);
+      result.device.log(LogLevel.Info, "Turning off, as we don't have energy to spare...");
       result.device.turnOffDueToMissingEnergy();
       this._lastDeviceChange = result;
     }

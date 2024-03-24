@@ -18,14 +18,14 @@ export class ShutterService {
       return b.currentLevel - a.currentLevel;
     });
 
-    const response: string[] = [`Dies sind die aktuellen Rollo Positionen:`];
+    const response: string[] = ['Dies sind die aktuellen Rollo Positionen:'];
     for (const r of rollos) {
       response.push(
         `${r.currentLevel}% Rollo: "${r.info.customName}" Gewünschte Position: ${r.desiredWindowShutterLevel}`,
       );
     }
-    response.push(`\nDie nächsten Zeiten zum Hochfahren:`);
-    const down: string[] = [`\nDie nächsten Zeiten zum Runterfahren:`];
+    response.push('\nDie nächsten Zeiten zum Hochfahren:');
+    const down: string[] = ['\nDie nächsten Zeiten zum Runterfahren:'];
     for (const r of API.getRooms().values()) {
       if (!r.WindowGroup) {
         continue;

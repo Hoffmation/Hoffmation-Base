@@ -119,7 +119,7 @@ export class RoomScene implements iScene {
     if (!this._on) {
       return;
     }
-    this.log(LogLevel.Info, `Ending scene`);
+    this.log(LogLevel.Info, 'Ending scene');
     this._on = false;
     this._onSceneEnd();
   }

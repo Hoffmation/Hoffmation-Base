@@ -25,10 +25,10 @@ export class VictronDevice implements iEnergyManager {
   public constructor(opts: VictronMqttConnectionOptions) {
     this.settings = new VictronDeviceSettings();
     this._info = new DeviceInfo();
-    this._info.fullName = `Victron Device`;
-    this._info.customName = `Victron`;
-    this._info.allDevicesKey = `victron`;
-    Devices.alLDevices[`victron`] = this;
+    this._info.fullName = 'Victron Device';
+    this._info.customName = 'Victron';
+    this._info.allDevicesKey = 'victron';
+    Devices.alLDevices['victron'] = this;
     Devices.energymanager = this;
     this.persistDeviceInfo();
     this.loadDeviceSettings();
@@ -165,7 +165,7 @@ export class VictronDevice implements iEnergyManager {
   private calculateExcessEnergy(): void {
     this._excessEnergy = 0;
     if (this.data == undefined) {
-      this.log(LogLevel.Debug, `No data available from Victron device.`);
+      this.log(LogLevel.Debug, 'No data available from Victron device.');
       return;
     }
 
@@ -175,7 +175,7 @@ export class VictronDevice implements iEnergyManager {
     const timeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
     if (this.settings.hasBattery && timeOfDay !== TimeOfDay.AfterSunset && timeOfDay !== TimeOfDay.Night) {
       if (this.data.battery.soc == null) {
-        this.log(LogLevel.Debug, `No battery data available from Victron device.`);
+        this.log(LogLevel.Debug, 'No battery data available from Victron device.');
         return;
       }
       neededBatteryWattage = ((1 - this.data.battery.soc) * this.settings.batteryCapacityWattage) / hoursTilSunset;
@@ -231,7 +231,7 @@ export class VictronDevice implements iEnergyManager {
     }
     if (!result.newState) {
       this.blockDeviceChangeTime = Utils.nowMS() + result.device.energySettings.powerReactionTime;
-      result.device.log(LogLevel.Info, `Turning off, as we don't have energy to spare...`);
+      result.device.log(LogLevel.Info, "Turning off, as we don't have energy to spare...");
       result.device.turnOffDueToMissingEnergy();
       this._lastDeviceChange = result;
     }

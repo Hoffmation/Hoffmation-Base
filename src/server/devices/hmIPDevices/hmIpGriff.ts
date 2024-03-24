@@ -138,7 +138,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
               (desiredTemp < currentTemp && outSideTemp < currentTemp) ||
               (desiredTemp > currentTemp && outSideTemp > currentTemp);
             if (!wouldHelp && this._helpingRoomTemp) {
-              const info: string = `Window should be closed, as it doesn't help reaching target temperature.`;
+              const info: string = "Window should be closed, as it doesn't help reaching target temperature.";
               this.log(LogLevel.Info, info);
               if (this.settings.informNotHelping) {
                 TelegramService.inform(info);

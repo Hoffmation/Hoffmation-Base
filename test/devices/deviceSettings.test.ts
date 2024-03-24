@@ -12,7 +12,7 @@ describe('Device Settings', () => {
     const actuatorSettings: ActuatorSettings = new ActuatorSettings();
     actuatorSettings.dawnOn = true;
     actuatorSettings.fromPartialObject(
-      JSON.parse(`{"dawnOn":false,"duskOn":false,"nightOn":false,"isStromStoss":false,"stromStossResendTime":180}`),
+      JSON.parse('{"dawnOn":false,"duskOn":false,"nightOn":false,"isStromStoss":false,"stromStossResendTime":180}'),
     );
     expect(actuatorSettings.dawnOn).toBeFalsy();
   });
@@ -20,7 +20,7 @@ describe('Device Settings', () => {
     const dimmerSettings: DimmerSettings = new DimmerSettings();
     dimmerSettings.dawnOn = true;
     dimmerSettings.fromPartialObject(
-      JSON.parse(`{"dawnOn":false,"duskOn":false,"nightOn":false,"isStromStoss":false,"stromStossResendTime":180}`),
+      JSON.parse('{"dawnOn":false,"duskOn":false,"nightOn":false,"isStromStoss":false,"stromStossResendTime":180}'),
     );
     expect(dimmerSettings.dawnOn).toBeFalsy();
   });

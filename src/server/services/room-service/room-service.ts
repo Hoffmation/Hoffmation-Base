@@ -105,7 +105,7 @@ export class RoomService {
       () => {
         this.awayModeActive = true;
         this._awayModeTimeout = undefined;
-        TelegramService.inform(`Alarm ist nun scharf. Gute Reise!`);
+        TelegramService.inform('Alarm ist nun scharf. Gute Reise!');
       },
       60000,
       this,
@@ -121,7 +121,7 @@ export class RoomService {
       () => {
         this.nightAlarmActive = true;
         this._nightModeTimeout = undefined;
-        TelegramService.inform(`Alarm ist nun scharf. Süße Träume!`);
+        TelegramService.inform('Alarm ist nun scharf. Süße Träume!');
       },
       60000,
       this,
@@ -149,11 +149,11 @@ export class RoomService {
 
   public static endAlarmModes(): void {
     if (this.awayModeActive) {
-      TelegramService.sendMessageToSubscriber(`Alarm Mode disarmed`);
+      TelegramService.sendMessageToSubscriber('Alarm Mode disarmed');
       SonosService.speakOnAll(Res.welcomeHome(), 35);
     }
     if (this.nightAlarmActive) {
-      TelegramService.sendMessageToSubscriber(`Nachtmodus der Alarmanlage entschärft`);
+      TelegramService.sendMessageToSubscriber('Nachtmodus der Alarmanlage entschärft');
       SonosService.speakOnAll(Res.goodMorning(), 30);
     }
     if (this._nightModeTimeout) {
@@ -173,7 +173,7 @@ export class RoomService {
   }
 
   private static stopIntrusionAlarm() {
-    ServerLogService.writeLog(LogLevel.Info, `Stoppe Intrusion Alarm`);
+    ServerLogService.writeLog(LogLevel.Info, 'Stoppe Intrusion Alarm');
     if (this._intrusionAlarmTimeout) {
       clearTimeout(this._intrusionAlarmTimeout);
     }
@@ -182,7 +182,7 @@ export class RoomService {
     }
     this._intrusionAlarmActive = false;
     this._intrusionAlarmLevel = 0;
-    ServerLogService.writeLog(LogLevel.Alert, `Alarm wurde beendet --> Fahre Rollos in Ausgangsposition.`);
+    ServerLogService.writeLog(LogLevel.Alert, 'Alarm wurde beendet --> Fahre Rollos in Ausgangsposition.');
     this.restoreShutterPositions(
       new RoomRestoreShutterPositionCommand(
         CommandSource.Force,

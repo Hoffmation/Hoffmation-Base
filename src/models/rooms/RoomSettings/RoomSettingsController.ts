@@ -126,7 +126,7 @@ export class RoomSettingsController implements iRoomDefaultSettings {
 
   public toJSON(): Partial<RoomSettingsController> {
     const result: Partial<RoomSettingsController> = Utils.jsonFilter(this);
-    return _.omit(result, [`defaultSettings`, 'deviceAddidngSettings']);
+    return _.omit(result, ['defaultSettings', 'deviceAddidngSettings']);
   }
 
   private onSettingChange(): void {

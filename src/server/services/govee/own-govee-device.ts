@@ -249,7 +249,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     this.device
       ?.turnOn()
       .then(() => {
-        this.log(LogLevel.Debug, `Govee turned on`, LogDebugType.SetActuator);
+        this.log(LogLevel.Debug, 'Govee turned on', LogDebugType.SetActuator);
       })
       .catch((error) => {
         this.log(LogLevel.Error, `Govee turn on resulted in error: ${error}`);
@@ -261,7 +261,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     this.device
       ?.turnOff()
       .then(() => {
-        this.log(LogLevel.Debug, `Govee turned off`, LogDebugType.SetActuator);
+        this.log(LogLevel.Debug, 'Govee turned off', LogDebugType.SetActuator);
       })
       .catch((error) => {
         this.log(LogLevel.Error, `Govee turn off resulted in error: ${error}`);

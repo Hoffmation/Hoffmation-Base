@@ -47,11 +47,11 @@ export class EnergyCalculation {
     logger: (level: LogLevel, message: string, logDebugType?: LogDebugType) => void,
   ): boolean {
     if (obj.drawnKwH === 0 && obj.injectedKwH === 0 && obj.selfConsumedKwH === 0) {
-      logger(LogLevel.Warn, `Not persisting energy Data, as all values are 0.`);
+      logger(LogLevel.Warn, 'Not persisting energy Data, as all values are 0.');
       return false;
     }
     if (!SettingsService.settings.energyManager?.wattagePrice) {
-      logger(LogLevel.Warn, `Wattage price not set, assuming average of 34ct.`);
+      logger(LogLevel.Warn, 'Wattage price not set, assuming average of 34ct.');
     }
     obj.endMs = endMs;
     obj.earnedInjected = Utils.round(
@@ -69,7 +69,7 @@ export class EnergyCalculation {
     obj.batteryStoredKwH = Utils.round(obj.batteryStoredKwH, 3);
     obj.batteryLevel = Utils.round(obj.batteryLevel, 3);
     Utils.dbo?.persistEnergyManager(obj);
-    logger(LogLevel.Info, `Persisting energy Manager Data.`);
+    logger(LogLevel.Info, 'Persisting energy Manager Data.');
     return true;
   }
 }

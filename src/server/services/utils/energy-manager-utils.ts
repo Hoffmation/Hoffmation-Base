@@ -14,7 +14,7 @@ export class EnergyManagerUtils {
       if (lastDeviceChange?.newState && e === lastDeviceChange.device) {
         e.log(
           LogLevel.Debug,
-          `This woould have been a matching energy consumer, but apperantly last turn on failed...`,
+          'This woould have been a matching energy consumer, but apperantly last turn on failed...',
         );
         return false;
       }
@@ -47,7 +47,7 @@ export class EnergyManagerUtils {
       if (lastDeviceChange?.newState === false && e === lastDeviceChange.device) {
         e.log(
           LogLevel.Debug,
-          `This woould have been a matching turn off energy consumer, but apperantly last turn off failed...`,
+          'This woould have been a matching turn off energy consumer, but apperantly last turn off failed...',
         );
         return false;
       }

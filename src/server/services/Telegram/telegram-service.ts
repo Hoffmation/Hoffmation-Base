@@ -74,10 +74,10 @@ export class TelegramService {
           TelegramService.sendMessage([m.chat.id], message.join('\n'));
           return true;
         },
-        `Gibt eine Liste mit sämtlichen Kommandos aus`,
+        'Gibt eine Liste mit sämtlichen Kommandos aus',
       ),
     );
-    TelegramService.inform(`(Re-)Initialisierung abgeschlossen`);
+    TelegramService.inform('(Re-)Initialisierung abgeschlossen');
   }
 
   public static publishCommands(): void {
@@ -131,7 +131,7 @@ export class TelegramService {
 
   public static sendMessage(ids: number[], message: string): void {
     if (!this.active) {
-      ServerLogService.writeLog(LogLevel.Debug, `Would have send telegram message, but telegram is not active`);
+      ServerLogService.writeLog(LogLevel.Debug, 'Would have send telegram message, but telegram is not active');
       return;
     }
 

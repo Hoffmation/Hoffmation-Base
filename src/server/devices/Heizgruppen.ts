@@ -7,8 +7,8 @@ export class Heizgruppen {
   public static getProblems(): string {
     const groups: HmIpHeizgruppe[] = this.getAllGruppen();
 
-    const response: string[] = [`Dies sind die bestehenden Differenzen:`];
-    response.push(`Raumname\t\tIst-Temperatur\t\tGerät`);
+    const response: string[] = ['Dies sind die bestehenden Differenzen:'];
+    response.push('Raumname\t\tIst-Temperatur\t\tGerät');
     for (const g of groups) {
       const heizungen: iHeater[] = g.getBelongingHeizungen();
       const tempProblem: string[] = [`${g.info.room}\t\t${g.iTemperature}°C\t\t${g.info.customName}`];

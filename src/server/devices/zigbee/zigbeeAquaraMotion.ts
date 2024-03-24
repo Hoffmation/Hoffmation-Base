@@ -8,7 +8,7 @@ import { DeviceCapability } from '../DeviceCapability';
 
 export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminationSensor {
   private _illuminance: number = 0;
-  private occupancyTimeoutID = `occupancy_timeout`;
+  private occupancyTimeoutID = 'occupancy_timeout';
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraMotion);

@@ -114,12 +114,12 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
   /** @inheritDoc */
   public setLight(c: DimmerSetLightCommand): void {
     if (this._stateIdState === '') {
-      this.log(LogLevel.Error, `Keine State ID bekannt.`);
+      this.log(LogLevel.Error, 'Keine State ID bekannt.');
       return;
     }
 
     if (!this.ioConn) {
-      this.log(LogLevel.Error, `Keine Connection bekannt.`);
+      this.log(LogLevel.Error, 'Keine Connection bekannt.');
       return;
     }
 

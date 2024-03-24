@@ -110,7 +110,7 @@ export class WindowGroup extends BaseGroup {
         return;
       }
       if (darkOutside) {
-        f.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c, `It's dark outside.`));
+        f.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c, "It's dark outside."));
         return;
       }
       let desiredPos: number = f.desiredPosition;

@@ -39,7 +39,7 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
       case 'battery':
         this.battery = state.val as number;
         if (this.battery < 20) {
-          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+          this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
     }

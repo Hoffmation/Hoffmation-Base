@@ -33,7 +33,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       ?.getShutterCalibration(this)
       .then((calibrationData: ShutterCalibration) => {
         this._shutterCalibrationData = calibrationData;
-        this.log(LogLevel.DeepTrace, `ZigbeeShutter  initialized with calibration data`);
+        this.log(LogLevel.DeepTrace, 'ZigbeeShutter  initialized with calibration data');
       })
       .catch((err: Error) => {
         this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err?.message ?? err}`);
@@ -127,14 +127,14 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (this._window !== undefined) {
       if (this._window.griffeInPosition(WindowPosition.offen) > 0 && pPosition < 100) {
         if (!c.skipOpenWarning) {
-          this.log(LogLevel.Alert, `Not closing the shutter, as the window is open!`);
+          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
         }
         return;
       }
       if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!c.skipOpenWarning) {
-          this.log(LogLevel.Alert, `Not closing the shutter, as the window is half open!`);
+          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');
         }
       }
     }
