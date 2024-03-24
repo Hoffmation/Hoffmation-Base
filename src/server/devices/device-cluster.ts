@@ -123,7 +123,14 @@ export class DeviceCluster {
     }
   }
 
-  public toJSON(): Partial<DeviceCluster & { deviceDict?: { [p: string]: DeviceList } }> {
+  public toJSON(): Partial<
+    DeviceCluster & {
+      /**
+       * Dictionary representation of the normal device map
+       */
+      deviceDict?: { [p: string]: DeviceList };
+    }
+  > {
     return Utils.jsonFilter(this);
   }
 }

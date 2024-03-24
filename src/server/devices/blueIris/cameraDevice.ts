@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { iCameraDevice, iHandleSensor, iRoomDevice } from '../baseDeviceInterfaces';
+import { iBaseDevice, iCameraDevice, iRoomDevice } from '../baseDeviceInterfaces';
 import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../../../models';
 import { BlueIrisCoordinator } from './blueIrisCoordinator';
 import { API, LogDebugType, ServerLogService, SettingsService, TelegramService, Utils } from '../../services';
@@ -8,7 +8,6 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 import { ioBrokerMain } from '../../ioBroker';
-import { WindowPosition } from '../models';
 
 export class CameraDevice implements iCameraDevice {
   public readonly blueIrisName: string;
@@ -33,7 +32,7 @@ export class CameraDevice implements iCameraDevice {
   private _lastImage: string = '';
   private _personDetected: boolean = false;
   private _dogDetected: boolean = false;
-  private _openHandlesMap: Map<string, iHandleSensor> = new Map<string, iHandleSensor>();
+  private _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
   public readonly mpegStreamLink: string = '';
   public readonly h264IosStreamLink: string = '';
   public readonly rtspStreamLink: string = '';
@@ -47,8 +46,8 @@ export class CameraDevice implements iCameraDevice {
     return this._personDetected;
   }
 
-  public get alarmBlockedByOpenHandles(): boolean {
-    return this._openHandlesMap.size > 0;
+  public get alarmBlockedByDevices(): boolean {
+    return this._devicesBlockingAlarmMap.size > 0;
   }
 
   public constructor(mqttName: string, roomName: string, blueIrisName: string) {
@@ -141,14 +140,16 @@ export class CameraDevice implements iCameraDevice {
     this._movementDetectedCallback.push(pCallback);
   }
 
-  public onGriffUpdate(handle: iHandleSensor): void {
-    const open: boolean = handle.position === WindowPosition.offen;
-    if (handle.position === WindowPosition.offen) {
-      this._openHandlesMap.set(handle.id, handle);
+  public blockForDevice(device: iBaseDevice, block: boolean): void {
+    if (block) {
+      this._devicesBlockingAlarmMap.set(device.id, device);
     } else {
-      this._openHandlesMap.delete(handle.id);
+      this._devicesBlockingAlarmMap.delete(device.id);
     }
-    this.log(LogLevel.Debug, `Handle change to open (${open}), new open amount: ${this._openHandlesMap.size}`);
+    this.log(
+      LogLevel.Debug,
+      `Handle device ${block ? 'block' : 'unblock'}, new blocking amount: ${this._devicesBlockingAlarmMap.size}`,
+    );
   }
 
   public persistMotionSensor(): void {
@@ -200,7 +201,7 @@ export class CameraDevice implements iCameraDevice {
         this._lastImage = state.val as string;
         Utils.guardedTimeout(() => {
           // Give Person Detected Update some time, as otherwise personDetected might still be false
-          if (this.settings.alertPersonOnTelegram && this._personDetected && !this.alarmBlockedByOpenHandles) {
+          if (this.settings.alertPersonOnTelegram && this._personDetected && !this.alarmBlockedByDevices) {
             TelegramService.sendImage(`${this.name} detected Person`, new Base64Image(this._lastImage, 'person_alert'));
           }
         }, 1000);

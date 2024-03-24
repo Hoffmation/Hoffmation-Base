@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 export interface IReadKeyList<T> {
   Hka_Bd: {
     Anforderung: {

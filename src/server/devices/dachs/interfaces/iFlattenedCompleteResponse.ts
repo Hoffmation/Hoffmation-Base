@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 export interface iFlattenedCompleteResponse {
   'Wartung_Cache.usIntervall': number;
   'Wartung_Cache.ulZeitstempel': number;

@@ -1,3 +1,4 @@
+/* eslint-disable */
 export interface deviceConfig {
   type?: ioBroker.ObjectType;
   _id: string;

@@ -1,11 +1,12 @@
 import { iExcessEnergyConsumer } from '../../devices';
 import { LogLevel } from '../../../models';
+import { EnergyConsumerStateChange } from './energy-consumer-state-change';
 
 export class EnergyManagerUtils {
   public static turnOnAdditionalConsumer(
     excessEnergyConsumer: iExcessEnergyConsumer[],
-    lastDeviceChange: { newState: boolean; device: iExcessEnergyConsumer } | undefined,
-  ): void | undefined | { newState: boolean; device: iExcessEnergyConsumer } {
+    lastDeviceChange: EnergyConsumerStateChange | undefined,
+  ): void | undefined | EnergyConsumerStateChange {
     const potentialDevices: iExcessEnergyConsumer[] = excessEnergyConsumer.filter((e) => {
       if (e.energySettings.priority === -1 || e.on || !e.isAvailableForExcessEnergy()) {
         return false;
@@ -33,8 +34,8 @@ export class EnergyManagerUtils {
 
   public static turnOffAdditionalConsumer(
     excessEnergyConsumer: iExcessEnergyConsumer[],
-    lastDeviceChange: { newState: boolean; device: iExcessEnergyConsumer } | undefined,
-  ): void | undefined | { newState: boolean; device: iExcessEnergyConsumer } {
+    lastDeviceChange: EnergyConsumerStateChange | undefined,
+  ): void | undefined | EnergyConsumerStateChange {
     const potentialDevices: iExcessEnergyConsumer[] = excessEnergyConsumer.filter((e) => {
       if (e.energySettings.priority === -1 || !e.on) {
         return false;

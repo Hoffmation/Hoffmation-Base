@@ -6,6 +6,7 @@ import { LogLevel } from '../../models';
 import { HTTPSOptions } from './HTTPSOptions';
 import path from 'path';
 import { IncomingMessage } from 'http';
+import { FileInfo } from './file-info';
 
 export class HTTPSService {
   public static request(
@@ -56,7 +57,7 @@ export class HTTPSService {
       }
 
       const file = fs.createWriteStream(filePath);
-      let fileInfo: { mime: string; size: number } | null = null;
+      let fileInfo: FileInfo | null = null;
 
       const request = HTTPS.get(url, (response: IncomingMessage) => {
         if (response.statusCode !== 200) {

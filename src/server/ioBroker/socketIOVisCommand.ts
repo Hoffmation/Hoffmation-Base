@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 export class SocketIOVisCommand {
   public command: string;
   public data: string;

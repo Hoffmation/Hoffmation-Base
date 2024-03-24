@@ -53,6 +53,7 @@ import { Dachs } from './dachs';
 import { iConfig } from '../config';
 import { ShellyDevice, ShellyTrv } from './shelly';
 import { TuyaDevice, TuyaGarageOpener } from './tuya';
+import { NameAmountValuePair } from './nameAmountValuePair';
 
 export class Devices {
   public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
@@ -133,7 +134,7 @@ export class Devices {
 
   public static getBatteryInfo(): string {
     ServerLogService.writeLog(LogLevel.Info, `Getting Battery Info`);
-    let data: Array<{ name: string; amount: number }> = [];
+    let data: NameAmountValuePair[] = [];
     const result: string[] = [
       `These are the battery values for each device. Device dependandt some are in volts, some in %`,
     ];
@@ -146,7 +147,7 @@ export class Devices {
         data.push({ name: d.info.customName, amount: d.battery });
       }
     }
-    data = data.sort((a: { name: string; amount: number }, b: { name: string; amount: number }) => {
+    data = data.sort((a: NameAmountValuePair, b: NameAmountValuePair) => {
       return a.amount - b.amount;
     });
     for (let i = 0; i < data.length; i++) {

@@ -20,7 +20,7 @@ export class ioBrokerMain {
     this.servConn = new IOBrokerConnection(
       {
         name: '', // optional - default 'vis.0'
-        connLink: SettingsService.settings.ioBrokerUrl, // optional URL of the socket.io adapter
+        connLink: SettingsService.settings.ioBroker?.ioBrokerUrl ?? SettingsService.settings.ioBrokerUrl,
         socketSession: '', // optional - used by authentication
       },
       this.connectionCallbacks,
@@ -73,7 +73,18 @@ export class ioBrokerMain {
       }, this);
     };
 
-    this.connectionCallbacks.onError = (err: { command: string; arg: string }) => {
+    this.connectionCallbacks.onError = (err: {
+      /**
+       *
+       */
+      command: string /**
+       *
+       */;
+      /**
+       *
+       */
+      arg: string;
+    }) => {
       console.log(`Cannot execute ${err.command} for ${err.arg}, because of insufficient permissions`);
     };
   }

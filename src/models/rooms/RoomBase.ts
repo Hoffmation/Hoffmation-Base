@@ -207,7 +207,14 @@ export class RoomBase implements iRoomBase, iIdHolder {
     return TimeCallbackService.darkOutsideOrNight(timeOfDay);
   }
 
-  public toJSON(): Partial<RoomBase & { groupDict?: { [p: string]: BaseGroup } }> {
+  public toJSON(): Partial<
+    RoomBase & {
+      /**
+       * The dictionary representation of the group map
+       */
+      groupDict?: { [p: string]: BaseGroup };
+    }
+  > {
     return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
   }
 

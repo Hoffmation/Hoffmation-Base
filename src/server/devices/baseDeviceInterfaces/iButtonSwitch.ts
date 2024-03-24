@@ -2,24 +2,40 @@ import { Button, ButtonPosition, ButtonPressType } from '../button';
 import { iRoomDevice } from './iRoomDevice';
 
 export interface iButtonSwitch extends iRoomDevice {
-  // Primarily in 4-6 Button switches
+  /**
+   * The Top-Left Button which can be found on normale 4-6 Button switches
+   */
   buttonTopLeft: Button | undefined;
-  // Primarily in 4-6 Button switches
+  /**
+   * The Top-Right Button which can be found on normale 4-6 Button switches
+   */
   buttonTopRight: Button | undefined;
 
-  // Primarily in 6 Button switches
+  /**
+   * The vertically Middle and horicontally Left Button which can be found on 6 Button switches
+   */
   buttonMidLeft: Button | undefined;
-  // Primarily in 6 Button switches
+  /**
+   * The vertically Middle and horicontally Right Button which can be found on 6 Button switches
+   */
   buttonMidRight: Button | undefined;
 
-  // Primarily in 4-6 Button switches
+  /**
+   * The Bottom-Left Button which can be found on normale 4-6 Button switches
+   */
   buttonBotLeft: Button | undefined;
-  // Primarily in 4-6 Button switches
+  /**
+   * The Bottom-Right Button which can be found on normale 4-6 Button switches
+   */
   buttonBotRight: Button | undefined;
 
-  // Primarily in 2 Button switches (top, bot)
+  /**
+   * The Bottom Button which can be found on vertical 2 Button switches
+   */
   buttonBot: Button | undefined;
-  // Primarily in 2 Button switches (top, bot)
+  /**
+   * The Top Button which can be found on vertical 2 Button switches
+   */
   buttonTop: Button | undefined;
 
   /**

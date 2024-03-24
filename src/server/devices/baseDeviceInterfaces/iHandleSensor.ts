@@ -2,7 +2,13 @@ import { WindowPosition } from '../models';
 import { iRoomDevice } from './iRoomDevice';
 
 export interface iHandleSensor extends iRoomDevice {
+  /**
+   *
+   */
   position: WindowPosition;
+  /**
+   *
+   */
   minutesOpen: number;
 
   /**

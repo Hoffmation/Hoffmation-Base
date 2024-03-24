@@ -17,6 +17,9 @@ import {
 import { CountToday, DesiredShutterPosition, EnergyCalculation, RoomBase, ShutterCalibration } from '../../../models';
 
 export interface iPersist {
+  /**
+   *
+   */
   initialized: boolean;
 
   /**

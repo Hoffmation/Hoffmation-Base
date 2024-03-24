@@ -8,4 +8,8 @@ export interface iIobrokerSettigns {
    * Whether the new/advanced zigbee2mqtt adapter is used
    */
   useZigbee2mqtt?: boolean;
+  /**
+   * The URL to the ioBroker instance (or the IP-Address)
+   */
+  ioBrokerUrl: string;
 }

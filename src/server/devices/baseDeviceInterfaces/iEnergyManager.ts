@@ -2,12 +2,23 @@ import { iExcessEnergyConsumer } from './iExcessEnergyConsumer';
 import { iBaseDevice } from './iBaseDevice';
 import { iDisposable } from '../../services';
 
-// TODO: Add missing Comments
 export interface iEnergyManager extends iBaseDevice, iDisposable {
+  /**
+   * The total energy being excessive at the moment of last calculation.
+   */
   excessEnergy: number;
 
+  /**
+   * The total wattaage being injected into the grid at the moment of last calculation.
+   */
   readonly injectingWattage: number;
+  /**
+   * The total wattage being drawn from the grid at the moment of last calculation.
+   */
   readonly drawingWattage: number;
+  /**
+   * The total wattage being consumed within the house at the moment of last calculation.
+   */
   readonly selfConsumingWattage: number;
 
   /**

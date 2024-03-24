@@ -2,12 +2,13 @@ import { ServerLogService, Utils } from '../../services';
 import { LogLevel } from '../../../models';
 import { ButtonCapabilities } from './buttonCapabilities';
 import { ButtonPressType } from './buttonPressType';
+import { ButtonCallback } from './buttonCallback';
 
 export class Button {
   private _statesMap: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();
-  private _callbacksMap: Map<ButtonPressType, Array<{ cb: (pValue: boolean) => void; description: string }>> = new Map<
+  private _callbacksMap: Map<ButtonPressType, Array<ButtonCallback>> = new Map<
     ButtonPressType,
-    Array<{ cb: (pValue: boolean) => void; description: string }>
+    Array<ButtonCallback>
   >();
   private _timeouts: Map<ButtonPressType, null | NodeJS.Timeout> = new Map<ButtonPressType, NodeJS.Timeout | null>();
 
@@ -46,8 +47,7 @@ export class Button {
     pCallback: (pValue: boolean) => void,
     description: string = 'Not described',
   ): void {
-    const cbArr: Array<{ cb: (pValue: boolean) => void; description: string }> | undefined =
-      this._callbacksMap.get(buttonType);
+    const cbArr: Array<ButtonCallback> | undefined = this._callbacksMap.get(buttonType);
     if (cbArr === undefined) {
       ServerLogService.writeLog(
         LogLevel.Error,

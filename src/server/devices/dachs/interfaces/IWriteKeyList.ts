@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import { KeyListEntity } from './KeyListEntity';
 
 export interface IWriteKeyList {

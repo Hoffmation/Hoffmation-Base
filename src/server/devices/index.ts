@@ -25,3 +25,4 @@ export * from './iDeviceUpdater';
 export * from './IoBrokerBaseDevice';
 export * from './tv';
 export * from './wledDevice';
+export { NameAmountValuePair } from './nameAmountValuePair';

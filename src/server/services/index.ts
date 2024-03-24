@@ -20,3 +20,4 @@ export * from './ShutterService';
 export * from './tibber-service';
 export * from './victron/index';
 export * from './time-callback-service';
+export { FileInfo } from './file-info';

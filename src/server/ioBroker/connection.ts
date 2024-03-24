@@ -1,4 +1,4 @@
-/* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment,jsdoc/require-returns-description,jsdoc/require-param-description */
+/* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment,jsdoc/require-returns-description,jsdoc/require-param-description,jsdoc/require-jsdoc */
 import { IncomingMessage } from 'http';
 import io from 'socket.io-client';
 import { iobrokerConnectionLogging, iobrokerConnectionLogLevel } from './iobrokerConnectionLogging';

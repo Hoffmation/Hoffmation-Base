@@ -5,8 +5,14 @@ import { DimmerSetLightCommand, DimmerSettings, LampToggleLightCommand } from '.
  * This interface represents a dimmable lamp device.
  */
 export interface iDimmableLamp extends iLamp {
+  /**
+   * The settings of the dimmer providing e.g. brightness settings for different times of the day.
+   */
   settings: DimmerSettings;
 
+  /**
+   * The current brightness of the light in percent.
+   */
   readonly brightness: number;
 
   /**
