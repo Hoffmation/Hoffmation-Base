@@ -21,7 +21,14 @@ export class TimeCallback {
     return this._calculationSunrise ?? TimeCallbackService.nextSunRise;
   }
 
+  /**
+   * The date this Callback was last fired
+   */
   public lastDone: Date = new Date(0);
+  /**
+   * The calculated date when this callback should be fired next
+   * @warning This might have not yet been recalculated
+   */
   public nextToDo?: Date;
 
   private _calculationSunset?: Date;

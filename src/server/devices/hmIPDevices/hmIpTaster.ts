@@ -21,13 +21,27 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     triplePress: false,
   };
 
+  /** @inheritDoc */
   public buttonTopLeft: Button;
+  /** @inheritDoc */
   public buttonMidLeft: Button;
+  /** @inheritDoc */
   public buttonBotLeft: Button;
+  /** @inheritDoc */
   public buttonTopRight: Button;
+  /** @inheritDoc */
   public buttonMidRight: Button;
+  /** @inheritDoc */
   public buttonBotRight: Button;
+  /**
+   * Not present for HM-IP-Taster
+   * @inheritDoc
+   */
   public buttonBot: undefined = undefined;
+  /**
+   * Not present for HM-IP-Taster
+   * @inheritDoc
+   */
   public buttonTop: undefined = undefined;
 
   public get battery(): number {

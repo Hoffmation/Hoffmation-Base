@@ -19,11 +19,16 @@ import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
 import { LampUtils } from '../sharedFunctions';
 
 export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAutomatic {
+  /** @inheritDoc */
   public lightOn: boolean = false;
+  /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
   private lightOnSwitchID: string = '';
+  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
+  /** @inheritDoc */
   public queuedValue: boolean | null = null;
+  /** @inheritDoc */
   public targetAutomaticState: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {

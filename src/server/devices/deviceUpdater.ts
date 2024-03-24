@@ -1,6 +1,6 @@
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { IDeviceUpdater } from './iDeviceUpdater';
-import { ServerLogService } from '../services';
+import { API, ServerLogService } from '../services';
 import { LogLevel } from '../../models';
 import { Devices } from './devices';
 import { iBaseDevice } from './baseDeviceInterfaces';
@@ -8,12 +8,6 @@ import { MqttCoordinator } from './mqtt';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 
 export class DeviceUpdater implements IDeviceUpdater {
-  public devices: Devices;
-
-  constructor(pDevices: Devices) {
-    this.devices = pDevices;
-  }
-
   public updateObject(pId: string, pObj: ioBroker.Object): void {
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pId);
     if (idSplit.length < 2) return;
@@ -43,7 +37,7 @@ export class DeviceUpdater implements IDeviceUpdater {
       classifier = Devices.IDENTIFIER_ZIGBEE;
       devId = idSplit[2].substring(2);
     }
-    const device: undefined | iBaseDevice = Devices.alLDevices[`${classifier}-${devId}`];
+    const device: undefined | iBaseDevice = API.getDevice(`${classifier}-${devId}`);
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
       return;
     }

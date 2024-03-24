@@ -45,8 +45,8 @@ export interface iButtonSwitch extends iRoomDevice {
 
   /**
    * Persist the button press to the persistent storage
-   * @param {string} buttonName - The name of the button
-   * @param {ButtonPressType} pressType - The type of the button press
+   * @param buttonName - The name of the button
+   * @param pressType - The type of the button press
    */
   persist(buttonName: string, pressType: ButtonPressType): void;
 
@@ -57,8 +57,8 @@ export interface iButtonSwitch extends iRoomDevice {
 
   /**
    * Method to simulate a button press (e.g. for testing or to use a specific logic which is bound to this button)
-   * @param {ButtonPosition} position - The position of the button
-   * @param {ButtonPressType} pressType - The type of the button press
+   * @param position - The position of the button
+   * @param pressType - The type of the button press
    */
   pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null;
 }

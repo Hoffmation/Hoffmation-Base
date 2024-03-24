@@ -15,13 +15,39 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
     triplePress: false,
   };
 
+  /**
+   * Not present for HM-IP-Wippe
+   * @inheritDoc
+   */
   public buttonTopLeft: undefined;
+  /**
+   * Not present for HM-IP-Wippe
+   * @inheritDoc
+   */
   public buttonMidLeft: undefined;
+  /**
+   * Not present for HM-IP-Wippe
+   * @inheritDoc
+   */
   public buttonBotLeft: undefined;
+  /**
+   * Not present for HM-IP-Wippe
+   * @inheritDoc
+   */
   public buttonTopRight: undefined;
+  /**
+   * Not present for HM-IP-Wippe
+   * @inheritDoc
+   */
   public buttonMidRight: undefined;
+  /**
+   * Not present for HM-IP-Wippe
+   * @inheritDoc
+   */
   public buttonBotRight: undefined;
+  /** @inheritDoc */
   public buttonBot: Button = new Button('Bottom', HmIpWippe.BUTTON_CAPABILLITIES);
+  /** @inheritDoc */
   public buttonTop: Button = new Button('Top', HmIpWippe.BUTTON_CAPABILLITIES);
 
   public constructor(pInfo: IoBrokerDeviceInfo) {

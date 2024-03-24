@@ -20,15 +20,15 @@ export class TrilaterationPoint {
     return points;
   }
 
-  public readonly coordinateName: string;
-
   constructor(
     public x: number,
     public y: number,
     public z: number,
     public roomName: string,
-  ) {
-    this.coordinateName = `${this.x}-${this.y}-${this.z}`;
+  ) {}
+
+  public get coordinateName(): string {
+    return `${this.x}-${this.y}-${this.z}`;
   }
 
   public getDistance(other: TrilaterationPoint): number {

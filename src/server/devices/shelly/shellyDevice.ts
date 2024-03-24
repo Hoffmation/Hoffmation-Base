@@ -11,8 +11,6 @@ export class ShellyDevice extends IoBrokerBaseDevice implements iDisposable {
     return this._lastUpdate;
   }
 
-  public stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
-
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
   }

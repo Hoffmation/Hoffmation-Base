@@ -18,6 +18,7 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
+  /** @inheritDoc */
   public settings: ShutterSettings = new ShutterSettings();
   protected _iMovementFinishTimeout: NodeJS.Timeout | null = null;
   protected _firstCommandRecieved: boolean = false;

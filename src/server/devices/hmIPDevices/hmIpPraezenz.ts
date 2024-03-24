@@ -17,13 +17,14 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
-  public excludeFromNightAlarm: boolean = false;
+  /** @inheritDoc */
   public movementDetected: boolean = false;
 
   public get battery(): number {
     return this._battery;
   }
 
+  /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   // private presenceStateID: string;

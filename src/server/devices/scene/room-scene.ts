@@ -9,8 +9,11 @@ import { Devices } from '../devices';
 import _ from 'lodash';
 
 export class RoomScene implements iScene {
+  /** @inheritDoc */
   public description: string = '';
+  /** @inheritDoc */
   public room: RoomBase | undefined;
+  /** @inheritDoc */
   public settings: SceneSettings = new SceneSettings();
   private readonly _onSceneStart: () => void;
   private readonly _onSceneEnd: () => void;

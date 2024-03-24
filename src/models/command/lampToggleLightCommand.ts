@@ -5,6 +5,7 @@ import { BaseCommand } from './baseCommand';
 import { TimeOfDay } from '../timeCallback';
 
 export class LampToggleLightCommand extends ActuatorToggleCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.LampToggleLightCommand;
 
   /**

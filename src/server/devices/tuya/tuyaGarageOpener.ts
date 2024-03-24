@@ -6,6 +6,7 @@ import { DeviceCapability } from '../DeviceCapability';
 import { iGarageDoorOpener } from '../baseDeviceInterfaces';
 
 export class TuyaGarageOpener extends TuyaDevice implements iGarageDoorOpener {
+  /** @inheritDoc */
   public settings: GarageDoorOpenerSettings = new GarageDoorOpenerSettings();
   private readonly _switchId: string;
   private readonly _doorContactId: string;

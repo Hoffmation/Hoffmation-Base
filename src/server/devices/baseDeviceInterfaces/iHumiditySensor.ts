@@ -20,7 +20,7 @@ export interface iHumiditySensor extends iRoomDevice {
 
   /**
    * Add a callback that is called when the humidity changes
-   * @param {(pValue: number) => void} pCallback - The callback to fire
+   * @param pCallback - The callback to fire
    */
   addHumidityCallback(pCallback: (pValue: number) => void): void;
 

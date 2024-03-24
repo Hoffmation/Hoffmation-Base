@@ -1,6 +1,9 @@
 import { HeatingMode, iConfig } from '../config';
 
 export class SettingsService {
+  /**
+   * The active settings for the Hoffmation system.
+   */
   public static settings: iConfig;
 
   public static get TelegramActive(): boolean {

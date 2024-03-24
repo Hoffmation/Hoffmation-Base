@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 export class ConnectionCallbacks {
   public onAuth?: unknown;
 

@@ -10,12 +10,14 @@ import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettin
 import { HeatGroup } from '../groups';
 
 export class ShellyTrv extends ShellyDevice implements iHeater {
+  /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
 
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
 
+  /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHeater();

@@ -3,6 +3,7 @@ import { CommandSource } from './commandSource';
 import { CommandType } from './commandType';
 
 export class WindowSetDesiredPositionCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.WindowSetDesiredPositionCommand;
 
   /**

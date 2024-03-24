@@ -4,6 +4,7 @@ import { CollisionSolving } from '../collisionSolving';
 import { BaseCommand } from './baseCommand';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
+  /** @inheritDoc */
   public _commandType: CommandType = CommandType.BlockAutomaticUntilCommand;
 
   /**

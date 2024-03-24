@@ -4,9 +4,9 @@ import { LogLevel } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { MagnetPosition } from '../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iBatteryDevice } from '../../baseDeviceInterfaces';
+import { iBatteryDevice, iMagnetSensor } from '../../baseDeviceInterfaces';
 
-export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice {
+export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice, iMagnetSensor {
   protected _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   public get lastBatteryPersist(): number {
@@ -17,8 +17,11 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice 
     return this._battery;
   }
 
+  /** @inheritDoc */
   public position: MagnetPosition = MagnetPosition.closed;
+  /** @inheritDoc */
   public telegramOnOpen: boolean = false;
+  /** @inheritDoc */
   public speakOnOpen: boolean = false;
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _openCallback: Array<(pValue: boolean) => void> = [];

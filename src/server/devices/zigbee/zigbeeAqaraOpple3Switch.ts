@@ -12,13 +12,27 @@ export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
     triplePress: true,
   };
 
+  /** @inheritDoc */
   public buttonTopLeft: Button = new Button('TopLeft', ZigbeeAqaraOpple3Switch.BUTTON_CAPABILLITIES);
+  /** @inheritDoc */
   public buttonMidLeft: Button = new Button('MidLeft', ZigbeeAqaraOpple3Switch.BUTTON_CAPABILLITIES);
+  /** @inheritDoc */
   public buttonBotLeft: Button = new Button('BotLeft', ZigbeeAqaraOpple3Switch.BUTTON_CAPABILLITIES);
+  /** @inheritDoc */
   public buttonTopRight: Button = new Button('TopRight', ZigbeeAqaraOpple3Switch.BUTTON_CAPABILLITIES);
+  /** @inheritDoc */
   public buttonMidRight: Button = new Button('MidRight', ZigbeeAqaraOpple3Switch.BUTTON_CAPABILLITIES);
+  /** @inheritDoc */
   public buttonBotRight: Button = new Button('BotRight', ZigbeeAqaraOpple3Switch.BUTTON_CAPABILLITIES);
+  /**
+   * Not present for {@link DeviceType.ZigbeeAqaraOpple3Switch}
+   * @inheritDoc
+   */
   public buttonBot: undefined = undefined;
+  /**
+   * Not present for {@link DeviceType.ZigbeeAqaraOpple3Switch}
+   * @inheritDoc
+   */
   public buttonTop: undefined = undefined;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {

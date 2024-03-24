@@ -5,6 +5,9 @@ import { IOBrokerConnection } from './connection';
 
 export class ioBrokerMain {
   private static readonly SplitKeys: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  /**
+   * The connection to the ioBroker server
+   */
   public static iOConnection: IOBrokerConnection | undefined;
   private static roomConstructors: { [roomName: string]: { new (): iRoomBase } } = {};
   private servConn: IOBrokerConnection;

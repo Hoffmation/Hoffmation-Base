@@ -13,7 +13,7 @@ import { ZigbeeDimmer } from './zigbeeDimmer';
 import { Utils } from '../../../services';
 
 export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct {
-  public static DEFAULT_COLOR_WARM: string = '#f2b200';
+  /** @inheritDoc */
   public override settings: LedSettings = new LedSettings();
   protected abstract readonly _stateIdColor: string;
   protected abstract readonly _stateIdColorTemp: string;
@@ -55,9 +55,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
     }
   }
 
-  /**
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   public override setTimeBased(c: LampSetTimeBasedCommand): void {
     this.setLight(LedSetLightCommand.byTimeBased(this.settings, c));
   }
@@ -66,9 +64,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
     this.setLight(new LedSetLightCommand(c, c.on, '', c.timeout));
   }
 
-  /**
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   public override setLight(c: LedSetLightCommand): void {
     if (this._stateIdState === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);

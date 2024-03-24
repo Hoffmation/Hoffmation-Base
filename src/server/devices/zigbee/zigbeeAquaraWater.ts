@@ -6,6 +6,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { iBatteryDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
+// TODO: Add iWaterSensor
 export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
@@ -17,7 +18,14 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
     return this._battery;
   }
 
+  /**
+   * Whether water is detected
+   */
   public water: boolean = false;
+  /**
+   * The timeout for the alarm
+   * @default undefined (no alarm active)
+   */
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
   private _messageAlarm: string = '';

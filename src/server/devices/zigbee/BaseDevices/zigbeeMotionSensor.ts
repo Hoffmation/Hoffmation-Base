@@ -15,6 +15,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     return this._lastBatteryPersist;
   }
 
+  /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
 
   public get movementDetected(): boolean {

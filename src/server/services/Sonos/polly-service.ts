@@ -10,9 +10,15 @@ import { LogLevel } from '../../../models';
 import path from 'path';
 
 export class PollyService {
+  /**
+   * Whether Polly-Service is active
+   */
   public static active: boolean = false;
+  /**
+   * The API Instance
+   */
   public static polly: AWS.Polly;
-  public static voice: string;
+  private static _voice: string;
   private static _mp3Path: string;
 
   public static initialize(config: iPollySettings): void {
@@ -26,7 +32,7 @@ export class PollyService {
         secretAccessKey: config.secretAccessKey,
       },
     });
-    this.voice = config.voiceID;
+    this._voice = config.voiceID;
   }
 
   public static getDuration(filename: string): number {
@@ -55,7 +61,7 @@ export class PollyService {
   }
 
   public static tts(text: string, cb: (fileLink: string, duration: number) => void): void {
-    const hash: string = `${this.voice}_${crypto.createHash('md5').update(text).digest('hex')}`;
+    const hash: string = `${this._voice}_${crypto.createHash('md5').update(text).digest('hex')}`;
     const fPath: string = `${this._mp3Path}${hash}.mp3`;
     try {
       if (fs.existsSync(fPath)) {
@@ -71,7 +77,7 @@ export class PollyService {
     const params: AWS.Polly.SynthesizeSpeechInput = {
       Text: text,
       OutputFormat: 'mp3',
-      VoiceId: this.voice,
+      VoiceId: this._voice,
     };
     this.polly.synthesizeSpeech(params, (err, data) => {
       if (err) {

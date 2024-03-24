@@ -12,9 +12,13 @@ import { PollyService } from './polly-service';
 import { API } from '../api';
 
 export class OwnSonosDevice implements iSpeaker {
+  /** @inheritDoc */
   public settings: SonosDeviceSettings = new SonosDeviceSettings();
+  /** @inheritDoc */
   public readonly deviceType: DeviceType = DeviceType.Sonos;
+  /** @inheritDoc */
   public readonly discoveryName: string;
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.speaker];
 
   public get customName(): string {

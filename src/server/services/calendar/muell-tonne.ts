@@ -4,8 +4,18 @@ import { LogLevel } from '../../../models';
 import { iSpeaker } from '../../devices';
 
 export class MuellTonne {
-  public static oneDay: number = 1000 * 60 * 60 * 24;
+  /**
+   * The duration of a signle day in milliseconds (used for date calculations)
+   */
+  private static readonly oneDay: number = 1000 * 60 * 60 * 24;
+  /**
+   * The next date this bin will be emptied
+   */
   public nextDate: Date | undefined = undefined;
+  /**
+   * All dates this bin will be emptied
+   * After a date has passed it will be removed
+   */
   public dates: Date[] = [];
 
   public constructor(

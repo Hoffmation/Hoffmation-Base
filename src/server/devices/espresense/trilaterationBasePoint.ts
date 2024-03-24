@@ -5,7 +5,13 @@ import { ServerLogService, Utils } from '../../services';
 import { LogLevel } from '../../../models';
 
 export class TrilaterationBasePoint {
+  /**
+   * The coordinates of this point in Space
+   */
   public readonly ownPoint: TrilaterationPoint;
+  /**
+   * A precalculated map of distances to all existing points in the home (@see {@link Trilateration.possiblePoints})
+   */
   public readonly precalculatedDistancesMap: Map<number, string[]> = new Map<number, string[]>();
 
   constructor(

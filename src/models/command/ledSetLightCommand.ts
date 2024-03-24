@@ -7,6 +7,7 @@ import { TimeOfDay } from '../timeCallback';
 import { LedSettings } from '../deviceSettings';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.LedSetLightCommand;
 
   /**

@@ -22,3 +22,4 @@ export * from './iTemperatureSensor';
 export * from './iTemporaryDisableAutomatic';
 export * from './iTvDevice';
 export * from './iVibrationSensor';
+export { iMagnetSensor } from './iMagnetSensor';

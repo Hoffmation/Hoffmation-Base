@@ -4,9 +4,15 @@ import { iDisposable, Res, SonosService, TelegramService, Utils } from '../../se
 import { MagnetPosition } from '../models';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { iMagnetSensor } from '../baseDeviceInterfaces';
 
-export class HmIpTuer extends HmIPDevice implements iDisposable {
+export class HmIpTuer extends HmIPDevice implements iDisposable, iMagnetSensor {
+  /** @inheritDoc */
   public position: MagnetPosition = MagnetPosition.closed;
+  /** @inheritDoc */
+  public telegramOnOpen: boolean = false;
+  /** @inheritDoc */
+  public speakOnOpen: boolean = false;
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _openCallback: Array<(pValue: boolean) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
@@ -66,7 +72,9 @@ export class HmIpTuer extends HmIPDevice implements iDisposable {
         }
         this.log(LogLevel.Info, message);
 
-        TelegramService.inform(message);
+        if (this.telegramOnOpen) {
+          TelegramService.inform(message);
+        }
         this.minutesOpen = 0;
         this._iOpenTimeout = undefined;
       }
@@ -74,8 +82,12 @@ export class HmIpTuer extends HmIPDevice implements iDisposable {
     } else if (this._iOpenTimeout === undefined) {
       const message = Res.wasOpened(this.info.customName);
       //const message: string = `Die Tür mit dem Namen wurde geöfnet!`
-      TelegramService.inform(message);
-      SonosService.speakOnAll(message, 40);
+      if (this.telegramOnOpen) {
+        TelegramService.inform(message);
+      }
+      if (this.speakOnOpen) {
+        SonosService.speakOnAll(message, 40);
+      }
       this._iOpenTimeout = Utils.guardedInterval(
         () => {
           this.minutesOpen++;

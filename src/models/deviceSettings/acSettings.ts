@@ -3,10 +3,23 @@ import { Utils } from '../../server';
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 
 export class AcSettings extends DeviceSettings {
+  /** The energy consumer settings for this AC */
   public energySettings: ExcessEnergyConsumerSettings = new ExcessEnergyConsumerSettings();
+  /**
+   * The earliest hour the AC can be turned on
+   */
   public minimumHours: number = 0;
+  /**
+   * The earliest minute the AC can be turned on within the hour {@link minimumHours}
+   */
   public minimumMinutes: number = 0;
+  /**
+   * The latest hour the AC can be turned on
+   */
   public maximumHours: number = 24;
+  /**
+   * The latest minute the AC can be turned on within the hour {@link maximumHours}
+   */
   public maximumMinutes: number = 0;
   /**
    * Heating can be forbidden completly e.g. for summer season

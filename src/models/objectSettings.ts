@@ -4,6 +4,9 @@ import { iIdHolder } from './iIdHolder';
 import _ from 'lodash';
 
 export abstract class ObjectSettings {
+  /**
+   * Callback to be fired when the settings change
+   */
   public onChangeCb?: () => void;
 
   public persist(holder: iIdHolder) {

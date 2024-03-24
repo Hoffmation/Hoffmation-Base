@@ -19,9 +19,9 @@ export interface iIdHolder {
 
   /**
    * Logs a message for this idHolder
-   * @param {LogLevel} level - The log level
-   * @param {string} message - The message to log
-   * @param {LogDebugType} logDebugType - If provided, this message will only be logged if the debug type is enabled in the settings
+   * @param level - The log level
+   * @param message - The message to log
+   * @param logDebugType - If provided, this message will only be logged if the debug type is enabled in the settings
    */
   log(level: LogLevel, message: string, logDebugType?: LogDebugType): void;
 }

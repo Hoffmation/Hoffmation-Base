@@ -11,9 +11,21 @@ import { DeviceType, UNDEFINED_TEMP_VALUE } from '../../devices';
 import _ from 'lodash';
 
 export class OwnDaikinDevice extends AcDevice {
+  /**
+   * The desired state of the device
+   */
   public desiredState: boolean = Power.OFF;
+  /**
+   * The desired humidity-state of the device
+   * @default 'AUTO'
+   */
   public desiredHum: number | 'AUTO' = 'AUTO';
+  /**
+   * The desired mode of the device
+   * @default Mode.COLD
+   */
   public desiredMode: number = Mode.COLD;
+  /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.Daikin;
   private _on: boolean = false;
 

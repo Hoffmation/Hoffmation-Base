@@ -4,6 +4,9 @@ import { AcDevice } from './ac-device';
 import { Devices } from '../../devices';
 
 export class OwnAcDevices {
+  /**
+   * A dict containing the AC-Devices
+   */
   public static ownDevices: { [name: string]: AcDevice } = {};
 
   public static addDevice(device: AcDevice): void {

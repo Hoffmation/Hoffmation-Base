@@ -24,7 +24,7 @@ export interface iExcessEnergyConsumer extends iBaseDevice {
   /**
    * Check if this device is available to consume excess energy
    * --> Device might be unavailable due to a force action from the user or other circumstances
-   * @returns {boolean} Whether this device is available to be turned on to consume excess energy
+   * @returns Whether this device is available to be turned on to consume excess energy
    */
   isAvailableForExcessEnergy(): boolean;
 
@@ -40,7 +40,7 @@ export interface iExcessEnergyConsumer extends iBaseDevice {
 
   /**
    * Check if this device was activated by excess energy
-   * @returns {boolean} Whether this device was activated by excess energy
+   * @returns Whether this device was activated by excess energy
    */
   wasActivatedByExcessEnergy(): boolean;
 }

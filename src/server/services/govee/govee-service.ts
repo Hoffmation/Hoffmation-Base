@@ -16,8 +16,7 @@ import {
 } from '@j3lte/govee-lan-controller/build/types/types';
 
 export class GooveeService {
-  public static all: GoveeDevice[] = [];
-  public static devicesDict: { [name: string]: GoveeDevice } = {};
+  private static devicesDict: { [name: string]: GoveeDevice } = {};
   private static goveeApi: Govee;
   private static ownDevices: { [name: string]: OwnGoveeDevice } = {};
 
@@ -27,7 +26,6 @@ export class GooveeService {
 
   public static initialize(): void {
     ServerLogService.writeLog(LogLevel.Debug, `Initializing Goovee-Service`);
-    this.all = [];
     this.goveeApi = new Govee({
       discover: true,
       discoverInterval: 300_000,

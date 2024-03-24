@@ -3,6 +3,7 @@ import { CommandSource } from './commandSource';
 import { CommandType } from './commandType';
 
 export class FloorSetAllShuttersCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.FloorSetAllShuttersCommand;
 
   /**

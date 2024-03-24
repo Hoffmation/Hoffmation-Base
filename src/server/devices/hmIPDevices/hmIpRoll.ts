@@ -17,6 +17,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
+  /** @inheritDoc */
   public settings: ShutterSettings = new ShutterSettings();
   private _setLevelSwitchID: string;
   private _firstCommandRecieved: boolean = false;

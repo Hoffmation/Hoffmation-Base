@@ -3,6 +3,7 @@ import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import { IoBrokerBaseDevice } from '../../../server';
 
 export class RoomInitializationSettings implements iRoomInitializationSettings {
+  /** @inheritDoc */
   public deviceAddingSettings?: RoomDeviceAddingSettings;
 
   public constructor(public shortName: string) {}

@@ -14,6 +14,7 @@ import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettin
 import { BlockAutomaticCommand, CommandSource, LogLevel, RoomBase, TemperatureSettings } from '../../../models';
 
 export class HeatGroup extends BaseGroup {
+  /** @inheritDoc */
   public settings: HeatGroupSettings = new HeatGroupSettings();
 
   public constructor(

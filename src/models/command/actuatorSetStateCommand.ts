@@ -5,6 +5,7 @@ import { ActuatorToggleCommand } from './actuatorToggleCommand';
 import { iActuator } from '../../server';
 
 export class ActuatorSetStateCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.ActuatorSetStateCommand;
 
   /**

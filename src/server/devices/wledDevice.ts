@@ -22,13 +22,17 @@ import { LampUtils } from './sharedFunctions';
 import { DeviceCapability } from './DeviceCapability';
 
 export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
-  public on: boolean = false;
+  /** @inheritDoc */
   public brightness: number = -1;
-  public battery: number = -1;
+  /** @inheritDoc */
   public queuedValue: boolean | null = null;
+  /** @inheritDoc */
   public settings: WledSettings = new WledSettings();
+  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
+  /** @inheritDoc */
   public targetAutomaticState: boolean = false;
+  private on: boolean = false;
   protected override readonly _debounceStateDelay: number = 500;
   private readonly _onID: string;
   private readonly _presetID: string;

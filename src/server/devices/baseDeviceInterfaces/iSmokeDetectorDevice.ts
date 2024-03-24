@@ -13,7 +13,7 @@ export interface iSmokeDetectorDevice extends iRoomDevice {
 
   /**
    * Stops the alarm of the smoke detector
-   * @param {boolean} quiet - If true, the alarm will be stopped without announcing alarm end.
+   * @param quiet - If true, the alarm will be stopped without announcing alarm end.
    */
   stopAlarm(quiet: boolean): void;
 }

@@ -2,15 +2,41 @@ import { LogLevel } from '../logLevel';
 import { LogDebugType, SettingsService, Utils } from '../../server';
 
 export class EnergyCalculation {
+  /**
+   * The amount of energy drawn from the grid in kWh since the last calculation
+   */
   public drawnKwH: number = 0;
+  /**
+   * The amount of energy injected into the grid in kWh since the last calculation
+   */
   public injectedKwH: number = 0;
+  /**
+   * The amount of energy self consumed in kWh since the last calculation
+   */
   public selfConsumedKwH: number = 0;
+  /**
+   * The cost of the energy drawn from the grid since the last calculation
+   */
   public costDrawn: number = 0;
+  /**
+   * The money earned by injecting energy into the grid since the last calculation
+   */
   public earnedInjected: number = 0;
+  /**
+   * The amount of money saved by self consuming energy since the last calculation
+   */
   public savedSelfConsume: number = 0;
+  /**
+   * The timestamp of the end of this calculation
+   */
   public endMs: number = 0;
+  /**
+   * The amount of energy stored in the battery in kWh since the last calculation
+   */
   public batteryStoredKwH: number = 0;
-  // Battery Level in %
+  /**
+   * Current battery level in %
+   */
   public batteryLevel: number = 0.0;
 
   constructor(public startMs: number) {}

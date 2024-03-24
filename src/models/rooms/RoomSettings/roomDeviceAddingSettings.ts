@@ -4,7 +4,10 @@ import { LogLevel } from '../../logLevel';
 import { RoomBase } from '../RoomBase';
 
 export class RoomDeviceAddingSettings {
-  public devices: Array<Array<RoomAddDeviceItem>> = [];
+  /**
+   * The devices that are to be added to the room
+   */
+  public devices: RoomAddDeviceItem[][] = [];
 
   constructor(public RoomName: string) {}
 

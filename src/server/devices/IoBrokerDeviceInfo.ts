@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import { deviceConfig } from '../../models';
 import _ from 'lodash';
 import { DeviceInfo } from './DeviceInfo';

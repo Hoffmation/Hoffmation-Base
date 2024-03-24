@@ -7,14 +7,24 @@ import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { DeviceCapability } from './DeviceCapability';
 
 export abstract class IoBrokerBaseDevice implements iRoomDevice {
-  public settings: DeviceSettings | undefined = undefined;
+  /**
+   * The settings for adding devices to Rooms
+   */
   public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
+  /**
+   * @inheritDoc
+   * @default undefined (no Settings)
+   */
+  public settings: DeviceSettings | undefined = undefined;
   private _room: RoomBase | undefined = undefined;
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
 
   // If configured > 0, this indicates the minimum time between state writes in ms
   protected _debounceStateDelay: number = 0;
   protected _lastWrite: number = 0;
+
+  protected stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
   public get customName(): string {
     return this.info.customName;

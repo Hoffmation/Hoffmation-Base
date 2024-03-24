@@ -1,4 +1,4 @@
-export class ringStorage<T> {
+export class RingStorage<T> {
   private storage: T[] = [];
   private pointer: number = 0;
 

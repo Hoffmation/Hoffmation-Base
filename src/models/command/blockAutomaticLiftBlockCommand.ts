@@ -3,6 +3,7 @@ import { CommandSource } from './commandSource';
 import { BaseCommand } from './baseCommand';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
+  /** @inheritDoc */
   public _commandType: CommandType = CommandType.BlockAutomaticLiftBlockCommand;
 
   /**

@@ -15,6 +15,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     return this._lastBatteryPersist;
   }
 
+  /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHeater();
@@ -23,6 +24,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     this,
     false,
   );
+  /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
 
   public get battery(): number {

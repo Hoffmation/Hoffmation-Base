@@ -30,13 +30,37 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     return this._battery;
   }
 
+  /**
+   * The sensitivity of the vibration sensor
+   */
   public sensitivity: string = '';
+  /**
+   * The detected tilt angle of the vibration sensor
+   */
   public tiltAngle: number = 0;
+  /**
+   * The detected tilt angle on the x-axis of the vibration sensor
+   */
   public tiltAngleX: number = 0;
+  /**
+   * The detected tilt angle on the x-axis of the vibration sensor
+   */
   public tiltAngleXAbs: number = 0;
+  /**
+   * The detected tilt angle on the y-axis of the vibration sensor
+   */
   public tiltAngleY: number = 0;
+  /**
+   * The detected tilt angle on the y-axis in absolute values of the vibration sensor
+   */
   public tiltAngleYAbs: number = 0;
+  /**
+   * The detected tilt angle on the z-axis of the vibration sensor
+   */
   public tiltAngleZ: number = 0;
+  /**
+   * Whether the vibration sensor is tilted
+   */
   public tilt: boolean = false;
   private _vibration: boolean = false;
   private _vibrationBlockedByHandleTimeStamp: number = 0;

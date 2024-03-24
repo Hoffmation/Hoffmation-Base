@@ -21,6 +21,7 @@ export enum DeviceCapability {
   smokeSensor = 19,
   loadMetering = 20,
   garageDoorOpener = 21,
+  magnetSensor = 22,
   bluetoothDetector = 101,
   trackableDevice = 102,
   scene = 103,

@@ -6,12 +6,16 @@ import { iIdHolder } from '../../../models/iIdHolder';
 import { GroupSettings } from '../../../models/groupSettings/groupSettings';
 
 export class BaseGroup implements iIdHolder {
+  /**
+   * The settings of the group
+   */
   public settings: GroupSettings | undefined = undefined;
 
   public get customName(): string {
     return `${GroupType[this.type]} ${this.getRoom().customName}`;
   }
 
+  /** @inheritDoc */
   public id: string;
 
   public constructor(

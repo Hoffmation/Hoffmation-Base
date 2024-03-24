@@ -26,8 +26,17 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     });
   }
 
+  /**
+   * The name of the room this settings are for
+   */
   public roomName: string;
+  /**
+   * The offset used for shutter sunrise/sunset actions
+   */
   public rolloOffset: SunTimeOffsets;
+  /**
+   * The offset used for lamp sunrise/sunset actions
+   */
   public lampOffset: SunTimeOffsets;
 
   private _settingsContainer: RoomSettings = new RoomSettings();

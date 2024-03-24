@@ -4,6 +4,7 @@ import { CommandSource } from './commandSource';
 import { TimeOfDay } from '../timeCallback';
 
 export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.LightGroupSwitchTimeConditional;
 
   /**

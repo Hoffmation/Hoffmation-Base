@@ -6,7 +6,14 @@ import { LogLevel, RoomBase } from '../../../models';
 import { LogDebugType, ServerLogService } from '../../services';
 
 export class Trilateration {
+  /**
+   * A list of all reference points for trilateration (e.g. Rooms, {@link iBluetoothDetector}s)
+   */
   public static readonly basePoints: TrilaterationBasePoint[] = [];
+  /**
+   * A list of all possible points for trilateration in this home, used for increased calculation speed
+   * This list is filled mostly by {@link Trilateration.addRoom} thus resulting in the air outside the house not being included
+   */
   public static possiblePoints: TrilaterationPoint[] = [];
 
   public static addRoom(room: RoomBase, startPoint: TrilaterationPoint, endPoint: TrilaterationPoint): void {

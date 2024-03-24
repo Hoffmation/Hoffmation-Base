@@ -27,9 +27,13 @@ import { HeatingMode } from '../../config';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
+  /** @inheritDoc */
   public currentConsumption: number = -1;
+  /** @inheritDoc */
   public settings: AcSettings = new AcSettings();
+  /** @inheritDoc */
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac, DeviceCapability.blockAutomatic];
+  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   protected _activatedByExcessEnergy: boolean = false;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;

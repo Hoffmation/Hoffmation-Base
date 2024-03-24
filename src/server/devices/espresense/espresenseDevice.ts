@@ -13,10 +13,17 @@ import { TrilaterationBasePoint } from './trilaterationBasePoint';
 import { Trilateration } from './trilateration';
 
 export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
+  /** @inheritDoc */
   public readonly position: TrilaterationBasePoint;
+  /** @inheritDoc */
   public settings: undefined = undefined;
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.bluetoothDetector];
+  /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.Espresense;
+  /**
+   * The name of this device
+   */
   public readonly name: string;
   private deviceMap: Map<string, DetectedBluetoothDevice> = new Map<string, DetectedBluetoothDevice>();
   private proximityCallbackMap: Map<string, ProximityCallback[]> = new Map<string, ProximityCallback[]>();

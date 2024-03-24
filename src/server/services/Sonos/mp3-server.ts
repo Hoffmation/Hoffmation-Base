@@ -6,8 +6,10 @@ import { iMp3Settings } from '../../config';
 import { LogLevel } from '../../../models';
 
 export class MP3Server {
+  /**
+   * Whether this service is active
+   */
   public static active: boolean = false;
-  public count: number = 0;
   private mp3Path: string = '';
 
   public constructor(settings: iMp3Settings) {

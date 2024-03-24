@@ -32,6 +32,7 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 import { Utils } from '../utils';
 
 export class PostgreSqlPersist implements iPersist {
+  /** @inheritDoc */
   initialized: boolean = false;
   private readonly psql: Pool;
   private readonly config: PoolConfig;

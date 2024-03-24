@@ -4,9 +4,6 @@ import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
-  public lowBattery: boolean = false;
-  public stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
-
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
   }

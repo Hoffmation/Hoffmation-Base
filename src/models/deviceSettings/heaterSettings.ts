@@ -2,36 +2,54 @@ import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../server';
 
 export class HeaterSettings extends DeviceSettings {
+  /**
+   * Whether this device should be in automatic mode
+   * @default true
+   */
   public automaticMode: boolean = true;
+  /**
+   * Whether this device should use it's own temperature or just rely on the room temperature (e.g. for a floor heating system being in a different room)
+   * @default true
+   */
   public useOwnTemperatur: boolean = true;
   /**
    * Whether this device should be controlled using only valve position
-   * !! Only certain devices allow direct controlling of valve Position !!
+   * @default false
+   * @warning Only certain devices allow direct controlling of valve Position
    */
   public controlByPid: boolean = false;
+  /**
+   * Whether this device should be controlled by offsetting the device temperature and it's target temperature.
+   * @default false
+   * @remark This is mainly needed for devices not allowing a separate control of valve position or temperature.
+   */
   public controlByTempDiff: boolean = false;
 
   /**
    * Whether this device should turn off at Start of summer season and only heat in winter
+   * @default true
    */
   public seasonalTurnOffActive: boolean = true;
 
   /**
-   *
    * The day in a year after which SeasonalHeater should be turned off completly
+   * @default 99 (Roughly in April)
    */
   public seasonTurnOffDay: number = 99;
   /**
    * The day in a year after which SeasonalHeater should be turned to automatic
+   * @default 267 (Roughly in September)
    */
   public seasonTurnOnDay: number = 267;
   /**
    * In case of pid Control the forced minimum percentage for this heater valve
+   * @default 1
    */
   public pidForcedMinimum: number = 1;
 
   /**
-   * Whether this AC should be turned off for some time manually
+   * Whether this Heater should be turned off for some time manually
+   * @default false
    */
   public manualDisabled: boolean = false;
 

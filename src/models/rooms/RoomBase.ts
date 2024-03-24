@@ -32,8 +32,15 @@ import {
 } from '../command';
 
 export class RoomBase implements iRoomBase, iIdHolder {
+  /**
+   * @see RoomInfo
+   */
   public info: RoomInfo;
+  /** @inheritDoc */
   public skipNextRolloUp: boolean = false;
+  /**
+   * The settings for this room
+   */
   public settings: RoomSettingsController;
 
   public constructor(

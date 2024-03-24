@@ -7,6 +7,7 @@ import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
 import { TimeOfDay } from '../timeCallback';
 
 export class WledSetLightCommand extends DimmerSetLightCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.WledSetLightCommand;
 
   /**

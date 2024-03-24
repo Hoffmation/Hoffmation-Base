@@ -12,12 +12,25 @@ import { Trilateration } from './trilateration';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
 
 export class DetectedBluetoothDevice implements iBaseDevice {
+  /** @inheritDoc */
   public settings: undefined = undefined;
+  /**
+   * A Map matching the distances to the trackers identified by {@link iBluetoothDetector.id}
+   */
   public distanceMap: Map<string, TrackedDistanceData> = new Map<string, TrackedDistanceData>();
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.trackableDevice];
+  /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.TrackableDevice;
+  /** @inheritDoc */
   public info: DeviceInfo = new DeviceInfo();
+  /**
+   * The last room the device was guessed to be in {@link iRoomBase.roomName}
+   */
   public lastRoom: string | undefined = undefined;
+  /**
+   * If the device is currently present
+   */
   public present: boolean = false;
 
   constructor(

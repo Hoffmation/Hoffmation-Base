@@ -7,6 +7,7 @@ import { LogLevel } from '../../models';
 export interface iTelegramSettings {
   /**
    * The threshold for the log level to trigger a message to telegram
+   * TODO: Maybe migrate to {@link iLogSettings}
    */
   logLevel: LogLevel;
   /**

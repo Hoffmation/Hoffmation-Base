@@ -15,7 +15,7 @@ export interface iLamp extends iActuator {
 
   /**
    * Changes the state of the lamp based on the time
-   * @param {LampSetTimeBasedCommand} command - The command to execute
+   * @param command - The command to execute
    */
   setTimeBased(command: LampSetTimeBasedCommand): void;
 

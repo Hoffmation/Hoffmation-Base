@@ -42,6 +42,10 @@ export class HoffmationInitializationObject {
 }
 
 export class HoffmationBase {
+  /**
+   * The iobroker Instance to interact with an ioBroker server
+   * @deprecated To ensure Hoffmation being capable of running without ioBroker, this property will be removed in the future.
+   */
   public static ioMain: ioBrokerMain;
 
   public static async initializeBeforeIoBroker(initObject: HoffmationInitializationObject): Promise<void> {
@@ -141,9 +145,9 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base Post ioBrokerInitializations finished`);
   }
 
-  public static startIoBroker(devices: Devices): void {
+  public static startIoBroker(_devices: Devices): void {
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base: Starting ioBroker Connection`);
-    this.ioMain = new ioBrokerMain(new DeviceUpdater(devices));
+    this.ioMain = new ioBrokerMain(new DeviceUpdater());
     ServerLogService.writeLog(LogLevel.Info, `Hoffmation-Base: ioBroker Connection established`);
   }
 }

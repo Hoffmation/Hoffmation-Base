@@ -43,14 +43,16 @@ module.exports = {
     'jsdoc/no-blank-block-descriptions': 2,
     'jsdoc/no-defaults': 'error',
     'jsdoc/no-multi-asterisks': 'error', // Recommended
-    'jsdoc/no-types': ['error', { contexts: ['any'] }], // Recommended
+    'jsdoc/no-types': [
+      'error',
+      { contexts: ['TSMethodSignature', 'TSPropertySignature', 'TSInterfaceDeclaration', 'PropertyDefinition'] },
+    ], // Recommended
     'jsdoc/require-asterisk-prefix': 'error',
     'jsdoc/require-description': 'error',
     'jsdoc/require-hyphen-before-param-description': 'error',
     'jsdoc/require-param': 'error', // Recommended
     'jsdoc/require-param-description': 'error', // Recommended
     'jsdoc/require-param-name': 'error', // Recommended
-    'jsdoc/require-param-type': 'off', // Recommended
     'jsdoc/require-property': 'error', // Recommended
     'jsdoc/require-property-description': 'error', // Recommended
     'jsdoc/require-property-name': 'error', // Recommended
@@ -67,8 +69,8 @@ module.exports = {
     'jsdoc/require-jsdoc': [
       'error',
       {
-        contexts: ['TSMethodSignature', 'TSPropertySignature', 'TSInterfaceDeclaration'],
-        publicOnly: true,
+        contexts: ['TSMethodSignature', 'TSPropertySignature', 'TSInterfaceDeclaration', 'PropertyDefinition'],
+        publicOnly: { ancestorsOnly: true },
       },
     ],
   },

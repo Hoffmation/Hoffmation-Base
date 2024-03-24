@@ -4,6 +4,7 @@ import { CommandSource } from './commandSource';
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
 
   /**

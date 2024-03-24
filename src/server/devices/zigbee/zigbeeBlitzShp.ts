@@ -37,6 +37,7 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
     return this._loadPower;
   }
 
+  /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
   private readonly _availableForExcessEnergy: boolean = true;
   private _activatedByExcessEnergy: boolean = false;

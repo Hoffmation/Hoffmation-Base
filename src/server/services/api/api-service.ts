@@ -83,7 +83,7 @@ export class API {
     if (d === undefined) {
       ServerLogService.writeLog(LogLevel.Warn, `Api.getDevice() --> "${id}" not found`);
     }
-    return Devices.alLDevices[id];
+    return d;
   }
 
   // TODO: Missing Comment

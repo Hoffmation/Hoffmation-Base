@@ -5,93 +5,92 @@ import { iTimePair } from '../../../server';
  */
 export interface iRoomDefaultSettings {
   /**
-   * The default radio URL to use with speaker
+   * @see RoomSettings.radioUrl
    */
   readonly radioUrl?: string;
 
   /**
-   * Use shutter to reduce warming of rooms on hot days (detected by weather service)
+   * @see RoomSettings.rolloHeatReduction
    */
   readonly rolloHeatReduction: boolean;
 
   /**
-   * Indicates rooms, which are time independent always dark (like basement).
-   * This results in lamps beeing turned on at motion regardless of windows and time.
+   * @see RoomSettings.roomIsAlwaysDark
    */
   readonly roomIsAlwaysDark: boolean;
 
   /**
-   * Should lights be turned on at Movement
+   * @see RoomSettings.lampenBeiBewegung
    */
   readonly lampenBeiBewegung: boolean;
 
   /**
-   * Should lights be turned off after sunrise
+   * @see RoomSettings.lichtSonnenAufgangAus
    */
   readonly lichtSonnenAufgangAus: boolean;
 
   /**
-   * Should shutters be closed on sunset (based on geolocation)
+   * @see RoomSettings.sonnenUntergangRollos
    */
   readonly sonnenUntergangRollos: boolean;
 
   /**
-   * +/- Offset for shutter closing on sunset in minutes
+   * @see RoomSettings.sonnenUntergangRolloDelay
    */
   readonly sonnenUntergangRolloDelay: number;
 
   /**
-   * Latest time of shutter closing (regardless of geospecific sunset)
+   * @see RoomSettings.sonnenUntergangRolloMaxTime
    */
   readonly sonnenUntergangRolloMaxTime: iTimePair;
 
   /**
-   * +/- Offset for turning on lamps at movement after/before sunset
+   * @see RoomSettings.sonnenUntergangLampenDelay
    */
   readonly sonnenUntergangLampenDelay: number;
 
   /**
-   * !Needs Weather Data! Additional Offset in Minutes per % Cloudiness
+   * @see RoomSettings.sonnenUntergangRolloAdditionalOffsetPerCloudiness
    */
   readonly sonnenUntergangRolloAdditionalOffsetPerCloudiness: number;
 
   /**
-   * Should shutters be opened on sunrise
+   * @see RoomSettings.sonnenUntergangRollos
    */
   readonly sonnenAufgangRollos: boolean;
 
   /**
-   * +/- Default Offset for shutters opening on sunrise in minutes
+   * @see RoomSettings.sonnenAufgangRolloDelay
    */
   readonly sonnenAufgangRolloDelay: number;
 
   /**
-   * Earliest time of shutter opening (regardless of geospecific sunset)
+   * @see RoomSettings.sonnenAufgangRolloMinTime
    */
   readonly sonnenAufgangRolloMinTime: iTimePair;
 
   /**
-   * +/- Offset for still turning on lamps at movement after/before sunrise
+   * @see RoomSettings.sonnenAufgangLampenDelay
    */
   readonly sonnenAufgangLampenDelay: number;
 
   /**
-   * Time in seconds after which detected movement is reseted
+   * @see RoomSettings.movementResetTimer
    */
   readonly movementResetTimer: number;
 
   /**
-   * Should Light be turned on at day if there are no Windows configured for this room
+   * @see RoomSettings.lightIfNoWindows
    */
   readonly lightIfNoWindows: boolean;
 
   /**
-   * Wether this room should always have ambient light on after sunset (regardless of motion e.g. Gardenlights).
+   * @see RoomSettings.ambientLightAfterSunset
    */
   readonly ambientLightAfterSunset: boolean;
 
   /**
-   * Whether normal ceiling lights should also be turned on by movement, even if there are LEDs and outlets
+   * @see RoomSettings.includeLampsInNormalMovementLightning
    */
   readonly includeLampsInNormalMovementLightning: boolean;
 }

@@ -17,11 +17,15 @@ import { LampUtils } from '../../sharedFunctions';
 
 export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   private _actuatorOn: boolean = false;
+  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
+  /** @inheritDoc */
   public targetAutomaticState: boolean = false;
 
+  /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
   protected readonly actuatorOnSwitchID: string;
+  /** @inheritDoc */
   public queuedValue: boolean | null = null;
 
   public get actuatorOn(): boolean {

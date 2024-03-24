@@ -10,6 +10,9 @@ import { DeviceType } from '../deviceType';
 import { ioBrokerMain } from '../../ioBroker';
 
 export class CameraDevice implements iCameraDevice {
+  /**
+   * The name of the camera in BlueIris
+   */
   public readonly blueIrisName: string;
   private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
@@ -22,9 +25,15 @@ export class CameraDevice implements iCameraDevice {
     return this._lastImage;
   }
 
+  /** @inheritDoc */
   public settings: CameraSettings = new CameraSettings();
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.camera, DeviceCapability.motionSensor];
+  /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.Camera;
+  /**
+   * The human readable name of this device
+   */
   public readonly name: string;
   protected _lastMotion: number = 0;
   private _initialized: boolean = false;
@@ -33,9 +42,13 @@ export class CameraDevice implements iCameraDevice {
   private _personDetected: boolean = false;
   private _dogDetected: boolean = false;
   private _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
+  /** @inheritDoc */
   public readonly mpegStreamLink: string = '';
+  /** @inheritDoc */
   public readonly h264IosStreamLink: string = '';
+  /** @inheritDoc */
   public readonly rtspStreamLink: string = '';
+  /** @inheritDoc */
   public readonly currentImageLink: string = '';
 
   public get dogDetected(): boolean {
@@ -113,9 +126,7 @@ export class CameraDevice implements iCameraDevice {
     this._info = info;
   }
 
-  /**
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   public get timeSinceLastMotion(): number {
     return Math.round((Utils.nowMS() - this._lastMotion) / 1000);
   }

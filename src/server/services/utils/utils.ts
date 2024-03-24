@@ -11,6 +11,9 @@ import { RGB } from './RGB';
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 
 export class Utils {
+  /**
+   * The persitence layer object
+   */
   public static dbo: iPersist | undefined;
 
   public static get anyDboActive(): boolean {

@@ -27,6 +27,10 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
   }
 
   private _smoke: boolean = false;
+  /**
+   * The timeout for the alarm to fire again
+   * @default undefined (no alarm active)
+   */
   public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _messageAlarmFirst: string = '';
   private _messageAlarm: string = '';

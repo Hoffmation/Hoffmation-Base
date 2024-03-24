@@ -3,6 +3,9 @@ import { LogLevel } from '../../../models';
 import { OwnGoveeDevice } from './own-govee-device';
 
 export class OwnGoveeDevices {
+  /**
+   * A Dictionary of all own Govee devices
+   */
   public static ownDevices: { [name: string]: OwnGoveeDevice } = {};
 
   public static addDevice(device: OwnGoveeDevice): void {

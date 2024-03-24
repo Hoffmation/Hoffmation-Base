@@ -15,6 +15,7 @@ import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
+  /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHeater();
@@ -23,6 +24,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     this,
     false,
   );
+  /** @inheritDoc */
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistTemperaturSensor();
@@ -31,6 +33,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     this,
     false,
   );
+  /** @inheritDoc */
   public readonly persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHumiditySensor();
@@ -39,6 +42,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     this,
     false,
   );
+  /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;

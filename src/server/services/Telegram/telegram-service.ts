@@ -6,8 +6,7 @@ import { iTelegramSettings } from '../../config';
 import { Base64Image, LogLevel } from '../../../models';
 
 export class TelegramService {
-  public static subscribedIDs: number[];
-
+  private static subscribedIDs: number[];
   private static token: string;
   private static active: boolean = false;
   private static bot: TelegramBot;
@@ -121,6 +120,12 @@ export class TelegramService {
         0,
         this,
       );
+    }
+  }
+
+  public static sendMessageToSubscriber(message: string) {
+    if (this.subscribedIDs.length > 0) {
+      this.sendMessage(this.subscribedIDs, message);
     }
   }
 

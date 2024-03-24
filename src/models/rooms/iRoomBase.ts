@@ -48,13 +48,13 @@ export interface iRoomBase {
 
   /**
    * This function sets the light in the room based on the command
-   * @param {RoomSetLightTimeBasedCommand} c - The command to execute
+   * @param c - The command to execute
    */
   setLightTimeBased(c: RoomSetLightTimeBasedCommand): void;
 
   /**
    * This function checks if it is now light time respecting the room settings, the current time and the daylight hours for this location.
-   * @returns {boolean}
+   * @returns
    */
   isNowLightTime(): boolean;
 }

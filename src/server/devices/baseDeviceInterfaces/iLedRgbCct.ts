@@ -24,7 +24,7 @@ export interface iLedRgbCct extends iDimmableLamp {
   /**
    * This function sets the light to a specific value
    * Accessible in API
-   * @param {LedSetLightCommand} c - The command to execute
+   * @param c - The command to execute
    */
   setLight(c: LedSetLightCommand): void;
 }

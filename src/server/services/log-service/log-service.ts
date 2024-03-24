@@ -2,7 +2,7 @@ import { TelegramService } from '../Telegram';
 import { LogLevel } from '../../../models';
 import { DeviceType } from '../../devices';
 import { iLogSettings } from '../../config';
-import { ringStorage } from '../utils';
+import { RingStorage } from '../utils';
 import { LogObject } from './log-object';
 import { LogFilterData } from './log-filter-data';
 import { LogSource } from '../../../models/logSource';
@@ -10,9 +10,22 @@ import { SettingsService } from '../settings-service';
 import { LogDebugType } from './log-debug-type';
 
 export class ServerLogService {
+  /**
+   * The level at which messages are sent to telegram
+   * @remarks defined at {@link iConfig.telegram.logLevel}
+   */
   public static telegramLevel: number = -1; // Controlled from within Config File
+  /**
+   * The threshold above which messages are stored in the ring-storage to be retrieved e.g. using {@link API.getLog}
+   */
   public static storageLevel: number = LogLevel.Trace; // Controlled from within Config File
-  public static storage: ringStorage<LogObject> = new ringStorage<LogObject>(10000);
+  /**
+   * The storage for the log messages
+   */
+  public static storage: RingStorage<LogObject> = new RingStorage<LogObject>(10000);
+  /**
+   * The settings for the logging system.
+   */
   public static settings: iLogSettings = {
     logLevel: LogLevel.Debug,
     useTimestamp: false,
@@ -54,7 +67,7 @@ export class ServerLogService {
 
       if (pLevel <= ServerLogService.telegramLevel) {
         const title: string = LogLevel[pLevel];
-        TelegramService.sendMessage(TelegramService.subscribedIDs, `${title}: ${message}`);
+        TelegramService.sendMessageToSubscriber(`${title}: ${message}`);
       }
     }
   }

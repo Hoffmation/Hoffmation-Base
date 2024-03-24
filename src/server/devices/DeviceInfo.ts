@@ -1,6 +1,15 @@
 export class DeviceInfo {
+  /**
+   * The complete name of the device in a human readable format
+   */
   public fullName: string = '';
+  /**
+   * The roomname matching {@link iRoomBase.roomName}
+   */
   public room: string = '';
+  /**
+   * If present the key to access this device in {@link Devices.alLDevices}
+   */
   public allDevicesKey?: string;
   private _customName?: string;
 

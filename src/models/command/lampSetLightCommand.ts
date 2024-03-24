@@ -4,6 +4,7 @@ import { BaseCommand } from './baseCommand';
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 
 export class LampSetLightCommand extends ActuatorSetStateCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.LampSetLightCommand;
 
   /**

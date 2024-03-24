@@ -18,21 +18,33 @@ import { DachsTemperatureSensor } from './dachsTemperatureSensor';
 import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
 
 export class Dachs implements iBaseDevice, iActuator {
+  /** @inheritDoc */
   public settings: DachsDeviceSettings = new DachsDeviceSettings();
+  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
+  /** @inheritDoc */
   public readonly deviceType: DeviceType = DeviceType.Dachs;
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
+  /**
+   * A reference to the Temperature measuring warm water temperature
+   */
   public readonly warmWaterSensor: DachsTemperatureSensor;
+  /**
+   * A reference to the Temperature measuring heat storage temperature
+   */
   public readonly heatStorageTempSensor: DachsTemperatureSensor;
   private readonly client: DachsHttpClient;
   private readonly config: iDachsSettings;
-  public fetchedData: iFlattenedCompleteResponse | undefined;
+  /** @inheritDoc */
   public queuedValue: boolean | null = null;
+  /** @inheritDoc */
+  public targetAutomaticState: boolean = false;
   private readonly _influxClient: DachsInfluxClient | undefined;
   private _dachsOn: boolean = false;
   private _tempWarmWater: number = 0;
   private _tempHeatStorage: number = 0;
-  public targetAutomaticState: boolean = false;
+  private fetchedData: iFlattenedCompleteResponse | undefined;
 
   public get customName(): string {
     return this.info.customName;

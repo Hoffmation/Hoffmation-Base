@@ -7,7 +7,11 @@ export enum iobrokerConnectionLogLevel {
   DeepTrace = 6,
 }
 
+// TODO: Migrate to normale Log-Service
 export class iobrokerConnectionLogging {
+  /**
+   * The LogLevel for the iobrokerConnectionLogging
+   */
   public static LogLevel = 5;
 
   public static writeLog(pLevel: iobrokerConnectionLogLevel, pMessage: string): void {

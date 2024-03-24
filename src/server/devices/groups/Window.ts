@@ -18,7 +18,15 @@ import { DeviceList } from '../device-list';
 import { ZigbeeMagnetContact } from '../zigbee';
 
 export class Window extends BaseGroup {
-  public desiredPosition: number = 0;
+  private _desiredPosition: number = 0;
+
+  /**
+   * The desired shutter level for the window
+   * @returns {number} The level (0 closed, 100 open)
+   */
+  public get desiredPosition(): number {
+    return this._desiredPosition;
+  }
 
   public constructor(
     roomName: string,
@@ -39,7 +47,7 @@ export class Window extends BaseGroup {
    * @param c - The command to execute
    */
   public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {
-    this.desiredPosition = c.position;
+    this._desiredPosition = c.position;
     this.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));
   }
 
@@ -141,7 +149,7 @@ export class Window extends BaseGroup {
     this.log(
       LogLevel.Debug,
       `Rollo Position Change in ${this.roomName} to ${pValue}`,
-      pValue == this.desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
+      pValue == this._desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
     );
 
     if (pValue === 0 || pValue === 100) {
@@ -152,6 +160,6 @@ export class Window extends BaseGroup {
   }
 
   public restoreDesiredPosition(c: WindowRestoreDesiredPositionCommand): void {
-    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this.desiredPosition));
+    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this._desiredPosition));
   }
 }

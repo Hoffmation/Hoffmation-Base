@@ -35,7 +35,7 @@ export interface iScene extends iRoomDevice {
 
   /**
    * Starts the scene for the given duration
-   * @param {number} timeout - If set, the scene will end after the given time in ms
+   * @param timeout - If set, the scene will end after the given time in ms
    */
   startScene(timeout?: number): void;
 

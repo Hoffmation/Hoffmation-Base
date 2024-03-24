@@ -8,7 +8,6 @@ export * from './command';
 export * from './daytime';
 export * from './deviceConfig';
 export * from './excessEnergyConsumerSettings';
-export * from './iTemperaturDataPoint';
 export * from './logLevel';
 export * from './objectSettings';
 export * from './temperatureSettings';

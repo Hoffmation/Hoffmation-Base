@@ -22,7 +22,15 @@ import { WledDevice } from '../wledDevice';
 import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
 
 export class LightGroup extends BaseGroup {
+  /**
+   * Time-Callback for the sunrise light off
+   * @remark This is undefined if the light should not be turned off at sunrise or no calculation has been done yet
+   */
   public sonnenAufgangLichtCallback: TimeCallback | undefined;
+  /**
+   * Time-Callback for the sunset light on
+   * @remark This is undefined if the light should not be turned on at sunset or no calculation has been done yet
+   */
   public sonnenUntergangLichtCallback: TimeCallback | undefined;
   private _ambientLightOn: boolean = false;
 
@@ -58,7 +66,7 @@ export class LightGroup extends BaseGroup {
       }
     }
     for (i = 0; i < this.getWled().length; i++) {
-      if (this.getWled()[i].on) {
+      if (this.getWled()[i].actuatorOn) {
         return true;
       }
     }

@@ -9,8 +9,6 @@ import TelegramBot from 'node-telegram-bot-api';
 import { OwnSonosDevice } from './own-sonos-device';
 
 export class SonosService {
-  public static all: SonosDevice[] = [];
-  public static devicesDict: { [name: string]: SonosDevice } = {};
   private static sonosManager: SonosManager;
   private static ownDevices: { [name: string]: OwnSonosDevice } = {};
   private static isInitialized: boolean;
@@ -58,7 +56,6 @@ export class SonosService {
         ),
       );
     }
-    this.all = [];
     this.sonosManager = new SonosManager();
     this.sonosManager
       .InitializeWithDiscovery(10)
@@ -130,7 +127,6 @@ export class SonosService {
   }
 
   private static initializeDevice(d: SonosDevice) {
-    this.devicesDict[d.Name] = d;
     if (this.ownDevices[d.Name] === undefined) {
       ServerLogService.writeLog(LogLevel.Alert, `Unbekanntes Sonos Gerät "${d.Name}"`);
       return;

@@ -56,16 +56,52 @@ import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
 
 export class Devices {
-  public static IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
-  public static IDENTIFIER_JS: string = 'javascript';
-  public static IDENTIFIER_Shelly: string = 'shelly';
-  public static IDENTIFIER_TUYA: string = 'tuya';
-  public static IDENTIFIER_ZIGBEE: string = 'zigbee';
-  public static IDENTIFIER_ZIGBEE2MQTT: string = 'zigbee2mqtt';
-  public static IDENTIFIER_WLED: string = 'wled';
+  /**
+   * A constant for the identifier of HM-IP Adapter devices
+   */
+  public static readonly IDENTIFIER_HOMEMATIC: string = 'hm-rpc';
+  /**
+   * A constant for the identifier of JavaScript Adapter devices
+   */
+  public static readonly IDENTIFIER_JS: string = 'javascript';
+  /**
+   * A constant for the identifier of Shelly Adapter devices
+   */
+  public static readonly IDENTIFIER_Shelly: string = 'shelly';
+  /**
+   * A constant for the identifier of Tuya Adapter devices
+   */
+  public static readonly IDENTIFIER_TUYA: string = 'tuya';
+  /**
+   * A constant for the identifier of Zigbee Adapter devices
+   */
+  public static readonly IDENTIFIER_ZIGBEE: string = 'zigbee';
+  /**
+   * A constant for the identifier of Zigbee2Mqtt Adapter devices
+   */
+  public static readonly IDENTIFIER_ZIGBEE2MQTT: string = 'zigbee2mqtt';
+  /**
+   * A constant for the identifier of WLED Adapter devices
+   */
+  public static readonly IDENTIFIER_WLED: string = 'wled';
+  /**
+   * A Map containing all devices
+   */
   public static alLDevices: { [id: string]: iBaseDevice } = {};
+  /**
+   * A reference to globally active energy manager
+   * @default undefined (no Energy-Manager)
+   */
   public static energymanager?: iEnergyManager = undefined;
+  /**
+   * A reference to the Dachs device
+   * @default undefined (no Dachs CHP)
+   */
   public static dachs?: Dachs = undefined;
+  /**
+   * A reference to the temperature sensor measuring the warm water temperature
+   * @default undefined (no warm water temperature sensor)
+   */
   public static temperatureWarmWater?: iTemperatureSensor = undefined;
 
   public constructor(

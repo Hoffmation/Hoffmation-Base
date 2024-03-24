@@ -10,7 +10,9 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   private static MOVEMENT_DETECTION: string = 'MOTION';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
+  /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
+  /** @inheritDoc */
   public movementDetected: boolean = false;
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private initialized: boolean = false;

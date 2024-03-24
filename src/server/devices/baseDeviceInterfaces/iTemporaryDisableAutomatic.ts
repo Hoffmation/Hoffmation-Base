@@ -16,7 +16,7 @@ export interface iTemporaryDisableAutomatic extends iBaseDevice {
 
   /**
    * Restores the automatic value/state of the device
-   * @param {RestoreTargetAutomaticValueCommand} command - The command to restore the automatic value/state
+   * @param command - The command to restore the automatic value/state
    */
   restoreTargetAutomaticValue(command: RestoreTargetAutomaticValueCommand): void;
 }

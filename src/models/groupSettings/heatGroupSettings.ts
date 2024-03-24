@@ -4,14 +4,23 @@ import { iIdHolder } from '../iIdHolder';
 import { GroupSettings } from './groupSettings';
 
 export class HeatGroupSettings extends GroupSettings {
+  /**
+   * The automatic points to use for the temperature calculation in automatic mode
+   */
   public automaticPoints: TemperatureSettings[] = [];
   /**
    * Whether the temperature should be calculated automatically, or the manualTemperature should be used
+   * @default true
    */
   public automaticMode: boolean = true;
+  /**
+   * The temperature to fall back to when automaticMode is enabled and no automaticPoint is found
+   * @default 20 Degrees Celsius
+   */
   public automaticFallBackTemperatur: number = 20;
   /**
    * Target temperature when automaticMode is disabled
+   * @default 20
    */
   public manualTemperature: number = 20;
 

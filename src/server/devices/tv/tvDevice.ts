@@ -7,8 +7,15 @@ import { LogDebugType, ServerLogService, Utils } from '../../services';
 import { TvDeviceType } from './tvDeviceType';
 
 export abstract class TvDevice implements iTvDevice {
+  /** @inheritDoc */
   public settings: TvSettings = new TvSettings();
+  /**
+   * @inheritDoc
+   */
   public room: RoomBase | undefined;
+  /**
+   * @inheritDoc
+   */
   public deviceCapabilities: DeviceCapability[] = [DeviceCapability.tv];
 
   protected constructor(

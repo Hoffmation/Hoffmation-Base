@@ -21,9 +21,13 @@ import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
 import { LampUtils } from '../../sharedFunctions';
 
 export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp, iTemporaryDisableAutomatic {
+  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
+  /** @inheritDoc */
   public queuedValue: boolean | null = null;
+  /** @inheritDoc */
   public settings: DimmerSettings = new DimmerSettings();
+  /** @inheritDoc */
   public targetAutomaticState: boolean = false;
   protected _lastPersist: number = 0;
   protected abstract readonly _stateIdBrightness: string;
@@ -103,9 +107,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     return setActuatorCommand.on;
   }
 
-  /**
-   * @inheritDoc
-   */
+  /** @inheritDoc */
   public setLight(c: DimmerSetLightCommand): void {
     if (this._stateIdState === '') {
       this.log(LogLevel.Error, `Keine State ID bekannt.`);

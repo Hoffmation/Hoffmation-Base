@@ -9,15 +9,33 @@ import { iSpeaker } from '../../devices';
 import { NameDatePair } from './name-date-pair';
 
 export class MuellService {
+  /**
+   * A list of all trash bins
+   */
   public static alleTonnen: NameDatePair[] = [];
+  /**
+   * The blue trash bin (normally being used for paper)
+   */
   public static blaueTonne: MuellTonne;
+  /**
+   * The grey trash bin (normally being used for general waste)
+   */
   public static graueTonne: MuellTonne;
+  /**
+   * The yellow trash bin (normally being used for plastic)
+   */
   public static gelbeTonne: MuellTonne;
+  /**
+   * The brown trash bin (normally being used for organic waste)
+   */
   public static brauneTonne: MuellTonne;
+  /**
+   * Whether the loading of the calendar is still pending
+   */
   public static loadingPending: boolean = true;
-  public static updateTimeCallback: TimeCallback;
-  public static checkTimeCallback: TimeCallback;
-  public static months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  private static updateTimeCallback: TimeCallback;
+  private static checkTimeCallback: TimeCallback;
+  private static months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   private static lastCheck: Date = new Date(0);
   private static _calendarURL: string;
   private static _active: boolean = false;

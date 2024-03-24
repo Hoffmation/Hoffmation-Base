@@ -8,6 +8,10 @@ import { LogLevel } from '../../../../models';
 import { Utils } from '../../../services';
 
 export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch {
+  /**
+   * The battery level of the device in percent.
+   * TODO: Implement iBatteryDevice
+   */
   public battery: number = -99;
   public abstract buttonBot: Button | undefined;
   public abstract buttonBotLeft: Button | undefined;

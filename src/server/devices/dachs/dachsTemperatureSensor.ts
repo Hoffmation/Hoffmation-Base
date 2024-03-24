@@ -8,10 +8,14 @@ import _ from 'lodash';
 import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
+  /** @inheritDoc */
   public settings: DeviceSettings | undefined = undefined;
+  /** @inheritDoc */
   public readonly deviceType: DeviceType = DeviceType.DachsWarmWaterTemperature;
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
 
+  /** @inheritDoc */
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistTemperaturSensor();

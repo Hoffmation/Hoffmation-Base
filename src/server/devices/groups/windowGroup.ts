@@ -24,7 +24,17 @@ import { DeviceList } from '../device-list';
 import { DeviceClusterType } from '../device-cluster-type';
 
 export class WindowGroup extends BaseGroup {
+  /**
+   * Timecallback for sunrise-shutter actions
+   * @remarks This callback is only set if needed and already calculated.
+   * @warning Manual setting of this callback is not recommended. Prefer {@link recalcTimeCallbacks} after changing settings.
+   */
   public sunriseShutterCallback: TimeCallback | undefined;
+  /**
+   * Timecallback for sunset-shutter actions
+   * @remarks This callback is only set if needed and already calculated.
+   * @warning Manual setting of this callback is not recommended. Prefer {@link recalcTimeCallbacks} after changing settings.
+   */
   public sunsetShutterCallback: TimeCallback | undefined;
 
   public constructor(

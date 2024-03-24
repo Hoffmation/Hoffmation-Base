@@ -15,7 +15,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
 
   protected _linkQuality: number = 0;
 
-  public readonly persistZigbeeInterval: NodeJS.Timeout = Utils.guardedInterval(
+  private readonly _persistZigbeeInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistZigbeeDevice();
     },
@@ -33,8 +33,6 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   public get lastUpdate(): Date {
     return this._lastUpdate;
   }
-
-  public stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -90,7 +88,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   }
 
   public dispose(): void {
-    clearInterval(this.persistZigbeeInterval);
+    clearInterval(this._persistZigbeeInterval);
   }
 
   public persistZigbeeDevice(): void {

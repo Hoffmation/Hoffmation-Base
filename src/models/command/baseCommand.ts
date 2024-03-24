@@ -2,8 +2,16 @@ import { CommandSource } from './commandSource';
 import { CommandType } from './commandType';
 
 export abstract class BaseCommand {
+  /**
+   * The timestamp of the command being created
+   */
   public readonly timestamp: Date;
-  abstract _commandType: CommandType;
+  /**
+   * The type of this command to be used for comparison.
+   *
+   * For checking if any command in the stack is of a specific type, use the {@link containsType} method.
+   */
+  public abstract _commandType: CommandType;
   /**
    * If set, this will be used in regards to checking if this is a force/manual/automatic action.
    * @type {CommandSource | undefined} The source of the command

@@ -3,6 +3,10 @@ import { ObjectSettings } from '../objectSettings';
 import { Utils } from '../../server';
 
 export abstract class DeviceSettings extends ObjectSettings {
+  /**
+   * Any device could be an energy consumer, so we have to provide the settings for it
+   * @default undefined
+   */
   public energySettings: ExcessEnergyConsumerSettings | undefined = undefined;
 
   public override fromPartialObject(_obj: Partial<DeviceSettings>): void {

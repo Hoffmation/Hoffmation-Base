@@ -29,13 +29,13 @@ export interface iTemperatureSensor extends iRoomDevice {
 
   /**
    * Adds a callback to be called when the temperature changes
-   * @param {(pValue: number) => void} pCallback - The callback to be called
+   * @param pCallback - The callback to be called
    */
   addTempChangeCallback(pCallback: (pValue: number) => void): void;
 
   /**
    * Inform the temperature sensor that the temperature in the room has changed
-   * @param {number} newTemperatur - The new temperature in the room in Celsius
+   * @param newTemperatur - The new temperature in the room in Celsius
    */
   onTemperaturChange(newTemperatur: number): void;
 

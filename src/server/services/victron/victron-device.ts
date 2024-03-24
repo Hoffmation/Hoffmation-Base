@@ -8,8 +8,11 @@ import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
 
 export class VictronDevice implements iEnergyManager {
   private readonly _victronConsumer: VictronMqttConsumer;
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.energyManager];
+  /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.Victron;
+  /** @inheritDoc */
   public readonly settings: VictronDeviceSettings;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private blockDeviceChangeTime: number = -1;

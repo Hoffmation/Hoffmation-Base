@@ -3,6 +3,7 @@ import { BaseCommand } from './baseCommand';
 import { CommandSource } from './commandSource';
 
 export class ActuatorToggleCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.ActuatorToggleCommand;
 
   /**

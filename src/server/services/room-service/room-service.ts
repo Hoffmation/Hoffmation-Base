@@ -1,4 +1,4 @@
-import { ringStorage, Utils } from '../utils';
+import { RingStorage, Utils } from '../utils';
 import {
   ActuatorSetStateCommand,
   CommandSource,
@@ -20,11 +20,26 @@ import { TelegramService } from '../Telegram';
 import { BaseGroup, iRoomDevice } from '../../devices';
 
 export class RoomService {
+  /**
+   * A Map containing all rooms in the house identified by their name
+   */
   public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
+  /**
+   * A Map containing all groups in the house identified by {@link BaseGroup.id}
+   */
   public static Groups: Map<string, BaseGroup> = new Map<string, BaseGroup>();
+  /**
+   * A boolean indicating if the away mode is active, which triggers certain alarms on movement
+   */
   public static awayModeActive: boolean = false;
+  /**
+   * A boolean indicating if the night mode is active, which triggers certain alarms on movement in rooms included in night alarm
+   */
   public static nightAlarmActive: boolean = false;
-  public static movementHistory: ringStorage<string> = new ringStorage<string>(15);
+  /**
+   * A ring storage containing the last 15 detected movements in the house
+   */
+  public static movementHistory: RingStorage<string> = new RingStorage<string>(15);
   private static _awayModeTimeout: NodeJS.Timeout | undefined;
   private static _nightModeTimeout: NodeJS.Timeout | undefined;
   private static _intrusionAlarmActive: boolean = false;
@@ -134,11 +149,11 @@ export class RoomService {
 
   public static endAlarmModes(): void {
     if (this.awayModeActive) {
-      TelegramService.sendMessage(TelegramService.subscribedIDs, `Alarm Mode disarmed`);
+      TelegramService.sendMessageToSubscriber(`Alarm Mode disarmed`);
       SonosService.speakOnAll(Res.welcomeHome(), 35);
     }
     if (this.nightAlarmActive) {
-      TelegramService.sendMessage(TelegramService.subscribedIDs, `Nachtmodus der Alarmanlage entschärft`);
+      TelegramService.sendMessageToSubscriber(`Nachtmodus der Alarmanlage entschärft`);
       SonosService.speakOnAll(Res.goodMorning(), 30);
     }
     if (this._nightModeTimeout) {

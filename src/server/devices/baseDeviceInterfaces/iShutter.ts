@@ -32,7 +32,7 @@ export interface iShutter extends iRoomDevice {
 
   /**
    * Sets the level of the shutter
-   * @param {ShutterSetLevelCommand} command - The command to execute
+   * @param command - The command to execute
    */
   setLevel(command: ShutterSetLevelCommand): void;
 }

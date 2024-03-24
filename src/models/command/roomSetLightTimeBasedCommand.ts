@@ -3,6 +3,7 @@ import { CommandType } from './commandType';
 import { CommandSource } from './commandSource';
 
 export class RoomSetLightTimeBasedCommand extends BaseCommand {
+  /** @inheritDoc */
   public override _commandType: CommandType = CommandType.RoomSetLightTimeBasedCommand;
 
   /**

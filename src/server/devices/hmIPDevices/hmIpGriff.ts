@@ -12,6 +12,7 @@ import { DeviceCapability } from '../DeviceCapability';
 import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
+  /** @inheritDoc */
   public settings: HandleSettings = new HandleSettings();
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
@@ -25,11 +26,13 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     return this._battery;
   }
 
+  /** @inheritDoc */
   public position: WindowPosition = WindowPosition.geschlossen;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _offenCallback: Array<(pValue: boolean) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
+  /** @inheritDoc */
   public minutesOpen: number = 0;
   private _window: Window | undefined = undefined;
   private _helpingRoomTemp: boolean = false;

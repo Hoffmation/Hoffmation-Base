@@ -13,8 +13,17 @@ import { WeatherResponse } from './weather-response';
 import { RainNextMinutesInfo } from './rain-next-minutes-info';
 
 export class WeatherService {
+  /**
+   * Whether the service is active or not
+   */
   public static active: boolean = false;
-  public static oneDay: number = 1000 * 60 * 60 * 24;
+  /**
+   * The milliseconds of one day
+   */
+  public static readonly oneDay: number = 1000 * 60 * 60 * 24;
+  /**
+   * The last weather response
+   */
   public static lastResponse: WeatherResponse;
   /**
    * The sun horizontal degree (0 is North)

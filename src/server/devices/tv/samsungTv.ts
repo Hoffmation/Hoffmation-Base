@@ -5,6 +5,7 @@ import Samsung, { KEYS } from 'samsung-tv-control';
 import { LogLevel } from '../../../models';
 
 export class SamsungTv extends TvDevice {
+  /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.SamsungTv;
   private _device: Samsung;
 

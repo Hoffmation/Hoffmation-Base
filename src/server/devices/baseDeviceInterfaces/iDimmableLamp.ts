@@ -19,13 +19,13 @@ export interface iDimmableLamp extends iLamp {
 
   /**
    * This function toggles the light on or off.
-   * @param {LampToggleLightCommand} command - The command to execute on the light device.
+   * @param command - The command to execute on the light device.
    */
   toggleLight(command: LampToggleLightCommand): void;
 
   /**
    * This function sets the light to a specific value.
-   * @param {DimmerSetLightCommand} command - The command to execute on the light device.
+   * @param command - The command to execute on the light device.
    */
   setLight(command: DimmerSetLightCommand): void;
 }

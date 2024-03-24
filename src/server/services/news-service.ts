@@ -14,7 +14,9 @@ import { iSpeaker } from '../devices';
 import ErrnoException = NodeJS.ErrnoException;
 
 export class NewsService {
-  // most recently downloaded news audio file
+  /**
+   * Path to the most recently downloaded news audio file
+   */
   public static lastNewsAudioFile: string;
 
   // prefix for all downloaded files of the news service
