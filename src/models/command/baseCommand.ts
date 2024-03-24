@@ -4,6 +4,11 @@ import { CommandType } from './commandType';
 export abstract class BaseCommand {
   public readonly timestamp: Date;
   abstract _commandType: CommandType;
+  /**
+   * If set, this will be used in regards to checking if this is a force/manual/automatic action.
+   * @type {CommandSource | undefined} The source of the command
+   */
+  public overrideCommandSource: CommandSource | undefined;
 
   /**
    * Base class for all commands
@@ -25,6 +30,13 @@ export abstract class BaseCommand {
   }
 
   public get isForceAction(): boolean {
+    if (this.overrideCommandSource !== undefined) {
+      return (
+        this.overrideCommandSource === CommandSource.Manual ||
+        this.overrideCommandSource === CommandSource.API ||
+        this.overrideCommandSource === CommandSource.Force
+      );
+    }
     if (this.source instanceof BaseCommand) {
       return this.source.isForceAction;
     }
@@ -34,6 +46,9 @@ export abstract class BaseCommand {
   }
 
   public get isManual(): boolean {
+    if (this.overrideCommandSource !== undefined) {
+      return this.overrideCommandSource === CommandSource.Manual || this.overrideCommandSource === CommandSource.API;
+    }
     if (this.source instanceof BaseCommand) {
       return this.source.isManual;
     }
@@ -41,6 +56,9 @@ export abstract class BaseCommand {
   }
 
   public get isInitial(): boolean {
+    if (this.overrideCommandSource !== undefined) {
+      return this.overrideCommandSource === CommandSource.Initial;
+    }
     if (this.source instanceof BaseCommand) {
       return this.source.isInitial;
     }

@@ -6,6 +6,10 @@
   * (theimo1221) Update packages
 -->
 
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix an issue with the recent blockAutomaticHandler changes, which resulted in a loop on manual turn off
+
 ## 3.0.0-alpha.20 (2024-03-23)
 
 * (theimo1221) Migrate "blockAutomaticHandler" to new command-structure

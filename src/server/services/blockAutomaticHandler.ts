@@ -49,6 +49,12 @@ export class BlockAutomaticHandler {
   }
 
   public liftAutomaticBlock(c: BlockAutomaticLiftBlockCommand): void {
+    if (this._restoreAutomaticStateTimeout !== null) {
+      clearTimeout(this._restoreAutomaticStateTimeout);
+    }
+    this._restoreAutomaticStateTimeout = null;
+    this.automaticBlockedUntil = new Date(0);
+
     this._restoreAutomatic(new RestoreTargetAutomaticValueCommand(c));
   }
 

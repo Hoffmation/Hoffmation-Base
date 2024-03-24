@@ -66,12 +66,12 @@ export class LampUtils {
       device.blockAutomationHandler.automaticBlockActive
     ) {
       dontBlock = true;
-      device.blockAutomationHandler.liftAutomaticBlock(
-        new BlockAutomaticLiftBlockCommand(
-          command,
-          'Reset Automatic Block as we are turning off manually after a force on',
-        ),
+      const liftCommand: BlockAutomaticLiftBlockCommand = new BlockAutomaticLiftBlockCommand(
+        command,
+        'Reset Automatic Block as we are turning off manually after a force on',
       );
+      liftCommand.overrideCommandSource = CommandSource.Automatic;
+      device.blockAutomationHandler.liftAutomaticBlock(liftCommand);
     }
     return dontBlock;
   }
