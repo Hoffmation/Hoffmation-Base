@@ -27,14 +27,14 @@ export interface iAcDevice extends iBaseDevice {
 
   /**
    * This function should be called to inform the air-conditioning device about a change of the room temperature
-   * @param {number} newTemperatur The new temperature of the room in degrees Celsius
+   * @param {number} newTemperatur - The new temperature of the room in degrees Celsius
    */
   onTemperaturChange(newTemperatur: number): void;
 
   /**
    * Updates the desired mode of the air-conditioning device and writes it to the device if desired
-   * @param {AcMode} mode The new desired mode
-   * @param {boolean} writeToDevice Whether to write the new mode to the device
+   * @param {AcMode} mode - The new desired mode
+   * @param {boolean} writeToDevice - Whether to write the new mode to the device
    */
   setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
 

@@ -103,9 +103,9 @@ export class NewsService {
 
   /**
    * Plays the latest news on a sonos device
-   * @param speaker Sonos device to play from
-   * @param volume volume to play at
-   * @param retries Number of times playing should be tried if there is currently no audio file available
+   * @param speaker - Sonos device to play from
+   * @param volume - volume to play at
+   * @param retries - Number of times playing should be tried if there is currently no audio file available
    */
   public static playLastNews(speaker: iSpeaker, volume: number = 30, retries: number = 5): void {
     if (!NewsService.lastNewsAudioFile) {
@@ -189,8 +189,8 @@ export class NewsService {
 
   /**
    * Deletes all files in the given directory that are older than the given age.
-   * @param rootDir Directory to search in
-   * @param keepMaxAge Maximum age in minutes until a file gets deleted
+   * @param rootDir - Directory to search in
+   * @param keepMaxAge - Maximum age in minutes until a file gets deleted
    */
   private static cleanOldFiles(rootDir: string, keepMaxAge: number): void {
     let deleteCount: number = 0;

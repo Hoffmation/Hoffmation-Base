@@ -95,7 +95,7 @@ export class VictronDevice implements iEnergyManager {
     return Math.max(this.victronConsumer.data.system.power ?? 0, 0) - this.drawingWattage;
   }
 
-  public cleanup(): void {
+  public dispose(): void {
     this._victronConsumer.disconnect();
     if (this._iDatabaseLoggerInterval !== null) {
       clearInterval(this._iDatabaseLoggerInterval);
@@ -153,7 +153,7 @@ export class VictronDevice implements iEnergyManager {
 
   /**
    * Changes the grid set point of the Victron device, to the desired value.
-   * @param setPoint The desired watt point the system should aim for.
+   * @param setPoint - The desired watt point the system should aim for.
    */
   public setGridSetPoint(setPoint: number): void {
     this._victronConsumer.setGridSetPoint(setPoint);

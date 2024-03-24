@@ -31,7 +31,8 @@ export class HeatGroup extends BaseGroup {
   }
 
   /**
-   * @returns The current measured temperature of the room in Celsius
+   * Calculates the combined humidity Level in this room
+   * @returns The humidity in percent
    */
   public get humidity(): number {
     let humidity: number = UNDEFINED_HUMIDITY_VALUE;
@@ -52,7 +53,8 @@ export class HeatGroup extends BaseGroup {
   }
 
   /**
-   * @returns The current measured temperature of the room in Celsius
+   * Calculates the temperature based on all available sensors.
+   * @returns The temperature in °C
    */
   public get temperature(): number {
     let temp: number = UNDEFINED_TEMP_VALUE;
@@ -157,8 +159,8 @@ export class HeatGroup extends BaseGroup {
   /**
    * Sets all ACs to new desired Value
    * TODO: Migrate to new Command System
-   * @param newDesiredState The new desired (on/off) state
-   * @param force Whether this was a manual trigger, thus blocking automatic changes for 1 hour
+   * @param newDesiredState - The new desired (on/off) state
+   * @param force - Whether this was a manual trigger, thus blocking automatic changes for 1 hour
    */
   public setAc(newDesiredState: boolean, force: boolean = false): void {
     const devs: AcDevice[] = this.getOwnAcDevices();

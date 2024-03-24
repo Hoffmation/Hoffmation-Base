@@ -149,7 +149,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
 
   /**
    * Sets the light based on the current time, rollo Position and room Settings
-   * @param c The command to execute
+   * @param c - The command to execute
    */
   public setLightTimeBased(c: RoomSetLightTimeBasedCommand): void {
     if (!this.LightGroup) {

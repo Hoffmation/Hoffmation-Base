@@ -8,10 +8,10 @@ export class BlockAutomaticUntilCommand extends BaseCommand {
 
   /**
    * Command to disable automatic actions until a specific date.
-   * @param source The source of the command.
-   * @param targetDate The date until the automatic actions will be disabled.
-   * @param reason You can provide an individual reason here for debugging purpose.
-   * @param onCollideAction The action to take if a block is already active. --> Default: overrideIfGreater
+   * @param source - The source of the command.
+   * @param targetDate - The date until the automatic actions will be disabled.
+   * @param reason - You can provide an individual reason here for debugging purpose.
+   * @param onCollideAction - The action to take if a block is already active. --> Default: overrideIfGreater
    */
   public constructor(
     source: CommandSource | BaseCommand,

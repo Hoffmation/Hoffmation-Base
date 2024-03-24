@@ -7,6 +7,4 @@ export interface iVibrationSensor extends iRoomDevice {
   vibrationBlockedByMotion: boolean;
   vibrationBlockedByMotionTimeStamp: number;
   vibration: boolean;
-
-  alarmCheck(): void;
 }

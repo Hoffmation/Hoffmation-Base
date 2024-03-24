@@ -42,7 +42,7 @@ import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp'
 export class API {
   /**
    * Endpoint to end a scene manually (or early if it has automatic turn off)
-   * @param deviceId The id of the scene to end
+   * @param deviceId - The id of the scene to end
    * @returns In case it failed the Error containing the reason
    */
   public static endScene(deviceId: string): Error | null {
@@ -60,7 +60,7 @@ export class API {
 
   /**
    * Gets the instance of an Ac Device identified by id
-   * @param id The device id of the AC
+   * @param id - The device id of the AC
    * @returns The instance of the AC Device or undefined if not found
    */
   public static getAc(id: string): AcDevice | undefined {
@@ -113,11 +113,11 @@ export class API {
 
   /**
    * Turns on/off one AC identified by it's id
-   * @param id The id of the device, if wrong false will be returned
-   * @param desiredState The desired state for the AC
-   * @param desiredMode The desired mode for the AC
-   * @param desiredTemperature The desired temperature for the AC in Celsius
-   * @param forceTime The time in ms this should not change before automatic change is allowed again
+   * @param id - The id of the device, if wrong false will be returned
+   * @param desiredState - The desired state for the AC
+   * @param desiredMode - The desired mode for the AC
+   * @param desiredTemperature - The desired temperature for the AC in Celsius
+   * @param forceTime - The time in ms this should not change before automatic change is allowed again
    * @returns True if the AC was found and the state was changed
    */
   public static setAc(
@@ -150,7 +150,7 @@ export class API {
 
   /**
    * Turns on/off all AC´s in the home
-   * @param desiredState The desired state for all AC´s
+   * @param desiredState - The desired state for all AC´s
    */
   public static setAllAc(desiredState: boolean): void {
     DaikinService.setAll(desiredState, true);
@@ -159,12 +159,12 @@ export class API {
 
   /**
    * Changes the status of a given Lamp
+   * @param deviceId - The device Id of the lamp
+   * @param state - The desired new state
+   * @param timeout - Desired time after which this should be reverted to normal state
+   * @returns In case it failed the Error containing the reason
    * @deprecated Use "API.lampSetLight" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The device Id of the lamp
-   * @param state The desired new state
-   * @param timeout Desired time after which this should be reverted to normal state
-   * @returns In case it failed the Error containing the reason
    */
   public static setLamp(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
     return this.lampSetLight(deviceId, new LampSetLightCommand(CommandSource.API, state, '', timeout));
@@ -172,8 +172,8 @@ export class API {
 
   /**
    * Changes the status of a given Lamp
-   * @param deviceId The device Id of the lamp
-   * @param c The command(stack) to perform on the lamp
+   * @param deviceId - The device Id of the lamp
+   * @param c - The command(stack) to perform on the lamp
    * @returns In case it failed the Error containing the reason.
    */
   public static lampSetLight(deviceId: string, c: LampSetLightCommand): Error | null {
@@ -191,12 +191,12 @@ export class API {
 
   /**
    * Changes the status of a given actuator
+   * @param deviceId - The device Id of the actuator
+   * @param state - The desired new state
+   * @param timeout - Desired time after which this should be reverted to automatic state
+   * @returns In case it failed the Error containing the reason
    * @deprecated Use "API.actuatorSetState" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The device Id of the actuator
-   * @param state The desired new state
-   * @param timeout Desired time after which this should be reverted to automatic state
-   * @returns In case it failed the Error containing the reason
    */
   public static setActuator(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
     return this.actuatorSetState(deviceId, new ActuatorSetStateCommand(CommandSource.API, state, '', timeout));
@@ -204,8 +204,8 @@ export class API {
 
   /**
    * Changes the status of a given actuator
-   * @param deviceId The device Id of the actuator
-   * @param c The command(stack) to perform on the actuator
+   * @param deviceId - The device Id of the actuator
+   * @param c - The command(stack) to perform on the actuator
    * @returns In case it failed the Error containing the reason
    */
   public static actuatorSetState(deviceId: string, c: ActuatorSetStateCommand): Error | null {
@@ -223,14 +223,14 @@ export class API {
 
   /**
    * Changes the status of the given dimmer
+   * @param deviceId - The device Id of the actuator
+   * @param state - The desired new state
+   * @param timeout - A chosen Timeout after which the light should be reset
+   * @param brightness - The desired brightness
+   * @param transitionTime - The transition time during turnOn/turnOff
+   * @returns In case it failed the Error containing the reason
    * @deprecated Use "API.dimmerSetLight" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The device Id of the actuator
-   * @param state The desired new state
-   * @param timeout A chosen Timeout after which the light should be reset
-   * @param brightness The desired brightness
-   * @param transitionTime The transition time during turnOn/turnOff
-   * @returns In case it failed the Error containing the reason
    */
   public static setDimmer(
     deviceId: string,
@@ -247,8 +247,8 @@ export class API {
 
   /**
    * Changes the status of the given dimmer
-   * @param deviceId The device Id of the dimmable device.
-   * @param command The command(stack) to perform on the dimmer
+   * @param deviceId - The device Id of the dimmable device.
+   * @param command - The command(stack) to perform on the dimmer
    * @returns In case it failed the Error containing the reason.
    */
   public static dimmerSetLight(deviceId: string, command: DimmerSetLightCommand): Error | null {
@@ -266,16 +266,16 @@ export class API {
 
   /**
    * Changes the status of a given led-device
+   * @param deviceId - The device Id of the actuator
+   * @param state - The desired new state
+   * @param timeout - A chosen Timeout after which the light should be reset
+   * @param brightness - The desired brightness
+   * @param transitionTime - The transition time during turnOn/turnOff
+   * @param color - The desired color in 6 digit hex Code
+   * @param colorTemp - The desired color Temperature (0 = more White)
+   * @returns In case it failed the Error containing the reason
    * @deprecated Use "API.ledSetLight" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The device Id of the actuator
-   * @param state The desired new state
-   * @param timeout A chosen Timeout after which the light should be reset
-   * @param brightness The desired brightness
-   * @param transitionTime The transition time during turnOn/turnOff
-   * @param color The desired color in 6 digit hex Code
-   * @param colorTemp The desired color Temperature (0 = more White)
-   * @returns In case it failed the Error containing the reason
    */
   public static setLedLamp(
     deviceId: string,
@@ -294,8 +294,8 @@ export class API {
 
   /**
    * Changes the status of a given led-device
-   * @param deviceId The device Id of the LED-Device
-   * @param command The command(stack) to perform on the led-device
+   * @param deviceId - The device Id of the LED-Device
+   * @param command - The command(stack) to perform on the led-device
    * @returns In case it failed the Error containing the reason
    */
   public static ledSetLight(deviceId: string, command: LedSetLightCommand): Error | null {
@@ -314,11 +314,11 @@ export class API {
   /**
    * Changes the position of a given shutter
    * if needed this updates the window position as well
+   * @param deviceId - The device Id of the shutter
+   * @param level - The desired new level (0 being open, 100 being closed)
+   * @returns Error if there is no shutter with the given id
    * @deprecated Use "API.shutterSetLevel" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The device Id of the shutter
-   * @param level The desired new level (0 being open, 100 being closed)
-   * @returns Error if there is no shutter with the given id
    */
   public static setShutter(deviceId: string, level: number): Error | null {
     return this.shutterSetLevel(deviceId, new ShutterSetLevelCommand(CommandSource.API, level));
@@ -327,8 +327,8 @@ export class API {
   /**
    * Changes the position of a given shutter
    * if needed this updates the window position as well
-   * @param deviceId The device Id of the shutter
-   * @param command The command(stack) to perform on the shutter
+   * @param deviceId - The device Id of the shutter
+   * @param command - The command(stack) to perform on the shutter
    * @returns Error if there is no shutter with the given id
    */
   public static shutterSetLevel(deviceId: string, command: ShutterSetLevelCommand): Error | null {
@@ -365,8 +365,8 @@ export class API {
 
   /**
    * Starts a specified scene
-   * @param deviceId The targeted scene
-   * @param turnOffTimeout If provided the time in ms after which the scene should end automatically
+   * @param deviceId - The targeted scene
+   * @param turnOffTimeout - If provided the time in ms after which the scene should end automatically
    * @returns In case it failed the Error containing the reason
    */
   public static startScene(deviceId: string, turnOffTimeout?: number): Error | null {
@@ -402,8 +402,8 @@ export class API {
 
   /**
    * Changes the settings of a given device
-   * @param deviceId The id of the device to change the settings
-   * @param settings A partial settings object containing the wanted settings properties
+   * @param deviceId - The id of the device to change the settings
+   * @param settings - A partial settings object containing the wanted settings properties
    * @returns In case it failed the Error containing the reason
    */
   public static setDeviceSettings(deviceId: string, settings: Partial<DeviceSettings>): Error | null {
@@ -437,8 +437,8 @@ export class API {
 
   /**
    * Changes the settings of a given room
-   * @param roomName The id of the Room to change the settings
-   * @param settings A partial settings object containing the wanted settings properties
+   * @param roomName - The id of the Room to change the settings
+   * @param settings - A partial settings object containing the wanted settings properties
    * @returns In case it failed the Error containing the reason
    */
   public static setRoomSettings(roomName: string, settings: Partial<DeviceSettings>): Error | null {
@@ -482,10 +482,10 @@ export class API {
 
   /**
    * Lifts a previously started Block of automatic
+   * @param deviceId - The target device
+   * @returns In case it failed the Error containing the reason
    * @deprecated Use "API.blockAutomaticLiftAutomaticBlock" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The target device
-   * @returns In case it failed the Error containing the reason
    */
   public static liftAutomaticBlock(deviceId: string): Error | null {
     return this.blockAutomaticLiftAutomaticBlock(deviceId, new BlockAutomaticLiftBlockCommand(CommandSource.API));
@@ -493,8 +493,8 @@ export class API {
 
   /**
    * Lifts a previously started Block of automatic
-   * @param deviceId The target device
-   * @param command The command to lift the automatic block
+   * @param deviceId - The target device
+   * @param command - The command to lift the automatic block
    * @returns In case it failed the Error containing the reason
    */
   public static blockAutomaticLiftAutomaticBlock(
@@ -515,12 +515,12 @@ export class API {
 
   /**
    * Blocks the automatic of the given device for provided Duration
+   * @param deviceId - The target device
+   * @param duration - The duration in ms for which the device should remain in current state
+   * @param onCollision - The desired Collision Solving strategy, in case the automatic being blocked already
+   * @returns In case it failed the Error containing the reason
    * @deprecated Use "API.blockAutomaticDisable" instead
    * TODO: Remove deprecated API method
-   * @param deviceId The target device
-   * @param duration The duration in ms for which the device should remain in current state
-   * @param onCollision The desired Collision Solving strategy, in case the automatic being blocked already
-   * @returns In case it failed the Error containing the reason
    */
   public static blockAutomatic(deviceId: string, duration: number, onCollision?: CollisionSolving): Error | null {
     this.blockAutomaticSetBlock(deviceId, new BlockAutomaticCommand(CommandSource.API, duration, '', onCollision));
@@ -529,8 +529,8 @@ export class API {
 
   /**
    * Blocks the automatic of the given device for provided Duration
-   * @param deviceId The target device
-   * @param command The command to block the automatic
+   * @param deviceId - The target device
+   * @param command - The command to block the automatic
    * @returns In case it failed the Error containing the reason
    */
   public static blockAutomaticSetBlock(deviceId: string, command: BlockAutomaticCommand): Error | null {

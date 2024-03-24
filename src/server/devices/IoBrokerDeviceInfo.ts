@@ -26,8 +26,8 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
 
   /**
    * Extracts the relevant infos from the passed deviceConfig and combines them in a new Info object
-   * @param pDevConf The device Config based on the extracted devices.json from ioBroker
-   * @param isJsStateChildObject Within JS Objects, creating devices is limited,
+   * @param pDevConf - The device Config based on the extracted devices.json from ioBroker
+   * @param isJsStateChildObject - Within JS Objects, creating devices is limited,
    * so we name the first child state for the object creation (e.g. javascript.0.00-EnergyManager.CurrentProduction)
    */
   public constructor(pDevConf: deviceConfig, isJsStateChildObject: boolean = false) {

@@ -180,7 +180,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     });
   }
 
-  public alarmCheck(): void {
+  private alarmCheck(): void {
     this.log(
       LogLevel.Debug,
       `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlockedByGriff}`,

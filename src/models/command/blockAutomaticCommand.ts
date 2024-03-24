@@ -8,10 +8,10 @@ export class BlockAutomaticCommand extends BaseCommand {
 
   /**
    * Command to disable automatic actions for a specific duration.
-   * @param source The source of the command.
-   * @param durationMS The duration in milliseconds for the automatic actions to be disabled.
-   * @param reason You can provide an individual reason here for debugging purpose.
-   * @param onCollideAction The action to take if a block is already active. --> Default: overrideIfGreater
+   * @param source - The source of the command.
+   * @param durationMS - The duration in milliseconds for the automatic actions to be disabled.
+   * @param reason - You can provide an individual reason here for debugging purpose.
+   * @param onCollideAction - The action to take if a block is already active. --> Default: overrideIfGreater
    */
   public constructor(
     source: CommandSource | BaseCommand,

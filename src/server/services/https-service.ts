@@ -43,8 +43,8 @@ export class HTTPSService {
   /**
    * Downloads a file from a given url to the given location.
    * If the location doesn't exist, it will be created quietly.
-   * @param url URL to download file from
-   * @param filePath Path to save file to
+   * @param url - URL to download file from
+   * @param filePath - Path to save file to
    * @returns A promise that resolves to true if the file was downloaded successfully, false otherwise
    */
   public static async downloadFile(url: string, filePath: string): Promise<boolean> {

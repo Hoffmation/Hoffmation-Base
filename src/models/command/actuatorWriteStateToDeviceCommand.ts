@@ -8,9 +8,9 @@ export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
 
   /**
    * Command to write the state of an actuator to the device
-   * @param source The source of the command
-   * @param stateValue The new state of the actuator
-   * @param reason You can provide a reason for clarification
+   * @param source - The source of the command
+   * @param stateValue - The new state of the actuator
+   * @param reason - You can provide a reason for clarification
    */
   public constructor(
     source: CommandSource | BaseCommand,

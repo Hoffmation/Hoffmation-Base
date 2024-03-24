@@ -9,7 +9,14 @@ export interface iShutter extends iRoomDevice {
   desiredWindowShutterLevel: number;
   window: Window | undefined;
 
+  /**
+   * Persists the current information of the shutter to the database
+   */
   persist(): void;
 
+  /**
+   * Sets the level of the shutter
+   * @param {ShutterSetLevelCommand} command - The command to execute
+   */
   setLevel(command: ShutterSetLevelCommand): void;
 }

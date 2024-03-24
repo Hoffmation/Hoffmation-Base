@@ -179,13 +179,6 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
   }
 
-  public stopAutomaticCheck(): void {
-    if (this._iAutomaticInterval !== undefined) {
-      clearInterval(this._iAutomaticInterval);
-      this._iAutomaticInterval = undefined;
-    }
-  }
-
   public checkAutomaticChange(): void {
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();

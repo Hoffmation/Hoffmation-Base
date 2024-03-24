@@ -79,7 +79,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
 
   /**
    * Adds a callback for when a motion state has changed.
-   * @param pCallback Function that accepts the new state as parameter
+   * @param pCallback - Function that accepts the new state as parameter
    */
   public addMovementCallback(pCallback: (newState: boolean) => void): void {
     this._movementDetectedCallback.push(pCallback);

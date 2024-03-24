@@ -41,7 +41,7 @@ export class RoomService {
 
   /**
    * Moves all shutters of the desired floor(s) to the desired position
-   * @param c {FloorSetAllShuttersCommand} the command to be executed on all windows of the desired floor(s)
+   * @param c - the command to be executed on all windows of the desired floor(s)
    */
   public static setAllShutterOfFloor(c: FloorSetAllShuttersCommand): void {
     const rooms: IterableIterator<[string, RoomBase]> =
@@ -54,8 +54,8 @@ export class RoomService {
   /**
    * Set ALl Lamps of a specific floor
    * !!floor -1 sets all lamps in house instead!!
-   * @param floor {number} the level on which all lamps shall be changed -1 equals all rooms
-   * @param command {ActuatorSetStateCommand} the command to be executed
+   * @param floor - {number} the level on which all lamps shall be changed -1 equals all rooms
+   * @param command - {ActuatorSetStateCommand} the command to be executed
    */
   public static setAllLampsOfFloor(floor: number, command: ActuatorSetStateCommand): void {
     ServerLogService.writeLog(LogLevel.Info, `Schalte alle Lampen in Etage ${floor} auf den Wert ${command.on}`);

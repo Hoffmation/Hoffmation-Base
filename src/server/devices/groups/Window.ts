@@ -36,7 +36,7 @@ export class Window extends BaseGroup {
 
   /**
    * sets the desired Pos and moves rollo to this level
-   * @param c The command to execute
+   * @param c - The command to execute
    */
   public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {
     this.desiredPosition = c.position;

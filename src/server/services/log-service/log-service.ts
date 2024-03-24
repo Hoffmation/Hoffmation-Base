@@ -87,7 +87,7 @@ export class ServerLogService {
 
   /**
    * Checks if this message is of a debugtype which should be skipped according to settings
-   * @param debugType {LogDebugType}
+   * @param debugType - {LogDebugType}
    * @returns If the Message should be skipped
    */
   private static checkDebugLogSkip(debugType: LogDebugType): boolean {

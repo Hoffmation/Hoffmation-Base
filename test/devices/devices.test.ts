@@ -45,6 +45,6 @@ describe('Devices', () => {
     expect(Object.keys(newObject).length > 0).toBeTruthy();
   });
   afterAll(() => {
-    Devices.energymanager?.cleanup();
+    Devices.energymanager?.dispose();
   });
 });

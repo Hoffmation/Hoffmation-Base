@@ -40,8 +40,9 @@ export class SettingsService {
   }
 
   /**
-   * @deprecated Only use in unit tests
-   * @returns A test configuration
+   * Generates a fresh Test configuration.
+   * @returns The test configuration.
+   * @deprecated Only use in unit tests.
    */
   public static get testConfig(): iConfig {
     return {

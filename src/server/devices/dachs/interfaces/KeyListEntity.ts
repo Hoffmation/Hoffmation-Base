@@ -10,12 +10,3 @@ export interface KeyListEntityResponse<V> {
   //HTTP VALUE RESPONSE
   value: V;
 }
-
-/**
- 
- "key": "",
- "doc": "",
- "unit": Number
- 
- 
- */

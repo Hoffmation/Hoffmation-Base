@@ -11,13 +11,13 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
 
   /**
    * Command to set the light state of a WLED device
-   * @param source The source of the command
-   * @param on The desired state of the light
-   * @param reason You can provide a reason for clarification
-   * @param timeout The duration in milliseconds this should block automatic changes --> Reverse to automatic after this time
-   * @param brightness The brightness of the light
-   * @param transitionTime The time in milliseconds the transition should take
-   * @param preset The preset to use
+   * @param source - The source of the command
+   * @param on - The desired state of the light
+   * @param reason - You can provide a reason for clarification
+   * @param timeout - The duration in milliseconds this should block automatic changes --> Reverse to automatic after this time
+   * @param brightness - The brightness of the light
+   * @param transitionTime - The time in milliseconds the transition should take
+   * @param preset - The preset to use
    */
   public constructor(
     source: CommandSource | BaseCommand,

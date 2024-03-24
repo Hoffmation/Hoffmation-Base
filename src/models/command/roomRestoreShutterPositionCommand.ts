@@ -7,9 +7,9 @@ export class RoomRestoreShutterPositionCommand extends BaseCommand {
 
   /**
    * Command to restore the normal automatic shutter position of a room
-   * @param source The source of the command
-   * @param recalc Whether to recalculate the shutter position
-   * @param reason You can provide a reason for clarification
+   * @param source - The source of the command
+   * @param recalc - Whether to recalculate the shutter position
+   * @param reason - You can provide a reason for clarification
    */
   public constructor(
     source: CommandSource | BaseCommand,

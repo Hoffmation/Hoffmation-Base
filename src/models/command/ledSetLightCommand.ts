@@ -11,14 +11,14 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
 
   /**
    * Command to set the light-state of a Led-Device
-   * @param source The source of the command
-   * @param on The desired state-value
-   * @param reason You can provide a reason for clarity
-   * @param timeout  A chosen Timeout after which the light should be reset
-   * @param brightness The desired brightness
-   * @param transitionTime The transition time during turnOn/turnOff
-   * @param color The desired color in 6 digit hex Code
-   * @param colorTemp The desired color Temperature (0 = more White)
+   * @param source - The source of the command
+   * @param on - The desired state-value
+   * @param reason - You can provide a reason for clarity
+   * @param timeout - A chosen Timeout after which the light should be reset
+   * @param brightness - The desired brightness
+   * @param transitionTime - The transition time during turnOn/turnOff
+   * @param color - The desired color in 6 digit hex Code
+   * @param colorTemp - The desired color Temperature (0 = more White)
    */
   public constructor(
     source: CommandSource | BaseCommand,
@@ -39,8 +39,8 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
 
   /**
    * Create a LedSetLightCommand based on a LampSetTimeBasedCommand and LedSettings by respecting the time of day
-   * @param settings The settings for the Led
-   * @param c The command to base the LedSetLightCommand on
+   * @param settings - The settings for the Led
+   * @param c - The command to base the LedSetLightCommand on
    * @returns The created LedSetLightCommand
    */
   public static byTimeBased(settings: LedSettings, c: LampSetTimeBasedCommand): LedSetLightCommand {

@@ -7,10 +7,10 @@ export class ShutterSetLevelCommand extends BaseCommand {
 
   /**
    * Command to set the level of a shutter
-   * @param source The source of the command
-   * @param level The level to set the shutter to (0: close, 100: completely open)
-   * @param reason You can provide a reason for clarification
-   * @param skipOpenWarning Whether to skip the warning of window being open
+   * @param source - The source of the command
+   * @param level - The level to set the shutter to (0: close, 100: completely open)
+   * @param reason - You can provide a reason for clarification
+   * @param skipOpenWarning - Whether to skip the warning of window being open
    */
   public constructor(
     source: CommandSource | BaseCommand,
