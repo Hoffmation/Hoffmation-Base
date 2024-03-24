@@ -5,18 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.23 (2024-03-24)
 
-* (theimo1221) Fix type definition for deviceConfig
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.21 (2024-03-24)
-
-* (theimo1221) Fix an issue with the recent blockAutomaticHandler changes, which resulted in a loop on manual turn off
-
-## 3.0.0-alpha.20 (2024-03-23)
-
-* (theimo1221) Migrate "blockAutomaticHandler" to new command-structure
-* (theimo1221) Update API-Service to migrate to new Command Structure
+* (theimo1221) Change iCameraDevice to use handles instead of just open flag
 
 ## 3.0.0
 
@@ -38,6 +30,7 @@
 * (theimo1221) Fix Order within wled to not turn on with preset selection after turning off
 * (theimo1221) Improve IoBrokerDevice set State Error Logging
 * (theimo1221) Allow AC "useOwnTemperature" without using Mode.Auto by splitting the settings.
+* (theimo1221) Update API-Service to migrate to new Command Structure
 
 ## 2.23.0 (2024-02-25)
 

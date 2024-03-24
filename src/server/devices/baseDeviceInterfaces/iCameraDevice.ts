@@ -1,5 +1,6 @@
 import { iMotionSensor } from './iMotionSensor';
 import { CameraSettings } from '../../../models';
+import { iHandleSensor } from './iHandleSensor';
 
 // TODO: Add missing Comments
 export interface iCameraDevice extends iMotionSensor {
@@ -9,14 +10,13 @@ export interface iCameraDevice extends iMotionSensor {
   readonly h264IosStreamLink: string;
   readonly rtspStreamLink: string;
   readonly currentImageLink: string;
-  readonly alarmBlockedByGriff: boolean;
-  readonly alarmBlockedByGriffTimeStamp: number;
+  readonly alarmBlockedByOpenHandles: boolean;
 
   /**
    * Inform this camera of certain handles being opened/closed to allow it to react accordingly (e.g. don't send alarm, for owner going into the garden)
-   * @param {boolean} open - Whether the handle is open or closed
+   * @param handle - The handle that has been opened/closed
    */
-  onGriffUpdate(open: boolean): void;
+  onGriffUpdate(handle: iHandleSensor): void;
 
   /**
    * Inform this camera of state updates within iOBroker
