@@ -45,6 +45,7 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
     }
   }
 
+  /** @inheritDoc */
   public abstract getButtonAssignment(): string;
 
   /** @inheritDoc */

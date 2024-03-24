@@ -14,47 +14,57 @@ import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
   /** @inheritDoc */
   public settings: HandleSettings = new HandleSettings();
+  /** @inheritDoc */
+  public position: WindowPosition = WindowPosition.geschlossen;
+  /** @inheritDoc */
+  public minutesOpen: number = 0;
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   private _lastHandlePersist: number = 0;
-
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  public get battery(): number {
-    return this._battery;
-  }
-
-  /** @inheritDoc */
-  public position: WindowPosition = WindowPosition.geschlossen;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _offenCallback: Array<(pValue: boolean) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
-  /** @inheritDoc */
-  public minutesOpen: number = 0;
   private _window: Window | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
 
+  /**
+   * @param pInfo
+   */
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpGriff);
     this.deviceCapabilities.push(DeviceCapability.handleSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
+  }
+
+  /**
+   *
+   */
   public set window(value: Window) {
     this._window = value;
   }
 
+  /** @inheritDoc */
   public addOffenCallback(pCallback: (pValue: boolean) => void): void {
     this._offenCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public addKippCallback(pCallback: (pValue: boolean) => void): void {
     this._kippCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public addClosedCallback(pCallback: (pValue: boolean) => void): void {
     this._closedCallback.push(pCallback);
   }
@@ -86,7 +96,43 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     }
   }
 
-  public updatePosition(pValue: WindowPosition): void {
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
+  /**
+   *
+   */
+  public persistHandleSensor(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastHandlePersist + 2000 > now) {
+      return;
+    }
+    this.log(LogLevel.Debug, `Persist handle state: ${this.position}`);
+    Utils.dbo?.persistHandleSensor(this);
+    this._lastHandlePersist = now;
+  }
+
+  /** @inheritDoc */
+  public dispose(): void {
+    if (this._iOpenTimeout) {
+      clearInterval(this._iOpenTimeout);
+      this._iOpenTimeout = undefined;
+    }
+  }
+
+  /** @inheritDoc */
+  public toJSON(): Partial<IoBrokerBaseDevice> {
+    return _.omit(super.toJSON(), ['_window']);
+  }
+
+  private updatePosition(pValue: WindowPosition): void {
     if (pValue === this.position) {
       if (this._lastHandlePersist == 0) {
         this.persistHandleSensor();
@@ -177,35 +223,5 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       60000,
       this,
     );
-  }
-
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  public persistHandleSensor(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastHandlePersist + 2000 > now) {
-      return;
-    }
-    this.log(LogLevel.Debug, `Persist handle state: ${this.position}`);
-    Utils.dbo?.persistHandleSensor(this);
-    this._lastHandlePersist = now;
-  }
-
-  public dispose(): void {
-    if (this._iOpenTimeout) {
-      clearInterval(this._iOpenTimeout);
-      this._iOpenTimeout = undefined;
-    }
-  }
-
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_window']);
   }
 }

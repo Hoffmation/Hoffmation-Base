@@ -28,7 +28,7 @@ export interface iHeater extends iRoomDevice, iDisposable {
   /**
    * The current room temperature in degree Celsius
    */
-  roomTemperature: number;
+  readonly roomTemperature: number;
   /**
    * The interval to persist the heater information
    * This mainly enforces the interval to be implemented.

@@ -13,8 +13,9 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     this.deviceCapabilities.push(DeviceCapability.lamp);
   }
 
+  /** @inheritDoc */
   public get lightOn(): boolean {
-    return super.isActuatorOn;
+    return super.actuatorOn;
   }
 
   /** @inheritDoc */
@@ -32,14 +33,17 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     super.setActuator(c);
   }
 
+  /** @inheritDoc */
   public toggleLight(c: LampToggleLightCommand): boolean {
     return LampUtils.toggleLight(this, c);
   }
 
+  /** @inheritDoc */
   public setTimeBased(c: LampSetTimeBasedCommand): void {
     LampUtils.setTimeBased(this, c);
   }
 
+  /** @inheritDoc */
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }

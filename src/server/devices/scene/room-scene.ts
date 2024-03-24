@@ -15,8 +15,13 @@ export class RoomScene implements iScene {
   public room: RoomBase | undefined;
   /** @inheritDoc */
   public settings: SceneSettings = new SceneSettings();
+  protected _deviceType: DeviceType;
+  protected _info: DeviceInfo;
   private readonly _onSceneStart: () => void;
   private readonly _onSceneEnd: () => void;
+  private _automaticEndTimeout: NodeJS.Timeout | null = null;
+  private _deviceCapabilities: DeviceCapability[] = [DeviceCapability.scene];
+  private _on: boolean = false;
 
   public constructor(
     name: string,
@@ -40,36 +45,32 @@ export class RoomScene implements iScene {
     this.loadDeviceSettings();
   }
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
-  protected _deviceType: DeviceType;
-
+  /** @inheritDoc */
   public get deviceType(): DeviceType {
     return this._deviceType;
   }
 
-  protected _info: DeviceInfo;
-
+  /** @inheritDoc */
   public get info(): DeviceInfo {
     return this._info;
   }
 
-  private _automaticEndTimeout: NodeJS.Timeout | null = null;
-
+  /** @inheritDoc */
   public get automaticEndTimeout(): NodeJS.Timeout | null {
     return this._automaticEndTimeout;
   }
 
-  private _deviceCapabilities: DeviceCapability[] = [DeviceCapability.scene];
-
+  /** @inheritDoc */
   public get deviceCapabilities(): DeviceCapability[] {
     return this._deviceCapabilities;
   }
 
-  private _on: boolean = false;
-
+  /** @inheritDoc */
   public get on(): boolean {
     return this._on;
   }
@@ -78,18 +79,22 @@ export class RoomScene implements iScene {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `ac-${this.info.room}-${this.info.customName}`;
   }
 
+  /** @inheritDoc */
   public get onSceneEnd(): () => void {
     return this._onSceneEnd;
   }
 
+  /** @inheritDoc */
   public get onSceneStart(): () => void {
     return this._onSceneStart;
   }
 
+  /** @inheritDoc */
   public startScene(timeout?: number | undefined): void {
     if (this._automaticEndTimeout != null) {
       clearTimeout(this._automaticEndTimeout);
@@ -111,6 +116,7 @@ export class RoomScene implements iScene {
     }
   }
 
+  /** @inheritDoc */
   public endScene(): void {
     if (this._automaticEndTimeout != null) {
       clearTimeout(this._automaticEndTimeout);
@@ -124,6 +130,7 @@ export class RoomScene implements iScene {
     this._onSceneEnd();
   }
 
+  /** @inheritDoc */
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
@@ -133,6 +140,7 @@ export class RoomScene implements iScene {
     });
   }
 
+  /** @inheritDoc */
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
@@ -143,10 +151,12 @@ export class RoomScene implements iScene {
     );
   }
 
+  /** @inheritDoc */
   public loadDeviceSettings(): void {
     this.settings.initializeFromDb(this);
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<TvDevice> {
     // eslint-disable-next-line
     const result: any = _.omit(this, ['room', '_onSceneStart', '_onSceneEnd']);

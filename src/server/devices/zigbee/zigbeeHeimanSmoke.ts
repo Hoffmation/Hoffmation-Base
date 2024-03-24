@@ -9,14 +9,10 @@ import { DeviceCapability } from '../DeviceCapability';
 export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, iSmokeDetectorDevice {
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
 
-  public get battery(): number {
-    return this._battery;
-  }
-
+  /**
+   * @param pInfo
+   */
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeHeimanSmoke);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
@@ -24,6 +20,16 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
     this._messageAlarm = Res.fireAlarmRepeat(this._roomName, this.info.customName);
     this._messageAlarmEnd = Res.fireAlarmEnd(this._roomName);
+  }
+
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
   }
 
   private _smoke: boolean = false;
@@ -36,12 +42,16 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
   private _messageAlarm: string = '';
   private _messageAlarmEnd: string = '';
 
+  /** @inheritDoc */
   public get smoke(): boolean {
     return this._smoke;
   }
 
   private _roomName: string = '';
 
+  /**
+   *
+   */
   public set roomName(val: string) {
     this._roomName = val;
     this._messageAlarmFirst = Res.fireAlarmStart(this._roomName, this.info.customName);
@@ -77,6 +87,9 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     }
   }
 
+  /**
+   * @param quiet
+   */
   public stopAlarm(quiet: boolean = false): void {
     if (this.iAlarmTimeout) {
       clearInterval(this.iAlarmTimeout);
@@ -123,6 +136,9 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     });
   }
 
+  /**
+   *
+   */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {
@@ -132,6 +148,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     this._lastBatteryPersist = now;
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this.iAlarmTimeout) {
       clearInterval(this.iAlarmTimeout);

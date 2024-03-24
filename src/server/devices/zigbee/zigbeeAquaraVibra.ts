@@ -8,28 +8,6 @@ import { DeviceCapability } from '../DeviceCapability';
 import * as console from 'console';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor, iBatteryDevice {
-  public get vibration(): boolean {
-    return this._vibration;
-  }
-
-  public get vibrationBlockedByMotionTimeStamp(): number {
-    return this._vibrationBlockedByMotionTimeStamp;
-  }
-
-  public get vibrationBlockedByHandleTimeStamp(): number {
-    return this._vibrationBlockedByHandleTimeStamp;
-  }
-
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  public get battery(): number {
-    return this._battery;
-  }
-
   /**
    * The sensitivity of the vibration sensor
    */
@@ -62,11 +40,15 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
    * Whether the vibration sensor is tilted
    */
   public tilt: boolean = false;
+  private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
   private _vibration: boolean = false;
   private _vibrationBlockedByHandleTimeStamp: number = 0;
   private _vibrationBlockedByMotionTimeStamp: number = 0;
   private _idSensitivity: string = '';
   private _alarmMessage: string;
+  private _vibrationBlockedByGriff: boolean = false;
+  private _vibrationBlockedByMotion: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
@@ -77,14 +59,39 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     this._idSensitivity = `${this.info.fullID}.sensitivity`;
   }
 
+  /** @inheritDoc */
+  public get vibration(): boolean {
+    return this._vibration;
+  }
+
+  /** @inheritDoc */
+  public get vibrationBlockedByMotionTimeStamp(): number {
+    return this._vibrationBlockedByMotionTimeStamp;
+  }
+
+  /** @inheritDoc */
+  public get vibrationBlockedByHandleTimeStamp(): number {
+    return this._vibrationBlockedByHandleTimeStamp;
+  }
+
   // TODO Set Sensitivity
 
-  private _vibrationBlockedByGriff: boolean = false;
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
+  }
+
+  /** @inheritDoc */
   public get vibrationBlockedByHandle(): boolean {
     return this._vibrationBlockedByGriff;
   }
 
+  /** @inheritDoc */
   public set vibrationBlockedByHandle(pVal: boolean) {
     this.log(LogLevel.Debug, `${pVal ? 'disa' : 'a'}rming vibration alarm for ${this.info.customName} due to handle`);
     if (pVal) {
@@ -93,12 +100,12 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     this._vibrationBlockedByGriff = pVal;
   }
 
-  private _vibrationBlockedByMotion: boolean = false;
-
+  /** @inheritDoc */
   public get vibrationBlockedByMotion(): boolean {
     return this._vibrationBlockedByMotion;
   }
 
+  /** @inheritDoc */
   public set vibrationBlockedByMotion(pVal: boolean) {
     this.log(
       LogLevel.Debug,
@@ -218,6 +225,16 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     });
   }
 
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
   private alarmCheck(): void {
     this.log(
       LogLevel.Debug,
@@ -235,14 +252,5 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     const message = this._alarmMessage;
     SonosService.speakOnAll(message);
     this.log(LogLevel.Alert, message);
-  }
-
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
   }
 }

@@ -227,6 +227,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     }
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this._iCalculationInterval) {
       clearInterval(this._iCalculationInterval);

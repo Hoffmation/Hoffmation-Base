@@ -42,6 +42,7 @@ export class TuyaDevice extends IoBrokerBaseDevice implements iDisposable {
     }
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     // Nothing yet
   }

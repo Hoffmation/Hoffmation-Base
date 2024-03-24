@@ -13,6 +13,9 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
   private _setModeId: string;
   private _mode: string = '';
 
+  /**
+   * @param pInfo
+   */
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeTuyaValve);
     this._setPointTemperaturID = `${this.info.fullID}.target_temperature`;
@@ -20,21 +23,24 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     this._setModeId = `${this.info.fullID}.mode`;
   }
 
+  /** @inheritDoc */
   public override set seasonTurnOff(value: boolean) {
     this._seasonTurnOff = value;
     this.setMode(value ? 'off' : 'auto');
   }
 
-  public override set roomTemperatur(value: number) {
+  /** @inheritDoc */
+  public override set desiredTemperature(val: number) {
+    this._desiredTemperatur = val;
+    this.checkTempDiff();
+  }
+
+  /** @inheritDoc */
+  protected override set roomTemperatur(value: number) {
     this._roomTemperature = value;
     if (this.settings.useOwnTemperatur) {
       return;
     }
-    this.checkTempDiff();
-  }
-
-  public override set desiredTemperature(val: number) {
-    this._desiredTemperatur = val;
     this.checkTempDiff();
   }
 

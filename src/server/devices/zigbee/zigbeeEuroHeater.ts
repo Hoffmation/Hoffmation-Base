@@ -33,10 +33,12 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     );
   }
 
+  /** @inheritDoc */
   public get seasonTurnOff(): boolean {
     return this._seasonTurnOff;
   }
 
+  /** @inheritDoc */
   public override set seasonTurnOff(value: boolean) {
     this._seasonTurnOff = value;
     if (value) {
@@ -47,24 +49,27 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     this.setMode(this.settings.controlByPid ? 1 : 2);
   }
 
-  public override set roomTemperatur(value: number) {
-    this._roomTemperature = value;
-    if (this.settings.useOwnTemperatur) {
-      return;
-    }
-    this.recalcLevel();
-  }
-
+  /** @inheritDoc */
   public override get roomTemperature(): number {
     return this._roomTemperature;
   }
 
+  /** @inheritDoc */
   public override get desiredTemperature(): number {
     return this._desiredTemperatur;
   }
 
+  /** @inheritDoc */
   public override set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
+    this.recalcLevel();
+  }
+
+  protected override set roomTemperatur(value: number) {
+    this._roomTemperature = value;
+    if (this.settings.useOwnTemperatur) {
+      return;
+    }
     this.recalcLevel();
   }
 
@@ -180,6 +185,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     this.setState(this._setPointTemperaturID, targetTemp);
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     clearInterval(this._forcedRefreshInterval);
   }

@@ -148,6 +148,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     this.settings?.initializeFromDb(this);
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this.persistTemperatureSensorInterval) {
       clearInterval(this.persistTemperatureSensorInterval);

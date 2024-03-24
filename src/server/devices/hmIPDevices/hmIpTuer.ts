@@ -114,6 +114,7 @@ export class HmIpTuer extends HmIPDevice implements iDisposable, iMagnetSensor {
     }
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this._iOpenTimeout) {
       clearInterval(this._iOpenTimeout);

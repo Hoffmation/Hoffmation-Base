@@ -8,10 +8,7 @@ export class ZigbeeIlluActuator extends ZigbeeActuator {
     super(pInfo, deviceType, `${pInfo.fullID}.state`);
   }
 
-  public get isActuatorOn(): boolean {
-    return this.actuatorOn;
-  }
-
+  /** @inheritDoc */
   public update(
     idSplit: string[],
     state: ioBroker.State,

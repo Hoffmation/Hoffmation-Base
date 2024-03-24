@@ -74,10 +74,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   protected _seasonTurnOff: boolean = false;
 
+  /** @inheritDoc */
   public get seasonTurnOff(): boolean {
     return this._seasonTurnOff;
   }
 
+  /** @inheritDoc */
   public set seasonTurnOff(value: boolean) {
     this._seasonTurnOff = value;
     if (value) {
@@ -105,6 +107,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   private _humidity: number = UNDEFINED_HUMIDITY_VALUE;
 
+  /** @inheritDoc */
   public get humidity(): number {
     return this._humidity;
   }
@@ -118,10 +121,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   private _desiredTemperature: number = 0;
 
+  /** @inheritDoc */
   public get desiredTemperature(): number {
     return this._desiredTemperature;
   }
 
+  /** @inheritDoc */
   public set desiredTemperature(val: number) {
     this.setState(
       this._setPointTemperatureID,
@@ -139,28 +144,29 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     return `${this._level * 100}%`;
   }
 
+  /** @inheritDoc */
   public get iLevel(): number {
     return this._level;
   }
 
+  /** @inheritDoc */
   public get sTemperature(): string {
     return `${this.temperature}°C`;
   }
 
+  /** @inheritDoc */
   public get iTemperature(): number {
     return this.temperature;
   }
 
   private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
 
+  /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
   }
 
-  public set roomTemperature(value: number) {
-    this._roomTemperature = value;
-  }
-
+  /** @inheritDoc */
   public addHumidityCallback(pCallback: (pValue: number) => void): void {
     this._humidityCallbacks.push(pCallback);
     if (this._humidity > 0) {
@@ -184,6 +190,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
   }
 
+  /** @inheritDoc */
   public checkAutomaticChange(): void {
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
@@ -205,6 +212,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
   }
 
+  /** @inheritDoc */
   public addTempChangeCallback(pCallback: (pValue: number) => void): void {
     this._temperatureCallbacks.push(pCallback);
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
@@ -212,18 +220,22 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
   }
 
+  /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
-    this.roomTemperature = newTemperatur;
+    this._roomTemperature = newTemperatur;
   }
 
+  /** @inheritDoc */
   public persistTemperaturSensor(): void {
     Utils.dbo?.persistTemperatureSensor(this);
   }
 
+  /** @inheritDoc */
   public persistHeater(): void {
     Utils.dbo?.persistHeater(this);
   }
 
+  /** @inheritDoc */
   public persistHumiditySensor(): void {
     Utils.dbo?.persistHumiditySensor(this);
   }
@@ -259,6 +271,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     this._initialSeasonCheckDone = true;
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this.persistTemperatureSensorInterval) {
       clearInterval(this.persistTemperatureSensorInterval);

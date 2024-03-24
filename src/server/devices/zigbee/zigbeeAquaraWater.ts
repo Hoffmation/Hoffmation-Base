@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { PollyService, Res, SonosService, Utils } from '../../services';
+import { Res, SonosService, Utils } from '../../services';
 import { ZigbeeDevice } from './BaseDevices';
 import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -10,10 +10,12 @@ import { DeviceCapability } from '../DeviceCapability';
 export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  /** @inheritDoc */
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
 
+  /** @inheritDoc */
   public get battery(): number {
     return this._battery;
   }
@@ -41,16 +43,6 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
   }
 
   private _roomName: string = '';
-
-  public set roomName(val: string) {
-    this._roomName = val;
-    this._messageAlarmFirst = Res.waterAlarmStart(this.info.customName, this._roomName);
-    this._messageAlarm = Res.waterAlarmRepeat(this.info.customName, this._roomName);
-    this._messageAlarmEnd = Res.waterAlarmEnd(this._roomName);
-    PollyService.preloadTTS(this._messageAlarmFirst);
-    PollyService.preloadTTS(this._messageAlarm);
-    PollyService.preloadTTS(this._messageAlarmEnd);
-  }
 
   /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
@@ -124,6 +116,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
     });
   }
 
+  /** @inheritDoc */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {
@@ -133,6 +126,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
     this._lastBatteryPersist = now;
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this.iAlarmTimeout) {
       clearInterval(this.iAlarmTimeout);

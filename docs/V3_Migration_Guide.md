@@ -8,7 +8,7 @@
 1. `iVibrationSensor`: Some properties used "Griff" this is moved to respective english terms and some other properties are now `readonly`.
 2. `iCameraDevice`: Blocking by griff/handle only is removed towards any device now being capable of setting a block (or lifting it).
 3. `iEnergyManager` now implements `iDisposable` instead of providing it's own cleanup method.
-4`iHeater` now implements `iDisposable` instead of providing a method to stop the interval.
+4. `iHeater` now implements `iDisposable` instead of providing a method to stop the interval.
 
 ## Command Changes
 A short document explaining the reasons/benefits of Command-Based structure is upcoming.
@@ -39,6 +39,8 @@ Changes to the device interfaces are respectivly performed for all devices imple
 23. `iRoomBase.WindowGroup.sunsetDown` now uses `ShutterSunsetDownCommand`.
 24. `iRoomBase.WindowGroup.restoreRolloPosition` now uses `RoomRestoreShutterPositionCommand` and got renamed to `restoreShutterPosition` for setting all windows in this group.
 
+## Minor property changes
+1. Some zigbee actuators had a `isActuatorOn` property which got removed due to `iActuator.actuatorOn` being available.
 
 ## API changes
 

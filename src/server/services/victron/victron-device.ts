@@ -98,6 +98,7 @@ export class VictronDevice implements iEnergyManager {
     return Math.max(this.victronConsumer.data.system.power ?? 0, 0) - this.drawingWattage;
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     this._victronConsumer.disconnect();
     if (this._iDatabaseLoggerInterval !== null) {

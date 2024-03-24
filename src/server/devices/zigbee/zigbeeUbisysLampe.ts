@@ -15,7 +15,7 @@ export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
 
   /** @inheritDoc */
   public get lightOn(): boolean {
-    return super.isActuatorOn;
+    return super.actuatorOn;
   }
 
   /** @inheritDoc */

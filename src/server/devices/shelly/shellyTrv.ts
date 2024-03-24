@@ -1,5 +1,5 @@
 import { ShellyDevice } from './shellyDevice';
-import { iHeater, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
 import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { PIDController } from '../../../liquid-pid';
@@ -9,14 +9,9 @@ import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 import { HeatGroup } from '../groups';
 
-export class ShellyTrv extends ShellyDevice implements iHeater {
+export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
-
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
   /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -26,15 +21,8 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this,
     false,
   );
-
-  public get battery(): number {
-    return this._battery;
-  }
-
-  public get minimumLevel(): number {
-    return this._minimumValveLevel;
-  }
-
+  protected _seasonTurnOff: boolean = false;
+  protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
   private _automaticMode: boolean = false;
   private _battery: number = -99;
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
@@ -91,12 +79,26 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     );
   }
 
-  protected _seasonTurnOff: boolean = false;
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
 
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
+  }
+
+  public get minimumLevel(): number {
+    return this._minimumValveLevel;
+  }
+
+  /** @inheritDoc */
   public get seasonTurnOff(): boolean {
     return this._seasonTurnOff;
   }
 
+  /** @inheritDoc */
   public set seasonTurnOff(value: boolean) {
     this._seasonTurnOff = value;
     if (value) {
@@ -107,10 +109,12 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this.setMode(!this.settings.controlByPid);
   }
 
+  /** @inheritDoc */
   public get desiredTemperature(): number {
     return this._desiredTemperatur;
   }
 
+  /** @inheritDoc */
   public set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
     if (this._targetTempVal === val) {
@@ -128,24 +132,12 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     );
   }
 
-  protected _humidity: number = 0;
-
-  public get humidity(): number {
-    return this._humidity;
-  }
-
-  public get sLevel(): string {
-    return `${this._level * 100}%`;
-  }
-
+  /** @inheritDoc */
   public get iLevel(): number {
     return this._level;
   }
 
-  public get sTemperatur(): string {
-    return `${this.iTemperature}°C`;
-  }
-
+  /** @inheritDoc */
   public get iTemperature(): number {
     if (this.settings.useOwnTemperatur) {
       return this._temperatur;
@@ -154,13 +146,12 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     }
   }
 
-  protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
-
+  /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
   }
 
-  public set roomTemperatur(val: number) {
+  private set roomTemperatur(val: number) {
     this._roomTemperature = val;
     if (this.settings.useOwnTemperatur) {
       return;
@@ -171,6 +162,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     }
   }
 
+  /** @inheritDoc */
   public checkAutomaticChange(): void {
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
@@ -215,17 +207,12 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     }
   }
 
-  public stopAutomaticCheck(): void {
-    if (this._iAutomaticInterval !== undefined) {
-      clearInterval(this._iAutomaticInterval);
-      this._iAutomaticInterval = undefined;
-    }
-  }
-
+  /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
   }
 
+  /** @inheritDoc */
   public persistHeater(): void {
     Utils.dbo?.persistHeater(this);
   }
@@ -259,6 +246,28 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     super.update(idSplit, state, initial, true);
   }
 
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
+  /** @inheritDoc */
+  public dispose(): void {
+    if (this.persistHeaterInterval) {
+      clearInterval(this.persistHeaterInterval);
+    }
+    if (this._iAutomaticInterval) {
+      clearInterval(this._iAutomaticInterval);
+      this._iAutomaticInterval = undefined;
+    }
+    super.dispose();
+  }
+
   protected getNextPidLevel(): number {
     if (this.seasonTurnOff || this._roomTemperature < 0) {
       return 0;
@@ -285,27 +294,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     this._initialSeasonCheckDone = true;
   }
 
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  public dispose(): void {
-    if (this.persistHeaterInterval) {
-      clearInterval(this.persistHeaterInterval);
-    }
-    if (this._iAutomaticInterval) {
-      clearInterval(this._iAutomaticInterval);
-      this._iAutomaticInterval = undefined;
-    }
-    super.dispose();
-  }
-
-  public recalcLevel(): void {
+  private recalcLevel(): void {
     if (this.settings.useOwnTemperatur || this.seasonTurnOff || !this.settings.controlByPid) {
       return;
     }

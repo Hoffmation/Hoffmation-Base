@@ -8,13 +8,13 @@ import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   private _loadPower: number = 0;
 
+  /**
+   * @param pInfo
+   * @param deviceType
+   */
   public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeUbisysActuator) {
     super(pInfo, deviceType, `${pInfo.fullID}.state`);
     this.deviceCapabilities.push(DeviceCapability.loadMetering);
-  }
-
-  public get isActuatorOn(): boolean {
-    return this.actuatorOn;
   }
 
   /** @inheritDoc */

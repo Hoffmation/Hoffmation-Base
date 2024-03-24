@@ -1711,6 +1711,7 @@ export class IOBrokerConnection implements iDisposable {
     );
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this._connectInterval) {
       clearInterval(this._connectInterval);

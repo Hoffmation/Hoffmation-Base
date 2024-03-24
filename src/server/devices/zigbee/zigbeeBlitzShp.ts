@@ -13,32 +13,12 @@ import { DeviceCapability } from '../DeviceCapability';
 import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
 export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsumer, iLoadMeter {
-  private _steckerOn: boolean = false;
-
-  public get steckerOn(): boolean {
-    return this._steckerOn;
-  }
-
-  private _current: number = 0;
-
-  public get current(): number {
-    return this._current;
-  }
-
-  private _energy: number = 0;
-
-  public get energy(): number {
-    return this._energy;
-  }
-
-  private _loadPower: number = 0;
-
-  public get loadPower(): number {
-    return this._loadPower;
-  }
-
   /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
+  private _steckerOn: boolean = false;
+  private _current: number = 0;
+  private _energy: number = 0;
+  private _loadPower: number = 0;
   private readonly _availableForExcessEnergy: boolean = true;
   private _activatedByExcessEnergy: boolean = false;
 
@@ -49,18 +29,35 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
     this.deviceCapabilities.push(DeviceCapability.loadMetering);
   }
 
+  public get current(): number {
+    return this._current;
+  }
+
+  public get energy(): number {
+    return this._energy;
+  }
+
+  /** @inheritDoc */
+  public get loadPower(): number {
+    return this._loadPower;
+  }
+
+  /** @inheritDoc */
   public get energySettings(): ExcessEnergyConsumerSettings {
     return this.settings.energySettings!;
   }
 
+  /** @inheritDoc */
   public get currentConsumption(): number {
     return this._loadPower;
   }
 
+  /** @inheritDoc */
   public get on(): boolean {
     return this._steckerOn;
   }
 
+  /** @inheritDoc */
   public isAvailableForExcessEnergy(): boolean {
     return this._availableForExcessEnergy;
   }
@@ -105,15 +102,18 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
     }
   }
 
+  /** @inheritDoc */
   public turnOnForExcessEnergy(): void {
     this._activatedByExcessEnergy = true;
     this.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, true, 'Turn on for excess energy'));
   }
 
+  /** @inheritDoc */
   public turnOffDueToMissingEnergy(): void {
     this.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Turn off due to missing energy'));
   }
 
+  /** @inheritDoc */
   public wasActivatedByExcessEnergy(): boolean {
     return this._activatedByExcessEnergy;
   }

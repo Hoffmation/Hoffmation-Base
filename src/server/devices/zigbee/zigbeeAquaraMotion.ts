@@ -19,7 +19,9 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
 
   private _motionTimeout: number = 0;
 
-  // Time after the last trigger until a motion event gets triggered again
+  /**
+   * Time after the last trigger until a motion event gets triggered again
+   */
   public get motionTimeout(): number {
     return this._motionTimeout;
   }
@@ -37,7 +39,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
     );
   }
 
-  // Currently measured brightness in lux
+  /** @inheritDoc */
   public get currentIllumination(): number {
     return this._illuminance;
   }

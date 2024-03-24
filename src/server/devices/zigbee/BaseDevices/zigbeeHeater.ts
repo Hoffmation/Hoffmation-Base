@@ -131,8 +131,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     return this._roomTemperature;
   }
 
-  /** @inheritDoc */
-  public set roomTemperatur(val: number) {
+  protected set roomTemperatur(val: number) {
     this._roomTemperature = val;
   }
 

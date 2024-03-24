@@ -68,6 +68,7 @@ export class TuyaGarageOpener extends TuyaDevice implements iGarageDoorOpener {
     this.setState(this._switchId, !this._switchState);
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     super.dispose();
   }
