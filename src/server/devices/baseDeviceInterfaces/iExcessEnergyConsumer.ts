@@ -1,7 +1,11 @@
 import { ExcessEnergyConsumerSettings } from '../../../models';
 import { iBaseDevice } from './iBaseDevice';
 
-// TODO: Add missing Comments
+/**
+ * This interface represents a device that can consume excess energy.
+ *
+ * For devices with {@link DeviceCapability.excessEnergyConsumer} capability.
+ */
 export interface iExcessEnergyConsumer extends iBaseDevice {
   /**
    * The energy consuming settings for this device

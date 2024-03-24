@@ -2,6 +2,11 @@ import { iRoomDevice } from './iRoomDevice';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
+/**
+ * This interface represents a temperature sensor device.
+ *
+ * For devices with {@link DeviceCapability.temperatureSensor} capability.
+ */
 export interface iTemperatureSensor extends iRoomDevice {
   /**
    * The interval to persist the temperature sensor information

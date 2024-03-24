@@ -64,7 +64,13 @@ module.exports = {
     'jsdoc/sort-tags': 'error',
     'jsdoc/tag-lines': 'error', // Recommended
     'jsdoc/valid-types': 'error', // Recommended
-    'jsdoc/require-jsdoc': ['error', { contexts: ['TSMethodSignature', 'TSPropertySignature'], publicOnly: true }],
+    'jsdoc/require-jsdoc': [
+      'error',
+      {
+        contexts: ['TSMethodSignature', 'TSPropertySignature', 'TSInterfaceDeclaration'],
+        publicOnly: true,
+      },
+    ],
   },
   overrides: [
     {

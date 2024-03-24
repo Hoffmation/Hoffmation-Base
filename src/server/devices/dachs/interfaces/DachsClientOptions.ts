@@ -1,3 +1,6 @@
+/**
+ * Options to connect to a Dachs CHP device
+ */
 export interface DachsClientOptions {
   /**
    * The hostname or IP address of the Dachs device

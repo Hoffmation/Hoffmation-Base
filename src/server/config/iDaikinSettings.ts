@@ -1,3 +1,6 @@
+/**
+ * The configuration for Daikin Air-Conditioning devices (if present)
+ */
 export interface iDaikinSettings {
   /**
    * Whether the Daikin service should be active.

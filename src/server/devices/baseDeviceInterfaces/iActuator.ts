@@ -10,6 +10,8 @@ import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 /**
  * Interface for Actuators.
  * An actuator can be any device whos primary function is to be on or off e.g a light, an outlet, a fan, etc.
+ *
+ * For devices with {@link DeviceCapability.actuator} capability.
  */
 export interface iActuator extends iRoomDevice, iTemporaryDisableAutomatic {
   /**

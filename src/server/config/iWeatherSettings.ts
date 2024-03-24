@@ -1,3 +1,7 @@
+/**
+ * The settings for the weather-service (if needed).
+ * The weather-service is used to get weather data for the house location.
+ */
 export interface iWeatherSettings {
   /**
    * The lattitude of the location

@@ -16,6 +16,10 @@ import {
 } from '../../devices';
 import { CountToday, DesiredShutterPosition, EnergyCalculation, RoomBase, ShutterCalibration } from '../../../models';
 
+/**
+ * The interface to interact with the persistence layer.
+ * In the past there was a mongo-db implementation, but this is now replaced by currently only postgresSql.
+ */
 export interface iPersist {
   /**
    * Whether persistence is properly initialized

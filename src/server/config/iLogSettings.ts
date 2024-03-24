@@ -1,5 +1,9 @@
 import { LogLevel } from '../../models';
 
+/**
+ * The settings for the logging system.
+ * There are different log-levels which can be set and debug-logging can be granular enabled
+ */
 export interface iLogSettings {
   /**
    * The threshold level for logging (-1 = off)

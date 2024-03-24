@@ -4,6 +4,8 @@ import { iBaseDevice } from './iBaseDevice';
 
 /**
  * Interface for normal air-conditioning devices
+ *
+ * For devices with {@link DeviceCapability.ac} capability.
  * TODO: Migrate to new Command-Based System
  * TODO: Extend from iActuator
  */

@@ -1,6 +1,10 @@
 import { TimeCallback } from '../timeCallback';
 import { RoomSetLightTimeBasedCommand } from '../command';
 
+/**
+ * This interface represents a room with it's base functionality.
+ * Whilst accessing the custom rooms can be beneficial for direct device interaction, this provides interactions to e.g. device groups.
+ */
 export interface iRoomBase {
   /**
    * The time-callback for controlling shutters at sunrise

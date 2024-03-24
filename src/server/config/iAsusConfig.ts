@@ -1,3 +1,6 @@
+/**
+ * The configuration needed to connect to an Asus Router
+ */
 export interface iAsusConfig {
   /**
    * The hostname of the Router (or it's IP-Address)

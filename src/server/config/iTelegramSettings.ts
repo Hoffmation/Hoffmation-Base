@@ -1,5 +1,9 @@
 import { LogLevel } from '../../models';
 
+/**
+ * The settings for the telegram-service (if needed).
+ * Telegram can be used to have a communication channel to the house and to receive notifications.
+ */
 export interface iTelegramSettings {
   /**
    * The threshold for the log level to trigger a message to telegram

@@ -1,3 +1,7 @@
+/**
+ * The settings for the news-service (if needed).
+ * The news-service is used to download news-podcasts and play them on speakers (e.g. Sonos)
+ */
 export interface iNewsSettings {
   /**
    * rss feed url that contains the news information and audio file

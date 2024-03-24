@@ -1,6 +1,11 @@
 import { Button, ButtonPosition, ButtonPressType } from '../button';
 import { iRoomDevice } from './iRoomDevice';
 
+/**
+ * Interface for Button Switch devices, providing e.g. access to the buttons and their assignments.
+ *
+ * For devices with {@link DeviceCapability.buttonSwitch} capability.
+ */
 export interface iButtonSwitch extends iRoomDevice {
   /**
    * The Top-Left Button which can be found on normale 4-6 Button switches

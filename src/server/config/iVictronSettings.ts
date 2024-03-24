@@ -1,5 +1,9 @@
 import { InfluxDbConnectionOptions } from 'victron-mqtt-consumer/build/models/InfluxDbConnectionOptions';
 
+/**
+ * The settings for the Victron-Service (if present).
+ * Victron is a energy management system which provides solar or battery power.
+ */
 export interface iVictronSettings {
   /**
    * The address of the Victron GX device

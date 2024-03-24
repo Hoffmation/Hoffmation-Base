@@ -3,6 +3,11 @@ import { iRoomDevice } from './iRoomDevice';
 import { iDisposable } from '../../services';
 
 // TODO: Migrate to new Command Structure
+/**
+ * This interface represents a heater device.
+ *
+ * For devices with {@link DeviceCapability.heater} capability.
+ */
 export interface iHeater extends iRoomDevice, iDisposable {
   /**
    * The settings of the heater

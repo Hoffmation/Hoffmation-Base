@@ -1,6 +1,8 @@
 import { iTimePair } from '../../../server';
 
-// These default settings can be overridden within every room
+/**
+ * Default settings for a room, which can then be overwritten by the room settings for each specific room
+ */
 export interface iRoomDefaultSettings {
   /**
    * The default radio URL to use with speaker

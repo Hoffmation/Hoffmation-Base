@@ -1,3 +1,6 @@
+/**
+ * Weather temperature data provided by OpenWeatherMap.
+ */
 export interface WeatherTemp {
   /**
    * Average daily temperature in Celsius.

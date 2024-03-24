@@ -1,5 +1,8 @@
 import { HeatingMode } from './heatingMode';
 
+/**
+ * Additional settings for the heating system (if present)
+ */
 export interface iHeaterSettings {
   /**
    * Whether heating with ac is allowed

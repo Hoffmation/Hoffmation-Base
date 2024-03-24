@@ -1,3 +1,6 @@
+/**
+ * Service to update the state of any device
+ */
 export interface IDeviceUpdater {
   /**
    * Updates the state of a device

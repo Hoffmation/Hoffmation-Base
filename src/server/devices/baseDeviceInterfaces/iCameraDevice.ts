@@ -2,6 +2,9 @@ import { iMotionSensor } from './iMotionSensor';
 import { CameraSettings } from '../../../models';
 import { iBaseDevice } from './iBaseDevice';
 
+/**
+ * An interface for any device with {@link DeviceCapability.camera} capability
+ */
 export interface iCameraDevice extends iMotionSensor {
   /**
    * The settings of the camera device

@@ -1,3 +1,7 @@
+/**
+ * The settings for the ioBroker instance
+ * Currently Hoffmation needs an ioBroker instance, but we might make it independent of it in the future.
+ */
 export interface iIobrokerSettigns {
   /**
    * Whether states should be initialized by processing each key on its own.

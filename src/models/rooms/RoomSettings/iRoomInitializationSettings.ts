@@ -1,5 +1,8 @@
 import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 
+/**
+ * The settings for initializing a room (after Devices are generated) to add devices to the room
+ */
 export interface iRoomInitializationSettings {
   /**
    * The settings for adding a device to the room

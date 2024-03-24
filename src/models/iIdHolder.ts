@@ -1,6 +1,10 @@
 import { LogLevel } from './logLevel';
 import { LogDebugType } from '../server';
 
+/**
+ * Interface for objects that have an unique id and a custom name
+ * The id can be used for API interaction, storing settings to the database, etc.
+ */
 export interface iIdHolder {
   /**
    * The id of the object.

@@ -1,6 +1,10 @@
 import { iRoomDevice } from './iRoomDevice';
 
-// TODO: Add missing Comments
+/**
+ * This interface represents a vibration sensor device.
+ *
+ * For devices with {@link DeviceCapability.vibrationSensor} capability.
+ */
 export interface iVibrationSensor extends iRoomDevice {
   /**
    * Whether the vibration sensor is currently blocked by a handle.

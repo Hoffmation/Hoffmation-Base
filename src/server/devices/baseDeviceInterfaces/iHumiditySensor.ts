@@ -2,6 +2,11 @@ import { iRoomDevice } from './iRoomDevice';
 
 export const UNDEFINED_HUMIDITY_VALUE = -1;
 
+/**
+ * This interface represents a humidity sensor device.
+ *
+ * For devices with {@link DeviceCapability.humiditySensor} capability.
+ */
 export interface iHumiditySensor extends iRoomDevice {
   /**
    * The interval to persist the humidity sensor information

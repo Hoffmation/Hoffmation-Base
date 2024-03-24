@@ -1,8 +1,12 @@
 import { iRoomDevice } from './index';
 import { SceneSettings } from '../../../models';
 
-// TODO: Add missing Comments
 // TODO: Migrate to new Command Structure
+/**
+ * This interface represents a scene which for simplification is considered as a device.
+ *
+ * For devices with {@link DeviceCapability.scene} capability.
+ */
 export interface iScene extends iRoomDevice {
   /**
    * The settings for the scene

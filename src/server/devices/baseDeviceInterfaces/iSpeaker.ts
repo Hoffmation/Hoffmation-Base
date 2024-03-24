@@ -1,5 +1,10 @@
 import { iRoomDevice } from './iRoomDevice';
 
+/**
+ * This interface represents a speaker device.
+ *
+ * For devices with {@link DeviceCapability.speaker} capability.
+ */
 export interface iSpeaker extends iRoomDevice {
   /**
    * Plays an mp3 file on the device

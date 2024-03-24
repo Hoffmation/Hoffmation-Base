@@ -2,9 +2,16 @@ import { iExcessEnergyConsumer } from './iExcessEnergyConsumer';
 import { iBaseDevice } from './iBaseDevice';
 import { iDisposable } from '../../services';
 
+/**
+ * Interface for devices that can manage energy consumption and production.
+ *
+ * For devices with {@link DeviceCapability.energyManager} capability.
+ */
 export interface iEnergyManager extends iBaseDevice, iDisposable {
   /**
    * The total energy being excessive at the moment of last calculation.
+   *
+   * For devices with {@link DeviceCapability.energyManager} capability.
    */
   excessEnergy: number;
 

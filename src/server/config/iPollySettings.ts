@@ -1,3 +1,7 @@
+/**
+ * The settings for the polly-service (if needed).
+ * This service is used to convert text to speech.
+ */
 export interface iPollySettings {
   /**
    * The path to store the mp3 files

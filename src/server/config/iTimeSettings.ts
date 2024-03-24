@@ -1,5 +1,8 @@
 import { iTimePair } from './iTimePair';
 
+/**
+ * The settings for the time-service.
+ */
 export interface iTimeSettings {
   /**
    * The time which should be considered as the start of the night

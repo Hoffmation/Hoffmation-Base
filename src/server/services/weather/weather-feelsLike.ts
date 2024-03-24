@@ -1,3 +1,6 @@
+/**
+ * Temperature data how its recognized by a human for the different times of the day.
+ */
 export interface WeatherFeelsLike {
   /**
    * Day temperature in Celsius

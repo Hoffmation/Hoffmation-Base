@@ -2,6 +2,11 @@ import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } 
 import { iActuator } from './iActuator';
 
 // TODO: Add missing Comments
+/**
+ * This interface represents a lamp device.
+ *
+ * For devices with {@link DeviceCapability.lamp} capability.
+ */
 export interface iLamp extends iActuator {
   /**
    * The state value of the device

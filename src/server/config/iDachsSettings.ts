@@ -1,5 +1,9 @@
 import { DachsClientOptions, InfluxDbConnectionOptions } from '../devices/dachs';
 
+/**
+ * The configuration for the Dachs CHP (if present)
+ * CHP = Combined Heat and Power (in german Block-Heiz-Kraftwerk)
+ */
 export interface iDachsSettings {
   /**
    * The interval in milli-seconds in which the Dachs client should refresh its data.

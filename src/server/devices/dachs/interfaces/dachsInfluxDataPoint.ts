@@ -1,3 +1,6 @@
+/**
+ * Represents a data point that can be written to the persistence layer
+ */
 export interface DachsInfluxDataPoint {
   /**
    * The timestamp of the data point

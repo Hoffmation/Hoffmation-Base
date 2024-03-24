@@ -1,7 +1,12 @@
 import { LedSetLightCommand, LedSettings } from '../../../models';
 import { iDimmableLamp } from './iDimmableLamp';
 
-// TODO: Add missing Comments
+/**
+ * Interface for RGB-CCT LED-Devices.
+ * A RGB-CCT LED-Device is a LED-Device that is capable of emitting light in different colors and color temperatures.
+ *
+ * For devices with {@link DeviceCapability.ledLamp} capability.
+ */
 export interface iLedRgbCct extends iDimmableLamp {
   /**
    * The settings of the LED-Device (e.g. brightness, color, colortemp) for different times of the day

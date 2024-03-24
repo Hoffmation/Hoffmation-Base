@@ -1,5 +1,10 @@
 import { iRoomDevice } from './iRoomDevice';
 
+/**
+ * This interface represents a TV device.
+ *
+ * For devices with {@link DeviceCapability.tv} capability.
+ */
 export interface iTvDevice extends iRoomDevice {
   /**
    * Whether the TV is currently on

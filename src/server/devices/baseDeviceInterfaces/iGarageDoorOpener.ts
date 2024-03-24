@@ -2,6 +2,11 @@ import { GarageDoorOpenerSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 
 // TODO: Migrate to new Command Structure
+/**
+ * This interface represents a garage door opener device.
+ *
+ * For devices with {@link DeviceCapability.garageDoorOpener} capability.
+ */
 export interface iGarageDoorOpener extends iRoomDevice {
   /**
    * The settings of the garage door opener

@@ -3,6 +3,8 @@ import { iRoomDevice } from './iRoomDevice';
 /**
  * Interface for Battery Devices.
  * A battery device can be any device that is powered by a battery e.g. a remote, a sensor, etc.
+ *
+ * For devices with {@link DeviceCapability.battery} capability.
  */
 export interface iBatteryDevice extends iRoomDevice {
   /**

@@ -1,6 +1,12 @@
 import { WindowPosition } from '../models';
 import { iRoomDevice } from './iRoomDevice';
 
+/**
+ * Interface for Handle Sensors.
+ * A handle sensor can be any device that is capable of detecting the position of a window handle e.g. a sensor, a window handle, etc.
+ *
+ * For devices with {@link DeviceCapability.handleSensor} capability.
+ */
 export interface iHandleSensor extends iRoomDevice {
   /**
    * The current position of the handle

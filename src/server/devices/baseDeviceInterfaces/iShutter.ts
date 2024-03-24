@@ -2,7 +2,11 @@ import { Window } from '../groups';
 import { iRoomDevice } from './iRoomDevice';
 import { ShutterSetLevelCommand, ShutterSettings } from '../../../models';
 
-// TODO: Add missing Comments
+/**
+ * This interface represents a shutter device.
+ *
+ * For devices with {@link DeviceCapability.shutter} capability.
+ */
 export interface iShutter extends iRoomDevice {
   /**
    * The settings for the shutter

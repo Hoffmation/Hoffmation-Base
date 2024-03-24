@@ -1,3 +1,6 @@
+/**
+ * The options needed for connecting to an InfluxDB database
+ */
 export interface InfluxDbConnectionOptions {
   /**
    * The host address of the InfluxDB server (or its ip address)

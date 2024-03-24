@@ -1,3 +1,6 @@
+/**
+ * The settings for the Sonos-Service (if present).
+ */
 export interface iSonosSettings {
   /**
    * Whether the Sonos service should be active.

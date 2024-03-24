@@ -3,6 +3,8 @@ import { DimmerSetLightCommand, DimmerSettings, LampToggleLightCommand } from '.
 
 /**
  * This interface represents a dimmable lamp device.
+ *
+ * For devices with {@link DeviceCapability.dimmablelamp} capability.
  */
 export interface iDimmableLamp extends iLamp {
   /**

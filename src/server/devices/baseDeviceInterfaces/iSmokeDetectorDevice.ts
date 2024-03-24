@@ -1,5 +1,10 @@
 import { iRoomDevice } from './iRoomDevice';
 
+/**
+ * This interface represents a smoke detector device.
+ *
+ * For devices with {@link DeviceCapability.smokeSensor} capability.
+ */
 export interface iSmokeDetectorDevice extends iRoomDevice {
   /**
    * Indicates if the smoke detector is currently detecting smoke

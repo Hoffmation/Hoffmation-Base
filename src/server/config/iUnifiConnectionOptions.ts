@@ -1,3 +1,6 @@
+/**
+ * The options neded to connect to a Unifi controller
+ */
 export interface iUnifiConnectionOptions {
   /**
    * The host address of the Unifi controller (or its IP address)

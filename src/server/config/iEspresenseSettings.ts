@@ -1,5 +1,9 @@
 import { iBluetoothTrackingSettings } from './iBluetoothTrackingSettings';
 
+/**
+ * The configuration for Espresense devices (if present)
+ * This can be used to monitor/tack/locate the position of certain bluetooth devices within the house.
+ */
 export interface iEspresenseSettings {
   /**
    * The instance of the mqtt adapter providing the data for espresense devices within ioBroker.

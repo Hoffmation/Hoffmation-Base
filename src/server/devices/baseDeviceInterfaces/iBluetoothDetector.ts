@@ -1,6 +1,11 @@
 import { iRoomDevice } from './iRoomDevice';
 import { ProximityCallback, TrilaterationBasePoint } from '../espresense';
 
+/**
+ * Interface for Bluetooth detector devices, providing proximity information for tracked devices
+ *
+ * For devices with {@link DeviceCapability.bluetoothDetector} capability.
+ */
 export interface iBluetoothDetector extends iRoomDevice {
   /**
    * The position of the device to allow for trilateration-calculations
