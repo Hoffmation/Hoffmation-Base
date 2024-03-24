@@ -8,7 +8,8 @@
 
 ## **WORK IN PROGRESS**
 
-* (theimo1221) Change iCameraDevice to use handles instead of just open flag
+* (theimo1221) Change iCameraDevice to use devices instead of just open handles
+* (theimo1221) Some package removals and fixes
 
 ## 3.0.0
 

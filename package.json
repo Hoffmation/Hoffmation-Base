@@ -48,7 +48,6 @@
     "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.0",
     "@iobroker/types": "^5.0.19",
     "@j3lte/govee-lan-controller": "^1.0.2",
     "@svrooij/sonos": "^2.5.0",
@@ -62,7 +61,6 @@
     "@types/xml2js": "^0.4.14",
     "aws-sdk": "2.1579.0",
     "axios": "^1.6.8",
-    "bson": "^6.5.0",
     "daikin-controller": "^2.1.0",
     "get-mp3-duration": "^1.0.0",
     "https": "^1.0.0",
