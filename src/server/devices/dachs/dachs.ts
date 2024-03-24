@@ -59,7 +59,7 @@ export class Dachs implements iBaseDevice, iActuator {
   public constructor(options: iDachsSettings) {
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this._info = new DeviceInfo();
-    this._info.fullName = `Dachs`;
+    this._info.fullName = "Dachs";
     this._info.customName = `Dachs ${options.roomName}`;
     this._info.allDevicesKey = `dachs-${options.roomName}`;
     this._info.room = options.roomName;
@@ -104,7 +104,7 @@ export class Dachs implements iBaseDevice, iActuator {
 
   /** @inheritDoc */
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
-    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.log(LogLevel.Debug, "Restore Target Automatic value");
     this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
   }
 

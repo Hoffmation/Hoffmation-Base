@@ -61,7 +61,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
         this._battery = state.val as number;
         this.persistBatteryDevice();
         if (this._battery < 20) {
-          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+          this.log(LogLevel.Warn, "Das Zigbee Gerät hat unter 20% Batterie.");
         }
         break;
       case 'smoke':

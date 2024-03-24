@@ -61,7 +61,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
       case 'available':
         const newAvailability: boolean = state.val as boolean;
         if (this._available && !newAvailability) {
-          this.log(LogLevel.Debug, `Device became unavailable.`);
+          this.log(LogLevel.Debug, "Device became unavailable.");
         }
         this._available = newAvailability;
         break;
@@ -84,7 +84,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   }
 
   public triggerDeviceQuery(): void {
-    this.log(LogLevel.Info, `Triggering Device Query`);
+    this.log(LogLevel.Info, "Triggering Device Query");
     this.setState(this._deviceQueryId, true);
   }
 

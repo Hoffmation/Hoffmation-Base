@@ -61,7 +61,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
         this._battery = state.val as number;
         this.persistBatteryDevice();
         if (this._battery < 20) {
-          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+          this.log(LogLevel.Warn, "Das Zigbee Gerät hat unter 20% Batterie.");
         }
         break;
       case 'detected':
@@ -98,7 +98,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
 
   private startAlarm(): void {
     if (Utils.nowMS() < this._supressAlarmTimeStamp) {
-      this.log(LogLevel.Warn, `Would start alarm, but we are supressed.`);
+      this.log(LogLevel.Warn, "Would start alarm, but we are supressed.");
       return;
     }
     if (this.iAlarmTimeout !== undefined) {

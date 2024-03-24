@@ -56,7 +56,7 @@ export class DaikinService {
           TelegramService.sendMessage([m.chat.id], 'Command executed');
           return true;
         },
-        `Turns all Ac's on without changing any settings`,
+        "Turns all Ac's on without changing any settings",
       ),
     );
     TelegramService.addMessageCallback(
@@ -69,7 +69,7 @@ export class DaikinService {
           TelegramService.sendMessage([m.chat.id], 'Command executed');
           return true;
         },
-        `Turns all Ac's off without changing any settings`,
+        "Turns all Ac's off without changing any settings",
       ),
     );
     return new Promise((res, _rej) => {

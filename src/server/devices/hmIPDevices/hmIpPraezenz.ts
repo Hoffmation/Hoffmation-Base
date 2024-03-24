@@ -113,7 +113,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     if (!this.initialized && pVal) {
       this.log(
         LogLevel.Debug,
-        `Präsenz erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
+        "Präsenz erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern",
       );
       Utils.guardedTimeout(
         () => {

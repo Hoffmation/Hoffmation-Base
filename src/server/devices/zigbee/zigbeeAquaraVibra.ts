@@ -119,7 +119,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
         this._battery = state.val as number;
         this.persistBatteryDevice();
         if (this._battery < 20) {
-          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+          this.log(LogLevel.Warn, "Das Zigbee Gerät hat unter 20% Batterie.");
         }
         break;
       case 'sensitivity':
@@ -208,7 +208,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
         break;
     }
     if (this._idSensitivity === '') {
-      this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
+      this.log(LogLevel.Error, "Keine Switch ID bekannt.");
       return;
     }
 
@@ -224,7 +224,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
       `Alarmcheck für ${this.info.customName} Alarmblock Wert: ${this._vibrationBlockedByGriff}`,
     );
     if (this._vibrationBlockedByGriff) {
-      this.log(LogLevel.Debug, `Window is open; ignoring vibration alarm.`);
+      this.log(LogLevel.Debug, "Window is open; ignoring vibration alarm.");
       return;
     }
     if (this._vibrationBlockedByMotion) {

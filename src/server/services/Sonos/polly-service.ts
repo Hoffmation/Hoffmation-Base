@@ -86,7 +86,7 @@ export class PollyService {
       }
 
       if (!data || data.AudioStream === undefined) {
-        ServerLogService.writeLog(LogLevel.Error, `AWS Polly didn't send any data`);
+        ServerLogService.writeLog(LogLevel.Error, "AWS Polly didn't send any data");
         return;
       }
 
@@ -95,10 +95,10 @@ export class PollyService {
       fs.writeFile(fPath, data.AudioStream as string | NodeJS.ArrayBufferView, (err) => {
         const duration: number = getMP3Duration(data.AudioStream);
         if (err) {
-          ServerLogService.writeLog(LogLevel.Error, `AWS Polly: Saving failed`);
+          ServerLogService.writeLog(LogLevel.Error, "AWS Polly: Saving failed");
           return;
         }
-        ServerLogService.writeLog(LogLevel.Trace, `AWS Polly: Saving sucessfully`);
+        ServerLogService.writeLog(LogLevel.Trace, "AWS Polly: Saving sucessfully");
 
         cb(hash, duration);
         return;

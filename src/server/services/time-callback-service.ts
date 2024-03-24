@@ -176,7 +176,7 @@ export class TimeCallbackService {
   }
 
   public static performCheck(): void {
-    ServerLogService.writeLog(LogLevel.Trace, `Perform TimeCallBackCheck`);
+    ServerLogService.writeLog(LogLevel.Trace, "Perform TimeCallBackCheck");
     const now: Date = new Date();
     for (const tc of TimeCallbackService._callbacks.values()) {
       if (tc.nextToDo === undefined || tc.nextToDo < tc.lastDone) {

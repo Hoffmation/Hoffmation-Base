@@ -87,7 +87,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
 
   public updateMovement(newState: boolean): void {
     if (!this._initialized && newState) {
-      this.log(LogLevel.Trace, `Movement recognized, but database initialization has not finished yet --> delay.`);
+      this.log(LogLevel.Trace, "Movement recognized, but database initialization has not finished yet --> delay.");
       Utils.guardedTimeout(
         () => {
           this.updateMovement(newState);
@@ -138,7 +138,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
         this._battery = state.val as number;
         this.persistBatteryDevice();
         if (this._battery < 20) {
-          this.log(LogLevel.Warn, `Das Zigbee Gerät hat unter 20% Batterie.`);
+          this.log(LogLevel.Warn, "Das Zigbee Gerät hat unter 20% Batterie.");
         }
         break;
       case 'occupancy':
@@ -167,7 +167,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
 
   private resetFallbackTimeout(): void {
     if (this._fallBackTimeout) {
-      this.log(LogLevel.Trace, `Fallback Timeout zurücksetzen`);
+      this.log(LogLevel.Trace, "Fallback Timeout zurücksetzen");
       clearTimeout(this._fallBackTimeout);
     }
   }
@@ -178,7 +178,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     }
     this._fallBackTimeout = Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset`);
+        this.log(LogLevel.Debug, "Benötige Fallback Bewegungs Reset");
         this._fallBackTimeout = undefined;
         this.updateMovement(false);
       },

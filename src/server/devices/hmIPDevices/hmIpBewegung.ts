@@ -88,7 +88,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     if (!this.initialized && pVal) {
       this.log(
         LogLevel.Trace,
-        `Bewegung erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern`,
+        "Bewegung erkannt aber die Initialisierung aus der DB ist noch nicht erfolgt --> verzögern",
       );
       Utils.guardedTimeout(
         () => {
@@ -126,7 +126,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
 
   private resetFallbackTimeout(): void {
     if (this._fallBackTimeout) {
-      this.log(LogLevel.Trace, `Fallback Timeout zurücksetzen`);
+      this.log(LogLevel.Trace, "Fallback Timeout zurücksetzen");
       clearTimeout(this._fallBackTimeout);
     }
   }
@@ -134,7 +134,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   private startFallbackTimeout(): void {
     this._fallBackTimeout = Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Debug, `Benötige Fallback Bewegungs Reset `);
+        this.log(LogLevel.Debug, "Benötige Fallback Bewegungs Reset ");
         this._fallBackTimeout = undefined;
         this.updateMovement(false);
       },

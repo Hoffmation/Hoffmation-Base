@@ -69,7 +69,7 @@ export class HmIpTuer extends HmIPDevice implements iDisposable, iMagnetSensor {
 
         let message = `${this.info.customName} closed after ${this.minutesOpen} minutes!`;
         if (this.minutesOpen === 0) {
-          message = `just closed`;
+          message = "just closed";
         }
         this.log(LogLevel.Info, message);
 

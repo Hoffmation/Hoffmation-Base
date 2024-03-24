@@ -113,7 +113,7 @@ export class TimeCallback {
     if (nextCalculatedTime < now && this.nextToDo && this.nextToDo > now) {
       ServerLogService.writeLog(
         LogLevel.Info,
-        `Time Callback recalc results in the past, while previous target is still in future --> fire immediately.`,
+        "Time Callback recalc results in the past, while previous target is still in future --> fire immediately.",
       );
       this.perform(now);
       return;

@@ -112,7 +112,7 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
 
   /** @inheritDoc */
   getShutterCalibration(_device: iShutter): Promise<ShutterCalibration> {
-    ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
+    ServerLogService.writeLog(LogLevel.Warn, "Postgres doesn't support Shutter Calibration yet.");
     return new Promise<ShutterCalibration>((_res, reject) => {
       reject('Not Implemented');
     });
@@ -392,7 +392,7 @@ END
 $$;`,
     );
     this.initialized = true;
-    ServerLogService.writeLog(LogLevel.Info, `Postgres DB initialized`);
+    ServerLogService.writeLog(LogLevel.Info, "Postgres DB initialized");
   }
 
   /** @inheritDoc */
@@ -514,7 +514,7 @@ values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString
 
   /** @inheritDoc */
   public persistShutterCalibration(_data: ShutterCalibration): void {
-    ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
+    ServerLogService.writeLog(LogLevel.Warn, "Postgres doesn't support Shutter Calibration yet.");
   }
 
   /** @inheritDoc */
@@ -577,11 +577,11 @@ LIMIT 1`,
 
   private isPsqlReady() {
     if (!this.initialized) {
-      ServerLogService.writeLog(LogLevel.Warn, `Db is not yet initialized`);
+      ServerLogService.writeLog(LogLevel.Warn, "Db is not yet initialized");
       return false;
     }
     if (!this.psql) {
-      ServerLogService.writeLog(LogLevel.Error, `PSQL client missing`);
+      ServerLogService.writeLog(LogLevel.Error, "PSQL client missing");
       return false;
     }
     return true;
