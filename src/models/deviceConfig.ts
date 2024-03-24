@@ -4,5 +4,5 @@ export interface deviceConfig {
   ts?: number;
   from?: string;
   native?: unknown;
-  common?: unknown & { name: string };
+  common?: { name: string | object };
 }

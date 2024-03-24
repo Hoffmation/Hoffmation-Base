@@ -38,8 +38,8 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pDevConf._id);
     this.fullID = pDevConf._id;
     this.devID = idSplit[2];
-    this.fullName = pDevConf.common!.name;
-    const nameSplit: string[] = pDevConf.common!.name.split('-');
+    this.fullName = pDevConf.common!.name as string;
+    const nameSplit: string[] = (pDevConf.common!.name as string).split('-');
 
     if (!isJsStateChildObject) {
       /**

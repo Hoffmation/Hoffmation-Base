@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix type definition for deviceConfig
+
 ## 3.0.0-alpha.21 (2024-03-24)
 
 * (theimo1221) Fix an issue with the recent blockAutomaticHandler changes, which resulted in a loop on manual turn off
