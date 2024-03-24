@@ -72,7 +72,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */
   public setActuator(command: ActuatorSetStateCommand): void {
     if (this.actuatorOnSwitchID === '') {
-      this.log(LogLevel.Error, "Keine Switch ID bekannt.");
+      this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
       return;
     }
 

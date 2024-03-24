@@ -10,7 +10,7 @@ export class Griffe {
       return b.position - a.position;
     });
 
-    const response: string[] = ["These are the current handle positions:"];
+    const response: string[] = ['These are the current handle positions:'];
     for (const g of griffe) {
       response.push(`${WindowPosition[g.position]} Window: "${g.info.customName}"`);
     }

@@ -71,12 +71,12 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
   /** @inheritDoc */
   public override setLight(c: LedSetLightCommand): void {
     if (this._stateIdState === '') {
-      this.log(LogLevel.Error, "Keine State ID bekannt.");
+      this.log(LogLevel.Error, 'Keine State ID bekannt.');
       return;
     }
 
     if (!this.ioConn) {
-      this.log(LogLevel.Error, "Keine Connection bekannt.");
+      this.log(LogLevel.Error, 'Keine Connection bekannt.');
       return;
     }
 

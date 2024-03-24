@@ -112,7 +112,7 @@ export class Devices {
     // This forces import of rooms at correct timing, to allow devices to land in proper rooms.
     pRoomImportEnforcer?.addRoomConstructor();
 
-    ServerLogService.writeLog(LogLevel.Info, "Constructing devices now");
+    ServerLogService.writeLog(LogLevel.Info, 'Constructing devices now');
     for (const cID in pDeviceData) {
       const cDevConf: deviceConfig = pDeviceData[cID];
       if (
@@ -142,7 +142,7 @@ export class Devices {
         cDevConf.type !== 'folder' &&
         !config?.energyManager?.disableJsEnergyManager
       ) {
-        ServerLogService.writeLog(LogLevel.Info, "Found Energy-Manager in Device json.");
+        ServerLogService.writeLog(LogLevel.Info, 'Found Energy-Manager in Device json.');
         Devices.createEnergyManager(cDevConf);
       }
     }
@@ -169,10 +169,10 @@ export class Devices {
   }
 
   public static getBatteryInfo(): string {
-    ServerLogService.writeLog(LogLevel.Info, "Getting Battery Info");
+    ServerLogService.writeLog(LogLevel.Info, 'Getting Battery Info');
     let data: NameAmountValuePair[] = [];
     const result: string[] = [
-      "These are the battery values for each device. Device dependandt some are in volts, some in %",
+      'These are the battery values for each device. Device dependandt some are in volts, some in %',
     ];
     for (const key in this.alLDevices) {
       const d: iBatteryDevice = this.alLDevices[key] as iBatteryDevice;

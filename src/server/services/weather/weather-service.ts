@@ -66,7 +66,7 @@ export class WeatherService {
       if (retries > 0) {
         ServerLogService.writeLog(
           LogLevel.Warn,
-          "WeatherService.playWeatherInfo(): Der Wetterbericht ist noch nicht bereit --> warten",
+          'WeatherService.playWeatherInfo(): Der Wetterbericht ist noch nicht bereit --> warten',
         );
         setTimeout(() => {
           WeatherService.playWeatherInfo(speaker, volume, short, retries - 1);
@@ -74,13 +74,13 @@ export class WeatherService {
       } else {
         ServerLogService.writeLog(
           LogLevel.Error,
-          "WeatherService.playWeatherInfo(): Der Wetterbericht ist vorhanden --> Abbruch",
+          'WeatherService.playWeatherInfo(): Der Wetterbericht ist vorhanden --> Abbruch',
         );
       }
       return;
     }
 
-    speaker.speakOnDevice(short ? "Kurze Wetterinfo:" : "HoffMation Wetter-Bericht:", volume, false);
+    speaker.speakOnDevice(short ? 'Kurze Wetterinfo:' : 'HoffMation Wetter-Bericht:', volume, false);
     speaker.speakOnDevice(`Wetterbeschreibung für heute:  ${wData.daily[0].weather[0].description}`, volume, false);
     speaker.speakOnDevice(`Aktuell sind es ${Math.round(wData.current.temp)} Grad.`, volume, false);
     if (!short) {
@@ -117,25 +117,25 @@ export class WeatherService {
 
     const { minutes, precipitation } = WeatherService.getRainNextMinutes();
     const ratio: number = minutes <= 0 ? 0 : (precipitation / minutes) * 60;
-    let message = "In der nächsten Zeit ";
+    let message = 'In der nächsten Zeit ';
     switch (true) {
       case ratio > 12:
-        message += "wird es kräftig regnen";
+        message += 'wird es kräftig regnen';
         break;
       case ratio > 4:
-        message += "wird es ordentlich regnen";
+        message += 'wird es ordentlich regnen';
         break;
       case ratio > 1:
-        message += "wird es regnen";
+        message += 'wird es regnen';
         break;
       case ratio > 0.5:
-        message += "wird es mäßig regnen";
+        message += 'wird es mäßig regnen';
         break;
       case ratio > 0.1:
-        message += "wird es nieseln regnen";
+        message += 'wird es nieseln regnen';
         break;
       default:
-        message += "bleibt es trocken.";
+        message += 'bleibt es trocken.';
         break;
     }
     speaker.speakOnDevice(message, volume, false);
@@ -149,7 +149,7 @@ export class WeatherService {
 
     const alerts: WeatherAlert[] = WeatherService.getActiveAlerts();
     if (alerts.length > 0) {
-      const alertMessage: string[] = ["Achtung, vorliegende Wetterwarnungen:"];
+      const alertMessage: string[] = ['Achtung, vorliegende Wetterwarnungen:'];
       alerts.forEach((element) => {
         alertMessage.push(
           `${element.event} von ${new Date(element.start * 1000).toLocaleString('de-DE')} bis ${new Date(
@@ -160,7 +160,7 @@ export class WeatherService {
       });
       speaker.speakOnDevice(alertMessage.join('\n'), volume, false);
     } else if (!short) {
-      speaker.speakOnDevice("Für heute liegt keine Unwetterwarnungen vor", volume, false);
+      speaker.speakOnDevice('Für heute liegt keine Unwetterwarnungen vor', volume, false);
     }
   }
 
@@ -170,7 +170,7 @@ export class WeatherService {
       `Es sind gerade ${this.lastResponse.current.temp} Grad (gefühlt ${this.lastResponse.current.feels_like}).`,
     );
     if (this.lastResponse.alerts !== undefined && this.lastResponse.alerts.length > 0) {
-      const message: string[] = ["Es gibt folgende Wetterwarnungen:"];
+      const message: string[] = ['Es gibt folgende Wetterwarnungen:'];
       this.lastResponse.alerts.forEach((element) => {
         message.push(
           `${element.event} von ${new Date(element.start * 1000)} bis ${new Date(element.end * 1000)}; Beschreibung: ${
@@ -185,7 +185,7 @@ export class WeatherService {
   public static getCurrentTemp(): number {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
-      ServerLogService.writeLog(LogLevel.Info, "WeatherService.isOutsideWarmer(): There are no data yet");
+      ServerLogService.writeLog(LogLevel.Info, 'WeatherService.isOutsideWarmer(): There are no data yet');
       return -99;
     }
     return wData.current.temp;
@@ -197,7 +197,7 @@ export class WeatherService {
   ): boolean {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
-      logger(LogLevel.Info, "WeatherService.isOutsideWarmer(): There are no data yet");
+      logger(LogLevel.Info, 'WeatherService.isOutsideWarmer(): There are no data yet');
       return false;
     }
     logger(
@@ -216,10 +216,10 @@ export class WeatherService {
   ): number {
     let result: number = normalPos;
     if (currentTemperatur < desiredTemperatur) {
-      logger(LogLevel.Trace, "RolloWeatherPosition: Room needs to heat up anyways.");
+      logger(LogLevel.Trace, 'RolloWeatherPosition: Room needs to heat up anyways.');
       return result;
     } else if (normalPos < 30) {
-      logger(LogLevel.Trace, "RolloWeatherPosition: Shutter should be down anyways.");
+      logger(LogLevel.Trace, 'RolloWeatherPosition: Shutter should be down anyways.');
       return result;
     } else if (this.hoursTilSunset() < 1) {
       logger(LogLevel.Trace, "RolloWeatherPosition: It's close to or after todays sunset");
@@ -228,10 +228,10 @@ export class WeatherService {
       shutterSettings.direction !== undefined &&
       !Utils.degreeInBetween(shutterSettings.direction - 50, shutterSettings.direction + 50, this.sunDirection)
     ) {
-      logger(LogLevel.Trace, "RolloWeatherPosition: Sun is facing a different direction");
+      logger(LogLevel.Trace, 'RolloWeatherPosition: Sun is facing a different direction');
       return result;
     } else if (this.getCurrentCloudiness() > 40) {
-      logger(LogLevel.Trace, "RolloWeatherPosition: It´s cloudy now.");
+      logger(LogLevel.Trace, 'RolloWeatherPosition: It´s cloudy now.');
     } else if (this.willOutsideBeWarmer(26, logger)) {
       result = shutterSettings.heatReductionPosition;
     }
@@ -248,7 +248,7 @@ export class WeatherService {
   public static getCurrentCloudiness(): number {
     const wData: WeatherResponse = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
-      ServerLogService.writeLog(LogLevel.Info, "WeatherService.getCurrentCloudiness(): There are no data yet");
+      ServerLogService.writeLog(LogLevel.Info, 'WeatherService.getCurrentCloudiness(): There are no data yet');
       return 0;
     }
     return wData.current.clouds;
@@ -307,7 +307,7 @@ export class WeatherService {
       '',
       5,
       (response: string) => {
-        ServerLogService.writeLog(LogLevel.Debug, "WeatherAPi Response erhalten");
+        ServerLogService.writeLog(LogLevel.Debug, 'WeatherAPi Response erhalten');
         ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response: ${response}`);
         Utils.guardedFunction(() => {
           WeatherService.lastResponse = JSON.parse(response);

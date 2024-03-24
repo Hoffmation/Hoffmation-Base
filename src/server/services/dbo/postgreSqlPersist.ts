@@ -392,7 +392,7 @@ END
 $$;`,
     );
     this.initialized = true;
-    ServerLogService.writeLog(LogLevel.Info, "Postgres DB initialized");
+    ServerLogService.writeLog(LogLevel.Info, 'Postgres DB initialized');
   }
 
   /** @inheritDoc */
@@ -577,11 +577,11 @@ LIMIT 1`,
 
   private isPsqlReady() {
     if (!this.initialized) {
-      ServerLogService.writeLog(LogLevel.Warn, "Db is not yet initialized");
+      ServerLogService.writeLog(LogLevel.Warn, 'Db is not yet initialized');
       return false;
     }
     if (!this.psql) {
-      ServerLogService.writeLog(LogLevel.Error, "PSQL client missing");
+      ServerLogService.writeLog(LogLevel.Error, 'PSQL client missing');
       return false;
     }
     return true;

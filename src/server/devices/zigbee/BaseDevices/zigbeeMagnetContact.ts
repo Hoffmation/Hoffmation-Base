@@ -52,7 +52,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
         this._battery = state.val as number;
         this.persistBatteryDevice();
         if (this._battery < 20) {
-          this.log(LogLevel.Warn, "Das Zigbee Gerät hat unter 20% Batterie.");
+          this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
     }

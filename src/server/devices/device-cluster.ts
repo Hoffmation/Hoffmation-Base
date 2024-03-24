@@ -10,7 +10,7 @@ export class DeviceCluster {
 
   public getIoBrokerDevicesByType(type: DeviceClusterType): IoBrokerBaseDevice[] {
     if (type === DeviceClusterType.Speaker) {
-      throw new Error("This is no IoBroker Device");
+      throw new Error('This is no IoBroker Device');
     }
     return this.getDevicesByType(type) as Array<IoBrokerBaseDevice>;
   }

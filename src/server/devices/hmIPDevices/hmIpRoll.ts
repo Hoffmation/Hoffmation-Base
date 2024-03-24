@@ -116,7 +116,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       return;
     }
     if (this._setLevelSwitchID === '') {
-      this.log(LogLevel.Error, "Keine Switch ID bekannt.");
+      this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
       return;
     }
 
@@ -128,14 +128,14 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     if (this._window !== undefined) {
       if (this._window.griffeInPosition(WindowPosition.offen) > 0 && command.level < 100) {
         if (!command.skipOpenWarning) {
-          this.log(LogLevel.Alert, "Not closing the shutter, as the window is open!");
+          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
         }
         return;
       }
       if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && targetLevel < 50) {
         targetLevel = 50;
         if (!command.skipOpenWarning) {
-          this.log(LogLevel.Alert, "Not closing the shutter, as the window is half open!");
+          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');
         }
       }
     }

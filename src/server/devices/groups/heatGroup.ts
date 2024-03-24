@@ -112,8 +112,8 @@ export class HeatGroup extends BaseGroup {
       return a.roomName.localeCompare(b.roomName);
     });
 
-    const response: string[] = ["Dies sind die aktuellen Informationen der Heizungen:"];
-    response.push("Name\t\tLuft Feuchtigkeit\t\tAktuelle Temperatur\t\tSoll Temperatur\t\tVentilstellung");
+    const response: string[] = ['Dies sind die aktuellen Informationen der Heizungen:'];
+    response.push('Name\t\tLuft Feuchtigkeit\t\tAktuelle Temperatur\t\tSoll Temperatur\t\tVentilstellung');
     for (const r of rooms) {
       response.push(
         `${r.roomName}:\t\t${r.HeatGroup?.humidity}%\t\t${r.HeatGroup?.temperature}°C\t\t${r.HeatGroup?.desiredTemp}°C`,

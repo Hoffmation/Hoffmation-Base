@@ -198,7 +198,7 @@ export class IOBrokerConnection implements iDisposable {
     });
 
     this._socket.on('reauthenticate', () => {
-      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, "Connection.ts: socket.on(reauthenticate)");
+      iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Error, 'Connection.ts: socket.on(reauthenticate)');
       if (this._connCallbacks.onConnChange) {
         this._connCallbacks.onConnChange(false);
         if (typeof app !== 'undefined') {
@@ -502,7 +502,7 @@ export class IOBrokerConnection implements iDisposable {
     if (this._connectInterval !== undefined || (pConnOptions.mayReconnect && !pConnOptions.mayReconnect())) {
       return;
     }
-    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, "Connection.ts: reconnect()");
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, 'Connection.ts: reconnect()');
     this._connectInterval = Utils.guardedInterval(
       () => {
         iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, 'Trying connect...');
@@ -1620,25 +1620,25 @@ export class IOBrokerConnection implements iDisposable {
     if (this.isAuthDone) {
       iobrokerConnectionLogging.writeLog(
         iobrokerConnectionLogLevel.DeepTrace,
-        "_queueCmdIfRequired: Auth is already done",
+        '_queueCmdIfRequired: Auth is already done',
       );
       return false;
     }
-    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, "_queueCmdIfRequired: Auth is not yet done");
+    iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Trace, '_queueCmdIfRequired: Auth is not yet done');
     // Queue command
     // @ts-ignore
     this._cmdQueue.push({ func: func, args: args });
     if (this._authRunning) {
       iobrokerConnectionLogging.writeLog(
         iobrokerConnectionLogLevel.DeepTrace,
-        "_queueCmdIfRequired: Authentication Process is already Running",
+        '_queueCmdIfRequired: Authentication Process is already Running',
       );
       return true;
     }
 
     iobrokerConnectionLogging.writeLog(
       iobrokerConnectionLogLevel.Trace,
-      "_queueCmdIfRequired: Starting Authentication Process",
+      '_queueCmdIfRequired: Starting Authentication Process',
     );
     this._authRunning = true;
     // Try to read version

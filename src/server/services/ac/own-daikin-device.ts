@@ -87,14 +87,14 @@ export class OwnDaikinDevice extends AcDevice {
 
   /** @inheritDoc */
   public turnOn(): void {
-    this.log(LogLevel.Info, "Turning on");
+    this.log(LogLevel.Info, 'Turning on');
     this.desiredState = Power.ON;
     this.setDesiredInfo();
   }
 
   /** @inheritDoc */
   public turnOff(): void {
-    this.log(LogLevel.Info, "Turning off");
+    this.log(LogLevel.Info, 'Turning off');
     this._activatedByExcessEnergy = false;
     this.desiredState = Power.OFF;
     this._mode = AcMode.Off;
@@ -145,7 +145,7 @@ export class OwnDaikinDevice extends AcDevice {
         this._on = res.power ?? this.desiredState;
         this.persist();
       } else {
-        this.log(LogLevel.Warn, "No Error, but also no response...");
+        this.log(LogLevel.Warn, 'No Error, but also no response...');
       }
     });
   }

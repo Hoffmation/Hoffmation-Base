@@ -253,7 +253,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
       this._battery = state.val as number;
       this.persistBatteryDevice();
       if (this._battery < 20) {
-        this.log(LogLevel.Warn, "Das Shelly Gerät hat unter 20% Batterie.");
+        this.log(LogLevel.Warn, 'Das Shelly Gerät hat unter 20% Batterie.');
       }
     }
     super.update(idSplit, state, initial, true);

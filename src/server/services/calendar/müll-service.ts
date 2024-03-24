@@ -73,7 +73,7 @@ export class MuellService {
   }
 
   public static updateCalendar(checkAfterwards: boolean = true): void {
-    ServerLogService.writeLog(LogLevel.Debug, "Muell Service wird nun initialisiert");
+    ServerLogService.writeLog(LogLevel.Debug, 'Muell Service wird nun initialisiert');
     async
       .fromURL(this._calendarURL)
       .then((data) => {
@@ -146,18 +146,18 @@ export class MuellService {
 
     const now: Date = new Date();
     if (now.getTime() - this.lastCheck.getTime() < 60000 && now.getDate() === this.lastCheck.getDate()) {
-      ServerLogService.writeLog(LogLevel.Trace, "MüllService.checkAll: Skipped weil wir gerade erst geprüft hatten.");
+      ServerLogService.writeLog(LogLevel.Trace, 'MüllService.checkAll: Skipped weil wir gerade erst geprüft hatten.');
       return;
     }
 
     if (this.gelbeTonne === undefined) {
       if (pRetries > 0) {
-        ServerLogService.writeLog(LogLevel.Warn, "Der Müllservice ist noch nicht bereit --> warten");
+        ServerLogService.writeLog(LogLevel.Warn, 'Der Müllservice ist noch nicht bereit --> warten');
         Utils.guardedTimeout(() => {
           MuellService.checkAll(pRetries - 1);
         }, 1000);
       } else {
-        ServerLogService.writeLog(LogLevel.Error, "Der Müllservice ist trotz Warten nicht bereit --> Abbruch");
+        ServerLogService.writeLog(LogLevel.Error, 'Der Müllservice ist trotz Warten nicht bereit --> Abbruch');
       }
 
       return;

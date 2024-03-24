@@ -31,7 +31,7 @@ export class TasterGroup extends BaseGroup {
             new WindowSetDesiredPositionCommand(CommandSource.Manual, 0, 'Button Top Left pressed long'),
           );
         },
-        "Close all Rollos in this room",
+        'Close all Rollos in this room',
       );
 
       t.buttonTopLeft?.addCb(
@@ -44,7 +44,7 @@ export class TasterGroup extends BaseGroup {
             new WindowSetDesiredPositionCommand(CommandSource.Manual, 25, 'Button Top Left pressed short'),
           );
         },
-        "Nearly closes all Rollos in this room",
+        'Nearly closes all Rollos in this room',
       );
 
       t.buttonTopRight?.addCb(
@@ -57,7 +57,7 @@ export class TasterGroup extends BaseGroup {
             new WindowSetDesiredPositionCommand(CommandSource.Manual, 100, 'Button Top Right pressed long'),
           );
         },
-        "Open all Rollos in this room",
+        'Open all Rollos in this room',
       );
 
       t.buttonTopRight?.addCb(
@@ -70,7 +70,7 @@ export class TasterGroup extends BaseGroup {
             new WindowSetDesiredPositionCommand(CommandSource.Manual, 50, 'Button Top Right pressed short'),
           );
         },
-        "All Rollos in this room to middle",
+        'All Rollos in this room to middle',
       );
 
       t.buttonMidLeft?.addCb(
@@ -83,7 +83,7 @@ export class TasterGroup extends BaseGroup {
             new ActuatorSetStateCommand(CommandSource.Manual, true, 'Button press to turn all lights on'),
           );
         },
-        "Turn all Lights in this room on",
+        'Turn all Lights in this room on',
       );
 
       t.buttonMidRight?.addCb(
@@ -96,7 +96,7 @@ export class TasterGroup extends BaseGroup {
             new ActuatorSetStateCommand(CommandSource.Manual, false, 'Button press to turn all lights off'),
           );
         },
-        "Turn all Lights in this room off",
+        'Turn all Lights in this room off',
       );
 
       if (SettingsService.settings.sonos?.buttonBotRightForRadio === true) {

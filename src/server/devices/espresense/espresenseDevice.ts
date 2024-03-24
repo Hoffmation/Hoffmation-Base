@@ -116,7 +116,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
 
     const trackedDistance = dev.getDistance(this.id);
     if (trackedDistance === undefined) {
-      this.log(LogLevel.Error, "TrackedDistance Undefined directly after update");
+      this.log(LogLevel.Error, 'TrackedDistance Undefined directly after update');
       return;
     }
     const distance: number | undefined = trackedDistance.distance;

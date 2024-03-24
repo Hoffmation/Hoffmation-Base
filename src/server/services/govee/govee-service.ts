@@ -25,7 +25,7 @@ export class GooveeService {
   }
 
   public static initialize(): void {
-    ServerLogService.writeLog(LogLevel.Debug, "Initializing Goovee-Service");
+    ServerLogService.writeLog(LogLevel.Debug, 'Initializing Goovee-Service');
     this.goveeApi = new Govee({
       discover: true,
       discoverInterval: 300_000,
@@ -34,7 +34,7 @@ export class GooveeService {
       ServerLogService.writeLog(LogLevel.Info, `GoveeDevice ${data.ip} scanned`);
     });
     this.goveeApi.on(GoveeEventTypes.Ready, () => {
-      ServerLogService.writeLog(LogLevel.Info, "Govee ready");
+      ServerLogService.writeLog(LogLevel.Info, 'Govee ready');
     });
     this.goveeApi.on(GoveeEventTypes.Error, (err) => {
       ServerLogService.writeLog(LogLevel.Error, `Govee-Error: ${err}`);
@@ -44,7 +44,7 @@ export class GooveeService {
       GooveeService.initializeDevice(device);
     });
     this.goveeApi.on(GoveeEventTypes.UnknownDevice, (_data: GoveeDeviceStatusData) => {
-      ServerLogService.writeLog(LogLevel.Warn, "GoveeDevice unknown");
+      ServerLogService.writeLog(LogLevel.Warn, 'GoveeDevice unknown');
     });
     this.goveeApi.on(GoveeEventTypes.UnknownMessage, (data: GoveeResponseMessage) => {
       ServerLogService.writeLog(LogLevel.Warn, `GoveeDevice unknown message: ${data}`);

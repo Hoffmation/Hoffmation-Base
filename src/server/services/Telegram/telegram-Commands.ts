@@ -165,10 +165,10 @@ export class TelegramCommands {
           RoomService.setAllShutterOfFloor(
             new FloorSetAllShuttersCommand(CommandSource.Manual, 0, undefined, 'Telegram command AllRolloDown'),
           );
-          TelegramService.sendMessage([m.chat.id], "Es werden alle Rollos heruntergefahren");
+          TelegramService.sendMessage([m.chat.id], 'Es werden alle Rollos heruntergefahren');
           return true;
         },
-        "Fährt alle rollos runter",
+        'Fährt alle rollos runter',
       ),
     );
 
@@ -187,7 +187,7 @@ export class TelegramCommands {
           TelegramService.sendMessage([m.chat.id], 'Abgeschlossen');
           return true;
         },
-        "Setzt alle Vibrationsensoren auf High",
+        'Setzt alle Vibrationsensoren auf High',
       ),
     );
 
@@ -207,7 +207,7 @@ export class TelegramCommands {
           TelegramService.sendMessage([m.chat.id], response.join('\n'));
           return true;
         },
-        "Retrieves the button assignments for all buttons in home",
+        'Retrieves the button assignments for all buttons in home',
       ),
     );
 
@@ -223,7 +223,7 @@ export class TelegramCommands {
             TelegramService.sendMessage([m.chat.id], response.join('\n'));
             return true;
           },
-          "Retrieves the current energy manager values",
+          'Retrieves the current energy manager values',
         ),
       );
     }

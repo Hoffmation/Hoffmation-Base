@@ -25,9 +25,9 @@ export class SonosService {
 
   public static initialize(reinitialize: boolean = false): void {
     if (SettingsService.settings.mp3Server?.serverAddress === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, "SonosService needs properly configured mp3Server.");
+      ServerLogService.writeLog(LogLevel.Alert, 'SonosService needs properly configured mp3Server.');
     }
-    ServerLogService.writeLog(LogLevel.Debug, "Initialisiere Sonos Service");
+    ServerLogService.writeLog(LogLevel.Debug, 'Initialisiere Sonos Service');
     if (!reinitialize) {
       this.checkTimeCallback = new TimeCallback(
         'SonosFunctionallityChecker',
@@ -52,7 +52,7 @@ export class SonosService {
             await SonosService.checkAll();
             return true;
           },
-          "Spiele eine kurze Nachricht auf allen Sonos Geräten um diese zu identifizieren",
+          'Spiele eine kurze Nachricht auf allen Sonos Geräten um diese zu identifizieren',
         ),
       );
     }
@@ -70,7 +70,7 @@ export class SonosService {
         });
         this.isInitialized = true;
         if (!reinitialize) {
-          this.reinitializationDevice?.speakOnDevice("Sonos System initialisiert und bereit für Sprachausgaben.", 30);
+          this.reinitializationDevice?.speakOnDevice('Sonos System initialisiert und bereit für Sprachausgaben.', 30);
         }
       })
       .catch(console.error);
@@ -95,14 +95,14 @@ export class SonosService {
         LogLevel.Error,
         `Atleast one device failed --> Last checked ${currentDevice?.name ?? 'undefined'}`,
       );
-      TelegramService.inform("Sonos device is failing --> Reinitialize whole system");
+      TelegramService.inform('Sonos device is failing --> Reinitialize whole system');
       this.initialize(true);
     }
   }
 
   public static speakOnAll(pMessage: string, volumeOverride: number = -1): void {
     if (!this.isInitialized) {
-      ServerLogService.writeLog(LogLevel.Alert, "SonosService noch nicht initialisiert.");
+      ServerLogService.writeLog(LogLevel.Alert, 'SonosService noch nicht initialisiert.');
     }
     PollyService.tts(pMessage, (networkPath: string, duration: number) => {
       const hours: number = new Date().getHours();

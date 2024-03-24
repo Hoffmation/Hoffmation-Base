@@ -181,7 +181,7 @@ export class CameraDevice implements iCameraDevice {
         const newValue: boolean = (state.val as number) === 1;
         this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
         if (newValue) {
-          this.log(LogLevel.Info, "Person Detected");
+          this.log(LogLevel.Info, 'Person Detected');
           this.resetPersonDetectFallbackTimer();
         }
         this._personDetected = newValue;
@@ -194,7 +194,7 @@ export class CameraDevice implements iCameraDevice {
         const newDogDetectionVal: boolean = (state.val as number) === 1;
         this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
         if (newDogDetectionVal) {
-          this.log(LogLevel.Info, "Dog Detected");
+          this.log(LogLevel.Info, 'Dog Detected');
           this.resetDogDetectFallbackTimer();
         }
         this._dogDetected = newDogDetectionVal;
@@ -247,7 +247,7 @@ export class CameraDevice implements iCameraDevice {
 
   private updateMovement(newState: boolean): void {
     if (!this._initialized && newState) {
-      this.log(LogLevel.Trace, "Movement recognized, but database initialization has not finished yet --> delay.");
+      this.log(LogLevel.Trace, 'Movement recognized, but database initialization has not finished yet --> delay.');
       Utils.guardedTimeout(
         () => {
           this.updateMovement(newState);

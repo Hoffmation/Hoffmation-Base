@@ -22,7 +22,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   public constructor(info: IoBrokerDeviceInfo) {
     super(info, DeviceType.JsEnergyManager);
     this.deviceCapabilities.push(DeviceCapability.energyManager);
-    this.log(LogLevel.Info, "Creating Energy Manager Device");
+    this.log(LogLevel.Info, 'Creating Energy Manager Device');
     this._iCalculationInterval = Utils.guardedInterval(
       () => {
         this.calculateExcessEnergy();

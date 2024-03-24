@@ -188,7 +188,7 @@ export class LightGroup extends BaseGroup {
         (c.time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
         (c.time === TimeOfDay.AfterSunset && s.settings.duskOn)
       ) {
-        s.setActuator(new ActuatorSetStateCommand(c, true, "LightGroup setAllActuatorsTimeBased", c.timeout));
+        s.setActuator(new ActuatorSetStateCommand(c, true, 'LightGroup setAllActuatorsTimeBased', c.timeout));
       }
     });
   }
@@ -272,7 +272,7 @@ export class LightGroup extends BaseGroup {
 
   private ambientLightStartCallback(): void {
     this._ambientLightOn = true;
-    this.log(LogLevel.Info, "Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung");
+    this.log(LogLevel.Info, 'Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung');
 
     this.getAllAsActuator().forEach((a) => {
       if (a.settings.includeInAmbientLight) {
@@ -281,7 +281,7 @@ export class LightGroup extends BaseGroup {
     });
     Utils.guardedTimeout(
       () => {
-        this.log(LogLevel.Info, "Ambientenbeleuchtung um Mitternacht abschalten.");
+        this.log(LogLevel.Info, 'Ambientenbeleuchtung um Mitternacht abschalten.');
         this._ambientLightOn = false;
         if (this.getRoom().PraesenzGroup?.anyPresent() !== true) {
           this.switchAll(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Ambient Light End Callback'));

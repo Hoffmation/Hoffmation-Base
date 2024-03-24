@@ -32,7 +32,7 @@ export class HTTPSService {
           HTTPSService.request(options, postData, retryOnError - 1, responseCallback);
         }, 100);
       } else {
-        ServerLogService.writeLog(LogLevel.Error, "HTTPS request failed after retries");
+        ServerLogService.writeLog(LogLevel.Error, 'HTTPS request failed after retries');
       }
     });
     if (postData !== '') {

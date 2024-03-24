@@ -75,7 +75,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
   /** @inheritdoc */
   public setLight(c: LampSetLightCommand): void {
     if (this.lightOnSwitchID === '') {
-      this.log(LogLevel.Error, "Keine Switch ID bekannt.");
+      this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
       return;
     }
     LampUtils.setActuator(this, c);

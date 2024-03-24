@@ -53,7 +53,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.scene)) {
       return new Error(`Device with ID ${deviceId} is no scene`);
     }
-    d.log(LogLevel.Info, "API Call to end this.");
+    d.log(LogLevel.Info, 'API Call to end this.');
     d.endScene();
     return null;
   }
@@ -184,7 +184,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.lamp)) {
       return new Error(`Device with ID ${deviceId} is no Lamp`);
     }
-    d.log(LogLevel.Info, "Received LampSetLightCommand API call.");
+    d.log(LogLevel.Info, 'Received LampSetLightCommand API call.');
     d.setLight(c);
     return null;
   }
@@ -216,7 +216,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.actuator)) {
       return new Error(`Device with ID ${deviceId} is no actuator`);
     }
-    d.log(LogLevel.Info, "Received ActuatorSetStateCommand API call.");
+    d.log(LogLevel.Info, 'Received ActuatorSetStateCommand API call.');
     d.setActuator(c);
     return null;
   }
@@ -259,7 +259,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.dimmablelamp)) {
       return new Error(`Device with ID ${deviceId} is no dimmablelamp`);
     }
-    d.log(LogLevel.Info, "Received dimmerSetLight API call.");
+    d.log(LogLevel.Info, 'Received dimmerSetLight API call.');
     d.setLight(command);
     return null;
   }
@@ -306,7 +306,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.ledLamp)) {
       return new Error(`Device with ID ${deviceId} is no LED`);
     }
-    d.log(LogLevel.Info, "Received ledSetLight API call.");
+    d.log(LogLevel.Info, 'Received ledSetLight API call.');
     d.setLight(command);
     return null;
   }
@@ -345,7 +345,7 @@ export class API {
     } else {
       d.setLevel(command);
     }
-    d.log(LogLevel.Info, "Received shutterSetLevel API call.");
+    d.log(LogLevel.Info, 'Received shutterSetLevel API call.');
     return null;
   }
 
@@ -377,7 +377,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.scene)) {
       return new Error(`Device with ID ${deviceId} is no scene`);
     }
-    d.log(LogLevel.Info, "API Call to start this.");
+    d.log(LogLevel.Info, 'API Call to start this.');
     d.startScene(turnOffTimeout);
     return null;
   }
@@ -391,10 +391,10 @@ export class API {
       return new Error(`Device with ID ${deviceId} is no Garage Door Opener`);
     }
     if (open) {
-      d.log(LogLevel.Info, "API Call to open Garage Door");
+      d.log(LogLevel.Info, 'API Call to open Garage Door');
       d.open();
     } else {
-      d.log(LogLevel.Info, "API Call to close Garage Door");
+      d.log(LogLevel.Info, 'API Call to close Garage Door');
       d.close();
     }
     return null;
@@ -466,7 +466,7 @@ export class API {
 
   // TODO: Missing Comment
   public static persistAllDeviceSettings(): void {
-    ServerLogService.writeLog(LogLevel.Info, "API Call to persist all device settings");
+    ServerLogService.writeLog(LogLevel.Info, 'API Call to persist all device settings');
     for (const device of Object.values(Devices.alLDevices)) {
       device.settings?.persist(device);
     }
@@ -474,7 +474,7 @@ export class API {
 
   // TODO: Missing Comment
   public static loadAllDeviceSettingsFromDb(): void {
-    ServerLogService.writeLog(LogLevel.Info, "API Call to load all device settings");
+    ServerLogService.writeLog(LogLevel.Info, 'API Call to load all device settings');
     for (const device of Object.values(Devices.alLDevices)) {
       device.loadDeviceSettings();
     }
@@ -508,7 +508,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
       return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
-    d.log(LogLevel.Info, "Received API Call to lift automatic block.");
+    d.log(LogLevel.Info, 'Received API Call to lift automatic block.');
     d.blockAutomationHandler.liftAutomaticBlock(command);
     return null;
   }
@@ -541,7 +541,7 @@ export class API {
     if (!d.deviceCapabilities.includes(DeviceCapability.blockAutomatic)) {
       return new Error(`Device with ID ${deviceId} is not capable of blocking automatic`);
     }
-    d.log(LogLevel.Info, "Received API Call to block automatic.");
+    d.log(LogLevel.Info, 'Received API Call to block automatic.');
     d.blockAutomationHandler.disableAutomatic(command);
     return null;
   }

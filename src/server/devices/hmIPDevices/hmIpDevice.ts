@@ -25,7 +25,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
       case '0.LOW_BAT':
         const newBatLowVal: boolean = state.val as boolean;
         if (newBatLowVal) {
-          this.log(LogLevel.Warn, "!!BATTERIE FAST LEER!!");
+          this.log(LogLevel.Warn, '!!BATTERIE FAST LEER!!');
         }
         break;
     }

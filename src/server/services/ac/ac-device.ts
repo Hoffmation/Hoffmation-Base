@@ -131,7 +131,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   /** @inheritDoc */
   public restoreTargetAutomaticValue(): void {
-    this.log(LogLevel.Debug, "Restore Target Automatic value");
+    this.log(LogLevel.Debug, 'Restore Target Automatic value');
     this.automaticCheck();
   }
 
@@ -167,7 +167,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._desiredTemperatur = heatGroup.desiredTemp;
 
     if (this.settings.manualDisabled) {
-      acOn && this.log(LogLevel.Info, "We should turn off now, as manual disable force is set.");
+      acOn && this.log(LogLevel.Info, 'We should turn off now, as manual disable force is set.');
       return AcMode.Off;
     }
 
@@ -180,7 +180,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
         this.settings.maximumMinutes,
       )
     ) {
-      acOn && this.log(LogLevel.Info, "We should turn off now, to respect night settings.");
+      acOn && this.log(LogLevel.Info, 'We should turn off now, to respect night settings.');
       return AcMode.Off;
     }
 
@@ -355,7 +355,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return;
     }
 
-    this.log(LogLevel.Info, "Someone entered the room. Turning off AC");
+    this.log(LogLevel.Info, 'Someone entered the room. Turning off AC');
     this.turnOff();
   }
 
@@ -364,7 +364,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return;
     }
 
-    this.log(LogLevel.Info, "Last person left the room. Checking if we should turn on AC");
+    this.log(LogLevel.Info, 'Last person left the room. Checking if we should turn on AC');
     this.restoreTargetAutomaticValue();
   }
 
