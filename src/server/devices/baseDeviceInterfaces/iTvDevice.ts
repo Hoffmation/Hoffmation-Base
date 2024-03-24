@@ -1,7 +1,9 @@
 import { iRoomDevice } from './iRoomDevice';
 
-// TODO: Add missing Comments
 export interface iTvDevice extends iRoomDevice {
+  /**
+   * Whether the TV is currently on
+   */
   readonly on: boolean;
 
   /**

@@ -128,7 +128,7 @@ export interface iConfig {
    * The settings for the translation-service.
    * The translation-service is used to provide certain messages in the desired language.
    * Currently only german and english are supported.
-   * !!Warning!!: The translation-service is not yet fully implemented and only used in some cases.
+   * @warning The translation-service is not yet fully implemented and only used in some cases.
    */
   translationSettings: iTranslationSettings;
   /**

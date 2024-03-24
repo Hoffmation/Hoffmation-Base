@@ -6,9 +6,10 @@ import { Utils } from '../utils';
 import { MuellTonne } from './muell-tonne';
 import { TimeCallbackService } from '../time-callback-service';
 import { iSpeaker } from '../../devices';
+import { NameDatePair } from './name-date-pair';
 
 export class MuellService {
-  public static alleTonnen: Array<{ name: string; date: Date }> = [];
+  public static alleTonnen: NameDatePair[] = [];
   public static blaueTonne: MuellTonne;
   public static graueTonne: MuellTonne;
   public static gelbeTonne: MuellTonne;

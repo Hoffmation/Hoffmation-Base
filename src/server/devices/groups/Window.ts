@@ -76,7 +76,7 @@ export class Window extends BaseGroup {
           return;
         }
         this.getVibration().forEach((element) => {
-          element.vibrationBlockedByGriff = true;
+          element.vibrationBlockedByHandle = true;
         });
         const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().settings.rolloOffset);
         ShutterService.windowAllToPosition(
@@ -92,7 +92,7 @@ export class Window extends BaseGroup {
       griff.addOffenCallback((offen: boolean) => {
         if (offen) {
           this.getVibration().forEach((element) => {
-            element.vibrationBlockedByGriff = true;
+            element.vibrationBlockedByHandle = true;
           });
           ShutterService.windowAllToPosition(
             this,
@@ -112,8 +112,8 @@ export class Window extends BaseGroup {
           this.getVibration().forEach((element) => {
             this.log(LogLevel.Debug, `Starte Timeout für Vibrationsdeaktivierung für ${element.info.customName}`);
             Utils.guardedTimeout(() => {
-              if (element.vibrationBlockedByGriffTimeStamp < now) {
-                element.vibrationBlockedByGriff = false;
+              if (element.vibrationBlockedByHandleTimeStamp < now) {
+                element.vibrationBlockedByHandle = false;
               }
             }, 12000);
           });

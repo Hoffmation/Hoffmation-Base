@@ -4,7 +4,7 @@ import { LogDebugType } from '../server';
 export interface iIdHolder {
   /**
    * The id of the object.
-   * !!Warning!! This should be unique across all objects
+   * @warning This should be unique across all objects
    */
   readonly id: string;
   /**

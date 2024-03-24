@@ -2,14 +2,24 @@ import { iRoomDevice } from './iRoomDevice';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
-// TODO: Add missing Comments
 export interface iTemperatureSensor extends iRoomDevice {
+  /**
+   * The interval to persist the temperature sensor information
+   * Mainly used to enforce implementation
+   */
   readonly persistTemperatureSensorInterval: NodeJS.Timeout;
+  /**
+   * The current room temperature as a number in Celsius
+   */
   roomTemperature: number;
-  // Temperature as a number in Celsius
-  iTemperature: number;
+  /**
+   * The devices measured Temperature as a number in Celsius
+   */
+  readonly iTemperature: number;
 
-  // Temperature as a string in Celsius
+  /**
+   * Formatted Temperature as a string in Celsius
+   */
   sTemperature: string;
 
   /**

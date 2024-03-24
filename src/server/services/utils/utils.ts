@@ -4,6 +4,9 @@ import _ from 'lodash';
 import { Res } from '../Translation';
 import { iPersist } from '../dbo';
 import { SettingsService } from '../settings-service';
+import { CatchEmResult } from './catchEmResult';
+import { iTimePair } from '../../config';
+import { RGB } from './RGB';
 
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 
@@ -18,7 +21,7 @@ export class Utils {
     return new Date(Utils.nowMS() + DAYMS).setHours(0, 0, 0, 0) - Utils.nowMS();
   }
 
-  public static async catchEm<T>(promise: Promise<T>): Promise<{ reason: Error | null; data: T | null }> {
+  public static async catchEm<T>(promise: Promise<T>): Promise<CatchEmResult<T>> {
     return promise
       .then((data: T) => ({
         reason: null,
@@ -187,7 +190,7 @@ export class Utils {
     return date <= endDate && date >= startDate;
   }
 
-  public static nowTime(): { hours: number; minutes: number } {
+  public static nowTime(): iTimePair {
     const now = new Date();
     return { hours: now.getHours(), minutes: now.getMinutes() };
   }
@@ -309,7 +312,7 @@ export class Utils {
     return hex;
   }
 
-  public static hexToRgb(color: string): { r: number; g: number; b: number } | null {
+  public static hexToRgb(color: string): RGB | null {
     let hex: string | null = Utils.formatHex(color);
     if (hex === null) {
       return null;

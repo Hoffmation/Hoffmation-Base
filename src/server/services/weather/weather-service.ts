@@ -1,5 +1,3 @@
-import { WeatherHourly } from './weather-hourly';
-import { WeatherCurrent } from './weather-current';
 import { WeatherMinutes } from './weather-minutes';
 import { WeatherAlert } from './weather-alert';
 import { iWeatherSettings } from '../../config';
@@ -8,22 +6,11 @@ import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
 import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
-import { WeatherDaily } from './weather-daily';
 import SunCalc from 'suncalc';
 import { TimeCallbackService } from '../time-callback-service';
 import { iSpeaker } from '../../devices';
-
-export interface WeatherResponse {
-  lat: number;
-  lon: number;
-  timezone: string;
-  timezone_offset: number;
-  current: WeatherCurrent;
-  minutely: WeatherMinutes[];
-  hourly: WeatherHourly[];
-  daily: WeatherDaily[];
-  alerts?: WeatherAlert[];
-}
+import { WeatherResponse } from './weather-response';
+import { RainNextMinutesInfo } from './rain-next-minutes-info';
 
 export class WeatherService {
   public static active: boolean = false;
@@ -258,7 +245,7 @@ export class WeatherService {
     return wData.current.clouds;
   }
 
-  private static getRainNextMinutes(): { minutes: number; precipitation: number } {
+  private static getRainNextMinutes(): RainNextMinutesInfo {
     const minutes: WeatherMinutes[] = WeatherService.lastResponse.minutely;
     let minutesUsed = 0;
     let precipitation = 0;

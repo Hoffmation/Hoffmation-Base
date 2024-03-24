@@ -13,7 +13,7 @@ import {
   RoomBase,
 } from '../../../models';
 import { LogDebugType, ServerLogService } from '../log-service';
-import { Utils } from '../utils';
+import { RGB, Utils } from '../utils';
 import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { API } from '../api';
@@ -228,7 +228,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (color === this._color) {
       return;
     }
-    const colors: { r: number; g: number; b: number } | null = Utils.hexToRgb(color);
+    const colors: RGB | null = Utils.hexToRgb(color);
     if (colors === null) {
       this.log(LogLevel.Error, `Govee set color resulted in error: ${color} is not a valid color`);
       return;

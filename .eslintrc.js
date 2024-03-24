@@ -32,7 +32,6 @@ module.exports = {
     'jsdoc/check-param-names': 'error', // Recommended
     'jsdoc/check-property-names': 'error', // Recommended
     'jsdoc/check-syntax': 'error',
-    'jsdoc/check-tag-names': 'error', // Recommended
     'jsdoc/check-types': 'error', // Recommended
     'jsdoc/check-values': 'error', // Recommended
     'jsdoc/empty-tags': 'error', // Recommended
@@ -45,7 +44,6 @@ module.exports = {
     'jsdoc/no-defaults': 'error',
     'jsdoc/no-multi-asterisks': 'error', // Recommended
     'jsdoc/no-types': ['error', { contexts: ['any'] }], // Recommended
-    'jsdoc/no-undefined-types': 'error', // Recommended
     'jsdoc/require-asterisk-prefix': 'error',
     'jsdoc/require-description': 'error',
     'jsdoc/require-hyphen-before-param-description': 'error',
@@ -66,8 +64,7 @@ module.exports = {
     'jsdoc/sort-tags': 'error',
     'jsdoc/tag-lines': 'error', // Recommended
     'jsdoc/valid-types': 'error', // Recommended
-    'jsdoc/require-jsdoc': ['error', { contexts: ['TSMethodSignature'], publicOnly: true }],
-    // 'jsdoc/require-jsdoc': ['error', { contexts: ['TSMethodSignature', 'TSPropertySignature'], publicOnly: true }],
+    'jsdoc/require-jsdoc': ['error', { contexts: ['TSMethodSignature', 'TSPropertySignature'], publicOnly: true }],
   },
   overrides: [
     {

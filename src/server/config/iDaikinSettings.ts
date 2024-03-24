@@ -14,7 +14,7 @@ export interface iDaikinSettings {
   useGetToPost?: boolean;
   /**
    * Whether Room Default Callbacks should be added to start ac on Bottom Right short and stop on long button press.
-   * !!Warning!! This can collide with Sonos-Control (@see {@link iSonosSettings.buttonBotRightForRadio})
+   * @warning This can collide with Sonos-Control (@see {@link iSonosSettings.buttonBotRightForRadio})
    */
   buttonBotRightForAc?: boolean;
 }

@@ -233,7 +233,7 @@ export class RoomService {
 
   private static restoreShutterPositions(c: RoomRestoreShutterPositionCommand): void {
     for (const room of this.Rooms.values()) {
-      room.WindowGroup?.restoreRolloPosition(c);
+      room.WindowGroup?.restoreShutterPosition(c);
     }
   }
 

@@ -5,8 +5,21 @@ import { iBatteryDevice, iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import * as console from 'console';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor, iBatteryDevice {
+  public get vibration(): boolean {
+    return this._vibration;
+  }
+
+  public get vibrationBlockedByMotionTimeStamp(): number {
+    return this._vibrationBlockedByMotionTimeStamp;
+  }
+
+  public get vibrationBlockedByHandleTimeStamp(): number {
+    return this._vibrationBlockedByHandleTimeStamp;
+  }
+
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   public get lastBatteryPersist(): number {
@@ -25,9 +38,9 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   public tiltAngleYAbs: number = 0;
   public tiltAngleZ: number = 0;
   public tilt: boolean = false;
-  public vibration: boolean = false;
-  public vibrationBlockedByGriffTimeStamp: number = 0;
-  public vibrationBlockedByMotionTimeStamp: number = 0;
+  private _vibration: boolean = false;
+  private _vibrationBlockedByHandleTimeStamp: number = 0;
+  private _vibrationBlockedByMotionTimeStamp: number = 0;
   private _idSensitivity: string = '';
   private _alarmMessage: string;
 
@@ -44,14 +57,14 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
 
   private _vibrationBlockedByGriff: boolean = false;
 
-  public get vibrationBlockedByGriff(): boolean {
+  public get vibrationBlockedByHandle(): boolean {
     return this._vibrationBlockedByGriff;
   }
 
-  public set vibrationBlockedByGriff(pVal: boolean) {
+  public set vibrationBlockedByHandle(pVal: boolean) {
     this.log(LogLevel.Debug, `${pVal ? 'disa' : 'a'}rming vibration alarm for ${this.info.customName} due to handle`);
     if (pVal) {
-      this.vibrationBlockedByGriffTimeStamp = new Date().getTime();
+      this._vibrationBlockedByHandleTimeStamp = new Date().getTime();
     }
     this._vibrationBlockedByGriff = pVal;
   }
@@ -68,7 +81,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
       `${pVal ? 'Dea' : 'A'}ktiviere Vibrationsalarm für ${this.info.customName} in Bezug auf Bewegung`,
     );
     if (pVal) {
-      this.vibrationBlockedByMotionTimeStamp = Utils.nowMS();
+      this._vibrationBlockedByMotionTimeStamp = Utils.nowMS();
     }
     this._vibrationBlockedByMotion = pVal;
   }
@@ -117,8 +130,8 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
           initial ? LogLevel.DeepTrace : LogLevel.Trace,
           `Vibrationssensor Update für ${this.info.customName} auf Vibration erkannt: ${state.val}`,
         );
-        this.vibration = state.val as boolean;
-        if (this.vibration) {
+        this._vibration = state.val as boolean;
+        if (this._vibration) {
           Utils.guardedTimeout(
             () => {
               this.alarmCheck();

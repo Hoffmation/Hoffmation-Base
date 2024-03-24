@@ -1,5 +1,5 @@
 import { DeviceInfo, Devices, DeviceType, iEnergyManager, iExcessEnergyConsumer } from '../../devices';
-import { EnergyManagerUtils, Utils } from '../utils';
+import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../utils';
 import { EnergyCalculation, LogLevel, TimeOfDay, VictronDeviceSettings } from '../../../models';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { LogDebugType, ServerLogService } from '../log-service';
@@ -13,7 +13,7 @@ export class VictronDevice implements iEnergyManager {
   public readonly settings: VictronDeviceSettings;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private blockDeviceChangeTime: number = -1;
-  private _lastDeviceChange: undefined | { newState: boolean; device: iExcessEnergyConsumer };
+  private _lastDeviceChange: undefined | EnergyConsumerStateChange;
   private _iCalculationInterval: NodeJS.Timeout | null = null;
   private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
   private _lastPersistenceCalculation: number = Utils.nowMS();

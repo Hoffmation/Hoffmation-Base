@@ -2,7 +2,7 @@ import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { iEnergyManager, iExcessEnergyConsumer } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { EnergyCalculation, LogLevel } from '../../../models';
-import { EnergyManagerUtils, iDisposable, Utils } from '../../services';
+import { EnergyConsumerStateChange, EnergyManagerUtils, iDisposable, Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { PhaseState } from '../models';
@@ -17,7 +17,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   private _powerValuePhaseB: number = -1;
   private _powerValuePhaseC: number = -1;
   private blockDeviceChangeTime: number = -1;
-  private _lastDeviceChange: undefined | { newState: boolean; device: iExcessEnergyConsumer };
+  private _lastDeviceChange: undefined | EnergyConsumerStateChange;
 
   public constructor(info: IoBrokerDeviceInfo) {
     super(info, DeviceType.JsEnergyManager);

@@ -132,7 +132,7 @@ export class WindowGroup extends BaseGroup {
     });
   }
 
-  public restoreRolloPosition(c: RoomRestoreShutterPositionCommand): void {
+  public restoreShutterPosition(c: RoomRestoreShutterPositionCommand): void {
     if (!c.recalc) {
       this.windows.forEach((f) => {
         f.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));

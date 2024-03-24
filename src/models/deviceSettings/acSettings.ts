@@ -18,7 +18,7 @@ export class AcSettings extends DeviceSettings {
   public useOwnTemperature: boolean = false;
   /**
    * Whether the AC should use automatic mode to decide on its own whether to heat or cool
-   * !!Warning!! This can result in excessive energy consumption, as overshooting the temperature can result in the AC switching to the opposite mode
+   * @warning This can result in excessive energy consumption, as overshooting the temperature can result in the AC switching to the opposite mode
    */
   public useAutomatic: boolean = false;
 

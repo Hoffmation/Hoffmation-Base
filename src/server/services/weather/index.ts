@@ -7,3 +7,5 @@ export * from './weather-item';
 export * from './weather-minutes';
 export * from './weather-service';
 export * from './weather-temp';
+export { WeatherResponse } from './weather-response';
+export { RainNextMinutesInfo } from './rain-next-minutes-info';

@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-jsdoc */
 /**
  * !!Ported from liquid pid!!!!
  * Control the PWM relays from the temperature
