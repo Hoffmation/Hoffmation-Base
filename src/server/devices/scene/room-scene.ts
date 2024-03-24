@@ -56,10 +56,6 @@ export class RoomScene implements iScene {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
   private _automaticEndTimeout: NodeJS.Timeout | null = null;
 
   public get automaticEndTimeout(): NodeJS.Timeout | null {

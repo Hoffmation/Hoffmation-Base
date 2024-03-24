@@ -53,6 +53,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   protected _currentLevel: number = -1;
 
+  /** @inheritDoc */
   public get currentLevel(): number {
     if (this._setLevel !== -1 && this._currentLevel !== this._setLevel) {
       return this._setLevel;
@@ -60,6 +61,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     return this._currentLevel;
   }
 
+  /** @inheritDoc */
   public set currentLevel(value: number) {
     if (value !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
       value = this._setLevel;
@@ -75,14 +77,17 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   protected _window?: Window;
 
+  /** @inheritDoc */
   public get window(): Window | undefined {
     return this._window;
   }
 
+  /** @inheritDoc */
   public set window(value: Window | undefined) {
     this._window = value;
   }
 
+  /** @inheritDoc */
   public get desiredWindowShutterLevel(): number {
     if (this._window === undefined) {
       return -1;
@@ -90,14 +95,17 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     return this._window.desiredPosition;
   }
 
+  /** @inheritDoc */
   public persist(): void {
     Utils.dbo?.persistShutter(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     super.update(idSplit, state, initial, pOverride);
   }
 
+  /** @inheritDoc */
   public setLevel(c: ShutterSetLevelCommand): void {
     let pPosition: number = c.level;
     if (!this._firstCommandRecieved && !c.isInitial) {
@@ -136,6 +144,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this.moveToPosition(pPosition);
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<IoBrokerBaseDevice> {
     return _.omit(super.toJSON(), ['_window']);
   }

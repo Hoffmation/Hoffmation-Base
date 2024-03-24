@@ -47,6 +47,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
     Utils.dbo?.persistIlluminationSensor(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Motion update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

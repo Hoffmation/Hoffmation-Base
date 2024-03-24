@@ -12,6 +12,7 @@ export class ZigbeeIkeaShutter extends ZigbeeShutter {
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     switch (idSplit[3]) {
       case 'position':

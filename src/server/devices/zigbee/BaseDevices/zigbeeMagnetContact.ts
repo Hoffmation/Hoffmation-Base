@@ -9,10 +9,12 @@ import { iBatteryDevice, iMagnetSensor } from '../../baseDeviceInterfaces';
 export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice, iMagnetSensor {
   protected _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  /** @inheritDoc */
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
 
+  /** @inheritDoc */
   public get battery(): number {
     return this._battery;
   }
@@ -32,14 +34,17 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
     super(pInfo, deviceType);
   }
 
+  /** @inheritDoc */
   public addOpenCallback(pCallback: (pValue: boolean) => void): void {
     this._openCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public addClosedCallback(pCallback: (pValue: boolean) => void): void {
     this._closedCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverrride: boolean = false): void {
     super.update(idSplit, state, initial, pOverrride);
     switch (idSplit[3]) {
@@ -120,6 +125,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
     }
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this._iOpenTimeout) {
       clearInterval(this._iOpenTimeout);
@@ -128,6 +134,7 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
     super.dispose();
   }
 
+  /** @inheritDoc */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {

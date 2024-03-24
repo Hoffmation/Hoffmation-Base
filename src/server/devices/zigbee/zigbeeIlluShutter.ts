@@ -22,6 +22,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     this._movementStateId = `${this.info.fullID}.position`;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     switch (idSplit[3]) {
       case 'position':

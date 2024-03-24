@@ -28,18 +28,21 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
 
   protected _color: string = '#fcba32';
 
+  /** @inheritDoc */
   public get color(): string {
     return this._color;
   }
 
   protected _colortemp: number = 500;
 
+  /** @inheritDoc */
   public get colortemp(): number {
     return this._colortemp;
   }
 
   // private effectID: string = '';
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `LED Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial);
@@ -60,6 +63,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
     this.setLight(LedSetLightCommand.byTimeBased(this.settings, c));
   }
 
+  /** @inheritDoc */
   public override setActuator(c: ActuatorSetStateCommand): void {
     this.setLight(new LedSetLightCommand(c, c.on, '', c.timeout));
   }

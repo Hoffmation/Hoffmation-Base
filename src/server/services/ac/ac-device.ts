@@ -43,18 +43,22 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   protected _mode: AcMode = AcMode.Off;
   private _movementCallbackAdded: boolean = false;
 
+  /** @inheritDoc */
   public get temperature(): number {
     return this._roomTemperature;
   }
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get room(): RoomBase | undefined {
     return this._room;
   }
 
+  /** @inheritDoc */
   public set room(room: RoomBase | undefined) {
     this._room = room;
     if (room !== undefined && !this._movementCallbackAdded) {
@@ -64,6 +68,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
   }
 
+  /** @inheritDoc */
   public get mode(): AcMode {
     return this._mode;
   }
@@ -86,16 +91,19 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
+  /** @inheritDoc */
   public get energySettings(): ExcessEnergyConsumerSettings {
     return this.settings.energySettings;
   }
 
   private _roomTemperature: number = 0;
 
+  /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
   }
 
+  /** @inheritDoc */
   public get info(): DeviceInfo {
     return this._info;
   }
@@ -104,27 +112,30 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._roomTemperature = val;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
   public abstract get deviceType(): DeviceType;
 
+  /**
+   * The name of this device
+   * @returns The human readable name of this device
+   */
   public get name(): string {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `ac-${this.info.room}-${this.info.customName}`;
   }
 
   public abstract get on(): boolean;
 
+  /** @inheritDoc */
   public restoreTargetAutomaticValue(): void {
     this.log(LogLevel.Debug, `Restore Target Automatic value`);
     this.automaticCheck();
   }
 
+  /** @inheritDoc */
   public isAvailableForExcessEnergy(): boolean {
     if (this.settings.useAutomatic || (this.room?.HeatGroup?.settings.automaticMode && this.settings.heatingAllowed)) {
       return false;
@@ -145,6 +156,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this.calculateDesiredMode() !== AcMode.Off;
   }
 
+  /** @inheritDoc */
   public calculateDesiredMode(): AcMode {
     const acOn: boolean = this.on;
     const heatGroup = this.room?.HeatGroup;
@@ -236,10 +248,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public abstract turnOn(): void;
 
+  /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
   }
 
+  /**
+   * Persists the current AC-Information to the database
+   */
   public persist(): void {
     if (!Utils.anyDboActive || this.on === undefined) {
       return;
@@ -247,6 +263,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     Utils.dbo?.persistAC(this);
   }
 
+  /** @inheritDoc */
   public turnOnForExcessEnergy(): void {
     if (this.blockAutomationHandler.automaticBlockActive) {
       return;
@@ -258,11 +275,18 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
   public abstract turnOff(): void;
 
+  /** @inheritDoc */
   public turnOffDueToMissingEnergy(): void {
     this.turnOff();
   }
 
-  // TODO: Migrate to new command system
+  /**
+   * Sets the state of the AC
+   * TODO: Migrate to new command system
+   * @param mode - The desired mode
+   * @param desiredTemp - The desired temperature (if unset it will be calculated)
+   * @param forceTime - The time in ms to force the AC to stay in this state (default 1h)
+   */
   public setState(mode: AcMode, desiredTemp?: number, forceTime: number = 60 * 60 * 1000): void {
     this.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Unknown, forceTime));
     this._mode = mode;
@@ -274,6 +298,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.turnOn();
   }
 
+  /** @inheritDoc */
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
@@ -283,14 +308,17 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     });
   }
 
+  /** @inheritDoc */
   public wasActivatedByExcessEnergy(): boolean {
     return this._activatedByExcessEnergy;
   }
 
+  /** @inheritDoc */
   public loadDeviceSettings(): void {
     this.settings.initializeFromDb(this);
   }
 
+  /** @inheritDoc */
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
@@ -340,6 +368,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.restoreTargetAutomaticValue();
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<AcDevice> {
     // eslint-disable-next-line
     const result: any = _.omit(this, ['room', '_room']);

@@ -36,6 +36,15 @@ export interface iCameraDevice extends iMotionSensor {
   readonly alarmBlockedByDevices: boolean;
 
   /**
+   * Whether the camera has currently detected a dog
+   */
+  readonly dogDetected: boolean;
+  /**
+   * Whether the camera has currently detected a human
+   */
+  readonly personDetected: boolean;
+
+  /**
    * Inform this camera of a device, which blocks the alarm (or should unlift its block)
    * @param device - The device to block/unblock the alarm for
    * @param block - Whether to block the alarm for the device or lift the block

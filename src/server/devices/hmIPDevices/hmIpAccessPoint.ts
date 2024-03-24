@@ -14,6 +14,7 @@ export class HmIpAccessPoint extends HmIPDevice {
     return this._ip;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `AP Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

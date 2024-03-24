@@ -85,6 +85,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     Utils.dbo?.persistShutter(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Rollo Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

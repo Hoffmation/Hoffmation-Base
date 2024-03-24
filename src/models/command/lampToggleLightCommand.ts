@@ -24,7 +24,7 @@ export class LampToggleLightCommand extends ActuatorToggleCommand {
     super(source, reason);
   }
 
-  public override get logMessage(): string {
+  public get logMessage(): string {
     return `Lamp toggleLight for reason: ${this.reasonTrace}`;
   }
 }

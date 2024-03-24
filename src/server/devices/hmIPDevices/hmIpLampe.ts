@@ -47,6 +47,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     this.setLight(new LampSetLightCommand(c, this.targetAutomaticState));
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Lampen Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     this.queuedValue = null;

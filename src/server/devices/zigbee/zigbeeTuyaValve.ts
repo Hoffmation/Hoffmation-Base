@@ -6,7 +6,7 @@ import { Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeTuyaValve extends ZigbeeHeater {
-  private _setLocalTempCalibrationId: string;
+  private readonly _setLocalTempCalibrationId: string;
   private _targetTempVal: number = UNDEFINED_TEMP_VALUE;
   private _localTempVal: number = UNDEFINED_TEMP_VALUE;
   private _localDiffTempVal: number = 0;
@@ -23,10 +23,6 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
   public override set seasonTurnOff(value: boolean) {
     this._seasonTurnOff = value;
     this.setMode(value ? 'off' : 'auto');
-  }
-
-  public override get roomTemperatur(): number {
-    return this._roomTemperature;
   }
 
   public override set roomTemperatur(value: number) {
@@ -46,6 +42,7 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
     return this._targetTempVal - (this._localTempVal + this._localDiffTempVal);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     switch (idSplit[3]) {
       case 'valve_position':

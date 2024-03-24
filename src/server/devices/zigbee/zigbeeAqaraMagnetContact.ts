@@ -9,6 +9,7 @@ export class ZigbeeAqaraMagnetContact extends ZigbeeMagnetContact {
     super(pInfo, DeviceType.ZigbeeAqaraMagnetContact);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Magnet Contact Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

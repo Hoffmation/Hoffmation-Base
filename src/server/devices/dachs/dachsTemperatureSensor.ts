@@ -42,18 +42,17 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     Utils.guardedTimeout(this.loadDeviceSettings, 200, this);
   }
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get info(): DeviceInfo {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
+  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `dachs-${this.info.room}-${this.info.customName}`;
   }
@@ -62,22 +61,27 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get room(): RoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
+  /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
   }
 
+  /** @inheritDoc */
   public set roomTemperature(value: number) {
     this._roomTemperature = value;
   }
 
+  /** @inheritDoc */
   public get iTemperature(): number {
     return this._temperature;
   }
 
+  /** @inheritDoc */
   public get sTemperature(): string {
     return `${this._temperature}°C`;
   }
@@ -95,6 +99,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     this.temperature = newTemp;
   }
 
+  /** @inheritDoc */
   public addTempChangeCallback(pCallback: (pValue: number) => void): void {
     this._temperaturCallbacks.push(pCallback);
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
@@ -102,14 +107,17 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     }
   }
 
+  /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperature = newTemperatur;
   }
 
+  /** @inheritDoc */
   public persistTemperaturSensor(): void {
     Utils.dbo?.persistTemperatureSensor(this);
   }
 
+  /** @inheritDoc */
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
@@ -119,10 +127,12 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     });
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<OwnSonosDevice> {
     return Utils.jsonFilter(_.omit(this, ['room', 'client', 'config', '_influxClient']));
   }
 
+  /** @inheritDoc */
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
@@ -133,6 +143,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     );
   }
 
+  /** @inheritDoc */
   public loadDeviceSettings(): void {
     this.settings?.initializeFromDb(this);
   }

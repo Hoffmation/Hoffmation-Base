@@ -28,6 +28,14 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   private deviceMap: Map<string, DetectedBluetoothDevice> = new Map<string, DetectedBluetoothDevice>();
   private proximityCallbackMap: Map<string, ProximityCallback[]> = new Map<string, ProximityCallback[]>();
 
+  /**
+   * Creates a new instance of the EspresenseDevice class
+   * @param name - The desired name of the device
+   * @param roomName - The name of the room this device is in {@link iRoomBase.roomName}
+   * @param x - The x coordinate of the device in the house
+   * @param y - The y coordinate of the device in the house
+   * @param z - The z coordinate of the device in the house
+   */
   public constructor(name: string, roomName: string, x: number, y: number, z: number) {
     this.position = new TrilaterationBasePoint(x, y, z, roomName);
     this.name = name;
@@ -43,28 +51,29 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     Trilateration.basePoints.push(this.position);
   }
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
   protected _info: DeviceInfo;
 
+  /** @inheritDoc */
   public get info(): DeviceInfo {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
+  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `espresense-${this.info.room}-${this.info.customName}`;
   }
 
+  /** @inheritDoc */
   public get room(): RoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
+  /** @inheritDoc */
   public distanceOfDevice(deviceName: string, maxAge: number = 60): number | undefined {
     for (const dev of this.deviceMap.values()) {
       if (dev.name != deviceName) {
@@ -76,10 +85,16 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     return undefined;
   }
 
+  /** @inheritDoc */
   public isDevicePresent(deviceName: string, maxDistance: number, maxAge: number = 60): boolean {
     return (this.distanceOfDevice(deviceName, maxAge) ?? 99) < maxDistance;
   }
 
+  /**
+   * Updates the device with the given state
+   * @param devName - The name of the bluetooth device
+   * @param state - The state containing the json-formatted distance data
+   */
   public update(devName: string, state: ioBroker.State): void {
     let data = null;
     try {
@@ -121,6 +136,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     }
   }
 
+  /** @inheritDoc */
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
@@ -130,10 +146,12 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     });
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<iRoomDevice> {
     return Utils.jsonFilter(this);
   }
 
+  /** @inheritDoc */
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
@@ -144,10 +162,12 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     );
   }
 
+  /** @inheritDoc */
   public loadDeviceSettings(): void {
     // Nothing
   }
 
+  /** @inheritDoc */
   public addProximityCallback(cb: ProximityCallback): void {
     let currentValue: ProximityCallback[] | undefined = this.proximityCallbackMap.get(cb.deviceName);
     if (currentValue == undefined) {

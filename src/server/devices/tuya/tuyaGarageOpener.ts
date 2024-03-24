@@ -24,6 +24,7 @@ export class TuyaGarageOpener extends TuyaDevice implements iGarageDoorOpener {
     this._doorContactId = `${this.info.fullID}.3`;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     const fullId = idSplit.join('.');
     switch (fullId) {

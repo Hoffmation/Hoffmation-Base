@@ -59,6 +59,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     this._closedCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Griff Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

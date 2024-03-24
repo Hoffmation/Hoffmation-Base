@@ -55,6 +55,7 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
     this.deviceCapabilities.push(DeviceCapability.buttonSwitch);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Wippe Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

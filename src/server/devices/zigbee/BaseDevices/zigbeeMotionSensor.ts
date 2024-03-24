@@ -7,39 +7,18 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
-  private _movementDetected: boolean = false;
-
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
   /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
-
-  public get movementDetected(): boolean {
-    if (!this.available) {
-      // If the device is not available, there is no active movement
-      return false;
-    }
-
-    if (Utils.nowMS() - this.lastUpdate.getTime() > 3600000) {
-      // If the device has not been updated for more than an hour, there is no active movement
-      return false;
-    }
-
-    return this._movementDetected;
-  }
-
-  public get battery(): number {
-    return this._battery;
-  }
-
+  /** @inheritDoc */
+  public detectionsToday: number = 0;
   protected _initialized: boolean = false;
   protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
+  protected _timeSinceLastMotion: number = 0;
+  private _movementDetected: boolean = false;
+  private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
@@ -61,31 +40,47 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     }
   }
 
-  protected _timeSinceLastMotion: number = 0;
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
+  /** @inheritDoc */
+  public get movementDetected(): boolean {
+    if (!this.available) {
+      // If the device is not available, there is no active movement
+      return false;
+    }
+
+    if (Utils.nowMS() - this.lastUpdate.getTime() > 3600000) {
+      // If the device has not been updated for more than an hour, there is no active movement
+      return false;
+    }
+
+    return this._movementDetected;
+  }
+
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
+  }
 
   // Time since last motion in seconds
+  /** @inheritDoc */
   public get timeSinceLastMotion(): number {
     return this._timeSinceLastMotion;
-  }
-
-  protected _detectionsToday: number = 0;
-
-  public get detectionsToday(): number {
-    return this._detectionsToday;
-  }
-
-  public set detectionsToday(pVal: number) {
-    this._detectionsToday = pVal;
   }
 
   /**
    * Adds a callback for when a motion state has changed.
    * @param pCallback - Function that accepts the new state as parameter
    */
+  /** @inheritDoc */
   public addMovementCallback(pCallback: (newState: boolean) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
   }
@@ -134,6 +129,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     }
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Motion update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, pOverride);
@@ -159,6 +155,16 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     }
   }
 
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
   private resetFallbackTimeout(): void {
     if (this._fallBackTimeout) {
       this.log(LogLevel.Trace, `Fallback Timeout zurücksetzen`);
@@ -179,14 +185,5 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       270000,
       this,
     );
-  }
-
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
   }
 }

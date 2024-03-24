@@ -145,6 +145,7 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     }
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean = false): void {
     this.log(
       LogLevel.DeepTrace,

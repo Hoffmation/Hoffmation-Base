@@ -14,17 +14,6 @@ export class CameraDevice implements iCameraDevice {
    * The name of the camera in BlueIris
    */
   public readonly blueIrisName: string;
-  private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
-  private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
-  private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
-  private _personDetectedStateId: string | undefined = undefined;
-  private _dogDetectedStateId: string | undefined = undefined;
-  private _movementDetectedStateId: string | undefined = undefined;
-
-  public get lastImage(): string {
-    return this._lastImage;
-  }
-
   /** @inheritDoc */
   public settings: CameraSettings = new CameraSettings();
   /** @inheritDoc */
@@ -35,13 +24,6 @@ export class CameraDevice implements iCameraDevice {
    * The human readable name of this device
    */
   public readonly name: string;
-  protected _lastMotion: number = 0;
-  private _initialized: boolean = false;
-  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
-  private _lastImage: string = '';
-  private _personDetected: boolean = false;
-  private _dogDetected: boolean = false;
-  private _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
   /** @inheritDoc */
   public readonly mpegStreamLink: string = '';
   /** @inheritDoc */
@@ -50,18 +32,23 @@ export class CameraDevice implements iCameraDevice {
   public readonly rtspStreamLink: string = '';
   /** @inheritDoc */
   public readonly currentImageLink: string = '';
-
-  public get dogDetected(): boolean {
-    return this._dogDetected;
-  }
-
-  public get personDetected(): boolean {
-    return this._personDetected;
-  }
-
-  public get alarmBlockedByDevices(): boolean {
-    return this._devicesBlockingAlarmMap.size > 0;
-  }
+  /** @inheritDoc */
+  public detectionsToday: number = 0;
+  protected _lastMotion: number = 0;
+  private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
+  private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
+  private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
+  private _personDetectedStateId: string | undefined = undefined;
+  private _dogDetectedStateId: string | undefined = undefined;
+  private _movementDetectedStateId: string | undefined = undefined;
+  private _initialized: boolean = false;
+  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+  private _lastImage: string = '';
+  private _personDetected: boolean = false;
+  private _dogDetected: boolean = false;
+  private _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
+  private _movementDetected: boolean = false;
+  private _info: DeviceInfo;
 
   public constructor(mqttName: string, roomName: string, blueIrisName: string) {
     this.blueIrisName = blueIrisName;
@@ -100,30 +87,34 @@ export class CameraDevice implements iCameraDevice {
     }
   }
 
-  private _detectionsToday: number = 0;
-
-  public get detectionsToday(): number {
-    return this._detectionsToday;
+  /** @inheritDoc */
+  public get lastImage(): string {
+    return this._lastImage;
   }
 
-  public set detectionsToday(pVal: number) {
-    this._detectionsToday = pVal;
+  /** @inheritDoc */
+  public get dogDetected(): boolean {
+    return this._dogDetected;
   }
 
-  private _movementDetected: boolean = false;
+  /** @inheritDoc */
+  public get personDetected(): boolean {
+    return this._personDetected;
+  }
 
+  /** @inheritDoc */
+  public get alarmBlockedByDevices(): boolean {
+    return this._devicesBlockingAlarmMap.size > 0;
+  }
+
+  /** @inheritDoc */
   public get movementDetected(): boolean {
     return this._movementDetected;
   }
 
-  private _info: DeviceInfo;
-
+  /** @inheritDoc */
   public get info(): DeviceInfo {
     return this._info;
-  }
-
-  public set info(info: DeviceInfo) {
-    this._info = info;
   }
 
   /** @inheritDoc */
@@ -131,26 +122,27 @@ export class CameraDevice implements iCameraDevice {
     return Math.round((Utils.nowMS() - this._lastMotion) / 1000);
   }
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `camera-${this.info.room}-${this.info.customName}`;
   }
 
+  /** @inheritDoc */
   public get room(): RoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
-  /**
-   * Adds a callback for when a motion state has changed.
-   * @param pCallback - Function that accepts the new state as parameter
-   */
+  /** @inheritDoc */
   public addMovementCallback(pCallback: (newState: boolean) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public blockForDevice(device: iBaseDevice, block: boolean): void {
     if (block) {
       this._devicesBlockingAlarmMap.set(device.id, device);
@@ -163,10 +155,12 @@ export class CameraDevice implements iCameraDevice {
     );
   }
 
+  /** @inheritDoc */
   public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State): void {
     const stateName = idSplit[4];
     switch (stateName) {
@@ -219,7 +213,39 @@ export class CameraDevice implements iCameraDevice {
     }
   }
 
-  public updateMovement(newState: boolean): void {
+  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
+    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
+      debugType: debugType,
+      room: this.room?.roomName ?? '',
+      deviceId: this.name,
+      deviceName: this.name,
+    });
+  }
+
+  public toJSON(): Partial<iRoomDevice> {
+    return Utils.jsonFilter(
+      _.omit(this, [
+        // To reduce Byte-size on cyclic update
+        '_lastImage',
+      ]),
+    );
+  }
+
+  public persistDeviceInfo(): void {
+    Utils.guardedTimeout(
+      () => {
+        Utils.dbo?.addDevice(this);
+      },
+      5000,
+      this,
+    );
+  }
+
+  public loadDeviceSettings(): void {
+    this.settings?.initializeFromDb(this);
+  }
+
+  private updateMovement(newState: boolean): void {
     if (!this._initialized && newState) {
       this.log(LogLevel.Trace, `Movement recognized, but database initialization has not finished yet --> delay.`);
       Utils.guardedTimeout(
@@ -253,38 +279,6 @@ export class CameraDevice implements iCameraDevice {
     for (const c of this._movementDetectedCallback) {
       c(newState);
     }
-  }
-
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      room: this.room?.roomName ?? '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  public toJSON(): Partial<iRoomDevice> {
-    return Utils.jsonFilter(
-      _.omit(this, [
-        // To reduce Byte-size on cyclic update
-        '_lastImage',
-      ]),
-    );
-  }
-
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Utils.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  public loadDeviceSettings(): void {
-    this.settings?.initializeFromDb(this);
   }
 
   private resetPersonDetectFallbackTimer(): void {

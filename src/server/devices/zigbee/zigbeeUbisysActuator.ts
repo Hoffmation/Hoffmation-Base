@@ -17,10 +17,12 @@ export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
     return this.actuatorOn;
   }
 
+  /** @inheritDoc */
   public get loadPower(): number {
     return this._loadPower;
   }
 
+  /** @inheritDoc */
   public update(
     idSplit: string[],
     state: ioBroker.State,

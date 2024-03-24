@@ -15,6 +15,7 @@ export class TuyaDevice extends IoBrokerBaseDevice implements iDisposable {
     super(pInfo, pType);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     this.log(
       LogLevel.DeepTrace,

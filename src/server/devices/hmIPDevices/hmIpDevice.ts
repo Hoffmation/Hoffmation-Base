@@ -8,6 +8,7 @@ export class HmIPDevice extends IoBrokerBaseDevice {
     super(pInfo, pType);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     if (!pOverride) {
       this.log(LogLevel.Trace, `Keine Update Überschreibung :\n\tID: ${idSplit.join('.')}`);

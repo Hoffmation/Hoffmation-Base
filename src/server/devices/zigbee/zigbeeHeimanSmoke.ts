@@ -52,6 +52,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     PollyService.preloadTTS(this._messageAlarmEnd);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Smoke Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

@@ -14,8 +14,4 @@ export class ActuatorToggleCommand extends BaseCommand {
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }
-
-  public get logMessage(): string {
-    return `Actuator toggle for reason: ${this.reasonTrace}`;
-  }
 }

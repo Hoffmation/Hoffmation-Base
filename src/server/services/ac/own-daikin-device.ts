@@ -43,6 +43,7 @@ export class OwnDaikinDevice extends AcDevice {
     return this._device;
   }
 
+  /** @inheritDoc */
   public get on(): boolean {
     return this._on;
   }
@@ -60,6 +61,7 @@ export class OwnDaikinDevice extends AcDevice {
     void this.updateInfo();
   }
 
+  /** @inheritDoc */
   public setDesiredMode(mode: AcMode, writeToDevice: boolean = true, desiredTemp?: number): void {
     let newMode: number = -1;
     switch (mode) {
@@ -83,12 +85,14 @@ export class OwnDaikinDevice extends AcDevice {
     }
   }
 
+  /** @inheritDoc */
   public turnOn(): void {
     this.log(LogLevel.Info, `Turning on`);
     this.desiredState = Power.ON;
     this.setDesiredInfo();
   }
 
+  /** @inheritDoc */
   public turnOff(): void {
     this.log(LogLevel.Info, `Turning off`);
     this._activatedByExcessEnergy = false;
@@ -196,6 +200,7 @@ export class OwnDaikinDevice extends AcDevice {
     });
   }
 
+  /** @inheritDoc */
   public override toJSON(): Partial<OwnDaikinDevice> {
     // eslint-disable-next-line
     const result: any = _.omit(this, ['room', '_room', 'device', '_device']);

@@ -46,20 +46,14 @@ export class Dachs implements iBaseDevice, iActuator {
   private _tempHeatStorage: number = 0;
   private fetchedData: iFlattenedCompleteResponse | undefined;
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get actuatorOn(): boolean {
     return this._dachsOn;
-  }
-
-  public get tempWarmWater(): number {
-    return this._tempWarmWater;
-  }
-
-  public get tempHeatStorage(): number {
-    return this._tempHeatStorage;
   }
 
   public constructor(options: iDachsSettings) {
@@ -87,33 +81,34 @@ export class Dachs implements iBaseDevice, iActuator {
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
-  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
-    this.log(LogLevel.Debug, `Restore Target Automatic value`);
-    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
-  }
-
-  protected _info: DeviceInfo;
-
+  /** @inheritDoc */
   public get info(): DeviceInfo {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
+  protected _info: DeviceInfo;
 
+  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `sonos-${this.info.room}-${this.info.customName}`;
+  }
+
+  /** @inheritDoc */
+  public get room(): RoomBase | undefined {
+    return API.getRoom(this.info.room);
   }
 
   public get name(): string {
     return this.info.customName;
   }
 
-  public get room(): RoomBase | undefined {
-    return API.getRoom(this.info.room);
+  /** @inheritDoc */
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
+    this.log(LogLevel.Debug, `Restore Target Automatic value`);
+    this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
   }
 
+  /** @inheritDoc */
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
@@ -123,12 +118,14 @@ export class Dachs implements iBaseDevice, iActuator {
     });
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<OwnSonosDevice> {
     return Utils.jsonFilter(
       _.omit(this, ['room', 'client', 'config', '_influxClient', 'warmWaterSensor', 'heatStorageTempSensor']),
     );
   }
 
+  /** @inheritDoc */
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
@@ -139,6 +136,7 @@ export class Dachs implements iBaseDevice, iActuator {
     );
   }
 
+  /** @inheritDoc */
   public loadDeviceSettings(): void {
     this.settings.initializeFromDb(this);
   }
@@ -173,20 +171,24 @@ export class Dachs implements iBaseDevice, iActuator {
       });
   }
 
+  /** @inheritDoc */
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }
 
+  /** @inheritDoc */
   public setActuator(c: ActuatorSetStateCommand): void {
     LampUtils.setActuator(this, c);
   }
 
+  /** @inheritDoc */
   public toggleActuator(c: ActuatorToggleCommand): boolean {
     const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
     this.setActuator(setActuatorCommand);
     return setActuatorCommand.on;
   }
 
+  /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     if (!c.stateValue) {

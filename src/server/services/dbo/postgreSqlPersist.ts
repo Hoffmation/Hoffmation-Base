@@ -42,6 +42,7 @@ export class PostgreSqlPersist implements iPersist {
     this.psql = new Pool(this.config);
   }
 
+  /** @inheritDoc */
   addRoom(room: RoomBase): void {
     this.query(`
 insert into hoffmation_schema."BasicRooms" (name, etage)
@@ -53,6 +54,7 @@ values ('${room.roomName}',${room.etage})
     `);
   }
 
+  /** @inheritDoc */
   addDevice(device: iBaseDevice): void {
     this.query(`
 insert into hoffmation_schema."DeviceInfo" ("deviceid", "roomname", "alldeviceskey", "customname", "devtype")
@@ -67,6 +69,7 @@ values ('${device.id}','${device.info.room}','${device.info.allDevicesKey}','${d
     `);
   }
 
+  /** @inheritDoc */
   async getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition> {
     const dbResult: DesiredShutterPosition[] | null = await this.query<DesiredShutterPosition>(
       `SELECT position
@@ -87,6 +90,7 @@ Limit 1`,
     return new DesiredShutterPosition(-1);
   }
 
+  /** @inheritDoc */
   async motionSensorTodayCount(device: iMotionSensor): Promise<CountToday> {
     const dbResult: CountToday[] | null = await this.query<CountToday>(
       `SELECT Count(*) 
@@ -106,6 +110,7 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
     return new CountToday(0);
   }
 
+  /** @inheritDoc */
   getShutterCalibration(_device: iShutter): Promise<ShutterCalibration> {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
     return new Promise<ShutterCalibration>((_res, reject) => {
@@ -113,6 +118,7 @@ WHERE "deviceID" = '${device.id}' and "movementDetected" and date >= CURRENT_DAT
     });
   }
 
+  /** @inheritDoc */
   async initialize(): Promise<void> {
     await this.psql.connect();
     // Execute BasicRoomsDDL
@@ -389,6 +395,7 @@ $$;`,
     ServerLogService.writeLog(LogLevel.Info, `Postgres DB initialized`);
   }
 
+  /** @inheritDoc */
   public persistAC(device: iAcDevice): void {
     this.query(`
 insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date", "roomTemperature")
@@ -396,6 +403,7 @@ values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.te
     `);
   }
 
+  /** @inheritDoc */
   public persistActuator(device: iActuator): void {
     let percentage: number | undefined = undefined;
     if (device.deviceCapabilities.includes(DeviceCapability.dimmablelamp)) {
@@ -407,6 +415,7 @@ values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${p
     `);
   }
 
+  /** @inheritDoc */
   public persistHeater(device: iHeater): void {
     let roomTemp: number | null = device.roomTemperature;
     let desiredTemperature: number | null = device.desiredTemperature;
@@ -424,6 +433,7 @@ values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomT
     `);
   }
 
+  /** @inheritDoc */
   public persistHandleSensor(device: iHandleSensor): void {
     const currentPos: number = device.position;
     this.query(`
@@ -432,6 +442,7 @@ values ('${device.id}', ${currentPos}, '${new Date().toISOString()}');
     `);
   }
 
+  /** @inheritDoc */
   public persistSwitchInput(device: iButtonSwitch, pressType: ButtonPressType, buttonName: string): void {
     this.query(`
 insert into hoffmation_schema."ButtonSwitchPresses" ("deviceID", "pressType", "buttonName", "date")
@@ -439,6 +450,7 @@ values ('${device.id}', ${pressType}, '${buttonName}', '${new Date().toISOString
     `);
   }
 
+  /** @inheritDoc */
   public persistMotionSensor(device: iMotionSensor): void {
     this.query(`
 insert into hoffmation_schema."MotionSensorDeviceData" ("deviceID", "movementDetected", "date")
@@ -446,6 +458,7 @@ values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}
     `);
   }
 
+  /** @inheritDoc */
   public persistShutter(device: iShutter): void {
     const currentLevel: number | null = device.currentLevel >= 0 ? device.currentLevel : null;
     const desiredLevel: number | null = device.desiredWindowShutterLevel >= 0 ? device.desiredWindowShutterLevel : null;
@@ -455,6 +468,7 @@ values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desire
     `);
   }
 
+  /** @inheritDoc */
   public persistTemperatureSensor(device: iTemperatureSensor): void {
     let roomTemp: number | null = device.roomTemperature;
     if (roomTemp === UNDEFINED_TEMP_VALUE) {
@@ -466,6 +480,7 @@ values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', $
     `);
   }
 
+  /** @inheritDoc */
   public persistHumiditySensor(device: iHumiditySensor): void {
     this.query(`
 insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
@@ -473,6 +488,7 @@ values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
     `);
   }
 
+  /** @inheritDoc */
   public persistBatteryDevice(device: iBatteryDevice): void {
     this.query(`
 insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
@@ -480,6 +496,7 @@ values ('${device.id}', ${Utils.round(device.battery, 1)}, '${new Date().toISOSt
     `);
   }
 
+  /** @inheritDoc */
   public persistZigbeeDevice(device: ZigbeeDevice): void {
     const dateValue = device.lastUpdate.getTime() > 0 ? `'${device.lastUpdate.toISOString()}'` : 'null';
     this.query(`
@@ -488,16 +505,19 @@ values ('${device.id}', '${new Date().toISOString()}', ${device.available}, ${de
     `);
   }
 
+  /** @inheritDoc */
   public persistIlluminationSensor(device: iIlluminationSensor): void {
     this.query(`
 insert into hoffmation_schema."IlluminationSensorDeviceData" ("deviceID", "illumination", "date")
 values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString()}');`);
   }
 
+  /** @inheritDoc */
   public persistShutterCalibration(_data: ShutterCalibration): void {
     ServerLogService.writeLog(LogLevel.Warn, `Postgres doesn't support Shutter Calibration yet.`);
   }
 
+  /** @inheritDoc */
   public persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
 insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
@@ -507,6 +527,7 @@ values ('${new Date(calc.startMs).toISOString()}','${new Date(calc.endMs).toISOS
     `);
   }
 
+  /** @inheritDoc */
   public persistSettings(id: string, settings: string, customName: string): void {
     this.query(`
 insert into hoffmation_schema."Settings" (id, settings, customname, date)
@@ -519,6 +540,7 @@ values ('${id}','${settings}','${customName}', '${new Date().toISOString()}')
     `);
   }
 
+  /** @inheritDoc */
   public async loadSettings(id: string): Promise<string | undefined> {
     const dbResult: idSettings[] | null = await this.query<idSettings>(
       `SELECT settings, id, date

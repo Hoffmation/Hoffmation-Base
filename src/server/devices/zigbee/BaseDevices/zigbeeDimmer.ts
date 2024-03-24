@@ -47,30 +47,31 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
 
   protected _brightness: number = 0;
 
+  /** @inheritDoc */
   public get brightness(): number {
     return this._brightness;
   }
 
   protected _lightOn: boolean = false;
 
+  /** @inheritDoc */
   public get lightOn(): boolean {
     return this._lightOn;
   }
 
   protected _transitionTime: number = 0;
 
-  public get transitionTime(): number {
-    return this._transitionTime;
-  }
-
+  /** @inheritDoc */
   public get actuatorOn(): boolean {
     return this.lightOn;
   }
 
+  /** @inheritDoc */
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState));
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.queuedValue = null;
     this.log(LogLevel.DeepTrace, `Dimmer Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
@@ -93,14 +94,17 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     }
   }
 
+  /** @inheritDoc */
   public setTimeBased(c: LampSetTimeBasedCommand): void {
     this.setLight(DimmerSetLightCommand.byTimeBased(this.settings, c));
   }
 
+  /** @inheritDoc */
   public setActuator(c: ActuatorSetStateCommand): void {
     this.setLight(new DimmerSetLightCommand(c, c.on, '', c.timeout));
   }
 
+  /** @inheritDoc */
   public toggleActuator(c: ActuatorToggleCommand): boolean {
     const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
     this.setActuator(setActuatorCommand);
@@ -160,6 +164,7 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     });
   }
 
+  /** @inheritDoc */
   public persist(): void {
     const now: number = Utils.nowMS();
     if (this._lastPersist + 1000 > now) {
@@ -169,10 +174,12 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     this._lastPersist = now;
   }
 
+  /** @inheritDoc */
   public toggleLight(c: LampToggleLightCommand): boolean {
     return LampUtils.toggleLight(this, c);
   }
 
+  /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     this.setState(this._stateIdState, c.stateValue);

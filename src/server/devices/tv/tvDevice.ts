@@ -40,10 +40,6 @@ export abstract class TvDevice implements iTvDevice {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
   public abstract get deviceType(): DeviceType;
 
   public get name(): string {

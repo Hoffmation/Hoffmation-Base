@@ -27,10 +27,12 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
     this.deviceCapabilities.push(DeviceCapability.batteryDriven, DeviceCapability.buttonSwitch);
   }
 
+  /** @inheritDoc */
   public persist(buttonName: string, pressType: ButtonPressType): void {
     Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverrride: boolean = false): void {
     super.update(idSplit, state, initial, pOverrride);
     switch (idSplit[3]) {
@@ -45,6 +47,7 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
 
   public abstract getButtonAssignment(): string;
 
+  /** @inheritDoc */
   public pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null {
     let taste: Button | undefined;
     switch (position) {

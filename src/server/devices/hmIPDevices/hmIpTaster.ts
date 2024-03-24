@@ -64,6 +64,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Taster Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

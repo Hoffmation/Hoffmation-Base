@@ -14,10 +14,13 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   public settings: MotionSensorSettings = new MotionSensorSettings();
   /** @inheritDoc */
   public movementDetected: boolean = false;
+  /** @inheritDoc */
+  public detectionsToday: number = 0;
   private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
   private initialized: boolean = false;
   private _fallBackTimeout: NodeJS.Timeout | undefined;
   private _lastMotionTime: number = 0;
+  private _currentIllumination: number = -1;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpBewegung);
@@ -39,21 +42,10 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     }
   }
 
+  /** @inheritDoc */
   public get timeSinceLastMotion(): number {
     return Math.floor((Utils.nowMS() - this._lastMotionTime) / 1000);
   }
-
-  private _detectionsToday: number = 0;
-
-  public get detectionsToday(): number {
-    return this._detectionsToday;
-  }
-
-  public set detectionsToday(pVal: number) {
-    this._detectionsToday = pVal;
-  }
-
-  private _currentIllumination: number = -1;
 
   public get currentIllumination(): number {
     return this._currentIllumination;
@@ -72,6 +64,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     Utils.dbo?.persistMotionSensor(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Bewegungs Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

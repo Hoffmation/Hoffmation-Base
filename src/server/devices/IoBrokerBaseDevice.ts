@@ -26,10 +26,12 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
 
   protected stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
+  /** @inheritDoc */
   public get room(): RoomBase {
     if (this._room === undefined) {
       this._room = Utils.guard<RoomBase>(API.getRoom(this.info.room));
@@ -51,6 +53,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     Utils.guardedTimeout(this.loadDeviceSettings, 300, this);
   }
 
+  /** @inheritDoc */
   public get id(): string {
     const result: string = Utils.guard(this.info.allDevicesKey);
     if (result === '0' || result === '1') {
@@ -68,10 +71,6 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
    */
   public get info(): IoBrokerDeviceInfo {
     return this._info;
-  }
-
-  public set info(value: IoBrokerDeviceInfo) {
-    this._info = value;
   }
 
   public get ioConn(): IOBrokerConnection | undefined {
@@ -95,6 +94,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     }
   }
 
+  /** @inheritDoc */
   public loadDeviceSettings(): void {
     this.settings?.initializeFromDb(this);
   }
@@ -127,6 +127,13 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     return this.ioConn !== undefined;
   }
 
+  /**
+   * Updates the state of a given data point
+   * @param {string[]} idSplit - ID of the data point
+   * @param {ioBroker.State} state - New state
+   * @param {boolean} initial - Whether this is during the initial update
+   * @param {boolean} pOverride - Whether the child class did override this method
+   */
   public abstract update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean): void;
 
   public log(level: LogLevel, message: string, logDebugType: LogDebugType = LogDebugType.None): void {
@@ -138,10 +145,12 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
     });
   }
 
+  /** @inheritDoc */
   public toJSON(): Partial<IoBrokerBaseDevice> {
     return Utils.jsonFilter(this, ['individualStateCallbacks'], ['_room']);
   }
 
+  /** @inheritDoc */
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {

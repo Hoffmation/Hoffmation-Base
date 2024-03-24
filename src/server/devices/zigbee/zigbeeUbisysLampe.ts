@@ -13,10 +13,12 @@ export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
     this.deviceCapabilities.push(DeviceCapability.lamp);
   }
 
+  /** @inheritDoc */
   public get lightOn(): boolean {
     return super.isActuatorOn;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
@@ -31,14 +33,17 @@ export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
     super.setActuator(c);
   }
 
+  /** @inheritDoc */
   public toggleLight(c: LampToggleLightCommand): boolean {
     return LampUtils.toggleLight(this, c);
   }
 
+  /** @inheritDoc */
   public setTimeBased(c: LampSetTimeBasedCommand): void {
     LampUtils.setTimeBased(this, c);
   }
 
+  /** @inheritDoc */
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }

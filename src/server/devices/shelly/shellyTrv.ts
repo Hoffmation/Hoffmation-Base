@@ -230,6 +230,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater {
     Utils.dbo?.persistHeater(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     if (idSplit[3] === 'tmp' && idSplit[4] === 'valvePosition') {
       this.log(LogLevel.Trace, `Valve position update for ${this.info.customName} to "${state.val}"`);

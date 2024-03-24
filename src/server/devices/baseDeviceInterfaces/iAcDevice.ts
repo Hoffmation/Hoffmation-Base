@@ -19,6 +19,10 @@ export interface iAcDevice extends iBaseDevice {
    */
   readonly on: boolean;
   /**
+   * The temperature of the room where this device is located
+   */
+  readonly roomTemperature: number;
+  /**
    * The current temperature of the air-conditioning device in degrees Celsius
    */
   readonly temperature: number;
@@ -49,4 +53,10 @@ export interface iAcDevice extends iBaseDevice {
    * Turns the air-conditioning device off
    */
   turnOff(): void;
+
+  /**
+   * Calculates the desired mode based on the current settings and the room temperature
+   * @returns The desired mode
+   */
+  calculateDesiredMode(): AcMode;
 }

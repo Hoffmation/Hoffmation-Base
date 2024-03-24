@@ -9,6 +9,7 @@ import { Utils } from '../../services';
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  /** @inheritDoc */
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
@@ -32,6 +33,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     false,
   );
 
+  /** @inheritDoc */
   public get battery(): number {
     return this._battery;
   }
@@ -49,14 +51,17 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   private _humidity: number = UNDEFINED_TEMP_VALUE;
   private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
 
+  /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
   }
 
+  /** @inheritDoc */
   public set roomTemperature(value: number) {
     this._roomTemperature = value;
   }
 
+  /** @inheritDoc */
   public get humidity(): number {
     return this._humidity;
   }
@@ -68,10 +73,12 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     }
   }
 
+  /** @inheritDoc */
   public get iTemperature(): number {
     return this._temperature;
   }
 
+  /** @inheritDoc */
   public get sTemperature(): string {
     return `${this._temperature}°C`;
   }
@@ -85,6 +92,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     }
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
@@ -104,6 +112,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     }
   }
 
+  /** @inheritDoc */
   public addHumidityCallback(pCallback: (pValue: number) => void): void {
     this._humidityCallbacks.push(pCallback);
     if (this._humidity > 0) {
@@ -111,6 +120,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     }
   }
 
+  /** @inheritDoc */
   public addTempChangeCallback(pCallback: (pValue: number) => void): void {
     this._temperaturCallbacks.push(pCallback);
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
@@ -118,18 +128,22 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     }
   }
 
+  /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperature = newTemperatur;
   }
 
+  /** @inheritDoc */
   public persistTemperaturSensor(): void {
     Utils.dbo?.persistTemperatureSensor(this);
   }
 
+  /** @inheritDoc */
   public persistHumiditySensor(): void {
     Utils.dbo?.persistHumiditySensor(this);
   }
 
+  /** @inheritDoc */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {
@@ -139,6 +153,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     this._lastBatteryPersist = now;
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this.persistTemperatureSensorInterval) {
       clearInterval(this.persistTemperatureSensorInterval);

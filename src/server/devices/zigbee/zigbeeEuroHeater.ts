@@ -78,6 +78,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     }
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     switch (idSplit[3]) {
       case 'valve_position':

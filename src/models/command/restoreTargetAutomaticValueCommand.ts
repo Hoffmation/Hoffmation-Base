@@ -14,8 +14,4 @@ export class RestoreTargetAutomaticValueCommand extends BaseCommand {
   public constructor(source: CommandSource | BaseCommand, reason: string = '') {
     super(source, reason);
   }
-
-  public get logMessage(): string {
-    return `Actuator restore target automatic value due to reason: ${this.reasonTrace}`;
-  }
 }

@@ -82,6 +82,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     this._movementDetectedCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Präzens Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

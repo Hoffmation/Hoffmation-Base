@@ -30,6 +30,7 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
     super(source, on, reason, timeout);
   }
 
+  /** @inheritDoc */
   public override get logMessage(): string {
     return `Dimmer setLight to ${this.on} with Brightness ${this.brightness} with timeout ${this.timeout} for reason: ${this.reasonTrace}`;
   }

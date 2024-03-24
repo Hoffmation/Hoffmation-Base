@@ -101,10 +101,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
   public get id(): string {
     return this.info.allDevicesKey ?? `govee-${this.info.room}-${this.info.customName}`;
   }

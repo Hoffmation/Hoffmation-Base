@@ -17,6 +17,7 @@ export class ZigbeeIlluLampe extends ZigbeeIlluActuator implements iLamp {
     return super.isActuatorOn;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {

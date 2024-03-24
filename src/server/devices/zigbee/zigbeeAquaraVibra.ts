@@ -110,6 +110,7 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     this._vibrationBlockedByMotion = pVal;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

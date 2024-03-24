@@ -65,6 +65,7 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
     return this._availableForExcessEnergy;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

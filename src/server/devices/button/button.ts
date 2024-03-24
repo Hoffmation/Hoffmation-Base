@@ -38,10 +38,6 @@ export class Button {
     }
   }
 
-  public getState(type: ButtonPressType): boolean {
-    return this._statesMap.get(type) ?? false;
-  }
-
   public addCb(
     buttonType: ButtonPressType,
     pCallback: (pValue: boolean) => void,

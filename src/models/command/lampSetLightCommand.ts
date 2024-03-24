@@ -18,6 +18,7 @@ export class LampSetLightCommand extends ActuatorSetStateCommand {
     super(source, on, reason, timeout);
   }
 
+  /** @inheritDoc */
   public override get logMessage(): string {
     return `Lamp setLight to ${this.on} with timeout ${this.timeout} for reason: ${this.reasonTrace}`;
   }

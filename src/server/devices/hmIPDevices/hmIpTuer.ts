@@ -30,6 +30,7 @@ export class HmIpTuer extends HmIPDevice implements iDisposable, iMagnetSensor {
     this._closedCallback.push(pCallback);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Tuer Update: JSON: ${JSON.stringify(state)}ID: ${idSplit.join('.')}`);
     super.update(idSplit, state, initial, true);

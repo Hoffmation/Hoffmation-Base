@@ -48,14 +48,17 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
   }
 
+  /** @inheritDoc */
   public get actuatorOn(): boolean {
     return this.on;
   }
 
+  /** @inheritDoc */
   public get lightOn(): boolean {
     return this.on;
   }
 
+  /** @inheritDoc */
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.setLight(new WledSetLightCommand(c, this.targetAutomaticState));
   }
@@ -84,6 +87,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     }
   }
 
+  /** @inheritDoc */
   public setLight(c: DimmerSetLightCommand): void {
     this.setWled(
       new WledSetLightCommand(
@@ -148,24 +152,29 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     this.setWled(WledSetLightCommand.byTimeBased(this.settings, c));
   }
 
+  /** @inheritDoc */
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }
 
+  /** @inheritDoc */
   public setActuator(command: ActuatorSetStateCommand): void {
     this.setWled(new WledSetLightCommand(command, command.on, 'Set Wled due to ActuatorSetStateCommand'));
   }
 
+  /** @inheritDoc */
   public toggleActuator(c: ActuatorToggleCommand): boolean {
     const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
     this.setActuator(setActuatorCommand);
     return setActuatorCommand.on;
   }
 
+  /** @inheritDoc */
   public toggleLight(c: LampToggleLightCommand): boolean {
     return LampUtils.toggleLight(this, c);
   }
 
+  /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     this.setState(this._onID, c.stateValue, undefined, (err) => {

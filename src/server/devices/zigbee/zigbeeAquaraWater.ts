@@ -52,6 +52,7 @@ export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
     PollyService.preloadTTS(this._messageAlarmEnd);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Water Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

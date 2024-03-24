@@ -11,6 +11,7 @@ import { HeatGroup } from '../../groups';
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   protected _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  /** @inheritDoc */
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
@@ -27,6 +28,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
 
+  /** @inheritDoc */
   public get battery(): number {
     return this._battery;
   }
@@ -70,18 +72,22 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
 
   protected _seasonTurnOff: boolean = false;
 
+  /** @inheritDoc */
   public get seasonTurnOff(): boolean {
     return this._seasonTurnOff;
   }
 
+  /** @inheritDoc */
   public set seasonTurnOff(value: boolean) {
     this._seasonTurnOff = value;
   }
 
+  /** @inheritDoc */
   public get desiredTemperature(): number {
     return this._desiredTemperatur;
   }
 
+  /** @inheritDoc */
   public set desiredTemperature(val: number) {
     this._desiredTemperatur = val;
     this.setState(
@@ -96,16 +102,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     );
   }
 
-  protected _humidity: number = 0;
-
-  public get humidity(): number {
-    return this._humidity;
-  }
-
   public get sLevel(): string {
     return `${this._level * 100}%`;
   }
 
+  /** @inheritDoc */
   public get iLevel(): number {
     return this._level;
   }
@@ -114,6 +115,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     return `${this.iTemperature}°C`;
   }
 
+  /** @inheritDoc */
   public get iTemperature(): number {
     if (this.settings.useOwnTemperatur) {
       return this._temperatur;
@@ -124,14 +126,17 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
 
   protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
 
+  /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
   }
 
+  /** @inheritDoc */
   public set roomTemperatur(val: number) {
     this._roomTemperature = val;
   }
 
+  /** @inheritDoc */
   public checkAutomaticChange(): void {
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
@@ -159,13 +164,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     }
   }
 
-  public stopAutomaticCheck(): void {
-    if (this._iAutomaticInterval !== undefined) {
-      clearInterval(this._iAutomaticInterval);
-      this._iAutomaticInterval = undefined;
-    }
-  }
-
+  /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperatur = newTemperatur;
   }
@@ -174,6 +173,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     Utils.dbo?.persistHeater(this);
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     switch (idSplit[3]) {
       case 'battery':
@@ -213,6 +213,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     this._initialSeasonCheckDone = true;
   }
 
+  /** @inheritDoc */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {
@@ -222,6 +223,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     this._lastBatteryPersist = now;
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     if (this.persistHeaterInterval) {
       clearInterval(this.persistHeaterInterval);

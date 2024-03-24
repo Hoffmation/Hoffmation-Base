@@ -47,10 +47,6 @@ export class OwnSonosDevice implements iSpeaker {
     return this._info;
   }
 
-  public set info(info: DeviceInfo) {
-    this._info = info;
-  }
-
   public get room(): RoomBase | undefined {
     return API.getRoom(this.info.room);
   }

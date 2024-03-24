@@ -19,7 +19,7 @@ export interface iBaseDevice extends iIdHolder {
   /**
    * Some basic information about the device (mainly its name, id, room, etc.)
    */
-  info: DeviceInfo;
+  readonly info: DeviceInfo;
   /**
    * The capabilities of the device thus referencing other interfaces which then can be used to treat devices regardless of their hardware-type.
    */

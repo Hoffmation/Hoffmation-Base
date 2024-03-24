@@ -69,7 +69,13 @@ module.exports = {
     'jsdoc/require-jsdoc': [
       'error',
       {
-        contexts: ['TSMethodSignature', 'TSPropertySignature', 'TSInterfaceDeclaration', 'PropertyDefinition'],
+        contexts: [
+          'TSMethodSignature',
+          'TSPropertySignature',
+          'TSInterfaceDeclaration',
+          'PropertyDefinition',
+          // 'MethodDefinition',
+        ],
         publicOnly: { ancestorsOnly: true },
       },
     ],

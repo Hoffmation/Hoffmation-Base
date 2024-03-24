@@ -39,6 +39,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
     this._deviceQueryId = `${this.info.fullID}.device_query`;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     this.log(
       LogLevel.DeepTrace,
@@ -87,6 +88,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
     this.setState(this._deviceQueryId, true);
   }
 
+  /** @inheritDoc */
   public dispose(): void {
     clearInterval(this._persistZigbeeInterval);
   }
@@ -95,6 +97,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
     Utils.dbo?.persistZigbeeDevice(this);
   }
 
+  /** @inheritDoc */
   protected override setState(
     pointId: string,
     state: string | number | boolean | ioBroker.State | ioBroker.SettableState | null,

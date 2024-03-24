@@ -172,6 +172,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     return this.room.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Heizgruppe Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

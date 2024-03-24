@@ -51,6 +51,7 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
     return this._temperatur;
   }
 
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Heizung Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);

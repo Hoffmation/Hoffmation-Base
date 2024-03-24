@@ -28,6 +28,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */
   public queuedValue: boolean | null = null;
 
+  /** @inheritDoc */
   public get actuatorOn(): boolean {
     return this._actuatorOn;
   }
@@ -40,10 +41,12 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
+  /** @inheritDoc */
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState));
   }
 
+  /** @inheritDoc */
   public update(
     idSplit: string[],
     state: ioBroker.State,
@@ -66,6 +69,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     }
   }
 
+  /** @inheritDoc */
   public setActuator(command: ActuatorSetStateCommand): void {
     if (this.actuatorOnSwitchID === '') {
       this.log(LogLevel.Error, `Keine Switch ID bekannt.`);
@@ -75,10 +79,12 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     LampUtils.setActuator(this, command);
   }
 
+  /** @inheritDoc */
   public persist(): void {
     Utils.dbo?.persistActuator(this);
   }
 
+  /** @inheritDoc */
   public toggleActuator(command: ActuatorToggleCommand): boolean {
     const newVal = this.queuedValue !== null ? !this.queuedValue : !this._actuatorOn;
     const timeout: number = newVal && command.isForceAction ? 30 * 60 * 1000 : -1;
@@ -86,6 +92,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     return newVal;
   }
 
+  /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
     this.setState(this.actuatorOnSwitchID, c.stateValue, undefined, (err) => {
