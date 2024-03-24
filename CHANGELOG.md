@@ -10,6 +10,8 @@
 
 * (theimo1221) Change iCameraDevice to use devices instead of just open handles
 * (theimo1221) Some package removals and fixes
+* (theimo1221) Highly improve documentation of publicly available properties and functions
+* (theimo1221) Prepare a V3 Migration Guide
 
 ## 3.0.0
 
