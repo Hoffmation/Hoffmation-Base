@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.23 (2024-03-24)
 
 * (theimo1221) Fix type definition for deviceConfig
 
