@@ -78,9 +78,9 @@ export class API {
   }
 
   // TODO: Missing Comment
-  public static getDevice(id: string): iBaseDevice {
+  public static getDevice(id: string, warnIfNotFound: boolean = true): iBaseDevice {
     const d: iBaseDevice | undefined = Devices.alLDevices[id];
-    if (d === undefined) {
+    if (d === undefined && warnIfNotFound) {
       ServerLogService.writeLog(LogLevel.Warn, `Api.getDevice() --> "${id}" not found`);
     }
     return d;

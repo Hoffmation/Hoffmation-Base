@@ -37,7 +37,7 @@ export class DeviceUpdater implements IDeviceUpdater {
       classifier = Devices.IDENTIFIER_ZIGBEE;
       devId = idSplit[2].substring(2);
     }
-    const device: undefined | iBaseDevice = API.getDevice(`${classifier}-${devId}`);
+    const device: undefined | iBaseDevice = API.getDevice(`${classifier}-${devId}`, false);
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
       return;
     }
