@@ -135,7 +135,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     });
   }
 
-  /** @inehritdoc */
+  /** @inheritdoc */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {
