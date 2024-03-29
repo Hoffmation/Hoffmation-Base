@@ -14,7 +14,7 @@ export class LampSetLightCommand extends ActuatorSetStateCommand {
    * @param on - The new state of the light
    * @param reason - You can provide a reason for clarification
    * @param disableAutomatic - If provided, the device will remain in the desired state for the given disable action.
-   * If unset the default value will be used: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
+   * If undefined the default value will be used in case it's a non automatic action: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    */
   public constructor(
     source: CommandSource | BaseCommand,

@@ -17,7 +17,7 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
    * @param on - The desired state of the light
    * @param reason - You can provide a reason for clarification
    * @param disableAutomatic - If provided, the device will remain in the desired state for the given disable action.
-   * If unset the default value will be used: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
+   * If undefined the default value will be used in case it's a non automatic action: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    * @param brightness - The brightness of the light
    * @param transitionTime - The time in milliseconds the transition should take
    * @param preset - The preset to use

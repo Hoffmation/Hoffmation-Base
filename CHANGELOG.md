@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.26 (2024-03-29)
 
-* (theimo1221) Reduce log spam
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't add default-block-automatic on non-force actions
 
 ## 3.0.0
 

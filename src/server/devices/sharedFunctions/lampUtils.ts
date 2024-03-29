@@ -148,8 +148,13 @@ export class LampUtils {
     if (dontBlock || c.disableAutomaticCommand === null) {
       return;
     }
-    c.disableAutomaticCommand ??= BlockAutomaticCommand.fromDeviceSettings(c, device.settings);
-    if (c.disableAutomaticCommand !== null) {
+    if (dontBlock) {
+      return;
+    }
+    if (c.disableAutomaticCommand === undefined && c.isForceAction) {
+      c.disableAutomaticCommand = BlockAutomaticCommand.fromDeviceSettings(c, device.settings);
+    }
+    if (c.disableAutomaticCommand) {
       device.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
     }
   }

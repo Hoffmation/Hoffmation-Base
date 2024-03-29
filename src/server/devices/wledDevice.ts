@@ -140,11 +140,15 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       });
     }
 
-    if (!dontBlock && c.disableAutomaticCommand !== null) {
-      c.disableAutomaticCommand ??= BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
-      if (c.disableAutomaticCommand !== null) {
-        this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
-      }
+    if (dontBlock || c.disableAutomaticCommand === null) {
+      return;
+    }
+    if (c.disableAutomaticCommand === undefined && c.isForceAction) {
+      c.disableAutomaticCommand = BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
+    }
+
+    if (c.disableAutomaticCommand) {
+      this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
     }
   }
 

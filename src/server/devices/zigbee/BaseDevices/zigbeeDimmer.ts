@@ -138,8 +138,10 @@ export abstract class ZigbeeDimmer extends ZigbeeDevice implements iDimmableLamp
     }
 
     if (!dontBlock && c.disableAutomaticCommand !== null) {
-      c.disableAutomaticCommand ??= BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
-      if (c.disableAutomaticCommand !== null) {
+      if (c.disableAutomaticCommand === undefined && c.isForceAction) {
+        c.disableAutomaticCommand = BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
+      }
+      if (c.disableAutomaticCommand) {
         this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
       }
     }
