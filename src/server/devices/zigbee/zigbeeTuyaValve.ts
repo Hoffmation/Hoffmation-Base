@@ -14,7 +14,8 @@ export class ZigbeeTuyaValve extends ZigbeeHeater {
   private _mode: string = '';
 
   /**
-   * @param pInfo
+   * Creates an instance of {@link DeviceType.ZigbeeTuyaValve}.
+   * @param pInfo - Device creation information
    */
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeTuyaValve);

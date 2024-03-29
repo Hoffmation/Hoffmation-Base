@@ -29,7 +29,8 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   private _helpingRoomTemp: boolean = false;
 
   /**
-   * @param pInfo
+   * Creates an instance of {@link DeviceType.HmIpGriff}.
+   * @param pInfo - Device creation information
    */
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpGriff);
@@ -48,7 +49,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   /**
-   *
+   * Adds a window to this device
    */
   public set window(value: Window) {
     this._window = value;
@@ -107,7 +108,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   /**
-   *
+   * Persists the handle sensor state to the persistence layer
    */
   public persistHandleSensor(): void {
     const now: number = Utils.nowMS();

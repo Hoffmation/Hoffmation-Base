@@ -21,6 +21,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
 
   /**
    * Time after the last trigger until a motion event gets triggered again
+   * @returns The time in ??? unit TODO: RF
    */
   public get motionTimeout(): number {
     return this._motionTimeout;

@@ -11,7 +11,8 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
   private _lastBatteryPersist: number = 0;
 
   /**
-   * @param pInfo
+   * Creates an instance of {@link DeviceType.ZigbeeHeimanSmoke}.
+   * @param pInfo - Device creation information
    */
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeHeimanSmoke);
@@ -50,7 +51,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
   private _roomName: string = '';
 
   /**
-   *
+   * The name of the room the device is in (Set during initialization)
    */
   public set roomName(val: string) {
     this._roomName = val;
@@ -87,9 +88,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     }
   }
 
-  /**
-   * @param quiet
-   */
+  /** @inheritDoc */
   public stopAlarm(quiet: boolean = false): void {
     if (this.iAlarmTimeout) {
       clearInterval(this.iAlarmTimeout);
@@ -136,9 +135,7 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     });
   }
 
-  /**
-   *
-   */
+  /** @inehritdoc */
   public persistBatteryDevice(): void {
     const now: number = Utils.nowMS();
     if (this._lastBatteryPersist + 60000 > now) {

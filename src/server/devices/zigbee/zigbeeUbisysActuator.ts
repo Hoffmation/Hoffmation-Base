@@ -9,8 +9,9 @@ export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   private _loadPower: number = 0;
 
   /**
-   * @param pInfo
-   * @param deviceType
+   * Creates an instance of {@link DeviceType.ZigbeeUbisysActuator} or a derived class like {@link ZigbeeUbisysLampe}
+   * @param pInfo - Device creation information
+   * @param deviceType - The device type (if not {@link DeviceType.ZigbeeUbisysActuator})
    */
   public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeUbisysActuator) {
     super(pInfo, deviceType, `${pInfo.fullID}.state`);
