@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.24 (2024-03-29)
 
 * (theimo1221) Change iCameraDevice to use devices instead of just open handles
 * (theimo1221) Some package removals and fixes
