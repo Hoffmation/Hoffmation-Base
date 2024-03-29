@@ -68,7 +68,7 @@ export interface iConfig {
    * The URL to the ioBroker instance.
    * @deprecated Please use the ioBroker property instead
    */
-  ioBrokerUrl: string;
+  ioBrokerUrl?: string;
   /**
    * @see iIobrokerSettigns
    */
