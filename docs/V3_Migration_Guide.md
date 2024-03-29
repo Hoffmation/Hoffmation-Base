@@ -40,9 +40,9 @@ Changes to the device interfaces are respectivly performed for all devices imple
 24. `iRoomBase.WindowGroup.restoreRolloPosition` now uses `RoomRestoreShutterPositionCommand` and got renamed to `restoreShutterPosition` for setting all windows in this group.
 
 ### Timeout got removed in favor of BlockAutomaticCommand
-Timeout itself was not configurable enough to provide enough options for the user. Example scenarios:
-a) User wants to turn a light on for an hour regardless of movement and normal settings. --> After an hour the light should fall back to automatic state.
-b) User wants to turn a light on until he himself turns it off. --> The light should stay on until the user turns it off.
+Timeout itself was not configurable enough to provide enough options for the user. Example scenarios:  
+a) User wants to turn a light on for an hour regardless of movement and normal settings. --> After an hour the light should fall back to automatic state.  
+b) User wants to turn a light on until he himself turns it off. --> The light should stay on until the user turns it off.  
 c) User just issues the turn on command without specifying a timeout. --> How long should the light stay on? And/or shall it fall back to automatic state?
 
 To resolve both scenario a) and b) the `BlockAutomaticCommand` can be used with explicit instructions.
