@@ -12,6 +12,7 @@
 * (theimo1221) Some package removals and fixes
 * (theimo1221) Highly improve documentation of publicly available properties and functions
 * (theimo1221) Prepare a V3 Migration Guide
+* (theimo1221) Make the disabling of automatic mode on force actions more configurable
 
 ## 3.0.0
 

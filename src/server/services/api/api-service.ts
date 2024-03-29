@@ -167,7 +167,10 @@ export class API {
    * TODO: Remove deprecated API method
    */
   public static setLamp(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
-    return this.lampSetLight(deviceId, new LampSetLightCommand(CommandSource.API, state, '', timeout));
+    return this.lampSetLight(
+      deviceId,
+      new LampSetLightCommand(CommandSource.API, state, '', new BlockAutomaticCommand(CommandSource.API, timeout)),
+    );
   }
 
   /**
@@ -199,7 +202,10 @@ export class API {
    * TODO: Remove deprecated API method
    */
   public static setActuator(deviceId: string, state: boolean, timeout: number = 60 * 60 * 1000): Error | null {
-    return this.actuatorSetState(deviceId, new ActuatorSetStateCommand(CommandSource.API, state, '', timeout));
+    return this.actuatorSetState(
+      deviceId,
+      new ActuatorSetStateCommand(CommandSource.API, state, '', new BlockAutomaticCommand(CommandSource.API, timeout)),
+    );
   }
 
   /**
@@ -241,7 +247,14 @@ export class API {
   ): Error | null {
     return this.dimmerSetLight(
       deviceId,
-      new DimmerSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime),
+      new DimmerSetLightCommand(
+        CommandSource.API,
+        state,
+        '',
+        new BlockAutomaticCommand(CommandSource.API, timeout),
+        brightness,
+        transitionTime,
+      ),
     );
   }
 
@@ -288,7 +301,16 @@ export class API {
   ): Error | null {
     return this.ledSetLight(
       deviceId,
-      new LedSetLightCommand(CommandSource.API, state, '', timeout, brightness, transitionTime, color, colorTemp),
+      new LedSetLightCommand(
+        CommandSource.API,
+        state,
+        '',
+        new BlockAutomaticCommand(CommandSource.API, timeout),
+        brightness,
+        transitionTime,
+        color,
+        colorTemp,
+      ),
     );
   }
 

@@ -65,7 +65,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
 
   /** @inheritDoc */
   public override setActuator(c: ActuatorSetStateCommand): void {
-    this.setLight(new LedSetLightCommand(c, c.on, '', c.timeout));
+    this.setLight(new LedSetLightCommand(c, c.on, '', c.disableAutomaticCommand));
   }
 
   /** @inheritDoc */

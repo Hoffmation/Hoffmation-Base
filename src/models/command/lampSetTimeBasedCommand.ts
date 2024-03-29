@@ -2,24 +2,33 @@ import { BaseCommand } from './baseCommand';
 import { CommandType } from './commandType';
 import { CommandSource } from './commandSource';
 import { TimeOfDay } from '../timeCallback';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LampSetTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */
   public override _commandType: CommandType = CommandType.LampSetTimeBasedCommand;
+  /**
+   * The command to disable automatic actions for a specific duration.
+   * Null = no automatic actions will be disabled.
+   * Undefined = use device or global default
+   */
+  public readonly disableAutomaticCommand: BlockAutomaticCommand | null | undefined;
 
   /**
    * Set's the lamp based on lamp settings for the current time
    * @param source - The source of the command
    * @param time - The time to use for calculation of desired state
    * @param reason - You can provide a reason for clarity
-   * @param timeout - If > 0 this is the time after which the lamp reverts to its original state
+   * @param disableAutomatic - If provided, the device will remain in the desired state for the given disable action.
+   * If unset the default value will be used: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    */
   public constructor(
     source: CommandSource | BaseCommand,
     public time: TimeOfDay,
     reason: string = '',
-    public timeout: number = -1,
+    disableAutomatic?: BlockAutomaticCommand | null,
   ) {
     super(source, reason);
+    this.disableAutomaticCommand = disableAutomatic;
   }
 }

@@ -5,7 +5,6 @@ import {
   ActuatorWriteStateToDeviceCommand,
   BlockAutomaticCommand,
   BlockAutomaticLiftBlockCommand,
-  CollisionSolving,
   CommandSource,
   CommandType,
   LampSetLightCommand,
@@ -53,7 +52,9 @@ export class LampUtils {
       (c.time === TimeOfDay.BeforeSunrise && device.settings.dawnOn) ||
       (c.time === TimeOfDay.AfterSunset && device.settings.duskOn)
     ) {
-      device.setLight(new LampSetLightCommand(c, true, `SetLight due to TimeBased ${TimeOfDay[c.time]}`, c.timeout));
+      device.setLight(
+        new LampSetLightCommand(c, true, `SetLight due to TimeBased ${TimeOfDay[c.time]}`, c.disableAutomaticCommand),
+      );
     }
   }
 
@@ -78,15 +79,15 @@ export class LampUtils {
 
   public static toggleLight(device: iLamp, c: LampToggleLightCommand): boolean {
     const newVal: boolean = device.queuedValue !== null ? !device.queuedValue : !device.lightOn;
-    const timeout: number = newVal && c.isForceAction ? 30 * 60 * 1000 : -1;
+
     if (newVal && c.time === undefined && c.calculateTime && device.room !== undefined) {
       c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
     }
     if (newVal && c.time !== undefined) {
-      device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, '', timeout));
+      device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, '', c.isForceAction ? undefined : null));
       return true;
     }
-    device.setLight(new LampSetLightCommand(c, newVal, '', timeout));
+    device.setLight(new LampSetLightCommand(c, newVal, '', c.isForceAction ? undefined : null));
     return newVal;
   }
 
@@ -141,13 +142,15 @@ export class LampUtils {
     device.writeActuatorStateToDevice(new ActuatorWriteStateToDeviceCommand(c, c.on));
 
     if (device.settings.isStromStoss && c.on) {
-      c.timeout = 3000;
+      c.disableAutomaticCommand = new BlockAutomaticCommand(c, 3000, 'StromStoss Off');
       LampUtils.stromStossOn(device);
     }
-    if (c.timeout > -1 && !dontBlock) {
-      device.blockAutomationHandler.disableAutomatic(
-        new BlockAutomaticCommand(c, c.timeout, '', CollisionSolving.overrideIfGreater),
-      );
+    if (dontBlock || c.disableAutomaticCommand === null) {
+      return;
+    }
+    c.disableAutomaticCommand ??= BlockAutomaticCommand.fromDeviceSettings(c, device.settings);
+    if (c.disableAutomaticCommand !== null) {
+      device.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
     }
   }
 }

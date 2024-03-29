@@ -3,7 +3,6 @@ import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
-  BlockAutomaticCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
   LedSetLightCommand,
@@ -167,8 +166,8 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     } else {
       this.turnOff();
     }
-    if (c.timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(c, c.timeout));
+    if (c.disableAutomaticCommand && !dontBlock) {
+      this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
     }
   }
 

@@ -5,6 +5,7 @@ import { BaseCommand } from './baseCommand';
 import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
 import { DimmerSettings } from '../deviceSettings';
 import { TimeOfDay } from '../timeCallback';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class DimmerSetLightCommand extends LampSetLightCommand {
   /** @inheritDoc */
@@ -15,7 +16,8 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
    * @param source - The source of the command
    * @param on - The desired value
    * @param reason - You can provide a reason for clarity
-   * @param timeout - A chosen Timeout after which the light should be reset
+   * @param disableAutomatic - If provided, the device will remain in the desired state for the given disable action.
+   * If unset the default value will be used: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    * @param brightness - The desired brightness
    * @param transitionTime - The transition time during turnOn/turnOff
    */
@@ -23,29 +25,50 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
     source: CommandSource | BaseCommand,
     on: boolean,
     reason: string = '',
-    timeout: number = -1,
+    disableAutomatic?: BlockAutomaticCommand | null,
     public brightness: number = -1,
     public transitionTime: number = -1,
   ) {
-    super(source, on, reason, timeout);
+    super(source, on, reason, disableAutomatic);
   }
 
   /** @inheritDoc */
   public override get logMessage(): string {
-    return `Dimmer setLight to ${this.on} with Brightness ${this.brightness} with timeout ${this.timeout} for reason: ${this.reasonTrace}`;
+    return `Dimmer setLight to ${this.on} with Brightness ${this.brightness} with disable ${this.disableAutomaticCommand?.logMessage} for reason: ${this.reasonTrace}`;
   }
 
   public static byTimeBased(s: DimmerSettings, c: LampSetTimeBasedCommand): DimmerSetLightCommand {
     const manual: boolean = c.isForceAction;
     switch (c.time) {
       case TimeOfDay.Daylight:
-        return new DimmerSetLightCommand(c, manual || s.dayOn, 'Daylight', c.timeout, s.dayBrightness);
+        return new DimmerSetLightCommand(c, manual || s.dayOn, 'Daylight', c.disableAutomaticCommand, s.dayBrightness);
       case TimeOfDay.BeforeSunrise:
-        return new DimmerSetLightCommand(c, manual || s.dawnOn, 'Dawn', c.timeout, s.dawnBrightness, undefined);
+        return new DimmerSetLightCommand(
+          c,
+          manual || s.dawnOn,
+          'Dawn',
+          c.disableAutomaticCommand,
+          s.dawnBrightness,
+          undefined,
+        );
       case TimeOfDay.AfterSunset:
-        return new DimmerSetLightCommand(c, manual || s.duskOn, 'Dusk', c.timeout, s.duskBrightness, undefined);
+        return new DimmerSetLightCommand(
+          c,
+          manual || s.duskOn,
+          'Dusk',
+          c.disableAutomaticCommand,
+          s.duskBrightness,
+          undefined,
+        );
       case TimeOfDay.Night:
-        return new DimmerSetLightCommand(c, manual || s.nightOn, 'Night', c.timeout, s.nightBrightness, undefined);
+        return new DimmerSetLightCommand(
+          c,
+          manual || s.nightOn,
+          'Night',
+          c.disableAutomaticCommand,
+          s.nightBrightness,
+          undefined,
+        );
       default:
         throw new Error(`TimeOfDay ${c.time} not supported`);
     }

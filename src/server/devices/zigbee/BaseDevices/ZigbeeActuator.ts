@@ -87,8 +87,8 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */
   public toggleActuator(command: ActuatorToggleCommand): boolean {
     const newVal = this.queuedValue !== null ? !this.queuedValue : !this._actuatorOn;
-    const timeout: number = newVal && command.isForceAction ? 30 * 60 * 1000 : -1;
-    this.setActuator(new ActuatorSetStateCommand(command, newVal, 'Due to ZigbeeActuatorToggle', timeout));
+    const setStateCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, command);
+    this.setActuator(setStateCommand);
     return newVal;
   }
 

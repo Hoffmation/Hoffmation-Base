@@ -8,6 +8,10 @@ import {
 import { Utils } from './utils';
 import _ from 'lodash';
 
+/**
+ * This class is responsible for blocking automatic actions for a specific duration.
+ * It also provides the possibility to lift the block before the duration is over {@link BlockAutomaticLiftBlockCommand}.
+ */
 export class BlockAutomaticHandler {
   private readonly _restoreAutomatic: (c: RestoreTargetAutomaticValueCommand) => void;
   private _automaticBlockedUntil: Date = new Date(0);
@@ -31,7 +35,13 @@ export class BlockAutomaticHandler {
 
   public disableAutomatic(c: BlockAutomaticCommand): void {
     this.disableAutomaticUntil(
-      new BlockAutomaticUntilCommand(c, new Date(Utils.nowMS() + c.durationMS), '', c.onCollideAction),
+      new BlockAutomaticUntilCommand(
+        c,
+        new Date(Utils.nowMS() + c.durationMS),
+        '',
+        c.onCollideAction,
+        c.revertToAutomaticAtBlockLift,
+      ),
     );
   }
 
@@ -45,23 +55,31 @@ export class BlockAutomaticHandler {
       return;
     }
     this.automaticBlockedUntil = c.targetDate;
-    this.updateRestoreTimeout(new RestoreTargetAutomaticValueCommand(c, 'Restore to automatic state after block.'));
+    if (c.revertToAutomaticAtBlockLift) {
+      this.updateRestoreTimeout(new RestoreTargetAutomaticValueCommand(c, 'Restore to automatic state after block.'));
+    } else {
+      this.removeRestoreTimeout();
+    }
   }
 
   public liftAutomaticBlock(c: BlockAutomaticLiftBlockCommand): void {
-    if (this._restoreAutomaticStateTimeout !== null) {
-      clearTimeout(this._restoreAutomaticStateTimeout);
-    }
-    this._restoreAutomaticStateTimeout = null;
+    this.removeRestoreTimeout();
     this.automaticBlockedUntil = new Date(0);
 
-    this._restoreAutomatic(new RestoreTargetAutomaticValueCommand(c));
+    if (c.revertToAutomatic) {
+      this._restoreAutomatic(new RestoreTargetAutomaticValueCommand(c));
+    }
+  }
+
+  private removeRestoreTimeout(): void {
+    if (this._restoreAutomaticStateTimeout !== null) {
+      clearTimeout(this._restoreAutomaticStateTimeout);
+      this._restoreAutomaticStateTimeout = null;
+    }
   }
 
   private updateRestoreTimeout(c: RestoreTargetAutomaticValueCommand): void {
-    if (this._restoreAutomaticStateTimeout !== null) {
-      clearTimeout(this._restoreAutomaticStateTimeout);
-    }
+    this.removeRestoreTimeout();
     this._restoreAutomaticStateTimeout = Utils.guardedTimeout(
       () => {
         this._restoreAutomatic(c);

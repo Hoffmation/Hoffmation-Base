@@ -24,3 +24,4 @@ export * from './iTimePair';
 export * from './iUnifiSettings';
 export * from './iUnifiConnectionOptions';
 export * from './iVictronSettings';
+export { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';

@@ -12,3 +12,4 @@ export * from './logLevel';
 export * from './objectSettings';
 export * from './temperatureSettings';
 export * from './timeCallback';
+export { BlockAutomaticSettings } from './blockAutomaticSettings';

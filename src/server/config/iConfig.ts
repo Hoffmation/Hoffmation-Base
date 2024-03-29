@@ -21,6 +21,7 @@ import { iVictronSettings } from './iVictronSettings';
 import { iDachsSettings } from './iDachsSettings';
 import { iEnergyManagerSettings } from './iEnergyManagerSettings';
 import { iUnifiSettings } from './iUnifiSettings';
+import { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';
 
 /**
  * The main configuration for Hoffmation normally stored in the `main-config.json` file.
@@ -30,6 +31,10 @@ export interface iConfig {
    * @see iAsusConfig
    */
   asusConfig?: iAsusConfig;
+  /**
+   * @see i
+   */
+  blockAutomaticHandlerDefaults?: iBlockAutomaticHandlerDefaults;
   /**
    * @see iBlueIrisSettings
    */

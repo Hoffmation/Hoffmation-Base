@@ -6,7 +6,6 @@ import {
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   BlockAutomaticCommand,
-  CollisionSolving,
   DimmerSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
@@ -94,7 +93,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
         c,
         c.on,
         'Set Wled due to DimmerSetLightCommand',
-        c.timeout,
+        c.disableAutomaticCommand,
         c.brightness,
         c.transitionTime,
         undefined,
@@ -141,10 +140,11 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       });
     }
 
-    if (c.timeout !== undefined && c.timeout > -1 && !dontBlock) {
-      this.blockAutomationHandler.disableAutomatic(
-        new BlockAutomaticCommand(c, c.timeout, '', CollisionSolving.overrideIfGreater),
-      );
+    if (!dontBlock && c.disableAutomaticCommand !== null) {
+      c.disableAutomaticCommand ??= BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
+      if (c.disableAutomaticCommand !== null) {
+        this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
+      }
     }
   }
 

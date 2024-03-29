@@ -188,7 +188,9 @@ export class LightGroup extends BaseGroup {
         (c.time === TimeOfDay.BeforeSunrise && s.settings.dawnOn) ||
         (c.time === TimeOfDay.AfterSunset && s.settings.duskOn)
       ) {
-        s.setActuator(new ActuatorSetStateCommand(c, true, 'LightGroup setAllActuatorsTimeBased', c.timeout));
+        s.setActuator(
+          new ActuatorSetStateCommand(c, true, 'LightGroup setAllActuatorsTimeBased', c.disableAutomaticCommand),
+        );
       }
     });
   }

@@ -1,6 +1,7 @@
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 import { ObjectSettings } from '../objectSettings';
 import { Utils } from '../../server';
+import { BlockAutomaticSettings } from '../blockAutomaticSettings';
 
 export abstract class DeviceSettings extends ObjectSettings {
   /**
@@ -9,12 +10,24 @@ export abstract class DeviceSettings extends ObjectSettings {
    */
   public energySettings: ExcessEnergyConsumerSettings | undefined = undefined;
 
+  /**
+   * Any device could be an {@link iTemporaryDisableAutomatic} device, so we have to provide the settings for it
+   * @default undefined
+   */
+  public blockAutomaticSettings: BlockAutomaticSettings | undefined = undefined;
+
   public override fromPartialObject(_obj: Partial<DeviceSettings>): void {
     if (_obj.energySettings) {
       if (this.energySettings === undefined) {
         this.energySettings = new ExcessEnergyConsumerSettings();
       }
       this.energySettings.fromPartialObject(_obj.energySettings);
+    }
+    if (_obj.blockAutomaticSettings) {
+      if (this.blockAutomaticSettings === undefined) {
+        this.blockAutomaticSettings = new BlockAutomaticSettings();
+      }
+      this.blockAutomaticSettings.fromPartialObject(_obj.blockAutomaticSettings);
     }
     super.fromPartialObject(_obj);
   }

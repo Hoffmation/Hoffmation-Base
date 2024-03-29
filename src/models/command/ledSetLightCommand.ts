@@ -5,6 +5,7 @@ import { DimmerSetLightCommand } from './dimmerSetLightCommand';
 import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
 import { TimeOfDay } from '../timeCallback';
 import { LedSettings } from '../deviceSettings';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -15,7 +16,8 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
    * @param source - The source of the command
    * @param on - The desired state-value
    * @param reason - You can provide a reason for clarity
-   * @param timeout - A chosen Timeout after which the light should be reset
+   * @param disableAutomatic - If provided, the device will remain in the desired state for the given disable action.
+   * If unset the default value will be used: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    * @param brightness - The desired brightness
    * @param transitionTime - The transition time during turnOn/turnOff
    * @param color - The desired color in 6 digit hex Code
@@ -25,18 +27,18 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
     source: CommandSource | BaseCommand,
     on: boolean,
     reason: string = '',
-    timeout: number = -1,
+    disableAutomatic?: BlockAutomaticCommand | null,
     brightness?: number,
     transitionTime?: number,
     public color: string = '',
     public colorTemp: number = -1,
   ) {
-    super(source, on, reason, timeout, brightness, transitionTime);
+    super(source, on, reason, disableAutomatic, brightness, transitionTime);
   }
 
   /** @inheritDoc */
   public override get logMessage(): string {
-    return `Led setLight to state: ${this.on}, timeout: ${this.timeout}, brightness: ${this.brightness}, color: ${this.color}, colorTemp: ${this.colorTemp} for reason: ${this.reasonTrace}`;
+    return `Led setLight to state: ${this.on}, blockAutomatic: ${this.disableAutomaticCommand?.logMessage}, brightness: ${this.brightness}, color: ${this.color}, colorTemp: ${this.colorTemp} for reason: ${this.reasonTrace}`;
   }
 
   /**
@@ -52,7 +54,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
           c,
           settings.dayOn,
           '',
-          c.timeout,
+          c.disableAutomaticCommand,
           settings.dayBrightness,
           undefined,
           settings.dayColor,
@@ -63,7 +65,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
           c,
           settings.dawnOn,
           '',
-          c.timeout,
+          c.disableAutomaticCommand,
           settings.dawnBrightness,
           undefined,
           settings.dawnColor,
@@ -74,7 +76,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
           c,
           settings.duskOn,
           '',
-          c.timeout,
+          c.disableAutomaticCommand,
           settings.duskBrightness,
           undefined,
           settings.duskColor,
@@ -85,7 +87,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
           c,
           settings.nightOn,
           '',
-          c.timeout,
+          c.disableAutomaticCommand,
           settings.nightBrightness,
           undefined,
           settings.nightColor,
