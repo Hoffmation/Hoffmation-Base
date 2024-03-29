@@ -5,13 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.24 (2024-03-29)
 
-* (theimo1221) Change iCameraDevice to use devices instead of just open handles
-* (theimo1221) Some package removals and fixes
-* (theimo1221) Highly improve documentation of publicly available properties and functions
-* (theimo1221) Prepare a V3 Migration Guide
-* (theimo1221) Make the disabling of automatic mode on force actions more configurable
+## **WORK IN PROGRESS**
+
+* (theimo1221) Re-add iRestSettings
 
 ## 3.0.0
 
@@ -34,6 +31,10 @@
 * (theimo1221) Improve IoBrokerDevice set State Error Logging
 * (theimo1221) Allow AC "useOwnTemperature" without using Mode.Auto by splitting the settings.
 * (theimo1221) Update API-Service to migrate to new Command Structure
+* (theimo1221) Highly improve documentation of publicly available properties and functions
+* (theimo1221) Prepare a V3 Migration Guide
+* (theimo1221) Make the disabling of automatic mode on force actions more configurable
+* (theimo1221) Change iCameraDevice to use devices instead of just open handles
 
 ## 2.23.0 (2024-02-25)
 

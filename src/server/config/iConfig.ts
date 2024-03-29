@@ -22,6 +22,7 @@ import { iDachsSettings } from './iDachsSettings';
 import { iEnergyManagerSettings } from './iEnergyManagerSettings';
 import { iUnifiSettings } from './iUnifiSettings';
 import { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';
+import { iRestSettings } from './iRestSettings';
 
 /**
  * The main configuration for Hoffmation normally stored in the `main-config.json` file.
@@ -96,6 +97,10 @@ export interface iConfig {
    * @see iPollySettings
    */
   polly?: iPollySettings;
+  /**
+   * @see iRestSettings
+   */
+  restServer?: iRestSettings;
   /**
    * @see iRoomDefaultSettings
    */

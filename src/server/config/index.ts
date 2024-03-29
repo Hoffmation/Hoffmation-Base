@@ -2,6 +2,7 @@ export * from './iConfig';
 export * from './iBlueIrisSettings';
 export * from './iBluetoothTrackingSettings';
 export * from './iEspresenseSettings';
+export * from './iRestSettings';
 export * from './iAsusConfig';
 export * from './iDaikinSettings';
 export * from './iEnergyManagerSettings';
