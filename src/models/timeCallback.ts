@@ -110,10 +110,10 @@ export class TimeCallback {
         }
         break;
     }
-    if (nextCalculatedTime < now && this.nextToDo && this.nextToDo > now) {
+    if (nextCalculatedTime < now && this.nextToDo && this.nextToDo > this.lastDone) {
       ServerLogService.writeLog(
         LogLevel.Info,
-        'Time Callback recalc results in the past, while previous target is still in future --> fire immediately.',
+        `Time Callback recalc results in the past, while previous target wasn't yet done --> fire immediately.`,
       );
       this.perform(now);
       return;
@@ -131,10 +131,10 @@ export class TimeCallback {
 
   public perform(now: Date = new Date()): void {
     ServerLogService.writeLog(LogLevel.Debug, `Timecallback '${this.name}' fired`);
-    this.cFunction();
     this.lastDone = now;
     this.nextToDo = undefined;
     this._calculationSunrise = undefined;
     this._calculationSunset = undefined;
+    this.cFunction();
   }
 }

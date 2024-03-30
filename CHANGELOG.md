@@ -10,6 +10,8 @@
 
 * (theimo1221) Automatic Restore Command shouldn't use original source command source as it is automatic not "
   manual"/"api"/etc
+* (theimo1221) Fix edge case, where a weather update leading to earlier sunset action (in the past) would not trigger
+  the correct callbacks
 
 ## 3.0.0-alpha.27 (2024-03-29)
 

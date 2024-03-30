@@ -134,11 +134,11 @@ export class WindowGroup extends BaseGroup {
   }
 
   public sunriseUp(c: ShutterSunriseUpCommand): void {
-    this.windows.forEach((f) => {
-      if (!this.getRoom().settings.sonnenAufgangRollos || f.getShutter().length === 0) {
+    this.windows.forEach((w) => {
+      if (!this.getRoom().settings.sonnenAufgangRollos || w.getShutter().length === 0) {
         return;
       }
-      f.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 100));
+      w.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 100));
     });
   }
 
@@ -235,7 +235,7 @@ export class WindowGroup extends BaseGroup {
     if (this.sunriseShutterCallback === undefined) {
       this.log(LogLevel.Debug, `Add Sunrise shutter TimeCallback for ${this.roomName}`);
       this.sunriseShutterCallback = new TimeCallback(
-        `${this.roomName} Sonnenaufgang Rollos`,
+        `${this.roomName} Sunrise Shutter`,
         TimeCallbackType.Sunrise,
         () => {
           if (room.skipNextRolloUp) {

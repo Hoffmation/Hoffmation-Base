@@ -111,13 +111,13 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     if (!this._firstCommandRecieved && !c.isInitial) {
       this._firstCommandRecieved = true;
     } else if (this._firstCommandRecieved && c.isInitial) {
-      this.log(LogLevel.Debug, `Skipped initial Rollo to ${pPosition} as we recieved a command already`);
+      this.log(LogLevel.Debug, `Skipped initial shutter to ${pPosition} as we recieved a command already`);
       return;
     }
     if (this.currentLevel === pPosition && !c.isForceAction) {
       this.log(
         LogLevel.Debug,
-        `Skip Rollo command to Position ${pPosition} as this is the current one, commandLog: ${c.logMessage}`,
+        `Skip shutter command to Position ${pPosition} as this is the current one, commandLog: ${c.logMessage}`,
         LogDebugType.SkipUnchangedRolloPosition,
       );
       return;
