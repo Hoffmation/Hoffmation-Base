@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.28 (2024-03-30)
 
 * (theimo1221) Automatic Restore Command shouldn't use original source command source as it is automatic not "
   manual"/"api"/etc
