@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Automatic Restore Command shouldn't use original source command source as it is automatic not "
+  manual"/"api"/etc
+
 ## 3.0.0-alpha.27 (2024-03-29)
 
 * (theimo1221) Don't add default-block-automatic on non-force actions

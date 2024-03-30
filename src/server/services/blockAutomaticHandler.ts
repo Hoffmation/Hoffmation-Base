@@ -3,6 +3,7 @@ import {
   BlockAutomaticLiftBlockCommand,
   BlockAutomaticUntilCommand,
   CollisionSolving,
+  CommandSource,
   RestoreTargetAutomaticValueCommand,
 } from '../../models';
 import { Utils } from './utils';
@@ -56,7 +57,9 @@ export class BlockAutomaticHandler {
     }
     this.automaticBlockedUntil = c.targetDate;
     if (c.revertToAutomaticAtBlockLift) {
-      this.updateRestoreTimeout(new RestoreTargetAutomaticValueCommand(c, 'Restore to automatic state after block.'));
+      const revertCommand = new RestoreTargetAutomaticValueCommand(c, 'Restore to automatic state after block.');
+      revertCommand.overrideCommandSource = CommandSource.Automatic;
+      this.updateRestoreTimeout(revertCommand);
     } else {
       this.removeRestoreTimeout();
     }
