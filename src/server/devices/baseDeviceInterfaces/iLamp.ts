@@ -9,11 +9,6 @@ import { iActuator } from './iActuator';
  */
 export interface iLamp extends iActuator {
   /**
-   * The state value of the device
-   */
-  readonly lightOn: boolean;
-
-  /**
    * Changes the state of the lamp based on the time
    * @param command - The command to execute
    */

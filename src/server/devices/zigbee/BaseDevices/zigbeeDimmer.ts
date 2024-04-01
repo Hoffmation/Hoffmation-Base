@@ -64,7 +64,7 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
 
   /** @inheritDoc */
   public setLight(c: DimmerSetLightCommand): void {
-    if (this._stateIdState === '') {
+    if (this._actuatorOnStateIdState === '') {
       this.log(LogLevel.Error, 'Keine State ID bekannt.');
       return;
     }
@@ -80,12 +80,13 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
       return;
     }
 
-    if (LampUtils.canDimmerChangeBeSkipped(this, c)) {
-      return;
-    }
     if (c.isAutomaticAction) {
       // Preserve the target state for the automatic handler, as
       this.targetAutomaticState = c.on;
+    }
+
+    if (LampUtils.canDimmerChangeBeSkipped(this, c)) {
+      return;
     }
 
     if (c.transitionTime > -1) {

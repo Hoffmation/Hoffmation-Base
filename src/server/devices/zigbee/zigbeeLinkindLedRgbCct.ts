@@ -6,7 +6,7 @@ export class ZigbeeLinkindLedRgbCct extends ZigbeeLedRGBCCT {
   protected readonly _stateIdBrightness: string;
   protected readonly _stateIdColor: string;
   protected readonly _stateIdColorTemp: string;
-  protected readonly _stateIdState: string;
+  protected readonly _actuatorOnStateIdState: string;
   protected readonly _stateIdTransitionTime: string;
   protected readonly _stateNameBrightness: string = 'brightness';
   protected readonly _stateNameState: string = 'state';
@@ -19,7 +19,7 @@ export class ZigbeeLinkindLedRgbCct extends ZigbeeLedRGBCCT {
     this._stateIdBrightness = `${this.info.fullID}.brightness`;
     this._stateIdColor = `${this.info.fullID}.color`;
     this._stateIdColorTemp = `${this.info.fullID}.colortemp`;
-    this._stateIdState = `${this.info.fullID}.state`;
+    this._actuatorOnStateIdState = `${this.info.fullID}.state`;
     this._stateIdTransitionTime = `${this.info.fullID}.transition_time`;
   }
 }

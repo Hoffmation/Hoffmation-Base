@@ -49,28 +49,11 @@ export class LightGroup extends BaseGroup {
   }
 
   public anyLightsOn(): boolean {
-    let i: number;
-    for (i = 0; i < this.getLights().length; i++) {
-      if (this.getLights()[i].lightOn) {
-        return true;
-      }
-    }
-    for (i = 0; i < this.getLED().length; i++) {
-      if (this.getLED()[i].actuatorOn) {
-        return true;
-      }
-    }
-    for (i = 0; i < this.getOutlets().length; i++) {
-      if (this.getOutlets()[i].actuatorOn) {
-        return true;
-      }
-    }
-    for (i = 0; i < this.getWled().length; i++) {
-      if (this.getWled()[i].actuatorOn) {
-        return true;
-      }
-    }
-    return false;
+    return (
+      this.getAllAsActuator().find((a: iActuator) => {
+        return a.actuatorOn;
+      }) !== undefined
+    );
   }
 
   public getLights(): iLamp[] {

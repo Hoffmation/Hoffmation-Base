@@ -16,29 +16,29 @@ import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
 import { LampUtils } from '../../sharedFunctions';
 
 export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
-  private _actuatorOn: boolean = false;
   /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   /** @inheritDoc */
   public targetAutomaticState: boolean = false;
-  protected _lastPersist: number = 0;
-
   /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
-  protected abstract readonly _stateIdState: string;
   /** @inheritDoc */
   public queuedValue: boolean | null = null;
-
-  /** @inheritDoc */
-  public get actuatorOn(): boolean {
-    return this._actuatorOn;
-  }
+  protected _lastPersist: number = 0;
+  protected abstract readonly _actuatorOnStateIdState: string;
+  protected readonly _stateNameState: string = 'state';
+  private _actuatorOn: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+  }
+
+  /** @inheritDoc */
+  public get actuatorOn(): boolean {
+    return this._actuatorOn;
   }
 
   /** @inheritDoc */
@@ -59,7 +59,7 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     this.queuedValue = null;
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
-      case 'state':
+      case this._stateNameState:
         if (!handledByChildObject) {
           this.log(LogLevel.Trace, `Aktor Update für ${this.info.customName} auf ${state.val}`);
         }
@@ -71,7 +71,7 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
 
   /** @inheritDoc */
   public setActuator(command: ActuatorSetStateCommand): void {
-    if (this._stateIdState === '') {
+    if (this._actuatorOnStateIdState === '') {
       this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
       return;
     }
@@ -100,7 +100,7 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
-    this.setState(this._stateIdState, c.stateValue, undefined, (err) => {
+    this.setState(this._actuatorOnStateIdState, c.stateValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
   }

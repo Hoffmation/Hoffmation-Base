@@ -7,14 +7,14 @@ import { DeviceCapability } from '../DeviceCapability';
 import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
 export class ZigbeeUbisysLampe extends ZigbeeLamp implements iLamp, iLoadMeter {
-  protected readonly _stateIdState: string;
+  protected readonly _actuatorOnStateIdState: string;
   protected readonly _stateNameState: string;
   private _loadPower: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeUbisysLampe);
     this.deviceCapabilities.push(DeviceCapability.loadMetering);
-    this._stateIdState = `${pInfo.fullID}.state`;
+    this._actuatorOnStateIdState = `${pInfo.fullID}.state`;
     this._stateNameState = `${pInfo.fullID}.state`;
   }
 

@@ -5,17 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.35 (2024-04-01)
 
-* (theimo1221) Don't turn on lamps on shutter down in rooms without motion sensor
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.34 (2024-04-01)
-
-* (theimo1221) Correct skip actuator change logic
-
-## 3.0.0-alpha.33 (2024-04-01)
-
-* (theimo1221) Fix Edge Case resulting in shutter not moving down
+* (theimo1221) Fix issue were Zigbee Lamp couldn't be toggled off
 
 ## 3.0.0
 
@@ -51,6 +44,8 @@
 * (theimo1221) Reduce not necessary dimmer change commands
 * (theimo1221) Add "actions" so commands starting from a sensor action can be correctly identified/traced (e.g. Motion,
   Temperature, Humidity)
+* (theimo1221) Fix Edge Case resulting in shutter not moving down on sunset
+* (theimo1221) Don't turn on lamps on shutter down in rooms without motion sensor
 
 ## 2.23.0 (2024-02-25)
 

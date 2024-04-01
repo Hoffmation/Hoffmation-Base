@@ -20,7 +20,7 @@ import { LampUtils } from '../sharedFunctions';
 
 export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAutomatic {
   /** @inheritDoc */
-  public lightOn: boolean = false;
+  private _actuatorOn: boolean = false;
   /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
   private lightOnSwitchID: string = '';
@@ -40,7 +40,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
   }
 
   public get actuatorOn(): boolean {
-    return this.lightOn;
+    return this._actuatorOn;
   }
 
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
@@ -55,7 +55,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     switch (idSplit[3]) {
       case '1':
         if (idSplit[4] === 'STATE') {
-          this.lightOn = state.val as boolean;
+          this._actuatorOn = state.val as boolean;
           this.persist();
         }
         break;

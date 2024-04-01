@@ -157,13 +157,13 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (LampUtils.checkBlockActive(this, c)) {
       return;
     }
-
-    if (LampUtils.canDimmerChangeBeSkipped(this, c)) {
-      return;
-    }
     if (c.isAutomaticAction) {
       // Preserve the target state for the automatic handler, as
       this.targetAutomaticState = c.on;
+    }
+
+    if (LampUtils.canDimmerChangeBeSkipped(this, c)) {
+      return;
     }
     if (c.brightness > -1 && c.on) {
       this.setBrightness(c.brightness, () => {
