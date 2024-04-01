@@ -13,6 +13,7 @@
 * (theimo1221) Fix strom-stoß devices to not block automatic on normal turn of action
 * (theimo1221) Reduce duplicate code within zigbee-actuators by introducing proper hierachy of
   classes (`ZigbeeActuator` -> `ZigbeeLamp` -> `ZigbeeDimmer` -> `ZigbeeLedRgbcct`)
+* (theimo1221) Add HeatingMode for transitional season
 
 ## 3.0.0
 

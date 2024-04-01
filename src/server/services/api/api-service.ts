@@ -34,8 +34,6 @@ import { LogObject, ServerLogService } from '../log-service';
 import { AcDevice, AcMode, DaikinService } from '../ac';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
-import { SettingsService } from '../settings-service';
-import { HeatingMode } from '../../config';
 import { GroupSettings } from '../../../models/groupSettings/groupSettings';
 import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
 
@@ -140,7 +138,7 @@ export class API {
       if (!desiredState) {
         desiredMode = AcMode.Off;
       } else {
-        desiredMode = SettingsService.heatMode == HeatingMode.Winter ? AcMode.Heating : AcMode.Cooling;
+        desiredMode = d.heatingAllowed ? AcMode.Heating : AcMode.Cooling;
       }
     }
     d.log(LogLevel.Info, `API Call to set AC to ${desiredState} with mode ${desiredMode} for ${forceTime}ms`);

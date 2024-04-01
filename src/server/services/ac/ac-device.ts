@@ -43,6 +43,28 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   protected _mode: AcMode = AcMode.Off;
   private _movementCallbackAdded: boolean = false;
 
+  /**
+   * Whether the AC is allowed to cool (depends on the season
+   * @returns {boolean} True if the AC is allowed to cool
+   */
+  public get coolingAllowed(): boolean {
+    if (SettingsService.heatMode !== HeatingMode.Summer) {
+      return false;
+    }
+    if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent()) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Whether the AC is allowed to heat (depends on the season and the settings)
+   * @returns {boolean} True if the AC is allowed to heat
+   */
+  public get heatingAllowed(): boolean {
+    return SettingsService.heatMode !== HeatingMode.Summer && this.settings.heatingAllowed;
+  }
+
   /** @inheritDoc */
   public get temperature(): number {
     return this._roomTemperature;
@@ -190,11 +212,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
         return AcMode.Auto;
       }
 
-      if (SettingsService.heatMode !== HeatingMode.Sommer && this.settings.heatingAllowed) {
+      if (this.heatingAllowed) {
         return AcMode.Heating;
-      }
-
-      if (!this.settings.noCoolingOnMovement || this.room?.PraesenzGroup?.anyPresent() !== true) {
+      } else if (this.coolingAllowed) {
         return AcMode.Cooling;
       }
       return AcMode.Off;
@@ -227,12 +247,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     const coolUntil: number = targetTemp + threshold;
     const heatUntil: number = targetTemp - thresholdHeating;
 
-    if (temp > coolUntil && SettingsService.heatMode === HeatingMode.Sommer) {
+    if (temp > coolUntil && this.coolingAllowed) {
       desiredMode = AcMode.Cooling;
-      if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent() === true) {
-        return AcMode.Off;
-      }
-    } else if (temp < heatUntil && this.settings.heatingAllowed && SettingsService.heatMode === HeatingMode.Winter) {
+    } else if (temp < heatUntil && this.heatingAllowed) {
       desiredMode = AcMode.Heating;
     }
     if (acOn ? desiredMode === AcMode.Off : desiredMode !== AcMode.Off) {
