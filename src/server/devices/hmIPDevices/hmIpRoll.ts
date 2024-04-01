@@ -6,6 +6,7 @@ import { WindowPosition } from '../models';
 import {
   CommandSource,
   LogLevel,
+  ShutterPositionChangedAction,
   ShutterSetLevelCommand,
   ShutterSettings,
   WindowSetDesiredPositionCommand,
@@ -15,7 +16,6 @@ import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
-import { ShutterPositionChangedAction } from '../../../models/action/shutterPositionChangedAction';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */

@@ -5,6 +5,7 @@ import {
   CommandSource,
   LogLevel,
   RoomSetLightTimeBasedCommand,
+  ShutterPositionChangedAction,
   ShutterSetLevelCommand,
   TimeOfDay,
   WindowRestoreDesiredPositionCommand,
@@ -16,7 +17,6 @@ import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { ZigbeeMagnetContact } from '../zigbee';
-import { ShutterPositionChangedAction } from '../../../models/action/shutterPositionChangedAction';
 
 export class Window extends BaseGroup {
   private _desiredPosition: number = 0;

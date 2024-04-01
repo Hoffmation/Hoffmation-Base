@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { iBaseDevice, iCameraDevice, iRoomDevice } from '../baseDeviceInterfaces';
-import { Base64Image, CameraSettings, CountToday, LogLevel, RoomBase } from '../../../models';
+import { Base64Image, CameraSettings, CountToday, LogLevel, MotionSensorAction, RoomBase } from '../../../models';
 import { BlueIrisCoordinator } from './blueIrisCoordinator';
 import { API, LogDebugType, ServerLogService, SettingsService, TelegramService, Utils } from '../../services';
 import { Devices } from '../devices';
@@ -8,7 +8,6 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 import { ioBrokerMain } from '../../ioBroker';
-import { MotionSensorAction } from '../../../models/action/motionSensorAction';
 
 export class CameraDevice implements iCameraDevice {
   /**

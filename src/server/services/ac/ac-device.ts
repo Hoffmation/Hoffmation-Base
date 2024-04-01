@@ -14,6 +14,8 @@ import {
   CommandSource,
   ExcessEnergyConsumerSettings,
   LogLevel,
+  PresenceGroupFirstEnterAction,
+  PresenceGroupLastLeftAction,
   RoomBase,
 } from '../../../models';
 import { Utils } from '../utils';
@@ -25,8 +27,6 @@ import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { PresenceGroupFirstEnterAction } from '../../../models/action/presenceGroupFirstEnterAction';
-import { PresenceGroupLastLeftAction } from '../../../models/action/presenceGroupLastLeftAction';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   /** @inheritDoc */

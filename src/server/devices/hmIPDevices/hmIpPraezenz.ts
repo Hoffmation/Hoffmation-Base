@@ -1,11 +1,10 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday, LogLevel, MotionSensorSettings } from '../../../models';
+import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
-import { MotionSensorAction } from '../../../models/action/motionSensorAction';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
   // TODO: Add iPresenceSensor

@@ -3,10 +3,8 @@ import { iBatteryDevice, iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VAL
 import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
-import { LogLevel } from '../../../models';
+import { HumiditySensorChangeAction, LogLevel, TemperatureSensorChangeAction } from '../../../models';
 import { Utils } from '../../services';
-import { HumiditySensorChangeAction } from '../../../models/action/humiditySensorChangeAction';
-import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   private _battery: number = -99;

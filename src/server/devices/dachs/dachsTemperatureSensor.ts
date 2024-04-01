@@ -5,8 +5,7 @@ import { DeviceType } from '../deviceType';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import _ from 'lodash';
-import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
-import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
+import { DeviceSettings, LogLevel, RoomBase, TemperatureSensorChangeAction } from '../../../models';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */

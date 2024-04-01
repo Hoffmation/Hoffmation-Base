@@ -1,13 +1,17 @@
-import { ActuatorSetStateCommand, LogLevel, RoomSetLightTimeBasedCommand } from '../../../models';
+import {
+  ActuatorSetStateCommand,
+  LogLevel,
+  MotionSensorAction,
+  PresenceGroupFirstEnterAction,
+  PresenceGroupLastLeftAction,
+  RoomSetLightTimeBasedCommand,
+} from '../../../models';
 import { RoomService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
 import { iMotionSensor } from '../baseDeviceInterfaces';
-import { MotionSensorAction } from '../../../models/action/motionSensorAction';
-import { PresenceGroupFirstEnterAction } from '../../../models/action/presenceGroupFirstEnterAction';
-import { PresenceGroupLastLeftAction } from '../../../models/action/presenceGroupLastLeftAction';
 
 export class PresenceGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);

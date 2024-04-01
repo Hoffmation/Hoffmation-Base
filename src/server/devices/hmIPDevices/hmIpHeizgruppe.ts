@@ -1,7 +1,14 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iDisposable, TimeCallbackService, Utils } from '../../services';
-import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import {
+  HeaterSettings,
+  HumiditySensorChangeAction,
+  LogLevel,
+  TemperatureSensorChangeAction,
+  TimeCallback,
+  TimeCallbackType,
+} from '../../../models';
 import {
   iHeater,
   iHumiditySensor,
@@ -13,8 +20,6 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
-import { HumiditySensorChangeAction } from '../../../models/action/humiditySensorChangeAction';
-import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */

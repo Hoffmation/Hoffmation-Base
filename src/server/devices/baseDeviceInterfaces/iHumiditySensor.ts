@@ -1,5 +1,5 @@
 import { iRoomDevice } from './iRoomDevice';
-import { HumiditySensorChangeAction } from '../../../models/action/humiditySensorChangeAction';
+import { HumiditySensorChangeAction } from '../../../models';
 
 export const UNDEFINED_HUMIDITY_VALUE = -1;
 

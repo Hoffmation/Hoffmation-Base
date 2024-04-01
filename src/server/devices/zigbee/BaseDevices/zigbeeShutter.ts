@@ -4,6 +4,7 @@ import {
   CommandSource,
   LogLevel,
   ShutterCalibration,
+  ShutterPositionChangedAction,
   ShutterSetLevelCommand,
   ShutterSettings,
   WindowSetDesiredPositionCommand,
@@ -16,7 +17,6 @@ import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
-import { ShutterPositionChangedAction } from '../../../../models/action/shutterPositionChangedAction';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** @inheritDoc */

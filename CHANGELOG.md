@@ -5,11 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.31 (2024-04-01)
 
-* (theimo1221) Reduce not necessary dimmer change commands
-* (theimo1221) Add "actions" so commands starting from a sensor action can be correctly identified/traced (e.g. Motion,
-  Temperature, Humidity)
+## **WORK IN PROGRESS**
+
+* (theimo1221) Optimize imports
 
 ## 3.0.0
 
@@ -42,6 +41,9 @@
 * (theimo1221) Reduce duplicate code within zigbee-actuators by introducing proper hierachy of
   classes (`ZigbeeActuator` -> `ZigbeeLamp` -> `ZigbeeDimmer` -> `ZigbeeLedRgbcct`)
 * (theimo1221) Add HeatingMode for transitional season
+* (theimo1221) Reduce not necessary dimmer change commands
+* (theimo1221) Add "actions" so commands starting from a sensor action can be correctly identified/traced (e.g. Motion,
+  Temperature, Humidity)
 
 ## 2.23.0 (2024-02-25)
 
