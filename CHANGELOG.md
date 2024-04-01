@@ -10,19 +10,6 @@
 
 * (theimo1221) Reduce not necessary dimmer change commands
 
-## 3.0.0-alpha.30 (2024-04-01)
-
-* (theimo1221) Debounce Zigbee Actuator Persistence
-
-## 3.0.0-alpha.29 (2024-04-01)
-
-* (theimo1221) Correct isAutomatic detection
-* (theimo1221) Fix some inconsistent date formatting
-* (theimo1221) Fix strom-stoß devices to not block automatic on normal turn of action
-* (theimo1221) Reduce duplicate code within zigbee-actuators by introducing proper hierachy of
-  classes (`ZigbeeActuator` -> `ZigbeeLamp` -> `ZigbeeDimmer` -> `ZigbeeLedRgbcct`)
-* (theimo1221) Add HeatingMode for transitional season
-
 ## 3.0.0
 
 * (theimo1221) Rework of commands especially with focus on command source and the stacked reason
@@ -50,6 +37,10 @@
 * (theimo1221) Change iCameraDevice to use devices instead of just open handles
 * (theimo1221) Fix edge case, where a weather update leading to earlier sunset action (in the past) would not trigger
   the correct callbacks
+* (theimo1221) Fix some inconsistent date formatting
+* (theimo1221) Reduce duplicate code within zigbee-actuators by introducing proper hierachy of
+  classes (`ZigbeeActuator` -> `ZigbeeLamp` -> `ZigbeeDimmer` -> `ZigbeeLedRgbcct`)
+* (theimo1221) Add HeatingMode for transitional season
 
 ## 2.23.0 (2024-02-25)
 
