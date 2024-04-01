@@ -118,6 +118,14 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
       return;
     }
 
+    if (LampUtils.checkDimmerUnchanged(this, c)) {
+      return;
+    }
+    if (c.isAutomaticAction) {
+      // Preserve the target state for the automatic handler, as
+      this.targetAutomaticState = c.on;
+    }
+
     this.log(LogLevel.Debug, c.logMessage);
 
     if (c.on && c.brightness !== -1 && this.brightness < 10) {

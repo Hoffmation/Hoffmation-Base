@@ -7,12 +7,14 @@ import {
   BlockAutomaticLiftBlockCommand,
   CommandSource,
   CommandType,
+  DimmerSetLightCommand,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
   LogLevel,
   TimeOfDay,
 } from '../../../models';
+import { iDimmableLamp } from '../baseDeviceInterfaces/iDimmableLamp';
 
 export class LampUtils {
   private static stromStossContinueTimeouts: Map<string, NodeJS.Timeout> = new Map<string, NodeJS.Timeout>();
@@ -105,16 +107,47 @@ export class LampUtils {
     return false;
   }
 
-  public static checkUnchanged(device: iActuator, c: ActuatorSetStateCommand): boolean {
-    if (!c.isForceAction && c.on === device.actuatorOn && device.queuedValue === null) {
+  /**
+   * Check if the dimmer is already in the desired state thus allowing to skip this command
+   * @param {iDimmableLamp} device - The device to check
+   * @param {DimmerSetLightCommand} c - The command to check
+   * @returns {boolean} - True if the command can be skipped
+   */
+  public static checkDimmerUnchanged(device: iDimmableLamp, c: DimmerSetLightCommand): boolean {
+    if (c.isForceAction) {
+      return false;
+    }
+    if (!this.checkUnchanged(device, c, true)) {
+      return false;
+    }
+    if (c.brightness !== device.brightness) {
+      return false;
+    }
+
+    device.log(
+      LogLevel.DeepTrace,
+      `Light command can be skipped as the device is already in desired state: ${c.logMessage}`,
+      LogDebugType.SkipUnchangedActuatorCommand,
+    );
+    return true;
+  }
+
+  public static checkUnchanged(device: iActuator, c: ActuatorSetStateCommand, noLog: boolean = false): boolean {
+    if (c.isForceAction) {
+      return false;
+    }
+    if (c.on !== device.queuedValue || (device.queuedValue === null && device.actuatorOn !== c.on)) {
+      return false;
+    }
+
+    if (!noLog) {
       device.log(
         LogLevel.DeepTrace,
-        `Skip light command as it is already ${c.on}`,
+        `Light command can be skipped as device is already in desired state; command: ${c.logMessage}`,
         LogDebugType.SkipUnchangedActuatorCommand,
       );
-      return true;
     }
-    return false;
+    return true;
   }
 
   public static setActuator(device: iActuator, c: ActuatorSetStateCommand): void {
