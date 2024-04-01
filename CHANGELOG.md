@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.31 (2024-04-01)
 
 * (theimo1221) Reduce not necessary dimmer change commands
 * (theimo1221) Add "actions" so commands starting from a sensor action can be correctly identified/traced (e.g. Motion,
