@@ -31,6 +31,9 @@ export abstract class BaseCommand {
   }
 
   public get isAutomaticAction(): boolean {
+    if (this.overrideCommandSource !== undefined) {
+      return this.overrideCommandSource === CommandSource.Automatic;
+    }
     if (this.source instanceof BaseCommand) {
       return this.source.isAutomaticAction;
     }
