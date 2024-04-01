@@ -46,7 +46,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */
   public targetAutomaticState: boolean = false;
   protected _info: DeviceInfo;
-  private _on: boolean = false;
+  private _actuatorOn: boolean = false;
   private _color: string = '#fcba32';
   private _colortemp: number = 500;
   private _room: RoomBase | undefined = undefined;
@@ -89,11 +89,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public get actuatorOn(): boolean {
-    return this._on;
-  }
-
-  public get lightOn(): boolean {
-    return this._on;
+    return this._actuatorOn;
   }
 
   public get info(): DeviceInfo {
@@ -212,7 +208,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   public update(data: GoveeDeviceState & GoveeDeviceStateInfo): void {
     this.queuedValue = null;
-    this._on = data.onOff === 1;
+    this._actuatorOn = data.onOff === 1;
     this.brightness = data.brightness;
     this._color = `#${data.color.r.toString(16)}${data.color.g.toString(16)}${data.color.b.toString(16)}`;
     this._colortemp = data.colorTemInKelvin;
@@ -249,7 +245,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private turnOn(): void {
-    if (this._on) {
+    if (this._actuatorOn) {
       return;
     }
     this.queuedValue = true;

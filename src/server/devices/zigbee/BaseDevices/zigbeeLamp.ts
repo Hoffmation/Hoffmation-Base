@@ -13,11 +13,6 @@ export abstract class ZigbeeLamp extends ZigbeeActuator implements iLamp, iTempo
   }
 
   /** @inheritDoc */
-  public get lightOn(): boolean {
-    return this.actuatorOn;
-  }
-
-  /** @inheritDoc */
   public update(
     idSplit: string[],
     state: ioBroker.State,

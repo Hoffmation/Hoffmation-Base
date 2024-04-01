@@ -53,11 +53,6 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   }
 
   /** @inheritDoc */
-  public get lightOn(): boolean {
-    return this.on;
-  }
-
-  /** @inheritDoc */
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.setLight(new WledSetLightCommand(c, this.targetAutomaticState));
   }
