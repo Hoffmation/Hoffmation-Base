@@ -7,6 +7,7 @@ import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
 export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   private _loadPower: number = 0;
+  protected readonly _stateIdState: string;
 
   /**
    * Creates an instance of {@link DeviceType.ZigbeeUbisysActuator} or a derived class like {@link ZigbeeUbisysLampe}
@@ -14,8 +15,9 @@ export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
    * @param deviceType - The device type (if not {@link DeviceType.ZigbeeUbisysActuator})
    */
   public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType = DeviceType.ZigbeeUbisysActuator) {
-    super(pInfo, deviceType, `${pInfo.fullID}.state`);
+    super(pInfo, deviceType);
     this.deviceCapabilities.push(DeviceCapability.loadMetering);
+    this._stateIdState = `${pInfo.fullID}.state`;
   }
 
   /** @inheritDoc */
@@ -24,15 +26,7 @@ export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   }
 
   /** @inheritDoc */
-  public update(
-    idSplit: string[],
-    state: ioBroker.State,
-    initial: boolean = false,
-    handledByChildObject: boolean = false,
-  ): void {
-    if (!handledByChildObject) {
-      this.log(LogLevel.DeepTrace, `Aktuator Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
-    }
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     switch (idSplit[3]) {
       case 'load_power':
         const newLoadPower: number = state.val as number;

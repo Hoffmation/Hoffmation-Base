@@ -7,3 +7,4 @@ export * from './zigbeeMagnetContact';
 export * from './zigbeeMotionSensor';
 export * from './zigbeeShutter';
 export * from './zigbeeSwitch';
+export { ZigbeeLamp } from './zigbeeLamp';

@@ -15,7 +15,7 @@ import { DeviceCapability } from '../../DeviceCapability';
 import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
 import { LampUtils } from '../../sharedFunctions';
 
-export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
+export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   private _actuatorOn: boolean = false;
   /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
@@ -24,7 +24,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
 
   /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
-  protected readonly actuatorOnSwitchID: string;
+  protected abstract readonly _stateIdState: string;
   /** @inheritDoc */
   public queuedValue: boolean | null = null;
 
@@ -33,11 +33,10 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     return this._actuatorOn;
   }
 
-  public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType, actuatorOnSwitchID: string) {
+  public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
-    this.actuatorOnSwitchID = actuatorOnSwitchID;
     this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
   }
 
@@ -71,7 +70,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
 
   /** @inheritDoc */
   public setActuator(command: ActuatorSetStateCommand): void {
-    if (this.actuatorOnSwitchID === '') {
+    if (this._stateIdState === '') {
       this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
       return;
     }
@@ -95,7 +94,7 @@ export class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
-    this.setState(this.actuatorOnSwitchID, c.stateValue, undefined, (err) => {
+    this.setState(this._stateIdState, c.stateValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });
   }

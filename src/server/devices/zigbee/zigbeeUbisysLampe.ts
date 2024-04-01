@@ -1,50 +1,40 @@
 import { DeviceType } from '../deviceType';
-import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import { iLamp } from '../baseDeviceInterfaces';
-import { Utils } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ZigbeeLamp } from './BaseDevices';
 import { DeviceCapability } from '../DeviceCapability';
-import { ZigbeeUbisysActuator } from './zigbeeUbisysActuator';
-import { LampUtils } from '../sharedFunctions';
+import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
-export class ZigbeeUbisysLampe extends ZigbeeUbisysActuator implements iLamp {
+export class ZigbeeUbisysLampe extends ZigbeeLamp implements iLamp, iLoadMeter {
+  protected readonly _stateIdState: string;
+  protected readonly _stateNameState: string;
+  private _loadPower: number = 0;
+
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeUbisysLampe);
-    this.deviceCapabilities.push(DeviceCapability.lamp);
+    this.deviceCapabilities.push(DeviceCapability.loadMetering);
+    this._stateIdState = `${pInfo.fullID}.state`;
+    this._stateNameState = `${pInfo.fullID}.state`;
   }
 
   /** @inheritDoc */
-  public get lightOn(): boolean {
-    return super.actuatorOn;
+  public get loadPower(): number {
+    return this._loadPower;
   }
 
   /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
-      case 'state':
-        this.log(LogLevel.Trace, `Lampen Update für ${this.info.customName} auf ${state.val}`);
+      case 'load_power':
+        const newLoadPower: number = state.val as number;
+        this.log(
+          Math.abs(newLoadPower - this._loadPower) > 0.25 ? LogLevel.Trace : LogLevel.DeepTrace,
+          `Outlet update, new current load power: ${state.val}`,
+        );
+        this._loadPower = newLoadPower;
         break;
     }
-  }
-
-  /** @inheritdoc */
-  public setLight(c: LampSetLightCommand): void {
-    super.setActuator(c);
-  }
-
-  /** @inheritDoc */
-  public toggleLight(c: LampToggleLightCommand): boolean {
-    return LampUtils.toggleLight(this, c);
-  }
-
-  /** @inheritDoc */
-  public setTimeBased(c: LampSetTimeBasedCommand): void {
-    LampUtils.setTimeBased(this, c);
-  }
-
-  /** @inheritDoc */
-  public persist(): void {
-    Utils.dbo?.persistActuator(this);
+    super.update(idSplit, state, initial, true);
   }
 }
