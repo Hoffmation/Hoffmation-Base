@@ -19,7 +19,7 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
     this._settingsContainer.onChangeCb = this.onSettingChange.bind(this);
     this._settingsContainer.initializeFromDb(room);
-    WeatherService.addWeatherUpdateCb(`RolloWeatherUpdate${this.roomName}`, () => {
+    WeatherService.addWeatherUpdateCb(`ShutterWeatherUpdate${this.roomName}`, () => {
       if (this.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
         this.room?.recalcTimeCallbacks();
       }

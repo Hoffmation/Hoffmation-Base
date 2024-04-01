@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.32 (2024-04-01)
 
-* (theimo1221) Optimize imports
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Edge Case resulting in shutter not moving down
 
 ## 3.0.0
 

@@ -110,17 +110,26 @@ export class TimeCallback {
         }
         break;
     }
-    if (nextCalculatedTime < now && this.nextToDo && this.nextToDo > this.lastDone) {
-      ServerLogService.writeLog(
-        LogLevel.Info,
-        `Time Callback recalc results in the past, while previous target wasn't yet done --> fire immediately.`,
-      );
-      this.perform(now);
-      return;
-    }
     if (this.nextToDo?.getTime() == nextCalculatedTime.getTime()) {
       // No change
       return;
+    }
+    if (this.nextToDo && this.nextToDo > this.lastDone) {
+      if (nextCalculatedTime < now) {
+        ServerLogService.writeLog(
+          LogLevel.Info,
+          `Time Callback recalc results in the past, while previous target wasn't yet done --> fire immediately.`,
+        );
+        this.perform(now);
+        return;
+      } else if (nextCalculatedTime.getDay() !== this.nextToDo.getDay() && this.type === TimeCallbackType.SunSet) {
+        // Recalculation between Sunset and delayed sunset action can result in the next day beeing calculated --> fire immediately
+        ServerLogService.writeLog(
+          LogLevel.Info,
+          `Time Callback recalc results in the next day, while previous action wasn't yet fired --> fire immediately.`,
+        );
+        this.perform(now);
+      }
     }
     this.nextToDo = nextCalculatedTime;
     ServerLogService.writeLog(
