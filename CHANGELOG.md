@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't turn on lamps on shutter down in rooms without motion sensor
+
 ## 3.0.0-alpha.34 (2024-04-01)
 
 * (theimo1221) Correct skip actuator change logic

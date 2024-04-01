@@ -2,6 +2,7 @@ import { TimeCallback, TimeOfDay } from '../timeCallback';
 import {
   BaseGroup,
   DeviceCluster,
+  DeviceClusterType,
   GroupType,
   HeatGroup,
   LightGroup,
@@ -164,10 +165,22 @@ export class RoomBase implements iRoomBase, iIdHolder {
       return;
     }
 
-    if (c.movementDependant && this.PraesenzGroup && !this.PraesenzGroup?.anyPresent()) {
-      this.log(LogLevel.Trace, 'Turn off lights as no-one is present.');
-      this.LightGroup.switchAll(new ActuatorSetStateCommand(c, false, 'No one is present --> Turn off lights.'));
-      return;
+    if (c.movementDependant) {
+      if (
+        !this.PraesenzGroup ||
+        this.PraesenzGroup.deviceCluster.getDevicesByType(DeviceClusterType.MotionDetection).length === 0
+      ) {
+        this.log(
+          LogLevel.Trace,
+          'Ignore movement dependant "setLightTimeBased" as we have no Presence Group or no sensors',
+        );
+        return;
+      }
+      if (!this.PraesenzGroup.anyPresent()) {
+        this.log(LogLevel.Trace, 'Turn off lights as no-one is present.');
+        this.LightGroup.switchAll(new ActuatorSetStateCommand(c, false, 'No one is present --> Turn off lights.'));
+        return;
+      }
     }
 
     if (!this.settings.lampOffset && !this.settings.roomIsAlwaysDark) {
