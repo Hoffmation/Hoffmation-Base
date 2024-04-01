@@ -16,6 +16,7 @@ import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
+import { ShutterPositionChangedAction } from '../../../../models/action/shutterPositionChangedAction';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** @inheritDoc */
@@ -62,13 +63,13 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   }
 
   /** @inheritDoc */
-  public set currentLevel(value: number) {
+  protected set currentLevel(value: number) {
     if (value !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
       value = this._setLevel;
     }
     if (value !== this._currentLevel && this._window) {
       Utils.guardedNewThread(() => {
-        this._window?.rolloPositionChange(value);
+        this._window?.rolloPositionChange(new ShutterPositionChangedAction(this, value));
       }, this);
       this.persist();
     }

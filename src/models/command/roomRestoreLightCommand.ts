@@ -4,7 +4,7 @@ import { CommandSource } from './commandSource';
 
 export class RoomRestoreLightCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.RoomRestoreLightCommand;
+  public override type: CommandType = CommandType.RoomRestoreLightCommand;
 
   /**
    * Command to restore the normal automatic light-state of a room

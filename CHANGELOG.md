@@ -9,6 +9,8 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Reduce not necessary dimmer change commands
+* (theimo1221) Add "actions" so commands starting from a sensor action can be correctly identified/traced (e.g. Motion,
+  Temperature, Humidity)
 
 ## 3.0.0
 

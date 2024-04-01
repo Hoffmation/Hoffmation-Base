@@ -6,6 +6,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import _ from 'lodash';
 import { DeviceSettings, LogLevel, RoomBase } from '../../../models';
+import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
@@ -25,7 +26,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
     false,
   );
 
-  private _temperaturCallbacks: ((pValue: number) => void)[] = [];
+  private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
   private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
   protected _info: DeviceInfo;
 
@@ -91,7 +92,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   private set temperature(val: number) {
     this._temperature = val;
     for (const cb of this._temperaturCallbacks) {
-      cb(val);
+      cb(new TemperatureSensorChangeAction(this, val));
     }
   }
 
@@ -100,10 +101,10 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   }
 
   /** @inheritDoc */
-  public addTempChangeCallback(pCallback: (pValue: number) => void): void {
+  public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
     this._temperaturCallbacks.push(pCallback);
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(this._temperature);
+      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
     }
   }
 

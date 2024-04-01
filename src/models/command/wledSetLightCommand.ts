@@ -9,7 +9,7 @@ import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class WledSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.WledSetLightCommand;
+  public override type: CommandType = CommandType.WledSetLightCommand;
 
   /**
    * Command to set the light state of a WLED device

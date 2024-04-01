@@ -11,7 +11,7 @@ export abstract class BaseCommand {
    *
    * For checking if any command in the stack is of a specific type, use the {@link containsType} method.
    */
-  public abstract _commandType: CommandType;
+  public abstract type: CommandType;
   /**
    * If set, this will be used in regards to checking if this is a force/manual/automatic action.
    * @type {CommandSource | undefined} The source of the command
@@ -77,7 +77,7 @@ export abstract class BaseCommand {
   }
 
   public get reasonTrace(): string {
-    const ownPart: string = this.reason !== '' ? `${this._commandType}("${this.reason}")` : `${this._commandType}`;
+    const ownPart: string = this.reason !== '' ? `${this.type}("${this.reason}")` : `${this.type}`;
     if (typeof this.source === 'object') {
       return `${this.source.reasonTrace} -> ${ownPart}`;
     }
@@ -86,7 +86,7 @@ export abstract class BaseCommand {
   }
 
   public containsType(type: CommandType): boolean {
-    if (this._commandType === type) {
+    if (this.type === type) {
       return true;
     }
     if (this.source instanceof BaseCommand) {

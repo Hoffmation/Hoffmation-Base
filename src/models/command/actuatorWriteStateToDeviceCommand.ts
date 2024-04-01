@@ -5,7 +5,7 @@ import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
+  public override type: CommandType = CommandType.ActuatorWriteStateToDeviceCommand;
 
   /**
    * Command to write the state of an actuator to the device

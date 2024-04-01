@@ -8,6 +8,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
 import { ioBrokerMain } from '../../ioBroker';
+import { MotionSensorAction } from '../../../models/action/motionSensorAction';
 
 export class CameraDevice implements iCameraDevice {
   /**
@@ -42,7 +43,7 @@ export class CameraDevice implements iCameraDevice {
   private _dogDetectedStateId: string | undefined = undefined;
   private _movementDetectedStateId: string | undefined = undefined;
   private _initialized: boolean = false;
-  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+  private _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
   private _lastImage: string = '';
   private _personDetected: boolean = false;
   private _dogDetected: boolean = false;
@@ -138,7 +139,7 @@ export class CameraDevice implements iCameraDevice {
   }
 
   /** @inheritDoc */
-  public addMovementCallback(pCallback: (newState: boolean) => void): void {
+  public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
@@ -277,7 +278,7 @@ export class CameraDevice implements iCameraDevice {
     }
 
     for (const c of this._movementDetectedCallback) {
-      c(newState);
+      c(new MotionSensorAction(this));
     }
   }
 

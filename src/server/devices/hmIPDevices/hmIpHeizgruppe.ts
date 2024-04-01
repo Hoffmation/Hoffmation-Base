@@ -13,6 +13,8 @@ import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
+import { HumiditySensorChangeAction } from '../../../models/action/humiditySensorChangeAction';
+import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */
@@ -48,8 +50,8 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   private _initialSeasonCheckDone: boolean = false;
   private _level: number = 0;
   private _setPointTemperatureID: string = '';
-  private _humidityCallbacks: Array<(pValue: number) => void> = [];
-  private _temperatureCallbacks: ((pValue: number) => void)[] = [];
+  private _humidityCallbacks: Array<(action: HumiditySensorChangeAction) => void> = [];
+  private _temperatureCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizgruppe);
@@ -101,7 +103,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   private set temperature(val: number) {
     this._temperature = val;
     for (const cb of this._temperatureCallbacks) {
-      cb(val);
+      cb(new TemperatureSensorChangeAction(this, val));
     }
   }
 
@@ -115,7 +117,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   private set humidity(val: number) {
     this._humidity = val;
     for (const cb of this._humidityCallbacks) {
-      cb(val);
+      cb(new HumiditySensorChangeAction(this, val));
     }
   }
 
@@ -167,10 +169,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   /** @inheritDoc */
-  public addHumidityCallback(pCallback: (pValue: number) => void): void {
+  public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
     this._humidityCallbacks.push(pCallback);
     if (this._humidity > 0) {
-      pCallback(this._humidity);
+      pCallback(new HumiditySensorChangeAction(this, this._humidity));
     }
   }
 
@@ -213,10 +215,10 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   /** @inheritDoc */
-  public addTempChangeCallback(pCallback: (pValue: number) => void): void {
+  public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
     this._temperatureCallbacks.push(pCallback);
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(this._temperature);
+      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
     }
   }
 

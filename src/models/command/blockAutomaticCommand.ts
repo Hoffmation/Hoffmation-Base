@@ -7,7 +7,7 @@ import { DeviceSettings } from '../deviceSettings';
 
 export class BlockAutomaticCommand extends BaseCommand {
   /** @inheritDoc */
-  public _commandType: CommandType = CommandType.BlockAutomaticCommand;
+  public type: CommandType = CommandType.BlockAutomaticCommand;
   /**
    * Whether the device should revert to automatic afterward.
    */

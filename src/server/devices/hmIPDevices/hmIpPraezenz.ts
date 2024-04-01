@@ -5,31 +5,25 @@ import { Utils } from '../../services';
 import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { MotionSensorAction } from '../../../models/action/motionSensorAction';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
   // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
   private static CURRENT_ILLUMINATION: string = 'ILLUMINATION';
   /** @inheritDoc */
   public movementDetected: boolean = false;
-
-  public get battery(): number {
-    return this._battery;
-  }
-
   /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
-  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+  private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
+  private _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
   // private presenceStateID: string;
   private initialized: boolean = false;
   private _lastMotionTime: number = 0;
+  private _detectionsToday: number = 0;
+  private _currentIllumination: number = -1;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
@@ -53,11 +47,17 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     }
   }
 
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
+  public get battery(): number {
+    return this._battery;
+  }
+
   public get timeSinceLastMotion(): number {
     return Math.floor((Utils.nowMS() - this._lastMotionTime) / 1000);
   }
-
-  private _detectionsToday: number = 0;
 
   public get detectionsToday(): number {
     return this._detectionsToday;
@@ -66,8 +66,6 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   public set detectionsToday(pVal: number) {
     this._detectionsToday = pVal;
   }
-
-  private _currentIllumination: number = -1;
 
   public get currentIllumination(): number {
     return this._currentIllumination;
@@ -78,7 +76,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     Utils.dbo?.persistIlluminationSensor(this);
   }
 
-  public addMovementCallback(pCallback: (pValue: boolean) => void): void {
+  public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
@@ -139,7 +137,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
       this.log(LogLevel.Trace, `Dies ist die ${this.detectionsToday} Bewegung `);
     }
     for (const c of this._movementDetectedCallback) {
-      c(pVal);
+      c(new MotionSensorAction(this));
     }
   }
 

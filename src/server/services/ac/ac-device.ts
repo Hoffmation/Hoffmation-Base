@@ -25,6 +25,8 @@ import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
+import { PresenceGroupFirstEnterAction } from '../../../models/action/presenceGroupFirstEnterAction';
+import { PresenceGroupLastLeftAction } from '../../../models/action/presenceGroupLastLeftAction';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   /** @inheritDoc */
@@ -367,7 +369,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.turnOn();
   }
 
-  private onRoomFirstEnter(): void {
+  private onRoomFirstEnter(_action: PresenceGroupFirstEnterAction): void {
     if (!this.settings.noCoolingOnMovement || !this.on || this.mode === AcMode.Heating) {
       return;
     }
@@ -376,12 +378,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.turnOff();
   }
 
-  private onRoomLastLeave(): void {
+  private onRoomLastLeave(action: PresenceGroupLastLeftAction): void {
     if (!this.settings.noCoolingOnMovement) {
       return;
     }
 
-    this.log(LogLevel.Info, 'Last person left the room. Checking if we should turn on AC');
+    this.log(LogLevel.Info, `Last person left the room (${action.reasonTrace}). Checking if we should turn on AC`);
     this.restoreTargetAutomaticValue();
   }
 

@@ -5,6 +5,8 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { LogLevel } from '../../../models';
 import { Utils } from '../../services';
+import { HumiditySensorChangeAction } from '../../../models/action/humiditySensorChangeAction';
+import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   private _battery: number = -99;
@@ -38,8 +40,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     return this._battery;
   }
 
-  private _humidityCallbacks: ((pValue: number) => void)[] = [];
-  private _temperaturCallbacks: ((pValue: number) => void)[] = [];
+  private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
+  private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
@@ -69,7 +71,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   private set humidity(val: number) {
     this._humidity = val;
     for (const cb of this._humidityCallbacks) {
-      cb(val);
+      cb(new HumiditySensorChangeAction(this, val));
     }
   }
 
@@ -88,7 +90,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   private set temperature(val: number) {
     this._temperature = val;
     for (const cb of this._temperaturCallbacks) {
-      cb(val);
+      cb(new TemperatureSensorChangeAction(this, val));
     }
   }
 
@@ -113,18 +115,18 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   }
 
   /** @inheritDoc */
-  public addHumidityCallback(pCallback: (pValue: number) => void): void {
+  public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
     this._humidityCallbacks.push(pCallback);
     if (this._humidity > 0) {
-      pCallback(this._humidity);
+      pCallback(new HumiditySensorChangeAction(this, this._humidity));
     }
   }
 
   /** @inheritDoc */
-  public addTempChangeCallback(pCallback: (pValue: number) => void): void {
+  public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
     this._temperaturCallbacks.push(pCallback);
     if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(this._temperature);
+      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
     }
   }
 

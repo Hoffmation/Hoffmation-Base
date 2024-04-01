@@ -6,7 +6,7 @@ import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LampSetLightCommand extends ActuatorSetStateCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.LampSetLightCommand;
+  public override type: CommandType = CommandType.LampSetLightCommand;
 
   /**
    * Command to set the light of a lamp

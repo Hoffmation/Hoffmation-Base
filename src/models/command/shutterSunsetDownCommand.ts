@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class ShutterSunsetDownCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.SunsetDownCommand;
+  public override type: CommandType = CommandType.SunsetDownCommand;
 
   /**
    * Command to perform actions when the shutter is closing due to sunset

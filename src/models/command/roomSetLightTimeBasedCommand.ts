@@ -4,7 +4,7 @@ import { CommandSource } from './commandSource';
 
 export class RoomSetLightTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.RoomSetLightTimeBasedCommand;
+  public override type: CommandType = CommandType.RoomSetLightTimeBasedCommand;
 
   /**
    * Sets the light based on the current time, rollo Position and room Settings

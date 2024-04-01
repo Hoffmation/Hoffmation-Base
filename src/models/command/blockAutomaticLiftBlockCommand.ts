@@ -5,7 +5,7 @@ import { SettingsService } from '../../server';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
   /** @inheritDoc */
-  public _commandType: CommandType = CommandType.BlockAutomaticLiftBlockCommand;
+  public type: CommandType = CommandType.BlockAutomaticLiftBlockCommand;
   /**
    * Whether the device should revert to desired automatic value.
    */

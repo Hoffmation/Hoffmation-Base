@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class RoomRestoreShutterPositionCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.RoomRestoreShutterPositionCommand;
+  public override type: CommandType = CommandType.RoomRestoreShutterPositionCommand;
 
   /**
    * Command to restore the normal automatic shutter position of a room

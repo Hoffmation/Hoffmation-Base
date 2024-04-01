@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class RestoreTargetAutomaticValueCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.ActuatorRestoreTargetAutomaticValueCommand;
+  public override type: CommandType = CommandType.ActuatorRestoreTargetAutomaticValueCommand;
 
   /**
    * Command to restore the target automatic value of an actuator

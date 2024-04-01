@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class WindowSetDesiredPositionCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.WindowSetDesiredPositionCommand;
+  public override type: CommandType = CommandType.WindowSetDesiredPositionCommand;
 
   /**
    * Command to set the desired position of the shutter of a window

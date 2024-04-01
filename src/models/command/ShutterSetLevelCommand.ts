@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class ShutterSetLevelCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.ShutterSetLevelCommand;
+  public override type: CommandType = CommandType.ShutterSetLevelCommand;
 
   /**
    * Command to set the level of a shutter

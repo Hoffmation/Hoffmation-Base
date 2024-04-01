@@ -1,4 +1,5 @@
 import { iRoomDevice } from './iRoomDevice';
+import { TemperatureSensorChangeAction } from '../../../models/action/temperatureSensorChangeAction';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
@@ -31,7 +32,7 @@ export interface iTemperatureSensor extends iRoomDevice {
    * Adds a callback to be called when the temperature changes
    * @param pCallback - The callback to be called
    */
-  addTempChangeCallback(pCallback: (pValue: number) => void): void;
+  addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void;
 
   /**
    * Inform the temperature sensor that the temperature in the room has changed

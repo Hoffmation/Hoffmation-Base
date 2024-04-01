@@ -6,7 +6,7 @@ import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LampSetTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.LampSetTimeBasedCommand;
+  public override type: CommandType = CommandType.LampSetTimeBasedCommand;
   /**
    * The command to disable automatic actions for a specific duration.
    * Null = no automatic actions will be disabled.

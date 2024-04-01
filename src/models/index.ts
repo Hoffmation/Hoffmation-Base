@@ -1,3 +1,4 @@
+export * from './action/index';
 export * from './rooms/index';
 export * from './deviceSettings/index';
 export * from './persistence/index';

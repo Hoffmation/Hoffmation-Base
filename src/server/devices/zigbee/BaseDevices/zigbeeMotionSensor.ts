@@ -5,6 +5,7 @@ import { LogDebugType, Utils } from '../../../services';
 import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
+import { MotionSensorAction } from '../../../../models/action/motionSensorAction';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
   /** @inheritDoc */
@@ -12,7 +13,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   /** @inheritDoc */
   public detectionsToday: number = 0;
   protected _initialized: boolean = false;
-  protected _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+  protected _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
   protected _timeSinceLastMotion: number = 0;
@@ -76,7 +77,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
    * @param pCallback - Function that accepts the new state as parameter
    */
   /** @inheritDoc */
-  public addMovementCallback(pCallback: (newState: boolean) => void): void {
+  public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
@@ -125,7 +126,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     }
 
     for (const c of this._movementDetectedCallback) {
-      c(newState);
+      c(new MotionSensorAction(this));
     }
   }
 

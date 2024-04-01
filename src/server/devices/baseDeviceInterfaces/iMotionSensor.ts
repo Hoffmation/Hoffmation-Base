@@ -1,5 +1,6 @@
 import { MotionSensorSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
+import { MotionSensorAction } from '../../../models/action/motionSensorAction';
 
 /**
  * This interface represents a motion sensor device.
@@ -28,7 +29,7 @@ export interface iMotionSensor extends iRoomDevice {
    * Adds a callback for when a motion state has changed.
    * @param pCallback - Function that accepts the new state as parameter
    */
-  addMovementCallback(pCallback: (newState: boolean) => void): void;
+  addMovementCallback(pCallback: (action: MotionSensorAction) => void): void;
 
   /**
    * Persists the current motion information to the database

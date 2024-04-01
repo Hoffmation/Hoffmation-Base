@@ -6,7 +6,7 @@ import { SettingsService } from '../../server';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
   /** @inheritDoc */
-  public _commandType: CommandType = CommandType.BlockAutomaticUntilCommand;
+  public type: CommandType = CommandType.BlockAutomaticUntilCommand;
 
   /**
    * The action to take if a block is already active.

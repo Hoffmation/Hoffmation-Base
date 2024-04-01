@@ -15,6 +15,7 @@ import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { ShutterPositionChangedAction } from '../../../models/action/shutterPositionChangedAction';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */
@@ -57,7 +58,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     }
     if (value !== this._currentLevel && this._window) {
       Utils.guardedNewThread(() => {
-        this._window?.rolloPositionChange(value);
+        this._window?.rolloPositionChange(new ShutterPositionChangedAction(this, value));
       }, this);
       this.persist();
     }

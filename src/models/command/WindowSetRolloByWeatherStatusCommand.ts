@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class WindowSetRolloByWeatherStatusCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.WindowSetRolloByWeatherStatusCommand;
+  public override type: CommandType = CommandType.WindowSetRolloByWeatherStatusCommand;
 
   /**
    * Command to set the desired position of the shutter of a window based on the weather status

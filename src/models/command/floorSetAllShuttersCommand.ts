@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class FloorSetAllShuttersCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.FloorSetAllShuttersCommand;
+  public override type: CommandType = CommandType.FloorSetAllShuttersCommand;
 
   /**
    * Creates an instance of FloorSetAllShuttersCommand.

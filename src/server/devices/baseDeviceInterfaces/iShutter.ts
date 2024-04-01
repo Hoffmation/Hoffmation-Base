@@ -15,7 +15,7 @@ export interface iShutter extends iRoomDevice {
   /**
    * The current level of the shutter (0 = closed, 100 = open)
    */
-  currentLevel: number;
+  readonly currentLevel: number;
   /**
    * The desired level of the shutter for this window (this might be different from the current level due to the desired level being set by the user)
    */

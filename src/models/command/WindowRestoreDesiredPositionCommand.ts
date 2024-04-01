@@ -4,7 +4,7 @@ import { CommandType } from './commandType';
 
 export class WindowRestoreDesiredPositionCommand extends BaseCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.WindowRestoreDesiredPositionCommand;
+  public override type: CommandType = CommandType.WindowRestoreDesiredPositionCommand;
 
   /**
    * Command to restore the desired position of the shutter of a window

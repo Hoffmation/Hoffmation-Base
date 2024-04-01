@@ -1,4 +1,5 @@
 import { iRoomDevice } from './iRoomDevice';
+import { HumiditySensorChangeAction } from '../../../models/action/humiditySensorChangeAction';
 
 export const UNDEFINED_HUMIDITY_VALUE = -1;
 
@@ -22,7 +23,7 @@ export interface iHumiditySensor extends iRoomDevice {
    * Add a callback that is called when the humidity changes
    * @param pCallback - The callback to fire
    */
-  addHumidityCallback(pCallback: (pValue: number) => void): void;
+  addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void;
 
   /**
    * Persists the current humidity information to the database

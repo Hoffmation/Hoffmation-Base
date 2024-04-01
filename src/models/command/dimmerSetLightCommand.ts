@@ -9,7 +9,7 @@ import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class DimmerSetLightCommand extends LampSetLightCommand {
   /** @inheritDoc */
-  public override _commandType: CommandType = CommandType.DimmerSetLightCommand;
+  public override type: CommandType = CommandType.DimmerSetLightCommand;
 
   /**
    * Command to change the light of a dimmer

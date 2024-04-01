@@ -5,6 +5,7 @@ import { Utils } from '../../services';
 import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { MotionSensorAction } from '../../../models/action/motionSensorAction';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';
@@ -16,7 +17,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   public movementDetected: boolean = false;
   /** @inheritDoc */
   public detectionsToday: number = 0;
-  private _movementDetectedCallback: Array<(pValue: boolean) => void> = [];
+  private _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
   private initialized: boolean = false;
   private _fallBackTimeout: NodeJS.Timeout | undefined;
   private _lastMotionTime: number = 0;
@@ -56,7 +57,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     Utils.dbo?.persistIlluminationSensor(this);
   }
 
-  public addMovementCallback(pCallback: (pValue: boolean) => void): void {
+  public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
 
@@ -120,7 +121,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     }
 
     for (const c of this._movementDetectedCallback) {
-      c(pVal);
+      c(new MotionSensorAction(this));
     }
   }
 

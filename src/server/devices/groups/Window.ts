@@ -16,6 +16,7 @@ import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
 import { DeviceList } from '../device-list';
 import { ZigbeeMagnetContact } from '../zigbee';
+import { ShutterPositionChangedAction } from '../../../models/action/shutterPositionChangedAction';
 
 export class Window extends BaseGroup {
   private _desiredPosition: number = 0;
@@ -145,17 +146,15 @@ export class Window extends BaseGroup {
     );
   }
 
-  public rolloPositionChange(pValue: number): void {
+  public rolloPositionChange(action: ShutterPositionChangedAction): void {
     this.log(
       LogLevel.Debug,
-      `Rollo Position Change in ${this.roomName} to ${pValue}`,
-      pValue == this._desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
+      `Rollo Position Change in ${this.roomName}: ${action.reasonTrace}`,
+      action.newPosition == this._desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
     );
 
-    if (pValue === 0 || pValue === 100) {
-      this.getRoom().setLightTimeBased(
-        new RoomSetLightTimeBasedCommand(CommandSource.Automatic, true, 'Window.rolloPositionChange'),
-      );
+    if (action.newPosition === 0 || action.newPosition === 100) {
+      this.getRoom().setLightTimeBased(new RoomSetLightTimeBasedCommand(action, true));
     }
   }
 
