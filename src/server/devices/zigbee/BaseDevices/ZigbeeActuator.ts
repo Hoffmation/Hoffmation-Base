@@ -21,6 +21,7 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   /** @inheritDoc */
   public targetAutomaticState: boolean = false;
+  protected _lastPersist: number = 0;
 
   /** @inheritDoc */
   public settings: ActuatorSettings = new ActuatorSettings();
@@ -80,7 +81,12 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
 
   /** @inheritDoc */
   public persist(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastPersist + 1000 > now) {
+      return;
+    }
     Utils.dbo?.persistActuator(this);
+    this._lastPersist = now;
   }
 
   /** @inheritDoc */
