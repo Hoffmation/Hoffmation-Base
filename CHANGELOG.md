@@ -10,6 +10,7 @@
 
 * (theimo1221) Correct isAutomatic detection
 * (theimo1221) Fix some inconsistent date formatting
+* (theimo1221) Fix strom-stoß devices to not block automatic on normal turn of action
 
 ## 3.0.0
 

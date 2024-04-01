@@ -26,7 +26,7 @@ export class LampUtils {
             LampUtils.stromStossContinueTimeouts.delete(actuator.id);
             if (actuator.room?.PraesenzGroup?.anyPresent()) {
               actuator.setActuator(
-                new ActuatorSetStateCommand(CommandSource.Automatic, true, 'StromStoss On due to Presence'),
+                new ActuatorSetStateCommand(CommandSource.Automatic, true, 'StromStoss On due to Presence', null),
               );
             }
           },
@@ -37,7 +37,7 @@ export class LampUtils {
     }
     Utils.guardedTimeout(
       () => {
-        actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, false, 'StromStoss Off'));
+        actuator.setActuator(new ActuatorSetStateCommand(CommandSource.Force, false, 'StromStoss Off', null));
       },
       3000,
       this,
@@ -97,7 +97,7 @@ export class LampUtils {
         LogLevel.Debug,
         `Skip command to ${c.on} as it is locked until ${new Date(
           device.blockAutomationHandler.automaticBlockedUntil,
-        ).toLocaleTimeString()}; command Log: ${c.logMessage}`,
+        ).toLocaleTimeString('de-DE')}; command Log: ${c.logMessage}`,
       );
       device.targetAutomaticState = c.on;
       return true;
