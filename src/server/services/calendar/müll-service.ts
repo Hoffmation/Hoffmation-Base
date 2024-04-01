@@ -98,7 +98,7 @@ export class MuellService {
             LogLevel.DeepTrace,
             `${ev.summary} is in ${ev.location} on the ${ev.start.getDate()} of ${
               this.months[ev.start.getMonth()]
-            } at ${ev.start.toLocaleTimeString('en-GB')}`,
+            } at ${ev.start.toLocaleTimeString('de-DE')}`,
           );
 
           if (ev.start.getTime() < todayMidnight) {

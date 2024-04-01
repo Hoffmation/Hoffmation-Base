@@ -102,7 +102,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
       result.push(
         `${data.trackerName}: ${Utils.round(data.distance ?? -99, 2)}m updated ${new Date(
           data.lastUpdate,
-        ).toLocaleTimeString()}`,
+        ).toLocaleTimeString('de-DE')}`,
       );
       Utils.nowTime();
     }

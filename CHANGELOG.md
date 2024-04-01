@@ -5,16 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.28 (2024-03-30)
 
-* (theimo1221) Automatic Restore Command shouldn't use original source command source as it is automatic not "
-  manual"/"api"/etc
-* (theimo1221) Fix edge case, where a weather update leading to earlier sunset action (in the past) would not trigger
-  the correct callbacks
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.27 (2024-03-29)
-
-* (theimo1221) Don't add default-block-automatic on non-force actions
+* (theimo1221) Correct isAutomatic detection
+* (theimo1221) Fix some inconsistent date formatting
 
 ## 3.0.0
 
@@ -41,6 +36,8 @@
 * (theimo1221) Prepare a V3 Migration Guide
 * (theimo1221) Make the disabling of automatic mode on force actions more configurable
 * (theimo1221) Change iCameraDevice to use devices instead of just open handles
+* (theimo1221) Fix edge case, where a weather update leading to earlier sunset action (in the past) would not trigger
+  the correct callbacks
 
 ## 2.23.0 (2024-02-25)
 

@@ -33,13 +33,15 @@ export class ShutterService {
       for (const f of r.WindowGroup.windows) {
         f.getShutter().forEach((shutter) => {
           response.push(
-            `Rollo: "${shutter.info.customName}"\t${
+            `Shutter: "${shutter.info.customName}"\t${
               shutter.room?.settings.sonnenAufgangRollos === true
                 ? r.sunriseShutterCallback?.nextToDo?.toLocaleTimeString()
-                : 'Hochfahren inaktiv'
+                : 'Sunrise Shutter up inactive'
             }`,
           );
-          down.push(`Rollo: "${shutter.info.customName}"\t${r.sunsetShutterCallback?.nextToDo?.toLocaleTimeString()}`);
+          down.push(
+            `Shutter: "${shutter.info.customName}"\t${r.sunsetShutterCallback?.nextToDo?.toLocaleTimeString('de-DE')}`,
+          );
         });
       }
     }
