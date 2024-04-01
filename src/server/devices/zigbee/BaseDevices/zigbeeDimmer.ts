@@ -80,7 +80,7 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
       return;
     }
 
-    if (LampUtils.checkDimmerUnchanged(this, c)) {
+    if (LampUtils.canDimmerChangeBeSkipped(this, c)) {
       return;
     }
     if (c.isAutomaticAction) {

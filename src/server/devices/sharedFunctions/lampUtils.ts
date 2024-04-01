@@ -113,11 +113,11 @@ export class LampUtils {
    * @param {DimmerSetLightCommand} c - The command to check
    * @returns {boolean} - True if the command can be skipped
    */
-  public static checkDimmerUnchanged(device: iDimmableLamp, c: DimmerSetLightCommand): boolean {
+  public static canDimmerChangeBeSkipped(device: iDimmableLamp, c: DimmerSetLightCommand): boolean {
     if (c.isForceAction) {
       return false;
     }
-    if (!this.checkUnchanged(device, c, true)) {
+    if (!this.canActuatorChangeBeSkipped(device, c, true)) {
       return false;
     }
     if (c.brightness !== device.brightness) {
@@ -132,11 +132,18 @@ export class LampUtils {
     return true;
   }
 
-  public static checkUnchanged(device: iActuator, c: ActuatorSetStateCommand, noLog: boolean = false): boolean {
+  public static canActuatorChangeBeSkipped(
+    device: iActuator,
+    c: ActuatorSetStateCommand,
+    noLog: boolean = false,
+  ): boolean {
     if (c.isForceAction) {
       return false;
     }
-    if (c.on !== device.queuedValue || (device.queuedValue === null && device.actuatorOn !== c.on)) {
+    if (
+      (device.queuedValue === null && device.actuatorOn !== c.on) ||
+      (device.queuedValue !== null && c.on === device.queuedValue)
+    ) {
       return false;
     }
 
@@ -167,7 +174,7 @@ export class LampUtils {
       // Preserve the target state for the automatic handler, as
       device.targetAutomaticState = c.on;
     }
-    if (LampUtils.checkUnchanged(device, c)) {
+    if (LampUtils.canActuatorChangeBeSkipped(device, c)) {
       return;
     }
 

@@ -158,7 +158,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       return;
     }
 
-    if (LampUtils.checkDimmerUnchanged(this, c)) {
+    if (LampUtils.canDimmerChangeBeSkipped(this, c)) {
       return;
     }
     if (c.isAutomaticAction) {
