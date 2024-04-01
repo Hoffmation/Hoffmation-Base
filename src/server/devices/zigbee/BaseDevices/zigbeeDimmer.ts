@@ -22,22 +22,18 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
   protected abstract readonly _stateIdTransitionTime: string;
   protected abstract readonly _stateNameBrightness: string;
   protected abstract readonly _stateNameTransitionTime: string;
+  protected _brightness: number = 0;
+  protected _transitionTime: number = 0;
 
   protected constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
     super(pInfo, deviceType);
-    this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
-    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
   }
-
-  protected _brightness: number = 0;
 
   /** @inheritDoc */
   public get brightness(): number {
     return this._brightness;
   }
-
-  protected _transitionTime: number = 0;
 
   /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {

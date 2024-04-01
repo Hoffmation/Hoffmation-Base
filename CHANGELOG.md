@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.36 (2024-04-01)
 
-* (theimo1221) Fix issue were Zigbee Lamp couldn't be toggled off
+## **WORK IN PROGRESS**
+
+* (theimo1221) Finalize zigbeeLamp Fix
 
 ## 3.0.0
 
