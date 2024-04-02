@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Extend dimmer logging for reduced logging
+
 ## 3.0.0-alpha.39 (2024-04-02)
 
 * (theimo1221) Restructure Presence Group to mitigate some issues in regard to rooms with multiple motion sensor

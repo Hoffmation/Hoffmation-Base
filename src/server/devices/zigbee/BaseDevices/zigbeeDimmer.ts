@@ -118,7 +118,10 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
     this.setBrightnessState(this.settings.turnOnThreshhold, () => {
       Utils.guardedTimeout(
         () => {
-          this.log(LogLevel.Info, `Delayed reduced brightness on ${this.info.customName}`);
+          this.log(
+            LogLevel.Info,
+            `Delayed reduced brightness on ${this.info.customName} to ${c.brightness} for command: ${c.logMessage}`,
+          );
           this.setBrightnessState(c.brightness);
         },
         1000,
