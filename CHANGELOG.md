@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.40 (2024-04-02)
 
 * (theimo1221) Extend dimmer logging for reduced logging
 * (theimo1221) Don't initially fire shutter position change on startup
