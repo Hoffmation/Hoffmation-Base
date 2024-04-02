@@ -33,7 +33,10 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
-    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
   }
 
   /** @inheritDoc */

@@ -42,4 +42,8 @@ export class BlockAutomaticUntilCommand extends BaseCommand {
       SettingsService.settings?.blockAutomaticHandlerDefaults?.revertToAutomaticAtBlockLift ??
       true;
   }
+
+  public get logMessage(): string {
+    return `Block automatic until ${this.targetDate.toISOString()}, reason: ${this.reasonTrace}`;
+  }
 }

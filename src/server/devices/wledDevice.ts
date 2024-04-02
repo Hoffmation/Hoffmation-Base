@@ -42,7 +42,10 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
     this._onID = `${this.info.fullID}.on`;
     this._presetID = `${this.info.fullID}.ps`;
     this._brightnessID = `${this.info.fullID}.bri`;
-    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
     this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.dimmablelamp);
   }

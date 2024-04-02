@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Improve handling with lifting automatic-block
+
 ## 3.0.0-alpha.37 (2024-04-01)
 
 * (theimo1221) Finalize zigbeeLamp Fix

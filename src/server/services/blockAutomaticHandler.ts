@@ -4,10 +4,12 @@ import {
   BlockAutomaticUntilCommand,
   CollisionSolving,
   CommandSource,
+  LogLevel,
   RestoreTargetAutomaticValueCommand,
 } from '../../models';
 import { Utils } from './utils';
 import _ from 'lodash';
+import { LogDebugType } from './log-service';
 
 /**
  * This class is responsible for blocking automatic actions for a specific duration.
@@ -18,7 +20,10 @@ export class BlockAutomaticHandler {
   private _automaticBlockedUntil: Date = new Date(0);
   private _restoreAutomaticStateTimeout: NodeJS.Timeout | null = null;
 
-  public constructor(restoreAutomaticCb: (c: RestoreTargetAutomaticValueCommand) => void) {
+  public constructor(
+    restoreAutomaticCb: (c: RestoreTargetAutomaticValueCommand) => void,
+    private readonly _logger: (level: LogLevel, message: string, logDebugType?: LogDebugType) => void,
+  ) {
     this._restoreAutomatic = restoreAutomaticCb;
   }
 
@@ -53,8 +58,14 @@ export class BlockAutomaticHandler {
       c.onCollideAction != CollisionSolving.override &&
       (c.onCollideAction != CollisionSolving.overrideIfGreater || c.targetDate < this._automaticBlockedUntil)
     ) {
+      this._logger(
+        LogLevel.Info,
+        `Block already active until "${this.automaticBlockedUntil.toLocaleTimeString('de-DE')}" --> ignoring: ${c.logMessage}`,
+      );
       return;
     }
+
+    this._logger(LogLevel.Info, c.logMessage);
     this.automaticBlockedUntil = c.targetDate;
     if (c.revertToAutomaticAtBlockLift) {
       const revertCommand = new RestoreTargetAutomaticValueCommand(c, 'Restore to automatic state after block.');
@@ -93,6 +104,6 @@ export class BlockAutomaticHandler {
   }
 
   public toJSON(): Partial<BlockAutomaticHandler> {
-    return Utils.jsonFilter(_.omit(this, ['_restoreAutomatic']));
+    return Utils.jsonFilter(_.omit(this, ['_restoreAutomatic', '_logger']));
   }
 }

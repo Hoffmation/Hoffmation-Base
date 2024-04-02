@@ -36,7 +36,10 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
     this.deviceCapabilities.push(DeviceCapability.lamp);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.lightOnSwitchID = `${this.info.fullID}.2.STATE`;
-    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
   }
 
   public get actuatorOn(): boolean {

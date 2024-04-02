@@ -62,6 +62,10 @@ export class LampUtils {
 
   public static checkUnBlock(device: iActuator, command: ActuatorSetStateCommand): boolean {
     let dontBlock: boolean = false;
+    if (command.containsType(CommandType.ActuatorRestoreTargetAutomaticValueCommand)) {
+      // We are restoring the automatic value, so we don't want to block the device
+      return true;
+    }
     if (
       command.isForceAction &&
       device.settings.resetToAutomaticOnForceOffAfterForceOn &&

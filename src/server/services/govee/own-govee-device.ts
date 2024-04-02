@@ -65,7 +65,10 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     this._info.allDevicesKey = `govee-${roomName}-${deviceId}`;
     Devices.alLDevices[`govee-${roomName}-${deviceId}`] = this;
     this.persistDeviceInfo();
-    this.blockAutomationHandler = new BlockAutomaticHandler(this.restoreTargetAutomaticValue.bind(this));
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
     Utils.guardedTimeout(this.loadDeviceSettings, 300, this);
   }
 
