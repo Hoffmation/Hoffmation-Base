@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.38 (2024-04-02)
 
 * (theimo1221) Improve handling with lifting automatic-block
 
