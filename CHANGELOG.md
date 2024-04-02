@@ -5,13 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.38 (2024-04-02)
 
-* (theimo1221) Improve handling with lifting automatic-block
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.37 (2024-04-01)
-
-* (theimo1221) Finalize zigbeeLamp Fix
+* (theimo1221) Restructure Presence Group to mitigate some issues in regard to rooms with multiple motion sensor
 
 ## 3.0.0
 
@@ -49,6 +46,7 @@
   Temperature, Humidity)
 * (theimo1221) Fix Edge Case resulting in shutter not moving down on sunset
 * (theimo1221) Don't turn on lamps on shutter down in rooms without motion sensor
+* (theimo1221) Improve handling with lifting automatic-block
 
 ## 2.23.0 (2024-02-25)
 

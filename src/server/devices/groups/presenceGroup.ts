@@ -31,9 +31,20 @@ export class PresenceGroup extends BaseGroup {
   public initCallbacks(): void {
     this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((action) => {
-        this.motionSensorOnFirstEnter(action);
+        if (action.motionDetected) {
+          this.motionSensorOnAnyMovement(action);
+        }
+        if (action.motionDetected || this.anyPresent()) {
+          // TODO: Possible Edge Case, if the other motion sensor doesn't fire motion end event this will never be called
+          this.resetLastLeftTimeout();
+          return;
+        } else if (!action.motionDetected && !this.anyPresent()) {
+          this.motionSensorOnLastLeft(action);
+        }
+        if (action.motionDetected && this.presentAmount() === 1 && this._lastLeftTimeout === null) {
+          this.fireFistEnterCBs(action);
+        }
         this.motionSensorOnLastLeft(action);
-        this.motionSensorAnyMovement(action);
       });
     });
 
@@ -53,39 +64,30 @@ export class PresenceGroup extends BaseGroup {
     });
   }
 
+  public presentAmount(): number {
+    return this.getMotionDetector().filter((b) => b.movementDetected).length;
+  }
+
   public addLastLeftCallback(cb: (action: PresenceGroupLastLeftAction) => void): void {
     this._lastLeftCbs.push(cb);
   }
 
-  public presentAmount(): number {
-    let count = 0;
-    for (let i = 0; i < this.getMotionDetector().length; i++) {
-      if (this.getMotionDetector()[i].movementDetected) {
-        count++;
-      }
-    }
-
-    return count;
+  public anyPresent(): boolean {
+    return this.getMotionDetector().find((b) => b.movementDetected) !== undefined;
   }
 
-  public anyPresent(): boolean {
-    for (let i = 0; i < this.getMotionDetector().length; i++) {
-      if (this.getMotionDetector()[i].movementDetected) {
-        return true;
-      }
+  private fireFistEnterCBs(action: MotionSensorAction): void {
+    for (const cb of this._firstEnterCbs) {
+      cb(new PresenceGroupFirstEnterAction(action));
     }
-
-    return false;
   }
 
   public addFirstEnterCallback(cb: (action: PresenceGroupFirstEnterAction) => void): void {
     this._firstEnterCbs.push(cb);
   }
 
-  private motionSensorAnyMovement(action: MotionSensorAction): void {
-    if (!action.motionDetected) {
-      return;
-    }
+  private motionSensorOnAnyMovement(action: MotionSensorAction): void {
+    this._lastMovement = new Date();
     if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !action.sensor.settings.excludeFromNightAlarm)) {
       RoomService.startIntrusionAlarm(this.getRoom(), action.sensor);
     }
@@ -98,13 +100,7 @@ export class PresenceGroup extends BaseGroup {
   }
 
   private motionSensorOnLastLeft(action: MotionSensorAction): void {
-    if (action.motionDetected || this.anyPresent()) {
-      this.resetLastLeftTimeout();
-      return;
-    }
-
-    let timeAfterReset: number =
-      Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
+    let timeAfterReset: number = this.getTimeAfterReset();
     if (timeAfterReset > 0) {
       this.log(
         LogLevel.Debug,
@@ -117,12 +113,12 @@ export class PresenceGroup extends BaseGroup {
     this.resetLastLeftTimeout();
     this._lastLeftTimeout = Utils.guardedTimeout(
       () => {
-        timeAfterReset =
-          Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
+        this._lastLeftTimeout = null;
+        timeAfterReset = this.getTimeAfterReset();
         const presentAmount: number = this.presentAmount();
         this.log(
           LogLevel.Debug,
-          `Delayed Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}, action: ${action.reasonTrace}`,
+          `Delayed Movement reset. Active Motions: ${presentAmount}\tTime after Last Movement including Reset: ${timeAfterReset}, action: ${action.reasonTrace}`,
         );
         if (presentAmount <= 0 && timeAfterReset > 0) {
           this.executeLastLeftCbs(new PresenceGroupLastLeftAction(action));
@@ -134,25 +130,20 @@ export class PresenceGroup extends BaseGroup {
   }
 
   /**
+   * Calculates whether we are after (negative if before) the time the movement
+   * reset timer should have reset the movement.
+   * @returns The time in milliseconds after the reset time.
+   */
+  private getTimeAfterReset(): number {
+    return Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
+  }
+
+  /**
    * In case of an existing delayed last left callback timeout, this removes it.
    */
   private resetLastLeftTimeout() {
     if (this._lastLeftTimeout !== null) {
       clearTimeout(this._lastLeftTimeout);
-    }
-  }
-
-  private motionSensorOnFirstEnter(action: MotionSensorAction): void {
-    if (!action.motionDetected) {
-      return;
-    }
-    this._lastMovement = new Date();
-    if (this.presentAmount() > 1) {
-      return;
-    }
-
-    for (const cb of this._firstEnterCbs) {
-      cb(new PresenceGroupFirstEnterAction(action));
     }
   }
 
