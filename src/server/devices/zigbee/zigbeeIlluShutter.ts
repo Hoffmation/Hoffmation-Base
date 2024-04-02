@@ -117,7 +117,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     const oldState: MovementState = this._movementState;
     if (this._movementStartPos === 0 && oldState === MovementState.Up && this._setLevel === 100) {
       this.log(LogLevel.Debug, `New Time-Until-Top measurement for ${this.info.customName}: ${timePassed}ms`);
-      this.currentLevel = this._setLevel;
+      this.setCurrentLevel(this._setLevel);
       this._shutterCalibrationData.counterUp++;
       this._shutterCalibrationData.averageUp +=
         (timePassed - this._shutterCalibrationData.averageUp) / this._shutterCalibrationData.counterUp;
@@ -132,7 +132,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     }
     if (this._movementStartPos === 100 && oldState === MovementState.Down && this._setLevel === 0) {
       this.log(LogLevel.Debug, `New Time-Until-Bottom measurement for ${this.info.customName}: ${timePassed}ms`);
-      this.currentLevel = this._setLevel;
+      this.setCurrentLevel(this._setLevel);
       this._shutterCalibrationData.counterDown++;
       this._shutterCalibrationData.averageDown +=
         (timePassed - this._shutterCalibrationData.averageDown) / this._shutterCalibrationData.counterDown;
@@ -151,9 +151,9 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     }
 
     if (oldState === MovementState.Down) {
-      this.currentLevel = Math.min(this._currentLevel - Math.round((timePassed * 100) / this.getAverageDown()), 0);
+      this.setCurrentLevel(Math.min(this._currentLevel - Math.round((timePassed * 100) / this.getAverageDown()), 0));
     } else if (oldState === MovementState.Up) {
-      this.currentLevel = Math.max(this._currentLevel + Math.round((timePassed * 100) / this.getAverageUp()), 100);
+      this.setCurrentLevel(Math.max(this._currentLevel + Math.round((timePassed * 100) / this.getAverageUp()), 100));
     }
   }
 }

@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Extend dimmer logging for reduced logging
+* (theimo1221) Don't initially fire shutter position change on startup
 
 ## 3.0.0-alpha.39 (2024-04-02)
 

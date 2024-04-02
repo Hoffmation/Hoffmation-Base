@@ -17,7 +17,7 @@ export class ZigbeeUbisysShutter extends ZigbeeShutter {
     switch (idSplit[3]) {
       case 'position':
         this.log(LogLevel.Trace, `Shutter Update for ${this.info.customName} to "${state.val}"`);
-        this.currentLevel = state.val as number;
+        this.setCurrentLevel(state.val as number, initial);
         break;
     }
 

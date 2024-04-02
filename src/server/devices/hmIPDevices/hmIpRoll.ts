@@ -52,17 +52,17 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     return this._currentLevel;
   }
 
-  public set currentLevel(value: number) {
-    if (value !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
-      value = this._setLevel;
+  /** @inheritDoc */
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
+    this.log(LogLevel.DeepTrace, `Rollo Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
+    super.update(idSplit, state, initial, true);
+    switch (idSplit[3]) {
+      case '3':
+        if (idSplit[4] === 'LEVEL') {
+          this.setCurrentLevel(state.val as number, true);
+        }
+        break;
     }
-    if (value !== this._currentLevel && this._window) {
-      Utils.guardedNewThread(() => {
-        this._window?.rolloPositionChange(new ShutterPositionChangedAction(this, value));
-      }, this);
-      this.persist();
-    }
-    this._currentLevel = value;
   }
 
   private _window?: Window;
@@ -86,17 +86,17 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     Utils.dbo?.persistShutter(this);
   }
 
-  /** @inheritDoc */
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
-    this.log(LogLevel.DeepTrace, `Rollo Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
-    super.update(idSplit, state, initial, true);
-    switch (idSplit[3]) {
-      case '3':
-        if (idSplit[4] === 'LEVEL') {
-          this.currentLevel = state.val as number;
-        }
-        break;
+  private setCurrentLevel(value: number, initial: boolean = false): void {
+    if (value !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
+      value = this._setLevel;
     }
+    if (value !== this._currentLevel && this._window && !initial) {
+      Utils.guardedNewThread(() => {
+        this._window?.rolloPositionChange(new ShutterPositionChangedAction(this, value));
+      }, this);
+      this.persist();
+    }
+    this._currentLevel = value;
   }
 
   public setLevel(command: ShutterSetLevelCommand): void {
