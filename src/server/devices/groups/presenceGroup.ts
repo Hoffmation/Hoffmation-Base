@@ -37,14 +37,12 @@ export class PresenceGroup extends BaseGroup {
         if (action.motionDetected || this.anyPresent()) {
           // TODO: Possible Edge Case, if the other motion sensor doesn't fire motion end event this will never be called
           this.resetLastLeftTimeout();
-          return;
         } else if (!action.motionDetected && !this.anyPresent()) {
           this.motionSensorOnLastLeft(action);
         }
         if (action.motionDetected && this.presentAmount() === 1 && this._lastLeftTimeout === null) {
           this.fireFistEnterCBs(action);
         }
-        this.motionSensorOnLastLeft(action);
       });
     });
 
@@ -109,7 +107,11 @@ export class PresenceGroup extends BaseGroup {
       this.executeLastLeftCbs(new PresenceGroupLastLeftAction(action));
       return;
     }
-    this.log(LogLevel.Debug, `Movement reset in ${this.roomName} delayed.`);
+    const newResetTime: Date = new Date(Utils.nowMS() + Math.abs(timeAfterReset));
+    this.log(
+      LogLevel.Debug,
+      `Movement reset in ${this.roomName} delayed to ${newResetTime.toLocaleTimeString('de-DE')}.`,
+    );
     this.resetLastLeftTimeout();
     this._lastLeftTimeout = Utils.guardedTimeout(
       () => {
