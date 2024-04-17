@@ -1,6 +1,6 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
-import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../../models';
+import { BatteryLevelChangeAction, HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
@@ -9,13 +9,6 @@ import { PIDController } from '../../../../liquid-pid';
 import { HeatGroup } from '../../groups';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
-  protected _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
   /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -27,12 +20,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   );
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
-  }
-
+  protected _battery: number = -99;
   protected _iAutomaticInterval: NodeJS.Timeout | undefined;
   protected _initialSeasonCheckDone: boolean = false;
   protected _level: number = 0;
@@ -50,6 +38,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     Ki: 1000, // PID: Ki in 1/1000
     Kd: 9, // PID: Kd in 1/1000
   });
+  protected _seasonTurnOff: boolean = false;
+  protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
+  private _lastBatteryPersist: number = 0;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -70,7 +63,15 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     );
   }
 
-  protected _seasonTurnOff: boolean = false;
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
+  }
 
   /** @inheritDoc */
   public get seasonTurnOff(): boolean {
@@ -124,8 +125,6 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     }
   }
 
-  protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
-
   /** @inheritDoc */
   public get roomTemperature(): number {
     return this._roomTemperature;
@@ -133,6 +132,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
 
   protected set roomTemperatur(val: number) {
     this._roomTemperature = val;
+  }
+
+  /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
   }
 
   /** @inheritDoc */
@@ -177,6 +181,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.checkForBatteryChange();
         this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
@@ -184,6 +189,28 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
         break;
     }
     super.update(idSplit, state, initial, pOverride);
+  }
+
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
+  /** @inheritDoc */
+  public dispose(): void {
+    if (this.persistHeaterInterval) {
+      clearInterval(this.persistHeaterInterval);
+    }
+    if (this._iAutomaticInterval) {
+      clearInterval(this._iAutomaticInterval);
+      this._iAutomaticInterval = undefined;
+    }
+    super.dispose();
   }
 
   protected getNextPidLevel(): number {
@@ -212,25 +239,17 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     this._initialSeasonCheckDone = true;
   }
 
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
       return;
     }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  /** @inheritDoc */
-  public dispose(): void {
-    if (this.persistHeaterInterval) {
-      clearInterval(this.persistHeaterInterval);
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
     }
-    if (this._iAutomaticInterval) {
-      clearInterval(this._iAutomaticInterval);
-      this._iAutomaticInterval = undefined;
-    }
-    super.dispose();
+    this._lastBatteryLevel = newLevel;
   }
 }

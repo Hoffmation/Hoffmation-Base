@@ -1,6 +1,12 @@
 import { DeviceType } from '../../deviceType';
 import { ZigbeeDevice } from './index';
-import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../../models';
+import {
+  BatteryLevelChangeAction,
+  CountToday,
+  LogLevel,
+  MotionSensorAction,
+  MotionSensorSettings,
+} from '../../../../models';
 import { LogDebugType, Utils } from '../../../services';
 import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
@@ -19,6 +25,8 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   private _movementDetected: boolean = false;
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
@@ -69,6 +77,11 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   /** @inheritDoc */
   public get timeSinceLastMotion(): number {
     return this._timeSinceLastMotion;
+  }
+
+  /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
   }
 
   /**
@@ -136,6 +149,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.checkForBatteryChange();
         this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
@@ -185,5 +199,19 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       270000,
       this,
     );
+  }
+
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

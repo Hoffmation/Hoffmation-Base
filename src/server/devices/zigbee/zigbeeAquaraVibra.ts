@@ -1,6 +1,6 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, SonosService, Utils } from '../../services';
-import { LogLevel } from '../../../models';
+import { BatteryLevelChangeAction, LogLevel } from '../../../models';
 import { iBatteryDevice, iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -49,6 +49,8 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   private _alarmMessage: string;
   private _vibrationBlockedByGriff: boolean = false;
   private _vibrationBlockedByMotion: boolean = false;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
@@ -118,12 +120,18 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.checkForBatteryChange();
         this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
@@ -252,5 +260,19 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     const message = this._alarmMessage;
     SonosService.speakOnAll(message);
     this.log(LogLevel.Alert, message);
+  }
+
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

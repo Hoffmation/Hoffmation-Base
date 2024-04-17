@@ -1,6 +1,12 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models';
+import {
+  BatteryLevelChangeAction,
+  CountToday,
+  LogLevel,
+  MotionSensorAction,
+  MotionSensorSettings,
+} from '../../../models';
 import { Utils } from '../../services';
 import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -23,6 +29,8 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   private _lastMotionTime: number = 0;
   private _detectionsToday: number = 0;
   private _currentIllumination: number = -1;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
@@ -75,6 +83,11 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     Utils.dbo?.persistIlluminationSensor(this);
   }
 
+  /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
   public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
@@ -89,6 +102,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this.checkForBatteryChange();
             this.persistBatteryDevice();
             break;
         }
@@ -151,5 +165,19 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     }
     Utils.dbo?.persistBatteryDevice(this);
     this._lastBatteryPersist = now;
+  }
+
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

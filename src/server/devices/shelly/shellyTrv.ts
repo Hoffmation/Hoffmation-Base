@@ -1,7 +1,7 @@
 import { ShellyDevice } from './shellyDevice';
 import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
-import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import { BatteryLevelChangeAction, HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { PIDController } from '../../../liquid-pid';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
@@ -53,6 +53,8 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
   private readonly _setEnableExternalTempId: string;
   private readonly _setPointTemperaturID: string;
   private readonly _valvePosId: string;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ShellyTrv);
@@ -163,6 +165,11 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public checkAutomaticChange(): void {
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
@@ -238,6 +245,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
       this._targetTempVal = state.val as number;
     } else if (idSplit[3] === 'bat' && idSplit[4] === 'value') {
       this._battery = state.val as number;
+      this.checkForBatteryChange();
       this.persistBatteryDevice();
       if (this._battery < 20) {
         this.log(LogLevel.Warn, 'Das Shelly Gerät hat unter 20% Batterie.');
@@ -334,5 +342,19 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
 
   private setMinimumLevel(pidForcedMinimum: number): void {
     this.setState(this._minumumLevelId, pidForcedMinimum);
+  }
+
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

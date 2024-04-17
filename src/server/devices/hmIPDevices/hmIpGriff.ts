@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { iDisposable, TelegramService, Utils, WeatherService } from '../../services';
 import { WindowPosition } from '../models';
 import { HeatGroup, Window } from '../groups';
-import { LogLevel } from '../../../models';
+import { BatteryLevelChangeAction, LogLevel } from '../../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -27,6 +27,8 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   private _window: Window | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   /**
    * Creates an instance of {@link DeviceType.HmIpGriff}.
@@ -56,6 +58,11 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public addOffenCallback(pCallback: (pValue: boolean) => void): void {
     this._offenCallback.push(pCallback);
   }
@@ -79,6 +86,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
+            this.checkForBatteryChange();
             this.persistBatteryDevice();
             break;
         }
@@ -90,6 +98,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             break;
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
+            this.checkForBatteryChange();
             this.persistBatteryDevice();
             break;
         }
@@ -224,5 +233,19 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       60000,
       this,
     );
+  }
+
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

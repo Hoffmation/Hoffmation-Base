@@ -1,15 +1,31 @@
-import { DeviceInfo, Devices, DeviceType, iEnergyManager, iExcessEnergyConsumer } from '../../devices';
+import {
+  DeviceCapability,
+  DeviceInfo,
+  Devices,
+  DeviceType,
+  iBatteryDevice,
+  iEnergyManager,
+  iExcessEnergyConsumer,
+} from '../../devices';
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../utils';
-import { EnergyCalculation, LogLevel, TimeOfDay, VictronDeviceSettings } from '../../../models';
-import { DeviceCapability } from '../../devices/DeviceCapability';
+import {
+  BatteryLevelChangeAction,
+  EnergyCalculation,
+  LogLevel,
+  TimeOfDay,
+  VictronDeviceSettings,
+} from '../../../models';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
 
-export class VictronDevice implements iEnergyManager {
+export class VictronDevice implements iEnergyManager, iBatteryDevice {
   private readonly _victronConsumer: VictronMqttConsumer;
   /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.energyManager];
+  public readonly deviceCapabilities: DeviceCapability[] = [
+    DeviceCapability.energyManager,
+    DeviceCapability.batteryDriven,
+  ];
   /** @inheritDoc */
   public deviceType: DeviceType = DeviceType.Victron;
   /** @inheritDoc */
@@ -21,6 +37,9 @@ export class VictronDevice implements iEnergyManager {
   private _iDatabaseLoggerInterval: NodeJS.Timeout | null = null;
   private _lastPersistenceCalculation: number = Utils.nowMS();
   private _nextPersistEntry: EnergyCalculation;
+  private _lastBatteryPersist: number = 0;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(opts: VictronMqttConnectionOptions) {
     this.settings = new VictronDeviceSettings();
@@ -35,6 +54,7 @@ export class VictronDevice implements iEnergyManager {
     this._victronConsumer = new VictronMqttConsumer(opts);
     this._iCalculationInterval = Utils.guardedInterval(
       () => {
+        this.checkForBatteryChange();
         this.calculateExcessEnergy();
       },
       5 * 1000,
@@ -50,10 +70,25 @@ export class VictronDevice implements iEnergyManager {
     this._nextPersistEntry = new EnergyCalculation(Utils.nowMS());
   }
 
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
   protected _info: DeviceInfo;
 
   public get info(): DeviceInfo {
     return this._info;
+  }
+
+  /** @inheritDoc */
+  public get battery(): number {
+    const level: number | null = this.data.battery.soc;
+    if (level == null) {
+      this.log(LogLevel.Debug, 'No battery data available from Victron device.');
+      return -1;
+    }
+    return level * 100;
   }
 
   public get victronConsumer(): VictronMqttConsumer {
@@ -80,6 +115,11 @@ export class VictronDevice implements iEnergyManager {
 
   public get id(): string {
     return this.info.allDevicesKey ?? `victron-${this.info.room}-${this.info.customName}`;
+  }
+
+  /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
   }
 
   public addExcessConsumer(device: iExcessEnergyConsumer): void {
@@ -151,6 +191,16 @@ export class VictronDevice implements iEnergyManager {
     );
   }
 
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
   public toJSON(): Partial<VictronDevice> {
     return Utils.jsonFilter(this, ['_victronConsumer']);
   }
@@ -175,11 +225,11 @@ export class VictronDevice implements iEnergyManager {
     let neededBatteryWattage: number = 0;
     const timeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
     if (this.settings.hasBattery && timeOfDay !== TimeOfDay.AfterSunset && timeOfDay !== TimeOfDay.Night) {
-      if (this.data.battery.soc == null) {
+      if (this.battery < 0) {
         this.log(LogLevel.Debug, 'No battery data available from Victron device.');
         return;
       }
-      neededBatteryWattage = ((1 - this.data.battery.soc) * this.settings.batteryCapacityWattage) / hoursTilSunset;
+      neededBatteryWattage = ((1 - this.battery / 100.0) * this.settings.batteryCapacityWattage) / hoursTilSunset;
 
       // Step 2: Calculate expected solar output
       const solarOutput = this.data.pvInverter.power ?? 0;
@@ -192,19 +242,19 @@ export class VictronDevice implements iEnergyManager {
     }
 
     let isSocTooLow: boolean = false;
-    if (this.data.battery.dcPower !== null && this.data.battery.soc !== null) {
+    if (this.data.battery.dcPower !== null && this.battery > -1) {
       if (timeOfDay === TimeOfDay.Night) {
-        isSocTooLow = this.data.battery.soc < 0.5;
+        isSocTooLow = this.battery < 50;
       } else if (timeOfDay === TimeOfDay.AfterSunset) {
-        isSocTooLow = this.data.battery.soc < 0.75;
+        isSocTooLow = this.battery < 75;
       } else if (hoursTilSunset > 4) {
-        isSocTooLow = this.data.battery.soc < 0.7;
+        isSocTooLow = this.battery < 70;
       } else {
-        isSocTooLow = this.data.battery.soc < 0.8;
+        isSocTooLow = this.battery < 80;
       }
     }
     // Whilst calculated spare energy is more precise, we don't mind using the battery as a buffer, if it is full enough.
-    if (this.data.battery.dcPower !== null && this.data.battery.soc !== null && !isSocTooLow) {
+    if (this.data.battery.dcPower !== null && this.battery > -1 && !isSocTooLow) {
       this._excessEnergy = this.settings.maximumBatteryDischargeWattage - Math.max(this.data.battery.dcPower, 0);
     }
     this.calculatePersistenceValues();
@@ -239,7 +289,7 @@ export class VictronDevice implements iEnergyManager {
   }
 
   private persist() {
-    this._nextPersistEntry.batteryLevel = (this.data.battery.soc ?? 0) / 100;
+    this._nextPersistEntry.batteryLevel = this.battery / 100;
     this._nextPersistEntry.batteryStoredKwH =
       (this._nextPersistEntry.batteryLevel * this.settings.batteryCapacityWattage) / 1000;
     const obj: EnergyCalculation = JSON.parse(JSON.stringify(this._nextPersistEntry));
@@ -256,5 +306,16 @@ export class VictronDevice implements iEnergyManager {
     this._nextPersistEntry.injectedKwH += Utils.kWh(this.injectingWattage, duration);
     this._nextPersistEntry.selfConsumedKwH += Utils.kWh(this.selfConsumingWattage, duration);
     this._lastPersistenceCalculation = now;
+  }
+
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

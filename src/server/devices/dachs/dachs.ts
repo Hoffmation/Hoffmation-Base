@@ -1,13 +1,23 @@
-import { DeviceInfo, Devices, DeviceType, iActuator, iBaseDevice, LampUtils } from '../../devices';
+import {
+  DeviceCapability,
+  DeviceInfo,
+  Devices,
+  DeviceType,
+  iActuator,
+  iBaseDevice,
+  iBatteryDevice,
+  LampUtils,
+} from '../../devices';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
+  BatteryLevelChangeAction,
+  CommandSource,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
   RoomBase,
 } from '../../../models';
-import { DeviceCapability } from '../DeviceCapability';
 import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
 import _ from 'lodash';
 import { iDachsSettings } from '../../config/iDachsSettings';
@@ -82,6 +92,10 @@ export class Dachs implements iBaseDevice, iActuator {
       this.restoreTargetAutomaticValue.bind(this),
       this.log.bind(this),
     );
+    if (Devices.energymanager?.deviceCapabilities?.includes(DeviceCapability.batteryDriven)) {
+      const energyManager: iBaseDevice = Devices.energymanager as iBaseDevice;
+      (energyManager as iBatteryDevice).addBatteryLevelCallback(this.onBatteryLevelChange.bind(this));
+    }
   }
 
   /** @inheritDoc */
@@ -222,5 +236,25 @@ export class Dachs implements iBaseDevice, iActuator {
       .catch((error) => {
         this.log(LogLevel.Error, `Error while turning on Dachs: ${error}`);
       });
+  }
+
+  /**
+   * Reacts on level Changes of a Energymanager with battery
+   * @param {BatteryLevelChangeAction} action - The action containing the new level
+   */
+  private onBatteryLevelChange(action: BatteryLevelChangeAction): void {
+    if (this._dachsOn || this.settings.batteryLevelTurnOnThreshold < action.newLevel) {
+      // We are already running, or battery level is high enough.
+      return;
+    }
+
+    const setStateCommand: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+      action,
+      true,
+      'Energy Level of battery dropped to critical level',
+      null,
+    );
+    setStateCommand.overrideCommandSource = CommandSource.Force;
+    this.setActuator(setStateCommand);
   }
 }

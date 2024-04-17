@@ -113,10 +113,6 @@ export class HoffmationBase {
       DaikinService.initialize();
     }
 
-    if (SettingsService.settings.dachs !== undefined) {
-      Devices.dachs = new Dachs(SettingsService.settings.dachs);
-    }
-
     Utils.guardedNewThread(() => {
       if (SettingsService.settings.muell) {
         ServerLogService.writeLog(LogLevel.Info, 'Muell settings detected --> initializing');
@@ -141,6 +137,14 @@ export class HoffmationBase {
         VictronService.initialize(SettingsService.settings.victron);
       }
     });
+
+    Utils.guardedNewThread(() => {
+      if (SettingsService.settings.dachs !== undefined) {
+        ServerLogService.writeLog(LogLevel.Info, 'Dachs settings detected --> initializing');
+        Devices.dachs = new Dachs(SettingsService.settings.dachs);
+      }
+    });
+
     if (SettingsService.TelegramActive) TelegramService.publishCommands();
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Post ioBrokerInitializations finished');
   }

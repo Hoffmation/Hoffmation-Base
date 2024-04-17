@@ -1,14 +1,26 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, RoomService, SonosService, Utils } from '../../services';
 import { ZigbeeDevice } from './BaseDevices';
-import { CommandSource, FloorSetAllShuttersCommand, LogLevel } from '../../../models';
+import { BatteryLevelChangeAction, CommandSource, FloorSetAllShuttersCommand, LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { iBatteryDevice, iSmokeDetectorDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, iSmokeDetectorDevice {
+  /**
+   * The timeout for the alarm to fire again
+   * @default undefined (no alarm active)
+   */
+  public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
+  private _smoke: boolean = false;
+  private _messageAlarmFirst: string = '';
+  private _messageAlarm: string = '';
+  private _messageAlarmEnd: string = '';
+  private _roomName: string = '';
 
   /**
    * Creates an instance of {@link DeviceType.ZigbeeHeimanSmoke}.
@@ -33,22 +45,10 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     return this._battery;
   }
 
-  private _smoke: boolean = false;
-  /**
-   * The timeout for the alarm to fire again
-   * @default undefined (no alarm active)
-   */
-  public iAlarmTimeout: NodeJS.Timeout | undefined = undefined;
-  private _messageAlarmFirst: string = '';
-  private _messageAlarm: string = '';
-  private _messageAlarmEnd: string = '';
-
   /** @inheritDoc */
   public get smoke(): boolean {
     return this._smoke;
   }
-
-  private _roomName: string = '';
 
   /**
    * The name of the room the device is in (Set during initialization)
@@ -64,12 +64,18 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Smoke Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.checkForBatteryChange();
         this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
@@ -105,6 +111,25 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     });
   }
 
+  /** @inheritdoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
+  }
+
+  /** @inheritDoc */
+  public dispose(): void {
+    if (this.iAlarmTimeout) {
+      clearInterval(this.iAlarmTimeout);
+      this.iAlarmTimeout = undefined;
+    }
+    super.dispose();
+  }
+
   private startAlarm(): void {
     if (this.iAlarmTimeout !== undefined) {
       clearInterval(this.iAlarmTimeout);
@@ -135,22 +160,17 @@ export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, i
     });
   }
 
-  /** @inheritdoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
       return;
     }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  /** @inheritDoc */
-  public dispose(): void {
-    if (this.iAlarmTimeout) {
-      clearInterval(this.iAlarmTimeout);
-      this.iAlarmTimeout = undefined;
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
     }
-    super.dispose();
+    this._lastBatteryLevel = newLevel;
   }
 }

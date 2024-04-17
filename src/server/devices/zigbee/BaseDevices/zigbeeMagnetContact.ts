@@ -1,14 +1,31 @@
 import { DeviceType } from '../../deviceType';
 import { Res, SonosService, TelegramService, Utils } from '../../../services';
-import { LogLevel } from '../../../../models';
+import { BatteryLevelChangeAction, LogLevel } from '../../../../models';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { MagnetPosition } from '../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { iBatteryDevice, iMagnetSensor } from '../../baseDeviceInterfaces';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice, iMagnetSensor {
+  /** @inheritDoc */
+  public position: MagnetPosition = MagnetPosition.closed;
+  /** @inheritDoc */
+  public telegramOnOpen: boolean = false;
+  /** @inheritDoc */
+  public speakOnOpen: boolean = false;
   protected _battery: number = -99;
   private _lastBatteryPersist: number = 0;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
+  private _closedCallback: Array<(pValue: boolean) => void> = [];
+  private _openCallback: Array<(pValue: boolean) => void> = [];
+  private _iOpenTimeout: NodeJS.Timeout | undefined;
+  private minutesOpen: number = 0;
+
+  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
+    super(pInfo, deviceType);
+  }
+
   /** @inheritDoc */
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
@@ -17,21 +34,6 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
   /** @inheritDoc */
   public get battery(): number {
     return this._battery;
-  }
-
-  /** @inheritDoc */
-  public position: MagnetPosition = MagnetPosition.closed;
-  /** @inheritDoc */
-  public telegramOnOpen: boolean = false;
-  /** @inheritDoc */
-  public speakOnOpen: boolean = false;
-  private _closedCallback: Array<(pValue: boolean) => void> = [];
-  private _openCallback: Array<(pValue: boolean) => void> = [];
-  private _iOpenTimeout: NodeJS.Timeout | undefined;
-  private minutesOpen: number = 0;
-
-  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
-    super(pInfo, deviceType);
   }
 
   /** @inheritDoc */
@@ -45,17 +47,42 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverrride: boolean = false): void {
     super.update(idSplit, state, initial, pOverrride);
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.checkForBatteryChange();
         this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
     }
+  }
+
+  /** @inheritDoc */
+  public dispose(): void {
+    if (this._iOpenTimeout) {
+      clearInterval(this._iOpenTimeout);
+      this._iOpenTimeout = undefined;
+    }
+    super.dispose();
+  }
+
+  /** @inheritDoc */
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 
   protected updatePosition(pValue: MagnetPosition): void {
@@ -125,22 +152,17 @@ export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice,
     }
   }
 
-  /** @inheritDoc */
-  public dispose(): void {
-    if (this._iOpenTimeout) {
-      clearInterval(this._iOpenTimeout);
-      this._iOpenTimeout = undefined;
-    }
-    super.dispose();
-  }
-
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
       return;
     }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

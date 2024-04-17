@@ -3,17 +3,15 @@ import { iBatteryDevice, iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VAL
 import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
-import { HumiditySensorChangeAction, LogLevel, TemperatureSensorChangeAction } from '../../../models';
+import {
+  BatteryLevelChangeAction,
+  HumiditySensorChangeAction,
+  LogLevel,
+  TemperatureSensorChangeAction,
+} from '../../../models';
 import { Utils } from '../../services';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
   /** @inheritDoc */
   public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -32,14 +30,15 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     this,
     false,
   );
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
-  }
-
+  private _battery: number = -99;
+  private _lastBatteryPersist: number = 0;
   private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
   private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
+  private _humidity: number = UNDEFINED_TEMP_VALUE;
+  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
+  private _temperature: number = UNDEFINED_TEMP_VALUE;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
@@ -48,8 +47,15 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
   }
 
-  private _humidity: number = UNDEFINED_TEMP_VALUE;
-  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
+  /** @inheritDoc */
+  public get lastBatteryPersist(): number {
+    return this._lastBatteryPersist;
+  }
+
+  /** @inheritDoc */
+  public get battery(): number {
+    return this._battery;
+  }
 
   /** @inheritDoc */
   public get roomTemperature(): number {
@@ -83,8 +89,6 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     return `${this._temperature}°C`;
   }
 
-  private _temperature: number = UNDEFINED_TEMP_VALUE;
-
   private set temperature(val: number) {
     this._temperature = val;
     for (const cb of this._temperaturCallbacks) {
@@ -93,11 +97,17 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
         this._battery = state.val as number;
+        this.checkForBatteryChange();
         this.persistBatteryDevice();
         if (this._battery < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
@@ -162,5 +172,19 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
       clearInterval(this.persistHumiditySensorInterval);
     }
     super.dispose();
+  }
+
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
+      return;
+    }
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

@@ -1,5 +1,5 @@
 import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
+import { BatteryLevelChangeAction, LogLevel } from '../../../models';
 import { HmIPDevice } from './hmIpDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { iBatteryDevice } from '../baseDeviceInterfaces';
@@ -24,6 +24,15 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
   private _level: number = 0;
   private _adaptionState: HmIpHeizungAdaptionStates | undefined;
   private _lastBatteryPersist: number = 0;
+  private _lastBatteryLevel: number = -1;
+  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
+  private _desiredTemperatur: number = 0;
+
+  public constructor(pInfo: IoBrokerDeviceInfo) {
+    super(pInfo, DeviceType.HmIpHeizung);
+    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+  }
+
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
@@ -31,13 +40,6 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
   public get battery(): number {
     return this._battery;
   }
-
-  public constructor(pInfo: IoBrokerDeviceInfo) {
-    super(pInfo, DeviceType.HmIpHeizung);
-    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
-  }
-
-  private _desiredTemperatur: number = 0;
 
   get desiredTemperatur(): number {
     return this._desiredTemperatur;
@@ -52,6 +54,11 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
   }
 
   /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Heizung Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
@@ -61,6 +68,7 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
             this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
+            this.checkForBatteryChange();
             this.persistBatteryDevice();
             break;
         }
@@ -69,6 +77,15 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
         this.updateBaseInformation(idSplit[4], state);
         break;
     }
+  }
+
+  public persistBatteryDevice(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastBatteryPersist + 60000 > now) {
+      return;
+    }
+    Utils.dbo?.persistBatteryDevice(this);
+    this._lastBatteryPersist = now;
   }
 
   private updateBaseInformation(name: string, state: ioBroker.State) {
@@ -95,12 +112,17 @@ export class HmIpHeizung extends HmIPDevice implements iBatteryDevice {
     }
   }
 
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
+  /**
+   * Checks whether the battery level did change and if so fires the callbacks
+   */
+  private checkForBatteryChange(): void {
+    const newLevel: number = this.battery;
+    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
       return;
     }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
+    for (const cb of this._batteryLevelCallbacks) {
+      cb(new BatteryLevelChangeAction(this));
+    }
+    this._lastBatteryLevel = newLevel;
   }
 }

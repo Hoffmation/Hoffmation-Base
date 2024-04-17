@@ -5,3 +5,4 @@ export * from './presenceGroupLastLeftAction';
 export * from './presenceGroupFirstEnterAction';
 export * from './shutterPositionChangedAction';
 export * from './temperatureSensorChangeAction';
+export { BatteryLevelChangeAction } from './batteryLevelChangeAction';

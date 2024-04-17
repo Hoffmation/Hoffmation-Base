@@ -5,9 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.41 (2024-04-02)
 
-* (theimo1221) Fix some presence group issues
+## **WORK IN PROGRESS**
+
+* (theimo1221) #1091 Add Callback Action to Battery Devices and use it in dachs to turn on bhp on certain level of e.g.
+  victron-energy-manager
 
 ## 3.0.0
 
