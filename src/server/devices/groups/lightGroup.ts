@@ -103,8 +103,6 @@ export class LightGroup extends BaseGroup {
   }
 
   public switchTimeConditional(c: LightGroupSwitchTimeConditionalCommand): void {
-    const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(c.time);
-
     let resultLampen = false;
     let resultSteckdosen = false;
     let activatedGroups = 0;
