@@ -126,11 +126,11 @@ export class LightGroup extends BaseGroup {
     if (this.getOutlets().length > 0) {
       activatedGroups++;
       this.log(LogLevel.Trace, `Set outlets time based for time "${TimeOfDay[c.time]}"`);
-      resultSteckdosen = darkOutside;
+      resultSteckdosen = true;
     }
     if (activatedGroups === 0 || this.getRoom().settings.includeLampsInNormalMovementLightning) {
       this.log(LogLevel.Trace, `Set Lamps time based for time "${TimeOfDay[c.time]}"`);
-      resultLampen = darkOutside;
+      resultLampen = true;
     }
 
     if (resultLampen) {

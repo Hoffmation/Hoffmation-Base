@@ -162,6 +162,14 @@ export class OwnDaikinDevice extends AcDevice {
     });
   }
 
+  /**
+   * Handles the situation when the device is unreachable, attempts to reconnect and log the outcome.
+   *
+   * This function logs a warning message indicating that the device is unreachable,
+   * then attempts to reconnect using the `DaikinService.reconnect` method.
+   * If the reconnection is successful, it sets the desired information and schedules a timeout of 5000ms.
+   * If the reconnection fails, it logs an error message with the reason for the failure.
+   */
   private handleDeviceUnreach(): void {
     this.log(LogLevel.Warn, `Detected EHOSTUNREACH for ${this.name}(${this.ip}), will try reconecting`);
     DaikinService.reconnect(this.name, this.ip, this._mac)

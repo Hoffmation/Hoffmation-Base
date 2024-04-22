@@ -44,6 +44,6 @@ export class BlockAutomaticUntilCommand extends BaseCommand {
   }
 
   public get logMessage(): string {
-    return `Block automatic until ${this.targetDate.toISOString()}, reason: ${this.reasonTrace}`;
+    return `Block automatic until ${this.targetDate.toLocaleString('de-DE')}, reason: ${this.reasonTrace}`;
   }
 }

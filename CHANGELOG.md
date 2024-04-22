@@ -10,6 +10,7 @@
 
 * (theimo1221) #1091 Add Callback Action to Battery Devices and use it in dachs to turn on bhp on certain level of e.g.
   victron-energy-manager
+* (theimo1221) Fix light-turn-on-on-movement during the day
 
 ## 3.0.0
 
