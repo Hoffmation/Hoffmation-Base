@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.43 (2024-04-29)
 
 * (theimo1221) Fix an issue in Presence Group resulting in light not being turned on.
 
