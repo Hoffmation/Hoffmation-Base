@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix an issue in Presence Group resulting in light not being turned on.
+
 ## 3.0.0-alpha.42 (2024-04-22)
 
 * (theimo1221) #1091 Add Callback Action to Battery Devices and use it in dachs to turn on bhp on certain level of e.g.

@@ -6,7 +6,7 @@ import {
   PresenceGroupLastLeftAction,
   RoomSetLightTimeBasedCommand,
 } from '../../../models';
-import { RoomService, Utils } from '../../services';
+import { LogDebugType, RoomService, Utils } from '../../services';
 import { BaseGroup } from './base-group';
 import { DeviceClusterType } from '../device-cluster-type';
 import { GroupType } from './group-type';
@@ -31,18 +31,26 @@ export class PresenceGroup extends BaseGroup {
   public initCallbacks(): void {
     this.getMotionDetector().forEach((b) => {
       b.addMovementCallback((action) => {
-        if (action.motionDetected) {
-          this.motionSensorOnAnyMovement(action);
-        }
-        if (action.motionDetected || this.anyPresent()) {
-          // TODO: Possible Edge Case, if the other motion sensor doesn't fire motion end event this will never be called
-          this.resetLastLeftTimeout();
-        } else if (!action.motionDetected && !this.anyPresent()) {
+        if (!action.motionDetected && !this.anyPresent()) {
           this.motionSensorOnLastLeft(action);
+          return;
         }
-        if (action.motionDetected && this.presentAmount() === 1 && this._lastLeftTimeout === null) {
+        if (!action.motionDetected && this.anyPresent()) {
+          this.resetLastLeftTimeout();
+          return;
+        }
+
+        // At this Point we can be certain about motion being detected.
+        this.log(
+          LogLevel.Debug,
+          `New Motion detected, present Amount: ${this.presentAmount()}`,
+          LogDebugType.NewMovementState,
+        );
+        this.motionSensorOnAnyMovement(action);
+        if (this.presentAmount() === 1 && this._lastLeftTimeout === null) {
           this.fireFistEnterCBs(action);
         }
+        this.resetLastLeftTimeout();
       });
     });
 
@@ -144,9 +152,11 @@ export class PresenceGroup extends BaseGroup {
    * In case of an existing delayed last left callback timeout, this removes it.
    */
   private resetLastLeftTimeout() {
-    if (this._lastLeftTimeout !== null) {
-      clearTimeout(this._lastLeftTimeout);
+    if (this._lastLeftTimeout === null) {
+      return;
     }
+    clearTimeout(this._lastLeftTimeout);
+    this._lastLeftTimeout = null;
   }
 
   private executeLastLeftCbs(action: PresenceGroupLastLeftAction): void {
