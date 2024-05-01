@@ -103,9 +103,9 @@ export class HoffmationBase {
       SonosService.initialize();
     }
 
-    if (SettingsService.settings.goveeDevicesPresent) {
+    if (SettingsService.settings.goveeSettings) {
       GooveeService.addOwnDevices(OwnGoveeDevices.ownDevices);
-      GooveeService.initialize();
+      GooveeService.initialize(SettingsService.settings.goveeSettings);
     }
 
     if (SettingsService.settings.daikin?.active) {

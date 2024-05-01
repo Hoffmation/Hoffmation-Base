@@ -12,14 +12,14 @@ import {
   RoomBase,
 } from '../../../models';
 import { LogDebugType, ServerLogService } from '../log-service';
-import { RGB, Utils } from '../utils';
+import { Utils } from '../utils';
 import _ from 'lodash';
 import { DeviceCapability } from '../../devices/DeviceCapability';
 import { API } from '../api';
 import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
-import { Device as GoveeDevice, DeviceStateInfo as GoveeDeviceStateInfo } from '@j3lte/govee-lan-controller';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { DeviceState as GoveeDeviceState } from '@j3lte/govee-lan-controller/build/types/device';
+import { GoveeDeviceData } from './govee-device-data';
+import { GooveeService } from './govee-service';
 
 export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */
@@ -51,12 +51,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   private _colortemp: number = 500;
   private _room: RoomBase | undefined = undefined;
 
-  public constructor(
-    deviceId: string,
-    ownDeviceName: string,
-    roomName: string,
-    public device: GoveeDevice | undefined,
-  ) {
+  public constructor(deviceId: string, ownDeviceName: string, roomName: string) {
     this.deviceId = deviceId;
     this._info = new DeviceInfo();
     this._info.fullName = `Govee ${roomName} ${ownDeviceName}`;
@@ -209,42 +204,31 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     }
   }
 
-  public update(data: GoveeDeviceState & GoveeDeviceStateInfo): void {
+  public update(data: GoveeDeviceData): void {
     this.queuedValue = null;
-    this._actuatorOn = data.onOff === 1;
+    this._actuatorOn = data.actuatorOn;
     this.brightness = data.brightness;
-    this._color = `#${data.color.r.toString(16)}${data.color.g.toString(16)}${data.color.b.toString(16)}`;
-    this._colortemp = data.colorTemInKelvin;
+    this._color = data.hexColor;
+    this._colortemp = data.colortemp;
   }
 
   private setBrightness(brightness: number, cb: () => void): void {
-    this.device
-      ?.setBrightness(brightness)
-      .then(() => {
-        cb();
-      })
-      .catch((error) => {
-        this.log(LogLevel.Error, `Govee set brightness resulted in error: ${error}`);
-      });
+    GooveeService.sendCommand(this, `brightness/${brightness}`).then((result) => {
+      if (!result) {
+        this.log(LogLevel.Error, 'Govee set brightness resulted in error');
+      }
+      cb();
+    });
   }
 
   private setColor(color: string): void {
-    if (color === this._color) {
-      return;
-    }
-    const colors: RGB | null = Utils.hexToRgb(color);
-    if (colors === null) {
-      this.log(LogLevel.Error, `Govee set color resulted in error: ${color} is not a valid color`);
-      return;
-    }
-    this.device
-      ?.setColorRGB(colors)
-      .then(() => {
+    GooveeService.sendCommand(this, `color/${color}`).then((result) => {
+      if (!result) {
+        this.log(LogLevel.Error, 'Govee set color resulted in error');
+      } else {
         this.log(LogLevel.Debug, `Govee set color to ${color}`, LogDebugType.SetActuator);
-      })
-      .catch((error) => {
-        this.log(LogLevel.Error, `Govee set color resulted in error: ${error}`);
-      });
+      }
+    });
   }
 
   private turnOn(): void {
@@ -252,25 +236,26 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       return;
     }
     this.queuedValue = true;
-    this.device
-      ?.turnOn()
-      .then(() => {
-        this.log(LogLevel.Debug, 'Govee turned on', LogDebugType.SetActuator);
-      })
-      .catch((error) => {
-        this.log(LogLevel.Error, `Govee turn on resulted in error: ${error}`);
-      });
+    GooveeService.sendCommand(this, `on/true`).then((result) => {
+      if (!result) {
+        this.log(LogLevel.Error, 'Govee turn on resulted in error');
+      } else {
+        this.log(LogLevel.Debug, `Govee turned on`, LogDebugType.SetActuator);
+      }
+    });
   }
 
   private turnOff(): void {
-    this.queuedValue = false;
-    this.device
-      ?.turnOff()
-      .then(() => {
-        this.log(LogLevel.Debug, 'Govee turned off', LogDebugType.SetActuator);
-      })
-      .catch((error) => {
-        this.log(LogLevel.Error, `Govee turn off resulted in error: ${error}`);
-      });
+    if (this._actuatorOn) {
+      return;
+    }
+    this.queuedValue = true;
+    GooveeService.sendCommand(this, `on/false`).then((result) => {
+      if (!result) {
+        this.log(LogLevel.Error, 'Govee turn off resulted in error');
+      } else {
+        this.log(LogLevel.Debug, `Govee turned off`, LogDebugType.SetActuator);
+      }
+    });
   }
 }

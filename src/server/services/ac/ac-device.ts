@@ -87,6 +87,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._room = room;
     if (room !== undefined && !this._movementCallbackAdded) {
       this._movementCallbackAdded = true;
+      // TODO: Maybe change to any Movement
       room?.PraesenzGroup?.addFirstEnterCallback(this.onRoomFirstEnter.bind(this));
       room?.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
     }

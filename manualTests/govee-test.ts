@@ -1,4 +1,12 @@
-import { GooveeService, HoffmationBase, HoffmationInitializationObject, OwnGoveeDevice, OwnGoveeDevices } from '../src';
+import {
+  CommandSource,
+  GooveeService,
+  HoffmationBase,
+  HoffmationInitializationObject,
+  LedSetLightCommand,
+  OwnGoveeDevice,
+  OwnGoveeDevices,
+} from '../src';
 import config from './mainConfig.example.json';
 
 export class GoveeTestTest {
@@ -10,17 +18,25 @@ export class GoveeTestTest {
     init.config.muell = undefined;
     await HoffmationBase.initializeBeforeIoBroker(init);
 
-    const device: OwnGoveeDevice = new OwnGoveeDevice('16:C1:36:35:30:0C:4A:FF', 'Vorne Links', 'Testraum', undefined);
+    const device: OwnGoveeDevice = new OwnGoveeDevice('16:C1:36:35:30:0C:4A:FF', 'Vorne Links', 'Testraum');
     OwnGoveeDevices.addDevice(device);
     GooveeService.addOwnDevices(OwnGoveeDevices.ownDevices);
-    GooveeService.initialize();
+    GooveeService.initialize({
+      url: 'http://localhost:3000',
+    });
     setTimeout(() => {
-      device.setLight(true, -1, true, 100, undefined, '#ff6a00', -1);
-    }, 15000);
+      console.log('Turning Govee on');
+      device.setLight(new LedSetLightCommand(CommandSource.Manual, true, 'Govee Test'));
+    }, 2000);
+
+    setTimeout(() => {
+      console.log('Turning Govee off');
+      device.setLight(new LedSetLightCommand(CommandSource.Manual, false, 'Govee Test'));
+    }, 8000);
     setTimeout(() => {
       console.log('shutdown-now');
       process.exit(1);
-    }, 55000);
+    }, 10000);
   }
 }
 

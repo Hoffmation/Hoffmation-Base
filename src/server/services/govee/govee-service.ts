@@ -1,79 +1,75 @@
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 import { OwnGoveeDevice } from './own-govee-device';
-import {
-  Device as GoveeDevice,
-  DeviceStateInfo as GoveeDeviceStateInfo,
-  Govee,
-  GoveeDeviceEventTypes,
-  GoveeEventTypes,
-} from '@j3lte/govee-lan-controller';
-import { DeviceState as GoveeDeviceState } from '@j3lte/govee-lan-controller/build/types/device';
-import {
-  GoveeDeviceData,
-  GoveeDeviceStatusData,
-  GoveeResponseMessage,
-} from '@j3lte/govee-lan-controller/build/types/types';
+import { iGoveeSettings } from '../../config';
+import * as http from 'http';
+import { GoveeDeviceData } from './govee-device-data';
+import { Utils } from '../utils';
 
 export class GooveeService {
-  private static devicesDict: { [name: string]: GoveeDevice } = {};
-  private static goveeApi: Govee;
+  private static _serverUrl: string = 'http://127.0.0.1:3000';
   private static ownDevices: { [name: string]: OwnGoveeDevice } = {};
+  private static _refreshInterval: NodeJS.Timeout | null = null;
 
   public static addOwnDevices(gvDevice: { [name: string]: OwnGoveeDevice }): void {
     this.ownDevices = gvDevice;
   }
 
-  public static initialize(): void {
+  public static initialize(config: iGoveeSettings): void {
     ServerLogService.writeLog(LogLevel.Debug, 'Initializing Goovee-Service');
-    this.goveeApi = new Govee({
-      discover: true,
-      discoverInterval: 300_000,
-    });
-    this.goveeApi.on(GoveeEventTypes.Scan, (data: GoveeDeviceData) => {
-      ServerLogService.writeLog(LogLevel.Info, `GoveeDevice ${data.ip} scanned`);
-    });
-    this.goveeApi.on(GoveeEventTypes.Ready, () => {
-      ServerLogService.writeLog(LogLevel.Info, 'Govee ready');
-    });
-    this.goveeApi.on(GoveeEventTypes.Error, (err) => {
-      ServerLogService.writeLog(LogLevel.Error, `Govee-Error: ${err}`);
-    });
-    this.goveeApi.on(GoveeEventTypes.NewDevice, (device: GoveeDevice) => {
-      ServerLogService.writeLog(LogLevel.Trace, `GoveeDevice ${device.id} joined`);
-      GooveeService.initializeDevice(device);
-    });
-    this.goveeApi.on(GoveeEventTypes.UnknownDevice, (_data: GoveeDeviceStatusData) => {
-      ServerLogService.writeLog(LogLevel.Warn, 'GoveeDevice unknown');
-    });
-    this.goveeApi.on(GoveeEventTypes.UnknownMessage, (data: GoveeResponseMessage) => {
-      ServerLogService.writeLog(LogLevel.Warn, `GoveeDevice unknown message: ${data}`);
-    });
-    this.goveeApi.discover();
+    this._serverUrl = config.url;
+    this._refreshInterval = Utils.guardedInterval(this.loadDevices, 5000, this, true);
   }
 
-  private static initializeDevice(d: GoveeDevice) {
-    this.devicesDict[d.id] = d;
-    if (this.ownDevices[d.id] === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, `Unknown Govee Device "${d.id}"`);
-      return;
+  public static cleanup(): void {
+    if (this._refreshInterval !== null) {
+      clearInterval(this._refreshInterval);
+      this._refreshInterval = null;
     }
-    const ownDevice = this.ownDevices[d.id];
-    ownDevice.device = d;
-    ownDevice.update(d.getState());
-
-    d.on(GoveeDeviceEventTypes.StateChange, (data: GoveeDeviceState & GoveeDeviceStateInfo) => {
-      ServerLogService.writeLog(LogLevel.Debug, `Govee ${d.id} state changed`);
-      this.updateDevice(d, data);
-    });
-    ServerLogService.writeLog(LogLevel.Debug, `Govee ${d.id} found at address ${d.ipAddr}`);
   }
 
-  private static updateDevice(device: GoveeDevice, data: GoveeDeviceState & GoveeDeviceStateInfo): void {
-    if (this.ownDevices[device.id] === undefined) {
-      ServerLogService.writeLog(LogLevel.Alert, `Unknown Govee Device "${device.id}"`);
-      return;
-    }
-    this.ownDevices[device.id].update(data);
+  public static async sendCommand(device: OwnGoveeDevice, command: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, _reject) => {
+      const requestLink: string = `${this._serverUrl}/device/${device.deviceId}/${command}`;
+      const req = http.get(requestLink, (res) => {
+        if (res.statusCode !== 200) {
+          ServerLogService.writeLog(
+            LogLevel.Alert,
+            `Failed to send Govee Command(${requestLink}): ${res.statusCode} - ${res.statusMessage}`,
+          );
+          resolve(false);
+          return;
+        }
+        resolve(true);
+        return;
+      });
+      req.on('error', (e) => {
+        ServerLogService.writeLog(LogLevel.Info, `Govee Error: ${e.message}`);
+      });
+    });
+  }
+
+  private static loadDevices(): void {
+    const req: http.ClientRequest = http.get(`${this._serverUrl}/devices`, (res) => {
+      if (res.statusCode !== 200) {
+        ServerLogService.writeLog(LogLevel.Alert, `Failed to load Govee Devices: ${res.statusCode}`);
+        return;
+      }
+      res.on('data', (d) => {
+        const data: { [name: string]: GoveeDeviceData } = JSON.parse(d.toString());
+        Object.keys(data).forEach((key) => {
+          const deviceData: GoveeDeviceData = data[key];
+          const ownDevice = this.ownDevices[key];
+          if (ownDevice === undefined) {
+            ServerLogService.writeLog(LogLevel.DeepTrace, `Unknown Govee Device "${key}"`);
+            return;
+          }
+          ownDevice.update(deviceData);
+        });
+      });
+    });
+    req.on('error', (e) => {
+      ServerLogService.writeLog(LogLevel.Info, `Govee Error: ${e.message}`);
+    });
   }
 }

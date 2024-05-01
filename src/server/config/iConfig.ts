@@ -23,6 +23,7 @@ import { iEnergyManagerSettings } from './iEnergyManagerSettings';
 import { iUnifiSettings } from './iUnifiSettings';
 import { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';
 import { iRestSettings } from './iRestSettings';
+import { iGoveeSettings } from './iGoveeSettings';
 
 /**
  * The main configuration for Hoffmation normally stored in the `main-config.json` file.
@@ -57,9 +58,9 @@ export interface iConfig {
    */
   espresense?: iEspresenseSettings;
   /**
-   * Whether any Govee devices are present in the house and should be included in Hoffmation.
+   * @see iGoveeSettings
    */
-  goveeDevicesPresent?: boolean;
+  goveeSettings?: iGoveeSettings;
   /**
    * @see iHeaterSettings
    */
