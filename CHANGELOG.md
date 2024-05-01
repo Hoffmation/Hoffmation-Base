@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Remove direct GoveeApiDependecy by using new https://github.com/theimo1221/govee-express-api
+
 ## 3.0.0-alpha.43 (2024-04-29)
 
 * (theimo1221) Fix an issue in Presence Group resulting in light not being turned on.
