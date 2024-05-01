@@ -222,7 +222,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private setColor(color: string): void {
-    GooveeService.sendCommand(this, `color/${color}`).then((result) => {
+    GooveeService.sendCommand(this, `color/${color.replace('#', '')}`).then((result) => {
       if (!result) {
         this.log(LogLevel.Error, 'Govee set color resulted in error');
       } else {

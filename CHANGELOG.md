@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Govee set color without #
+
 ## 3.0.0-alpha.44 (2024-05-01)
 
 * (theimo1221) Remove direct GoveeApiDependecy by using new https://github.com/theimo1221/govee-express-api
