@@ -18,6 +18,7 @@ import {
 import { LogDebugType, ServerLogService } from '../log-service';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
+import { extend } from 'lodash';
 
 export class VictronDevice implements iEnergyManager, iBatteryDevice {
   /** @inheritDoc */
@@ -215,7 +216,14 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
   }
 
   public toJSON(): Partial<VictronDevice> {
-    return Utils.jsonFilter(this, ['_victronConsumer']);
+    return extend(Utils.jsonFilter(this, ['_victronConsumer', '_excessEnergyConsumer']), {
+      battery: this.battery,
+      acBlocked: this.acBlocked,
+      excessEnergy: this.excessEnergy,
+      drawingWattage: this.drawingWattage,
+      injectingWattage: this.injectingWattage,
+      selfConsumingWattage: this.selfConsumingWattage,
+    });
   }
 
   /**

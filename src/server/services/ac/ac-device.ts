@@ -200,6 +200,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
 
     if (Devices.energymanager?.acBlocked) {
+      acOn && this.log(LogLevel.Info, 'We should turn off now, as energy-manager demands off.');
       return AcMode.Off;
     }
 
