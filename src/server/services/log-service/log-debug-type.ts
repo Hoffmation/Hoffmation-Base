@@ -9,4 +9,5 @@ export enum LogDebugType {
   DaikinSuccessfullControlInfo,
   EuroHeaterValveLogging,
   Trilateration,
+  DachsUnreach,
 }

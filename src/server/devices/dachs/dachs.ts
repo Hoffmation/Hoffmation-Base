@@ -84,7 +84,7 @@ export class Dachs implements iBaseDevice, iActuator {
       flatten: true,
     };
     this.config = modifiedOptions;
-    this.client = new DachsHttpClient(this.config.connectionOptions);
+    this.client = new DachsHttpClient(this.config.connectionOptions, this.log.bind(this));
     this.warmWaterSensor = new DachsTemperatureSensor(this.config.roomName, 'ww', 'Water Temperature');
     this.heatStorageTempSensor = new DachsTemperatureSensor(this.config.roomName, 'hs', 'Heat Storage Temperature');
     Utils.guardedInterval(this.loadData, this.config.refreshInterval, this);
@@ -184,7 +184,7 @@ export class Dachs implements iBaseDevice, iActuator {
         this.persist();
       })
       .catch((error) => {
-        this.log(LogLevel.Error, `Error while fetching data: ${error}`);
+        this.log(LogLevel.Error, `Error while fetching data: ${error}`, LogDebugType.DachsUnreach);
       });
   }
 

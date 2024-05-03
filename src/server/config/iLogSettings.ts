@@ -45,4 +45,9 @@ export interface iLogSettings {
    * Whether to log debug messages for trilateration calculations
    */
   debugTrilateration?: boolean;
+
+  /**
+   * Whether to send telegram messages on "HOST Unreach" of Dachs
+   */
+  alertDachsUnreachable?: boolean;
 }

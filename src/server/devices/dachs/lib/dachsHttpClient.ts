@@ -3,7 +3,7 @@ import ReadKeyList from './ReadKeyList';
 import * as _ from 'lodash';
 import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse } from '../interfaces';
 import keyTemplates from './keyTemplates';
-import { ServerLogService } from '../../../services';
+import { LogDebugType } from '../../../services';
 import { LogLevel } from '../../../../models';
 
 /**
@@ -19,7 +19,10 @@ export class DachsHttpClient {
   private readonly url: string;
   private axiosInstance: AxiosInstance;
 
-  constructor(options: DachsClientOptions) {
+  constructor(
+    options: DachsClientOptions,
+    private readonly _logger: (level: LogLevel, message: string, logDebugType?: LogDebugType) => void,
+  ) {
     this.options = options;
     //combine parameter to baseUrl
     //check http prefix
@@ -41,7 +44,7 @@ export class DachsHttpClient {
         return response;
       },
       (error) => {
-        ServerLogService.writeLog(LogLevel.Error, `DachsHttpClient: ${error.message}`);
+        this._logger(LogLevel.Error, `DachsHttpClient: ${error.message}`, LogDebugType.DachsUnreach);
       },
     );
   }
@@ -72,7 +75,7 @@ export class DachsHttpClient {
   fetchByKeys(...keys: string[]): Promise<{ [id: string]: KeyListEntityResponse<string | number | boolean> }> {
     return new Promise((resolve, reject) => {
       this.axiosInstance
-        .get("/getKey" + this.urlBuilder(keys))
+        .get('/getKey' + this.urlBuilder(keys))
         .then((res: AxiosResponse<string>) => {
           if (!res.data) reject('No data received');
           resolve(this.parser(res.data));
@@ -102,7 +105,7 @@ export class DachsHttpClient {
     return new Promise((resolve, reject) => {
       this.axiosInstance
         .post(
-          "/setKeys",
+          '/setKeys',
           Object.entries(data)
             .map(([key, value]) => `${key}=${value}`)
             .join('&'),

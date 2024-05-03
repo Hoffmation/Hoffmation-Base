@@ -5,27 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.46 (2024-05-01)
 
-* (theimo1221) Fix govee turn off
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.45 (2024-05-01)
-
-* (theimo1221) Govee set color without #
-
-## 3.0.0-alpha.44 (2024-05-01)
-
-* (theimo1221) Remove direct GoveeApiDependecy by using new https://github.com/theimo1221/govee-express-api
-
-## 3.0.0-alpha.43 (2024-04-29)
-
-* (theimo1221) Fix an issue in Presence Group resulting in light not being turned on.
-
-## 3.0.0-alpha.42 (2024-04-22)
-
-* (theimo1221) #1091 Add Callback Action to Battery Devices and use it in dachs to turn on bhp on certain level of e.g.
-  victron-energy-manager
-* (theimo1221) Fix light-turn-on-on-movement during the day
+* (theimo1221) Add Option to disable Dachs-Unreach Telegram spam
 
 ## 3.0.0
 
@@ -64,6 +47,10 @@
 * (theimo1221) Fix Edge Case resulting in shutter not moving down on sunset
 * (theimo1221) Don't turn on lamps on shutter down in rooms without motion sensor
 * (theimo1221) Improve handling with lifting automatic-block
+* (theimo1221) Remove direct GoveeApiDependecy by using new https://github.com/theimo1221/govee-express-api
+* (theimo1221) #1091 Add Callback Action to Battery Devices and use it in dachs to turn on bhp on certain level of e.g.
+  victron-energy-manager
+* (theimo1221) Fix light-turn-on-on-movement during the day
 
 ## 2.23.0 (2024-02-25)
 

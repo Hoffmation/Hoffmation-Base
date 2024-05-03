@@ -18,11 +18,11 @@ export class GoveeTestTest {
     init.config.muell = undefined;
     await HoffmationBase.initializeBeforeIoBroker(init);
 
-    const device: OwnGoveeDevice = new OwnGoveeDevice('16:C1:36:35:30:0C:4A:FF', 'Vorne Links', 'Testraum');
+    const device: OwnGoveeDevice = new OwnGoveeDevice('D9:9C:C8:35:34:31:78:5B', 'Vorne Links', 'Testraum');
     OwnGoveeDevices.addDevice(device);
     GooveeService.addOwnDevices(OwnGoveeDevices.ownDevices);
     GooveeService.initialize({
-      url: 'http://localhost:3000',
+      url: 'http://goveeapi.hoffmation.com:3000',
     });
     setTimeout(() => {
       console.log('Turning Govee on');
