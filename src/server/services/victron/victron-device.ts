@@ -104,7 +104,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
       this.log(LogLevel.Debug, 'No battery data available from Victron device.');
       return -1;
     }
-    return level * 100;
+    return level;
   }
 
   public get victronConsumer(): VictronMqttConsumer {

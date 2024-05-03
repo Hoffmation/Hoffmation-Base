@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Victron battery is already in percent
+
 ## 3.0.0-alpha.49 (2024-05-03)
 
 * (theimo1221) Extend Victron JSON-Data-Output
