@@ -11,4 +11,9 @@ export interface iSonosSettings {
    * @warning This can collide with AC-Control (@see {@link iDaikinSettings.buttonBotRightForAc})
    */
   buttonBotRightForRadio?: boolean;
+
+  /**
+   * The hostname to use for initialization (needed in some VLAN situation where discovery is not possible).
+   */
+  initialHost?: string;
 }

@@ -7,6 +7,7 @@ import { TimeCallbackService } from '../time-callback-service';
 import { SettingsService } from '../settings-service';
 import TelegramBot from 'node-telegram-bot-api';
 import { OwnSonosDevice } from './own-sonos-device';
+import { iSonosSettings } from '../../config';
 
 export class SonosService {
   private static sonosManager: SonosManager;
@@ -14,6 +15,10 @@ export class SonosService {
   private static isInitialized: boolean;
   private static checkTimeCallback: TimeCallback;
   private static reinitializationDevice: OwnSonosDevice | undefined;
+
+  private static get config(): iSonosSettings | undefined {
+    return SettingsService.settings.sonos;
+  }
 
   public static addOwnDevices(
     snDevices: { [name: string]: OwnSonosDevice },
@@ -57,13 +62,17 @@ export class SonosService {
       );
     }
     this.sonosManager = new SonosManager();
-    this.sonosManager
-      .InitializeWithDiscovery(10)
+    this.sonosManager.OnNewDevice((d: SonosDevice) => {
+      ServerLogService.writeLog(LogLevel.Info, `SonosDevice ${d.Name} joined`);
+      SonosService.initializeDevice(d);
+    });
+
+    const initialHost: string | undefined = this.config?.initialHost;
+    (initialHost === undefined
+      ? this.sonosManager.InitializeWithDiscovery(10)
+      : this.sonosManager.InitializeFromDevice(initialHost)
+    )
       .then(() => {
-        this.sonosManager.OnNewDevice((d: SonosDevice) => {
-          ServerLogService.writeLog(LogLevel.Info, `SonosDevice ${d.Name} joined`);
-          SonosService.initializeDevice(d);
-        });
         ServerLogService.writeLog(LogLevel.Debug, `${this.sonosManager.Devices.length} Sonos Geräte gefunden.`);
         this.sonosManager.Devices.forEach((d: SonosDevice) => {
           SonosService.initializeDevice(d);

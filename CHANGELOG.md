@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Allow sonos initialization by one known host
+
 ## 3.0.0-alpha.51 (2024-05-03)
 
 * (theimo1221) Extend Victron JSON-Data-Output
