@@ -5,21 +5,6 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.52 (2024-05-03)
-
-* (theimo1221) Allow sonos initialization by one known host
-
-## 3.0.0-alpha.51 (2024-05-03)
-
-* (theimo1221) Extend Victron JSON-Data-Output
-
-## 3.0.0-alpha.48 (2024-05-03)
-
-* (theimo1221) Basic AC-Block implementation
-
-## 3.0.0-alpha.47 (2024-05-03)
-
-* (theimo1221) Add Option to disable Dachs-Unreach Telegram spam
 
 ## 3.0.0
 
@@ -62,6 +47,8 @@
 * (theimo1221) #1091 Add Callback Action to Battery Devices and use it in dachs to turn on bhp on certain level of e.g.
   victron-energy-manager
 * (theimo1221) Fix light-turn-on-on-movement during the day
+* (theimo1221) Basic AC-Block by energymanager implementation
+* (theimo1221) Allow sonos initialization by one known host
 
 ## 2.23.0 (2024-02-25)
 
