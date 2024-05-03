@@ -20,7 +20,6 @@ import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } 
 import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
 
 export class VictronDevice implements iEnergyManager, iBatteryDevice {
-  private readonly _victronConsumer: VictronMqttConsumer;
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [
     DeviceCapability.energyManager,
@@ -30,6 +29,8 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
   public deviceType: DeviceType = DeviceType.Victron;
   /** @inheritDoc */
   public readonly settings: VictronDeviceSettings;
+  protected _info: DeviceInfo;
+  private readonly _victronConsumer: VictronMqttConsumer;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private blockDeviceChangeTime: number = -1;
   private _lastDeviceChange: undefined | EnergyConsumerStateChange;
@@ -40,6 +41,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
   private _lastBatteryPersist: number = 0;
   private _lastBatteryLevel: number = -1;
   private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
+  private _excessEnergy: number = 0;
 
   public constructor(opts: VictronMqttConnectionOptions) {
     this.settings = new VictronDeviceSettings();
@@ -71,11 +73,24 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
   }
 
   /** @inheritDoc */
+  public get acBlocked(): boolean {
+    if (this.settings.hasBattery) {
+      const hours: number = new Date().getHours();
+      if (hours < 6 || hours > 18) {
+        return this.battery < 70;
+      }
+      if (hours < 10 || hours > 16) {
+        return this.battery < 60;
+      }
+      return this.battery < 50;
+    }
+    return false;
+  }
+
+  /** @inheritDoc */
   public get lastBatteryPersist(): number {
     return this._lastBatteryPersist;
   }
-
-  protected _info: DeviceInfo;
 
   public get info(): DeviceInfo {
     return this._info;
@@ -99,8 +114,6 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
     return this._victronConsumer.data;
   }
 
-  private _excessEnergy: number = 0;
-
   public get excessEnergy(): number {
     return this._excessEnergy;
   }
@@ -117,15 +130,6 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
     return this.info.allDevicesKey ?? `victron-${this.info.room}-${this.info.customName}`;
   }
 
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
-  }
-
-  public addExcessConsumer(device: iExcessEnergyConsumer): void {
-    this._excessEnergyConsumer.push(device);
-  }
-
   public get injectingWattage(): number {
     return Math.min(this.victronConsumer.data.grid.power ?? 0, 0) * -1;
   }
@@ -136,6 +140,15 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
 
   public get selfConsumingWattage(): number {
     return Math.max(this.victronConsumer.data.system.power ?? 0, 0) - this.drawingWattage;
+  }
+
+  /** @inheritDoc */
+  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
+    this._batteryLevelCallbacks.push(pCallback);
+  }
+
+  public addExcessConsumer(device: iExcessEnergyConsumer): void {
+    this._excessEnergyConsumer.push(device);
   }
 
   /** @inheritDoc */

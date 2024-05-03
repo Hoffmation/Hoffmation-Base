@@ -16,6 +16,11 @@ export interface iEnergyManager extends iBaseDevice, iDisposable {
   excessEnergy: number;
 
   /**
+   * Whether the Energy Manager actively blocks AC
+   */
+  readonly acBlocked: boolean;
+
+  /**
    * The total wattaage being injected into the grid at the moment of last calculation.
    */
   readonly injectingWattage: number;

@@ -78,6 +78,11 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     return this._powerValuePhaseA + this._powerValuePhaseB + this._powerValuePhaseC;
   }
 
+  /** @inheritDoc */
+  public get acBlocked(): boolean {
+    return this.excessEnergy < 200;
+  }
+
   private _excessEnergyConsumerConsumption: number = 0;
 
   /**
