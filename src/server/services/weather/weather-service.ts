@@ -8,7 +8,7 @@ import { Utils } from '../utils';
 import { LogDebugType, ServerLogService } from '../log-service';
 import SunCalc from 'suncalc';
 import { TimeCallbackService } from '../time-callback-service';
-import { iSpeaker } from '../../devices';
+import { iSpeaker, UNDEFINED_TEMP_VALUE } from '../../devices';
 import { WeatherResponse } from './weather-response';
 import { RainNextMinutesInfo } from './rain-next-minutes-info';
 
@@ -37,6 +37,10 @@ export class WeatherService {
 
   public static addWeatherUpdateCb(name: string, cb: () => void) {
     this._dataUpdateCbs[name] = cb;
+  }
+
+  public static get todayMaxTemp(): number {
+    return WeatherService.lastResponse?.daily[0]?.temp.max ?? UNDEFINED_TEMP_VALUE;
   }
 
   public static initialize(config: iWeatherSettings): void {

@@ -6,6 +6,10 @@
   * (theimo1221) Update packages
 -->
 
+## **WORK IN PROGRESS**
+
+* (theimo1221) No AC Cooling if outside max temp will stay below 22 degree Celsius.
+
 ## 3.0.0
 
 * (theimo1221) Rework of commands especially with focus on command source and the stacked reason

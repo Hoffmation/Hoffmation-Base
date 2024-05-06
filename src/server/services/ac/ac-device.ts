@@ -27,6 +27,7 @@ import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
+import { WeatherService } from '../weather';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   /** @inheritDoc */
@@ -54,6 +55,14 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return false;
     }
     if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent()) {
+      return false;
+    }
+    if (
+      WeatherService.active &&
+      WeatherService.todayMaxTemp < 22 && // TODO: Make this value configurable
+      WeatherService.todayMaxTemp !== UNDEFINED_TEMP_VALUE
+    ) {
+      // As it is quite cold outside there is no need to cool
       return false;
     }
     return true;
