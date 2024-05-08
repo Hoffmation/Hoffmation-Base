@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.54 (2024-05-08)
 
 * (theimo1221) Add Support for Shelly Actuator
 
