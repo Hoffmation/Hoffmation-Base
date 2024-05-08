@@ -41,6 +41,7 @@ export enum DeviceType {
   JsEnergyManager = 301,
   RoomScene = 401,
   ShellyTrv = 402,
+  ShellyActuator = 403,
   TuyaGarageDoorOpener = 501,
   WledDevice = 1001,
   GoveeLed = 1002,

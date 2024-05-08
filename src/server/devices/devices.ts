@@ -54,6 +54,7 @@ import { iConfig } from '../config';
 import { ShellyDevice, ShellyTrv } from './shelly';
 import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
+import { ShellyActuator } from './shelly/shellyActuator';
 
 export class Devices {
   /**
@@ -209,6 +210,9 @@ export class Devices {
     switch (shellyInfo.deviceType) {
       case 'Trv':
         d = new ShellyTrv(shellyInfo);
+        break;
+      case 'Actuator':
+        d = new ShellyActuator(shellyInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No shelly Device Type for ${shellyInfo.deviceType} defined`);

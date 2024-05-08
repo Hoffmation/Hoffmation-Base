@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Support for Shelly Actuator
+
 ## 3.0.0-alpha.53 (2024-05-06)
 
 * (theimo1221) No AC Cooling if outside max temp will stay below 22 degree Celsius.

@@ -34,6 +34,7 @@ export class DeviceCluster {
         break;
       case DeviceType.Camera:
         clusterTypes.push(DeviceClusterType.Camera);
+        clusterTypes.push(DeviceClusterType.MotionDetection);
         break;
       case DeviceType.HmIpLampe:
       case DeviceType.ZigbeeIlluDimmer:
@@ -76,6 +77,7 @@ export class DeviceCluster {
         clusterTypes.push(DeviceClusterType.MotionDetection);
         break;
       case DeviceType.ZigbeeIkeaSteckdose:
+      case DeviceType.ZigbeeBlitzShp:
         clusterTypes.push(DeviceClusterType.Outlets);
         break;
       case DeviceType.ZigbeeIlluLedRGBCCT:
@@ -93,9 +95,6 @@ export class DeviceCluster {
       case DeviceType.ZigbeeAquaraWater:
         clusterTypes.push(DeviceClusterType.WaterDetectors);
         break;
-      case DeviceType.ZigbeeBlitzShp:
-        clusterTypes.push(DeviceClusterType.Outlets);
-        break;
       case DeviceType.WledDevice:
         clusterTypes.push(DeviceClusterType.WLED);
         break;
@@ -105,6 +104,7 @@ export class DeviceCluster {
       case DeviceType.HmIpHeizung: // Setting/Controlling via HM-Ip Heizgruppe
       case DeviceType.unknown:
       case DeviceType.HmIpAccessPoint: // You can't really do stuff with it.
+      case DeviceType.ShellyActuator: // Dependent on use case
         break;
     }
     for (const type of clusterTypes) {
