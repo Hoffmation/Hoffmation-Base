@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.54 (2024-05-08)
 
-* (theimo1221) Add Support for Shelly Actuator
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix shelly Actuator export
 
 ## 3.0.0-alpha.53 (2024-05-06)
 
@@ -56,6 +57,7 @@
 * (theimo1221) Fix light-turn-on-on-movement during the day
 * (theimo1221) Basic AC-Block by energymanager implementation
 * (theimo1221) Allow sonos initialization by one known host
+* (theimo1221) Add Support for Shelly Actuator
 
 ## 2.23.0 (2024-02-25)
 
