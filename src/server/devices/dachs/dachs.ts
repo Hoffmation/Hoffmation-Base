@@ -333,7 +333,6 @@ export class Dachs implements iBaseDevice, iActuator {
       return;
     }
     const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredState, reason, null);
-    setAction.overrideCommandSource = CommandSource.Force;
     this.warmWaterPump.setActuator(setAction);
   }
 }

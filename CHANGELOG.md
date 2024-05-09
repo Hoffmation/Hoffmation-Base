@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Extend Battery Level logging
+* (theimo1221) Dachs WW Pump not as force action
 
 ## 3.0.0-alpha.53 (2024-05-06)
 
