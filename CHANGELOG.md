@@ -5,18 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.57 (2024-05-09)
 
-* (theimo1221) Make external Dachs actuators writeable.
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.56 (2024-05-09)
-
-* (theimo1221) Add settings to prevent/allow Dachs to run/start based on battery level.
-* (theimo1221) Add logic and settings to control the Dachs WW pump.
-
-## 3.0.0-alpha.55 (2024-05-08)
-
-* (theimo1221) Fix shelly Actuator export
+* (theimo1221) Extend Battery Level logging
 
 ## 3.0.0-alpha.53 (2024-05-06)
 
@@ -66,6 +58,8 @@
 * (theimo1221) Basic AC-Block by energymanager implementation
 * (theimo1221) Allow sonos initialization by one known host
 * (theimo1221) Add Support for Shelly Actuator
+* (theimo1221) Add settings to prevent/allow Dachs to run/start based on battery level.
+* (theimo1221) Add logic and settings to control the Dachs WW pump.
 
 ## 2.23.0 (2024-02-25)
 
