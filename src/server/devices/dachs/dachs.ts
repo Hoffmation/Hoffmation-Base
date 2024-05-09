@@ -17,6 +17,7 @@ import {
   LogLevel,
   RestoreTargetAutomaticValueCommand,
   RoomBase,
+  TemperatureSensorChangeAction,
 } from '../../../models';
 import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
 import _ from 'lodash';
@@ -104,6 +105,8 @@ export class Dachs implements iBaseDevice, iActuator {
       const energyManager: iBaseDevice = Devices.energymanager as iBaseDevice;
       (energyManager as iBatteryDevice).addBatteryLevelCallback(this.onBatteryLevelChange.bind(this));
     }
+    this.warmWaterSensor.addTempChangeCallback(this.onTempChange.bind(this));
+    this.heatStorageTempSensor.addTempChangeCallback(this.onTempChange.bind(this));
   }
 
   /** @inheritDoc */
@@ -297,5 +300,40 @@ export class Dachs implements iBaseDevice, iActuator {
     );
     setStateCommand.overrideCommandSource = CommandSource.Force;
     this.setActuator(setStateCommand);
+  }
+
+  private onTempChange(action: TemperatureSensorChangeAction): void {
+    if (this.warmWaterPump === undefined) {
+      // We have no control over the warm water pump --> nothing to do
+      return;
+    }
+
+    const wwTemp: number = this._tempWarmWater;
+    const heatStorageTemp: number = this._tempHeatStorage;
+    let desiredState: boolean = false;
+    let reason: string = '';
+    if (wwTemp > this.settings.warmWaterDesiredMinTemp + 3) {
+      desiredState = false;
+      reason = `Temperature of warm water pump ${wwTemp}°C is above desired minimum temperature ${this.settings.warmWaterDesiredMinTemp}°C`;
+    } else if (wwTemp > heatStorageTemp) {
+      desiredState = false;
+      reason = `Temperature of warm water pump ${wwTemp}°C is higher than temperature of heat storage ${heatStorageTemp}°C`;
+    } else if (heatStorageTemp < this.settings.warmWaterDesiredMinTemp - 4) {
+      desiredState = false;
+      reason = `Temperature of heat storage ${heatStorageTemp}°C is too low to heat water.`;
+    } else if (wwTemp < this.settings.warmWaterDesiredMinTemp) {
+      desiredState = true;
+      reason = `Temperature of warm water pump ${wwTemp}°C is lower than desired minimum temperature ${this.settings.warmWaterDesiredMinTemp}°C`;
+    } else {
+      // We are somewhere between states, let's not change anything
+      return;
+    }
+    if (desiredState === this.warmWaterPump.actuatorOn) {
+      // Nothing to do
+      return;
+    }
+    const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredState, reason, null);
+    setAction.overrideCommandSource = CommandSource.Force;
+    this.warmWaterPump.setActuator(setAction);
   }
 }

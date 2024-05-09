@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add settings to prevent/allow Dachs to run/start based on battery level.
+* (theimo1221) Add logic and settings to control the Dachs WW pump.
 
 ## 3.0.0-alpha.55 (2024-05-08)
 

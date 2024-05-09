@@ -24,10 +24,18 @@ export class DachsDeviceSettings extends ActuatorSettings {
    * Defines the battery level above which the dachs should be prevented from starting/running.
    */
   public batteryLevelPreventStartThreshold: number = 70;
+  /**
+   * Defines the desired minimum temperature for warm water.
+   */
+  public warmWaterDesiredMinTemp: number = 45;
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
     this.refreshInterval = data.refreshInterval ?? this.refreshInterval;
     this.batteryLevelTurnOnThreshold = data.batteryLevelTurnOnThreshold ?? this.batteryLevelTurnOnThreshold;
+    this.batteryLevelPreventStartThreshold =
+      data.batteryLevelPreventStartThreshold ?? this.batteryLevelPreventStartThreshold;
+    this.batteryLevelAllowStartThreshold = data.batteryLevelAllowStartThreshold ?? this.batteryLevelAllowStartThreshold;
+    this.warmWaterDesiredMinTemp = data.warmWaterDesiredMinTemp ?? this.warmWaterDesiredMinTemp;
     super.fromPartialObject(data);
   }
 
