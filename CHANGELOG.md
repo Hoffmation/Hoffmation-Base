@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.59 (2024-05-09)
 
 * (theimo1221) No AC Cooling if outside max temp will stay below ac.settings configured level.
 
