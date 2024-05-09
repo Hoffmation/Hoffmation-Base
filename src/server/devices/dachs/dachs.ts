@@ -44,6 +44,14 @@ export class Dachs implements iBaseDevice, iActuator {
    * A reference to the Temperature measuring heat storage temperature
    */
   public readonly heatStorageTempSensor: DachsTemperatureSensor;
+  /**
+   * An external actuator controlling the warm water pump
+   */
+  public readonly warmWaterPump?: iActuator;
+  /**
+   * An external actuator to prevent the Dachs from starting.
+   */
+  public readonly blockDachsStart?: iActuator;
   private readonly client: DachsHttpClient;
   private readonly config: iDachsSettings;
   /** @inheritDoc */
@@ -138,7 +146,16 @@ export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
   public toJSON(): Partial<OwnSonosDevice> {
     return Utils.jsonFilter(
-      _.omit(this, ['room', 'client', 'config', '_influxClient', 'warmWaterSensor', 'heatStorageTempSensor']),
+      _.omit(this, [
+        'room',
+        'client',
+        'config',
+        '_influxClient',
+        'warmWaterSensor',
+        'heatStorageTempSensor',
+        'warmWaterPump',
+        'blockDachsStart',
+      ]),
     );
   }
 
@@ -243,7 +260,31 @@ export class Dachs implements iBaseDevice, iActuator {
    * @param {BatteryLevelChangeAction} action - The action containing the new level
    */
   private onBatteryLevelChange(action: BatteryLevelChangeAction): void {
-    if (this._dachsOn || this.settings.batteryLevelTurnOnThreshold < action.newLevel) {
+    if (this.blockDachsStart !== undefined) {
+      if (action.newLevel > this.settings.batteryLevelPreventStartThreshold) {
+        const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          true,
+          `Battery reached ${action.newLevel}%, Dachs should not run any more`,
+          null,
+        );
+        blockAction.overrideCommandSource = CommandSource.Force;
+        this.blockDachsStart.setActuator(blockAction);
+        return;
+      } else if (action.newLevel < this.settings.batteryLevelAllowStartThreshold) {
+        const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          false,
+          `Battery reached ${action.newLevel}%, Dachs is now allowed to run if needed`,
+          null,
+        );
+        this.blockDachsStart.setActuator(liftAction);
+      } else if (this.blockDachsStart.actuatorOn) {
+        // We haven't reached the lower threshold yet --> nothing to do
+        return;
+      }
+    }
+    if (this._dachsOn || this.settings.batteryLevelTurnOnThreshold > action.newLevel) {
       // We are already running, or battery level is high enough.
       return;
     }

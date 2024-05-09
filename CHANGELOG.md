@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add settings to prevent/allow Dachs to run/start based on battery level.
+
 ## 3.0.0-alpha.55 (2024-05-08)
 
 * (theimo1221) Fix shelly Actuator export

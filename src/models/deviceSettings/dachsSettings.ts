@@ -16,6 +16,15 @@ export class DachsDeviceSettings extends ActuatorSettings {
    */
   public batteryLevelTurnOnThreshold: number = -1;
 
+  /**
+   * Defines the battery level below which the dachs should be allowed to start
+   */
+  public batteryLevelAllowStartThreshold: number = 50;
+  /**
+   * Defines the battery level above which the dachs should be prevented from starting/running.
+   */
+  public batteryLevelPreventStartThreshold: number = 70;
+
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
     this.refreshInterval = data.refreshInterval ?? this.refreshInterval;
     this.batteryLevelTurnOnThreshold = data.batteryLevelTurnOnThreshold ?? this.batteryLevelTurnOnThreshold;
