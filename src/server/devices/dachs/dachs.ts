@@ -48,11 +48,11 @@ export class Dachs implements iBaseDevice, iActuator {
   /**
    * An external actuator controlling the warm water pump
    */
-  public readonly warmWaterPump?: iActuator;
+  public warmWaterPump?: iActuator;
   /**
    * An external actuator to prevent the Dachs from starting.
    */
-  public readonly blockDachsStart?: iActuator;
+  public blockDachsStart?: iActuator;
   private readonly client: DachsHttpClient;
   private readonly config: iDachsSettings;
   /** @inheritDoc */
