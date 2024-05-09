@@ -59,7 +59,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     }
     if (
       WeatherService.active &&
-      WeatherService.todayMaxTemp < 22 && // TODO: Make this value configurable
+      WeatherService.todayMaxTemp < this.settings.minOutdoorTempForCooling &&
       WeatherService.todayMaxTemp !== UNDEFINED_TEMP_VALUE
     ) {
       // As it is quite cold outside there is no need to cool

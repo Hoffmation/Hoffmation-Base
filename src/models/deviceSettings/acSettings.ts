@@ -45,6 +45,11 @@ export class AcSettings extends DeviceSettings {
    */
   public manualDisabled: boolean = false;
 
+  /**
+   * The minimum outside temperature (max. of day)  in Celsius to even consider cooling.
+   */
+  public minOutdoorTempForCooling: number = 21;
+
   public fromPartialObject(data: Partial<AcSettings>): void {
     this.minimumHours = data.minimumHours ?? this.minimumHours;
     this.minimumMinutes = data.minimumMinutes ?? this.minimumMinutes;
@@ -55,6 +60,7 @@ export class AcSettings extends DeviceSettings {
     this.useOwnTemperature = data.useOwnTemperature ?? this.useOwnTemperature;
     this.useAutomatic = data.useAutomatic ?? this.useAutomatic;
     this.manualDisabled = data.manualDisabled ?? this.manualDisabled;
+    this.minOutdoorTempForCooling = data.minOutdoorTempForCooling ?? this.minOutdoorTempForCooling;
     super.fromPartialObject(data);
   }
 

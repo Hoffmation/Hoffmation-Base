@@ -5,14 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.58 (2024-05-09)
 
-* (theimo1221) Extend Battery Level logging
-* (theimo1221) Dachs WW Pump not as force action
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.53 (2024-05-06)
-
-* (theimo1221) No AC Cooling if outside max temp will stay below 22 degree Celsius.
+* (theimo1221) No AC Cooling if outside max temp will stay below ac.settings configured level.
 
 ## 3.0.0
 
