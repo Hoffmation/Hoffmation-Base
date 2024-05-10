@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.60 (2024-05-10)
 
 * (theimo1221) Add PresenceGroup.AnyMovementCb, to mitigate certain issues, where with a very long movement light/ac
   didn't behave as expected.
