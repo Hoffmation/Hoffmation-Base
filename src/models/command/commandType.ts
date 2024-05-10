@@ -16,6 +16,7 @@ export enum CommandType {
   LedSetLightCommand = 'LedSetLightCommand',
   LightGroupSwitchTimeConditional = 'LightGroupSwitchTimeConditional',
   MotionSensorAction = 'MotionSensorAction',
+  PresenceGroupAnyMovementAction = 'PresenceGroupAnyMovementAction',
   PresenceGroupFirstEnterAction = 'PresenceGroupFirstEnterAction',
   PresenceGroupLastLeftAction = 'PresenceGroupLastLeftAction',
   RoomRestoreShutterPositionCommand = 'RoomRestoreShutterPositionCommand',

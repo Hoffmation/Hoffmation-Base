@@ -2,6 +2,7 @@ import {
   ActuatorSetStateCommand,
   LogLevel,
   MotionSensorAction,
+  PresenceGroupAnyMovementAction,
   PresenceGroupFirstEnterAction,
   PresenceGroupLastLeftAction,
   RoomSetLightTimeBasedCommand,
@@ -18,6 +19,7 @@ export class PresenceGroup extends BaseGroup {
   private _lastLeftTimeout: NodeJS.Timeout | null = null;
   private _lastLeftCbs: ((action: PresenceGroupLastLeftAction) => void)[] = [];
   private _firstEnterCbs: ((action: PresenceGroupFirstEnterAction) => void)[] = [];
+  private _anyMovementCbs: ((action: PresenceGroupAnyMovementAction) => void)[] = [];
 
   public constructor(roomName: string, motionSensorIds: string[]) {
     super(roomName, GroupType.Presence);
@@ -61,7 +63,7 @@ export class PresenceGroup extends BaseGroup {
       );
     });
 
-    this.addFirstEnterCallback((action: PresenceGroupFirstEnterAction) => {
+    this.addAnyMovementCallback((action: PresenceGroupAnyMovementAction) => {
       if (!this.getRoom().settings.lampenBeiBewegung) {
         return;
       }
@@ -76,6 +78,10 @@ export class PresenceGroup extends BaseGroup {
 
   public addLastLeftCallback(cb: (action: PresenceGroupLastLeftAction) => void): void {
     this._lastLeftCbs.push(cb);
+  }
+
+  public addAnyMovementCallback(cb: (action: PresenceGroupAnyMovementAction) => void): void {
+    this._anyMovementCbs.push(cb);
   }
 
   public anyPresent(): boolean {
@@ -103,6 +109,7 @@ export class PresenceGroup extends BaseGroup {
     RoomService.movementHistory.add(
       `${Utils.nowString()}: Raum "${this.roomName}" Gerät "${action.sensor.info.fullName}"`,
     );
+    this.executeAnyMovementCbs(new PresenceGroupAnyMovementAction(action));
   }
 
   private motionSensorOnLastLeft(action: MotionSensorAction): void {
@@ -157,6 +164,12 @@ export class PresenceGroup extends BaseGroup {
     }
     clearTimeout(this._lastLeftTimeout);
     this._lastLeftTimeout = null;
+  }
+
+  private executeAnyMovementCbs(action: PresenceGroupAnyMovementAction): void {
+    for (const cb of this._anyMovementCbs) {
+      cb(action);
+    }
   }
 
   private executeLastLeftCbs(action: PresenceGroupLastLeftAction): void {

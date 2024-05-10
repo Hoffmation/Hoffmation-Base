@@ -97,7 +97,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     if (room !== undefined && !this._movementCallbackAdded) {
       this._movementCallbackAdded = true;
       // TODO: Maybe change to any Movement
-      room?.PraesenzGroup?.addFirstEnterCallback(this.onRoomFirstEnter.bind(this));
+      room?.PraesenzGroup?.addAnyMovementCallback(this.onRoomAnyMovement.bind(this));
       room?.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
     }
   }
@@ -387,12 +387,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this.turnOn();
   }
 
-  private onRoomFirstEnter(_action: PresenceGroupFirstEnterAction): void {
+  private onRoomAnyMovement(_action: PresenceGroupFirstEnterAction): void {
     if (!this.settings.noCoolingOnMovement || !this.on || this.mode === AcMode.Heating) {
       return;
     }
 
-    this.log(LogLevel.Info, 'Someone entered the room. Turning off AC');
+    this.log(LogLevel.Info, 'Something moved in the room. Turning off AC');
     this.turnOff();
   }
 
