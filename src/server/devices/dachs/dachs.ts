@@ -287,7 +287,7 @@ export class Dachs implements iBaseDevice, iActuator {
         return;
       }
     }
-    if (this._dachsOn || this.settings.batteryLevelTurnOnThreshold > action.newLevel) {
+    if (this._dachsOn || this.settings.batteryLevelTurnOnThreshold < action.newLevel) {
       // We are already running, or battery level is high enough.
       return;
     }
