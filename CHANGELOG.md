@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.61 (2024-05-10)
 
 * (theimo1221) Fix minor logic error within dachs
 
