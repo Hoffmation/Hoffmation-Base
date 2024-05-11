@@ -54,6 +54,7 @@ export class DeviceCluster {
         clusterTypes.push(DeviceClusterType.Shutter);
         break;
       case DeviceType.ZigbeeSonoffTemp:
+      case DeviceType.SmartGardenSensor:
         clusterTypes.push(DeviceClusterType.TemperaturSensor);
         clusterTypes.push(DeviceClusterType.HumiditySensor);
         break;
