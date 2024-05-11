@@ -51,10 +51,10 @@ import { WledDevice } from './wledDevice';
 import { DeviceCapability } from './DeviceCapability';
 import { Dachs } from './dachs';
 import { iConfig } from '../config';
-import { ShellyDevice, ShellyTrv } from './shelly';
+import { ShellyActuator, ShellyDevice, ShellyTrv } from './shelly';
 import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
-import { ShellyActuator } from './shelly/shellyActuator';
+import { SmartGardenService } from './smartGarden';
 
 export class Devices {
   /**
@@ -85,6 +85,10 @@ export class Devices {
    * A constant for the identifier of WLED Adapter devices
    */
   public static readonly IDENTIFIER_WLED: string = 'wled';
+  /**
+   * A constant for the identifier of SmartGarden devices.
+   */
+  public static readonly IDENTIFIER_SMART_GARDEN: string = 'smartgarden';
   /**
    * A Map containing all devices
    */
@@ -138,6 +142,8 @@ export class Devices {
         Devices.processShellyDevice(cDevConf);
       } else if (cName.indexOf('00-Tuya') === 0) {
         Devices.processTuyaDevice(cDevConf);
+      } else if (cDevConf.type === 'device' && cName.indexOf('DEVICE_') === 0 && cID.indexOf('smartgarden') === 0) {
+        Devices.processSmartGardenDevice(cDevConf);
       } else if (
         cName.indexOf('00-EnergyManager') === 0 &&
         cDevConf.type !== 'folder' &&
@@ -194,7 +200,7 @@ export class Devices {
   }
 
   private static processShellyDevice(cDevConf: deviceConfig) {
-    const shellyInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const shellyInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_Shelly}-${shellyInfo.devID}`;
     shellyInfo.allDevicesKey = fullName;
 
@@ -222,7 +228,7 @@ export class Devices {
   }
 
   private static processTuyaDevice(cDevConf: deviceConfig) {
-    const tuyaInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const tuyaInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_TUYA}-${tuyaInfo.devID}`;
     tuyaInfo.allDevicesKey = fullName;
 
@@ -247,7 +253,7 @@ export class Devices {
   }
 
   private static processZigbeeDevice(cDevConf: deviceConfig) {
-    const zigbeeInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const zigbeeInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const apiDevId: string = zigbeeInfo.devID.startsWith('0x') ? zigbeeInfo.devID.substring(2) : zigbeeInfo.devID;
     const fullName: string = `zigbee-${apiDevId}`;
     zigbeeInfo.allDevicesKey = fullName;
@@ -344,8 +350,12 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
+  private static processSmartGardenDevice(cDevConf: deviceConfig) {
+    SmartGardenService.processSmartGardenDevice(cDevConf);
+  }
+
   private static processWledDevice(cDevConf: deviceConfig) {
-    const wledIoBrokerDeviceInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const wledIoBrokerDeviceInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_WLED}-${wledIoBrokerDeviceInfo.devID}`;
     wledIoBrokerDeviceInfo.allDevicesKey = fullName;
 
@@ -361,7 +371,7 @@ export class Devices {
   }
 
   private static processHMIPDevice(cDevConf: deviceConfig) {
-    const hmIPInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf);
+    const hmIPInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_HOMEMATIC}-${hmIPInfo.devID}`;
     hmIPInfo.allDevicesKey = fullName;
 
@@ -423,7 +433,7 @@ export class Devices {
     if (Devices.energymanager !== undefined) {
       return;
     }
-    const devInfo: IoBrokerDeviceInfo = new IoBrokerDeviceInfo(cDevConf, true);
+    const devInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byStateJsSplit(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_JS}-${devInfo.devID}`;
     devInfo.allDevicesKey = fullName;
     Devices.energymanager = new JsObjectEnergyManager(devInfo);

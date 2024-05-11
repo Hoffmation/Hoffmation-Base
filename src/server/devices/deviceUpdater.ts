@@ -36,6 +36,18 @@ export class DeviceUpdater implements IDeviceUpdater {
     } else if (idSplit[0] == Devices.IDENTIFIER_ZIGBEE2MQTT) {
       classifier = Devices.IDENTIFIER_ZIGBEE;
       devId = idSplit[2].substring(2);
+    } else if (idSplit[0] == Devices.IDENTIFIER_SMART_GARDEN) {
+      if (
+        idSplit[1] === 'admin' ||
+        idSplit[2].indexOf('LOCATION') !== 0 ||
+        idSplit.length < 4 ||
+        idSplit[3].indexOf('DEVICE') !== 0
+      ) {
+        // This is no update for a smartgarden device
+        return;
+      }
+      classifier = Devices.IDENTIFIER_SMART_GARDEN;
+      devId = idSplit[3];
     }
     const device: undefined | iBaseDevice = API.getDevice(`${classifier}-${devId}`, false);
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {

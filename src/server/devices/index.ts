@@ -1,6 +1,7 @@
 export * from './baseDeviceInterfaces/index';
 export * from './blueIris/index';
 export * from './button/index';
+export * from './dachs/index';
 export * from './espresense/index';
 export * from './groups/index';
 export * from './hmIPDevices/index';
@@ -9,6 +10,7 @@ export * from './models/index';
 export * from './scene/index';
 export * from './sharedFunctions/index';
 export * from './shelly/index';
+export * from './smartGarden/index';
 export * from './tuya/index';
 export * from './tv/index';
 export * from './zigbee/index';
