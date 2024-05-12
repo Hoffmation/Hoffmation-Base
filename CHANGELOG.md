@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.68 (2024-05-12)
 
 * (theimo1221) Add Debug Log regarding smart-garden
 
