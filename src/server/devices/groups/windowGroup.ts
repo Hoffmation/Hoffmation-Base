@@ -260,16 +260,20 @@ export class WindowGroup extends BaseGroup {
         undefined,
         room.settings.rolloOffset,
       );
-      if (
-        !TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset)) &&
-        this.anyShutterDown
-      ) {
-        this.sunriseUp(
-          new ShutterSunriseUpCommand(
-            CommandSource.Initial,
-            'Initial sunrise up as it is day and at least 1 shutter is down.',
-          ),
-        );
+      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
+        if (!this.anyShutterDown) {
+          // Only set new desired position without applying it.
+          this.setDesiredPosition(
+            new WindowSetDesiredPositionCommand(CommandSource.Initial, 100, 'It is daytime during restart.', false),
+          );
+        } else {
+          this.sunriseUp(
+            new ShutterSunriseUpCommand(
+              CommandSource.Initial,
+              'Initial sunrise up as it is day and at least 1 shutter is down.',
+            ),
+          );
+        }
       }
       TimeCallbackService.addCallback(this.sunriseShutterCallback);
     }

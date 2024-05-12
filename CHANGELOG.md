@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.65 (2024-05-12)
 
-* (theimo1221) Don't force initial shutter up, if shutter is e.g. half open due to heat reduction.
+## **WORK IN PROGRESS**
+
+* (theimo1221) While not enforcing initial shutter up, still set correct initial desired position.
 
 ## 3.0.0
 

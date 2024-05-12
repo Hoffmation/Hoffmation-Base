@@ -60,7 +60,7 @@ export class SmartGardenMower extends SmartGardenDevice implements iActuator {
     const stateName: string = idSplit[5];
     if (folder.indexOf('SERVICE_MOWER') === 0) {
       switch (stateName) {
-        case 'activity_value':
+        case 'activity_moving_i':
           this._actuatorOn = state.val as boolean;
           this.persist();
           break;
