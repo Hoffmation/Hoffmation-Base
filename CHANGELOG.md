@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.71 (2024-05-12)
 
-* (theimo1221) Fix Smart-Garden device updates
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix Smart-Garden mower state update
 
 ## 3.0.0
 
