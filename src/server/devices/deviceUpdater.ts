@@ -39,8 +39,8 @@ export class DeviceUpdater implements IDeviceUpdater {
     } else if (idSplit[0] == Devices.IDENTIFIER_SMART_GARDEN) {
       if (
         idSplit[1] === 'admin' ||
-        idSplit[2].indexOf('LOCATION') !== 0 ||
         idSplit.length < 4 ||
+        idSplit[2].indexOf('LOCATION') !== 0 ||
         idSplit[3].indexOf('DEVICE') !== 0
       ) {
         // This is no update for a smartgarden device

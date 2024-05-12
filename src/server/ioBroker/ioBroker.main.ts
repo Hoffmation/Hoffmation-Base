@@ -71,8 +71,13 @@ export class ioBrokerMain {
     this.connectionCallbacks.onUpdate = (id: string, state: ioBroker.State) => {
       Utils.guardedNewThread(() => {
         // console.log('NEW VALUE of ' + id + ': ' + JSON.stringify(state));
-        this.states[id] = state;
-        this.deviceUpdater.updateState(id, state);
+        try {
+          this.states[id] = state;
+          this.deviceUpdater.updateState(id, state);
+        } catch (e) {
+          ServerLogService.writeLog(LogLevel.Alert, `Update of state (${id}) to ${state} failed: ${e}`);
+          return;
+        }
       }, this);
     };
 
