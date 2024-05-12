@@ -32,8 +32,8 @@ export class SmartGardenValve extends SmartGardenDevice implements iActuator {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.SmartGardenValve);
-    this._durationValueStateId = `${pInfo.fullID}.SERVICE_VALVE_${this._deviceSerial}/duration_value`;
-    this._stopAllValvesStateId = `${pInfo.fullID}.SERVICE_VALVE_SET_${this._deviceSerial}/stop_all_valves_i`;
+    this._durationValueStateId = `${pInfo.fullID}.SERVICE_VALVE_${this._deviceSerial}.duration_value`;
+    this._stopAllValvesStateId = `${pInfo.fullID}.SERVICE_VALVE_SET_${this._deviceSerial}.stop_all_valves_i`;
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.blockAutomationHandler = new BlockAutomaticHandler(

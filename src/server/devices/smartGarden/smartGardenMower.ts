@@ -30,7 +30,7 @@ export class SmartGardenMower extends SmartGardenDevice implements iActuator {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.SmartGardenMower);
-    this._activityControlStateId = `${pInfo.fullID}.SERVICE_MOWER_${this._deviceSerial}/activity_control_i`;
+    this._activityControlStateId = `${pInfo.fullID}.SERVICE_MOWER_${this._deviceSerial}.activity_control_i`;
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.blockAutomationHandler = new BlockAutomaticHandler(

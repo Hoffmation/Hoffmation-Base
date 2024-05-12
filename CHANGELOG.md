@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.66 (2024-05-12)
 
-* (theimo1221) While not enforcing initial shutter up, still set correct initial desired position.
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix smartgarden state ids
 
 ## 3.0.0
 
@@ -59,6 +60,7 @@
 * (theimo1221) Add PresenceGroup.AnyMovementCb, to mitigate certain issues, where with a very long movement light/ac
   didn't behave as expected.
 * (theimo1221) First implementation of Gardena Devices (Sensor, Valve and Mower) using smart-garden ioBroker adapter.
+* (theimo1221) While not enforcing initial shutter up, still set correct initial desired position.
 
 ## 2.23.0 (2024-02-25)
 
