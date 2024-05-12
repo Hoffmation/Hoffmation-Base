@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.70 (2024-05-12)
 
 * (theimo1221) Reduce logging to smart-garden devices
 
