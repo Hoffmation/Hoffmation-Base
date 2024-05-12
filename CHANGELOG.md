@@ -8,10 +8,7 @@
 
 ## **WORK IN PROGRESS**
 
-* (theimo1221) Preparations for the implementation of SmartGardenDevices
-* (theimo1221) Add Smart-Garden Sensor (temperature and humidity of soil)
-* (theimo1221) Add BatteryDriven to Smart Garden base device
-* (theimo1221) Add Smartgarden mover as an actuator until we have iMover
+* (theimo1221) First implementation of Gardena Devices (Sensor, Valve and Mower) using smart-garden ioBroker adapter.
 
 ## 3.0.0-alpha.61 (2024-05-10)
 

@@ -5,6 +5,9 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
 import { Devices } from '../devices';
 import { SmartGardenDevice } from './smartGardenDevice';
+import { SmartGardenSensor } from './smartGardenSensor';
+import { SmartGardenMower } from './smartGardenMower';
+import { SmartGardenValve } from './smartGardenValve';
 
 export class SmartGardenService {
   private static readonly _registeredDevices: Map<string, SmartGardenDeviceRegistrationInfo> = new Map();
@@ -38,9 +41,15 @@ export class SmartGardenService {
     ioBrokerDeviceInfo.allDevicesKey = fullName;
     let d: SmartGardenDevice;
     switch (registrationInfo.deviceType) {
-      // case DeviceType.SmartGardenValve:
-      //   d = new SmartGardenValve(ioBrokerDeviceInfo);
-      //   break;
+      case DeviceType.SmartGardenSensor:
+        d = new SmartGardenSensor(ioBrokerDeviceInfo);
+        break;
+      case DeviceType.SmartGardenMower:
+        d = new SmartGardenMower(ioBrokerDeviceInfo);
+        break;
+      case DeviceType.SmartGardenValve:
+        d = new SmartGardenValve(ioBrokerDeviceInfo);
+        break;
       default:
         ServerLogService.writeLog(
           LogLevel.Warn,

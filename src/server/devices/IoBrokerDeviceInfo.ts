@@ -70,7 +70,6 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
   public static byDeviceConfig(pDevConf: deviceConfig): IoBrokerDeviceInfo {
     const nameSplit: string[] = (pDevConf.common!.name as string).split('-');
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pDevConf._id);
-    let channel: number | undefined;
     /**
      * 0: hm-rpc
      * 1: rcpInstance

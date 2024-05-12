@@ -15,7 +15,7 @@ import {
 import { LampUtils } from '../sharedFunctions';
 import { Utils } from '../../services';
 
-export class SmartGardenMover extends SmartGardenDevice implements iActuator {
+export class SmartGardenMower extends SmartGardenDevice implements iActuator {
   /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   /** @inheritDoc */
@@ -28,9 +28,9 @@ export class SmartGardenMover extends SmartGardenDevice implements iActuator {
   private readonly _activityControlStateId: string;
   private _actuatorOn: boolean = false;
 
-  public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
-    super(pInfo, type);
-    this._activityControlStateId = `${pInfo.fullID}.SERVICE_MOVER_${this._deviceSerial}/activity_control_i`;
+  public constructor(pInfo: IoBrokerDeviceInfo) {
+    super(pInfo, DeviceType.SmartGardenMower);
+    this._activityControlStateId = `${pInfo.fullID}.SERVICE_MOWER_${this._deviceSerial}/activity_control_i`;
     this.deviceCapabilities.push(DeviceCapability.actuator);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.blockAutomationHandler = new BlockAutomaticHandler(
@@ -58,7 +58,7 @@ export class SmartGardenMover extends SmartGardenDevice implements iActuator {
     }
     const folder: string = idSplit[4];
     const stateName: string = idSplit[5];
-    if (folder.indexOf('SERVICE_SENSOR') === 0) {
+    if (folder.indexOf('SERVICE_MOWER') === 0) {
       switch (stateName) {
         case 'activity_value':
           this._actuatorOn = state.val as boolean;
@@ -110,20 +110,20 @@ export class SmartGardenMover extends SmartGardenDevice implements iActuator {
     if (pauseGardenaPlan) {
       this.log(LogLevel.Info, 'Pausing Gardena Plan');
       this.setState(this._activityControlStateId, 'PARK_UNTIL_FURTHER_NOTICE', undefined, (err) => {
-        this.log(LogLevel.Error, `Pausing gardena mover resulted in error: ${err}`);
+        this.log(LogLevel.Error, `Pausing gardena mower resulted in error: ${err}`);
       });
       return;
     }
     this.log(LogLevel.Info, 'Pausing until next task');
     this.setState(this._activityControlStateId, 'PARK_UNTIL_NEXT_TASK', undefined, (err) => {
-      this.log(LogLevel.Error, `Pausing gardena mover resulted in error: ${err}`);
+      this.log(LogLevel.Error, `Pausing gardena mower resulted in error: ${err}`);
     });
   }
 
   private mov(durationInSeconds: number): void {
     this.log(LogLevel.Info, `Start moving for ${durationInSeconds} seconds`);
     this.setState(this._activityControlStateId, durationInSeconds.toString(10), undefined, (err) => {
-      this.log(LogLevel.Error, `Starting gardena mover resulted in error: ${err}`);
+      this.log(LogLevel.Error, `Starting gardena mower resulted in error: ${err}`);
     });
   }
 }
