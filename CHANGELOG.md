@@ -10,6 +10,7 @@
 
 * (theimo1221) Preparations for the implementation of SmartGardenDevices
 * (theimo1221) Add Smart-Garden Sensor (temperature and humidity of soil)
+* (theimo1221) Add BatteryDriven to Smart Garden base device
 
 ## 3.0.0-alpha.61 (2024-05-10)
 
