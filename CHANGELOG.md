@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.64 (2024-05-12)
 
-* (theimo1221) Fix potentional crash in smart-garden update logic.
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't force initial shutter up, if shutter is e.g. half open due to heat reduction.
 
 ## 3.0.0
 

@@ -29,6 +29,16 @@ export class Window extends BaseGroup {
     return this._desiredPosition;
   }
 
+  /**
+   * Checks if any shutter is down (0%)
+   * @returns {boolean} true if any shutter is down
+   */
+  public get anyShutterDown(): boolean {
+    return this.getShutter().some((s: iShutter) => {
+      return s.currentLevel === 0;
+    });
+  }
+
   public constructor(
     roomName: string,
     public readonly handleIds: string[] = [],

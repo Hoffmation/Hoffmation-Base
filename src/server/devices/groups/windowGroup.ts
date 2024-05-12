@@ -37,6 +37,16 @@ export class WindowGroup extends BaseGroup {
    */
   public sunsetShutterCallback: TimeCallback | undefined;
 
+  /**
+   * Checks if any Shutter of any window is down
+   * @returns {boolean} True if there is atleast one shutte with level of 0%.
+   */
+  public get anyShutterDown(): boolean {
+    return this.windows.some((w: Window) => {
+      w.anyShutterDown;
+    });
+  }
+
   public constructor(
     roomName: string,
     public windows: Window[],
@@ -250,8 +260,16 @@ export class WindowGroup extends BaseGroup {
         undefined,
         room.settings.rolloOffset,
       );
-      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
-        this.sunriseUp(new ShutterSunriseUpCommand(CommandSource.Initial, 'Initial sunrise up as it is day'));
+      if (
+        !TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset)) &&
+        this.anyShutterDown
+      ) {
+        this.sunriseUp(
+          new ShutterSunriseUpCommand(
+            CommandSource.Initial,
+            'Initial sunrise up as it is day and at least 1 shutter is down.',
+          ),
+        );
       }
       TimeCallbackService.addCallback(this.sunriseShutterCallback);
     }
