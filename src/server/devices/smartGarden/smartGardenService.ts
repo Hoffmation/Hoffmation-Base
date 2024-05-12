@@ -1,4 +1,3 @@
-import { SmartGardenDeviceRegistrationInfo } from './SmartGardenDeviceRegistrationInfo';
 import { deviceConfig, LogLevel } from '../../../models';
 import { ServerLogService } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -8,6 +7,7 @@ import { SmartGardenDevice } from './smartGardenDevice';
 import { SmartGardenSensor } from './smartGardenSensor';
 import { SmartGardenMower } from './smartGardenMower';
 import { SmartGardenValve } from './smartGardenValve';
+import { SmartGardenDeviceRegistrationInfo } from './smartGardenDeviceRegistrationInfo';
 
 export class SmartGardenService {
   private static readonly _registeredDevices: Map<string, SmartGardenDeviceRegistrationInfo> = new Map();

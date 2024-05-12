@@ -5,18 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.62 (2024-05-12)
 
-* (theimo1221) First implementation of Gardena Devices (Sensor, Valve and Mower) using smart-garden ioBroker adapter.
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.61 (2024-05-10)
-
-* (theimo1221) Fix minor logic error within dachs
-
-## 3.0.0-alpha.60 (2024-05-10)
-
-* (theimo1221) Add PresenceGroup.AnyMovementCb, to mitigate certain issues, where with a very long movement light/ac
-  didn't behave as expected.
+* (theimo1221) Fix smart-garden Exports
 
 ## 3.0.0
 
@@ -65,6 +57,9 @@
 * (theimo1221) Add settings to prevent/allow Dachs to run/start based on battery level.
 * (theimo1221) Add logic and settings to control the Dachs WW pump.
 * (theimo1221) No AC Cooling if outside max temp will stay below ac.settings configured level.
+* (theimo1221) Add PresenceGroup.AnyMovementCb, to mitigate certain issues, where with a very long movement light/ac
+  didn't behave as expected.
+* (theimo1221) First implementation of Gardena Devices (Sensor, Valve and Mower) using smart-garden ioBroker adapter.
 
 ## 2.23.0 (2024-02-25)
 
