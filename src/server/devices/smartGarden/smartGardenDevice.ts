@@ -43,7 +43,7 @@ export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable
   /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     this.log(
-      LogLevel.Warn,
+      LogLevel.DeepTrace,
       `Smartgarden: ${initial ? 'Initiales ' : ''}Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     if (!pOverride) {

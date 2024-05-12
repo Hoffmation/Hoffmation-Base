@@ -1,17 +1,14 @@
-# Changelog
+**# Changelog
 
 <!--
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.70 (2024-05-12)
 
-* (theimo1221) Reduce logging to smart-garden devices
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.69 (2024-05-12)
-
-* (theimo1221) Add Debug Log regarding device-updating issue
+* (theimo1221) Fix Smart-Garden device updates
 
 ## 3.0.0
 
@@ -1562,4 +1559,4 @@ extract of all the patches since V0.1.20...
 
 ## 0.1.42-alpha.0 (2022-07-09)
 
-* (theimo1221): Add ExcessEnergyConsumer Handling for Daikin AC
+* (theimo1221): Add ExcessEnergyConsumer Handling for Daikin AC**

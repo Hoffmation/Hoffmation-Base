@@ -47,16 +47,16 @@ export class DeviceUpdater implements IDeviceUpdater {
         return;
       }
       classifier = Devices.IDENTIFIER_SMART_GARDEN;
-      devId = idSplit[3];
+      devId = idSplit[3].replace(/-2D/g, '-');
     }
     const allDevicesKey: string = `${classifier}-${devId}`;
     const device: undefined | iBaseDevice = API.getDevice(allDevicesKey, false);
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
-      classifier == Devices.IDENTIFIER_SMART_GARDEN &&
-        ServerLogService.writeLog(
-          LogLevel.Warn,
-          `deviceUpdater.updateState('${id}', ${JSON.stringify(state)}'): Device ${allDevicesKey} type is "${typeof device}"`,
-        );
+      // classifier == Devices.IDENTIFIER_SMART_GARDEN &&
+      //   ServerLogService.writeLog(
+      //     LogLevel.Warn,
+      //     `deviceUpdater.updateState('${id}', ${JSON.stringify(state)}'): Device ${allDevicesKey} type is "${typeof device}"`,
+      //   );
       return;
     }
     try {
