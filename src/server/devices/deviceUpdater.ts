@@ -52,10 +52,11 @@ export class DeviceUpdater implements IDeviceUpdater {
     const allDevicesKey: string = `${classifier}-${devId}`;
     const device: undefined | iBaseDevice = API.getDevice(allDevicesKey, false);
     if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
-      ServerLogService.writeLog(
-        LogLevel.Error,
-        `deviceUpdater.updateState('${id}', ${JSON.stringify(state)}'): Device ${allDevicesKey} not found`,
-      );
+      classifier == Devices.IDENTIFIER_SMART_GARDEN &&
+        ServerLogService.writeLog(
+          LogLevel.Warn,
+          `deviceUpdater.updateState('${id}', ${JSON.stringify(state)}'): Device ${allDevicesKey} type is "${typeof device}"`,
+        );
       return;
     }
     try {
