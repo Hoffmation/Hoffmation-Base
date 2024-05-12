@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.66 (2024-05-12)
 
 * (theimo1221) While not enforcing initial shutter up, still set correct initial desired position.
 
