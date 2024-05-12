@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.68 (2024-05-12)
 
-* (theimo1221) Add Debug Log regarding smart-garden
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Debug Log regarding device-updating issue
 
 ## 3.0.0
 
