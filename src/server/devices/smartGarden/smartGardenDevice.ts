@@ -8,6 +8,7 @@ import { DeviceCapability } from '../DeviceCapability';
 
 export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable, iBatteryDevice {
   protected _criticalBatteryLevel: number = 20;
+  protected readonly _deviceSerial: string;
   private _lastUpdate: Date = new Date(0);
   private _lastBatteryLevel: number = -1;
   private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
@@ -17,6 +18,7 @@ export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+    this._deviceSerial = pInfo.devID.replace('DEVICE_', '');
   }
 
   /** @inheritDoc */

@@ -44,7 +44,7 @@ export enum DeviceType {
   ShellyActuator = 403,
   TuyaGarageDoorOpener = 501,
   // SmartGardenValve = 601,
-  // SmartGardenMover = 602,
+  SmartGardenMover = 602,
   SmartGardenSensor = 603,
   WledDevice = 1001,
   GoveeLed = 1002,
