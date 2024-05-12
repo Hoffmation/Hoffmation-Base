@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.67 (2024-05-12)
 
-* (theimo1221) Fix smartgarden state ids
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Debug Log regarding smart-garden
 
 ## 3.0.0
 

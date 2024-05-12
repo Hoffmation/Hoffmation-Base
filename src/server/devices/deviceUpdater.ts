@@ -37,12 +37,14 @@ export class DeviceUpdater implements IDeviceUpdater {
       classifier = Devices.IDENTIFIER_ZIGBEE;
       devId = idSplit[2].substring(2);
     } else if (idSplit[0] == Devices.IDENTIFIER_SMART_GARDEN) {
+      ServerLogService.writeLog(LogLevel.Debug, `Received smart-garden state (${id}): ${JSON.stringify(state)}`);
       if (
         idSplit[1] === 'admin' ||
         idSplit.length < 4 ||
         idSplit[2].indexOf('LOCATION') !== 0 ||
         idSplit[3].indexOf('DEVICE') !== 0
       ) {
+        ServerLogService.writeLog(LogLevel.Debug, `Discarded smart-garden state id-split: ${JSON.stringify(idSplit)}`);
         // This is no update for a smartgarden device
         return;
       }
