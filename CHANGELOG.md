@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't send color change command on govee setLight(false) commands as color-change turns device on.
+
 ## 3.0.0-alpha.72 (2024-05-12)
 
 * (theimo1221) Fix Smart-Garden mower state update

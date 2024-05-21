@@ -141,9 +141,12 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     }
     this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
 
-    const formattedColor: string | null = Utils.formatHex(c.color);
-    if (formattedColor !== null) {
-      this.setColor(c.color);
+    if (c.on) {
+      // Changing the color turns the device on as well --> Only change color on turn on actions
+      const formattedColor: string | null = Utils.formatHex(c.color);
+      if (formattedColor !== null) {
+        this.setColor(c.color);
+      }
     }
 
     const dontBlock: boolean = LampUtils.checkUnBlock(this, c);
