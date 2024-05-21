@@ -53,7 +53,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         return new LedSetLightCommand(
           c,
           settings.dayOn,
-          '',
+          `byTimeBased(${TimeOfDay[c.time]})`,
           c.disableAutomaticCommand,
           settings.dayBrightness,
           undefined,
@@ -64,7 +64,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         return new LedSetLightCommand(
           c,
           settings.dawnOn,
-          '',
+          `byTimeBased(${TimeOfDay[c.time]})`,
           c.disableAutomaticCommand,
           settings.dawnBrightness,
           undefined,
@@ -75,7 +75,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         return new LedSetLightCommand(
           c,
           settings.duskOn,
-          '',
+          `byTimeBased(${TimeOfDay[c.time]})`,
           c.disableAutomaticCommand,
           settings.duskBrightness,
           undefined,
@@ -86,7 +86,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
         return new LedSetLightCommand(
           c,
           settings.nightOn,
-          '',
+          `byTimeBased(${TimeOfDay[c.time]})`,
           c.disableAutomaticCommand,
           settings.nightBrightness,
           undefined,

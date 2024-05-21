@@ -106,7 +106,7 @@ export class LightGroup extends BaseGroup {
     let resultLampen = false;
     let resultSteckdosen = false;
     let activatedGroups = 0;
-    const command: LampSetTimeBasedCommand = new LampSetTimeBasedCommand(c, c.time, 'LightGroup switchTimeConditional');
+    const command: LampSetTimeBasedCommand = new LampSetTimeBasedCommand(c, c.time);
     if (this.getWled().length > 0) {
       activatedGroups++;
       this.log(LogLevel.Debug, `Set Wled time based for time "${TimeOfDay[c.time]}"`);

@@ -202,7 +202,9 @@ export class RoomBase implements iRoomBase, iIdHolder {
     ) {
       timeOfDay = Utils.nowTime().hours > 16 ? TimeOfDay.AfterSunset : TimeOfDay.BeforeSunrise;
     }
-    this.LightGroup.switchTimeConditional(new LightGroupSwitchTimeConditionalCommand(c, timeOfDay));
+    this.LightGroup.switchTimeConditional(
+      new LightGroupSwitchTimeConditionalCommand(c, timeOfDay, `time: ${TimeOfDay[timeOfDay]}`),
+    );
   }
 
   public isNowLightTime(): boolean {
