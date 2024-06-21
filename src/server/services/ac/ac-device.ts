@@ -1,4 +1,5 @@
 import {
+  DeviceCapability,
   DeviceInfo,
   Devices,
   DeviceType,
@@ -23,7 +24,6 @@ import { LogDebugType, ServerLogService } from '../log-service';
 import { AcMode } from './ac-mode';
 import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
-import { DeviceCapability } from '../../devices/DeviceCapability';
 import { SettingsService } from '../settings-service';
 import { HeatingMode } from '../../config';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
