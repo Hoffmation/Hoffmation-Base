@@ -54,7 +54,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     if (SettingsService.heatMode !== HeatingMode.Summer) {
       return false;
     }
-    if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent()) {
+    if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent(true)) {
       return false;
     }
     if (

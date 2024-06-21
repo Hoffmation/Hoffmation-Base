@@ -26,6 +26,10 @@ export class PresenceGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.MotionDetection, new DeviceList(motionSensorIds));
   }
 
+  private get lastLeftDelayActive(): boolean {
+    return this._lastLeftTimeout !== null;
+  }
+
   public getMotionDetector(): Array<iMotionSensor> {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.MotionDetection) as Array<iMotionSensor>;
   }
@@ -84,7 +88,10 @@ export class PresenceGroup extends BaseGroup {
     this._anyMovementCbs.push(cb);
   }
 
-  public anyPresent(): boolean {
+  public anyPresent(includeMovementResetDelayCheck: boolean = false): boolean {
+    if (includeMovementResetDelayCheck && this.lastLeftDelayActive) {
+      return true;
+    }
     return this.getMotionDetector().find((b) => b.movementDetected) !== undefined;
   }
 

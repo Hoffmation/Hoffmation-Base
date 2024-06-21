@@ -266,7 +266,7 @@ export class LightGroup extends BaseGroup {
       () => {
         this.log(LogLevel.Info, 'Ambientenbeleuchtung um Mitternacht abschalten.');
         this._ambientLightOn = false;
-        if (this.getRoom().PraesenzGroup?.anyPresent() !== true) {
+        if (this.getRoom().PraesenzGroup?.anyPresent(true) !== true) {
           this.switchAll(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Ambient Light End Callback'));
         }
       },

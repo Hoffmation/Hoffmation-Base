@@ -26,7 +26,7 @@ export class LampUtils {
         Utils.guardedTimeout(
           () => {
             LampUtils.stromStossContinueTimeouts.delete(actuator.id);
-            if (actuator.room?.PraesenzGroup?.anyPresent()) {
+            if (actuator.room?.PraesenzGroup?.anyPresent(true)) {
               actuator.setActuator(
                 new ActuatorSetStateCommand(CommandSource.Automatic, true, 'StromStoss On due to Presence', null),
               );
