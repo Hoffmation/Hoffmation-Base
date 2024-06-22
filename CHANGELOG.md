@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.75 (2024-06-22)
 
 * (theimo1221) Harden acknowledgement of movement reset delay
 * (theimo1221) Update packages
