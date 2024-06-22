@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Harden acknowledgement of movement reset delay
+* (theimo1221) Update packages
 
 ## 3.0.0-alpha.74 (2024-06-21)
 
