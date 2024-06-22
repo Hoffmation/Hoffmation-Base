@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Harden acknowledgement of movement reset delay
+
 ## 3.0.0-alpha.74 (2024-06-21)
 
 * (theimo1221) Allow Presence check to include acknowledgement of movement reset delay.

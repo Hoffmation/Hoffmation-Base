@@ -27,7 +27,7 @@ export class PresenceGroup extends BaseGroup {
   }
 
   private get lastLeftDelayActive(): boolean {
-    return this._lastLeftTimeout !== null;
+    return this.getTimeAfterReset() < 0;
   }
 
   public getMotionDetector(): Array<iMotionSensor> {
@@ -76,8 +76,11 @@ export class PresenceGroup extends BaseGroup {
     });
   }
 
-  public presentAmount(): number {
-    return this.getMotionDetector().filter((b) => b.movementDetected).length;
+  public anyPresent(includeMovementResetDelayCheck: boolean = false): boolean {
+    if (includeMovementResetDelayCheck && this.lastLeftDelayActive) {
+      return true;
+    }
+    return this.presentAmount() > 0;
   }
 
   public addLastLeftCallback(cb: (action: PresenceGroupLastLeftAction) => void): void {
@@ -88,11 +91,8 @@ export class PresenceGroup extends BaseGroup {
     this._anyMovementCbs.push(cb);
   }
 
-  public anyPresent(includeMovementResetDelayCheck: boolean = false): boolean {
-    if (includeMovementResetDelayCheck && this.lastLeftDelayActive) {
-      return true;
-    }
-    return this.getMotionDetector().find((b) => b.movementDetected) !== undefined;
+  private presentAmount(): number {
+    return this.getMotionDetector().filter((b) => b.movementDetected).length;
   }
 
   private fireFistEnterCBs(action: MotionSensorAction): void {
@@ -122,6 +122,7 @@ export class PresenceGroup extends BaseGroup {
   private motionSensorOnLastLeft(action: MotionSensorAction): void {
     let timeAfterReset: number = this.getTimeAfterReset();
     if (timeAfterReset > 0) {
+      this._lastLeftTimeout = null;
       this.log(
         LogLevel.Debug,
         `Movement reset. Active Motions: ${this.presentAmount()}\tTime after Last Movement including Reset: ${timeAfterReset}`,

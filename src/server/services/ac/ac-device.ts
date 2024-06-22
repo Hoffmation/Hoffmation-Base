@@ -54,9 +54,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     if (SettingsService.heatMode !== HeatingMode.Summer) {
       return false;
     }
-    if (this.settings.noCoolingOnMovement && this.room?.PraesenzGroup?.anyPresent(true)) {
-      return false;
-    }
     if (
       WeatherService.active &&
       WeatherService.todayMaxTemp < this.settings.minOutdoorTempForCooling &&
@@ -190,7 +187,15 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     ) {
       return false;
     }
-    return this.calculateDesiredMode() !== AcMode.Off;
+    const desiredMode: AcMode = this.calculateDesiredMode();
+    if (
+      desiredMode === AcMode.Cooling &&
+      this.settings.noCoolingOnMovement &&
+      this.room?.PraesenzGroup?.anyPresent(true)
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /** @inheritDoc */
@@ -306,6 +311,15 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
       return;
     }
     this._activatedByExcessEnergy = true;
+    const desiredMode: AcMode = this.calculateDesiredMode();
+
+    if (
+      desiredMode === AcMode.Cooling &&
+      this.settings.noCoolingOnMovement &&
+      this.room?.PraesenzGroup?.anyPresent(true)
+    ) {
+      return;
+    }
     this.setDesiredMode(this.calculateDesiredMode(), false);
     this.turnOn();
   }
@@ -380,7 +394,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
 
     this.setDesiredMode(desiredMode, false);
 
-    if (desiredMode == AcMode.Off) {
+    if (
+      desiredMode == AcMode.Off ||
+      (desiredMode === AcMode.Cooling &&
+        this.settings.noCoolingOnMovement &&
+        this.room?.PraesenzGroup?.anyPresent(true))
+    ) {
       this.turnOff();
       return;
     }
