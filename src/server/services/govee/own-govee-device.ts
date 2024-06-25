@@ -235,9 +235,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private turnOn(): void {
-    if (this._actuatorOn) {
-      return;
-    }
     this.queuedValue = true;
     GooveeService.sendCommand(this, `on/true`).then((result) => {
       if (!result) {
@@ -249,9 +246,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   private turnOff(): void {
-    if (!this._actuatorOn) {
-      return;
-    }
     this.queuedValue = false;
     GooveeService.sendCommand(this, `on/false`).then((result) => {
       if (!result) {
