@@ -5,43 +5,14 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix typo
+
 ## 3.0.0-alpha.80 (2024-08-11)
 
 * (theimo1221) Correct Velux Shutter updating
-
-## 3.0.0-alpha.79 (2024-08-11)
-
-* (theimo1221) Harden against missing devices
-
-## 3.0.0-alpha.78 (2024-08-11)
-
-* (theimo1221) Further Velux implementation
-
-## 3.0.0-alpha.77 (2024-08-11)
-
-* (theimo1221) Update packages
-* (theimo1221) First implementation of velux Device
-
-## 3.0.0-alpha.76 (2024-06-25)
-
-* (theimo1221) Govee don't skip potentially unchanged turn on/off commands.
-
-## 3.0.0-alpha.75 (2024-06-22)
-
-* (theimo1221) Harden acknowledgement of movement reset delay
-* (theimo1221) Update packages
-
-## 3.0.0-alpha.74 (2024-06-21)
-
-* (theimo1221) Allow Presence check to include acknowledgement of movement reset delay.
-
-## 3.0.0-alpha.73 (2024-05-21)
-
-* (theimo1221) Don't send color change command on govee setLight(false) commands as color-change turns device on.
-
-## 3.0.0-alpha.72 (2024-05-12)
-
-* (theimo1221) Fix Smart-Garden mower state update
 
 ## 3.0.0
 
@@ -94,6 +65,11 @@
   didn't behave as expected.
 * (theimo1221) First implementation of Gardena Devices (Sensor, Valve and Mower) using smart-garden ioBroker adapter.
 * (theimo1221) While not enforcing initial shutter up, still set correct initial desired position.
+* (theimo1221) Update packages
+* (theimo1221) First implementation of velux Device
+* (theimo1221) Allow Presence check to include acknowledgement of movement reset delay.
+* (theimo1221) Harden acknowledgement of movement reset delay
+* (theimo1221) Harden against missing devices
 
 ## 2.23.0 (2024-02-25)
 
