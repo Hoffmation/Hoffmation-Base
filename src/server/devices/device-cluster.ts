@@ -19,7 +19,10 @@ export class DeviceCluster {
     return this.deviceMap.get(type)?.getDevices() ?? [];
   }
 
-  public addByDeviceType(device: iBaseDevice): void {
+  public addByDeviceType(device?: iBaseDevice): void {
+    if (!device) {
+      return;
+    }
     const type: DeviceType = device.deviceType;
     const clusterTypes: DeviceClusterType[] = [DeviceClusterType.all];
     switch (type) {
