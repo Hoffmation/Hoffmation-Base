@@ -72,7 +72,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
     this.log(LogLevel.DeepTrace, `Rollo Update : ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[4]) {
-      case 'targetPosition':
+      case 'currentPosition':
         this.setCurrentLevel(state.val as number, true);
         break;
     }

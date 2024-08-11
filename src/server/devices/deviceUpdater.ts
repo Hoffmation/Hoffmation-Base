@@ -49,7 +49,7 @@ export class DeviceUpdater implements IDeviceUpdater {
       classifier = Devices.IDENTIFIER_SMART_GARDEN;
       devId = idSplit[3].replace(/-2D/g, '-');
     } else if (idSplit[0] == Devices.IDENTIFIER_VELUX) {
-      if (idSplit[1] === 'admin' || idSplit[2].indexOf('DEVICE') !== 0) {
+      if (idSplit[1] === 'admin' || idSplit[2].indexOf('PRODUCTS') !== 0) {
         // This is no update for a velux device
         return;
       }
