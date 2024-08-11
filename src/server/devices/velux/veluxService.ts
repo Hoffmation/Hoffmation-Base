@@ -10,8 +10,8 @@ import { VeluxDevice } from './veluxDevice';
 export class VeluxService {
   private static readonly _registeredDevices: Map<string, VeluxDeviceRegistrationInfo> = new Map();
 
-  public static preRegisterDevice(id: string, registrationInfo: VeluxDeviceRegistrationInfo): void {
-    this._registeredDevices.set(id, registrationInfo);
+  public static preRegisterDevice(devName: string, registrationInfo: VeluxDeviceRegistrationInfo): void {
+    this._registeredDevices.set(devName, registrationInfo);
   }
 
   public static processVeluxDevice(cDevConf: deviceConfig): void {
@@ -21,7 +21,7 @@ export class VeluxService {
     }
     const registrationInfo: VeluxDeviceRegistrationInfo | undefined = this._registeredDevices.get(devName);
     if (!registrationInfo) {
-      ServerLogService.writeLog(LogLevel.Error, `SmartGarden Device ${devName} not registered`);
+      ServerLogService.writeLog(LogLevel.Error, `Velux Device ${devName} not registered`);
       return;
     }
 

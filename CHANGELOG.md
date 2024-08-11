@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Further Velux implementation
+
 ## 3.0.0-alpha.77 (2024-08-11)
 
 * (theimo1221) Update packages

@@ -21,7 +21,7 @@ export class VeluxDevice extends IoBrokerBaseDevice implements iDisposable {
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
     this.log(
       LogLevel.DeepTrace,
-      `Smartgarden: ${initial ? 'Initiales ' : ''}Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
+      `Velux: ${initial ? 'Initiales ' : ''}Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`,
     );
     if (!pOverride) {
       this.log(
