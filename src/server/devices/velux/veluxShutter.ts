@@ -126,7 +126,8 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
 
     this._setLevel = targetLevel;
     this.log(LogLevel.Debug, `Fahre Rollo auf Position ${targetLevel}`);
-    this.setState(this._setLevelSwitchID, targetLevel);
+    // Level is inverted for Velux Adapter (100 = 0, 0 = 100, 25 = 75, etc.)
+    this.setState(this._setLevelSwitchID, Math.abs(targetLevel - 100));
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
@@ -134,15 +135,16 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
   }
 
   private setCurrentLevel(value: number, initial: boolean = false): void {
-    if (value !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
-      value = this._setLevel;
+    let correctedValue: number = Math.abs(value - 100);
+    if (correctedValue !== this._setLevel && Utils.nowMS() - this._setLevelTime < 60 * 10000) {
+      correctedValue = this._setLevel;
     }
-    if (value !== this._currentLevel && this._window && !initial) {
+    if (correctedValue !== this._currentLevel && this._window && !initial) {
       Utils.guardedNewThread(() => {
-        this._window?.rolloPositionChange(new ShutterPositionChangedAction(this, value));
+        this._window?.rolloPositionChange(new ShutterPositionChangedAction(this, correctedValue));
       }, this);
       this.persist();
     }
-    this._currentLevel = value;
+    this._currentLevel = correctedValue;
   }
 }
