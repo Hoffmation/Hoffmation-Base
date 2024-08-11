@@ -13,6 +13,7 @@ export * from './shelly/index';
 export * from './smartGarden/index';
 export * from './tuya/index';
 export * from './tv/index';
+export * from './velux/index';
 export * from './zigbee/index';
 export * from './device-cluster';
 export * from './device-cluster-type';

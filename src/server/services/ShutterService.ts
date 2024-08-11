@@ -56,6 +56,7 @@ export class ShutterService {
       if (
         d.deviceType === DeviceType.HmIpRoll ||
         d.deviceType === DeviceType.ZigbeeIlluShutter ||
+        d.deviceType === DeviceType.VeluxShutter ||
         d.deviceType === DeviceType.ZigbeeUbisysShutter
       ) {
         rollos.push(d as iShutter);

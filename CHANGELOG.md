@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update packages
+* (theimo1221) First implementation of velux Device
 
 ## 3.0.0-alpha.76 (2024-06-25)
 

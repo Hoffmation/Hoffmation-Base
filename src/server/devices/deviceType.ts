@@ -46,6 +46,7 @@ export enum DeviceType {
   SmartGardenValve = 601,
   SmartGardenMower = 602,
   SmartGardenSensor = 603,
+  VeluxShutter = 701,
   WledDevice = 1001,
   GoveeLed = 1002,
   Daikin = 2001,

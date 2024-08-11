@@ -55,6 +55,7 @@ import { ShellyActuator, ShellyDevice, ShellyTrv } from './shelly';
 import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
 import { SmartGardenService } from './smartGarden';
+import { VeluxService } from './velux';
 
 export class Devices {
   /**
@@ -89,6 +90,11 @@ export class Devices {
    * A constant for the identifier of SmartGarden devices.
    */
   public static readonly IDENTIFIER_SMART_GARDEN: string = 'smartgarden';
+
+  /**
+   * A constant for the identifier of Velux Adapter devices.
+   */
+  public static readonly IDENTIFIER_VELUX: string = 'klf200';
   /**
    * A Map containing all devices
    */
@@ -120,17 +126,19 @@ export class Devices {
     ServerLogService.writeLog(LogLevel.Info, 'Constructing devices now');
     for (const cID in pDeviceData) {
       const cDevConf: deviceConfig = pDeviceData[cID];
-      if (
-        !cDevConf.common ||
-        !cDevConf.common.name ||
-        typeof cDevConf.common.name === 'object' ||
-        !cDevConf.type ||
-        cDevConf.type === 'channel'
-      ) {
+      if (!cDevConf.common || !cDevConf.common.name || typeof cDevConf.common.name === 'object' || !cDevConf.type) {
         continue;
       }
 
       const cName: string = cDevConf.common.name;
+
+      if (cDevConf.type === 'channel') {
+        // Velux has the name in the root channel of a device
+        if (cName.indexOf('00-Velux') === 0) {
+          Devices.processVeluxDevice(cDevConf);
+        }
+        continue;
+      }
 
       if (cName.indexOf('00-HmIP') === 0) {
         Devices.processHMIPDevice(cDevConf);
@@ -348,6 +356,10 @@ export class Devices {
         d = new ZigbeeDevice(zigbeeInfo, DeviceType.unknown);
     }
     Devices.alLDevices[fullName] = d;
+  }
+
+  private static processVeluxDevice(cDevConf: deviceConfig) {
+    VeluxService.processVeluxDevice(cDevConf);
   }
 
   private static processSmartGardenDevice(cDevConf: deviceConfig) {

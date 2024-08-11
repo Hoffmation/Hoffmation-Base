@@ -48,6 +48,13 @@ export class DeviceUpdater implements IDeviceUpdater {
       }
       classifier = Devices.IDENTIFIER_SMART_GARDEN;
       devId = idSplit[3].replace(/-2D/g, '-');
+    } else if (idSplit[0] == Devices.IDENTIFIER_VELUX) {
+      if (idSplit[1] === 'admin' || idSplit[2].indexOf('DEVICE') !== 0) {
+        // This is no update for a velux device
+        return;
+      }
+      classifier = Devices.IDENTIFIER_VELUX;
+      devId = idSplit[3];
     }
     const allDevicesKey: string = `${classifier}-${devId}`;
     const device: undefined | iBaseDevice = API.getDevice(allDevicesKey, false);

@@ -51,6 +51,7 @@ export class DeviceCluster {
       case DeviceType.HmIpRoll:
       case DeviceType.ZigbeeIlluShutter:
       case DeviceType.ZigbeeUbisysShutter:
+      case DeviceType.VeluxShutter:
         clusterTypes.push(DeviceClusterType.Shutter);
         break;
       case DeviceType.ZigbeeSonoffTemp:
