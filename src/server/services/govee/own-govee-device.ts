@@ -50,6 +50,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   private _color: string = '#fcba32';
   private _colortemp: number = 500;
   private _room: RoomBase | undefined = undefined;
+  protected _lastPersist: number = 0;
 
   public constructor(deviceId: string, ownDeviceName: string, roomName: string) {
     this.deviceId = deviceId;
@@ -185,7 +186,12 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public persist(): void {
+    const now: number = Utils.nowMS();
+    if (this._lastPersist + 1000 > now) {
+      return;
+    }
     Utils.dbo?.persistActuator(this);
+    this._lastPersist = now;
   }
 
   public toggleActuator(c: ActuatorToggleCommand): boolean {
@@ -209,10 +215,21 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   public update(data: GoveeDeviceData): void {
     this.queuedValue = null;
+    const anyChanged: boolean =
+      this._actuatorOn !== data.actuatorOn ||
+      this.brightness !== data.brightness ||
+      this._color !== data.hexColor ||
+      this._colortemp !== data.colortemp;
+
+    if (!anyChanged) {
+      return;
+    }
+
     this._actuatorOn = data.actuatorOn;
     this.brightness = data.brightness;
     this._color = data.hexColor;
     this._colortemp = data.colortemp;
+    this.persist();
   }
 
   private setBrightness(brightness: number, cb: () => void): void {

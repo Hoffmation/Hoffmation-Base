@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add persistance for Govee Lamps
+
 ## 3.0.0-alpha.82 (2024-08-11)
 
 * (theimo1221) Invert Velux Shutter level
