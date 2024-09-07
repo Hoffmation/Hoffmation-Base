@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.85 (2024-09-07)
 
 * (theimo1221) Update packages
 * (theimo1221) Migrate to eslint 9
