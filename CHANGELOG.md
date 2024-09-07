@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.87 (2024-09-07)
 
 * (theimo1221) Correct Dachs Settings persistence
 
