@@ -143,13 +143,13 @@ export class WeatherService {
         break;
     }
     speaker.speakOnDevice(message, volume, false);
-    !short &&
-      precipitation > 0 &&
+    if (!short && precipitation > 0) {
       speaker.speakOnDevice(
         `Es werden etwa ${precipitation} Millimeter Niederschlag in den nächsten ${minutes} Minuten fallen`,
         volume,
         false,
       );
+    }
 
     const alerts: WeatherAlert[] = WeatherService.getActiveAlerts();
     if (alerts.length > 0) {

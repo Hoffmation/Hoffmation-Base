@@ -293,7 +293,7 @@ export class IOBrokerConnection implements iDisposable {
         ) {
           try {
             state.val = JSON.parse(state.val);
-          } catch (e) {
+          } catch (_e) {
             iobrokerConnectionLogging.writeLog(
               iobrokerConnectionLogLevel.Debug,
               'Command seems to be an object, but cannot parse it: ' + state.val,
@@ -786,7 +786,9 @@ export class IOBrokerConnection implements iDisposable {
     parts.splice(0, 2);
 
     this._socket.emit('mkdir', adapter, parts.join('/'), (err: Error) => {
-      callback && callback(err);
+      if (callback) {
+        callback(err);
+      }
     });
   }
 
@@ -796,7 +798,9 @@ export class IOBrokerConnection implements iDisposable {
     parts.splice(0, 2);
 
     this._socket.emit('unlink', adapter, parts.join('/'), (err: Error) => {
-      callback && callback(err);
+      if (callback) {
+        callback(err);
+      }
     });
   }
 
@@ -807,7 +811,9 @@ export class IOBrokerConnection implements iDisposable {
     const parts2 = newname.split('/');
     parts2.splice(0, 2);
     this._socket.emit('rename', adapter, parts1.join('/'), parts2.join('/'), (err: Error) => {
-      callback && callback(err);
+      if (callback) {
+        callback(err);
+      }
     });
   }
 
@@ -876,7 +882,9 @@ export class IOBrokerConnection implements iDisposable {
     }
     this._socket.emit('getStates', idPattern, (err: Error, data: Record<string, ioBroker.State>) => {
       iobrokerConnectionLogging.writeLog(iobrokerConnectionLogLevel.Debug, `getStates Callback; Error: "${err}"`);
-      this._gettingStates !== undefined && this._gettingStates--;
+      if (this._gettingStates !== undefined) {
+        this._gettingStates--;
+      }
       if (err || !data) {
         if (callback) {
           callback(err || new Error('Authentication required'));

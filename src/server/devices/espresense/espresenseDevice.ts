@@ -99,7 +99,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
     let data = null;
     try {
       data = JSON.parse(state.val as string);
-    } catch (e) {
+    } catch (_e) {
       this.log(LogLevel.Error, `Recieved malformed update data: ${state.val}`);
       return;
     }

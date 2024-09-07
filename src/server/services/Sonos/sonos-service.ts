@@ -99,7 +99,7 @@ export class SonosService {
       if (currentDevice !== undefined) {
         ServerLogService.writeLog(LogLevel.Info, `Alle Geräte okay --> Last checked ${currentDevice.name}`);
       }
-    } catch (e) {
+    } catch (_e) {
       ServerLogService.writeLog(
         LogLevel.Error,
         `Atleast one device failed --> Last checked ${currentDevice?.name ?? 'undefined'}`,

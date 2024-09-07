@@ -103,7 +103,10 @@ export class TasterGroup extends BaseGroup {
         const sonosGroup: SpeakerGroup | undefined = this.getRoom().SonosGroup;
         if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
           t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
-            pValue && sonosGroup.trigger(this.getRoom().settings.radioUrl);
+            if (!pValue) {
+              return;
+            }
+            sonosGroup.trigger(this.getRoom().settings.radioUrl);
           });
         }
       }
@@ -112,10 +115,16 @@ export class TasterGroup extends BaseGroup {
         const heatGroup: HeatGroup | undefined = this.getRoom().HeatGroup;
         if (heatGroup !== undefined && heatGroup.getOwnAcDevices().length > 0) {
           t.buttonBotRight?.addCb(ButtonPressType.short, (pValue: boolean) => {
-            pValue && heatGroup.setAc(true);
+            if (!pValue) {
+              return;
+            }
+            heatGroup.setAc(true);
           });
           t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
-            pValue && heatGroup.setAc(false, true);
+            if (!pValue) {
+              return;
+            }
+            heatGroup.setAc(false, true);
           });
         }
       }

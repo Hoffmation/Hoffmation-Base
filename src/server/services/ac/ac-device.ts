@@ -209,12 +209,16 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     this._desiredTemperatur = heatGroup.desiredTemp;
 
     if (this.settings.manualDisabled) {
-      acOn && this.log(LogLevel.Info, 'We should turn off now, as manual disable force is set.');
+      if (acOn) {
+        this.log(LogLevel.Info, 'We should turn off now, as manual disable force is set.');
+      }
       return AcMode.Off;
     }
 
     if (Devices.energymanager?.acBlocked) {
-      acOn && this.log(LogLevel.Info, 'We should turn off now, as energy-manager demands off.');
+      if (acOn) {
+        this.log(LogLevel.Info, 'We should turn off now, as energy-manager demands off.');
+      }
       return AcMode.Off;
     }
 
@@ -227,7 +231,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
         this.settings.maximumMinutes,
       )
     ) {
-      acOn && this.log(LogLevel.Info, 'We should turn off now, to respect night settings.');
+      if (acOn) {
+        this.log(LogLevel.Info, 'We should turn off now, to respect night settings.');
+      }
       return AcMode.Off;
     }
 

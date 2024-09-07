@@ -6,6 +6,7 @@
     "test/**/*.test.ts",
     "manualTests/**/*test.ts",
     ".eslintrc.js",
+    "eslint.config.mjs",
     ".jest.config.js"
   ]
 }

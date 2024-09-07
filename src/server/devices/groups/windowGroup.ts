@@ -43,7 +43,7 @@ export class WindowGroup extends BaseGroup {
    */
   public get anyShutterDown(): boolean {
     return this.windows.some((w: Window) => {
-      w.anyShutterDown;
+      return w.anyShutterDown;
     });
   }
 
