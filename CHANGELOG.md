@@ -5,18 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.86 (2024-09-07)
 
-* (theimo1221) Add more Dachs Settings to prevent startup during daytime
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.85 (2024-09-07)
-
-* (theimo1221) Update packages
-* (theimo1221) Migrate to eslint 9
-
-## 3.0.0-alpha.84 (2024-09-07)
-
-* (theimo1221) Add possibility to add a heating rod to the dachs
+* (theimo1221) Correct Dachs Settings persistence
 
 ## 3.0.0
 
@@ -75,6 +67,9 @@
 * (theimo1221) Harden acknowledgement of movement reset delay
 * (theimo1221) Harden against missing devices
 * (theimo1221) Add persistence for Govee Lamps
+* (theimo1221) Add more Dachs Settings to prevent startup during daytime
+* (theimo1221) Migrate to eslint 9
+* (theimo1221) Add possibility to add a heating rod to the dachs
 
 ## 2.23.0 (2024-02-25)
 

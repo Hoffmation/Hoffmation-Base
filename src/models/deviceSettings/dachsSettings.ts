@@ -5,7 +5,7 @@ export class DachsDeviceSettings extends ActuatorSettings {
   /**
    * The refresh interval in ms to pull the data from the device.
    */
-  public refreshInterval: number = 30000;
+  public refreshIntervalTime: number = 30000;
 
   /**
    * Defines the battery level at which the dachs should be turned on,
@@ -44,8 +44,11 @@ export class DachsDeviceSettings extends ActuatorSettings {
   public warmWaterDesiredMinTemp: number = 45;
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
-    this.refreshInterval = data.refreshInterval ?? this.refreshInterval;
+    this.refreshIntervalTime = data.refreshIntervalTime ?? this.refreshIntervalTime;
+    this.batteryLevelBeforeNightTurnOnThreshold =
+      data.batteryLevelBeforeNightTurnOnThreshold ?? this.batteryLevelBeforeNightTurnOnThreshold;
     this.batteryLevelTurnOnThreshold = data.batteryLevelTurnOnThreshold ?? this.batteryLevelTurnOnThreshold;
+    this.batteryLevelHeatingRodThreshold = data.batteryLevelHeatingRodThreshold ?? this.batteryLevelHeatingRodThreshold;
     this.batteryLevelPreventStartThreshold =
       data.batteryLevelPreventStartThreshold ?? this.batteryLevelPreventStartThreshold;
     this.batteryLevelAllowStartThreshold = data.batteryLevelAllowStartThreshold ?? this.batteryLevelAllowStartThreshold;
