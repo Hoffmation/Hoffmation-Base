@@ -77,12 +77,12 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
     if (this.settings.hasBattery) {
       const hours: number = new Date().getHours();
       if (hours < 6 || hours > 18) {
-        return this.battery < 70;
+        return this.battery < this.settings.minimumNightTimeAcBatteryLevel;
       }
       if (hours < 10 || hours > 16) {
-        return this.battery < 60;
+        return this.battery < this.settings.minimumTransientTimeAcBatteryLevel;
       }
-      return this.battery < 50;
+      return this.battery < this.settings.minimumDayTimeAcBatteryLevel;
     }
     return false;
   }

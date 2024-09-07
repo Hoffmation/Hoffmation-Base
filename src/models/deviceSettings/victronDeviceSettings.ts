@@ -12,6 +12,20 @@ export class VictronDeviceSettings extends DeviceSettings {
    * @default true
    */
   public hasBattery: boolean = true;
+
+  /**
+   * The minimum battery level for nighttime AC usage allowance
+   */
+  public minimumNightTimeAcBatteryLevel: number = 80;
+  /**
+   * The minimum battery level for early morning or evening hours AC usage allowance
+   */
+  public minimumTransientTimeAcBatteryLevel: number = 70;
+
+  /**
+   * The minimum battery level at which the system should be allowed to use AC
+   */
+  public minimumDayTimeAcBatteryLevel: number = 60;
   /**
    * If the system has a grid
    * @default true
@@ -51,6 +65,10 @@ export class VictronDeviceSettings extends DeviceSettings {
     this.hasBattery = data.hasBattery ?? this.hasBattery;
     this.hasGrid = data.hasGrid ?? this.hasGrid;
     this.hasSolar = data.hasSolar ?? this.hasSolar;
+    this.minimumNightTimeAcBatteryLevel = data.minimumNightTimeAcBatteryLevel ?? this.minimumNightTimeAcBatteryLevel;
+    this.minimumTransientTimeAcBatteryLevel =
+      data.minimumTransientTimeAcBatteryLevel ?? this.minimumTransientTimeAcBatteryLevel;
+    this.minimumDayTimeAcBatteryLevel = data.minimumDayTimeAcBatteryLevel ?? this.minimumDayTimeAcBatteryLevel;
     this.batteryCapacityWattage = data.batteryCapacityWattage ?? this.batteryCapacityWattage;
     this.normalBaseConsumptionWattage = data.normalBaseConsumptionWattage ?? this.normalBaseConsumptionWattage;
     this.maximumBatteryDischargeWattage = data.maximumBatteryDischargeWattage ?? this.maximumBatteryDischargeWattage;

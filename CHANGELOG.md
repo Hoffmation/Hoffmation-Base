@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.87 (2024-09-07)
 
-* (theimo1221) Correct Dachs Settings persistence
+## **WORK IN PROGRESS**
+
+* (theimo1221) Make Victron AC Block configurable
 
 ## 3.0.0
 
