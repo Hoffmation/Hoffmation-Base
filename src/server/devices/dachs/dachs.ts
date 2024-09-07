@@ -19,7 +19,7 @@ import {
   RoomBase,
   TemperatureSensorChangeAction,
 } from '../../../models';
-import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
+import { API, LogDebugType, OwnSonosDevice, ServerLogService, SettingsService, Utils } from '../../services';
 import _ from 'lodash';
 import { iDachsSettings } from '../../config/iDachsSettings';
 import { DachsDeviceSettings } from '../../../models/deviceSettings/dachsSettings';
@@ -27,6 +27,7 @@ import { DachsHttpClient, DachsInfluxClient } from './lib';
 import { iFlattenedCompleteResponse } from './interfaces';
 import { DachsTemperatureSensor } from './dachsTemperatureSensor';
 import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { HeatingMode } from '../../config';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
@@ -49,6 +50,10 @@ export class Dachs implements iBaseDevice, iActuator {
    * An external actuator controlling the warm water pump
    */
   public warmWaterPump?: iActuator;
+  /**
+   * An external actuator controlling the heat rod.
+   */
+  public heatingRod?: iActuator;
   /**
    * An external actuator to prevent the Dachs from starting.
    */
@@ -157,6 +162,7 @@ export class Dachs implements iBaseDevice, iActuator {
         'warmWaterSensor',
         'heatStorageTempSensor',
         'warmWaterPump',
+        'heatingRod',
         'blockDachsStart',
       ]),
     );
@@ -263,6 +269,7 @@ export class Dachs implements iBaseDevice, iActuator {
    * @param {BatteryLevelChangeAction} action - The action containing the new level
    */
   private onBatteryLevelChange(action: BatteryLevelChangeAction): void {
+    this.checkHeatingRod(action);
     if (this.blockDachsStart !== undefined) {
       if (action.newLevel > this.settings.batteryLevelPreventStartThreshold) {
         const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
@@ -334,5 +341,26 @@ export class Dachs implements iBaseDevice, iActuator {
     }
     const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredState, reason, null);
     this.warmWaterPump.setActuator(setAction);
+  }
+
+  private checkHeatingRod(action: BatteryLevelChangeAction): void {
+    if (this.heatingRod === undefined) {
+      return;
+    }
+    const shouldBeOff: boolean =
+      SettingsService.settings.heaterSettings?.mode === HeatingMode.Winter ||
+      action.newLevel < this.settings.batteryLevelHeatingRodThreshold;
+
+    if (this.heatingRod.actuatorOn !== shouldBeOff) {
+      return;
+    }
+
+    const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+      action,
+      !shouldBeOff,
+      `Battery reached ${action.newLevel}%, heating rod should be turned ${shouldBeOff ? 'off' : 'on'}`,
+      null,
+    );
+    this.heatingRod.setActuator(setAction);
   }
 }

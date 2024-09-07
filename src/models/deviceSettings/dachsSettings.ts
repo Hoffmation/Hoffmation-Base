@@ -25,6 +25,10 @@ export class DachsDeviceSettings extends ActuatorSettings {
    */
   public batteryLevelPreventStartThreshold: number = 70;
   /**
+   * Defines the battery level above which the external heating rod should be turned on
+   */
+  public batteryLevelHeatingRodThreshold: number = 80;
+  /**
    * Defines the desired minimum temperature for warm water.
    */
   public warmWaterDesiredMinTemp: number = 45;

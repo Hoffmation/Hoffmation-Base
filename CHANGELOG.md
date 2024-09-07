@@ -5,17 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.83 (2024-08-17)
 
-* (theimo1221) Add persistance for Govee Lamps
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.82 (2024-08-11)
-
-* (theimo1221) Invert Velux Shutter level
-
-## 3.0.0-alpha.80 (2024-08-11)
-
-* (theimo1221) Correct Velux Shutter updating
+* (theimo1221) Add possibility to add a heating rod to the dachs
 
 ## 3.0.0
 
@@ -73,6 +66,7 @@
 * (theimo1221) Allow Presence check to include acknowledgement of movement reset delay.
 * (theimo1221) Harden acknowledgement of movement reset delay
 * (theimo1221) Harden against missing devices
+* (theimo1221) Add persistence for Govee Lamps
 
 ## 2.23.0 (2024-02-25)
 
