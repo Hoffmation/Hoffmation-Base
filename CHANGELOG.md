@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add more Dachs Settings to prevent startup during daytime
+
 ## 3.0.0-alpha.85 (2024-09-07)
 
 * (theimo1221) Update packages

@@ -18,8 +18,18 @@ import {
   RestoreTargetAutomaticValueCommand,
   RoomBase,
   TemperatureSensorChangeAction,
+  TimeOfDay,
 } from '../../../models';
-import { API, LogDebugType, OwnSonosDevice, ServerLogService, SettingsService, Utils } from '../../services';
+import {
+  API,
+  LogDebugType,
+  OwnSonosDevice,
+  ServerLogService,
+  SettingsService,
+  SunTimeOffsets,
+  TimeCallbackService,
+  Utils,
+} from '../../services';
 import _ from 'lodash';
 import { iDachsSettings } from '../../config/iDachsSettings';
 import { DachsDeviceSettings } from '../../../models/deviceSettings/dachsSettings';
@@ -294,8 +304,23 @@ export class Dachs implements iBaseDevice, iActuator {
         return;
       }
     }
-    if (this._dachsOn || this.settings.batteryLevelTurnOnThreshold < action.newLevel) {
-      // We are already running, or battery level is high enough.
+    if (this._dachsOn) {
+      // We are already running
+      return;
+    }
+
+    const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
+
+    if (
+      (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
+      action.newLevel > this.settings.batteryLevelTurnOnThreshold
+    ) {
+      // It is daytime (maybe solar power) and it is no critical battery level
+      return;
+    }
+
+    if (action.newLevel > this.settings.batteryLevelBeforeNightTurnOnThreshold) {
+      // It is not daylight but battery level is high enough
       return;
     }
 

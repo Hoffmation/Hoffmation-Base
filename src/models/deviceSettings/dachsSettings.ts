@@ -17,6 +17,16 @@ export class DachsDeviceSettings extends ActuatorSettings {
   public batteryLevelTurnOnThreshold: number = -1;
 
   /**
+   * Defines the battery level at which the dachs should be turned on,
+   * in evening hours to prevent a battery based island-system to run out of
+   * power overnight.
+   * @default -1 --> No turn on for battery loading
+   *
+   * Uses {@link iBatteryDevice.addBatteryLevelCallback}
+   */
+  public batteryLevelBeforeNightTurnOnThreshold: number = -1;
+
+  /**
    * Defines the battery level below which the dachs should be allowed to start
    */
   public batteryLevelAllowStartThreshold: number = 50;
