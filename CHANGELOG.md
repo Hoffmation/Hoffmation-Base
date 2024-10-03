@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.89 (2024-10-03)
 
 * (theimo1221) Add option to report Victron Battery at interval even without level change.
 
