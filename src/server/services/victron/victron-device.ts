@@ -42,6 +42,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
   private _lastBatteryLevel: number = -1;
   private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
   private _excessEnergy: number = 0;
+  private _lastBatteryChangeReportMs: number = 0;
 
   public constructor(opts: VictronMqttConnectionOptions) {
     this.settings = new VictronDeviceSettings();
@@ -333,9 +334,14 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
 
   private checkForBatteryChange(): void {
     const newLevel: number = this.battery;
-    if (newLevel == this._lastBatteryLevel) {
+    if (
+      newLevel == this._lastBatteryLevel &&
+      (this.settings.batteryReportingInterval < 0 ||
+        Utils.nowMS() - this._lastBatteryChangeReportMs < this.settings.batteryReportingInterval * 60 * 1000)
+    ) {
       return;
     }
+    this._lastBatteryChangeReportMs = Utils.nowMS();
     for (const cb of this._batteryLevelCallbacks) {
       cb(new BatteryLevelChangeAction(this));
     }

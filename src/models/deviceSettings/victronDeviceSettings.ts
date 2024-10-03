@@ -3,6 +3,11 @@ import { Utils } from '../../server';
 
 export class VictronDeviceSettings extends DeviceSettings {
   /**
+   * The default time interval in minutes for battery-change reporting regardless of battery level.
+   * -1 = disabled
+   */
+  public batteryReportingInterval: number = 30;
+  /**
    * The maximum wattage that the battery can deliver to the house
    * @default 1700
    */
@@ -62,6 +67,7 @@ export class VictronDeviceSettings extends DeviceSettings {
 
   public fromPartialObject(data: Partial<VictronDeviceSettings>): void {
     this.maxBatteryLoadWattage = data.maxBatteryLoadWattage ?? this.maxBatteryLoadWattage;
+    this.batteryReportingInterval = data.batteryReportingInterval ?? this.batteryReportingInterval;
     this.hasBattery = data.hasBattery ?? this.hasBattery;
     this.hasGrid = data.hasGrid ?? this.hasGrid;
     this.hasSolar = data.hasSolar ?? this.hasSolar;

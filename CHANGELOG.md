@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to report Victron Battery at interval even without level change.
+
 ## 3.0.0-alpha.88 (2024-09-07)
 
 * (theimo1221) Make Victron AC Block configurable
