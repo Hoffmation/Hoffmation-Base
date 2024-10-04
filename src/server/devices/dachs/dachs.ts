@@ -25,7 +25,6 @@ import {
   LogDebugType,
   OwnSonosDevice,
   ServerLogService,
-  SettingsService,
   SunTimeOffsets,
   TimeCallbackService,
   Utils,
@@ -37,7 +36,6 @@ import { DachsHttpClient, DachsInfluxClient } from './lib';
 import { iFlattenedCompleteResponse } from './interfaces';
 import { DachsTemperatureSensor } from './dachsTemperatureSensor';
 import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { HeatingMode } from '../../config';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
@@ -372,9 +370,7 @@ export class Dachs implements iBaseDevice, iActuator {
     if (this.heatingRod === undefined) {
       return;
     }
-    const shouldBeOff: boolean =
-      SettingsService.settings.heaterSettings?.mode === HeatingMode.Winter ||
-      action.newLevel < this.settings.batteryLevelHeatingRodThreshold;
+    const shouldBeOff: boolean = action.newLevel < this.settings.batteryLevelHeatingRodThreshold;
 
     if (this.heatingRod.actuatorOn !== shouldBeOff) {
       return;
