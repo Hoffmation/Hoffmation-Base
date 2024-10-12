@@ -35,6 +35,7 @@ import {
   ZigbeeLinkindLedRgbCct,
   ZigbeeOsramDimmer,
   ZigbeeSMaBiTMagnetContact,
+  ZigbeeSodaHandle,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
   ZigbeeTuyaValve,
@@ -56,7 +57,6 @@ import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
 import { SmartGardenService } from './smartGarden';
 import { VeluxService } from './velux';
-import { ZigbeeSodaHandle } from './zigbee/zigbeeSodaHandle';
 
 export class Devices {
   /**
