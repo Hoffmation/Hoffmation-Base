@@ -1,6 +1,7 @@
 import { WindowPosition } from '../models';
 import { iRoomDevice } from './iRoomDevice';
 import { HandleSensor } from '../sharedFunctions';
+import { Window } from '../groups';
 
 /**
  * Interface for Handle Sensors.
@@ -21,6 +22,11 @@ export interface iHandleSensor extends iRoomDevice {
    * The time the handle was open in minutes
    */
   minutesOpen: number;
+
+  /**
+   * If known the window this handle is attached to
+   */
+  window: Window | undefined;
 
   /**
    * Add a callback that is called when the handle is change to open

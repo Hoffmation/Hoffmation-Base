@@ -13,6 +13,7 @@
 * (theimo1221) Generalize Humidity Sensor
 * (theimo1221) Generalize Battery Devices
 * (theimo1221) Generalize Handle Sensor
+* (theimo1221) Prepare Zigbee window handle
 
 ## 3.0.0-alpha.89 (2024-10-03)
 

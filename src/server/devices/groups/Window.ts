@@ -11,7 +11,7 @@ import {
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
 } from '../../../models';
-import { iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
+import { iHandleSensor, iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
 import { BaseGroup } from './base-group';
 import { GroupType } from './group-type';
 import { DeviceClusterType } from '../device-cluster-type';
@@ -62,7 +62,7 @@ export class Window extends BaseGroup {
     this.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));
   }
 
-  public getHandle(): HmIpGriff[] {
+  public getHandle(): iHandleSensor[] {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
   }
 

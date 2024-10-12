@@ -3,8 +3,6 @@ import { iDisposable } from '../../services';
 import { WindowPosition } from '../models';
 import { Window } from '../groups';
 import { LogLevel } from '../../../models';
-import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
@@ -45,9 +43,11 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     return this.battery.level;
   }
 
-  /**
-   * Adds a window to this device
-   */
+  public get window(): Window | undefined {
+    return this.handleSensor.window;
+  }
+
+  /** @inheritDoc */
   public set window(value: Window) {
     this.handleSensor.window = value;
   }
@@ -95,10 +95,5 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   /** @inheritDoc */
   public dispose(): void {
     this.handleSensor.dispose();
-  }
-
-  /** @inheritDoc */
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_window']);
   }
 }
