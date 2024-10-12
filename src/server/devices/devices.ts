@@ -56,6 +56,7 @@ import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
 import { SmartGardenService } from './smartGarden';
 import { VeluxService } from './velux';
+import { ZigbeeSodaHandle } from './zigbee/zigbeeSodaHandle';
 
 export class Devices {
   /**
@@ -350,6 +351,9 @@ export class Devices {
         break;
       case 'EuroHeater':
         d = new ZigbeeEuroHeater(zigbeeInfo);
+        break;
+      case 'SodaHandle':
+        d = new ZigbeeSodaHandle(zigbeeInfo);
         break;
       default:
         ServerLogService.writeLog(LogLevel.Warn, `No zigbee Device Type for ${zigbeeInfo.deviceType} defined`);

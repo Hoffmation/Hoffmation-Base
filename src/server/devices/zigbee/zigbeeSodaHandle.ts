@@ -1,94 +1,80 @@
-import { ZigbeeDevice } from './BaseDevices';
-import { Battery, HandleSensor } from '../sharedFunctions';
-import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
+import { ZigbeeWindowHandle } from './BaseDevices';
+import { iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { WindowPosition } from '../models';
-import { Window } from '../groups';
-import { LogLevel } from '../../../models';
-import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
+import { DeviceCapability } from '../DeviceCapability';
+import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
+import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../../models';
 
-export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, iBatteryDevice {
+export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperatureSensor, iHumiditySensor {
   /** @inheritDoc */
-  public readonly battery: Battery = new Battery(this);
+  public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
-  public readonly handleSensor: HandleSensor = new HandleSensor(this);
-  /** @inheritDoc */
-  public settings: HandleSettings = new HandleSettings();
+  public humiditySensor: HumiditySensor = new HumiditySensor(this);
 
-  public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {
-    super(pInfo, deviceType);
-    this.deviceCapabilities.push(DeviceCapability.handleSensor);
-    this.deviceCapabilities.push(DeviceCapability.batteryDriven);
+  public constructor(pInfo: IoBrokerDeviceInfo) {
+    super(pInfo, DeviceType.ZigbeeSodaHandle);
+    this.deviceCapabilities.push(DeviceCapability.humiditySensor);
+    this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
   }
 
   /** @inheritDoc */
-  public get position(): WindowPosition {
-    return this.handleSensor.position;
+  public get roomTemperature(): number {
+    return this.temperatureSensor.roomTemperature;
   }
 
   /** @inheritDoc */
-  public get minutesOpen(): number {
-    return this.handleSensor.minutesOpen;
+  public set roomTemperature(value: number) {
+    this.temperatureSensor.roomTemperature = value;
   }
 
   /** @inheritDoc */
-  public get batteryLevel(): number {
-    return this.battery.level;
+  public get humidity(): number {
+    return this.humiditySensor.humidity;
   }
 
   /** @inheritDoc */
-  public get window(): Window | undefined {
-    return this.handleSensor.window;
+  public get iTemperature(): number {
+    return this.temperatureSensor.temperature;
   }
 
   /** @inheritDoc */
-  public set window(value: Window) {
-    this.handleSensor.window = value;
+  public get sTemperature(): string {
+    return `${this.temperatureSensor.temperature}°C`;
   }
 
   /** @inheritDoc */
-  public addOffenCallback(pCallback: (pValue: boolean) => void): void {
-    this.handleSensor.addOffenCallback(pCallback);
-  }
-
-  /** @inheritDoc */
-  public addKippCallback(pCallback: (pValue: boolean) => void): void {
-    this.handleSensor.addKippCallback(pCallback);
-  }
-
-  /** @inheritDoc */
-  public addClosedCallback(pCallback: (pValue: boolean) => void): void {
-    this.handleSensor.addClosedCallback(pCallback);
-  }
-
-  /** @inheritDoc */
-  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false, pOverride: boolean = false): void {
-    super.update(idSplit, state, initial, pOverride);
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
+    super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
-      case 'position':
-        this.handleSensor.position = this.toWindowPosition(state.val as string);
+      case 'humidity':
+        this.humiditySensor.humidity = state.val as number;
         break;
-      case 'battery':
-        this.battery.level = state.val as number;
-        if (this.batteryLevel < 20) {
-          this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
-        }
+      case 'temperature':
+        this.temperatureSensor.temperature = state.val as number;
         break;
     }
   }
 
-  private toWindowPosition(val: string): WindowPosition {
-    switch (val) {
-      case 'up':
-        return WindowPosition.tilted;
-      case 'right':
-      case 'left':
-        return WindowPosition.open;
-      case 'down':
-        return WindowPosition.closed;
-    }
-    throw new Error(`Unknown window position ${val}`);
+  /** @inheritDoc */
+  public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
+    this.humiditySensor.addHumidityCallback(pCallback);
+  }
+
+  /** @inheritDoc */
+  public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
+    this.temperatureSensor.addTempChangeCallback(pCallback);
+  }
+
+  /** @inheritDoc */
+  public onTemperaturChange(newTemperatur: number): void {
+    this.roomTemperature = newTemperatur;
+  }
+
+  /** @inheritDoc */
+  public dispose(): void {
+    this.temperatureSensor.dispose();
+    this.humiditySensor.dispose();
+    super.dispose();
   }
 }

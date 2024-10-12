@@ -8,3 +8,4 @@ export * from './zigbeeMotionSensor';
 export * from './zigbeeShutter';
 export * from './zigbeeSwitch';
 export { ZigbeeLamp } from './zigbeeLamp';
+export { ZigbeeWindowHandle } from './zigbeeWindowHandle';

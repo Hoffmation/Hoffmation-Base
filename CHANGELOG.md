@@ -14,6 +14,8 @@
 * (theimo1221) Generalize Battery Devices
 * (theimo1221) Generalize Handle Sensor
 * (theimo1221) Prepare Zigbee window handle
+* (theimo1221) Implement SodaHandle (https://www.zigbee2mqtt.io/devices/S8.html#soda-s8) a window handle with
+  temp-/humidity sensor
 
 ## 3.0.0-alpha.89 (2024-10-03)
 

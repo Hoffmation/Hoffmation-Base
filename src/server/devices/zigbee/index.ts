@@ -18,6 +18,7 @@ export * from './zigbeeInnr142C';
 export * from './zigbeeLinkindLedRgbCct';
 export * from './zigbeeOsramDimmer';
 export * from './zigbeeSMaBiTMagnetContact';
+export * from './zigbeeSodaHandle';
 export * from './zigbeeSonoffMotion';
 export * from './zigbeeSonoffTemp';
 export * from './zigbeeTuyaValve';

@@ -38,6 +38,7 @@ export enum DeviceType {
   ZigbeeUbisysActuator = 224,
   ZigbeeUbisysLampe = 225,
   ZigbeeInnr142C = 226,
+  ZigbeeSodaHandle = 227,
   JsEnergyManager = 301,
   RoomScene = 401,
   ShellyTrv = 402,
