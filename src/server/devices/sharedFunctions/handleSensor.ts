@@ -15,7 +15,7 @@ export class HandleSensor implements iDisposable {
    */
   public minutesOpen: number = 0;
   /**
-   *
+   * The window this handle is attached to
    */
   public window: Window | undefined;
   private _lastPersist: number = 0;
