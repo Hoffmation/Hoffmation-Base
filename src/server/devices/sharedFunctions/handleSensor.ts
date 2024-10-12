@@ -4,8 +4,11 @@ import { iDisposable, LogDebugType, TelegramService, Utils, WeatherService } fro
 import { HeatGroup, Window } from '../groups';
 import { iHandleSensor } from '../baseDeviceInterfaces';
 import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
+import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
-export class HandleSensor implements iDisposable {
+export class HandleSensor implements iDisposable, iJsonOmitKeys {
+  /** @inheritDoc */
+  public readonly jsonOmitKeys: string[] = ['_device', 'window'];
   /**
    * The current position of the handle
    */
@@ -139,10 +142,6 @@ export class HandleSensor implements iDisposable {
     this._closedCallback.push(pCallback);
   }
 
-  public toJSON(): Partial<HandleSensor> {
-    return Utils.jsonFilter(this, ['_device', 'window']);
-  }
-
   public dispose(): void {
     if (this._iOpenTimeout) {
       clearInterval(this._iOpenTimeout);
@@ -165,5 +164,9 @@ export class HandleSensor implements iDisposable {
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     this._device.log(level, message, debugType);
+  }
+
+  public toJSON(): Partial<HandleSensor> {
+    return Utils.jsonFilter(this, this.jsonOmitKeys);
   }
 }

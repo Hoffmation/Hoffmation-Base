@@ -1,8 +1,11 @@
 import { Utils } from '../../services';
 import { TemperatureSensorChangeAction } from '../../../models';
 import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
-export class TemperatureSensor {
+export class TemperatureSensor implements iJsonOmitKeys {
+  /** @inheritDoc */
+  public readonly jsonOmitKeys: string[] = ['_device'];
   /**
    * The current room temperature as a number in Celsius
    */
@@ -55,6 +58,6 @@ export class TemperatureSensor {
   }
 
   public toJSON(): Partial<TemperatureSensor> {
-    return Utils.jsonFilter(this, ['_device']);
+    return Utils.jsonFilter(this, this.jsonOmitKeys);
   }
 }

@@ -1,12 +1,21 @@
 import { iRoomDevice } from './baseDeviceInterfaces';
 import { API, LogDebugType, ServerLogService, Utils } from '../services';
-import { DeviceSettings, LogLevel, RoomAddDeviceItem, RoomBase, RoomDeviceAddingSettings } from '../../models';
+import {
+  DeviceSettings,
+  iJsonOmitKeys,
+  LogLevel,
+  RoomAddDeviceItem,
+  RoomBase,
+  RoomDeviceAddingSettings,
+} from '../../models';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 import { DeviceType } from './deviceType';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { DeviceCapability } from './DeviceCapability';
 
-export abstract class IoBrokerBaseDevice implements iRoomDevice {
+export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
+  /** @inheritDoc */
+  public readonly jsonOmitKeys: string[] = ['individualStateCallbacks'];
   /**
    * The settings for adding devices to Rooms
    */
@@ -147,7 +156,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice {
 
   /** @inheritDoc */
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return Utils.jsonFilter(this, ['individualStateCallbacks'], ['_room']);
+    return Utils.jsonFilter(this, this.jsonOmitKeys, ['_room']);
   }
 
   /** @inheritDoc */

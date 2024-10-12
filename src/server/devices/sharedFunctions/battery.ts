@@ -1,8 +1,9 @@
 import { iBatteryDevice } from '../baseDeviceInterfaces';
 import { Utils } from '../../services';
 import { BatteryLevelChangeAction, VictronDeviceSettings } from '../../../models';
+import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
-export class Battery {
+export class Battery implements iJsonOmitKeys {
   /**
    * The last time the battery was persisted (in milliseconds since 1970)
    */
@@ -11,6 +12,8 @@ export class Battery {
   private _lastLevel: number = -1;
   private _levelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
   private _lastChangeReportMs: number = 0;
+  /** @inheritDoc */
+  public readonly jsonOmitKeys: string[] = ['_device'];
 
   public constructor(private readonly _device: iBatteryDevice) {}
 
@@ -32,10 +35,6 @@ export class Battery {
     }
     Utils.dbo?.persistBatteryDevice(this._device);
     this._lastPersist = now;
-  }
-
-  public toJSON(): Partial<iBatteryDevice> {
-    return Utils.jsonFilter(this, ['_device']);
   }
 
   /**
@@ -63,5 +62,9 @@ export class Battery {
    */
   public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
     this._levelCallbacks.push(pCallback);
+  }
+
+  public toJSON(): Partial<iBatteryDevice> {
+    return Utils.jsonFilter(this, this.jsonOmitKeys);
   }
 }

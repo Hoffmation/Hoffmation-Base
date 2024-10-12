@@ -92,11 +92,6 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   }
 
   /** @inheritDoc */
-  public persistTemperaturSensor(): void {
-    this.temperatureSensor.persist();
-  }
-
-  /** @inheritDoc */
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,

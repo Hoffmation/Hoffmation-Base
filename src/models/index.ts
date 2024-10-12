@@ -14,3 +14,4 @@ export * from './objectSettings';
 export * from './temperatureSettings';
 export * from './timeCallback';
 export { BlockAutomaticSettings } from './blockAutomaticSettings';
+export { iJsonOmitKeys } from './iJsonOmitKeys';

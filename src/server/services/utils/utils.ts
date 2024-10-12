@@ -7,6 +7,7 @@ import { SettingsService } from '../settings-service';
 import { CatchEmResult } from './catchEmResult';
 import { iTimePair } from '../../config';
 import { RGB } from './RGB';
+import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 
@@ -114,9 +115,11 @@ export class Utils {
       'interval',
       'timeouts',
       'callback',
+      'callbacks',
       'otaInfo',
       'precalculatedDistancesMap',
       'stateMap',
+      'jsonOmitKeys',
     ];
     keysToOmit.push(...additionalOmitKeys);
     const loweredOmitKeys: string[] = keysToOmit.map((key) => key.toLowerCase());
@@ -223,6 +226,7 @@ export class Utils {
     if (level > 10 && level < 20) {
       ServerLogService.writeLog(LogLevel.Warn, `DeepOmit Loop Level ${level} reached for ${currentKey}`);
     }
+    const combinedOmmitKeys: string[] = [...keysToOmit, ...((obj as iJsonOmitKeys)?.jsonOmitKeys ?? [])];
     // the inner function which will be called recursivley
     return _.transform(obj, (result: { [name: string]: unknown }, value, key: string | number) => {
       if (value === undefined || value === null) {
@@ -230,7 +234,7 @@ export class Utils {
       }
       if (typeof key == 'string') {
         const lowerKey: string = key.toLowerCase();
-        for (const checkKey of keysToOmit) {
+        for (const checkKey of combinedOmmitKeys) {
           // if the key is in the index skip it
           if (lowerKey.includes(checkKey)) {
             return;

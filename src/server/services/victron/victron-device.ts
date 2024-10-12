@@ -9,12 +9,14 @@ import {
   iExcessEnergyConsumer,
 } from '../../devices';
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../utils';
-import { EnergyCalculation, LogLevel, TimeOfDay, VictronDeviceSettings } from '../../../models';
+import { EnergyCalculation, iJsonOmitKeys, LogLevel, TimeOfDay, VictronDeviceSettings } from '../../../models';
 import { LogDebugType, ServerLogService } from '../log-service';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
 
-export class VictronDevice implements iEnergyManager, iBatteryDevice {
+export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {
+  /** @inheritDoc */
+  public readonly jsonOmitKeys: string[] = ['_victronConsumer', '_excessEnergyConsumer'];
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [
     DeviceCapability.energyManager,
@@ -200,7 +202,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice {
         injectingWattage: this.injectingWattage,
         selfConsumingWattage: this.selfConsumingWattage,
       },
-      ...Utils.jsonFilter(this, ['_victronConsumer', '_excessEnergyConsumer']),
+      ...Utils.jsonFilter(this, this.jsonOmitKeys),
     };
   }
 

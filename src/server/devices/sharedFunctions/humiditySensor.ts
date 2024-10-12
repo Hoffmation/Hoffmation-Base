@@ -1,8 +1,11 @@
 import { Utils } from '../../services';
 import { HumiditySensorChangeAction } from '../../../models';
 import { iHumiditySensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
-export class HumiditySensor {
+export class HumiditySensor implements iJsonOmitKeys {
+  /** @inheritDoc */
+  public readonly jsonOmitKeys: string[] = ['_device'];
   private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
   private _humidity: number = UNDEFINED_TEMP_VALUE;
   private readonly _persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
@@ -37,14 +40,14 @@ export class HumiditySensor {
     Utils.dbo?.persistHumiditySensor(this._device);
   }
 
-  public toJSON(): Partial<HumiditySensor> {
-    return Utils.jsonFilter(this, ['_device']);
-  }
-
   public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
     this._humidityCallbacks.push(pCallback);
     if (this._humidity > 0) {
       pCallback(new HumiditySensorChangeAction(this._device, this._humidity));
     }
+  }
+
+  public toJSON(): Partial<HumiditySensor> {
+    return Utils.jsonFilter(this, this.jsonOmitKeys);
   }
 }
