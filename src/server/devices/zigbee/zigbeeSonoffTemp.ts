@@ -1,5 +1,5 @@
 import { ZigbeeDevice } from './BaseDevices';
-import { iBatteryDevice, iHumiditySensor, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
 import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
@@ -10,25 +10,15 @@ import {
   TemperatureSensorChangeAction,
 } from '../../../models';
 import { Utils } from '../../services';
-import { TemperatureSensorService } from '../sharedFunctions';
+import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   /** @inheritDoc */
-  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
-
+  public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
-  public readonly persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    () => {
-      this.persistHumiditySensor();
-    },
-    5 * 60 * 1000,
-    this,
-    false,
-  );
+  public humiditySensor: HumiditySensor = new HumiditySensor(this);
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
-  private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
-  private _humidity: number = UNDEFINED_TEMP_VALUE;
   private _lastBatteryLevel: number = -1;
   private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
@@ -51,34 +41,27 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this.temperatureSensorService.roomTemperature;
+    return this.temperatureSensor.roomTemperature;
   }
 
   /** @inheritDoc */
   public set roomTemperature(value: number) {
-    this.temperatureSensorService.roomTemperature = value;
+    this.temperatureSensor.roomTemperature = value;
   }
 
   /** @inheritDoc */
   public get humidity(): number {
-    return this._humidity;
-  }
-
-  private set humidity(val: number) {
-    this._humidity = val;
-    for (const cb of this._humidityCallbacks) {
-      cb(new HumiditySensorChangeAction(this, val));
-    }
+    return this.humiditySensor.humidity;
   }
 
   /** @inheritDoc */
   public get iTemperature(): number {
-    return this.temperatureSensorService.temperature;
+    return this.temperatureSensor.temperature;
   }
 
   /** @inheritDoc */
   public get sTemperature(): string {
-    return `${this.temperatureSensorService.temperature}°C`;
+    return `${this.temperatureSensor.temperature}°C`;
   }
 
   /** @inheritDoc */
@@ -99,25 +82,22 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
         }
         break;
       case 'humidity':
-        this.humidity = state.val as number;
+        this.humiditySensor.humidity = state.val as number;
         break;
       case 'temperature':
-        this.temperatureSensorService.temperature = state.val as number;
+        this.temperatureSensor.temperature = state.val as number;
         break;
     }
   }
 
   /** @inheritDoc */
   public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
-    this._humidityCallbacks.push(pCallback);
-    if (this._humidity > 0) {
-      pCallback(new HumiditySensorChangeAction(this, this._humidity));
-    }
+    this.humiditySensor.addHumidityCallback(pCallback);
   }
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this.temperatureSensorService.addTempChangeCallback(pCallback);
+    this.temperatureSensor.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -127,12 +107,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public persistTemperaturSensor(): void {
-    this.temperatureSensorService.persist();
-  }
-
-  /** @inheritDoc */
-  public persistHumiditySensor(): void {
-    Utils.dbo?.persistHumiditySensor(this);
+    this.temperatureSensor.persist();
   }
 
   /** @inheritDoc */
@@ -147,10 +122,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public dispose(): void {
-    this.temperatureSensorService.dispose();
-    if (this.persistHumiditySensorInterval) {
-      clearInterval(this.persistHumiditySensorInterval);
-    }
+    this.temperatureSensor.dispose();
+    this.humiditySensor.dispose();
     super.dispose();
   }
 

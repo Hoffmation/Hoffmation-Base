@@ -9,12 +9,12 @@ import {
   TimeCallback,
   TimeCallbackType,
 } from '../../../models';
-import { iHeater, iHumiditySensor, iTemperatureSensor, UNDEFINED_HUMIDITY_VALUE } from '../baseDeviceInterfaces';
+import { iHeater, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
 import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
-import { TemperatureSensorService } from '../sharedFunctions';
+import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */
@@ -27,23 +27,15 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     false,
   );
   /** @inheritDoc */
-  public readonly persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    () => {
-      this.persistHumiditySensor();
-    },
-    5 * 60 * 1000,
-    this,
-    false,
-  );
+  public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
-  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
+  public humiditySensor: HumiditySensor = new HumiditySensor(this);
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
   private _level: number = 0;
   private _setPointTemperatureID: string = '';
-  private _humidityCallbacks: Array<(action: HumiditySensorChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizgruppe);
@@ -85,23 +77,14 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   public get temperature(): number {
     if (this.settings.useOwnTemperatur) {
-      return this.temperatureSensorService.temperature;
+      return this.temperatureSensor.temperature;
     }
     return this.roomTemperature;
   }
 
-  private _humidity: number = UNDEFINED_HUMIDITY_VALUE;
-
   /** @inheritDoc */
   public get humidity(): number {
-    return this._humidity;
-  }
-
-  private set humidity(val: number) {
-    this._humidity = val;
-    for (const cb of this._humidityCallbacks) {
-      cb(new HumiditySensorChangeAction(this, val));
-    }
+    return this.humiditySensor.humidity;
   }
 
   private _desiredTemperature: number = 0;
@@ -146,15 +129,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this.temperatureSensorService.roomTemperature;
+    return this.temperatureSensor.roomTemperature;
   }
 
   /** @inheritDoc */
   public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
-    this._humidityCallbacks.push(pCallback);
-    if (this._humidity > 0) {
-      pCallback(new HumiditySensorChangeAction(this, this._humidity));
-    }
+    this.humiditySensor.addHumidityCallback(pCallback);
   }
 
   public getBelongingHeizungen(): iHeater[] {
@@ -197,12 +177,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this.temperatureSensorService.addTempChangeCallback(pCallback);
+    this.temperatureSensor.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
-    this.temperatureSensorService.roomTemperature = newTemperatur;
+    this.temperatureSensor.roomTemperature = newTemperatur;
   }
 
   /** @inheritDoc */
@@ -216,16 +196,9 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   /** @inheritDoc */
-  public persistHumiditySensor(): void {
-    Utils.dbo?.persistHumiditySensor(this);
-  }
-
-  /** @inheritDoc */
   public dispose(): void {
-    this.temperatureSensorService.dispose();
-    if (this.persistHumiditySensorInterval) {
-      clearInterval(this.persistHumiditySensorInterval);
-    }
+    this.temperatureSensor.dispose();
+    this.humiditySensor.dispose();
     if (this.persistHeaterInterval) {
       clearInterval(this.persistHeaterInterval);
     }
@@ -251,13 +224,13 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   private updateBaseInformation(name: string, state: ioBroker.State) {
     switch (name) {
       case 'ACTUAL_TEMPERATURE':
-        this.temperatureSensorService.temperature = state.val as number;
+        this.temperatureSensor.temperature = state.val as number;
         break;
       case 'LEVEL':
         this._level = state.val as number;
         break;
       case 'HUMIDITY':
-        this.humidity = state.val as number;
+        this.humiditySensor.humidity = state.val as number;
         break;
       case 'SET_POINT_TEMPERATURE':
         this.log(LogLevel.DeepTrace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);

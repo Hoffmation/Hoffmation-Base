@@ -1,6 +1,6 @@
 import { iRoomDevice } from './iRoomDevice';
 import { TemperatureSensorChangeAction } from '../../../models';
-import { TemperatureSensorService } from '../sharedFunctions';
+import { TemperatureSensor } from '../sharedFunctions';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
@@ -13,7 +13,7 @@ export interface iTemperatureSensor extends iRoomDevice {
   /**
    * Service which handles common aspects of the temperature sensor like persisting
    */
-  readonly temperatureSensorService: TemperatureSensorService;
+  readonly temperatureSensor: TemperatureSensor;
   /**
    * The current room temperature as a number in Celsius
    */
@@ -39,9 +39,4 @@ export interface iTemperatureSensor extends iRoomDevice {
    * @param newTemperatur - The new temperature in the room in Celsius
    */
   onTemperaturChange(newTemperatur: number): void;
-
-  /**
-   * Persists the current temperature sensor information to the database
-   */
-  persistTemperaturSensor(): void;
 }

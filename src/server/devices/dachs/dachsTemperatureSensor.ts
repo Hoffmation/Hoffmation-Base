@@ -6,7 +6,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import _ from 'lodash';
 import { DeviceSettings, LogLevel, RoomBase, TemperatureSensorChangeAction } from '../../../models';
-import { TemperatureSensorService } from '../sharedFunctions';
+import { TemperatureSensor } from '../sharedFunctions';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
@@ -16,7 +16,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
   /** @inheritDoc */
-  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
+  public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
 
   protected _info: DeviceInfo;
 
@@ -59,31 +59,31 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
 
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this.temperatureSensorService.roomTemperature;
+    return this.temperatureSensor.roomTemperature;
   }
 
   /** @inheritDoc */
   public set roomTemperature(value: number) {
-    this.temperatureSensorService.roomTemperature = value;
+    this.temperatureSensor.roomTemperature = value;
   }
 
   /** @inheritDoc */
   public get iTemperature(): number {
-    return this.temperatureSensorService.temperature;
+    return this.temperatureSensor.temperature;
   }
 
   /** @inheritDoc */
   public get sTemperature(): string {
-    return `${this.temperatureSensorService.temperature}°C`;
+    return `${this.temperatureSensor.temperature}°C`;
   }
 
   public update(newTemp: number): void {
-    this.temperatureSensorService.temperature = newTemp;
+    this.temperatureSensor.temperature = newTemp;
   }
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this.temperatureSensorService.addTempChangeCallback(pCallback);
+    this.temperatureSensor.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -93,7 +93,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
 
   /** @inheritDoc */
   public persistTemperaturSensor(): void {
-    this.temperatureSensorService.persist();
+    this.temperatureSensor.persist();
   }
 
   /** @inheritDoc */
@@ -129,6 +129,6 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
 
   /** @inheritDoc */
   public dispose(): void {
-    this.temperatureSensorService.dispose();
+    this.temperatureSensor.dispose();
   }
 }

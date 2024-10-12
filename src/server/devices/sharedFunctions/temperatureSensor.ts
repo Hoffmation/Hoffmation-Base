@@ -2,7 +2,7 @@ import { Utils } from '../../services';
 import { TemperatureSensorChangeAction } from '../../../models';
 import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 
-export class TemperatureSensorService {
+export class TemperatureSensor {
   /**
    * The current room temperature as a number in Celsius
    */
@@ -54,7 +54,7 @@ export class TemperatureSensorService {
     }
   }
 
-  public toJSON(): Partial<TemperatureSensorService> {
+  public toJSON(): Partial<TemperatureSensor> {
     return Utils.jsonFilter(this, ['_device']);
   }
 }

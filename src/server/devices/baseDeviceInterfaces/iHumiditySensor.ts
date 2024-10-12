@@ -1,5 +1,6 @@
 import { iRoomDevice } from './iRoomDevice';
 import { HumiditySensorChangeAction } from '../../../models';
+import { HumiditySensor } from '../sharedFunctions';
 
 export const UNDEFINED_HUMIDITY_VALUE = -1;
 
@@ -10,10 +11,9 @@ export const UNDEFINED_HUMIDITY_VALUE = -1;
  */
 export interface iHumiditySensor extends iRoomDevice {
   /**
-   * The interval to persist the humidity sensor information
-   * This mainly enforces the interval to be implemented.
+   * Common humidity sensor handling like persisting
    */
-  readonly persistHumiditySensorInterval: NodeJS.Timeout;
+  readonly humiditySensor: HumiditySensor;
   /**
    * The current humidity in percent
    */
@@ -24,9 +24,4 @@ export interface iHumiditySensor extends iRoomDevice {
    * @param pCallback - The callback to fire
    */
   addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void;
-
-  /**
-   * Persists the current humidity information to the database
-   */
-  persistHumiditySensor(): void;
 }

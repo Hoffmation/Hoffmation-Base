@@ -1,2 +1,3 @@
+export * from './humiditySensor';
 export * from './lampUtils';
-export * from './temperatureSensorService';
+export * from './temperatureSensor';
