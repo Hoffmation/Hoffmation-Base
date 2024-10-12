@@ -4,7 +4,13 @@ import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
-import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../../models';
+import {
+  CommandSource,
+  HumiditySensorChangeAction,
+  LogLevel,
+  TemperatureSensorChangeAction,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 
 export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperatureSensor, iHumiditySensor {
   /** @inheritDoc */
@@ -53,6 +59,16 @@ export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperature
       case 'temperature':
         this.temperatureSensor.temperature = state.val as number;
         break;
+      case 'button_left':
+        if (!initial && (state.val as string) === 'pressed') {
+          this.onButtonLeftPressed();
+        }
+        break;
+      case 'button_right':
+        if (!initial && (state.val as string) === 'pressed') {
+          this.onButtonRightPressed();
+        }
+        break;
     }
   }
 
@@ -76,5 +92,31 @@ export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperature
     this.temperatureSensor.dispose();
     this.humiditySensor.dispose();
     super.dispose();
+  }
+
+  private onButtonLeftPressed(): void {
+    this.log(LogLevel.Info, 'Button left pressed');
+    if (!this.window) {
+      return;
+    }
+    const command: WindowSetDesiredPositionCommand = new WindowSetDesiredPositionCommand(
+      CommandSource.Manual,
+      0,
+      'Button on handle was pressed',
+    );
+    this.window.setDesiredPosition(command);
+  }
+
+  private onButtonRightPressed(): void {
+    this.log(LogLevel.Info, 'Button right pressed');
+    if (!this.window) {
+      return;
+    }
+    const command: WindowSetDesiredPositionCommand = new WindowSetDesiredPositionCommand(
+      CommandSource.Manual,
+      100,
+      'Button on handle was pressed',
+    );
+    this.window.setDesiredPosition(command);
   }
 }
