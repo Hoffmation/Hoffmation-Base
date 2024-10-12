@@ -110,13 +110,13 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this.log(LogLevel.Debug, c.logMessage);
 
     if (this._window !== undefined) {
-      if (this._window.griffeInPosition(WindowPosition.offen) > 0 && pPosition < 100) {
+      if (this._window.griffeInPosition(WindowPosition.open) > 0 && pPosition < 100) {
         if (!c.skipOpenWarning) {
           this.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
         }
         return;
       }
-      if (this._window.griffeInPosition(WindowPosition.kipp) > 0 && pPosition < 50) {
+      if (this._window.griffeInPosition(WindowPosition.tilted) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!c.skipOpenWarning) {
           this.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');

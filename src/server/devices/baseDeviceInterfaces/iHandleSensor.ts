@@ -1,5 +1,6 @@
 import { WindowPosition } from '../models';
 import { iRoomDevice } from './iRoomDevice';
+import { HandleSensor } from '../sharedFunctions';
 
 /**
  * Interface for Handle Sensors.
@@ -8,6 +9,10 @@ import { iRoomDevice } from './iRoomDevice';
  * For devices with {@link DeviceCapability.handleSensor} capability.
  */
 export interface iHandleSensor extends iRoomDevice {
+  /**
+   * A common object for all handle sensors handling stuff like persist and callbacks
+   */
+  handleSensor: HandleSensor;
   /**
    * The current position of the handle
    */

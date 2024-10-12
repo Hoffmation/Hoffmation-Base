@@ -91,7 +91,7 @@ export class Window extends BaseGroup {
   public initialize(): void {
     this.getHandle().forEach((griff) => {
       griff.addKippCallback((kipp: boolean) => {
-        if (!(kipp && this.griffeInPosition(WindowPosition.offen) === 0)) {
+        if (!(kipp && this.griffeInPosition(WindowPosition.open) === 0)) {
           return;
         }
         this.getVibration().forEach((element) => {
@@ -124,8 +124,8 @@ export class Window extends BaseGroup {
       griff.addClosedCallback((geschlossen: boolean) => {
         if (
           geschlossen &&
-          this.griffeInPosition(WindowPosition.offen) === 0 &&
-          this.griffeInPosition(WindowPosition.kipp) === 0
+          this.griffeInPosition(WindowPosition.open) === 0 &&
+          this.griffeInPosition(WindowPosition.tilted) === 0
         ) {
           const now = new Date().getTime();
           this.getVibration().forEach((element) => {

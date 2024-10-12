@@ -1,5 +1,5 @@
 export enum WindowPosition {
-  geschlossen = 0,
-  kipp = 1,
-  offen = 2,
+  closed = 0,
+  tilted = 1,
+  open = 2,
 }

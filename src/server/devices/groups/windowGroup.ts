@@ -133,10 +133,10 @@ export class WindowGroup extends BaseGroup {
           shutterSettings,
         );
       }
-      if (f.griffeInPosition(WindowPosition.offen) > 0 && desiredPos < 100) {
+      if (f.griffeInPosition(WindowPosition.open) > 0 && desiredPos < 100) {
         return;
       }
-      if (f.griffeInPosition(WindowPosition.kipp) > 0) {
+      if (f.griffeInPosition(WindowPosition.tilted) > 0) {
         desiredPos = Math.max(30, desiredPos);
       }
       ShutterService.windowAllToPosition(f, new ShutterSetLevelCommand(c, desiredPos, '', true));
