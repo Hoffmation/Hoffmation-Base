@@ -10,17 +10,12 @@ import {
   TemperatureSensorChangeAction,
 } from '../../../models';
 import { Utils } from '../../services';
+import { TemperatureSensorService } from '../sharedFunctions';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   /** @inheritDoc */
-  public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    () => {
-      this.persistTemperaturSensor();
-    },
-    5 * 60 * 1000,
-    this,
-    false,
-  );
+  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
+
   /** @inheritDoc */
   public readonly persistHumiditySensorInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -33,10 +28,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   private _battery: number = -99;
   private _lastBatteryPersist: number = 0;
   private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
-  private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
   private _humidity: number = UNDEFINED_TEMP_VALUE;
-  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
-  private _temperature: number = UNDEFINED_TEMP_VALUE;
   private _lastBatteryLevel: number = -1;
   private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
@@ -59,12 +51,12 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this._roomTemperature;
+    return this.temperatureSensorService.roomTemperature;
   }
 
   /** @inheritDoc */
   public set roomTemperature(value: number) {
-    this._roomTemperature = value;
+    this.temperatureSensorService.roomTemperature = value;
   }
 
   /** @inheritDoc */
@@ -81,19 +73,12 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public get iTemperature(): number {
-    return this._temperature;
+    return this.temperatureSensorService.temperature;
   }
 
   /** @inheritDoc */
   public get sTemperature(): string {
-    return `${this._temperature}°C`;
-  }
-
-  private set temperature(val: number) {
-    this._temperature = val;
-    for (const cb of this._temperaturCallbacks) {
-      cb(new TemperatureSensorChangeAction(this, val));
-    }
+    return `${this.temperatureSensorService.temperature}°C`;
   }
 
   /** @inheritDoc */
@@ -117,7 +102,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
         this.humidity = state.val as number;
         break;
       case 'temperature':
-        this.temperature = state.val as number;
+        this.temperatureSensorService.temperature = state.val as number;
         break;
     }
   }
@@ -132,10 +117,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this._temperaturCallbacks.push(pCallback);
-    if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
-    }
+    this.temperatureSensorService.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -145,7 +127,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public persistTemperaturSensor(): void {
-    Utils.dbo?.persistTemperatureSensor(this);
+    this.temperatureSensorService.persist();
   }
 
   /** @inheritDoc */
@@ -165,9 +147,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public dispose(): void {
-    if (this.persistTemperatureSensorInterval) {
-      clearInterval(this.persistTemperatureSensorInterval);
-    }
+    this.temperatureSensorService.dispose();
     if (this.persistHumiditySensorInterval) {
       clearInterval(this.persistHumiditySensorInterval);
     }

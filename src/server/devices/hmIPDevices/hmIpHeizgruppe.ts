@@ -9,32 +9,18 @@ import {
   TimeCallback,
   TimeCallbackType,
 } from '../../../models';
-import {
-  iHeater,
-  iHumiditySensor,
-  iTemperatureSensor,
-  UNDEFINED_HUMIDITY_VALUE,
-  UNDEFINED_TEMP_VALUE,
-} from '../baseDeviceInterfaces';
+import { iHeater, iHumiditySensor, iTemperatureSensor, UNDEFINED_HUMIDITY_VALUE } from '../baseDeviceInterfaces';
 import { DeviceClusterType } from '../device-cluster-type';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
+import { TemperatureSensorService } from '../sharedFunctions';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
       this.persistHeater();
-    },
-    5 * 60 * 1000,
-    this,
-    false,
-  );
-  /** @inheritDoc */
-  public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    () => {
-      this.persistTemperaturSensor();
     },
     5 * 60 * 1000,
     this,
@@ -50,13 +36,14 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     false,
   );
   /** @inheritDoc */
+  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
+  /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
   private _level: number = 0;
   private _setPointTemperatureID: string = '';
   private _humidityCallbacks: Array<(action: HumiditySensorChangeAction) => void> = [];
-  private _temperatureCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizgruppe);
@@ -96,20 +83,11 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     }
   }
 
-  private _temperature: number = UNDEFINED_TEMP_VALUE;
-
   public get temperature(): number {
     if (this.settings.useOwnTemperatur) {
-      return this._temperature;
+      return this.temperatureSensorService.temperature;
     }
-    return this._roomTemperature;
-  }
-
-  private set temperature(val: number) {
-    this._temperature = val;
-    for (const cb of this._temperatureCallbacks) {
-      cb(new TemperatureSensorChangeAction(this, val));
-    }
+    return this.roomTemperature;
   }
 
   private _humidity: number = UNDEFINED_HUMIDITY_VALUE;
@@ -166,11 +144,9 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     return this.temperature;
   }
 
-  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
-
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this._roomTemperature;
+    return this.temperatureSensorService.roomTemperature;
   }
 
   /** @inheritDoc */
@@ -221,15 +197,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this._temperatureCallbacks.push(pCallback);
-    if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
-    }
+    this.temperatureSensorService.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
-    this._roomTemperature = newTemperatur;
+    this.temperatureSensorService.roomTemperature = newTemperatur;
   }
 
   /** @inheritDoc */
@@ -247,21 +220,18 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     Utils.dbo?.persistHumiditySensor(this);
   }
 
-  private updateBaseInformation(name: string, state: ioBroker.State) {
-    switch (name) {
-      case 'ACTUAL_TEMPERATURE':
-        this.temperature = state.val as number;
-        break;
-      case 'LEVEL':
-        this._level = state.val as number;
-        break;
-      case 'HUMIDITY':
-        this.humidity = state.val as number;
-        break;
-      case 'SET_POINT_TEMPERATURE':
-        this.log(LogLevel.DeepTrace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
-        this._desiredTemperature = state.val as number;
-        break;
+  /** @inheritDoc */
+  public dispose(): void {
+    this.temperatureSensorService.dispose();
+    if (this.persistHumiditySensorInterval) {
+      clearInterval(this.persistHumiditySensorInterval);
+    }
+    if (this.persistHeaterInterval) {
+      clearInterval(this.persistHeaterInterval);
+    }
+    if (this._iAutomaticInterval) {
+      clearInterval(this._iAutomaticInterval);
+      this._iAutomaticInterval = undefined;
     }
   }
 
@@ -278,20 +248,21 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     this._initialSeasonCheckDone = true;
   }
 
-  /** @inheritDoc */
-  public dispose(): void {
-    if (this.persistTemperatureSensorInterval) {
-      clearInterval(this.persistTemperatureSensorInterval);
-    }
-    if (this.persistHumiditySensorInterval) {
-      clearInterval(this.persistHumiditySensorInterval);
-    }
-    if (this.persistHeaterInterval) {
-      clearInterval(this.persistHeaterInterval);
-    }
-    if (this._iAutomaticInterval) {
-      clearInterval(this._iAutomaticInterval);
-      this._iAutomaticInterval = undefined;
+  private updateBaseInformation(name: string, state: ioBroker.State) {
+    switch (name) {
+      case 'ACTUAL_TEMPERATURE':
+        this.temperatureSensorService.temperature = state.val as number;
+        break;
+      case 'LEVEL':
+        this._level = state.val as number;
+        break;
+      case 'HUMIDITY':
+        this.humidity = state.val as number;
+        break;
+      case 'SET_POINT_TEMPERATURE':
+        this.log(LogLevel.DeepTrace, `Heizgruppe Update Soll-Temperatur JSON: ${JSON.stringify(state)}`);
+        this._desiredTemperature = state.val as number;
+        break;
     }
   }
 }

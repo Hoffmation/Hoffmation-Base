@@ -1,4 +1,4 @@
-import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iTemperatureSensor } from '../baseDeviceInterfaces';
 import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
 import { DeviceCapability } from '../DeviceCapability';
 import { DeviceType } from '../deviceType';
@@ -6,6 +6,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import _ from 'lodash';
 import { DeviceSettings, LogLevel, RoomBase, TemperatureSensorChangeAction } from '../../../models';
+import { TemperatureSensorService } from '../sharedFunctions';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
@@ -14,19 +15,9 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   public readonly deviceType: DeviceType = DeviceType.DachsWarmWaterTemperature;
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
-
   /** @inheritDoc */
-  public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    () => {
-      this.persistTemperaturSensor();
-    },
-    5 * 60 * 1000,
-    this,
-    false,
-  );
+  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
 
-  private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
-  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
   protected _info: DeviceInfo;
 
   public constructor(roomName: string, shortKey: string, longKey: string) {
@@ -68,43 +59,31 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
 
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this._roomTemperature;
+    return this.temperatureSensorService.roomTemperature;
   }
 
   /** @inheritDoc */
   public set roomTemperature(value: number) {
-    this._roomTemperature = value;
+    this.temperatureSensorService.roomTemperature = value;
   }
 
   /** @inheritDoc */
   public get iTemperature(): number {
-    return this._temperature;
+    return this.temperatureSensorService.temperature;
   }
 
   /** @inheritDoc */
   public get sTemperature(): string {
-    return `${this._temperature}°C`;
-  }
-
-  private _temperature: number = UNDEFINED_TEMP_VALUE;
-
-  private set temperature(val: number) {
-    this._temperature = val;
-    for (const cb of this._temperaturCallbacks) {
-      cb(new TemperatureSensorChangeAction(this, val));
-    }
+    return `${this.temperatureSensorService.temperature}°C`;
   }
 
   public update(newTemp: number): void {
-    this.temperature = newTemp;
+    this.temperatureSensorService.temperature = newTemp;
   }
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this._temperaturCallbacks.push(pCallback);
-    if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
-    }
+    this.temperatureSensorService.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -114,7 +93,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
 
   /** @inheritDoc */
   public persistTemperaturSensor(): void {
-    Utils.dbo?.persistTemperatureSensor(this);
+    this.temperatureSensorService.persist();
   }
 
   /** @inheritDoc */
@@ -150,8 +129,6 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
 
   /** @inheritDoc */
   public dispose(): void {
-    if (this.persistTemperatureSensorInterval) {
-      clearInterval(this.persistTemperatureSensorInterval);
-    }
+    this.temperatureSensorService.dispose();
   }
 }

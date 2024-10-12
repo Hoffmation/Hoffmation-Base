@@ -5,6 +5,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
 import { DeviceCapability } from '../DeviceCapability';
 import { Utils } from '../../services';
+import { TemperatureSensorService } from '../sharedFunctions';
 
 export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySensor, iTemperatureSensor {
   /** @inheritDoc */
@@ -17,19 +18,9 @@ export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySen
     false,
   );
   /** @inheritDoc */
-  public readonly persistTemperatureSensorInterval: NodeJS.Timeout = Utils.guardedInterval(
-    () => {
-      this.persistTemperaturSensor();
-    },
-    5 * 60 * 1000,
-    this,
-    false,
-  );
+  public temperatureSensorService: TemperatureSensorService = new TemperatureSensorService(this);
   private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
   private _humidity: number = UNDEFINED_TEMP_VALUE;
-  private _roomTemperature: number = UNDEFINED_TEMP_VALUE;
-  private _temperature: number = UNDEFINED_TEMP_VALUE;
-  private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.SmartGardenSensor);
@@ -39,12 +30,12 @@ export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySen
 
   /** @inheritDoc */
   public get roomTemperature(): number {
-    return this._roomTemperature;
+    return this.temperatureSensorService.roomTemperature;
   }
 
   /** @inheritDoc */
   public set roomTemperature(value: number) {
-    this._roomTemperature = value;
+    this.temperatureSensorService.roomTemperature = value;
   }
 
   /** @inheritDoc */
@@ -61,19 +52,12 @@ export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySen
 
   /** @inheritDoc */
   public get iTemperature(): number {
-    return this._temperature;
+    return this.temperatureSensorService.temperature;
   }
 
   /** @inheritDoc */
   public get sTemperature(): string {
-    return `${this._temperature}°C`;
-  }
-
-  private set temperature(val: number) {
-    this._temperature = val;
-    for (const cb of this._temperaturCallbacks) {
-      cb(new TemperatureSensorChangeAction(this, val));
-    }
+    return `${this.temperatureSensorService.temperature}°C`;
   }
 
   /** @inheritDoc */
@@ -86,10 +70,7 @@ export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySen
 
   /** @inheritDoc */
   public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
-    this._temperaturCallbacks.push(pCallback);
-    if (this._temperature > UNDEFINED_TEMP_VALUE) {
-      pCallback(new TemperatureSensorChangeAction(this, this._temperature));
-    }
+    this.temperatureSensorService.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -121,7 +102,7 @@ export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySen
           this.humidity = state.val as number;
           break;
         case 'soilTemperature_value':
-          this.temperature = state.val as number;
+          this.temperatureSensorService.temperature = state.val as number;
           break;
       }
     }
@@ -129,9 +110,7 @@ export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySen
 
   /** @inheritDoc */
   public dispose(): void {
-    if (this.persistTemperatureSensorInterval) {
-      clearInterval(this.persistTemperatureSensorInterval);
-    }
+    this.temperatureSensorService.dispose();
     if (this.persistHumiditySensorInterval) {
       clearInterval(this.persistHumiditySensorInterval);
     }

@@ -1,5 +1,6 @@
 import { iRoomDevice } from './iRoomDevice';
 import { TemperatureSensorChangeAction } from '../../../models';
+import { TemperatureSensorService } from '../sharedFunctions';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 
@@ -10,10 +11,9 @@ export const UNDEFINED_TEMP_VALUE = -99;
  */
 export interface iTemperatureSensor extends iRoomDevice {
   /**
-   * The interval to persist the temperature sensor information
-   * Mainly used to enforce implementation
+   * Service which handles common aspects of the temperature sensor like persisting
    */
-  readonly persistTemperatureSensorInterval: NodeJS.Timeout;
+  readonly temperatureSensorService: TemperatureSensorService;
   /**
    * The current room temperature as a number in Celsius
    */
