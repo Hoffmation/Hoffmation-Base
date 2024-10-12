@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.90 (2024-10-12)
 
 * (theimo1221) Allow Heating Rod even during winter
 * (theimo1221) Generalize Temperature Sensor
