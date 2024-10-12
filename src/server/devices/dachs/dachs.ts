@@ -116,7 +116,7 @@ export class Dachs implements iBaseDevice, iActuator {
     );
     if (Devices.energymanager?.deviceCapabilities?.includes(DeviceCapability.batteryDriven)) {
       const energyManager: iBaseDevice = Devices.energymanager as iBaseDevice;
-      (energyManager as iBatteryDevice).addBatteryLevelCallback(this.onBatteryLevelChange.bind(this));
+      (energyManager as iBatteryDevice).battery.addBatteryLevelCallback(this.onBatteryLevelChange.bind(this));
     }
     this.warmWaterSensor.addTempChangeCallback(this.onTempChange.bind(this));
     this.heatStorageTempSensor.addTempChangeCallback(this.onTempChange.bind(this));

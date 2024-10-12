@@ -2,12 +2,15 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iBatteryDevice, iButtonSwitch } from '../baseDeviceInterfaces';
 import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
-import { BatteryLevelChangeAction, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import { Utils } from '../../services';
+import { Battery } from '../sharedFunctions';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDevice {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
     shortPress: true,
     longPress: true,
@@ -36,10 +39,6 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
    * @inheritDoc
    */
   public buttonTop: undefined = undefined;
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpTaster);
@@ -53,17 +52,8 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     this.buttonBotRight = new Button('BotRight', HmIpTaster.BUTTON_CAPABILLITIES);
   }
 
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  public get battery(): number {
-    return this._battery;
-  }
-
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   public persist(buttonName: string, pressType: ButtonPressType): void {
@@ -79,9 +69,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
-            this.checkForBatteryChange();
-            this.persistBatteryDevice();
+            this.battery.level = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;
@@ -156,15 +144,6 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
     return result.join('\n');
   }
 
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
   public pressButton(position: ButtonPosition, pressType: ButtonPressType): Error | null {
     let taste: Button | undefined;
     switch (position) {
@@ -205,19 +184,5 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
       this.log(LogLevel.Info, `Simulated ButtonPress for ${taste.name} type: ${pressType}`);
     }
     return result;
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

@@ -11,6 +11,7 @@
 * (theimo1221) Allow Heating Rod even during winter
 * (theimo1221) Generalize Temperature Sensor
 * (theimo1221) Generalize Humidity Sensor
+* (theimo1221) Generalize Battery Devices
 
 ## 3.0.0-alpha.89 (2024-10-03)
 

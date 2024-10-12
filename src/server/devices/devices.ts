@@ -194,8 +194,8 @@ export class Devices {
       if (!d.deviceCapabilities.includes(DeviceCapability.batteryDriven)) {
         continue;
       }
-      if (d.battery !== undefined) {
-        data.push({ name: d.info.customName, amount: d.battery });
+      if (d.batteryLevel !== undefined) {
+        data.push({ name: d.info.customName, amount: d.batteryLevel });
       }
     }
     data = data.sort((a: NameAmountValuePair, b: NameAmountValuePair) => {

@@ -1,13 +1,16 @@
 import { DeviceType } from '../deviceType';
 import { PollyService, Res, SonosService, Utils } from '../../services';
-import { BatteryLevelChangeAction, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import { iBatteryDevice, iVibrationSensor } from '../baseDeviceInterfaces';
 import { ZigbeeDevice } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
 import * as console from 'console';
+import { Battery } from '../sharedFunctions';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor, iBatteryDevice {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   /**
    * The sensitivity of the vibration sensor
    */
@@ -40,8 +43,6 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
    * Whether the vibration sensor is tilted
    */
   public tilt: boolean = false;
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
   private _vibration: boolean = false;
   private _vibrationBlockedByHandleTimeStamp: number = 0;
   private _vibrationBlockedByMotionTimeStamp: number = 0;
@@ -49,8 +50,6 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   private _alarmMessage: string;
   private _vibrationBlockedByGriff: boolean = false;
   private _vibrationBlockedByMotion: boolean = false;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAquaraVibra);
@@ -79,13 +78,8 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   // TODO Set Sensitivity
 
   /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   /** @inheritDoc */
@@ -120,20 +114,13 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
   }
 
   /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
-  }
-
-  /** @inheritDoc */
   public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
     this.log(LogLevel.DeepTrace, `Stecker Update: ID: ${idSplit.join('.')} JSON: ${JSON.stringify(state)}`);
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
-        this._battery = state.val as number;
-        this.checkForBatteryChange();
-        this.persistBatteryDevice();
-        if (this._battery < 20) {
+        this.battery.level = state.val as number;
+        if (this.batteryLevel < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
@@ -233,16 +220,6 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     });
   }
 
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
   private alarmCheck(): void {
     this.log(
       LogLevel.Debug,
@@ -260,19 +237,5 @@ export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor,
     const message = this._alarmMessage;
     SonosService.speakOnAll(message);
     this.log(LogLevel.Alert, message);
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

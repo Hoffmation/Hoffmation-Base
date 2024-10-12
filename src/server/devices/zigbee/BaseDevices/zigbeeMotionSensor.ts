@@ -1,18 +1,15 @@
 import { DeviceType } from '../../deviceType';
 import { ZigbeeDevice } from './index';
-import {
-  BatteryLevelChangeAction,
-  CountToday,
-  LogLevel,
-  MotionSensorAction,
-  MotionSensorSettings,
-} from '../../../../models';
+import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../../models';
 import { LogDebugType, Utils } from '../../../services';
 import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
+import { Battery } from '../../sharedFunctions';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
   /** @inheritDoc */
@@ -23,10 +20,6 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
   protected _timeSinceLastMotion: number = 0;
   private _movementDetected: boolean = false;
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
     super(pInfo, type);
@@ -49,11 +42,6 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   }
 
   /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  /** @inheritDoc */
   public get movementDetected(): boolean {
     if (!this.available) {
       // If the device is not available, there is no active movement
@@ -69,19 +57,14 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   }
 
   /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   // Time since last motion in seconds
   /** @inheritDoc */
   public get timeSinceLastMotion(): number {
     return this._timeSinceLastMotion;
-  }
-
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
   }
 
   /**
@@ -148,10 +131,8 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     super.update(idSplit, state, initial, pOverride);
     switch (idSplit[3]) {
       case 'battery':
-        this._battery = state.val as number;
-        this.checkForBatteryChange();
-        this.persistBatteryDevice();
-        if (this._battery < 20) {
+        this.battery.level = state.val as number;
+        if (this.batteryLevel < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
@@ -167,16 +148,6 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
         this._timeSinceLastMotion = state.val as number;
         break;
     }
-  }
-
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
   }
 
   private resetFallbackTimeout(): void {
@@ -199,19 +170,5 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       270000,
       this,
     );
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

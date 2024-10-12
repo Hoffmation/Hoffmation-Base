@@ -9,18 +9,15 @@ import {
   LogLevel,
   TemperatureSensorChangeAction,
 } from '../../../models';
-import { Utils } from '../../services';
-import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
+import { Battery, HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   /** @inheritDoc */
   public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
   public humiditySensor: HumiditySensor = new HumiditySensor(this);
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
+  /** @inheritDoc */
+  public battery: Battery = new Battery(this);
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeSonoffTemp);
@@ -30,13 +27,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   }
 
   /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   /** @inheritDoc */
@@ -66,7 +58,7 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
 
   /** @inheritDoc */
   public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
+    this.battery.addBatteryLevelCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -74,10 +66,8 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
     super.update(idSplit, state, initial, true);
     switch (idSplit[3]) {
       case 'battery':
-        this._battery = state.val as number;
-        this.checkForBatteryChange();
-        this.persistBatteryDevice();
-        if (this._battery < 20) {
+        this.battery.level = state.val as number;
+        if (this.batteryLevel < 20) {
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
@@ -106,38 +96,9 @@ export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor
   }
 
   /** @inheritDoc */
-  public persistTemperaturSensor(): void {
-    this.temperatureSensor.persist();
-  }
-
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  /** @inheritDoc */
   public dispose(): void {
     this.temperatureSensor.dispose();
     this.humiditySensor.dispose();
     super.dispose();
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

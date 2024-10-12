@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { iDisposable, TelegramService, Utils, WeatherService } from '../../services';
 import { WindowPosition } from '../models';
 import { HeatGroup, Window } from '../groups';
-import { BatteryLevelChangeAction, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import _ from 'lodash';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -10,16 +10,17 @@ import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
 import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
+import { Battery } from '../sharedFunctions';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
   public settings: HandleSettings = new HandleSettings();
   /** @inheritDoc */
   public position: WindowPosition = WindowPosition.geschlossen;
   /** @inheritDoc */
   public minutesOpen: number = 0;
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
   private _lastHandlePersist: number = 0;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
@@ -27,8 +28,6 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   private _window: Window | undefined = undefined;
   private _helpingRoomTemp: boolean = false;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   /**
    * Creates an instance of {@link DeviceType.HmIpGriff}.
@@ -41,13 +40,8 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   }
 
   /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   /**
@@ -55,11 +49,6 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
    */
   public set window(value: Window) {
     this._window = value;
-  }
-
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
   }
 
   /** @inheritDoc */
@@ -85,9 +74,7 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
-            this.checkForBatteryChange();
-            this.persistBatteryDevice();
+            this.battery.level = 100 * (((state.val as number) - 0.9) / 0.6);
             break;
         }
         break;
@@ -97,23 +84,11 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
             this.updatePosition(state.val as WindowPosition);
             break;
           case 'OPERATING_VOLTAGE':
-            this._battery = 100 * (((state.val as number) - 0.9) / 0.6);
-            this.checkForBatteryChange();
-            this.persistBatteryDevice();
+            this.battery.level = 100 * (((state.val as number) - 0.9) / 0.6);
             break;
         }
         break;
     }
-  }
-
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
   }
 
   /**
@@ -233,19 +208,5 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
       60000,
       this,
     );
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

@@ -12,7 +12,7 @@ export class BatteryLevelChangeAction extends BaseAction {
   public readonly newLevel: number;
 
   public constructor(device: iBatteryDevice) {
-    super(undefined, `New Battery Level (${device.battery}%) received`);
-    this.newLevel = device.battery;
+    super(undefined, `New Battery Level (${device.batteryLevel}%) received`);
+    this.newLevel = device.batteryLevel;
   }
 }

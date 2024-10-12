@@ -1,15 +1,18 @@
 import { ShellyDevice } from './shellyDevice';
 import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
-import { BatteryLevelChangeAction, HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
 import { PIDController } from '../../../liquid-pid';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 import { HeatGroup } from '../groups';
+import { Battery } from '../sharedFunctions';
 
 export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
   /** @inheritDoc */
@@ -24,7 +27,6 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
   protected _seasonTurnOff: boolean = false;
   protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
   private _automaticMode: boolean = false;
-  private _battery: number = -99;
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
   private _lastRecalc: number = 0;
@@ -46,15 +48,12 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
     Ki: 1000, // PID: Ki in 1/1000
     Kd: 9, // PID: Kd in 1/1000
   });
-  private _lastBatteryPersist: number = 0;
   private readonly _minumumLevelId: string;
   private readonly _setAutomaticModeId: string;
   private readonly _setExternalTempId: string;
   private readonly _setEnableExternalTempId: string;
   private readonly _setPointTemperaturID: string;
   private readonly _valvePosId: string;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ShellyTrv);
@@ -82,13 +81,8 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
   }
 
   /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   public get minimumLevel(): number {
@@ -162,11 +156,6 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
     if (this.settings.controlByPid) {
       this.recalcLevel();
     }
-  }
-
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
   }
 
   /** @inheritDoc */
@@ -244,24 +233,12 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
     } else if (idSplit[3] === 'tmp' && idSplit[4] === 'temperatureTargetC') {
       this._targetTempVal = state.val as number;
     } else if (idSplit[3] === 'bat' && idSplit[4] === 'value') {
-      this._battery = state.val as number;
-      this.checkForBatteryChange();
-      this.persistBatteryDevice();
-      if (this._battery < 20) {
+      this.battery.level = state.val as number;
+      if (this.batteryLevel < 20) {
         this.log(LogLevel.Warn, 'Das Shelly Gerät hat unter 20% Batterie.');
       }
     }
     super.update(idSplit, state, initial, true);
-  }
-
-  /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
   }
 
   /** @inheritDoc */
@@ -342,19 +319,5 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
 
   private setMinimumLevel(pidForcedMinimum: number): void {
     this.setState(this._minumumLevelId, pidForcedMinimum);
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

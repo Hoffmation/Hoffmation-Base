@@ -1,18 +1,15 @@
 import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
-import {
-  BatteryLevelChangeAction,
-  CountToday,
-  LogLevel,
-  MotionSensorAction,
-  MotionSensorSettings,
-} from '../../../models';
+import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models';
 import { Utils } from '../../services';
 import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../DeviceCapability';
+import { Battery } from '../sharedFunctions';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   // TODO: Add iPresenceSensor
   private static PRESENCE_DETECTION: string = 'PRESENCE_DETECTION_STATE';
   // private static ILLUMINATION_DURING_MOVEMENT: string = 'CURRENT_ILLUMINATION';
@@ -21,16 +18,12 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   public movementDetected: boolean = false;
   /** @inheritDoc */
   public settings: MotionSensorSettings = new MotionSensorSettings();
-  private _battery: number = -99;
-  private _lastBatteryPersist: number = 0;
   private _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
   // private presenceStateID: string;
   private initialized: boolean = false;
   private _lastMotionTime: number = 0;
   private _detectionsToday: number = 0;
   private _currentIllumination: number = -1;
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpPraezenz);
@@ -54,12 +47,8 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     }
   }
 
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   public get timeSinceLastMotion(): number {
@@ -83,11 +72,6 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     Utils.dbo?.persistIlluminationSensor(this);
   }
 
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
-  }
-
   public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
     this._movementDetectedCallback.push(pCallback);
   }
@@ -101,9 +85,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
       case '0':
         switch (idSplit[4]) {
           case 'OPERATING_VOLTAGE':
-            this._battery = 100 * (((state.val as number) - 1.8) / 1.2);
-            this.checkForBatteryChange();
-            this.persistBatteryDevice();
+            this.battery.level = 100 * (((state.val as number) - 1.8) / 1.2);
             break;
         }
         break;
@@ -156,28 +138,5 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
 
   public persistMotionSensor(): void {
     Utils.dbo?.persistMotionSensor(this);
-  }
-
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

@@ -1,19 +1,18 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { iDisposable, Utils } from '../../services';
+import { iDisposable } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
-import { BatteryLevelChangeAction, LogLevel } from '../../../models';
+import { LogLevel } from '../../../models';
 import { iBatteryDevice } from '../baseDeviceInterfaces';
 import { DeviceCapability } from '../DeviceCapability';
+import { Battery } from '../sharedFunctions';
 
 export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable, iBatteryDevice {
+  /** @inheritDoc */
+  public readonly battery: Battery = new Battery(this);
   protected _criticalBatteryLevel: number = 20;
   protected readonly _deviceSerial: string;
   private _lastUpdate: Date = new Date(0);
-  private _lastBatteryLevel: number = -1;
-  private _batteryLevelCallbacks: Array<(action: BatteryLevelChangeAction) => void> = [];
-  private _lastBatteryPersist: number = 0;
-  private _battery: number = -99;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -22,22 +21,12 @@ export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable
   }
 
   /** @inheritDoc */
-  public get lastBatteryPersist(): number {
-    return this._lastBatteryPersist;
-  }
-
-  /** @inheritDoc */
-  public get battery(): number {
-    return this._battery;
+  public get batteryLevel(): number {
+    return this.battery.level;
   }
 
   public get lastUpdate(): Date {
     return this._lastUpdate;
-  }
-
-  /** @inheritDoc */
-  public addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void {
-    this._batteryLevelCallbacks.push(pCallback);
   }
 
   /** @inheritDoc */
@@ -65,10 +54,8 @@ export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable
     if (folder.indexOf('SERVICE_COMMON') === 0) {
       switch (stateName) {
         case 'batteryLevel_value':
-          this._battery = state.val as number;
-          this.checkForBatteryChange();
-          this.persistBatteryDevice();
-          if (this._battery < this._criticalBatteryLevel) {
+          this.battery.level = state.val as number;
+          if (this.batteryLevel < this._criticalBatteryLevel) {
             this.log(LogLevel.Warn, 'This SmartGarden device reached critical battery level.');
           }
           break;
@@ -85,31 +72,7 @@ export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable
   }
 
   /** @inheritDoc */
-  public persistBatteryDevice(): void {
-    const now: number = Utils.nowMS();
-    if (this._lastBatteryPersist + 60000 > now) {
-      return;
-    }
-    Utils.dbo?.persistBatteryDevice(this);
-    this._lastBatteryPersist = now;
-  }
-
-  /** @inheritDoc */
   public dispose(): void {
     // Nothing yet
-  }
-
-  /**
-   * Checks whether the battery level did change and if so fires the callbacks
-   */
-  private checkForBatteryChange(): void {
-    const newLevel: number = this.battery;
-    if (newLevel == -1 || newLevel == this._lastBatteryLevel) {
-      return;
-    }
-    for (const cb of this._batteryLevelCallbacks) {
-      cb(new BatteryLevelChangeAction(this));
-    }
-    this._lastBatteryLevel = newLevel;
   }
 }

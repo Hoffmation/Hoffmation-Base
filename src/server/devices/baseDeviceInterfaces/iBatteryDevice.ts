@@ -1,5 +1,5 @@
-import { BatteryLevelChangeAction } from '../../../models';
 import { iBaseDevice } from './iBaseDevice';
+import { Battery } from '../sharedFunctions';
 
 /**
  * Interface for Battery Devices.
@@ -9,23 +9,12 @@ import { iBaseDevice } from './iBaseDevice';
  */
 export interface iBatteryDevice extends iBaseDevice {
   /**
-   * The last time the battery was persisted (in milliseconds since 1970)
+   * Common battery handling like persisting
    */
-  readonly lastBatteryPersist: number;
+  readonly battery: Battery;
 
   /**
    * The battery status of the device in percentage (0 empty - 100 full)
    */
-  readonly battery: number;
-
-  /**
-   * Method to persist the battery status of the device to the persistence layer
-   */
-  persistBatteryDevice(): void;
-
-  /**
-   * Adds a callback for when the battery-level has Changed.
-   * @param pCallback - Function that accepts the new state as parameter
-   */
-  addBatteryLevelCallback(pCallback: (action: BatteryLevelChangeAction) => void): void;
+  readonly batteryLevel: number;
 }

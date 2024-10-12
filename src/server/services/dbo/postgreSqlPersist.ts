@@ -492,7 +492,7 @@ values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
   public persistBatteryDevice(device: iBatteryDevice): void {
     this.query(`
 insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
-values ('${device.id}', ${Utils.round(device.battery, 1)}, '${new Date().toISOString()}');
+values ('${device.id}', ${Utils.round(device.batteryLevel, 1)}, '${new Date().toISOString()}');
     `);
   }
 
