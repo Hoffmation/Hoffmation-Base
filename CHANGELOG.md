@@ -5,24 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.90 (2024-10-12)
 
-* (theimo1221) Allow Heating Rod even during winter
-* (theimo1221) Generalize Temperature Sensor
-* (theimo1221) Generalize Humidity Sensor
-* (theimo1221) Generalize Battery Devices
-* (theimo1221) Generalize Handle Sensor
-* (theimo1221) Prepare Zigbee window handle
-* (theimo1221) Implement SodaHandle (https://www.zigbee2mqtt.io/devices/S8.html#soda-s8) a window handle with
-  temp-/humidity sensor and buttons for up/down
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.89 (2024-10-03)
-
-* (theimo1221) Add option to report Victron Battery at interval even without level change.
-
-## 3.0.0-alpha.88 (2024-09-07)
-
-* (theimo1221) Make Victron AC Block configurable
+* (theimo1221) Minor fix in Soda-Handle position update
 
 ## 3.0.0
 
@@ -84,6 +70,16 @@
 * (theimo1221) Add more Dachs Settings to prevent startup during daytime
 * (theimo1221) Migrate to eslint 9
 * (theimo1221) Add possibility to add a heating rod to the dachs
+* (theimo1221) Generalize Temperature Sensor
+* (theimo1221) Generalize Humidity Sensor
+* (theimo1221) Generalize Battery Devices
+* (theimo1221) Generalize Handle Sensor
+* (theimo1221) Allow Heating Rod even during winter
+* (theimo1221) Prepare Zigbee window handle
+* (theimo1221) Implement SodaHandle (https://www.zigbee2mqtt.io/devices/S8.html#soda-s8) a window handle with
+  temp-/humidity sensor and buttons for up/down
+* (theimo1221) Add option to report Victron Battery at interval even without level change.
+* (theimo1221) Make Victron AC Block configurable
 
 ## 2.23.0 (2024-02-25)
 

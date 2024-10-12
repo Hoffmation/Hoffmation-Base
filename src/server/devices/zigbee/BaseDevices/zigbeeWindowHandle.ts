@@ -68,7 +68,7 @@ export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, i
     super.update(idSplit, state, initial, pOverride);
     switch (idSplit[3]) {
       case 'position':
-        this.handleSensor.position = this.toWindowPosition(state.val as string);
+        this.handleSensor.updatePosition(this.toWindowPosition(state.val as string));
         break;
       case 'battery':
         this.battery.level = state.val as number;
