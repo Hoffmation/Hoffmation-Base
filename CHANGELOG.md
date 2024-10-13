@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.92 (2024-10-13)
 
 * (theimo1221) Fix Temperature Sensor persistence
 
