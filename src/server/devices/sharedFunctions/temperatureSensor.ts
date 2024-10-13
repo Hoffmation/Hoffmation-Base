@@ -1,7 +1,6 @@
 import { Utils } from '../../services';
-import { TemperatureSensorChangeAction } from '../../../models';
+import { iJsonOmitKeys, TemperatureSensorChangeAction } from '../../../models';
 import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
 export class TemperatureSensor implements iJsonOmitKeys {
   /** @inheritDoc */
@@ -31,6 +30,10 @@ export class TemperatureSensor implements iJsonOmitKeys {
     for (const cb of this._temperaturCallbacks) {
       cb(new TemperatureSensorChangeAction(this._device, val));
     }
+  }
+
+  public get temperature(): number {
+    return this._temperature;
   }
 
   /**
