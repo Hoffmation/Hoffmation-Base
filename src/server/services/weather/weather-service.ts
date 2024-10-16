@@ -187,6 +187,14 @@ export class WeatherService {
     }
   }
 
+  public static get currentHumidity(): number {
+    if (WeatherService.lastResponse?.current === undefined) {
+      ServerLogService.writeLog(LogLevel.Info, 'WeatherService.currentHumidity: There is no data yet');
+      return -1;
+    }
+    return WeatherService.lastResponse.current.humidity;
+  }
+
   public static get currentTemp(): number {
     if (WeatherService.lastResponse?.current === undefined) {
       ServerLogService.writeLog(LogLevel.Info, 'WeatherService.isOutsideWarmer(): There are no data yet');

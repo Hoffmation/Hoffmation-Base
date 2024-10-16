@@ -5,17 +5,14 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Expose weather report humidity
+
 ## 3.0.0-alpha.93 (2024-10-16)
 
 * (theimo1221) Update OpenWeatherMap API from 2.5 to 3.0
-
-## 3.0.0-alpha.92 (2024-10-13)
-
-* (theimo1221) Fix Temperature Sensor persistence
-
-## 3.0.0-alpha.91 (2024-10-12)
-
-* (theimo1221) Minor fix in Soda-Handle position update
 
 ## 3.0.0
 
