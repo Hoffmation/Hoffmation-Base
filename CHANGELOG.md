@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Expose weather report humidity
+* (theimo1221) Update packages
 
 ## 3.0.0-alpha.93 (2024-10-16)
 
