@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.93 (2024-10-16)
 
 * (theimo1221) Update OpenWeatherMap API from 2.5 to 3.0
 
