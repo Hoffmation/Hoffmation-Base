@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.94 (2024-10-16)
 
 * (theimo1221) Expose weather report humidity
 * (theimo1221) Update packages
