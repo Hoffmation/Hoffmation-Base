@@ -37,7 +37,11 @@ export class Utils {
       }));
   }
 
-  public static guardedFunction(func: (...args: unknown[]) => void, thisContext: unknown | undefined): void {
+  public static guardedFunction(
+    func: (...args: unknown[]) => void,
+    thisContext: unknown | undefined,
+    additionalErrorMsg?: string,
+  ): void {
     try {
       if (thisContext) {
         func.bind(thisContext)();
@@ -45,6 +49,11 @@ export class Utils {
         func();
       }
     } catch (e) {
+      const message = `Guarded Function failed: ${(e as Error).message}\n Stack: ${(e as Error).stack}`;
+      if (additionalErrorMsg) {
+        ServerLogService.writeLog(LogLevel.Error, `${message}\n${additionalErrorMsg}`);
+        return;
+      }
       ServerLogService.writeLog(
         LogLevel.Error,
         `Guarded Function failed: ${(e as Error).message}\n Stack: ${(e as Error).stack}`,

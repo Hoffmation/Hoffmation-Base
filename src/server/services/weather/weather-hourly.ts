@@ -15,4 +15,10 @@ export interface WeatherHourly {
   wind_deg: number;
   weather: WeatherItem[];
   pop: number;
+  rain?: {
+    '1h': number;
+  };
+  snow?: {
+    '1h': number;
+  };
 }

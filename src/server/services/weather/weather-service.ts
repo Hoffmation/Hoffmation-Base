@@ -300,28 +300,23 @@ export class WeatherService {
     if (!this.appID) {
       return;
     }
-    HTTPSService.request(
-      new HTTPSOptions(
-        'api.openweathermap.org',
-        `/data/2.5/onecall?lat=${WeatherService.latitude}&lon=${WeatherService.longitude}&appid=${WeatherService.appID}&units=metric&lang=de`,
-        {},
-        'GET',
-        443,
-      ),
-      '',
-      5,
-      (response: string) => {
-        ServerLogService.writeLog(LogLevel.Debug, 'WeatherAPi Response erhalten');
-        ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response: ${response}`);
-        Utils.guardedFunction(() => {
+    const host: string = 'api.openweathermap.org';
+    const path: string = `/data/3.0/onecall?lat=${WeatherService.latitude}&lon=${WeatherService.longitude}&appid=${WeatherService.appID}&units=metric&lang=de`;
+    HTTPSService.request(new HTTPSOptions(host, path, {}, 'GET', 443), '', 5, (response: string) => {
+      ServerLogService.writeLog(LogLevel.Debug, 'WeatherAPi Response erhalten');
+      ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response: ${response}`);
+      Utils.guardedFunction(
+        () => {
           WeatherService.lastResponse = JSON.parse(response);
           WeatherService.processHourlyWeather();
           for (const dataUpdateCbsKey in this._dataUpdateCbs) {
             this._dataUpdateCbs[dataUpdateCbsKey]();
           }
-        }, this);
-      },
-    );
+        },
+        this,
+        `Response from Weather API call at https://${host}/${path}: ${response}`,
+      );
+    });
   }
 
   private static recalcAzimuth(): void {

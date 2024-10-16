@@ -7,6 +7,10 @@ export interface WeatherDaily {
   dt: number;
   sunrise: number;
   sunset: number;
+  moonrise: number;
+  moonset: number;
+  moon_phase: number;
+  summary: string;
   pressure: number;
   humidity: number;
   dew_point: number;
