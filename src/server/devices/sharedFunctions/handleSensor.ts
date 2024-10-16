@@ -78,7 +78,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
         if (heatgroup !== undefined) {
           const desiredTemp: number = heatgroup.desiredTemp;
           const currentTemp: number = heatgroup.temperature;
-          const outSideTemp: number = WeatherService.getCurrentTemp();
+          const outSideTemp: number = WeatherService.currentTemp;
 
           // Check if any of these values are unavailable
           if (desiredTemp > -99 && currentTemp > -99 && outSideTemp > -99) {

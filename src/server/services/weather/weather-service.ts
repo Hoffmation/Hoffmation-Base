@@ -24,7 +24,7 @@ export class WeatherService {
   /**
    * The last weather response
    */
-  public static lastResponse: WeatherResponse;
+  public static lastResponse: WeatherResponse | undefined;
   /**
    * The sun horizontal degree (0 is North)
    */
@@ -65,7 +65,7 @@ export class WeatherService {
   }
 
   public static playWeatherInfo(speaker: iSpeaker, volume: number = 30, short: boolean = false, retries = 5): void {
-    const wData: WeatherResponse = WeatherService.lastResponse;
+    const wData: WeatherResponse | undefined = WeatherService.lastResponse;
     if (wData === undefined) {
       if (retries > 0) {
         ServerLogService.writeLog(
@@ -168,7 +168,8 @@ export class WeatherService {
     }
   }
 
-  public static processHourlyWeather(): void {
+  public static processHourlyWeather(response: WeatherResponse): void {
+    this.lastResponse = response;
     ServerLogService.writeLog(
       LogLevel.Info,
       `Es sind gerade ${this.lastResponse.current.temp} Grad (gefühlt ${this.lastResponse.current.feels_like}).`,
@@ -186,20 +187,19 @@ export class WeatherService {
     }
   }
 
-  public static getCurrentTemp(): number {
-    const wData: WeatherResponse = WeatherService.lastResponse;
-    if (wData === undefined || wData.current === undefined) {
+  public static get currentTemp(): number {
+    if (WeatherService.lastResponse?.current === undefined) {
       ServerLogService.writeLog(LogLevel.Info, 'WeatherService.isOutsideWarmer(): There are no data yet');
       return -99;
     }
-    return wData.current.temp;
+    return WeatherService.lastResponse.current.temp;
   }
 
   public static willOutsideBeWarmer(
     referenceTemperature: number,
     logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
   ): boolean {
-    const wData: WeatherResponse = WeatherService.lastResponse;
+    const wData: WeatherResponse | undefined = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
       logger(LogLevel.Info, 'WeatherService.isOutsideWarmer(): There are no data yet');
       return false;
@@ -250,7 +250,7 @@ export class WeatherService {
   }
 
   public static getCurrentCloudiness(): number {
-    const wData: WeatherResponse = WeatherService.lastResponse;
+    const wData: WeatherResponse | undefined = WeatherService.lastResponse;
     if (wData === undefined || wData.current === undefined) {
       ServerLogService.writeLog(LogLevel.Info, 'WeatherService.getCurrentCloudiness(): There are no data yet');
       return 0;
@@ -259,7 +259,7 @@ export class WeatherService {
   }
 
   private static getRainNextMinutes(): RainNextMinutesInfo {
-    const minutes: WeatherMinutes[] = WeatherService.lastResponse.minutely;
+    const minutes: WeatherMinutes[] | undefined = WeatherService.lastResponse?.minutely;
     let minutesUsed = 0;
     let precipitation = 0;
     if (minutes !== undefined) {
@@ -277,7 +277,7 @@ export class WeatherService {
 
   private static getActiveAlerts(): WeatherAlert[] {
     const result: WeatherAlert[] = [];
-    if (WeatherService.lastResponse.alerts === undefined || WeatherService.lastResponse.alerts.length === 0) {
+    if (WeatherService.lastResponse?.alerts === undefined || WeatherService.lastResponse.alerts.length === 0) {
       return result;
     }
     const now: number = new Date().getTime();
@@ -307,8 +307,8 @@ export class WeatherService {
       ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response: ${response}`);
       Utils.guardedFunction(
         () => {
-          WeatherService.lastResponse = JSON.parse(response);
-          WeatherService.processHourlyWeather();
+          const responseObj: WeatherResponse = JSON.parse(response);
+          WeatherService.processHourlyWeather(responseObj);
           for (const dataUpdateCbsKey in this._dataUpdateCbs) {
             this._dataUpdateCbs[dataUpdateCbsKey]();
           }
