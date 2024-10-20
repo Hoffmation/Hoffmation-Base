@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.95 (2024-10-20)
 
 * (theimo1221) Improve Dachs Warm-Water-Pump behaviour
 
