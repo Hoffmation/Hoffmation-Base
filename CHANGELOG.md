@@ -5,14 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.94 (2024-10-16)
 
-* (theimo1221) Expose weather report humidity
-* (theimo1221) Update packages
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.93 (2024-10-16)
-
-* (theimo1221) Update OpenWeatherMap API from 2.5 to 3.0
+* (theimo1221) Improve Dachs Warm-Water-Pump behaviour
 
 ## 3.0.0
 
@@ -84,6 +80,8 @@
   temp-/humidity sensor and buttons for up/down
 * (theimo1221) Add option to report Victron Battery at interval even without level change.
 * (theimo1221) Make Victron AC Block configurable
+* (theimo1221) Update OpenWeatherMap API from 2.5 to 3.0
+* (theimo1221) Expose weather report humidity
 
 ## 2.23.0 (2024-02-25)
 

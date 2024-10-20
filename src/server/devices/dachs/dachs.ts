@@ -230,6 +230,10 @@ export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
   public setActuator(c: ActuatorSetStateCommand): void {
     LampUtils.setActuator(this, c);
+    if (c.on && this.warmWaterPump && (this.queuedValue === true || this._dachsOn)) {
+      const startPumpCommand: ActuatorSetStateCommand = new ActuatorSetStateCommand(c, true, 'Dachs is starting/on');
+      this.warmWaterPump.setActuator(startPumpCommand);
+    }
   }
 
   /** @inheritDoc */
@@ -277,48 +281,9 @@ export class Dachs implements iBaseDevice, iActuator {
    * @param {BatteryLevelChangeAction} action - The action containing the new level
    */
   private onBatteryLevelChange(action: BatteryLevelChangeAction): void {
+    const shouldDachsBeStarted: boolean = this.shouldDachsBeStarted(action);
     this.checkHeatingRod(action);
-    if (this.blockDachsStart !== undefined) {
-      if (action.newLevel > this.settings.batteryLevelPreventStartThreshold) {
-        const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
-          action,
-          true,
-          `Battery reached ${action.newLevel}%, Dachs should not run any more`,
-          null,
-        );
-        blockAction.overrideCommandSource = CommandSource.Force;
-        this.blockDachsStart.setActuator(blockAction);
-        return;
-      } else if (action.newLevel < this.settings.batteryLevelAllowStartThreshold) {
-        const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
-          action,
-          false,
-          `Battery reached ${action.newLevel}%, Dachs is now allowed to run if needed`,
-          null,
-        );
-        this.blockDachsStart.setActuator(liftAction);
-      } else if (this.blockDachsStart.actuatorOn) {
-        // We haven't reached the lower threshold yet --> nothing to do
-        return;
-      }
-    }
-    if (this._dachsOn) {
-      // We are already running
-      return;
-    }
-
-    const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
-
-    if (
-      (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
-      action.newLevel > this.settings.batteryLevelTurnOnThreshold
-    ) {
-      // It is daytime (maybe solar power) and it is no critical battery level
-      return;
-    }
-
-    if (action.newLevel > this.settings.batteryLevelBeforeNightTurnOnThreshold) {
-      // It is not daylight but battery level is high enough
+    if (!shouldDachsBeStarted) {
       return;
     }
 
@@ -342,12 +307,18 @@ export class Dachs implements iBaseDevice, iActuator {
     const heatStorageTemp: number = this._tempHeatStorage;
     let desiredState: boolean = false;
     let reason: string = '';
-    if (wwTemp > this.settings.warmWaterDesiredMinTemp + 3) {
-      desiredState = false;
-      reason = `Temperature of warm water pump ${wwTemp}°C is above desired minimum temperature ${this.settings.warmWaterDesiredMinTemp}°C`;
+    if (this._dachsOn) {
+      desiredState = true;
+      reason = 'Dachs is on anyways';
     } else if (wwTemp > heatStorageTemp) {
       desiredState = false;
       reason = `Temperature of warm water pump ${wwTemp}°C is higher than temperature of heat storage ${heatStorageTemp}°C`;
+    } else if (this.blockDachsStart?.actuatorOn === false) {
+      desiredState = true;
+      reason = 'Dachs is not blocked --> lowering storage temp might trigger it.';
+    } else if (wwTemp > this.settings.warmWaterDesiredMinTemp + 3) {
+      desiredState = false;
+      reason = `Temperature of warm water pump ${wwTemp}°C is above desired minimum temperature ${this.settings.warmWaterDesiredMinTemp}°C`;
     } else if (heatStorageTemp < this.settings.warmWaterDesiredMinTemp - 4) {
       desiredState = false;
       reason = `Temperature of heat storage ${heatStorageTemp}°C is too low to heat water.`;
@@ -383,5 +354,52 @@ export class Dachs implements iBaseDevice, iActuator {
       null,
     );
     this.heatingRod.setActuator(setAction);
+  }
+
+  private shouldDachsBeStarted(action: BatteryLevelChangeAction): boolean {
+    if (this.blockDachsStart !== undefined) {
+      if (action.newLevel > this.settings.batteryLevelPreventStartThreshold) {
+        const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          true,
+          `Battery reached ${action.newLevel}%, Dachs should not run any more`,
+          null,
+        );
+        blockAction.overrideCommandSource = CommandSource.Force;
+        this.blockDachsStart.setActuator(blockAction);
+        return false;
+      } else if (action.newLevel < this.settings.batteryLevelAllowStartThreshold) {
+        const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          false,
+          `Battery reached ${action.newLevel}%, Dachs is now allowed to run if needed`,
+          null,
+        );
+        this.blockDachsStart.setActuator(liftAction);
+      } else if (this.blockDachsStart.actuatorOn) {
+        // We haven't reached the lower threshold yet --> nothing to do
+        return false;
+      }
+    }
+    if (this._dachsOn) {
+      // We are already running
+      return false;
+    }
+
+    const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
+
+    if (
+      (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
+      action.newLevel > this.settings.batteryLevelTurnOnThreshold
+    ) {
+      // It is daytime (maybe solar power) and it is no critical battery level
+      return false;
+    }
+
+    if (action.newLevel > this.settings.batteryLevelBeforeNightTurnOnThreshold) {
+      // It is not daylight but battery level is high enough
+      return false;
+    }
+    return true;
   }
 }
