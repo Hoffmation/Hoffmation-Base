@@ -5,12 +5,15 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Don't force warm water pump during dachs on, as Storage might have less temperature than warm water
+  storage.
+
 ## 3.0.0-alpha.96 (2024-11-04)
 
 * (theimo1221) Add alternative heating source for Dachs
-
-## 3.0.0-alpha.95 (2024-10-20)
-
 * (theimo1221) Improve Dachs Warm-Water-Pump behaviour
 
 ## 3.0.0

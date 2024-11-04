@@ -235,10 +235,16 @@ export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
   public setActuator(c: ActuatorSetStateCommand): void {
     LampUtils.setActuator(this, c);
-    if (c.on && this.warmWaterPump && (this.queuedValue === true || this._dachsOn)) {
-      const startPumpCommand: ActuatorSetStateCommand = new ActuatorSetStateCommand(c, true, 'Dachs is starting/on');
-      this.warmWaterPump.setActuator(startPumpCommand);
+    if (
+      !c.on ||
+      !this.warmWaterPump ||
+      (this.queuedValue === false && !this._dachsOn) ||
+      this.heatStorageTempSensor.temperatureSensor.temperature < this.warmWaterSensor.temperatureSensor.temperature
+    ) {
+      return;
     }
+    const startPumpCommand: ActuatorSetStateCommand = new ActuatorSetStateCommand(c, true, 'Dachs is starting/on');
+    this.warmWaterPump.setActuator(startPumpCommand);
   }
 
   /** @inheritDoc */
