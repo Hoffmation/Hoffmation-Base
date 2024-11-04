@@ -25,6 +25,7 @@ import {
   LogDebugType,
   OwnSonosDevice,
   ServerLogService,
+  SettingsService,
   SunTimeOffsets,
   TimeCallbackService,
   Utils,
@@ -36,6 +37,7 @@ import { DachsHttpClient, DachsInfluxClient } from './lib';
 import { iFlattenedCompleteResponse } from './interfaces';
 import { DachsTemperatureSensor } from './dachsTemperatureSensor';
 import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { HeatingMode } from '../../config';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
@@ -391,6 +393,18 @@ export class Dachs implements iBaseDevice, iActuator {
           null,
         );
         this.blockDachsStart.setActuator(liftAction);
+      } else if (
+        SettingsService.settings.heaterSettings?.mode === HeatingMode.Winter &&
+        this.heatStorageTempSensor.temperatureSensor.temperature < 60 &&
+        Utils.dateByTimeSpan(21, 30) < new Date()
+      ) {
+        const liftWinterAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          false,
+          `Battery at ${action.newLevel}% but it is winter, we are nearing night and heat storage is kinda cold: Dachs is now allowed to run if needed`,
+          null,
+        );
+        this.blockDachsStart.setActuator(liftWinterAction);
       } else if (this.blockDachsStart.actuatorOn) {
         // We haven't reached the lower threshold yet --> nothing to do
         return false;
