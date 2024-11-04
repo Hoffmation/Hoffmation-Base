@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.98 (2024-11-04)
 
 * (theimo1221) Earlier allowance of dachs in winter mode nearing night.
 
