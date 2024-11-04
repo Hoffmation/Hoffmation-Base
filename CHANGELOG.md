@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add alternative heating source for Dachs
+
 ## 3.0.0-alpha.95 (2024-10-20)
 
 * (theimo1221) Improve Dachs Warm-Water-Pump behaviour

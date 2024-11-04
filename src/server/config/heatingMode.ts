@@ -1,6 +1,6 @@
 export enum HeatingMode {
-  None,
-  Winter,
-  Summer,
-  TransitionalSeason,
+  None = 0,
+  Winter = 1,
+  Summer = 2,
+  TransitionalSeason = 3,
 }

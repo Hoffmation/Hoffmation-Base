@@ -66,6 +66,10 @@ export class Dachs implements iBaseDevice, iActuator {
    * An external actuator to prevent the Dachs from starting.
    */
   public blockDachsStart?: iActuator;
+  /**
+   * An external actuator controlling some device to heat the warm water while the Dachs is prohibited from starting.
+   */
+  public warmWaterDachsAlternativeActuator?: iActuator;
   private readonly client: DachsHttpClient;
   private readonly config: iDachsSettings;
   /** @inheritDoc */
@@ -172,6 +176,7 @@ export class Dachs implements iBaseDevice, iActuator {
         'warmWaterPump',
         'heatingRod',
         'blockDachsStart',
+        'warmWaterDachsAlternativeActuator',
       ]),
     );
   }
@@ -283,6 +288,7 @@ export class Dachs implements iBaseDevice, iActuator {
   private onBatteryLevelChange(action: BatteryLevelChangeAction): void {
     const shouldDachsBeStarted: boolean = this.shouldDachsBeStarted(action);
     this.checkHeatingRod(action);
+    this.checkAlternativeActuator(shouldDachsBeStarted, action);
     if (!shouldDachsBeStarted) {
       return;
     }
@@ -305,35 +311,38 @@ export class Dachs implements iBaseDevice, iActuator {
 
     const wwTemp: number = this._tempWarmWater;
     const heatStorageTemp: number = this._tempHeatStorage;
-    let desiredState: boolean = false;
+    let desiredWwPumpState: boolean = false;
     let reason: string = '';
-    if (this._dachsOn) {
-      desiredState = true;
+    if (this.warmWaterDachsAlternativeActuator?.actuatorOn === true) {
+      desiredWwPumpState = false;
+      reason = 'Alternative heating source is on';
+    } else if (this._dachsOn) {
+      desiredWwPumpState = true;
       reason = 'Dachs is on anyways';
     } else if (wwTemp > heatStorageTemp) {
-      desiredState = false;
+      desiredWwPumpState = false;
       reason = `Temperature of warm water pump ${wwTemp}°C is higher than temperature of heat storage ${heatStorageTemp}°C`;
     } else if (this.blockDachsStart?.actuatorOn === false) {
-      desiredState = true;
+      desiredWwPumpState = true;
       reason = 'Dachs is not blocked --> lowering storage temp might trigger it.';
     } else if (wwTemp > this.settings.warmWaterDesiredMinTemp + 3) {
-      desiredState = false;
+      desiredWwPumpState = false;
       reason = `Temperature of warm water pump ${wwTemp}°C is above desired minimum temperature ${this.settings.warmWaterDesiredMinTemp}°C`;
     } else if (heatStorageTemp < this.settings.warmWaterDesiredMinTemp - 4) {
-      desiredState = false;
+      desiredWwPumpState = false;
       reason = `Temperature of heat storage ${heatStorageTemp}°C is too low to heat water.`;
     } else if (wwTemp < this.settings.warmWaterDesiredMinTemp) {
-      desiredState = true;
+      desiredWwPumpState = true;
       reason = `Temperature of warm water pump ${wwTemp}°C is lower than desired minimum temperature ${this.settings.warmWaterDesiredMinTemp}°C`;
     } else {
       // We are somewhere between states, let's not change anything
       return;
     }
-    if (desiredState === this.warmWaterPump.actuatorOn) {
+    if (desiredWwPumpState === this.warmWaterPump.actuatorOn) {
       // Nothing to do
       return;
     }
-    const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredState, reason, null);
+    const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredWwPumpState, reason, null);
     this.warmWaterPump.setActuator(setAction);
   }
 
@@ -401,5 +410,28 @@ export class Dachs implements iBaseDevice, iActuator {
       return false;
     }
     return true;
+  }
+
+  private checkAlternativeActuator(shouldDachsBeStarted: boolean, action: BatteryLevelChangeAction): void {
+    if (!this.warmWaterDachsAlternativeActuator) {
+      return;
+    }
+    let desiredState: boolean = false;
+    let reason: string = 'Dachs is allowed to run --> Block alternative heating source';
+    if (shouldDachsBeStarted || this._dachsOn) {
+      reason = 'Dachs is running or should be started';
+      desiredState = false;
+    } else if (this.blockDachsStart?.actuatorOn === true || this.blockDachsStart?.queuedValue === true) {
+      reason = 'Dachs is blocked --> Allow Alternative Heating Source';
+      desiredState = true;
+    }
+
+    if (this.warmWaterDachsAlternativeActuator.actuatorOn === desiredState) {
+      return;
+    }
+
+    const command: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredState, reason, null);
+    command.overrideCommandSource = CommandSource.Force;
+    this.warmWaterDachsAlternativeActuator.setActuator(command);
   }
 }
