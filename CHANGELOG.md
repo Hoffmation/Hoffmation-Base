@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.97 (2024-11-04)
 
 * (theimo1221) Don't force warm water pump during dachs on, as Storage might have less temperature than warm water
   storage.
