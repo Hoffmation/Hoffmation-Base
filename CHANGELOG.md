@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.0 (2024-11-06)
 
 * (theimo1221) Recheck desired state on dachs state change
 
