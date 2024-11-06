@@ -324,12 +324,12 @@ export class Dachs implements iBaseDevice, iActuator {
     if (this.warmWaterDachsAlternativeActuator?.actuatorOn === true) {
       desiredWwPumpState = false;
       reason = 'Alternative heating source is on';
-    } else if (this._dachsOn) {
-      desiredWwPumpState = true;
-      reason = 'Dachs is on anyways';
     } else if (wwTemp > heatStorageTemp) {
       desiredWwPumpState = false;
       reason = `Temperature of warm water pump ${wwTemp}°C is higher than temperature of heat storage ${heatStorageTemp}°C`;
+    } else if (this._dachsOn) {
+      desiredWwPumpState = true;
+      reason = 'Dachs is on anyways';
     } else if (this.blockDachsStart?.actuatorOn === false) {
       desiredWwPumpState = true;
       reason = 'Dachs is not blocked --> lowering storage temp might trigger it.';

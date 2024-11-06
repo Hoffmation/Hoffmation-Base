@@ -5,19 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-alpha.98 (2024-11-04)
 
-* (theimo1221) Earlier allowance of dachs in winter mode nearing night.
+## **WORK IN PROGRESS**
 
-## 3.0.0-alpha.97 (2024-11-04)
-
-* (theimo1221) Don't force warm water pump during dachs on, as Storage might have less temperature than warm water
-  storage.
-
-## 3.0.0-alpha.96 (2024-11-04)
-
-* (theimo1221) Add alternative heating source for Dachs
-* (theimo1221) Improve Dachs Warm-Water-Pump behaviour
+* (theimo1221) Prevent dachs from cooling warm water storage, with colder water from heat storage.
 
 ## 3.0.0
 
@@ -91,6 +82,11 @@
 * (theimo1221) Make Victron AC Block configurable
 * (theimo1221) Update OpenWeatherMap API from 2.5 to 3.0
 * (theimo1221) Expose weather report humidity
+* (theimo1221) Add alternative heating source for Dachs
+* (theimo1221) Improve Dachs Warm-Water-Pump behaviour
+* (theimo1221) Don't force warm water pump during dachs on, as Storage might have less temperature than warm water
+  storage.
+* (theimo1221) Earlier allowance of dachs in winter mode nearing night.
 
 ## 2.23.0 (2024-02-25)
 
