@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-alpha.99 (2024-11-06)
 
 * (theimo1221) Prevent dachs from cooling warm water storage, with colder water from heat storage.
 
