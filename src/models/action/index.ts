@@ -5,5 +5,6 @@ export * from './presenceGroupLastLeftAction';
 export * from './presenceGroupFirstEnterAction';
 export * from './shutterPositionChangedAction';
 export * from './temperatureSensorChangeAction';
+export { ActuatorChangeAction } from './actuatorChangeAction';
 export { BatteryLevelChangeAction } from './batteryLevelChangeAction';
 export { PresenceGroupAnyMovementAction } from './presenceGroupAnyMovementAction';

@@ -9,9 +9,11 @@ import {
   LampUtils,
 } from '../../devices';
 import {
+  ActuatorChangeAction,
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
+  BaseAction,
   BatteryLevelChangeAction,
   CommandSource,
   LogLevel,
@@ -217,11 +219,17 @@ export class Dachs implements iBaseDevice, iActuator {
           this._influxClient.addMeasurementToQueue(key, value ? '1' : '0');
         }
         this._influxClient.flush();
+        const isDachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
+        const didDachsChange = this._dachsOn !== isDachsOn;
+        this._dachsOn = isDachsOn;
         this._dachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
         this._tempWarmWater = this.fetchedData['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
         this.warmWaterSensor.update(this._tempWarmWater);
         this._tempHeatStorage = this.fetchedData['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
         this.heatStorageTempSensor.update(this._tempHeatStorage);
+        if (didDachsChange) {
+          this.onDachsRunningStateChange(new ActuatorChangeAction(this));
+        }
         this.persist();
       })
       .catch((error) => {
@@ -294,8 +302,12 @@ export class Dachs implements iBaseDevice, iActuator {
    * @param {BatteryLevelChangeAction} action - The action containing the new level
    */
   private onBatteryLevelChange(action: BatteryLevelChangeAction): void {
-    const shouldDachsBeStarted: boolean = this.shouldDachsBeStarted(action);
-    this.checkHeatingRod(action);
+    this.checkAllDesiredStates(action, action.newLevel);
+  }
+
+  private checkAllDesiredStates(action: BaseAction, batteryLevel: number): void {
+    const shouldDachsBeStarted: boolean = this.shouldDachsBeStarted(action, batteryLevel);
+    this.checkHeatingRod(action, batteryLevel);
     this.checkAlternativeActuator(shouldDachsBeStarted, action);
     if (!shouldDachsBeStarted) {
       return;
@@ -354,11 +366,11 @@ export class Dachs implements iBaseDevice, iActuator {
     this.warmWaterPump.setActuator(setAction);
   }
 
-  private checkHeatingRod(action: BatteryLevelChangeAction): void {
+  private checkHeatingRod(action: BaseAction, batteryLevel: number): void {
     if (this.heatingRod === undefined) {
       return;
     }
-    const shouldBeOff: boolean = action.newLevel < this.settings.batteryLevelHeatingRodThreshold;
+    const shouldBeOff: boolean = batteryLevel < this.settings.batteryLevelHeatingRodThreshold;
 
     if (this.heatingRod.actuatorOn !== shouldBeOff) {
       return;
@@ -367,29 +379,29 @@ export class Dachs implements iBaseDevice, iActuator {
     const setAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
       action,
       !shouldBeOff,
-      `Battery reached ${action.newLevel}%, heating rod should be turned ${shouldBeOff ? 'off' : 'on'}`,
+      `Battery reached ${batteryLevel}%, heating rod should be turned ${shouldBeOff ? 'off' : 'on'}`,
       null,
     );
     this.heatingRod.setActuator(setAction);
   }
 
-  private shouldDachsBeStarted(action: BatteryLevelChangeAction): boolean {
+  private shouldDachsBeStarted(action: BaseAction, batteryLevel: number): boolean {
     if (this.blockDachsStart !== undefined) {
-      if (action.newLevel > this.settings.batteryLevelPreventStartThreshold) {
+      if (batteryLevel > this.settings.batteryLevelPreventStartThreshold) {
         const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
           action,
           true,
-          `Battery reached ${action.newLevel}%, Dachs should not run any more`,
+          `Battery reached ${batteryLevel}%, Dachs should not run any more`,
           null,
         );
         blockAction.overrideCommandSource = CommandSource.Force;
         this.blockDachsStart.setActuator(blockAction);
         return false;
-      } else if (action.newLevel < this.settings.batteryLevelAllowStartThreshold) {
+      } else if (batteryLevel < this.settings.batteryLevelAllowStartThreshold) {
         const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
           action,
           false,
-          `Battery reached ${action.newLevel}%, Dachs is now allowed to run if needed`,
+          `Battery reached ${batteryLevel}%, Dachs is now allowed to run if needed`,
           null,
         );
         this.blockDachsStart.setActuator(liftAction);
@@ -401,7 +413,7 @@ export class Dachs implements iBaseDevice, iActuator {
         const liftWinterAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
           action,
           false,
-          `Battery at ${action.newLevel}% but it is winter, we are nearing night and heat storage is kinda cold: Dachs is now allowed to run if needed`,
+          `Battery at ${batteryLevel}% but it is winter, we are nearing night and heat storage is kinda cold: Dachs is now allowed to run if needed`,
           null,
         );
         this.blockDachsStart.setActuator(liftWinterAction);
@@ -419,20 +431,20 @@ export class Dachs implements iBaseDevice, iActuator {
 
     if (
       (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
-      action.newLevel > this.settings.batteryLevelTurnOnThreshold
+      batteryLevel > this.settings.batteryLevelTurnOnThreshold
     ) {
       // It is daytime (maybe solar power) and it is no critical battery level
       return false;
     }
 
-    if (action.newLevel > this.settings.batteryLevelBeforeNightTurnOnThreshold) {
+    if (batteryLevel > this.settings.batteryLevelBeforeNightTurnOnThreshold) {
       // It is not daylight but battery level is high enough
       return false;
     }
     return true;
   }
 
-  private checkAlternativeActuator(shouldDachsBeStarted: boolean, action: BatteryLevelChangeAction): void {
+  private checkAlternativeActuator(shouldDachsBeStarted: boolean, action: BaseAction): void {
     if (!this.warmWaterDachsAlternativeActuator) {
       return;
     }
@@ -453,5 +465,9 @@ export class Dachs implements iBaseDevice, iActuator {
     const command: ActuatorSetStateCommand = new ActuatorSetStateCommand(action, desiredState, reason, null);
     command.overrideCommandSource = CommandSource.Force;
     this.warmWaterDachsAlternativeActuator.setActuator(command);
+  }
+
+  private onDachsRunningStateChange(runStateChange: ActuatorChangeAction): void {
+    this.checkAllDesiredStates(runStateChange, (Devices.energymanager as unknown as iBatteryDevice)?.batteryLevel ?? 0);
   }
 }

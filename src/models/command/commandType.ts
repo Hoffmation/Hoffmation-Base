@@ -1,4 +1,5 @@
 export enum CommandType {
+  ActuatorChangeAction = 'ActuatorChangeAction',
   BatteryManagerLevelChangeAction = 'BatteryManagerLevelChangeAction',
   BlockAutomaticLiftBlockCommand = 'BlockAutomaticLiftBlockCommand',
   BlockAutomaticCommand = 'BlockAutomaticCommand',
