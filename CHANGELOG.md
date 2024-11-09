@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update postgres to prefer json type for settings
+
 ## 3.0.0-beta.1 (2024-11-09)
 
 * (theimo1221) iHeater to correctly implement iTemperatureDevice
