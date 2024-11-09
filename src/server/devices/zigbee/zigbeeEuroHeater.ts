@@ -51,7 +51,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
 
   /** @inheritDoc */
   public override get roomTemperature(): number {
-    return this._roomTemperature;
+    return super.roomTemperature;
   }
 
   /** @inheritDoc */
@@ -65,8 +65,8 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     this.recalcLevel();
   }
 
-  protected override set roomTemperatur(value: number) {
-    this._roomTemperature = value;
+  protected override set roomTemperature(value: number) {
+    super.roomTemperature = value;
     if (this.settings.useOwnTemperatur) {
       return;
     }
@@ -153,7 +153,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
       return;
     }
     this._lastRecalc = Utils.nowMS();
-    const desiredDiff: number = Utils.round(this.desiredTemperature - this._roomTemperature, 1);
+    const desiredDiff: number = Utils.round(this.desiredTemperature - this.roomTemperature, 1);
     const currentDiff: number = this.tempDiff;
     const missingDiff: number = Utils.round(desiredDiff - currentDiff, 1);
     if (Math.abs(missingDiff) < 0.15) {
@@ -172,7 +172,7 @@ export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
     }
     const newLocalDiff: number = Math.sign(desiredDiff) * -9;
     this.setLocalDiff(newLocalDiff);
-    this.setTargetTemperatur(this._temperatur + this._roomTemperature + newLocalDiff + this.desiredTemperature);
+    this.setTargetTemperatur(this._temperatur + this.roomTemperature + newLocalDiff + this.desiredTemperature);
   }
 
   private setLocalDiff(newLocalDiff: number): void {

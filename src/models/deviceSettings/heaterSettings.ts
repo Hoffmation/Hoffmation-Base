@@ -60,6 +60,8 @@ export class HeaterSettings extends DeviceSettings {
   public fromPartialObject(data: Partial<HeaterSettings>): void {
     this.automaticMode = data.automaticMode ?? this.automaticMode;
     this.useOwnTemperatur = data.useOwnTemperatur ?? this.useOwnTemperatur;
+    this.useOwnTemperatureForRoomTemperature =
+      data.useOwnTemperatureForRoomTemperature ?? this.useOwnTemperatureForRoomTemperature;
     this.controlByPid = data.controlByPid ?? this.controlByPid;
     this.controlByTempDiff = data.controlByTempDiff ?? this.controlByTempDiff;
     this.seasonalTurnOffActive = data.seasonalTurnOffActive ?? this.seasonalTurnOffActive;
