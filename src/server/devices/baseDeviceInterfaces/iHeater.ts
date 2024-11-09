@@ -1,6 +1,7 @@
 import { HeaterSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 import { iDisposable } from '../../services';
+import { iTemperatureSensor } from './iTemperatureSensor';
 
 // TODO: Migrate to new Command Structure
 /**
@@ -8,7 +9,7 @@ import { iDisposable } from '../../services';
  *
  * For devices with {@link DeviceCapability.heater} capability.
  */
-export interface iHeater extends iRoomDevice, iDisposable {
+export interface iHeater extends iTemperatureSensor, iRoomDevice, iDisposable {
   /**
    * The settings of the heater
    */
@@ -21,14 +22,6 @@ export interface iHeater extends iRoomDevice, iDisposable {
    * The current valve position of the heater (between 0 and 1.0)
    */
   readonly iLevel: number;
-  /**
-   * The current temperature in degree Celsius of the heater
-   */
-  readonly iTemperature: number;
-  /**
-   * The current room temperature in degree Celsius
-   */
-  readonly roomTemperature: number;
   /**
    * The interval to persist the heater information
    * This mainly enforces the interval to be implemented.
@@ -44,12 +37,6 @@ export interface iHeater extends iRoomDevice, iDisposable {
    * Perform a check to calculate the new desired heater state
    */
   checkAutomaticChange(): void;
-
-  /**
-   * Informs the heater that the temperature of the room has changed
-   * @param newTemperatur - The new temperature in degree Celsius.
-   */
-  onTemperaturChange(newTemperatur: number): void;
 
   /**
    * Persists the current heater information to the database

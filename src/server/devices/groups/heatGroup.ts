@@ -60,8 +60,13 @@ export class HeatGroup extends BaseGroup {
   public get temperature(): number {
     let temp: number = UNDEFINED_TEMP_VALUE;
     let count: number = 0;
-    this.getTempSensors().forEach((sensor) => {
-      const sensorValue: number = sensor.iTemperature;
+    const usedIds: string[] = [];
+    this.getHeater().forEach((heaterAsSensor) => {
+      usedIds.push(heaterAsSensor.id);
+      if (!heaterAsSensor.settings.useOwnTemperatureForRoomTemperature) {
+        return;
+      }
+      const sensorValue: number = heaterAsSensor.iTemperature;
       if (sensorValue === UNDEFINED_TEMP_VALUE) {
         return;
       }
@@ -72,11 +77,12 @@ export class HeatGroup extends BaseGroup {
       }
       temp = (temp * count + sensorValue) / ++count;
     });
-    this.getHeater().forEach((heaterAsSensor) => {
-      if (!heaterAsSensor.settings.useOwnTemperatur) {
+    this.getTempSensors().forEach((sensor) => {
+      if (usedIds.includes(sensor.id)) {
+        // Heater which correctly implement sensor as well.
         return;
       }
-      const sensorValue: number = heaterAsSensor.iTemperature;
+      const sensorValue: number = sensor.iTemperature;
       if (sensorValue === UNDEFINED_TEMP_VALUE) {
         return;
       }
@@ -191,10 +197,15 @@ export class HeatGroup extends BaseGroup {
     if (temp == UNDEFINED_TEMP_VALUE) {
       return;
     }
+    const usedIds: string[] = [];
     this.getHeater().forEach((heater) => {
+      usedIds.push(heater.id);
       heater.onTemperaturChange(temp);
     });
     this.getTempSensors().forEach((sensor) => {
+      if (usedIds.includes(sensor.id)) {
+        return;
+      }
       sensor.onTemperaturChange(temp);
     });
     this.getOwnAcDevices().forEach((ac) => {

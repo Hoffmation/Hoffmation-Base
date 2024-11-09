@@ -1,20 +1,28 @@
 import { ShellyDevice } from './shellyDevice';
-import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iBatteryDevice, iHeater, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
-import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import {
+  HeaterSettings,
+  LogLevel,
+  TemperatureSensorChangeAction,
+  TimeCallback,
+  TimeCallbackType,
+} from '../../../models';
 import { PIDController } from '../../../liquid-pid';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceType } from '../deviceType';
 import { DeviceCapability } from '../DeviceCapability';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 import { HeatGroup } from '../groups';
-import { Battery } from '../sharedFunctions';
+import { Battery, TemperatureSensor } from '../sharedFunctions';
 
-export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
+export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSensor, iBatteryDevice {
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
+  /** @inheritDoc */
+  public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -33,7 +41,6 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
   private _level: number = 0;
   private _minimumValveLevel: number = 0;
   private _recalcTimeout: NodeJS.Timeout | null = null;
-  private _temperatur: number = UNDEFINED_TEMP_VALUE;
   private _targetTempVal: number = UNDEFINED_TEMP_VALUE;
   private _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
   private _useExternalTemperatureEnabled: boolean = false;
@@ -135,20 +142,25 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
 
   /** @inheritDoc */
   public get iTemperature(): number {
-    if (this.settings.useOwnTemperatur) {
-      return this._temperatur;
+    if (this.settings.useOwnTemperatureForRoomTemperature) {
+      return this.temperatureSensor.temperature;
     } else {
       return this._roomTemperature;
     }
   }
 
   /** @inheritDoc */
+  public get sTemperature(): string {
+    return `${this.iTemperature}°C`;
+  }
+
+  /** @inheritDoc */
   public get roomTemperature(): number {
-    return this._roomTemperature;
+    return this.temperatureSensor.roomTemperature;
   }
 
   private set roomTemperatur(val: number) {
-    this._roomTemperature = val;
+    this.temperatureSensor.roomTemperature = val;
     if (this.settings.useOwnTemperatur) {
       return;
     }
@@ -156,6 +168,11 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
     if (this.settings.controlByPid) {
       this.recalcLevel();
     }
+  }
+
+  /** @inheritDoc */
+  public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
+    this.temperatureSensor.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -223,7 +240,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iBatteryDevice {
     } else if (idSplit[3] === 'tmp' && idSplit[4] === 'minimumValvePosition') {
       this._minimumValveLevel = state.val as number;
     } else if (idSplit[3] === 'tmp' && idSplit[4] === 'temperatureC') {
-      this._temperatur = state.val as number;
+      this.temperatureSensor.temperature = state.val as number;
     } else if (idSplit[3] === 'tmp' && idSplit[4] === 'automaticTemperatureControl') {
       this._automaticMode = state.val as boolean;
       const desiredMode = !this.settings.controlByPid;

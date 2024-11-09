@@ -13,6 +13,10 @@ export class HeaterSettings extends DeviceSettings {
    */
   public useOwnTemperatur: boolean = true;
   /**
+   * Whether this devices temperature measurement should be included in the room temperature calculation.
+   */
+  public useOwnTemperatureForRoomTemperature: boolean = true;
+  /**
    * Whether this device should be controlled using only valve position
    * @default false
    * @warning Only certain devices allow direct controlling of valve Position

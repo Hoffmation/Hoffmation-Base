@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) iHeater to correctly implement iTemperatureDevice
+
 ## 3.0.0-beta.0 (2024-11-06)
 
 * (theimo1221) Recheck desired state on dachs state change

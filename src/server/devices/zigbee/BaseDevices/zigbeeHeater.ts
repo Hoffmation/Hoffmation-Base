@@ -1,13 +1,19 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
-import { HeaterSettings, LogLevel, TimeCallback, TimeCallbackType } from '../../../../models';
+import {
+  HeaterSettings,
+  LogLevel,
+  TemperatureSensorChangeAction,
+  TimeCallback,
+  TimeCallbackType,
+} from '../../../../models';
 import { DeviceType } from '../../deviceType';
 import { TimeCallbackService, Utils } from '../../../services';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability } from '../../DeviceCapability';
 import { PIDController } from '../../../../liquid-pid';
 import { HeatGroup } from '../../groups';
-import { Battery } from '../../sharedFunctions';
+import { Battery, TemperatureSensor } from '../../sharedFunctions';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   /** @inheritDoc */
@@ -21,6 +27,8 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     this,
     false,
   );
+  /** @inheritDoc */
+  public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
   protected _battery: number = -99;
@@ -42,7 +50,6 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     Kd: 9, // PID: Kd in 1/1000
   });
   protected _seasonTurnOff: boolean = false;
-  protected _roomTemperature: number = UNDEFINED_TEMP_VALUE;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -107,26 +114,32 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     return this._level;
   }
 
-  public get sTemperatur(): string {
-    return `${this.iTemperature}°C`;
-  }
-
   /** @inheritDoc */
   public get iTemperature(): number {
-    if (this.settings.useOwnTemperatur) {
-      return this._temperatur;
+    if (this.settings.useOwnTemperatureForRoomTemperature) {
+      return this.temperatureSensor.temperature;
     } else {
-      return this._roomTemperature;
+      return this.roomTemperature;
     }
   }
 
   /** @inheritDoc */
-  public get roomTemperature(): number {
-    return this._roomTemperature;
+  public get sTemperature(): string {
+    return `${this.iTemperature}°C`;
   }
 
-  protected set roomTemperatur(val: number) {
-    this._roomTemperature = val;
+  /** @inheritDoc */
+  public get roomTemperature(): number {
+    return this.temperatureSensor.roomTemperature;
+  }
+
+  protected set roomTemperature(val: number) {
+    this.temperatureSensor.roomTemperature = val;
+  }
+
+  /** @inheritDoc */
+  public addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void {
+    this.temperatureSensor.addTempChangeCallback(pCallback);
   }
 
   /** @inheritDoc */
@@ -159,7 +172,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
 
   /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
-    this.roomTemperatur = newTemperatur;
+    this.roomTemperature = newTemperatur;
   }
 
   public persistHeater(): void {
@@ -192,14 +205,14 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   }
 
   protected getNextPidLevel(): number {
-    if (this.seasonTurnOff || this._roomTemperature < 0) {
+    if (this.seasonTurnOff || this.roomTemperature < 0) {
       return 0;
     }
     this._pidController.setPoint(this.desiredTemperature);
-    const newValue: number = this._pidController.calculate(this._roomTemperature);
+    const newValue: number = this._pidController.calculate(this.roomTemperature);
     this.log(
       LogLevel.Debug,
-      `New PID Value ${newValue}% (cTemp: ${this._roomTemperature}, dTemp: ${this.desiredTemperature})`,
+      `New PID Value ${newValue}% (cTemp: ${this.roomTemperature}, dTemp: ${this.desiredTemperature})`,
     );
     return newValue;
   }
