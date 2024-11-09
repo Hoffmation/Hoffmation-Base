@@ -388,6 +388,12 @@ BEGIN
     alter table hoffmation_schema."EnergyCalculation"
       add "batteryLevel" double precision;
   END IF;
+  IF (SELECT pg_typeof(settings) = to_regtype('varchar')
+      FROM hoffmation_schema."Settings"
+      LIMIT 1) THEN
+      alter table hoffmation_schema."Settings"
+          alter column settings type jsonb using settings::jsonb;
+  END IF;
 END
 $$;`,
     );
@@ -543,7 +549,7 @@ values ('${id}','${settings}','${customName}', '${new Date().toISOString()}')
   /** @inheritDoc */
   public async loadSettings(id: string): Promise<string | undefined> {
     const dbResult: idSettings[] | null = await this.query<idSettings>(
-      `SELECT settings, id, date
+      `SELECT settings::text, id, date
 from hoffmation_schema."Settings" 
 WHERE "id" = '${id}'
 ORDER BY "date" DESC

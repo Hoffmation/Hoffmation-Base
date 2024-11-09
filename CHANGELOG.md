@@ -8,7 +8,8 @@
 
 ## **WORK IN PROGRESS**
 
-* (theimo1221) Update postgres to prefer json type for settings
+* (theimo1221) Update postgres to prefer jsonb type for settings
+* (theimo1221) Auto Convert Settings column to jsonb
 
 ## 3.0.0-beta.1 (2024-11-09)
 
