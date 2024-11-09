@@ -364,7 +364,7 @@ BEGIN
     create table if not exists hoffmation_schema."Settings"
     (
         "id"            varchar(60) not null,
-        "settings"      json not null,
+        "settings"      jsonb not null,
         "customname"    varchar(100) not null,
         date            timestamp   not null,
         constraint settings_pk
