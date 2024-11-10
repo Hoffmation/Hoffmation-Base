@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.3 (2024-11-10)
 
 * (theimo1221) Add device capability temperature sensor to heater
 
