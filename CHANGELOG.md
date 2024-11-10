@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add device capability temperature sensor to heater
+
 ## 3.0.0-beta.2 (2024-11-09)
 
 * (theimo1221) Update postgres to prefer jsonb type for settings

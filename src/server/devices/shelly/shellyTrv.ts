@@ -65,6 +65,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ShellyTrv);
     this.deviceCapabilities.push(DeviceCapability.heater);
+    this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this._setAutomaticModeId = `${this.info.fullID}.tmp.automaticTemperatureControl`;
     this._setExternalTempId = `${this.info.fullID}.ext.temperature`;

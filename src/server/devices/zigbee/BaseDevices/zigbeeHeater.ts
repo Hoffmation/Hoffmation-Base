@@ -54,6 +54,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this.deviceCapabilities.push(DeviceCapability.heater);
+    this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
     TimeCallbackService.addCallback(
