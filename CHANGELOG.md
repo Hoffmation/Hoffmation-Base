@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Tuya Motion sensor and correct missing cluster Types for Soda S8
+
 ## 3.0.0-beta.3 (2024-11-10)
 
 * (theimo1221) Add device capability temperature sensor to heater

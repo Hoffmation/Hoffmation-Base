@@ -25,3 +25,4 @@ export * from './zigbeeTuyaValve';
 export * from './zigbeeUbisysActuator';
 export * from './zigbeeUbisysLampe';
 export * from './zigbeeUbisysShutter';
+export { ZigbeeTuyaMotion } from './zigbeeTuyaMotion';

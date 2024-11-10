@@ -38,6 +38,7 @@ import {
   ZigbeeSodaHandle,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
+  ZigbeeTuyaMotion,
   ZigbeeTuyaValve,
   ZigbeeUbisysActuator,
   ZigbeeUbisysLampe,
@@ -348,6 +349,9 @@ export class Devices {
         break;
       case 'TuyaValve':
         d = new ZigbeeTuyaValve(zigbeeInfo);
+        break;
+      case 'TuyaMotion':
+        d = new ZigbeeTuyaMotion(zigbeeInfo);
         break;
       case 'EuroHeater':
         d = new ZigbeeEuroHeater(zigbeeInfo);
