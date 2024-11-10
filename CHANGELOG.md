@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add Tuya Motion sensor and correct missing cluster Types for Soda S8
+* (theimo1221) Add more options to dachs for controlling/forcing run in winter
 
 ## 3.0.0-beta.3 (2024-11-10)
 

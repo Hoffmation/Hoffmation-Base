@@ -126,8 +126,8 @@ export class Dachs implements iBaseDevice, iActuator {
       const energyManager: iBaseDevice = Devices.energymanager as iBaseDevice;
       (energyManager as iBatteryDevice).battery.addBatteryLevelCallback(this.onBatteryLevelChange.bind(this));
     }
-    this.warmWaterSensor.addTempChangeCallback(this.onTempChange.bind(this));
-    this.heatStorageTempSensor.addTempChangeCallback(this.onTempChange.bind(this));
+    this.warmWaterSensor.addTempChangeCallback(this.onWarmWaterTempChange.bind(this));
+    this.heatStorageTempSensor.addTempChangeCallback(this.onHeatStorageTempChange.bind(this));
   }
 
   /** @inheritDoc */
@@ -309,6 +309,7 @@ export class Dachs implements iBaseDevice, iActuator {
     const shouldDachsBeStarted: boolean = this.shouldDachsBeStarted(action, batteryLevel);
     this.checkHeatingRod(action, batteryLevel);
     this.checkAlternativeActuator(shouldDachsBeStarted, action);
+    this.checkWwPumpDesiredState(action);
     if (!shouldDachsBeStarted) {
       return;
     }
@@ -323,7 +324,15 @@ export class Dachs implements iBaseDevice, iActuator {
     this.setActuator(setStateCommand);
   }
 
-  private onTempChange(action: TemperatureSensorChangeAction): void {
+  private onHeatStorageTempChange(action: TemperatureSensorChangeAction): void {
+    this.checkAllDesiredStates(action, (Devices.energymanager as unknown as iBatteryDevice)?.batteryLevel ?? 0);
+  }
+
+  private onWarmWaterTempChange(action: TemperatureSensorChangeAction): void {
+    this.checkAllDesiredStates(action, (Devices.energymanager as unknown as iBatteryDevice)?.batteryLevel ?? 0);
+  }
+
+  private checkWwPumpDesiredState(action: BaseAction): void {
     if (this.warmWaterPump === undefined) {
       // We have no control over the warm water pump --> nothing to do
       return;
@@ -407,7 +416,7 @@ export class Dachs implements iBaseDevice, iActuator {
         this.blockDachsStart.setActuator(liftAction);
       } else if (
         SettingsService.settings.heaterSettings?.mode === HeatingMode.Winter &&
-        this.heatStorageTempSensor.temperatureSensor.temperature < 60 &&
+        this.heatStorageTempSensor.temperatureSensor.temperature < this.settings.winterMinimumPreNightHeatStorageTemp &&
         Utils.dateByTimeSpan(21, 30) < new Date()
       ) {
         const liftWinterAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
@@ -425,6 +434,14 @@ export class Dachs implements iBaseDevice, iActuator {
     if (this._dachsOn) {
       // We are already running
       return false;
+    }
+
+    if (
+      SettingsService.settings.heaterSettings?.mode === HeatingMode.Winter &&
+      this.heatStorageTempSensor.temperatureSensor.temperature < this.settings.winterMinimumHeatStorageTemp
+    ) {
+      // It is winter and heat storage is kinda cold --> Start
+      return true;
     }
 
     const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());

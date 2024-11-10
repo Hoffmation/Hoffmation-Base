@@ -42,6 +42,14 @@ export class DachsDeviceSettings extends ActuatorSettings {
    * Defines the desired minimum temperature for warm water.
    */
   public warmWaterDesiredMinTemp: number = 45;
+  /**
+   * Defines the desired minimum temperature for heat storage during winter.
+   */
+  public winterMinimumHeatStorageTemp: number = 55;
+  /**
+   * Defines the desired minimum temperature for heat storage during winter.
+   */
+  public winterMinimumPreNightHeatStorageTemp: number = 65;
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
     this.refreshIntervalTime = data.refreshIntervalTime ?? this.refreshIntervalTime;
@@ -53,6 +61,9 @@ export class DachsDeviceSettings extends ActuatorSettings {
       data.batteryLevelPreventStartThreshold ?? this.batteryLevelPreventStartThreshold;
     this.batteryLevelAllowStartThreshold = data.batteryLevelAllowStartThreshold ?? this.batteryLevelAllowStartThreshold;
     this.warmWaterDesiredMinTemp = data.warmWaterDesiredMinTemp ?? this.warmWaterDesiredMinTemp;
+    this.winterMinimumHeatStorageTemp = data.winterMinimumHeatStorageTemp ?? this.winterMinimumHeatStorageTemp;
+    this.winterMinimumPreNightHeatStorageTemp =
+      data.winterMinimumPreNightHeatStorageTemp ?? this.winterMinimumPreNightHeatStorageTemp;
     super.fromPartialObject(data);
   }
 
