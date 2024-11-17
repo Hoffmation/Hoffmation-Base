@@ -101,7 +101,7 @@ export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperature
     }
     const command: WindowSetDesiredPositionCommand = new WindowSetDesiredPositionCommand(
       CommandSource.Manual,
-      0,
+      100,
       'Button on handle was pressed',
     );
     this.window.setDesiredPosition(command);
@@ -114,7 +114,7 @@ export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperature
     }
     const command: WindowSetDesiredPositionCommand = new WindowSetDesiredPositionCommand(
       CommandSource.Manual,
-      100,
+      0,
       'Button on handle was pressed',
     );
     this.window.setDesiredPosition(command);
