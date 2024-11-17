@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.5 (2024-11-17)
 
 * (theimo1221) Change left/right Button handling on Soda S8 to match label on those buttons
 
