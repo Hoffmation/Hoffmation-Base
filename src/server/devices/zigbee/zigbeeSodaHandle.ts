@@ -14,7 +14,7 @@ import {
 
 /**
  * A smart window handle with integrated temperature and humidity sensor.
- * As the temperature sensor is so close to the window it might be off, which is why the correction coefficient is set to 0.22°C per outdoor diff to 21°C
+ * As the temperature sensor is so close to the window it might be off, which is why the correction coefficient is set to 0.21°C per outdoor diff to 21°C
  */
 export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperatureSensor, iHumiditySensor {
   /** @inheritDoc */
@@ -26,7 +26,7 @@ export class ZigbeeSodaHandle extends ZigbeeWindowHandle implements iTemperature
     super(pInfo, DeviceType.ZigbeeSodaHandle);
     this.deviceCapabilities.push(DeviceCapability.humiditySensor);
     this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
-    this.temperatureSensor.outdoorTemperatureCorrectionCoefficient = 0.22;
+    this.temperatureSensor.outdoorTemperatureCorrectionCoefficient = 0.21;
   }
 
   /** @inheritDoc */

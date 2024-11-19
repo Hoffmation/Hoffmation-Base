@@ -5,39 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.0.0-beta.6 (2024-11-19)
 
-* (theimo1221) Compensate soda handle being to close to the window, resulting in wrong temperature measurements.
+## **WORK IN PROGRESS**
 
-## 3.0.0-beta.5 (2024-11-17)
-
-* (theimo1221) Change left/right Button handling on Soda S8 to match label on those buttons
-
-## 3.0.0-beta.4 (2024-11-10)
-
-* (theimo1221) Add Tuya Motion sensor and correct missing cluster Types for Soda S8
-* (theimo1221) Add more options to dachs for controlling/forcing run in winter
-
-## 3.0.0-beta.3 (2024-11-10)
-
-* (theimo1221) Add device capability temperature sensor to heater
-
-## 3.0.0-beta.2 (2024-11-09)
-
-* (theimo1221) Update postgres to prefer jsonb type for settings
-* (theimo1221) Auto Convert Settings column to jsonb
-
-## 3.0.0-beta.1 (2024-11-09)
-
-* (theimo1221) iHeater to correctly implement iTemperatureDevice
-
-## 3.0.0-beta.0 (2024-11-06)
-
-* (theimo1221) Recheck desired state on dachs state change
-
-## 3.0.0-alpha.99 (2024-11-06)
-
-* (theimo1221) Prevent dachs from cooling warm water storage, with colder water from heat storage.
+* (theimo1221) Correct default soda handle compensation
 
 ## 3.0.0
 
@@ -116,6 +87,16 @@
 * (theimo1221) Don't force warm water pump during dachs on, as Storage might have less temperature than warm water
   storage.
 * (theimo1221) Earlier allowance of dachs in winter mode nearing night.
+* (theimo1221) Add Tuya Motion sensor and correct missing cluster Types for Soda S8
+* (theimo1221) Change left/right Button handling on Soda S8 to match label on those buttons
+* (theimo1221) Add more options to dachs for controlling/forcing run in winter
+* (theimo1221) Auto Convert Settings column to jsonb
+* (theimo1221) Update postgres to prefer jsonb type for settings
+* (theimo1221) iHeater to correctly implement iTemperatureDevice
+* (theimo1221) Add device capability temperature sensor to heater
+* (theimo1221) Recheck desired state on dachs state change
+* (theimo1221) Prevent dachs from cooling warm water storage, with colder water from heat storage.
+* (theimo1221) Compensate soda handle being to close to the window, resulting in wrong temperature measurements.
 
 ## 2.23.0 (2024-02-25)
 
