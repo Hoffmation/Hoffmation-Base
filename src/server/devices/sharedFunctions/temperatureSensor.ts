@@ -1,4 +1,4 @@
-import { Utils } from '../../services';
+import { Utils, WeatherService } from '../../services';
 import { iJsonOmitKeys, TemperatureSensorChangeAction } from '../../../models';
 import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 
@@ -9,6 +9,12 @@ export class TemperatureSensor implements iJsonOmitKeys {
    * The current room temperature as a number in Celsius
    */
   public roomTemperature: number = UNDEFINED_TEMP_VALUE;
+  /**
+   * Temperature correction coefficient to mitigate outdoor temperature, e.g. if this is closely placed to a window.
+   * @remarks Default: 0 and difference to 21°C
+   * @example With outdoor temp of 10°C and a coefficient of 0.5, the temperature correction will be +5.5°C
+   */
+  public outdoorTemperatureCorrectionCoefficient: number = 0;
   /**
    * The interval to persist the temperature sensor information
    */
@@ -26,9 +32,13 @@ export class TemperatureSensor implements iJsonOmitKeys {
   public constructor(private readonly _device: iTemperatureSensor) {}
 
   public set temperature(val: number) {
-    this._temperature = val;
+    let correctedValue: number = val;
+    if (this.outdoorTemperatureCorrectionCoefficient !== 0 && WeatherService.currentTemp !== UNDEFINED_TEMP_VALUE) {
+      correctedValue = val + this.outdoorTemperatureCorrectionCoefficient * (21 - WeatherService.currentTemp);
+    }
+    this._temperature = correctedValue;
     for (const cb of this._temperaturCallbacks) {
-      cb(new TemperatureSensorChangeAction(this._device, val));
+      cb(new TemperatureSensorChangeAction(this._device, correctedValue));
     }
   }
 
