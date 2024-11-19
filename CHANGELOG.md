@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.7 (2024-11-19)
 
 * (theimo1221) Correct default soda handle compensation
 
