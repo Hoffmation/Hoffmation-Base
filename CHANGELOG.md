@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.8 (2024-12-07)
 
 * (theimo1221) Harden HTTP Clients against connection errors.
 
