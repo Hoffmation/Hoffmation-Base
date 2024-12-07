@@ -310,6 +310,7 @@ export class WeatherService {
     }
     const host: string = 'api.openweathermap.org';
     const path: string = `/data/3.0/onecall?lat=${WeatherService.latitude}&lon=${WeatherService.longitude}&appid=${WeatherService.appID}&units=metric&lang=de`;
+    ServerLogService.writeLog(LogLevel.Debug, 'Send WeatherAPi Request for data update.');
     HTTPSService.request(new HTTPSOptions(host, path, {}, 'GET', 443), '', 5, (response: string) => {
       ServerLogService.writeLog(LogLevel.Debug, 'WeatherAPi Response erhalten');
       ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response: ${response}`);

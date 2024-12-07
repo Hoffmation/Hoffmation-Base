@@ -57,6 +57,15 @@ export class TelegramService {
       ServerLogService.writeLog(LogLevel.Debug, `Telegram Polling Error: ${e.message}`);
       ServerLogService.writeLog(LogLevel.Trace, `Telegram Polling Error stack: ${e.stack}`);
     });
+    this.bot.on('webhook_error', (e) => {
+      /*
+      if (!this.reinitiliazeWithTimeout()) {
+        return;
+      }
+       */
+      ServerLogService.writeLog(LogLevel.Debug, `Telegram Webhook Error: ${e.message}`);
+      ServerLogService.writeLog(LogLevel.Trace, `Telegram Webhook Error stack: ${e.stack}`);
+    });
     TelegramService.addMessageCallback(
       new TelegramMessageCallback(
         'helpCommand',

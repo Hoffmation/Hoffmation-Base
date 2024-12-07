@@ -26,6 +26,12 @@ export class MP3Server {
           response.end('ungültige Anfrage', 'utf-8');
           return;
         }
+        req.on('error', (e) => {
+          ServerLogService.writeLog(LogLevel.Warn, `MP3-Server HTTP Error: ${e}`);
+        });
+        response.on('error', (e) => {
+          ServerLogService.writeLog(LogLevel.Warn, `MP3-Server HTTP Error: ${e}`);
+        });
         const q = url.parse(req.url, true).query;
 
         const fName = q.fname;

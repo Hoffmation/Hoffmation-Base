@@ -23,6 +23,9 @@ export class HTTPSService {
       res.on('end', () => {
         responseCallback(responseData.join(''), res.statusCode ?? 0);
       });
+      res.on('error', (e: Error) => {
+        ServerLogService.writeLog(LogLevel.Error, `HTTPS Error: ${e}`);
+      });
     });
     req.on('error', (e: Error) => {
       ServerLogService.writeLog(LogLevel.DeepTrace, `HTTPS Error: ${e}`);
