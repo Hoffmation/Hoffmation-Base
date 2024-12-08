@@ -6,7 +6,7 @@ import { DeviceType } from '../../deviceType';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { WindowPosition } from '../../models';
 import { Window } from '../../groups';
-import { LogLevel } from '../../../../models';
+import { HandleChangeAction, LogLevel } from '../../../../models';
 import { HandleSettings } from '../../../../models/deviceSettings/handleSettings';
 
 export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, iBatteryDevice {
@@ -61,6 +61,11 @@ export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, i
   /** @inheritDoc */
   public addClosedCallback(pCallback: (pValue: boolean) => void): void {
     this.handleSensor.addClosedCallback(pCallback);
+  }
+
+  /** @inheritDoc */
+  public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
+    this.handleSensor.addHandleChangeCallback(cb);
   }
 
   /** @inheritDoc */

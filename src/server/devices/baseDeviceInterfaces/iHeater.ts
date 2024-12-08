@@ -1,4 +1,4 @@
-import { HeaterSettings } from '../../../models';
+import { HandleChangeAction, HeaterSettings } from '../../../models';
 import { iRoomDevice } from './iRoomDevice';
 import { iDisposable } from '../../services';
 import { iTemperatureSensor } from './iTemperatureSensor';
@@ -34,6 +34,11 @@ export interface iHeater extends iTemperatureSensor, iRoomDevice, iDisposable {
   seasonTurnOff: boolean;
 
   /**
+   * Whether any window in the room is open.
+   */
+  readonly windowOpen: boolean;
+
+  /**
    * Perform a check to calculate the new desired heater state
    */
   checkAutomaticChange(): void;
@@ -42,4 +47,10 @@ export interface iHeater extends iTemperatureSensor, iRoomDevice, iDisposable {
    * Persists the current heater information to the database
    */
   persistHeater(): void;
+
+  /**
+   * Called when a window handle in the room changes its state
+   * @param action
+   */
+  onHandleChange(action: HandleChangeAction): void;
 }

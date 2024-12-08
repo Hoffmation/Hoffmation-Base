@@ -2,6 +2,7 @@ import { WindowPosition } from '../models';
 import { iRoomDevice } from './iRoomDevice';
 import { HandleSensor } from '../sharedFunctions';
 import { Window } from '../groups';
+import { HandleChangeAction } from '../../../models';
 
 /**
  * Interface for Handle Sensors.
@@ -45,4 +46,10 @@ export interface iHandleSensor extends iRoomDevice {
    * @param pCallback - The callback to fire
    */
   addClosedCallback(pCallback: (pValue: boolean) => void): void;
+
+  /**
+   * Add a callback that is called when the handle is changed to any position
+   * @param cb - The callback to fire
+   */
+  addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void;
 }

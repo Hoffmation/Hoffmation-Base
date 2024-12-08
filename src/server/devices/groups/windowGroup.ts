@@ -1,5 +1,6 @@
 import {
   CommandSource,
+  HandleChangeAction,
   LogLevel,
   RoomBase,
   RoomRestoreShutterPositionCommand,
@@ -47,6 +48,16 @@ export class WindowGroup extends BaseGroup {
     });
   }
 
+  /**
+   * Checks if any handle of any window is open
+   * @returns {boolean} True if there is atleast one handle that is open.
+   */
+  public get anyWindowOpen(): boolean {
+    return this.windows.some((w: Window) => {
+      return w.anyHandleNotClosed;
+    });
+  }
+
   public constructor(
     roomName: string,
     public windows: Window[],
@@ -66,6 +77,16 @@ export class WindowGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.MagnetContact, new DeviceList(magnetIds));
+  }
+
+  /**
+   * Adds Callbacks to each window and their handles.
+   * @param cb - The callback to execute on met condition.
+   */
+  public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
+    this.windows.forEach((f: Window): void => {
+      f.addHandleChangeCallback(cb);
+    });
   }
 
   public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {

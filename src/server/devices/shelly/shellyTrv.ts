@@ -2,6 +2,7 @@ import { ShellyDevice } from './shellyDevice';
 import { iBatteryDevice, iHeater, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
 import { TimeCallbackService, Utils } from '../../services';
 import {
+  HandleChangeAction,
   HeaterSettings,
   LogLevel,
   TemperatureSensorChangeAction,
@@ -60,7 +61,9 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
   private readonly _setExternalTempId: string;
   private readonly _setEnableExternalTempId: string;
   private readonly _setPointTemperaturID: string;
+  private readonly _setWindowOpenID: string;
   private readonly _valvePosId: string;
+  private _windowOpen: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ShellyTrv);
@@ -71,6 +74,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
     this._setExternalTempId = `${this.info.fullID}.ext.temperature`;
     this._setEnableExternalTempId = `${this.info.fullID}.ext.enabled`;
     this._setPointTemperaturID = `${this.info.fullID}.tmp.temperatureTargetC`;
+    this._setWindowOpenID = `${this.info.fullID}.ext.openWindow`;
     this._minumumLevelId = `${this.info.fullID}.tmp.minimumValvePosition`;
     this._valvePosId = `${this.info.fullID}.tmp.valvePosition`;
     this._iAutomaticInterval = Utils.guardedInterval(this.checkAutomaticChange, 300000, this); // Alle 5 Minuten prüfen
@@ -158,6 +162,11 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
   /** @inheritDoc */
   public get roomTemperature(): number {
     return this.temperatureSensor.roomTemperature;
+  }
+
+  /** @inheritDoc */
+  public get windowOpen(): boolean {
+    return this._windowOpen;
   }
 
   private set roomTemperatur(val: number) {
@@ -295,6 +304,25 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
       this.seasonTurnOff = desiredState;
     }
     this._initialSeasonCheckDone = true;
+  }
+
+  public onHandleChange(_action: HandleChangeAction): void {
+    if (this.room.WindowGroup === undefined) {
+      return;
+    }
+    const newState: boolean = this.room.WindowGroup?.anyWindowOpen;
+    if (newState === this._windowOpen) {
+      return;
+    }
+    this._windowOpen = newState;
+    this.onWindowOpenChange(this._windowOpen);
+  }
+
+  private onWindowOpenChange(pValue: boolean): void {
+    if (!this._setWindowOpenID) {
+      return;
+    }
+    this.setState(this._setWindowOpenID, pValue);
   }
 
   private recalcLevel(): void {

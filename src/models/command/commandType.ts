@@ -28,6 +28,7 @@ export enum CommandType {
   ShutterSunriseUpCommand = 'ShutterSunriseUpCommand',
   SunsetDownCommand = 'SunsetDownCommand',
   TemperatureSensorChangeAction = 'TemperatureSensorChangeAction',
+  HandleChangedAction = 'HandleChangedAction',
   WindowRestoreDesiredPositionCommand = 'WindowRestoreDesiredPositionCommand',
   WindowSetDesiredPositionCommand = 'WindowSetDesiredPositionCommand',
   WindowSetRolloByWeatherStatusCommand = 'WindowSetRolloByWeatherStatusCommand',

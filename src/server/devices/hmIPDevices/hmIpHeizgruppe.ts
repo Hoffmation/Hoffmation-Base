@@ -2,6 +2,7 @@ import { HmIPDevice } from './hmIpDevice';
 import { DeviceType } from '../deviceType';
 import { iDisposable, TimeCallbackService, Utils } from '../../services';
 import {
+  HandleChangeAction,
   HeaterSettings,
   HumiditySensorChangeAction,
   LogLevel,
@@ -32,10 +33,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   public humiditySensor: HumiditySensor = new HumiditySensor(this);
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
+  private readonly _setWindowOpenID: string = '';
   private _iAutomaticInterval: NodeJS.Timeout | undefined;
   private _initialSeasonCheckDone: boolean = false;
   private _level: number = 0;
   private _setPointTemperatureID: string = '';
+  private _windowOpen: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpHeizgruppe);
@@ -133,6 +136,11 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   }
 
   /** @inheritDoc */
+  public get windowOpen(): boolean {
+    return this._windowOpen;
+  }
+
+  /** @inheritDoc */
   public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {
     this.humiditySensor.addHumidityCallback(pCallback);
   }
@@ -195,6 +203,18 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
     Utils.dbo?.persistHeater(this);
   }
 
+  public onHandleChange(_action: HandleChangeAction): void {
+    if (this.room.WindowGroup === undefined) {
+      return;
+    }
+    const newState: boolean = this.room.WindowGroup?.anyWindowOpen;
+    if (newState === this._windowOpen) {
+      return;
+    }
+    this._windowOpen = newState;
+    this.onWindowOpenChange(this._windowOpen);
+  }
+
   /** @inheritDoc */
   public dispose(): void {
     this.temperatureSensor.dispose();
@@ -219,6 +239,13 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
       this.seasonTurnOff = isSummer;
     }
     this._initialSeasonCheckDone = true;
+  }
+
+  private onWindowOpenChange(pValue: boolean): void {
+    if (!this._setWindowOpenID) {
+      return;
+    }
+    this.setState(this._setWindowOpenID, pValue);
   }
 
   private updateBaseInformation(name: string, state: ioBroker.State) {

@@ -2,7 +2,7 @@ import { DeviceType } from '../deviceType';
 import { iDisposable } from '../../services';
 import { WindowPosition } from '../models';
 import { Window } from '../groups';
-import { LogLevel } from '../../../models';
+import { HandleChangeAction, LogLevel } from '../../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
@@ -65,6 +65,11 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
   /** @inheritDoc */
   public addClosedCallback(pCallback: (pValue: boolean) => void): void {
     this.handleSensor.addClosedCallback(pCallback);
+  }
+
+  /** @inheritDoc */
+  public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
+    this.handleSensor.addHandleChangeCallback(cb);
   }
 
   /** @inheritDoc */

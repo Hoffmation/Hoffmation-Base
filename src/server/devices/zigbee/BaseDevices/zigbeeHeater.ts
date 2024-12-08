@@ -1,6 +1,7 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
 import {
+  HandleChangeAction,
   HeaterSettings,
   LogLevel,
   TemperatureSensorChangeAction,
@@ -36,6 +37,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   protected _initialSeasonCheckDone: boolean = false;
   protected _level: number = 0;
   protected _setPointTemperaturID: string = '';
+  protected _setWindowOpenID: string = '';
   protected _temperatur: number = UNDEFINED_TEMP_VALUE;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
   protected _pidController: PIDController = new PIDController({
@@ -50,6 +52,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     Kd: 9, // PID: Kd in 1/1000
   });
   protected _seasonTurnOff: boolean = false;
+  protected _windowOpen: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -74,6 +77,11 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   /** @inheritDoc */
   public get batteryLevel(): number {
     return this.battery.level;
+  }
+
+  /** @inheritDoc */
+  public get windowOpen(): boolean {
+    return this._windowOpen;
   }
 
   /** @inheritDoc */
@@ -171,6 +179,18 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     }
   }
 
+  public onHandleChange(_action: HandleChangeAction): void {
+    if (this.room.WindowGroup === undefined) {
+      return;
+    }
+    const newState: boolean = this.room.WindowGroup?.anyWindowOpen;
+    if (newState === this._windowOpen) {
+      return;
+    }
+    this._windowOpen = newState;
+    this.onWindowOpenChange(this._windowOpen);
+  }
+
   /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperature = newTemperatur;
@@ -229,5 +249,12 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
       this.seasonTurnOff = desiredState;
     }
     this._initialSeasonCheckDone = true;
+  }
+
+  private onWindowOpenChange(pValue: boolean): void {
+    if (!this._setWindowOpenID) {
+      return;
+    }
+    this.setState(this._setWindowOpenID, pValue);
   }
 }

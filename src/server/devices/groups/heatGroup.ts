@@ -11,7 +11,14 @@ import {
 } from '../baseDeviceInterfaces';
 import { AcDevice, API, Utils } from '../../services';
 import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
-import { BlockAutomaticCommand, CommandSource, LogLevel, RoomBase, TemperatureSettings } from '../../../models';
+import {
+  BlockAutomaticCommand,
+  CommandSource,
+  HandleChangeAction,
+  LogLevel,
+  RoomBase,
+  TemperatureSettings,
+} from '../../../models';
 
 export class HeatGroup extends BaseGroup {
   /** @inheritDoc */
@@ -160,6 +167,11 @@ export class HeatGroup extends BaseGroup {
     });
     this.getOwnAcDevices().forEach((acDev: AcDevice) => {
       acDev.room = this.getRoom();
+    });
+    this.getRoom().WindowGroup?.addHandleChangeCallback((handleChangeAction: HandleChangeAction): void => {
+      this.getHeater().forEach((heater: iHeater) => {
+        heater.onHandleChange(handleChangeAction);
+      });
     });
   }
 

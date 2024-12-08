@@ -1,8 +1,8 @@
-import { HmIpGriff } from '../hmIPDevices';
 import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services';
 import { WindowPosition } from '../models';
 import {
   CommandSource,
+  HandleChangeAction,
   LogLevel,
   RoomSetLightTimeBasedCommand,
   ShutterPositionChangedAction,
@@ -39,6 +39,16 @@ export class Window extends BaseGroup {
     });
   }
 
+  /**
+   * Checks if any handle is not closed
+   * @returns {boolean} true if any handle is not closed
+   */
+  public get anyHandleNotClosed(): boolean {
+    return this.getHandle().some((h: iHandleSensor) => {
+      return h.position !== WindowPosition.closed;
+    });
+  }
+
   public constructor(
     roomName: string,
     public readonly handleIds: string[] = [],
@@ -63,7 +73,7 @@ export class Window extends BaseGroup {
   }
 
   public getHandle(): iHandleSensor[] {
-    return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.Handle) as HmIpGriff[];
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Handle) as iHandleSensor[];
   }
 
   public getMagnetContact(): ZigbeeMagnetContact[] {
@@ -170,5 +180,11 @@ export class Window extends BaseGroup {
 
   public restoreDesiredPosition(c: WindowRestoreDesiredPositionCommand): void {
     ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this._desiredPosition));
+  }
+
+  public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
+    this.getHandle().forEach((griff: iHandleSensor): void => {
+      griff.addHandleChangeCallback(cb);
+    });
   }
 }

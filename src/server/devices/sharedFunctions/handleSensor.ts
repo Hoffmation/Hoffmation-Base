@@ -1,10 +1,9 @@
 import { WindowPosition } from '../models';
-import { LogLevel } from '../../../models';
+import { HandleChangeAction, iJsonOmitKeys, LogLevel } from '../../../models';
 import { iDisposable, LogDebugType, TelegramService, Utils, WeatherService } from '../../services';
 import { HeatGroup, Window } from '../groups';
 import { iHandleSensor } from '../baseDeviceInterfaces';
 import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
-import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
 export class HandleSensor implements iDisposable, iJsonOmitKeys {
   /** @inheritDoc */
@@ -25,6 +24,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
   private _offenCallback: Array<(pValue: boolean) => void> = [];
+  private _handleChangeCallback: Array<(action: HandleChangeAction) => void> = [];
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   private _helpingRoomTemp: boolean = false;
 
@@ -45,6 +45,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
     this.log(LogLevel.Debug, `Update Windowhandle to position "${WindowPosition[pValue]}"`);
 
     this.position = pValue;
+    const handleChangeAction: HandleChangeAction = new HandleChangeAction(this._device);
     for (const c1 of this._closedCallback) {
       c1(pValue === 0);
     }
@@ -55,6 +56,10 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
 
     for (const c3 of this._offenCallback) {
       c3(pValue === 2);
+    }
+
+    for (const c4 of this._handleChangeCallback) {
+      c4(handleChangeAction);
     }
     this.persist();
 
@@ -140,6 +145,10 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
   /** @inheritDoc */
   public addClosedCallback(pCallback: (pValue: boolean) => void): void {
     this._closedCallback.push(pCallback);
+  }
+
+  public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
+    this._handleChangeCallback.push(cb);
   }
 
   public dispose(): void {
