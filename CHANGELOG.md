@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.9 (2024-12-08)
 
 * (theimo1221) Shelly TRV set Window open on handle change.
 
