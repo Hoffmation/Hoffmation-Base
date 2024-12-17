@@ -5,6 +5,8 @@ import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse }
 import keyTemplates from './keyTemplates';
 import { LogDebugType } from '../../../services';
 import { LogLevel } from '../../../../models';
+import * as http from 'node:http';
+import * as https from 'node:https';
 
 /**
  * axios HTTP Client Class
@@ -26,6 +28,8 @@ export class DachsHttpClient {
     this.options = options;
     //combine parameter to baseUrl
     //check http prefix
+    axios.defaults.httpsAgent = new https.Agent({ keepAlive: false });
+    axios.defaults.httpAgent = new http.Agent({ keepAlive: false });
     const protocol = options.protocol ? options.protocol : 'http';
     this.options.host = this.options.host.startsWith('http') ? this.options.host : `${protocol}://${this.options.host}`;
     //combine all parameter for url
