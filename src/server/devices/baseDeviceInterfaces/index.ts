@@ -4,6 +4,7 @@ export * from './iBaseDevice';
 export * from './iBatteryDevice';
 export * from './iButtonSwitch';
 export * from './iCameraDevice';
+export * from './iDimmableLamp';
 export * from './iEnergyManager';
 export * from './iExcessEnergyConsumer';
 export * from './iGarageDoorOpener';
