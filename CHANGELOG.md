@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0 (2024-12-29)
 
 * (theimo1221) Add device setting to skip a device in homebridge
 
