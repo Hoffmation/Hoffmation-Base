@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.0.0-beta.12 (2024-12-29)
 
 * (theimo1221) Extract Camera Device from Blue Iris Camera Device (preparation for unifi cameras)
 
