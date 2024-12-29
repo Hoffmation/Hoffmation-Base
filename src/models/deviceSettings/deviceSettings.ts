@@ -15,6 +15,11 @@ export abstract class DeviceSettings extends ObjectSettings {
    * @default undefined
    */
   public blockAutomaticSettings: BlockAutomaticSettings | undefined = undefined;
+  /**
+   * Whether to skip this device in Homebridge-Hoffmation
+   * @default false
+   */
+  public skipInHomebridge: boolean = false;
 
   public override fromPartialObject(_obj: Partial<DeviceSettings>): void {
     if (_obj.energySettings) {
@@ -29,6 +34,7 @@ export abstract class DeviceSettings extends ObjectSettings {
       }
       this.blockAutomaticSettings.fromPartialObject(_obj.blockAutomaticSettings);
     }
+    this.skipInHomebridge = _obj.skipInHomebridge ?? this.skipInHomebridge;
     super.fromPartialObject(_obj);
   }
 
