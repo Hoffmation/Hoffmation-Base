@@ -31,3 +31,4 @@ export * from './IoBrokerBaseDevice';
 export * from './IoBrokerDeviceInfo';
 export { NameAmountValuePair } from './nameAmountValuePair';
 export * from './wledDevice';
+export * from './CameraDevice';

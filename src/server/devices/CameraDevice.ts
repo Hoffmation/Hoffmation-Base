@@ -1,19 +1,13 @@
+import { iBaseDevice, iCameraDevice, iRoomDevice } from './baseDeviceInterfaces';
+import { DeviceType } from './deviceType';
+import { DeviceCapability } from './DeviceCapability';
+import { Base64Image, CameraSettings, CountToday, LogLevel, MotionSensorAction, RoomBase } from '../../models';
+import { DeviceInfo } from './DeviceInfo';
+import { Devices } from './devices';
+import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../services';
 import _ from 'lodash';
-import { iBaseDevice, iCameraDevice, iRoomDevice } from '../baseDeviceInterfaces';
-import { Base64Image, CameraSettings, CountToday, LogLevel, MotionSensorAction, RoomBase } from '../../../models';
-import { BlueIrisCoordinator } from './blueIrisCoordinator';
-import { API, LogDebugType, ServerLogService, SettingsService, TelegramService, Utils } from '../../services';
-import { Devices } from '../devices';
-import { DeviceInfo } from '../DeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { DeviceType } from '../deviceType';
-import { ioBrokerMain } from '../../ioBroker';
 
-export class CameraDevice implements iCameraDevice {
-  /**
-   * The name of the camera in BlueIris
-   */
-  public readonly blueIrisName: string;
+export abstract class CameraDevice implements iCameraDevice {
   /** @inheritDoc */
   public settings: CameraSettings = new CameraSettings();
   /** @inheritDoc */
@@ -25,52 +19,38 @@ export class CameraDevice implements iCameraDevice {
    */
   public readonly name: string;
   /** @inheritDoc */
-  public readonly mpegStreamLink: string = '';
+  abstract readonly mpegStreamLink: string;
   /** @inheritDoc */
-  public readonly h264IosStreamLink: string = '';
+  abstract readonly h264IosStreamLink: string;
   /** @inheritDoc */
-  public readonly rtspStreamLink: string = '';
+  abstract readonly rtspStreamLink: string;
   /** @inheritDoc */
-  public readonly currentImageLink: string = '';
+  abstract readonly currentImageLink: string;
   /** @inheritDoc */
   public detectionsToday: number = 0;
   protected _lastMotion: number = 0;
+  protected _initialized: boolean = false;
+  protected _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
+  protected _lastImage: string = '';
+  protected _personDetected: boolean = false;
+  protected _dogDetected: boolean = false;
+  protected _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
+  protected _movementDetected: boolean = false;
+  protected _info: DeviceInfo;
   private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
-  private _personDetectedStateId: string | undefined = undefined;
-  private _dogDetectedStateId: string | undefined = undefined;
-  private _movementDetectedStateId: string | undefined = undefined;
-  private _initialized: boolean = false;
-  private _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
-  private _lastImage: string = '';
-  private _personDetected: boolean = false;
-  private _dogDetected: boolean = false;
-  private _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
-  private _movementDetected: boolean = false;
-  private _info: DeviceInfo;
 
-  public constructor(mqttName: string, roomName: string, blueIrisName: string) {
-    this.blueIrisName = blueIrisName;
-    this.name = mqttName;
+  protected constructor(name: string, roomName: string) {
+    this.name = name;
     this._info = new DeviceInfo();
-    this._info.fullName = `Camera ${roomName} ${mqttName}`;
-    this._info.customName = `Camera ${mqttName}`;
+    this._info.fullName = `Camera ${roomName} ${name}`;
+    this._info.customName = `Camera ${name}`;
     this._info.room = roomName;
-    this._info.allDevicesKey = `camera-${roomName}-${mqttName}`;
+    this._info.allDevicesKey = `camera-${roomName}-${name}`;
     Devices.alLDevices[this._info.allDevicesKey] = this;
-    BlueIrisCoordinator.addDevice(this, mqttName);
     this.persistDeviceInfo();
     this.loadDeviceSettings();
-    const blueIrisSettings = SettingsService.settings.blueIris;
-    if (blueIrisSettings !== undefined) {
-      this.mpegStreamLink = `${blueIrisSettings.serverAddress}/mjpg/${this.blueIrisName}/video.mjpg?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
-      this.h264IosStreamLink = `${blueIrisSettings.serverAddress}/h264/${this.blueIrisName}/temp.m?user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
-      this.rtspStreamLink = `rtsp://${blueIrisSettings.username}:${
-        blueIrisSettings.password
-      }@${blueIrisSettings.serverAddress.replace('http://', '')}:80/${this.blueIrisName}`;
-      this.currentImageLink = `${blueIrisSettings.serverAddress}/image/${this.blueIrisName}.jpg?q=100&s=100&user=${blueIrisSettings.username}&pw=${blueIrisSettings.password}`;
-    }
     if (!Utils.anyDboActive) {
       this._initialized = true;
     } else {
@@ -160,59 +140,6 @@ export class CameraDevice implements iCameraDevice {
     Utils.dbo?.persistMotionSensor(this);
   }
 
-  /** @inheritDoc */
-  public update(idSplit: string[], state: ioBroker.State): void {
-    const stateName = idSplit[4];
-    switch (stateName) {
-      case 'MotionDetected':
-        this._movementDetectedStateId = idSplit.join('.');
-        if (this.settings.movementDetectionOnPersonOnly) {
-          return;
-        }
-        this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
-        const movementDetected: boolean = (state.val as number) === 1;
-        this.updateMovement(movementDetected);
-        if (movementDetected) {
-          this.resetMovementFallbackTimer();
-        }
-        break;
-      case 'PersonDetected':
-        this._personDetectedStateId = idSplit.join('.');
-        const newValue: boolean = (state.val as number) === 1;
-        this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
-        if (newValue) {
-          this.log(LogLevel.Info, 'Person Detected');
-          this.resetPersonDetectFallbackTimer();
-        }
-        this._personDetected = newValue;
-        if (this.settings.movementDetectionOnPersonOnly) {
-          this.updateMovement(newValue);
-        }
-        break;
-      case 'DogDetected':
-        this._dogDetectedStateId = idSplit.join('.');
-        const newDogDetectionVal: boolean = (state.val as number) === 1;
-        this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
-        if (newDogDetectionVal) {
-          this.log(LogLevel.Info, 'Dog Detected');
-          this.resetDogDetectFallbackTimer();
-        }
-        this._dogDetected = newDogDetectionVal;
-        if (this.settings.movementDetectionOnDogsToo) {
-          this.updateMovement(newDogDetectionVal);
-        }
-        break;
-      case 'MotionSnapshot':
-        this._lastImage = state.val as string;
-        Utils.guardedTimeout(() => {
-          // Give Person Detected Update some time, as otherwise personDetected might still be false
-          if (this.settings.alertPersonOnTelegram && this._personDetected && !this.alarmBlockedByDevices) {
-            TelegramService.sendImage(`${this.name} detected Person`, new Base64Image(this._lastImage, 'person_alert'));
-          }
-        }, 1000);
-    }
-  }
-
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
     ServerLogService.writeLog(level, `${this.name}: ${message}`, {
       debugType: debugType,
@@ -244,6 +171,56 @@ export class CameraDevice implements iCameraDevice {
   public loadDeviceSettings(): void {
     this.settings?.initializeFromDb(this);
   }
+
+  protected onNewMotionDetectedValue(newValue: boolean): void {
+    if (this.settings.movementDetectionOnPersonOnly) {
+      return;
+    }
+    this.log(LogLevel.Debug, `Update for "Motion" to value: ${newValue}`);
+    this.updateMovement(newValue);
+    if (newValue) {
+      this.resetMovementFallbackTimer();
+    }
+  }
+
+  protected onNewPersonDetectedValue(newValue: boolean): void {
+    this.log(LogLevel.Debug, `Update for PersonDetected to value: ${newValue}`);
+    if (newValue) {
+      this.log(LogLevel.Info, 'Person Detected');
+      this.resetPersonDetectFallbackTimer();
+    }
+    this._personDetected = newValue;
+    if (this.settings.movementDetectionOnPersonOnly) {
+      this.updateMovement(newValue);
+    }
+  }
+
+  protected onNewImageSnapshot(image: string): void {
+    this._lastImage = image;
+    Utils.guardedTimeout(() => {
+      // Give Person Detected Update some time, as otherwise personDetected might still be false
+      if (this.settings.alertPersonOnTelegram && this._personDetected && !this.alarmBlockedByDevices) {
+        TelegramService.sendImage(`${this.name} detected Person`, new Base64Image(this._lastImage, 'person_alert'));
+      }
+    }, 1000);
+  }
+
+  protected onNewDogDetectionValue(newDogDetectionVal: boolean): void {
+    if (newDogDetectionVal) {
+      this.log(LogLevel.Info, 'Dog Detected');
+      this.resetDogDetectFallbackTimer();
+    }
+    this._dogDetected = newDogDetectionVal;
+    if (this.settings.movementDetectionOnDogsToo) {
+      this.updateMovement(newDogDetectionVal);
+    }
+  }
+
+  protected abstract resetPersonDetectedState(): void;
+
+  protected abstract resetDogDetectedState(): void;
+
+  protected abstract resetMovementDetectedState(): void;
 
   private updateMovement(newState: boolean): void {
     if (!this._initialized && newState) {
@@ -293,30 +270,7 @@ export class CameraDevice implements iCameraDevice {
         if (this.settings.movementDetectionOnPersonOnly) {
           this.updateMovement(false);
         }
-        if (this._personDetectedStateId !== undefined) {
-          ioBrokerMain.iOConnection?.setState(this._personDetectedStateId, { val: 0, ack: true });
-        }
-      },
-      120000,
-      this,
-    );
-  }
-
-  private resetDogDetectFallbackTimer(): void {
-    if (this._dogDetectFallbackTimeout !== null) {
-      clearTimeout(this._dogDetectFallbackTimeout);
-      this._dogDetectFallbackTimeout = null;
-    }
-    this._dogDetectFallbackTimeout = Utils.guardedTimeout(
-      () => {
-        this._dogDetectFallbackTimeout = null;
-        this._dogDetected = false;
-        if (this.settings.movementDetectionOnDogsToo) {
-          this.updateMovement(false);
-        }
-        if (this._dogDetectedStateId !== undefined) {
-          ioBrokerMain.iOConnection?.setState(this._dogDetectedStateId, { val: 0, ack: true });
-        }
+        this.resetPersonDetectedState();
       },
       120000,
       this,
@@ -337,9 +291,26 @@ export class CameraDevice implements iCameraDevice {
         }
         this._movementDetected = false;
         this.updateMovement(false);
-        if (this._movementDetectedStateId !== undefined) {
-          ioBrokerMain.iOConnection?.setState(this._movementDetectedStateId, { val: 0, ack: true });
+        this.resetMovementDetectedState();
+      },
+      120000,
+      this,
+    );
+  }
+
+  private resetDogDetectFallbackTimer(): void {
+    if (this._dogDetectFallbackTimeout !== null) {
+      clearTimeout(this._dogDetectFallbackTimeout);
+      this._dogDetectFallbackTimeout = null;
+    }
+    this._dogDetectFallbackTimeout = Utils.guardedTimeout(
+      () => {
+        this._dogDetectFallbackTimeout = null;
+        this._dogDetected = false;
+        if (this.settings.movementDetectionOnDogsToo) {
+          this.updateMovement(false);
         }
+        this.resetDogDetectedState();
       },
       120000,
       this,

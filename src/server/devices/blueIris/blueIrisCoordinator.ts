@@ -1,6 +1,7 @@
 import { ServerLogService } from '../../services';
 import { LogLevel } from '../../../models';
 import { iCameraDevice } from '../baseDeviceInterfaces';
+import { BlueIrisCameraDevice } from './blueIrisCameraDevice';
 
 export class BlueIrisCoordinator {
   private static cameraDeviceMap: Map<string, iCameraDevice> = new Map<string, iCameraDevice>();
@@ -14,11 +15,11 @@ export class BlueIrisCoordinator {
       return;
     }
     const devName = idSplit[3];
-    const dev = this.cameraDeviceMap.get(devName ?? '');
+    const dev: iCameraDevice | undefined = this.cameraDeviceMap.get(devName ?? '');
     if (dev === undefined) {
       ServerLogService.writeLog(LogLevel.Warn, `Unknown Blue Iris Device "${devName}"`);
       return;
     }
-    dev.update(idSplit, state);
+    (dev as BlueIrisCameraDevice).update(idSplit, state);
   }
 }

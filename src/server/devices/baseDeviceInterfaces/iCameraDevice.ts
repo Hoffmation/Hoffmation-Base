@@ -50,12 +50,4 @@ export interface iCameraDevice extends iMotionSensor {
    * @param block - Whether to block the alarm for the device or lift the block
    */
   blockForDevice(device: iBaseDevice, block: boolean): void;
-
-  /**
-   * Inform this camera of state updates within iOBroker
-   * TODO: Make camera independent of iOBroker
-   * @param idSplit - The id split of the state
-   * @param state - The state that has been updated
-   */
-  update(idSplit: string[], state: ioBroker.State): void;
 }
