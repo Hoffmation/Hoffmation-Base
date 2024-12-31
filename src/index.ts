@@ -32,6 +32,7 @@ import {
 import { LogLevel } from './models';
 import { Dachs } from './server/devices/dachs';
 import '@iobroker/types';
+import { UnifiProtect } from './server/services/unifi/unifi-protect';
 
 export * from './models/index';
 export * from './server/index';
@@ -83,6 +84,10 @@ export class HoffmationBase {
     } else if (SettingsService.settings.unifiSettings) {
       ServerLogService.writeLog(LogLevel.Info, 'Unifi Router settings detected --> initializing');
       new UnifiRouter(SettingsService.settings.unifiSettings);
+    }
+    if (SettingsService.settings.unifiSettings?.nvrOptions) {
+      ServerLogService.writeLog(LogLevel.Info, 'Unifi Protect settings detected --> initializing');
+      new UnifiProtect(SettingsService.settings.unifiSettings.nvrOptions);
     }
     TimeCallbackService.init();
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base First Initializations finished');

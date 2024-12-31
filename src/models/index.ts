@@ -10,6 +10,7 @@ export * from './daytime';
 export * from './deviceConfig';
 export * from './excessEnergyConsumerSettings';
 export * from './logLevel';
+export * from './logSource';
 export * from './objectSettings';
 export * from './temperatureSettings';
 export * from './timeCallback';

@@ -27,3 +27,4 @@ export * from './iUnifiConnectionOptions';
 export * from './iVictronSettings';
 export { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';
 export { iGoveeSettings } from './iGoveeSettings';
+export { iUnifiProtectOptions } from './iUnifiProtectOptions';

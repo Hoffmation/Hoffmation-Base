@@ -1,4 +1,5 @@
 import { iUnifiConnectionOptions } from './iUnifiConnectionOptions';
+import { iUnifiProtectOptions } from './iUnifiProtectOptions';
 
 /**
  * The settings for the Unifi-Service (if needed).
@@ -10,4 +11,8 @@ export interface iUnifiSettings {
    * The options for connecting to the Unifi controller
    */
   loginOptions: iUnifiConnectionOptions;
+  /**
+   * The options for connecting to the Unifi NVR;
+   */
+  nvrOptions?: iUnifiProtectOptions;
 }
