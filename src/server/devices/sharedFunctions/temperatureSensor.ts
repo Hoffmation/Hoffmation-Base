@@ -28,10 +28,23 @@ export class TemperatureSensor implements iJsonOmitKeys {
   );
   private _temperature: number = UNDEFINED_TEMP_VALUE;
   private _temperaturCallbacks: ((action: TemperatureSensorChangeAction) => void)[] = [];
+  /**
+   * The last time the temperature sensor was seen.
+   */
+  public lastSeen: number = 0;
 
   public constructor(private readonly _device: iTemperatureSensor) {}
 
+  public get temperature(): number {
+    if (Utils.nowMS() - this.lastSeen > 60 * 60 * 1000) {
+      // Temperature sensor hasn't been seen in an hour --> Don't to trust it
+      return UNDEFINED_TEMP_VALUE;
+    }
+    return this._temperature;
+  }
+
   public set temperature(val: number) {
+    this.lastSeen = Utils.nowMS();
     let correctedValue: number = val;
     if (this.outdoorTemperatureCorrectionCoefficient !== 0 && WeatherService.currentTemp !== UNDEFINED_TEMP_VALUE) {
       correctedValue = val + this.outdoorTemperatureCorrectionCoefficient * (21 - WeatherService.currentTemp);
@@ -40,10 +53,6 @@ export class TemperatureSensor implements iJsonOmitKeys {
     for (const cb of this._temperaturCallbacks) {
       cb(new TemperatureSensorChangeAction(this._device, correctedValue));
     }
-  }
-
-  public get temperature(): number {
-    return this._temperature;
   }
 
   /**
