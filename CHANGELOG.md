@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Ignore temperature Sensors with a value older than a hour
+
 ## 3.0.0 (2024-12-29)
 
 * (theimo1221) Add device setting to skip a device in homebridge
