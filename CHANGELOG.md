@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Ignore temperature Sensors with a value older than a hour
+* (theimo1221) Improve handling with offline motion sensors
 
 ## 3.0.0 (2024-12-29)
 
