@@ -1,6 +1,10 @@
 # Lib
 /lib
 
+# Dtrack stuff
+/npm.json
+/upload_to_dtrack.sh
+
 # Private Test Data
 /test/devices/ownDevices.json
 
