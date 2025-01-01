@@ -42,7 +42,8 @@
       "node-telegram-bot-api",
       "socket.io-client"
     ],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "include": [
     "src"

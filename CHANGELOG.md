@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update packages
+
 ## 3.0.1 (2025-01-01)
 
 * (theimo1221) Ignore temperature Sensors with a value older than a hour
