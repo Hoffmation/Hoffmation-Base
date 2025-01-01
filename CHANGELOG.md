@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Remove experimental Samsung TV implementation
+
 ## 3.0.2 (2025-01-01)
 
 * (theimo1221) Update packages
