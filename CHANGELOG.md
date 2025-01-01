@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Remove experimental Samsung TV implementation
+* (theimo1221) Remove some unused dependencies
 
 ## 3.0.2 (2025-01-01)
 
