@@ -48,7 +48,7 @@
     "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts"
   },
   "dependencies": {
-    "@svrooij/sonos": "^2.5.0",
+    "@svrooij/sonos": "^2.6.0-beta.11",
     "aws-sdk": "2.1692.0",
     "axios": "^1.7.9",
     "daikin-controller": "^2.1.0",
