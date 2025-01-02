@@ -5,10 +5,19 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+## 3.0.3 (2025-01-02)
 
-## **WORK IN PROGRESS**
+* (theimo1221) Remove experimental Samsung TV implementation
+* (theimo1221) Remove some unused dependencies
+
+## 3.0.2 (2025-01-01)
+
+* (theimo1221) Update packages
+
+## 3.0.1 (2025-01-01)
 
 * (theimo1221) Ignore temperature Sensors with a value older than a hour
+* (theimo1221) Improve handling with offline motion sensors
 
 ## 3.0.0 (2024-12-29)
 

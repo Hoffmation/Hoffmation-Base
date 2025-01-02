@@ -43,13 +43,13 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
 
   /** @inheritDoc */
   public get movementDetected(): boolean {
-    if (!this.available) {
-      // If the device is not available, there is no active movement
-      return false;
-    }
-
-    if (Utils.nowMS() - this.lastUpdate.getTime() > 3600000) {
-      // If the device has not been updated for more than an hour, there is no active movement
+    if (!this.available || Utils.nowMS() - this.lastUpdate.getTime() > 3600000) {
+      // If the device is not available or has not been updated for more than an hour, there is no active movement
+      if (this._movementDetected) {
+        // The device must have gone offline whilst occupancy was detected -> reset
+        this.log(LogLevel.Error, 'Zigbee Motion Sensor went offline, resetting movement state');
+        this.updateMovement(false);
+      }
       return false;
     }
 
