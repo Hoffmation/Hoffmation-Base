@@ -10,7 +10,7 @@ export interface iUnifiSettings {
   /**
    * The options for connecting to the Unifi controller
    */
-  loginOptions: iUnifiConnectionOptions;
+  loginOptions?: iUnifiConnectionOptions;
   /**
    * The options for connecting to the Unifi NVR;
    */

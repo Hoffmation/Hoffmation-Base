@@ -1,5 +1,6 @@
 import {
   AsusRouter,
+  Dachs,
   DaikinService,
   Devices,
   DeviceUpdater,
@@ -24,15 +25,14 @@ import {
   TibberService,
   TimeCallbackService,
   Trilateration,
+  UnifiProtect,
   UnifiRouter,
   Utils,
   VictronService,
   WeatherService,
 } from './server';
 import { LogLevel } from './models';
-import { Dachs } from './server/devices/dachs';
 import '@iobroker/types';
-import { UnifiProtect } from './server/services/unifi/unifi-protect';
 
 export * from './models/index';
 export * from './server/index';
@@ -81,9 +81,9 @@ export class HoffmationBase {
     if (SettingsService.settings.asusConfig) {
       ServerLogService.writeLog(LogLevel.Info, 'Asus Router settings detected --> initializing');
       new AsusRouter(SettingsService.settings.asusConfig);
-    } else if (SettingsService.settings.unifiSettings) {
+    } else if (SettingsService.settings.unifiSettings?.loginOptions) {
       ServerLogService.writeLog(LogLevel.Info, 'Unifi Router settings detected --> initializing');
-      new UnifiRouter(SettingsService.settings.unifiSettings);
+      new UnifiRouter(SettingsService.settings.unifiSettings.loginOptions);
     }
     if (SettingsService.settings.unifiSettings?.nvrOptions) {
       ServerLogService.writeLog(LogLevel.Info, 'Unifi Protect settings detected --> initializing');

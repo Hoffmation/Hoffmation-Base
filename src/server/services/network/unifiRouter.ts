@@ -2,7 +2,7 @@ import { Router } from './router';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import Unifi from 'node-unifi';
-import { iUnifiSettings } from '../../config';
+import { iUnifiConnectionOptions } from '../../config';
 import { ServerLogService } from '../log-service';
 import { LogLevel } from '../../../models';
 
@@ -14,9 +14,9 @@ export class UnifiRouter extends Router {
   private readonly _api: Unifi.Controller;
   private _loggedIn: boolean = false;
 
-  public constructor(config: iUnifiSettings) {
+  public constructor(config: iUnifiConnectionOptions) {
     super();
-    this._api = new Unifi.Controller(config.loginOptions);
+    this._api = new Unifi.Controller(config);
     Router.setRouter(this);
     this.login();
   }

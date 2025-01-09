@@ -1,11 +1,16 @@
 import { iUnifiProtectOptions } from '../../config';
-import { ProtectApi, ProtectCameraConfig, ProtectNvrBootstrapInterface } from 'unifi-protect';
-import { ProtectLogging } from 'unifi-protect/dist/protect-logging';
 import { ServerLogService } from '../log-service';
 import { LogLevel, LogSource } from '../../../models';
-import { ProtectNvrBootstrap } from 'unifi-protect/dist/protect-types';
+import { iDisposable } from '../utils';
+import {
+  ProtectApi,
+  ProtectCameraConfig,
+  ProtectLogging,
+  ProtectNvrBootstrap,
+  ProtectNvrBootstrapInterface,
+} from 'unifi-protect';
 
-export class UnifiProtect {
+export class UnifiProtect implements iDisposable {
   private readonly unifiLogger: UnifiLogger = new UnifiLogger();
   private readonly _api: ProtectApi;
 
@@ -19,6 +24,10 @@ export class UnifiProtect {
       .catch((error: unknown): void => {
         ServerLogService.writeLog(LogLevel.Error, `Unifi-Protect: Login failed: ${error}`);
       });
+  }
+
+  public dispose(): void {
+    this._api.logout();
   }
 
   private async initialize(): Promise<void> {
