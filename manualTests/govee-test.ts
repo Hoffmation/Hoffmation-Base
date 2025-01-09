@@ -1,5 +1,6 @@
 import {
   CommandSource,
+  ExampleConfig,
   GooveeService,
   HoffmationBase,
   HoffmationInitializationObject,
@@ -7,11 +8,10 @@ import {
   OwnGoveeDevice,
   OwnGoveeDevices,
 } from '../src';
-import config from './mainConfig.example.json';
 
 export class GoveeTestTest {
   public static async start(): Promise<void> {
-    const init = new HoffmationInitializationObject(config);
+    const init = new HoffmationInitializationObject(ExampleConfig);
     init.config.telegram = undefined;
     init.config.polly = undefined;
     init.config.persistence = undefined;

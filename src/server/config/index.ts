@@ -25,6 +25,7 @@ export * from './iTimePair';
 export * from './iUnifiSettings';
 export * from './iUnifiConnectionOptions';
 export * from './iVictronSettings';
+export * from './exampleConfig';
 export { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';
 export { iGoveeSettings } from './iGoveeSettings';
 export { iUnifiProtectOptions } from './iUnifiProtectOptions';

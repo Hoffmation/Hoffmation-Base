@@ -1,9 +1,8 @@
-import config from './mainConfig.example.json';
-import { HoffmationBase, HoffmationInitializationObject, Router, UnifiRouter } from '../src';
+import { ExampleConfig, HoffmationBase, HoffmationInitializationObject, Router, UnifiRouter } from '../src';
 
 export class UnifiTest {
   public static async start(): Promise<void> {
-    const init = new HoffmationInitializationObject(config);
+    const init = new HoffmationInitializationObject(ExampleConfig);
     init.config.telegram = undefined;
     init.config.polly = undefined;
     init.config.persistence = undefined;
@@ -18,8 +17,8 @@ export class UnifiTest {
       },
     };
     await HoffmationBase.initializeBeforeIoBroker(init);
-    if (!init.config.unifiSettings) throw new Error('No unifi config found');
-    const router: Router = new UnifiRouter(init.config.unifiSettings);
+    if (!init.config.unifiSettings.loginOptions) throw new Error('No unifi config found');
+    const router: Router = new UnifiRouter(init.config.unifiSettings.loginOptions);
     // Test some device reconnect
     setTimeout(() => {
       console.log('Reconnect Device:');
