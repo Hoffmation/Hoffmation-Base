@@ -1,8 +1,8 @@
-import { WindowPosition } from '../models/index.js';
-import { iRoomDevice } from './iRoomDevice.js';
-import { HandleSensor } from '../sharedFunctions/index.js';
-import { Window } from '../groups/index.js';
-import { HandleChangeAction } from '../../../models/index.js';
+import { WindowPosition } from '../models';
+import { iRoomDevice } from './iRoomDevice';
+import { HandleSensor } from '../sharedFunctions';
+import { Window } from '../groups';
+import { HandleChangeAction } from '../../../models';
 
 /**
  * Interface for Handle Sensors.

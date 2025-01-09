@@ -1,6 +1,6 @@
-import { ZigbeeDimmer } from './BaseDevices/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceType } from '../deviceType.js';
+import { ZigbeeDimmer } from './BaseDevices';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType';
 
 export class ZigbeeIlluDimmer extends ZigbeeDimmer {
   protected _stateNameBrightness: string = 'brightness';

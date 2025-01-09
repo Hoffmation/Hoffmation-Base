@@ -1,9 +1,9 @@
-import { RoomBase } from '../RoomBase.js';
-import { iRoomDefaultSettings } from './iRoomDefaultSettings.js';
-import { API, iTimePair, ServerLogService, SunTimeOffsets, Utils, WeatherService } from '../../../server/index.js';
+import { RoomBase } from '../RoomBase';
+import { iRoomDefaultSettings } from './iRoomDefaultSettings';
+import { API, iTimePair, ServerLogService, SunTimeOffsets, Utils, WeatherService } from '../../../server';
 import _ from 'lodash';
-import { RoomSettings } from './roomSettings.js';
-import { LogLevel } from '../../logLevel.js';
+import { RoomSettings } from './roomSettings';
+import { LogLevel } from '../../logLevel';
 
 export class RoomSettingsController implements iRoomDefaultSettings {
   /**

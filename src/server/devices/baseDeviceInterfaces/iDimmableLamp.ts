@@ -1,5 +1,5 @@
-import { iLamp } from './iLamp.js';
-import { DimmerSetLightCommand, DimmerSettings, LampToggleLightCommand } from '../../../models/index.js';
+import { iLamp } from './iLamp';
+import { DimmerSetLightCommand, DimmerSettings, LampToggleLightCommand } from '../../../models';
 
 /**
  * This interface represents a dimmable lamp device.

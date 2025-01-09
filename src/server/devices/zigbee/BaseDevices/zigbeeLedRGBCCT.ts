@@ -1,16 +1,16 @@
-import { DeviceType } from '../../deviceType.js';
+import { DeviceType } from '../../deviceType';
 import {
   ActuatorSetStateCommand,
   LampSetTimeBasedCommand,
   LedSetLightCommand,
   LedSettings,
   LogLevel,
-} from '../../../../models/index.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../../DeviceCapability.js';
-import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct.js';
-import { ZigbeeDimmer } from './zigbeeDimmer.js';
-import { Utils } from '../../../services/index.js';
+} from '../../../../models';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct';
+import { ZigbeeDimmer } from './zigbeeDimmer';
+import { Utils } from '../../../services';
 
 export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct {
   /** @inheritDoc */

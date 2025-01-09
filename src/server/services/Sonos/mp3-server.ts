@@ -1,9 +1,9 @@
 import * as http from 'http';
 import * as url from 'url';
 import * as fs from 'fs';
-import { ServerLogService } from '../log-service/index.js';
-import { iMp3Settings } from '../../config/index.js';
-import { LogLevel } from '../../../models/index.js';
+import { ServerLogService } from '../log-service';
+import { iMp3Settings } from '../../config';
+import { LogLevel } from '../../../models';
 
 export class MP3Server {
   /**

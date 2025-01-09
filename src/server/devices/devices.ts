@@ -1,4 +1,19 @@
-import { deviceConfig, iRoomImportEnforcer, LogLevel } from '../../models/index.js';
+import { deviceConfig, iRoomImportEnforcer, LogLevel } from '../../models';
+import {
+  HmIpAccessPoint,
+  HmIpBewegung,
+  HmIPDevice,
+  HmIpGriff,
+  HmIpHeizgruppe,
+  HmIpHeizung,
+  HmIpLampe,
+  HmIpPraezenz,
+  HmIpRoll,
+  HmIpTaster,
+  HmIpTherm,
+  HmIpTuer,
+  HmIpWippe,
+} from './hmIPDevices';
 import {
   ZigbeeAqaraMagnetContact,
   ZigbeeAqaraOpple3Switch,
@@ -28,42 +43,21 @@ import {
   ZigbeeUbisysActuator,
   ZigbeeUbisysLampe,
   ZigbeeUbisysShutter,
-} from './zigbee/index.js';
-import { DeviceType } from './deviceType.js';
-import { ServerLogService } from '../services/index.js';
-import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo.js';
-import {
-  iBaseDevice,
-  iBatteryDevice,
-  iEnergyManager,
-  iMotionSensor,
-  iTemperatureSensor,
-} from './baseDeviceInterfaces/index.js';
-import { JsObjectEnergyManager } from './jsObject/index.js';
-import { WledDevice } from './wledDevice.js';
-import { DeviceCapability } from './DeviceCapability.js';
-import { Dachs } from './dachs/index.js';
-import { iConfig } from '../config/index.js';
-import { ShellyActuator, ShellyDevice, ShellyTrv } from './shelly/index.js';
-import { TuyaDevice, TuyaGarageOpener } from './tuya/index.js';
-import { NameAmountValuePair } from './nameAmountValuePair.js';
-import { SmartGardenService } from './smartGarden/index.js';
-import { VeluxService } from './velux/index.js';
-import {
-  HmIpAccessPoint,
-  HmIpBewegung,
-  HmIPDevice,
-  HmIpGriff,
-  HmIpHeizgruppe,
-  HmIpHeizung,
-  HmIpLampe,
-  HmIpPraezenz,
-  HmIpRoll,
-  HmIpTaster,
-  HmIpTherm,
-  HmIpTuer,
-  HmIpWippe,
-} from './hmIPDevices/index.js';
+} from './zigbee';
+import { DeviceType } from './deviceType';
+import { ServerLogService } from '../services';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
+import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor, iTemperatureSensor } from './baseDeviceInterfaces';
+import { JsObjectEnergyManager } from './jsObject';
+import { WledDevice } from './wledDevice';
+import { DeviceCapability } from './DeviceCapability';
+import { Dachs } from './dachs';
+import { iConfig } from '../config';
+import { ShellyActuator, ShellyDevice, ShellyTrv } from './shelly';
+import { TuyaDevice, TuyaGarageOpener } from './tuya';
+import { NameAmountValuePair } from './nameAmountValuePair';
+import { SmartGardenService } from './smartGarden';
+import { VeluxService } from './velux';
 
 export class Devices {
   /**

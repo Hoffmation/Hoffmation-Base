@@ -1,5 +1,5 @@
-import { iRoomDevice } from './baseDeviceInterfaces/index.js';
-import { API, LogDebugType, ServerLogService, Utils } from '../services/index.js';
+import { iRoomDevice } from './baseDeviceInterfaces';
+import { API, LogDebugType, ServerLogService, Utils } from '../services';
 import {
   DeviceSettings,
   iJsonOmitKeys,
@@ -7,11 +7,11 @@ import {
   RoomAddDeviceItem,
   RoomBase,
   RoomDeviceAddingSettings,
-} from '../../models/index.js';
-import { IOBrokerConnection, ioBrokerMain } from '../ioBroker/index.js';
-import { DeviceType } from './deviceType.js';
-import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo.js';
-import { DeviceCapability } from './DeviceCapability.js';
+} from '../../models';
+import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
+import { DeviceType } from './deviceType';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
+import { DeviceCapability } from './DeviceCapability';
 
 export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
   /** @inheritDoc */

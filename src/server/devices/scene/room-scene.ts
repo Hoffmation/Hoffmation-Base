@@ -1,11 +1,11 @@
-import { iScene } from '../baseDeviceInterfaces/index.js';
-import { LogLevel, RoomBase, SceneSettings } from '../../../models/index.js';
-import { TvDevice } from '../tv/index.js';
-import { LogDebugType, ServerLogService, Utils } from '../../services/index.js';
-import { DeviceInfo } from '../DeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { DeviceType } from '../deviceType.js';
-import { Devices } from '../devices.js';
+import { iScene } from '../baseDeviceInterfaces';
+import { LogLevel, RoomBase, SceneSettings } from '../../../models';
+import { TvDevice } from '../tv';
+import { LogDebugType, ServerLogService, Utils } from '../../services';
+import { DeviceInfo } from '../DeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { DeviceType } from '../deviceType';
+import { Devices } from '../devices';
 import _ from 'lodash';
 
 export class RoomScene implements iScene {

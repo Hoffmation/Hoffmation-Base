@@ -1,4 +1,4 @@
-import { iConfig } from './iConfig.js';
+import { iConfig } from './iConfig';
 
 export const ExampleConfig = {
   timeSettings: {

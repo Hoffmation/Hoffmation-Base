@@ -30,13 +30,13 @@ import {
   Utils,
   VictronService,
   WeatherService,
-} from './server/index.js';
-import { LogLevel } from './models/index.js';
+} from './server';
+import { LogLevel } from './models';
 import '@iobroker/types';
 
-export * from './models/index.js';
-export * from './server/index.js';
-export * from './liquid-pid.js';
+export * from './models/index';
+export * from './server/index';
+export * from './liquid-pid';
 
 export class HoffmationInitializationObject {
   public constructor(public config: iConfig) {}

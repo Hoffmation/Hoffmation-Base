@@ -1,6 +1,6 @@
-import { BaseAction } from './baseAction.js';
-import { CommandType } from '../command/index.js';
-import { iHandleSensor, WindowPosition } from '../../server/index.js';
+import { BaseAction } from './baseAction';
+import { CommandType } from '../command';
+import { iHandleSensor, WindowPosition } from '../../server';
 
 export class HandleChangeAction extends BaseAction {
   /** @inheritDoc */

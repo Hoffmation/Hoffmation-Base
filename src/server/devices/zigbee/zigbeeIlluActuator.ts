@@ -1,6 +1,6 @@
-import { ZigbeeActuator } from './BaseDevices/index.js';
-import { DeviceType } from '../deviceType.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { ZigbeeActuator } from './BaseDevices';
+import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeIlluActuator extends ZigbeeActuator {
   protected readonly _actuatorOnStateIdState: string;

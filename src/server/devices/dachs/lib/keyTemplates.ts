@@ -1,4 +1,4 @@
-import ReadKeyList from './ReadKeyList.js';
+import ReadKeyList from './ReadKeyList';
 
 export default {
   BetriebsDatenDachs: [

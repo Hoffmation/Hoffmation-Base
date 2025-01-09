@@ -6,7 +6,6 @@
     "lib/**/*"
   ],
   "main": "lib/index.js",
-  "type": "module",
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
@@ -46,8 +45,7 @@
     "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts",
     "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts",
     "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts",
-    "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts",
-    "manual-test-unifi-protect": "tsc && ts-node ./manualTests/unifi-protect-test.ts"
+    "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts"
   },
   "dependencies": {
     "@svrooij/sonos": "^2.6.0-beta.11",
@@ -66,7 +64,7 @@
     "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1",
     "tibber-api": "^5.3.1",
-    "unifi-protect": "^4.20.3",
+    "unifi-protect": "^4.19.0",
     "victron-mqtt-consumer": "^0.1.14"
   },
   "devDependencies": {

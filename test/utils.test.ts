@@ -1,4 +1,4 @@
-import { ServerLogService, SettingsService, Utils } from '../src.js';
+import { ServerLogService, SettingsService, Utils } from '../src';
 
 describe('UtilsTest', () => {
   ServerLogService.settings.logLevel = -1;

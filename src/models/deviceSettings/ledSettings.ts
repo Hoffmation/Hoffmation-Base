@@ -1,5 +1,5 @@
-import { DimmerSettings } from './dimmerSettings.js';
-import { Utils } from '../../server/index.js';
+import { DimmerSettings } from './dimmerSettings';
+import { Utils } from '../../server';
 
 export class LedSettings extends DimmerSettings {
   /**

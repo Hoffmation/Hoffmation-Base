@@ -1,4 +1,4 @@
-import { Utils } from '../../services/index.js';
+import { Utils } from '../../services';
 
 export class TrilaterationPoint {
   public static getPointsInRange(

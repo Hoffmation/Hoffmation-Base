@@ -1,5 +1,5 @@
-import { ActuatorSettings, deviceConfig, Devices, DimmerSettings, Utils } from '../../src.js';
-import ExampleDevices from './exampledevices/index.json.js';
+import { ActuatorSettings, deviceConfig, Devices, DimmerSettings, Utils } from '../../src';
+import ExampleDevices from './exampleDevices.json';
 
 describe('Device Settings', () => {
   Utils.testInitializeServices();

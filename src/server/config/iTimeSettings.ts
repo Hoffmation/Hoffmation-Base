@@ -1,4 +1,4 @@
-import { iTimePair } from './iTimePair.js';
+import { iTimePair } from './iTimePair';
 
 /**
  * The settings for the time-service.

@@ -5,7 +5,7 @@ import {
   TimeCallbackService,
   TimeCallbackType,
   TimeOfDay,
-} from '../../src.js';
+} from '../../src';
 
 describe('TimeCallbackService', () => {
   it('next Maximum Time is Today and correct', async () => {

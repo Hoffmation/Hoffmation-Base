@@ -1,7 +1,7 @@
-import { Utils } from '../../services/index.js';
-import { HumiditySensorChangeAction } from '../../../models/index.js';
-import { iHumiditySensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces/index.js';
-import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys.js';
+import { Utils } from '../../services';
+import { HumiditySensorChangeAction } from '../../../models';
+import { iHumiditySensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
 
 export class HumiditySensor implements iJsonOmitKeys {
   /** @inheritDoc */

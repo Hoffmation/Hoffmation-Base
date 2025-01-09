@@ -1,15 +1,15 @@
-import { ZigbeeDevice } from './BaseDevices/index.js';
-import { iBatteryDevice, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces/index.js';
-import { DeviceType } from '../deviceType.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
+import { ZigbeeDevice } from './BaseDevices';
+import { iBatteryDevice, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
+import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
 import {
   BatteryLevelChangeAction,
   HumiditySensorChangeAction,
   LogLevel,
   TemperatureSensorChangeAction,
-} from '../../../models/index.js';
-import { Battery, HumiditySensor, TemperatureSensor } from '../sharedFunctions/index.js';
+} from '../../../models';
+import { Battery, HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 
 export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
   /** @inheritDoc */

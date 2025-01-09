@@ -1,13 +1,13 @@
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
-import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models/index.js';
-import { ServerLogService } from '../log-service/index.js';
-import { PollyService } from './polly-service.js';
-import { TelegramMessageCallback, TelegramService } from '../Telegram/index.js';
-import { TimeCallbackService } from '../time-callback-service.js';
-import { SettingsService } from '../settings-service.js';
+import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import { ServerLogService } from '../log-service';
+import { PollyService } from './polly-service';
+import { TelegramMessageCallback, TelegramService } from '../Telegram';
+import { TimeCallbackService } from '../time-callback-service';
+import { SettingsService } from '../settings-service';
 import TelegramBot from 'node-telegram-bot-api';
-import { OwnSonosDevice } from './own-sonos-device.js';
-import { iSonosSettings } from '../../config/index.js';
+import { OwnSonosDevice } from './own-sonos-device';
+import { iSonosSettings } from '../../config';
 
 export class SonosService {
   private static sonosManager: SonosManager;

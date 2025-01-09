@@ -6,13 +6,13 @@ import {
   PresenceGroupFirstEnterAction,
   PresenceGroupLastLeftAction,
   RoomSetLightTimeBasedCommand,
-} from '../../../models/index.js';
-import { LogDebugType, RoomService, Utils } from '../../services/index.js';
-import { BaseGroup } from './base-group.js';
-import { DeviceClusterType } from '../device-cluster-type.js';
-import { GroupType } from './group-type.js';
-import { DeviceList } from '../device-list.js';
-import { iMotionSensor } from '../baseDeviceInterfaces/index.js';
+} from '../../../models';
+import { LogDebugType, RoomService, Utils } from '../../services';
+import { BaseGroup } from './base-group';
+import { DeviceClusterType } from '../device-cluster-type';
+import { GroupType } from './group-type';
+import { DeviceList } from '../device-list';
+import { iMotionSensor } from '../baseDeviceInterfaces';
 
 export class PresenceGroup extends BaseGroup {
   private _lastMovement: Date = new Date(0);

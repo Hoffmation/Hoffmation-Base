@@ -4,7 +4,7 @@ import {
   TrilaterationPoint,
   TrilaterationPointDistance,
   Utils,
-} from '../../src.js';
+} from '../../src';
 
 describe('Trilateration', () => {
   Utils.testInitializeServices();

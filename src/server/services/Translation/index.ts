@@ -1,3 +1,3 @@
-export * from './iRessources.js';
-export * from './res.js';
-export { IRessourceObject } from './IRessourceObject.js';
+export * from './iRessources';
+export * from './res';
+export { IRessourceObject } from './IRessourceObject';

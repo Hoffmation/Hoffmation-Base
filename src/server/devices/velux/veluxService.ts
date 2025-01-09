@@ -1,11 +1,11 @@
-import { deviceConfig, LogLevel } from '../../../models/index.js';
-import { ServerLogService } from '../../services/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceType } from '../deviceType.js';
-import { Devices } from '../devices.js';
-import { VeluxDeviceRegistrationInfo } from './veluxDeviceRegistrationInfo.js';
-import { VeluxShutter } from './veluxShutter.js';
-import { VeluxDevice } from './veluxDevice.js';
+import { deviceConfig, LogLevel } from '../../../models';
+import { ServerLogService } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType';
+import { Devices } from '../devices';
+import { VeluxDeviceRegistrationInfo } from './veluxDeviceRegistrationInfo';
+import { VeluxShutter } from './veluxShutter';
+import { VeluxDevice } from './veluxDevice';
 
 export class VeluxService {
   private static readonly _registeredDevices: Map<string, VeluxDeviceRegistrationInfo> = new Map();

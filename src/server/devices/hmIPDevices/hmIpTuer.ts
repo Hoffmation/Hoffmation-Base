@@ -1,10 +1,10 @@
-import { HmIPDevice } from './hmIpDevice.js';
-import { DeviceType } from '../deviceType.js';
-import { iDisposable, Res, SonosService, TelegramService, Utils } from '../../services/index.js';
-import { MagnetPosition } from '../models/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { iMagnetSensor } from '../baseDeviceInterfaces/index.js';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { iDisposable, Res, SonosService, TelegramService, Utils } from '../../services';
+import { MagnetPosition } from '../models';
+import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { iMagnetSensor } from '../baseDeviceInterfaces';
 
 export class HmIpTuer extends HmIPDevice implements iDisposable, iMagnetSensor {
   /** @inheritDoc */

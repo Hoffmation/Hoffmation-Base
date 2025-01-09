@@ -1,5 +1,5 @@
-import { Button, ButtonPosition, ButtonPressType } from '../button/index.js';
-import { iRoomDevice } from './iRoomDevice.js';
+import { Button, ButtonPosition, ButtonPressType } from '../button';
+import { iRoomDevice } from './iRoomDevice';
 
 /**
  * Interface for Button Switch devices, providing e.g. access to the buttons and their assignments.

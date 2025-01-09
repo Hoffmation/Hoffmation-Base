@@ -1,6 +1,6 @@
-import { BaseAction } from './baseAction.js';
-import { CommandType } from '../command/index.js';
-import { iTemperatureSensor } from '../../server/index.js';
+import { BaseAction } from './baseAction';
+import { CommandType } from '../command';
+import { iTemperatureSensor } from '../../server';
 
 export class TemperatureSensorChangeAction extends BaseAction {
   /** @inheritDoc */

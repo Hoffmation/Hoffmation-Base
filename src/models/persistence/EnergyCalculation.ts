@@ -1,5 +1,5 @@
-import { LogLevel } from '../logLevel.js';
-import { LogDebugType, SettingsService, Utils } from '../../server/index.js';
+import { LogLevel } from '../logLevel';
+import { LogDebugType, SettingsService, Utils } from '../../server';
 
 export class EnergyCalculation {
   /**

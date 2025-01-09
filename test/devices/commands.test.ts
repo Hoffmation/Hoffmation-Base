@@ -1,4 +1,4 @@
-import { ActuatorSetStateCommand, CommandSource, LampSetLightCommand } from '../../src.js';
+import { ActuatorSetStateCommand, CommandSource, LampSetLightCommand } from '../../src';
 
 describe('Commands', () => {
   it('Should print a proper reason Tree', () => {

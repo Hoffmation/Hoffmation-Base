@@ -1,7 +1,7 @@
-import { ServerLogService } from '../log-service/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { AcDevice } from './ac-device.js';
-import { Devices } from '../../devices/index.js';
+import { ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models';
+import { AcDevice } from './ac-device';
+import { Devices } from '../../devices';
 
 export class OwnAcDevices {
   /**

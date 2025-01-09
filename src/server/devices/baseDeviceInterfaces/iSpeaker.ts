@@ -1,4 +1,4 @@
-import { iRoomDevice } from './iRoomDevice.js';
+import { iRoomDevice } from './iRoomDevice';
 
 /**
  * This interface represents a speaker device.

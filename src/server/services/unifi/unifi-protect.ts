@@ -1,7 +1,7 @@
-import { iUnifiProtectOptions } from '../../config/index.js';
-import { ServerLogService } from '../log-service/index.js';
-import { LogLevel, LogSource } from '../../../models/index.js';
-import { iDisposable } from '../utils/index.js';
+import { iUnifiProtectOptions } from '../../config';
+import { ServerLogService } from '../log-service';
+import { LogLevel, LogSource } from '../../../models';
+import { iDisposable } from '../utils';
 import {
   ProtectApi,
   ProtectCameraConfig,

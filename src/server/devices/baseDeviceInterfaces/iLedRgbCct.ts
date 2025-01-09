@@ -1,5 +1,5 @@
-import { LedSetLightCommand, LedSettings } from '../../../models/index.js';
-import { iDimmableLamp } from './iDimmableLamp.js';
+import { LedSetLightCommand, LedSettings } from '../../../models';
+import { iDimmableLamp } from './iDimmableLamp';
 
 /**
  * Interface for RGB-CCT LED-Devices.

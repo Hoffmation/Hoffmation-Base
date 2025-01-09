@@ -1,4 +1,4 @@
-import { DeviceType } from '../deviceType.js';
+import { DeviceType } from '../deviceType';
 
 export class VeluxDeviceRegistrationInfo {
   public constructor(

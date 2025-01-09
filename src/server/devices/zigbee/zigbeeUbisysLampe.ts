@@ -1,10 +1,10 @@
-import { DeviceType } from '../deviceType.js';
-import { LogLevel } from '../../../models/index.js';
-import { iLamp } from '../baseDeviceInterfaces/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter.js';
-import { ZigbeeLamp } from './BaseDevices/index.js';
+import { DeviceType } from '../deviceType';
+import { LogLevel } from '../../../models';
+import { iLamp } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ZigbeeLamp } from './BaseDevices';
+import { DeviceCapability } from '../DeviceCapability';
+import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
 export class ZigbeeUbisysLampe extends ZigbeeLamp implements iLamp, iLoadMeter {
   protected readonly _actuatorOnStateIdState: string;

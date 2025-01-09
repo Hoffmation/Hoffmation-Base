@@ -1,8 +1,8 @@
-import { ZigbeeMagnetContact } from './BaseDevices/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { MagnetPosition } from '../models/index.js';
-import { DeviceType } from '../deviceType.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { ZigbeeMagnetContact } from './BaseDevices';
+import { LogLevel } from '../../../models';
+import { MagnetPosition } from '../models';
+import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeAqaraMagnetContact extends ZigbeeMagnetContact {
   public constructor(pInfo: IoBrokerDeviceInfo) {

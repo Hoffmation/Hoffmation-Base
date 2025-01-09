@@ -1,5 +1,5 @@
-import { ObjectSettings } from '../../objectSettings.js';
-import { iTimePair, SettingsService } from '../../../server/index.js';
+import { ObjectSettings } from '../../objectSettings';
+import { iTimePair, SettingsService } from '../../../server';
 
 export class RoomSettings extends ObjectSettings {
   /**

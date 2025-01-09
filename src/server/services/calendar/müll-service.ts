@@ -1,12 +1,12 @@
 import { async, VEvent } from 'node-ical';
-import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models/index.js';
-import { iMuellSettings } from '../../config/index.js';
-import { ServerLogService } from '../log-service/index.js';
-import { Utils } from '../utils/index.js';
-import { MuellTonne } from './muell-tonne.js';
-import { TimeCallbackService } from '../time-callback-service.js';
-import { iSpeaker } from '../../devices/index.js';
-import { NameDatePair } from './name-date-pair.js';
+import { LogLevel, TimeCallback, TimeCallbackType } from '../../../models';
+import { iMuellSettings } from '../../config';
+import { ServerLogService } from '../log-service';
+import { Utils } from '../utils';
+import { MuellTonne } from './muell-tonne';
+import { TimeCallbackService } from '../time-callback-service';
+import { iSpeaker } from '../../devices';
+import { NameDatePair } from './name-date-pair';
 
 export class MuellService {
   /**

@@ -1,5 +1,5 @@
-import { MotionSensorAction, MotionSensorSettings } from '../../../models/index.js';
-import { iRoomDevice } from './iRoomDevice.js';
+import { MotionSensorAction, MotionSensorSettings } from '../../../models';
+import { iRoomDevice } from './iRoomDevice';
 
 /**
  * This interface represents a motion sensor device.

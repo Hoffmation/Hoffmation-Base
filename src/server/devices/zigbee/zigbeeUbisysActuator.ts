@@ -1,9 +1,9 @@
-import { LogLevel } from '../../../models/index.js';
-import { DeviceType } from '../deviceType.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter.js';
-import { ZigbeeActuator } from './BaseDevices/index.js';
+import { ZigbeeActuator } from './BaseDevices';
+import { LogLevel } from '../../../models';
+import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
 
 export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   private _loadPower: number = 0;

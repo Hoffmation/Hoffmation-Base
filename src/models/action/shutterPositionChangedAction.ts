@@ -1,6 +1,6 @@
-import { BaseAction } from './baseAction.js';
-import { CommandType } from '../command/index.js';
-import { iShutter } from '../../server/index.js';
+import { BaseAction } from './baseAction';
+import { CommandType } from '../command';
+import { iShutter } from '../../server';
 
 export class ShutterPositionChangedAction extends BaseAction {
   /** @inheritDoc */

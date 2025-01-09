@@ -1,5 +1,5 @@
-import { CommandSource } from './commandSource.js';
-import { CommandType } from './commandType.js';
+import { CommandSource } from './commandSource';
+import { CommandType } from './commandType';
 
 export abstract class BaseCommand {
   /**

@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { WeatherItem } from './weather-item.js';
+import { WeatherItem } from './weather-item';
 
 export interface WeatherHourly {
   dt: number;

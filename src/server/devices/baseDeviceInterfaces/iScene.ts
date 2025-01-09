@@ -1,5 +1,5 @@
-import { iRoomDevice } from './index.js';
-import { SceneSettings } from '../../../models/index.js';
+import { iRoomDevice } from './index';
+import { SceneSettings } from '../../../models';
 
 // TODO: Migrate to new Command Structure
 /**

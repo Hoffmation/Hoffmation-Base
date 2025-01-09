@@ -1,6 +1,6 @@
-import { CommandSource } from './commandSource.js';
-import { BaseCommand } from './baseCommand.js';
-import { CommandType } from './commandType.js';
+import { CommandSource } from './commandSource';
+import { BaseCommand } from './baseCommand';
+import { CommandType } from './commandType';
 
 export class RoomRestoreShutterPositionCommand extends BaseCommand {
   /** @inheritDoc */

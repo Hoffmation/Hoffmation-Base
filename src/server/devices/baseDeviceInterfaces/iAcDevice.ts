@@ -1,6 +1,6 @@
-import { AcSettings } from '../../../models/index.js';
-import { AcMode } from '../../services/index.js';
-import { iBaseDevice } from './iBaseDevice.js';
+import { AcSettings } from '../../../models';
+import { AcMode } from '../../services';
+import { iBaseDevice } from './iBaseDevice';
 
 /**
  * Interface for normal air-conditioning devices

@@ -1,3 +1,3 @@
-export * from './muell-tonne.js';
-export * from './müll-service.js';
-export { NameDatePair } from './name-date-pair.js';
+export * from './muell-tonne';
+export * from './müll-service';
+export { NameDatePair } from './name-date-pair';

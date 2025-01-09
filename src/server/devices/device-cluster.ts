@@ -1,9 +1,9 @@
-import { DeviceClusterType } from './device-cluster-type.js';
-import { DeviceList } from './device-list.js';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice.js';
-import { Utils } from '../services/index.js';
-import { DeviceType } from './deviceType.js';
-import { iBaseDevice } from './baseDeviceInterfaces/index.js';
+import { DeviceClusterType } from './device-cluster-type';
+import { DeviceList } from './device-list';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { Utils } from '../services';
+import { DeviceType } from './deviceType';
+import { iBaseDevice } from './baseDeviceInterfaces';
 
 export class DeviceCluster {
   public constructor(public deviceMap: Map<DeviceClusterType, DeviceList> = new Map<DeviceClusterType, DeviceList>()) {}

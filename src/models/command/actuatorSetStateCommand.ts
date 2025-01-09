@@ -1,9 +1,9 @@
-import { BaseCommand } from './baseCommand.js';
-import { CommandSource } from './commandSource.js';
-import { CommandType } from './commandType.js';
-import { ActuatorToggleCommand } from './actuatorToggleCommand.js';
-import { iActuator } from '../../server/index.js';
-import { BlockAutomaticCommand } from './blockAutomaticCommand.js';
+import { BaseCommand } from './baseCommand';
+import { CommandSource } from './commandSource';
+import { CommandType } from './commandType';
+import { ActuatorToggleCommand } from './actuatorToggleCommand';
+import { iActuator } from '../../server';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class ActuatorSetStateCommand extends BaseCommand {
   /** @inheritDoc */

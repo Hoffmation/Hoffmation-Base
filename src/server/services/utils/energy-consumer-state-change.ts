@@ -1,4 +1,4 @@
-import { iExcessEnergyConsumer } from '../../devices/index.js';
+import { iExcessEnergyConsumer } from '../../devices';
 
 export class EnergyConsumerStateChange {
   public constructor(

@@ -1,12 +1,12 @@
 /* eslint-disable prefer-rest-params,@typescript-eslint/ban-ts-comment,jsdoc/require-returns-description,jsdoc/require-param-description,jsdoc/require-jsdoc */
 import { IncomingMessage } from 'http';
 import io from 'socket.io-client';
-import { iobrokerConnectionLogging, iobrokerConnectionLogLevel } from './iobrokerConnectionLogging.js';
-import { iDisposable, Utils } from '../services/index.js';
-import { ConnectionCallbacks } from '../../models/index.js';
-import { SocketIOVisCommand } from './socketIOVisCommand.js';
-import { IoBrokerAuthInfo } from './ioBrokerAuthInfo.js';
-import { SocketIOConnectOpts } from './socketIOConnectOptions.js';
+import { iobrokerConnectionLogging, iobrokerConnectionLogLevel } from './iobrokerConnectionLogging';
+import { iDisposable, Utils } from '../services';
+import { ConnectionCallbacks } from '../../models';
+import { SocketIOVisCommand } from './socketIOVisCommand';
+import { IoBrokerAuthInfo } from './ioBrokerAuthInfo';
+import { SocketIOConnectOpts } from './socketIOConnectOptions';
 
 let session: unknown;
 let app: unknown;

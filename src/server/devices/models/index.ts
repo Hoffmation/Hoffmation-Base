@@ -1,3 +1,3 @@
-export * from './WindowPosition.js';
-export * from './MagnetPosition.js';
-export * from './phaseState.js';
+export * from './WindowPosition';
+export * from './MagnetPosition';
+export * from './phaseState';

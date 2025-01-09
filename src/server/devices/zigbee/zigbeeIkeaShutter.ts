@@ -1,7 +1,7 @@
-import { ZigbeeShutter } from './BaseDevices/index.js';
-import { DeviceType } from '../deviceType.js';
-import { LogLevel } from '../../../models/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { ZigbeeShutter } from './BaseDevices';
+import { DeviceType } from '../deviceType';
+import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class ZigbeeIkeaShutter extends ZigbeeShutter {
   private readonly _positionStateId: string;

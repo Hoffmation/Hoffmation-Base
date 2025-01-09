@@ -1,11 +1,11 @@
-import { CommandType } from './commandType.js';
-import { CommandSource } from './commandSource.js';
-import { BaseCommand } from './baseCommand.js';
-import { DimmerSetLightCommand } from './dimmerSetLightCommand.js';
-import { WledSettings } from '../deviceSettings/index.js';
-import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand.js';
-import { TimeOfDay } from '../timeCallback.js';
-import { BlockAutomaticCommand } from './blockAutomaticCommand.js';
+import { CommandType } from './commandType';
+import { CommandSource } from './commandSource';
+import { BaseCommand } from './baseCommand';
+import { DimmerSetLightCommand } from './dimmerSetLightCommand';
+import { WledSettings } from '../deviceSettings';
+import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
+import { TimeOfDay } from '../timeCallback';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class WledSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */

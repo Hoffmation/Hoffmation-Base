@@ -1,7 +1,7 @@
-export * from './energy-manager-utils.js';
-export * from './ringStorage.js';
-export * from './utils.js';
-export * from './iDisposeable.js';
-export { EnergyConsumerStateChange } from './energy-consumer-state-change.js';
-export { CatchEmResult } from './catchEmResult.js';
-export { RGB } from './RGB.js';
+export * from './energy-manager-utils';
+export * from './ringStorage';
+export * from './utils';
+export * from './iDisposeable';
+export { EnergyConsumerStateChange } from './energy-consumer-state-change';
+export { CatchEmResult } from './catchEmResult';
+export { RGB } from './RGB';

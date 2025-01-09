@@ -1,12 +1,12 @@
-import { iTemperatureSensor } from '../baseDeviceInterfaces/index.js';
-import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services/index.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { DeviceType } from '../deviceType.js';
-import { DeviceInfo } from '../DeviceInfo.js';
+import { iTemperatureSensor } from '../baseDeviceInterfaces';
+import { API, LogDebugType, OwnSonosDevice, ServerLogService, Utils } from '../../services';
+import { DeviceCapability } from '../DeviceCapability';
+import { DeviceType } from '../deviceType';
+import { DeviceInfo } from '../DeviceInfo';
+import { Devices } from '../devices';
 import _ from 'lodash';
-import { DeviceSettings, LogLevel, RoomBase, TemperatureSensorChangeAction } from '../../../models/index.js';
-import { TemperatureSensor } from '../sharedFunctions/index.js';
-import { Devices } from '../devices.js';
+import { DeviceSettings, LogLevel, RoomBase, TemperatureSensorChangeAction } from '../../../models';
+import { TemperatureSensor } from '../sharedFunctions';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */

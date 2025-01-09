@@ -1,8 +1,8 @@
-import { DeviceSettings } from '../../../models/index.js';
-import { DeviceType } from '../deviceType.js';
-import { DeviceInfo } from '../DeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { iIdHolder } from '../../../models/iIdHolder.js';
+import { DeviceSettings } from '../../../models';
+import { DeviceType } from '../deviceType';
+import { DeviceInfo } from '../DeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { iIdHolder } from '../../../models/iIdHolder';
 
 /**
  * This is the main interface for all devices as it ensures certain base functionality.

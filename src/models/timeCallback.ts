@@ -1,5 +1,5 @@
-import { ServerLogService, SunTimeOffsets, TimeCallbackService, Utils } from '../server/index.js';
-import { LogLevel } from './logLevel.js';
+import { ServerLogService, SunTimeOffsets, TimeCallbackService, Utils } from '../server';
+import { LogLevel } from './logLevel';
 
 export enum TimeCallbackType {
   TimeOfDay = 1,

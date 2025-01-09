@@ -1,4 +1,4 @@
-import { InfluxDbConnectionOptions } from '../devices/index.js';
+import { InfluxDbConnectionOptions } from 'victron-mqtt-consumer/build/models/InfluxDbConnectionOptions';
 
 /**
  * The settings for the Victron-Service (if present).

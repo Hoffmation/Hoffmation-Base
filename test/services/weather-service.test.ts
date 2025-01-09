@@ -1,4 +1,4 @@
-import { ServerLogService, WeatherService } from '../../src.js';
+import { ServerLogService, WeatherService } from '../../src';
 
 describe('WeatherService', () => {
   jest.setTimeout(10000);

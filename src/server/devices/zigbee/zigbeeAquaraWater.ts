@@ -1,11 +1,11 @@
-import { DeviceType } from '../deviceType.js';
-import { Res, SonosService, Utils } from '../../services/index.js';
-import { ZigbeeDevice } from './BaseDevices/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { iBatteryDevice } from '../baseDeviceInterfaces/index.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { Battery } from '../sharedFunctions/index.js';
+import { DeviceType } from '../deviceType';
+import { Res, SonosService, Utils } from '../../services';
+import { ZigbeeDevice } from './BaseDevices';
+import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { DeviceCapability } from '../DeviceCapability';
+import { Battery } from '../sharedFunctions';
 
 // TODO: Add iWaterSensor
 export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {

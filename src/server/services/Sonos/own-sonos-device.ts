@@ -1,14 +1,15 @@
-import { DeviceCapability, DeviceInfo, Devices, DeviceType, iSpeaker } from '../../devices/index.js';
-import { LogLevel, RoomBase, SonosDeviceSettings } from '../../../models/index.js';
+import { DeviceInfo, Devices, DeviceType, iSpeaker } from '../../devices';
+import { LogLevel, RoomBase, SonosDeviceSettings } from '../../../models';
 import { SonosDevice } from '@svrooij/sonos/lib';
-import { LogDebugType, ServerLogService } from '../log-service/index.js';
-import { Utils } from '../utils/index.js';
+import { LogDebugType, ServerLogService } from '../log-service';
+import { Utils } from '../utils';
 import _ from 'lodash';
-import { SonosService } from './sonos-service.js';
-import { SettingsService } from '../settings-service.js';
-import { PollyService } from './polly-service.js';
-import { API } from '../api/index.js';
-import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue.js';
+import { SonosService } from './sonos-service';
+import { DeviceCapability } from '../../devices/DeviceCapability';
+import { SettingsService } from '../settings-service';
+import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
+import { PollyService } from './polly-service';
+import { API } from '../api';
 
 export class OwnSonosDevice implements iSpeaker {
   /** @inheritDoc */

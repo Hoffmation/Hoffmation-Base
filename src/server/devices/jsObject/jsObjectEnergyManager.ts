@@ -1,11 +1,11 @@
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice.js';
-import { iEnergyManager, iExcessEnergyConsumer } from '../baseDeviceInterfaces/index.js';
-import { DeviceType } from '../deviceType.js';
-import { EnergyCalculation, LogLevel } from '../../../models/index.js';
-import { EnergyConsumerStateChange, EnergyManagerUtils, iDisposable, Utils } from '../../services/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { PhaseState } from '../models/index.js';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { iEnergyManager, iExcessEnergyConsumer } from '../baseDeviceInterfaces';
+import { DeviceType } from '../deviceType';
+import { EnergyCalculation, LogLevel } from '../../../models';
+import { EnergyConsumerStateChange, EnergyManagerUtils, iDisposable, Utils } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { PhaseState } from '../models';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager, iDisposable {
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];

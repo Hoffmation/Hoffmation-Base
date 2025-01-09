@@ -1,4 +1,4 @@
-import { EspresenseDevice } from './espresenseDevice.js';
+import { EspresenseDevice } from './espresenseDevice';
 
 export class EspresenseCoordinator {
   private static espDeviceMap: Map<string, EspresenseDevice> = new Map<string, EspresenseDevice>();

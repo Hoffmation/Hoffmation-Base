@@ -1,6 +1,6 @@
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceType } from '../deviceType.js';
-import { ZigbeeLedRGBCCT } from './BaseDevices/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType';
+import { ZigbeeLedRGBCCT } from './BaseDevices';
 
 export class ZigbeeIlluLedRGBCCT extends ZigbeeLedRGBCCT {
   protected readonly _stateIdBrightness: string;

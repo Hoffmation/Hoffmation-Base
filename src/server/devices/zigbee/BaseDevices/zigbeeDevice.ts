@@ -1,8 +1,8 @@
-import { DeviceType } from '../../deviceType.js';
-import { LogLevel } from '../../../../models/index.js';
-import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { iDisposable, Utils } from '../../../services/index.js';
+import { DeviceType } from '../../deviceType';
+import { LogLevel } from '../../../../models';
+import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { iDisposable, Utils } from '../../../services';
 
 export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   protected _available: boolean = false;

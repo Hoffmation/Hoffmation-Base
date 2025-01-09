@@ -1,4 +1,4 @@
-import { LogLevel } from '../../models/index.js';
+import { LogLevel } from '../../models';
 
 /**
  * The settings for the logging system.

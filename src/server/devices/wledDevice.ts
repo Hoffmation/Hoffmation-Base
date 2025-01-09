@@ -1,6 +1,6 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice.js';
-import { DeviceType } from './deviceType.js';
-import { LogDebugType, ServerLogService, Utils } from '../services/index.js';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { DeviceType } from './deviceType';
+import { LogDebugType, ServerLogService, Utils } from '../services';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -13,12 +13,12 @@ import {
   RestoreTargetAutomaticValueCommand,
   WledSetLightCommand,
   WledSettings,
-} from '../../models/index.js';
-import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo.js';
-import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp.js';
-import { BlockAutomaticHandler } from '../services/blockAutomaticHandler.js';
-import { LampUtils } from './sharedFunctions/index.js';
-import { DeviceCapability } from './DeviceCapability.js';
+} from '../../models';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
+import { iDimmableLamp } from './baseDeviceInterfaces/iDimmableLamp';
+import { BlockAutomaticHandler } from '../services/blockAutomaticHandler';
+import { LampUtils } from './sharedFunctions';
+import { DeviceCapability } from './DeviceCapability';
 
 export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   /** @inheritDoc */

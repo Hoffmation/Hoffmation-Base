@@ -1,6 +1,6 @@
-import { CommandType } from './commandType.js';
-import { BaseCommand } from './baseCommand.js';
-import { CommandSource } from './commandSource.js';
+import { CommandType } from './commandType';
+import { BaseCommand } from './baseCommand';
+import { CommandSource } from './commandSource';
 
 export class ActuatorToggleCommand extends BaseCommand {
   /** @inheritDoc */

@@ -1,4 +1,4 @@
-import { TimeCallback, TimeOfDay } from '../timeCallback.js';
+import { TimeCallback, TimeOfDay } from '../timeCallback';
 import {
   BaseGroup,
   DeviceCluster,
@@ -19,18 +19,18 @@ import {
   Utils,
   WaterGroup,
   WindowGroup,
-} from '../../server/index.js';
-import { LogLevel } from '../logLevel.js';
-import { RoomSettingsController } from './RoomSettings/index.js';
-import { iRoomBase } from './iRoomBase.js';
-import { RoomInfo } from './roomInfo.js';
+} from '../../server';
+import { LogLevel } from '../logLevel';
+import { RoomSettingsController } from './RoomSettings';
+import { iRoomBase } from './iRoomBase';
+import { RoomInfo } from './roomInfo';
 import _ from 'lodash';
-import { iIdHolder } from '../iIdHolder.js';
+import { iIdHolder } from '../iIdHolder';
 import {
   ActuatorSetStateCommand,
   LightGroupSwitchTimeConditionalCommand,
   RoomSetLightTimeBasedCommand,
-} from '../command/index.js';
+} from '../command';
 
 export class RoomBase implements iRoomBase, iIdHolder {
   /**

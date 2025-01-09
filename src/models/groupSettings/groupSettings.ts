@@ -1,3 +1,3 @@
-import { ObjectSettings } from '../objectSettings.js';
+import { ObjectSettings } from '../objectSettings';
 
 export abstract class GroupSettings extends ObjectSettings {}

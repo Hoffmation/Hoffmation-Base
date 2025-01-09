@@ -1,5 +1,5 @@
-import { GarageDoorOpenerSettings } from '../../../models/index.js';
-import { iRoomDevice } from './iRoomDevice.js';
+import { GarageDoorOpenerSettings } from '../../../models';
+import { iRoomDevice } from './iRoomDevice';
 
 // TODO: Migrate to new Command Structure
 /**

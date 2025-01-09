@@ -1,5 +1,5 @@
-import { LogLevel } from '../../../models/index.js';
-import { LogFilterData } from './log-filter-data.js';
+import { LogLevel } from '../../../models';
+import { LogFilterData } from './log-filter-data';
 
 export class LogObject {
   public constructor(

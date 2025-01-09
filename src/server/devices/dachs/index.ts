@@ -1,3 +1,3 @@
-export * from './dachs.js';
-export * from './interfaces/index.js';
-export * from './lib/index.js';
+export * from './dachs';
+export * from './interfaces';
+export * from './lib';

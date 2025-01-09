@@ -1,1 +1,1 @@
-export * from './room-service.js';
+export * from './room-service';

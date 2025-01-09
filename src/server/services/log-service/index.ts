@@ -1,4 +1,4 @@
-export * from './log-service.js';
-export * from './log-object.js';
-export * from './log-filter-data.js';
-export { LogDebugType } from './log-debug-type.js';
+export * from './log-service';
+export * from './log-object';
+export * from './log-filter-data';
+export { LogDebugType } from './log-debug-type';

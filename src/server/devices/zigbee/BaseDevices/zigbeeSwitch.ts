@@ -1,11 +1,11 @@
-import { iButtonSwitch } from '../../baseDeviceInterfaces/index.js';
-import { ZigbeeDevice } from './zigbeeDevice.js';
-import { DeviceType } from '../../deviceType.js';
-import { Button, ButtonPosition, ButtonPressType } from '../../button/index.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../../DeviceCapability.js';
-import { LogLevel } from '../../../../models/index.js';
-import { Utils } from '../../../services/index.js';
+import { iButtonSwitch } from '../../baseDeviceInterfaces';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { DeviceType } from '../../deviceType';
+import { Button, ButtonPosition, ButtonPressType } from '../../button';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { LogLevel } from '../../../../models';
+import { Utils } from '../../../services';
 
 export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch {
   /**

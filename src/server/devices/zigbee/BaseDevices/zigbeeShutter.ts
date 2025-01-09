@@ -1,5 +1,5 @@
-import { DeviceType } from '../../deviceType.js';
-import { LogDebugType, Utils } from '../../../services/index.js';
+import { DeviceType } from '../../deviceType';
+import { LogDebugType, Utils } from '../../../services';
 import {
   CommandSource,
   LogLevel,
@@ -8,15 +8,15 @@ import {
   ShutterSetLevelCommand,
   ShutterSettings,
   WindowSetDesiredPositionCommand,
-} from '../../../../models/index.js';
-import { ZigbeeDevice } from './zigbeeDevice.js';
-import { iShutter } from '../../baseDeviceInterfaces/index.js';
-import { Window } from '../../groups/index.js';
-import { WindowPosition } from '../../models/index.js';
+} from '../../../../models';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { iShutter } from '../../baseDeviceInterfaces';
+import { Window } from '../../groups';
+import { WindowPosition } from '../../models';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../../DeviceCapability.js';
+import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** @inheritDoc */

@@ -1,1 +1,1 @@
-export * from './jsObjectEnergyManager.js';
+export * from './jsObjectEnergyManager';

@@ -1,4 +1,4 @@
-import { HeatingMode } from './heatingMode.js';
+import { HeatingMode } from './heatingMode';
 
 /**
  * Additional settings for the heating system (if present)

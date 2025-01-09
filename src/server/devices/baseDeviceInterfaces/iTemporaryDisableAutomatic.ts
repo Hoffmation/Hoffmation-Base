@@ -1,6 +1,6 @@
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler.js';
-import { iBaseDevice } from './iBaseDevice.js';
-import { RestoreTargetAutomaticValueCommand } from '../../../models/index.js';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { iBaseDevice } from './iBaseDevice';
+import { RestoreTargetAutomaticValueCommand } from '../../../models';
 
 /**
  * This interface represents a device which automatic action can be temporarily disabled.

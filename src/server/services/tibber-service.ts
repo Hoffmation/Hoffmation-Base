@@ -1,4 +1,4 @@
-import { iTibberSettings } from '../config/index.js';
+import { iTibberSettings } from '../config';
 import { IConfig, TibberFeed, TibberQueryBase } from 'tibber-api';
 
 export class TibberService {

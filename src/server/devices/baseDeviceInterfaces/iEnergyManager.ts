@@ -1,6 +1,6 @@
-import { iExcessEnergyConsumer } from './iExcessEnergyConsumer.js';
-import { iBaseDevice } from './iBaseDevice.js';
-import { iDisposable } from '../../services/index.js';
+import { iExcessEnergyConsumer } from './iExcessEnergyConsumer';
+import { iBaseDevice } from './iBaseDevice';
+import { iDisposable } from '../../services';
 
 /**
  * Interface for devices that can manage energy consumption and production.

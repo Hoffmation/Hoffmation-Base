@@ -1,13 +1,13 @@
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
-import { LogDebugType, ServerLogService } from '../log-service/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { SettingsService } from '../settings-service.js';
-import { DaikinService } from './daikin-service.js';
-import { Utils } from '../utils/index.js';
-import { AcDevice } from './ac-device.js';
-import { AcMode } from './ac-mode.js';
-import { AcDeviceType } from './acDeviceType.js';
-import { DeviceType, UNDEFINED_TEMP_VALUE } from '../../devices/index.js';
+import { LogDebugType, ServerLogService } from '../log-service';
+import { LogLevel } from '../../../models';
+import { SettingsService } from '../settings-service';
+import { DaikinService } from './daikin-service';
+import { Utils } from '../utils';
+import { AcDevice } from './ac-device';
+import { AcMode } from './ac-mode';
+import { AcDeviceType } from './acDeviceType';
+import { DeviceType, UNDEFINED_TEMP_VALUE } from '../../devices';
 import _ from 'lodash';
 
 export class OwnDaikinDevice extends AcDevice {

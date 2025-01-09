@@ -1,8 +1,8 @@
-import { CommandType } from './commandType.js';
-import { CommandSource } from './commandSource.js';
-import { CollisionSolving } from '../collisionSolving.js';
-import { BaseCommand } from './baseCommand.js';
-import { SettingsService } from '../../server/index.js';
+import { CommandType } from './commandType';
+import { CommandSource } from './commandSource';
+import { CollisionSolving } from '../collisionSolving';
+import { BaseCommand } from './baseCommand';
+import { SettingsService } from '../../server';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
   /** @inheritDoc */

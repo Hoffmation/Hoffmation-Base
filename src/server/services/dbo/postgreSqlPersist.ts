@@ -1,4 +1,4 @@
-import { iPersist } from './iPersist.js';
+import { iPersist } from './iPersist';
 import {
   CountToday,
   DesiredShutterPosition,
@@ -7,7 +7,7 @@ import {
   LogLevel,
   RoomBase,
   ShutterCalibration,
-} from '../../../models/index.js';
+} from '../../../models';
 import {
   ButtonPressType,
   DeviceCapability,
@@ -26,10 +26,10 @@ import {
   iTemperatureSensor,
   UNDEFINED_TEMP_VALUE,
   ZigbeeDevice,
-} from '../../devices/index.js';
+} from '../../devices';
 import { Pool, PoolConfig, QueryResultRow } from 'pg';
-import { ServerLogService } from '../log-service/index.js';
-import { Utils } from '../utils/index.js';
+import { ServerLogService } from '../log-service';
+import { Utils } from '../utils';
 
 export class PostgreSqlPersist implements iPersist {
   /** @inheritDoc */

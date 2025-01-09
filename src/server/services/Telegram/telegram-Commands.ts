@@ -1,18 +1,10 @@
 import TelegramBot from 'node-telegram-bot-api';
-import {
-  Devices,
-  DeviceType,
-  Griffe,
-  HeatGroup,
-  Heizgruppen,
-  HmIpTaster,
-  ZigbeeAquaraVibra,
-} from '../../devices/index.js';
-import { TelegramMessageCallback } from './telegramMessageCalback.js';
-import { ShutterService } from '../ShutterService.js';
-import { TelegramService } from './telegram-service.js';
-import { RoomService } from '../room-service/index.js';
-import { CommandSource, FloorSetAllShuttersCommand } from '../../../models/index.js';
+import { Devices, DeviceType, Griffe, HeatGroup, Heizgruppen, HmIpTaster, ZigbeeAquaraVibra } from '../../devices';
+import { TelegramMessageCallback } from './telegramMessageCalback';
+import { ShutterService } from '../ShutterService';
+import { TelegramService } from './telegram-service';
+import { RoomService } from '../room-service';
+import { CommandSource, FloorSetAllShuttersCommand } from '../../../models';
 
 export class TelegramCommands {
   public static initialize(): void {

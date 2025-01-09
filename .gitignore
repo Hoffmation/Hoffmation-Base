@@ -6,7 +6,7 @@
 /upload_to_dtrack.sh
 
 # Private Test Data
-/test/devices/owndevices/index.json
+/test/devices/ownDevices.json
 
 # Logs
 logs

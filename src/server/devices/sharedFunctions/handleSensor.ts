@@ -1,9 +1,9 @@
-import { WindowPosition } from '../models/index.js';
-import { HandleChangeAction, iJsonOmitKeys, LogLevel } from '../../../models/index.js';
-import { iDisposable, LogDebugType, TelegramService, Utils, WeatherService } from '../../services/index.js';
-import { HeatGroup, Window } from '../groups/index.js';
-import { iHandleSensor } from '../baseDeviceInterfaces/index.js';
-import { HandleSettings } from '../../../models/deviceSettings/handleSettings.js';
+import { WindowPosition } from '../models';
+import { HandleChangeAction, iJsonOmitKeys, LogLevel } from '../../../models';
+import { iDisposable, LogDebugType, TelegramService, Utils, WeatherService } from '../../services';
+import { HeatGroup, Window } from '../groups';
+import { iHandleSensor } from '../baseDeviceInterfaces';
+import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
 
 export class HandleSensor implements iDisposable, iJsonOmitKeys {
   /** @inheritDoc */

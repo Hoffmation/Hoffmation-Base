@@ -1,2 +1,2 @@
-export * from './postgreSqlPersist.js';
-export * from './iPersist.js';
+export * from './postgreSqlPersist';
+export * from './iPersist';

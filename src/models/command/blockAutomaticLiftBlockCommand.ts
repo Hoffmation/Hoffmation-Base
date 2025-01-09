@@ -1,7 +1,7 @@
-import { CommandType } from './commandType.js';
-import { CommandSource } from './commandSource.js';
-import { BaseCommand } from './baseCommand.js';
-import { SettingsService } from '../../server/index.js';
+import { CommandType } from './commandType';
+import { CommandSource } from './commandSource';
+import { BaseCommand } from './baseCommand';
+import { SettingsService } from '../../server';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
   /** @inheritDoc */

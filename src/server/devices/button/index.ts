@@ -1,5 +1,5 @@
-export * from './button.js';
-export * from './buttonCapabilities.js';
-export * from './buttonPressType.js';
-export * from './buttonPosition.js';
-export { ButtonCallback } from './buttonCallback.js';
+export * from './button';
+export * from './buttonCapabilities';
+export * from './buttonPressType';
+export * from './buttonPosition';
+export { ButtonCallback } from './buttonCallback';

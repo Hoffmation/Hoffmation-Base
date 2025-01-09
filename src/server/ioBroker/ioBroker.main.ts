@@ -1,7 +1,7 @@
-import { DeviceUpdater, IDeviceUpdater } from '../devices/index.js';
-import { ServerLogService, SettingsService, TimeCallbackService, Utils } from '../services/index.js';
-import { ConnectionCallbacks, iRoomBase, LogLevel } from '../../models/index.js';
-import { IOBrokerConnection } from './connection.js';
+import { DeviceUpdater, IDeviceUpdater } from '../devices';
+import { ServerLogService, SettingsService, TimeCallbackService, Utils } from '../services';
+import { ConnectionCallbacks, iRoomBase, LogLevel } from '../../models';
+import { IOBrokerConnection } from './connection';
 
 export class ioBrokerMain {
   private static readonly SplitKeys: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

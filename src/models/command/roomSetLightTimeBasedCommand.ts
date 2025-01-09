@@ -1,6 +1,6 @@
-import { BaseCommand } from './baseCommand.js';
-import { CommandType } from './commandType.js';
-import { CommandSource } from './commandSource.js';
+import { BaseCommand } from './baseCommand';
+import { CommandType } from './commandType';
+import { CommandSource } from './commandSource';
 
 export class RoomSetLightTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */

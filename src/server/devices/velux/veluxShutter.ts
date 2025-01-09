@@ -1,7 +1,7 @@
-import { DeviceType } from '../deviceType.js';
-import { LogDebugType, Utils } from '../../services/index.js';
-import { Window } from '../groups/index.js';
-import { WindowPosition } from '../models/index.js';
+import { DeviceType } from '../deviceType';
+import { LogDebugType, Utils } from '../../services';
+import { Window } from '../groups';
+import { WindowPosition } from '../models';
 import {
   CommandSource,
   LogLevel,
@@ -9,13 +9,13 @@ import {
   ShutterSetLevelCommand,
   ShutterSettings,
   WindowSetDesiredPositionCommand,
-} from '../../../models/index.js';
-import { iShutter } from '../baseDeviceInterfaces/index.js';
+} from '../../../models';
+import { iShutter } from '../baseDeviceInterfaces';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { VeluxDevice } from './veluxDevice.js';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { VeluxDevice } from './veluxDevice';
 
 export class VeluxShutter extends VeluxDevice implements iShutter {
   /** @inheritDoc */

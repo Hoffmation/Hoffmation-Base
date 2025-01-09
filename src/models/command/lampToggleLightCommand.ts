@@ -1,8 +1,8 @@
-import { ActuatorToggleCommand } from './actuatorToggleCommand.js';
-import { CommandType } from './commandType.js';
-import { CommandSource } from './commandSource.js';
-import { BaseCommand } from './baseCommand.js';
-import { TimeOfDay } from '../timeCallback.js';
+import { ActuatorToggleCommand } from './actuatorToggleCommand';
+import { CommandType } from './commandType';
+import { CommandSource } from './commandSource';
+import { BaseCommand } from './baseCommand';
+import { TimeOfDay } from '../timeCallback';
 
 export class LampToggleLightCommand extends ActuatorToggleCommand {
   /** @inheritDoc */

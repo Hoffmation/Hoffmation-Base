@@ -1,2 +1,2 @@
-export { TuyaDevice } from './tuyaDevice.js';
-export { TuyaGarageOpener } from './tuyaGarageOpener.js';
+export { TuyaDevice } from './tuyaDevice';
+export { TuyaGarageOpener } from './tuyaGarageOpener';

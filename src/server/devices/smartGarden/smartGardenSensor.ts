@@ -1,10 +1,10 @@
-import { iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces/index.js';
-import { SmartGardenDevice } from './smartGardenDevice.js';
-import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../../models/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceType } from '../deviceType.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { HumiditySensor, TemperatureSensor } from '../sharedFunctions/index.js';
+import { iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
+import { SmartGardenDevice } from './smartGardenDevice';
+import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType';
+import { DeviceCapability } from '../DeviceCapability';
+import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 
 export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySensor, iTemperatureSensor {
   /** @inheritDoc */

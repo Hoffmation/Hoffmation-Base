@@ -1,4 +1,4 @@
-import { RingStorage, Utils } from '../utils/index.js';
+import { RingStorage, Utils } from '../utils';
 import {
   ActuatorSetStateCommand,
   CommandSource,
@@ -12,12 +12,12 @@ import {
   RoomSetLightTimeBasedCommand,
   WindowSetDesiredPositionCommand,
   WledSetLightCommand,
-} from '../../../models/index.js';
-import { ServerLogService } from '../log-service/index.js';
-import { SonosService } from '../Sonos/index.js';
-import { Res } from '../Translation/index.js';
-import { TelegramService } from '../Telegram/index.js';
-import { BaseGroup, iRoomDevice } from '../../devices/index.js';
+} from '../../../models';
+import { ServerLogService } from '../log-service';
+import { SonosService } from '../Sonos';
+import { Res } from '../Translation';
+import { TelegramService } from '../Telegram';
+import { BaseGroup, iRoomDevice } from '../../devices';
 
 export class RoomService {
   /**

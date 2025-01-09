@@ -1,5 +1,5 @@
-import { ZigbeeDevice } from './zigbeeDevice.js';
-import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces/index.js';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
 import {
   HandleChangeAction,
   HeaterSettings,
@@ -7,14 +7,14 @@ import {
   TemperatureSensorChangeAction,
   TimeCallback,
   TimeCallbackType,
-} from '../../../../models/index.js';
-import { DeviceType } from '../../deviceType.js';
-import { TimeCallbackService, Utils } from '../../../services/index.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../../DeviceCapability.js';
-import { PIDController } from '../../../../liquid-pid.js';
-import { HeatGroup } from '../../groups/index.js';
-import { Battery, TemperatureSensor } from '../../sharedFunctions/index.js';
+} from '../../../../models';
+import { DeviceType } from '../../deviceType';
+import { TimeCallbackService, Utils } from '../../../services';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { PIDController } from '../../../../liquid-pid';
+import { HeatGroup } from '../../groups';
+import { Battery, TemperatureSensor } from '../../sharedFunctions';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   /** @inheritDoc */

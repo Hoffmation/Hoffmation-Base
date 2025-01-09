@@ -5,15 +5,15 @@ import {
   DimmerSettings,
   LampSetTimeBasedCommand,
   LogLevel,
-} from '../../../../models/index.js';
-import { DeviceType } from '../../deviceType.js';
-import { LogDebugType, SettingsService, Utils } from '../../../services/index.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../../DeviceCapability.js';
-import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp.js';
-import { iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces/index.js';
-import { LampUtils } from '../../sharedFunctions/index.js';
-import { ZigbeeLamp } from './zigbeeLamp.js';
+} from '../../../../models';
+import { DeviceType } from '../../deviceType';
+import { LogDebugType, SettingsService, Utils } from '../../../services';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { iDimmableLamp } from '../../baseDeviceInterfaces/iDimmableLamp';
+import { iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
+import { LampUtils } from '../../sharedFunctions';
+import { ZigbeeLamp } from './zigbeeLamp';
 
 export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, iTemporaryDisableAutomatic {
   /** @inheritDoc */

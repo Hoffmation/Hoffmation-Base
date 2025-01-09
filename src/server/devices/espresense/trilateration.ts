@@ -1,9 +1,9 @@
-import { TrilaterationBasePoint } from './trilaterationBasePoint.js';
-import { TrilaterationPoint } from './trilaterationPoint.js';
-import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate.js';
-import { TrilaterationPointDistance } from './trilaterationPointDistance.js';
-import { LogLevel, RoomBase } from '../../../models/index.js';
-import { LogDebugType, ServerLogService } from '../../services/index.js';
+import { TrilaterationBasePoint } from './trilaterationBasePoint';
+import { TrilaterationPoint } from './trilaterationPoint';
+import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
+import { TrilaterationPointDistance } from './trilaterationPointDistance';
+import { LogLevel, RoomBase } from '../../../models';
+import { LogDebugType, ServerLogService } from '../../services';
 
 export class Trilateration {
   /**

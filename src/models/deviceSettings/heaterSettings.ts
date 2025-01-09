@@ -1,5 +1,5 @@
-import { DeviceSettings } from './deviceSettings.js';
-import { Utils } from '../../server/index.js';
+import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../server';
 
 export class HeaterSettings extends DeviceSettings {
   /**

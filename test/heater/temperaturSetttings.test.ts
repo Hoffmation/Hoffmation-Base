@@ -1,4 +1,4 @@
-import { Daytime, TemperatureSettings } from '../../lib.js';
+import { Daytime, TemperatureSettings } from '../../lib';
 
 describe('TemperatureSettings', () => {
   const setting: TemperatureSettings = new TemperatureSettings(new Daytime(0, 0), new Daytime(6, 0), 20, 'Nacht');

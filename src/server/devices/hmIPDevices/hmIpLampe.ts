@@ -1,6 +1,6 @@
-import { HmIPDevice } from './hmIpDevice.js';
-import { DeviceType } from '../deviceType.js';
-import { LogDebugType, Utils } from '../../services/index.js';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { LogDebugType, Utils } from '../../services';
 import {
   ActuatorSetStateCommand,
   ActuatorSettings,
@@ -11,12 +11,12 @@ import {
   LampToggleLightCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-} from '../../../models/index.js';
-import { iLamp, iTemporaryDisableAutomatic } from '../baseDeviceInterfaces/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler.js';
-import { LampUtils } from '../sharedFunctions/index.js';
+} from '../../../models';
+import { iLamp, iTemporaryDisableAutomatic } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { LampUtils } from '../sharedFunctions';
 
 export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAutomatic {
   /** @inheritDoc */

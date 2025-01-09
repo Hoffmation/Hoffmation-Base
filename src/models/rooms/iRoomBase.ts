@@ -1,5 +1,5 @@
-import { TimeCallback } from '../timeCallback.js';
-import { RoomSetLightTimeBasedCommand } from '../command/index.js';
+import { TimeCallback } from '../timeCallback';
+import { RoomSetLightTimeBasedCommand } from '../command';
 
 /**
  * This interface represents a room with it's base functionality.

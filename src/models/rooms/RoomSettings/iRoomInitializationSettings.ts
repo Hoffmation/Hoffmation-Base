@@ -1,4 +1,4 @@
-import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings.js';
+import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 
 /**
  * The settings for initializing a room (after Devices are generated) to add devices to the room

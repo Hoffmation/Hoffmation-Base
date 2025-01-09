@@ -1,8 +1,8 @@
-import { BaseCommand } from './baseCommand.js';
-import { CommandType } from './commandType.js';
-import { CommandSource } from './commandSource.js';
-import { TimeOfDay } from '../timeCallback.js';
-import { BlockAutomaticCommand } from './blockAutomaticCommand.js';
+import { BaseCommand } from './baseCommand';
+import { CommandType } from './commandType';
+import { CommandSource } from './commandSource';
+import { TimeOfDay } from '../timeCallback';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LampSetTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */

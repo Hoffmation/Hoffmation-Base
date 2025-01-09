@@ -1,11 +1,11 @@
-import { HmIPDevice } from './hmIpDevice.js';
-import { DeviceType } from '../deviceType.js';
-import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models/index.js';
-import { Utils } from '../../services/index.js';
-import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { Battery } from '../sharedFunctions/index.js';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models';
+import { Utils } from '../../services';
+import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { Battery } from '../sharedFunctions';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
   /** @inheritDoc */

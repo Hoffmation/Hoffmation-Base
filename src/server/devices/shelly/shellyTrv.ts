@@ -1,6 +1,6 @@
-import { ShellyDevice } from './shellyDevice.js';
-import { iBatteryDevice, iHeater, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces/index.js';
-import { TimeCallbackService, Utils } from '../../services/index.js';
+import { ShellyDevice } from './shellyDevice';
+import { iBatteryDevice, iHeater, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { TimeCallbackService, Utils } from '../../services';
 import {
   HandleChangeAction,
   HeaterSettings,
@@ -8,14 +8,14 @@ import {
   TemperatureSensorChangeAction,
   TimeCallback,
   TimeCallbackType,
-} from '../../../models/index.js';
-import { PIDController } from '../../../liquid-pid.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceType } from '../deviceType.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings.js';
-import { HeatGroup } from '../groups/index.js';
-import { Battery, TemperatureSensor } from '../sharedFunctions/index.js';
+} from '../../../models';
+import { PIDController } from '../../../liquid-pid';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType';
+import { DeviceCapability } from '../DeviceCapability';
+import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
+import { HeatGroup } from '../groups';
+import { Battery, TemperatureSensor } from '../sharedFunctions';
 
 export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSensor, iBatteryDevice {
   /** @inheritDoc */

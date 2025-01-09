@@ -1,4 +1,4 @@
-import { iTimePair } from '../../../server/index.js';
+import { iTimePair } from '../../../server';
 
 /**
  * Default settings for a room, which can then be overwritten by the room settings for each specific room

@@ -1,10 +1,10 @@
-import { DeviceType } from '../deviceType.js';
-import { LogLevel } from '../../../models/index.js';
-import { iIlluminationSensor } from '../baseDeviceInterfaces/index.js';
-import { ZigbeeMotionSensor } from './BaseDevices/index.js';
-import { Utils } from '../../services/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
+import { DeviceType } from '../deviceType';
+import { LogLevel } from '../../../models';
+import { iIlluminationSensor } from '../baseDeviceInterfaces';
+import { ZigbeeMotionSensor } from './BaseDevices';
+import { Utils } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
 
 export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminationSensor {
   private _illuminance: number = 0;

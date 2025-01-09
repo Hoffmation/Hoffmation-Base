@@ -1,6 +1,6 @@
-import { iRoomDevice } from './iRoomDevice.js';
-import { TemperatureSensorChangeAction } from '../../../models/index.js';
-import { TemperatureSensor } from '../sharedFunctions/index.js';
+import { iRoomDevice } from './iRoomDevice';
+import { TemperatureSensorChangeAction } from '../../../models';
+import { TemperatureSensor } from '../sharedFunctions';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 

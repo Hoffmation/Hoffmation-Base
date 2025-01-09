@@ -1,5 +1,5 @@
-import { ExcessEnergyConsumerSettings } from '../../../models/index.js';
-import { iBaseDevice } from './iBaseDevice.js';
+import { ExcessEnergyConsumerSettings } from '../../../models';
+import { iBaseDevice } from './iBaseDevice';
 
 /**
  * This interface represents a device that can consume excess energy.

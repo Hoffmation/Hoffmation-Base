@@ -1,5 +1,5 @@
-import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services/index.js';
-import { WindowPosition } from '../models/index.js';
+import { LogDebugType, ShutterService, TimeCallbackService, Utils } from '../../services';
+import { WindowPosition } from '../models';
 import {
   CommandSource,
   HandleChangeAction,
@@ -10,13 +10,13 @@ import {
   TimeOfDay,
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
-} from '../../../models/index.js';
-import { iHandleSensor, iShutter, iVibrationSensor } from '../baseDeviceInterfaces/index.js';
-import { BaseGroup } from './base-group.js';
-import { GroupType } from './group-type.js';
-import { DeviceClusterType } from '../device-cluster-type.js';
-import { DeviceList } from '../device-list.js';
-import { ZigbeeMagnetContact } from '../zigbee/index.js';
+} from '../../../models';
+import { iHandleSensor, iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
+import { BaseGroup } from './base-group';
+import { GroupType } from './group-type';
+import { DeviceClusterType } from '../device-cluster-type';
+import { DeviceList } from '../device-list';
+import { ZigbeeMagnetContact } from '../zigbee';
 
 export class Window extends BaseGroup {
   private _desiredPosition: number = 0;

@@ -1,7 +1,7 @@
-import { LogLevel } from '../../../models/index.js';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice.js';
-import { DeviceType } from '../deviceType.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { LogLevel } from '../../../models';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { DeviceType } from '../deviceType';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {

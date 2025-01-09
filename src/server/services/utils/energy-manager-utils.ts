@@ -1,6 +1,6 @@
-import { iExcessEnergyConsumer } from '../../devices/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { EnergyConsumerStateChange } from './energy-consumer-state-change.js';
+import { iExcessEnergyConsumer } from '../../devices';
+import { LogLevel } from '../../../models';
+import { EnergyConsumerStateChange } from './energy-consumer-state-change';
 
 export class EnergyManagerUtils {
   public static turnOnAdditionalConsumer(

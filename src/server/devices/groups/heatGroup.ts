@@ -1,16 +1,16 @@
-import { BaseGroup } from './base-group.js';
-import { GroupType } from './group-type.js';
-import { DeviceClusterType } from '../device-cluster-type.js';
-import { DeviceList } from '../device-list.js';
+import { BaseGroup } from './base-group';
+import { GroupType } from './group-type';
+import { DeviceClusterType } from '../device-cluster-type';
+import { DeviceList } from '../device-list';
 import {
   iHeater,
   iHumiditySensor,
   iTemperatureSensor,
   UNDEFINED_HUMIDITY_VALUE,
   UNDEFINED_TEMP_VALUE,
-} from '../baseDeviceInterfaces/index.js';
-import { AcDevice, API, Utils } from '../../services/index.js';
-import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings.js';
+} from '../baseDeviceInterfaces';
+import { AcDevice, API, Utils } from '../../services';
+import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
 import {
   BlockAutomaticCommand,
   CommandSource,
@@ -18,7 +18,7 @@ import {
   LogLevel,
   RoomBase,
   TemperatureSettings,
-} from '../../../models/index.js';
+} from '../../../models';
 
 export class HeatGroup extends BaseGroup {
   /** @inheritDoc */

@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { WeatherTemp } from './weather-temp.js';
-import { WeatherItem } from './weather-item.js';
-import { WeatherFeelsLike } from './weather-feelsLike.js';
+import { WeatherTemp } from './weather-temp';
+import { WeatherItem } from './weather-item';
+import { WeatherFeelsLike } from './weather-feelsLike';
 
 export interface WeatherDaily {
   dt: number;

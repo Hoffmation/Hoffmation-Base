@@ -1,7 +1,7 @@
-import { HmIpGriff } from './hmIPDevices/index.js';
-import { DeviceType } from './deviceType.js';
-import { WindowPosition } from './models/index.js';
-import { Devices } from './devices.js';
+import { HmIpGriff } from './hmIPDevices';
+import { DeviceType } from './deviceType';
+import { WindowPosition } from './models';
+import { Devices } from './devices';
 
 export class Griffe {
   public static getGriffPosition(): string {

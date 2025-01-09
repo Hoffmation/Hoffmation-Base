@@ -1,5 +1,5 @@
-import { iUnifiConnectionOptions } from './iUnifiConnectionOptions.js';
-import { iUnifiProtectOptions } from './iUnifiProtectOptions.js';
+import { iUnifiConnectionOptions } from './iUnifiConnectionOptions';
+import { iUnifiProtectOptions } from './iUnifiProtectOptions';
 
 /**
  * The settings for the Unifi-Service (if needed).

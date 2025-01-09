@@ -1,5 +1,5 @@
-import { RoomBase } from '../../../models/index.js';
-import { iBaseDevice } from './iBaseDevice.js';
+import { RoomBase } from '../../../models';
+import { iBaseDevice } from './iBaseDevice';
 
 /**
  * This interface represents a device that is located in a single room.

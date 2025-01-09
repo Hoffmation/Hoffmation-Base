@@ -1,6 +1,6 @@
-import { iRoomInitializationSettings } from './iRoomInitializationSettings.js';
-import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings.js';
-import { IoBrokerBaseDevice } from '../../../server/index.js';
+import { iRoomInitializationSettings } from './iRoomInitializationSettings';
+import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
+import { IoBrokerBaseDevice } from '../../../server';
 
 export class RoomInitializationSettings implements iRoomInitializationSettings {
   /** @inheritDoc */

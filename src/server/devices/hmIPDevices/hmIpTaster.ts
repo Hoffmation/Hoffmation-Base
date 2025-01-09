@@ -1,12 +1,12 @@
-import { HmIPDevice } from './hmIpDevice.js';
-import { DeviceType } from '../deviceType.js';
-import { iBatteryDevice, iButtonSwitch } from '../baseDeviceInterfaces/index.js';
-import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button/index.js';
-import { LogLevel } from '../../../models/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { Utils } from '../../services/index.js';
-import { Battery } from '../sharedFunctions/index.js';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { iBatteryDevice, iButtonSwitch } from '../baseDeviceInterfaces';
+import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
+import { LogLevel } from '../../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { Utils } from '../../services';
+import { Battery } from '../sharedFunctions';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDevice {
   /** @inheritDoc */

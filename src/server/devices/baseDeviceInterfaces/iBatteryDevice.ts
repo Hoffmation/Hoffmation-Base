@@ -1,5 +1,5 @@
-import { iBaseDevice } from './iBaseDevice.js';
-import { Battery } from '../sharedFunctions/index.js';
+import { iBaseDevice } from './iBaseDevice';
+import { Battery } from '../sharedFunctions';
 
 /**
  * Interface for Battery Devices.

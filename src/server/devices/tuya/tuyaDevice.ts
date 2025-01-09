@@ -1,8 +1,8 @@
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice.js';
-import { iDisposable } from '../../services/index.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceType } from '../deviceType.js';
-import { LogLevel } from '../../../models/index.js';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { iDisposable } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType';
+import { LogLevel } from '../../../models';
 
 export class TuyaDevice extends IoBrokerBaseDevice implements iDisposable {
   private _lastUpdate: Date = new Date(0);

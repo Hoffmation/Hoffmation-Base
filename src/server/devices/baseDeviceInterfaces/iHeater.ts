@@ -1,7 +1,7 @@
-import { HandleChangeAction, HeaterSettings } from '../../../models/index.js';
-import { iRoomDevice } from './iRoomDevice.js';
-import { iDisposable } from '../../services/index.js';
-import { iTemperatureSensor } from './iTemperatureSensor.js';
+import { HandleChangeAction, HeaterSettings } from '../../../models';
+import { iRoomDevice } from './iRoomDevice';
+import { iDisposable } from '../../services';
+import { iTemperatureSensor } from './iTemperatureSensor';
 
 // TODO: Migrate to new Command Structure
 /**

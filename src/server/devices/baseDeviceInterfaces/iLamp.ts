@@ -1,5 +1,5 @@
-import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models/index.js';
-import { iActuator } from './iActuator.js';
+import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models';
+import { iActuator } from './iActuator';
 
 // TODO: Add missing Comments
 /**

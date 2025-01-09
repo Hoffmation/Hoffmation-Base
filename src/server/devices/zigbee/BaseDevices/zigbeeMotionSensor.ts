@@ -1,11 +1,11 @@
-import { DeviceType } from '../../deviceType.js';
-import { ZigbeeDevice } from './index.js';
-import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../../models/index.js';
-import { LogDebugType, Utils } from '../../../services/index.js';
-import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces/index.js';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../../DeviceCapability.js';
-import { Battery } from '../../sharedFunctions/index.js';
+import { DeviceType } from '../../deviceType';
+import { ZigbeeDevice } from './index';
+import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../../models';
+import { LogDebugType, Utils } from '../../../services';
+import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../../DeviceCapability';
+import { Battery } from '../../sharedFunctions';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
   /** @inheritDoc */

@@ -1,6 +1,6 @@
-import { HmIPDevice } from './hmIpDevice.js';
-import { DeviceType } from '../deviceType.js';
-import { iDisposable, TimeCallbackService, Utils } from '../../services/index.js';
+import { HmIPDevice } from './hmIpDevice';
+import { DeviceType } from '../deviceType';
+import { iDisposable, TimeCallbackService, Utils } from '../../services';
 import {
   HandleChangeAction,
   HeaterSettings,
@@ -9,13 +9,13 @@ import {
   TemperatureSensorChangeAction,
   TimeCallback,
   TimeCallbackType,
-} from '../../../models/index.js';
-import { iHeater, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces/index.js';
-import { DeviceClusterType } from '../device-cluster-type.js';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
-import { DeviceCapability } from '../DeviceCapability.js';
-import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings.js';
-import { HumiditySensor, TemperatureSensor } from '../sharedFunctions/index.js';
+} from '../../../models';
+import { iHeater, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
+import { DeviceClusterType } from '../device-cluster-type';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability } from '../DeviceCapability';
+import { HeatGroupSettings } from '../../../models/groupSettings/heatGroupSettings';
+import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */

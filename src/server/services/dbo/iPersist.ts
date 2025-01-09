@@ -13,14 +13,8 @@ import {
   iShutter,
   iTemperatureSensor,
   ZigbeeDevice,
-} from '../../devices/index.js';
-import {
-  CountToday,
-  DesiredShutterPosition,
-  EnergyCalculation,
-  RoomBase,
-  ShutterCalibration,
-} from '../../../models/index.js';
+} from '../../devices';
+import { CountToday, DesiredShutterPosition, EnergyCalculation, RoomBase, ShutterCalibration } from '../../../models';
 
 /**
  * The interface to interact with the persistence layer.

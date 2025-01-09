@@ -1,6 +1,6 @@
-import { iMotionSensor } from './iMotionSensor.js';
-import { CameraSettings } from '../../../models/index.js';
-import { iBaseDevice } from './iBaseDevice.js';
+import { iMotionSensor } from './iMotionSensor';
+import { CameraSettings } from '../../../models';
+import { iBaseDevice } from './iBaseDevice';
 
 /**
  * An interface for any device with {@link DeviceCapability.camera} capability
