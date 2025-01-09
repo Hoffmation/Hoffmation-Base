@@ -1,9 +1,9 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { TelegramMessageCallback } from './telegramMessageCalback';
-import { ServerLogService } from '../log-service';
-import { Utils } from '../utils';
-import { iTelegramSettings } from '../../config';
-import { Base64Image, LogLevel } from '../../../models';
+import { TelegramMessageCallback } from './telegramMessageCalback.js';
+import { ServerLogService } from '../log-service/index.js';
+import { Utils } from '../utils/index.js';
+import { iTelegramSettings } from '../../config/index.js';
+import { Base64Image, LogLevel } from '../../../models/index.js';
 
 export class TelegramService {
   private static subscribedIDs: number[];

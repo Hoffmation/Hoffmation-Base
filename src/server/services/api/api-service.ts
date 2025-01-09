@@ -2,18 +2,20 @@ import {
   BaseGroup,
   ButtonPosition,
   ButtonPressType,
+  DeviceCapability,
   Devices,
   iActuator,
   iBaseDevice,
   iButtonSwitch,
   iCameraDevice,
+  iDimmableLamp,
   iGarageDoorOpener,
   iLamp,
   iScene,
   iShutter,
   iSpeaker,
   iTemporaryDisableAutomatic,
-} from '../../devices';
+} from '../../devices/index.js';
 import {
   ActuatorSetStateCommand,
   BlockAutomaticCommand,
@@ -28,14 +30,12 @@ import {
   RoomBase,
   ShutterSetLevelCommand,
   WindowSetDesiredPositionCommand,
-} from '../../../models';
-import { RoomService } from '../room-service';
-import { LogObject, ServerLogService } from '../log-service';
-import { AcDevice, AcMode, DaikinService } from '../ac';
-import { DeviceCapability } from '../../devices/DeviceCapability';
-import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
-import { GroupSettings } from '../../../models/groupSettings/groupSettings';
-import { iDimmableLamp } from '../../devices/baseDeviceInterfaces/iDimmableLamp';
+} from '../../../models/index.js';
+import { RoomService } from '../room-service/index.js';
+import { LogObject, ServerLogService } from '../log-service/index.js';
+import { AcDevice, AcMode, DaikinService } from '../ac/index.js';
+import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct.js';
+import { GroupSettings } from '../../../models/groupSettings/groupSettings.js';
 
 export class API {
   /**

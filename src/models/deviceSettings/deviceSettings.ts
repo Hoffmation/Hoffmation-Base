@@ -1,7 +1,7 @@
-import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
-import { ObjectSettings } from '../objectSettings';
-import { Utils } from '../../server';
-import { BlockAutomaticSettings } from '../blockAutomaticSettings';
+import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings.js';
+import { ObjectSettings } from '../objectSettings.js';
+import { Utils } from '../../server/index.js';
+import { BlockAutomaticSettings } from '../blockAutomaticSettings.js';
 
 export abstract class DeviceSettings extends ObjectSettings {
   /**

@@ -1,2 +1,2 @@
-export * from './victron-device';
-export * from './victron-service';
+export * from './victron-device.js';
+export * from './victron-service.js';

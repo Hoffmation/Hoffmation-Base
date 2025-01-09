@@ -1,13 +1,13 @@
-import { ZigbeeDevice } from './index';
-import { Battery, HandleSensor } from '../../sharedFunctions';
-import { iBatteryDevice, iHandleSensor } from '../../baseDeviceInterfaces';
-import { DeviceCapability } from '../../DeviceCapability';
-import { DeviceType } from '../../deviceType';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { WindowPosition } from '../../models';
-import { Window } from '../../groups';
-import { HandleChangeAction, LogLevel } from '../../../../models';
-import { HandleSettings } from '../../../../models/deviceSettings/handleSettings';
+import { ZigbeeDevice } from './index.js';
+import { Battery, HandleSensor } from '../../sharedFunctions/index.js';
+import { iBatteryDevice, iHandleSensor } from '../../baseDeviceInterfaces/index.js';
+import { DeviceCapability } from '../../DeviceCapability.js';
+import { DeviceType } from '../../deviceType.js';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
+import { WindowPosition } from '../../models/index.js';
+import { Window } from '../../groups/index.js';
+import { HandleChangeAction, LogLevel } from '../../../../models/index.js';
+import { HandleSettings } from '../../../../models/deviceSettings/handleSettings.js';
 
 export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, iBatteryDevice {
   /** @inheritDoc */

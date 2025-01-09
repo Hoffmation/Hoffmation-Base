@@ -3,7 +3,7 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "es2018",
-    "module": "commonjs",
+    "module": "NodeNext",
     "outDir": "./lib",
     "declaration": true,
     "lib": [
@@ -30,7 +30,7 @@
       ]
     },
     "baseUrl": "./src",
-    "moduleResolution": "node",
+    "moduleResolution": "nodeNext",
     "resolveJsonModule": true,
     "typeRoots": [
       "./node_modules/@types",
@@ -43,7 +43,8 @@
       "socket.io-client"
     ],
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src"

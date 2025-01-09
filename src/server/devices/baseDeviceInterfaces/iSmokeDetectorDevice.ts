@@ -1,4 +1,4 @@
-import { iRoomDevice } from './iRoomDevice';
+import { iRoomDevice } from './iRoomDevice.js';
 
 /**
  * This interface represents a smoke detector device.

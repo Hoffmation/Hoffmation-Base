@@ -1,6 +1,6 @@
-import { CommandType } from '../command';
-import { BaseAction } from './baseAction';
-import { iMotionSensor } from '../../server';
+import { CommandType } from '../command/index.js';
+import { BaseAction } from './baseAction.js';
+import { iMotionSensor } from '../../server/index.js';
 
 export class MotionSensorAction extends BaseAction {
   /** @inheritDoc */

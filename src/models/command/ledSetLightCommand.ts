@@ -1,11 +1,11 @@
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { BaseCommand } from './baseCommand';
-import { DimmerSetLightCommand } from './dimmerSetLightCommand';
-import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
-import { TimeOfDay } from '../timeCallback';
-import { LedSettings } from '../deviceSettings';
-import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { CommandType } from './commandType.js';
+import { CommandSource } from './commandSource.js';
+import { BaseCommand } from './baseCommand.js';
+import { DimmerSetLightCommand } from './dimmerSetLightCommand.js';
+import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand.js';
+import { TimeOfDay } from '../timeCallback.js';
+import { LedSettings } from '../deviceSettings/index.js';
+import { BlockAutomaticCommand } from './blockAutomaticCommand.js';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */

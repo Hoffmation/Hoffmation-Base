@@ -1,9 +1,9 @@
-import { TuyaDevice } from './tuyaDevice';
-import { GarageDoorOpenerSettings, LogLevel } from '../../../models';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { iGarageDoorOpener } from '../baseDeviceInterfaces';
+import { TuyaDevice } from './tuyaDevice.js';
+import { GarageDoorOpenerSettings, LogLevel } from '../../../models/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceType } from '../deviceType.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { iGarageDoorOpener } from '../baseDeviceInterfaces/index.js';
 
 export class TuyaGarageOpener extends TuyaDevice implements iGarageDoorOpener {
   /** @inheritDoc */

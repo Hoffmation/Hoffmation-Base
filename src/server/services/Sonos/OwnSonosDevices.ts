@@ -1,6 +1,6 @@
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models';
-import { OwnSonosDevice } from './own-sonos-device';
+import { ServerLogService } from '../log-service/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { OwnSonosDevice } from './own-sonos-device.js';
 
 export class OwnSonosDevices {
   /**

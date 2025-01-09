@@ -1,10 +1,10 @@
-import { DeviceInfo, DeviceType } from '../../devices';
-import { LogLevel, RoomBase, TvSettings } from '../../../models';
+import { DeviceInfo, DeviceType } from '../../devices/index.js';
+import { LogLevel, RoomBase, TvSettings } from '../../../models/index.js';
 import _ from 'lodash';
-import { iTvDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
-import { LogDebugType, ServerLogService, Utils } from '../../services';
-import { TvDeviceType } from './tvDeviceType';
+import { iTvDevice } from '../baseDeviceInterfaces/index.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { LogDebugType, ServerLogService, Utils } from '../../services/index.js';
+import { TvDeviceType } from './tvDeviceType.js';
 
 export abstract class TvDevice implements iTvDevice {
   /** @inheritDoc */

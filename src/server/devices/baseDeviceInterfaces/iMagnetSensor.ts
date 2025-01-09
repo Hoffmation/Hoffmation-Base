@@ -1,5 +1,5 @@
-import { iRoomDevice } from './iRoomDevice';
-import { MagnetPosition } from '../models';
+import { iRoomDevice } from './iRoomDevice.js';
+import { MagnetPosition } from '../models/index.js';
 
 /**
  * This interface represents a magnet sensor device.

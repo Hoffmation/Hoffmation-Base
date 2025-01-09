@@ -1,6 +1,6 @@
-import { ShellyDevice } from './shellyDevice';
-import { iActuator } from '../baseDeviceInterfaces';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { ShellyDevice } from './shellyDevice.js';
+import { iActuator } from '../baseDeviceInterfaces/index.js';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler.js';
 import {
   ActuatorSetStateCommand,
   ActuatorSettings,
@@ -8,12 +8,12 @@ import {
   ActuatorWriteStateToDeviceCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-} from '../../../models';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { LampUtils } from '../sharedFunctions';
-import { LogDebugType, Utils } from '../../services';
+} from '../../../models/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceType } from '../deviceType.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { LampUtils } from '../sharedFunctions/index.js';
+import { LogDebugType, Utils } from '../../services/index.js';
 
 export class ShellyActuator extends ShellyDevice implements iActuator {
   /** @inheritDoc */

@@ -1,10 +1,10 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { HmIPDevice } from './hmIpDevice';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
-import { Battery } from '../sharedFunctions';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { HmIPDevice } from './hmIpDevice.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { iBatteryDevice } from '../baseDeviceInterfaces/index.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { Battery } from '../sharedFunctions/index.js';
 
 enum HmIpHeizungAdaptionStates {
   StateNotAvailable = 0,

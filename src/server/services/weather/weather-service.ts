@@ -1,16 +1,16 @@
-import { WeatherMinutes } from './weather-minutes';
-import { WeatherAlert } from './weather-alert';
-import { iWeatherSettings } from '../../config';
-import { LogLevel, ShutterSettings } from '../../../models';
-import { HTTPSOptions } from '../HTTPSOptions';
-import { HTTPSService } from '../https-service';
-import { Utils } from '../utils';
-import { LogDebugType, ServerLogService } from '../log-service';
+import { WeatherMinutes } from './weather-minutes.js';
+import { WeatherAlert } from './weather-alert.js';
+import { iWeatherSettings } from '../../config/index.js';
+import { LogLevel, ShutterSettings } from '../../../models/index.js';
+import { HTTPSOptions } from '../HTTPSOptions.js';
+import { HTTPSService } from '../https-service.js';
+import { Utils } from '../utils/index.js';
+import { LogDebugType, ServerLogService } from '../log-service/index.js';
 import SunCalc from 'suncalc';
-import { TimeCallbackService } from '../time-callback-service';
-import { iSpeaker, UNDEFINED_TEMP_VALUE } from '../../devices';
-import { WeatherResponse } from './weather-response';
-import { RainNextMinutesInfo } from './rain-next-minutes-info';
+import { TimeCallbackService } from '../time-callback-service.js';
+import { iSpeaker, UNDEFINED_TEMP_VALUE } from '../../devices/index.js';
+import { WeatherResponse } from './weather-response.js';
+import { RainNextMinutesInfo } from './rain-next-minutes-info.js';
 
 export class WeatherService {
   /**

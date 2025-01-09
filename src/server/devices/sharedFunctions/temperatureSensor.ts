@@ -1,6 +1,6 @@
-import { Utils, WeatherService } from '../../services';
-import { iJsonOmitKeys, TemperatureSensorChangeAction } from '../../../models';
-import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
+import { Utils, WeatherService } from '../../services/index.js';
+import { iJsonOmitKeys, TemperatureSensorChangeAction } from '../../../models/index.js';
+import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces/index.js';
 
 export class TemperatureSensor implements iJsonOmitKeys {
   /** @inheritDoc */

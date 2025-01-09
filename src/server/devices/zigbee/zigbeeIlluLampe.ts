@@ -1,7 +1,7 @@
-import { DeviceType } from '../deviceType';
-import { iLamp } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { ZigbeeLamp } from './BaseDevices';
+import { DeviceType } from '../deviceType.js';
+import { iLamp } from '../baseDeviceInterfaces/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { ZigbeeLamp } from './BaseDevices/index.js';
 
 export class ZigbeeIlluLampe extends ZigbeeLamp implements iLamp {
   protected readonly _actuatorOnStateIdState: string;

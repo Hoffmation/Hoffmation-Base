@@ -1,7 +1,7 @@
-import { BaseCommand } from './baseCommand';
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { TimeOfDay } from '../timeCallback';
+import { BaseCommand } from './baseCommand.js';
+import { CommandType } from './commandType.js';
+import { CommandSource } from './commandSource.js';
+import { TimeOfDay } from '../timeCallback.js';
 
 export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
   /** @inheritDoc */

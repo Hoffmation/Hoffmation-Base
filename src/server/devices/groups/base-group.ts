@@ -1,9 +1,9 @@
-import { GroupType } from './group-type';
-import { DeviceCluster } from '../device-cluster';
-import { LogLevel, RoomBase } from '../../../models';
-import { API, LogDebugType, ServerLogService, Utils } from '../../services';
-import { iIdHolder } from '../../../models/iIdHolder';
-import { GroupSettings } from '../../../models/groupSettings/groupSettings';
+import { GroupType } from './group-type.js';
+import { DeviceCluster } from '../device-cluster.js';
+import { LogLevel, RoomBase } from '../../../models/index.js';
+import { API, LogDebugType, ServerLogService, Utils } from '../../services/index.js';
+import { iIdHolder } from '../../../models/iIdHolder.js';
+import { GroupSettings } from '../../../models/groupSettings/groupSettings.js';
 
 export class BaseGroup implements iIdHolder {
   /**

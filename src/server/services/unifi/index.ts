@@ -1,1 +1,1 @@
-export { UnifiProtect } from './unifi-protect';
+export { UnifiProtect } from './unifi-protect.js';

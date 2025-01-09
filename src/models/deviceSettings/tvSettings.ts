@@ -1,6 +1,6 @@
-import { DeviceSettings } from './deviceSettings';
-import { Daytime } from '../daytime';
-import { Utils } from '../../server';
+import { DeviceSettings } from './deviceSettings.js';
+import { Daytime } from '../daytime.js';
+import { Utils } from '../../server/index.js';
 
 export class TvSettings extends DeviceSettings {
   /**

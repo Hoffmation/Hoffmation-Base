@@ -1,10 +1,10 @@
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
-import { LogLevel, TimeCallback, TimeCallbackType, TimeOfDay } from '../../models';
-import { ServerLogService } from './log-service';
-import { Utils } from './utils';
-import { iTimePair } from '../config';
-import { SettingsService } from './settings-service';
-import { Devices } from '../devices';
+import { LogLevel, TimeCallback, TimeCallbackType, TimeOfDay } from '../../models/index.js';
+import { ServerLogService } from './log-service/index.js';
+import { Utils } from './utils/index.js';
+import { iTimePair } from '../config/index.js';
+import { SettingsService } from './settings-service.js';
+import { Devices } from '../devices/index.js';
 
 export class SunTimeOffsets {
   public constructor(

@@ -1,9 +1,9 @@
-import { TimeCallbackService, Utils } from '../../services';
-import { BaseGroup } from './base-group';
-import { GroupType } from './group-type';
-import { DeviceClusterType } from '../device-cluster-type';
-import { DeviceList } from '../device-list';
-import { iActuator, iLamp } from '../baseDeviceInterfaces';
+import { TimeCallbackService, Utils } from '../../services/index.js';
+import { BaseGroup } from './base-group.js';
+import { GroupType } from './group-type.js';
+import { DeviceClusterType } from '../device-cluster-type.js';
+import { DeviceList } from '../device-list.js';
+import { iActuator, iLamp } from '../baseDeviceInterfaces/index.js';
 import {
   ActuatorSetStateCommand,
   CommandSource,
@@ -17,9 +17,9 @@ import {
   TimeCallbackType,
   TimeOfDay,
   WledSetLightCommand,
-} from '../../../models';
-import { WledDevice } from '../wledDevice';
-import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
+} from '../../../models/index.js';
+import { WledDevice } from '../wledDevice.js';
+import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct.js';
 
 export class LightGroup extends BaseGroup {
   /**

@@ -1,10 +1,10 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { Battery } from '../sharedFunctions';
+import { HmIPDevice } from './hmIpDevice.js';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { iBatteryDevice } from '../baseDeviceInterfaces/index.js';
+import { Battery } from '../sharedFunctions/index.js';
 
 export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
   /** @inheritDoc */

@@ -1,7 +1,7 @@
-import { ServerLogService } from '../log-service';
-import { TelegramService } from '../Telegram';
-import { LogLevel } from '../../../models';
-import { iSpeaker } from '../../devices';
+import { ServerLogService } from '../log-service/index.js';
+import { TelegramService } from '../Telegram/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { iSpeaker } from '../../devices/index.js';
 
 export class MuellTonne {
   /**

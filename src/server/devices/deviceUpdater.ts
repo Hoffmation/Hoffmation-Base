@@ -1,11 +1,11 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { IDeviceUpdater } from './iDeviceUpdater';
-import { API, ServerLogService } from '../services';
-import { LogLevel } from '../../models';
-import { Devices } from './devices';
-import { iBaseDevice } from './baseDeviceInterfaces';
-import { MqttCoordinator } from './mqtt';
-import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice.js';
+import { IDeviceUpdater } from './iDeviceUpdater.js';
+import { API, ServerLogService } from '../services/index.js';
+import { LogLevel } from '../../models/index.js';
+import { iBaseDevice } from './baseDeviceInterfaces/index.js';
+import { MqttCoordinator } from './mqtt/index.js';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo.js';
+import { Devices } from './devices.js';
 
 export class DeviceUpdater implements IDeviceUpdater {
   public updateObject(pId: string, pObj: ioBroker.Object): void {

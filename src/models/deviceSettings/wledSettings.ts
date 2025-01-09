@@ -1,5 +1,5 @@
-import { DimmerSettings } from './dimmerSettings';
-import { Utils } from '../../server';
+import { DimmerSettings } from './dimmerSettings.js';
+import { Utils } from '../../server/index.js';
 
 export class WledSettings extends DimmerSettings {
   /**

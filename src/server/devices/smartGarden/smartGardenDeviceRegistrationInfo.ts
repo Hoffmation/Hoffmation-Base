@@ -1,4 +1,4 @@
-import { DeviceType } from '../deviceType';
+import { DeviceType } from '../deviceType.js';
 
 export class SmartGardenDeviceRegistrationInfo {
   public constructor(

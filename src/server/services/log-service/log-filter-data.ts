@@ -1,5 +1,5 @@
-import { LogSource } from '../../../models/logSource';
-import { LogDebugType } from './log-debug-type';
+import { LogSource } from '../../../models/logSource.js';
+import { LogDebugType } from './log-debug-type.js';
 
 export class LogFilterData {
   /**

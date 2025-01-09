@@ -1,14 +1,14 @@
-import { DeviceType } from '../deviceType';
-import { iDisposable } from '../../services';
-import { WindowPosition } from '../models';
-import { Window } from '../groups';
-import { HandleChangeAction, LogLevel } from '../../../models';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { HmIPDevice } from './hmIpDevice';
-import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
-import { HandleSettings } from '../../../models/deviceSettings/handleSettings';
-import { Battery, HandleSensor } from '../sharedFunctions';
+import { DeviceType } from '../deviceType.js';
+import { iDisposable } from '../../services/index.js';
+import { WindowPosition } from '../models/index.js';
+import { Window } from '../groups/index.js';
+import { HandleChangeAction, LogLevel } from '../../../models/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { HmIPDevice } from './hmIpDevice.js';
+import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces/index.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { HandleSettings } from '../../../models/deviceSettings/handleSettings.js';
+import { Battery, HandleSensor } from '../sharedFunctions/index.js';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
   /** @inheritDoc */

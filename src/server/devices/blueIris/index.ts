@@ -1,2 +1,2 @@
-export * from './blueIrisCoordinator';
-export * from './blueIrisCameraDevice';
+export * from './blueIrisCoordinator.js';
+export * from './blueIrisCameraDevice.js';

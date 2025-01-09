@@ -1,8 +1,8 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { LogDebugType, Utils } from '../../services';
-import { Window } from '../groups';
-import { WindowPosition } from '../models';
+import { HmIPDevice } from './hmIpDevice.js';
+import { DeviceType } from '../deviceType.js';
+import { LogDebugType, Utils } from '../../services/index.js';
+import { Window } from '../groups/index.js';
+import { WindowPosition } from '../models/index.js';
 import {
   CommandSource,
   LogLevel,
@@ -10,12 +10,12 @@ import {
   ShutterSetLevelCommand,
   ShutterSettings,
   WindowSetDesiredPositionCommand,
-} from '../../../models';
-import { iShutter } from '../baseDeviceInterfaces';
+} from '../../../models/index.js';
+import { iShutter } from '../baseDeviceInterfaces/index.js';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceCapability } from '../DeviceCapability.js';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */

@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import HTTPS from 'https';
-import { ServerLogService } from './log-service';
-import { Utils } from './utils';
-import { LogLevel } from '../../models';
-import { HTTPSOptions } from './HTTPSOptions';
+import { ServerLogService } from './log-service/index.js';
+import { Utils } from './utils/index.js';
+import { LogLevel } from '../../models/index.js';
+import { HTTPSOptions } from './HTTPSOptions.js';
 import path from 'path';
 import { IncomingMessage } from 'http';
-import { FileInfo } from './file-info';
+import { FileInfo } from './file-info.js';
 
 export class HTTPSService {
   public static request(

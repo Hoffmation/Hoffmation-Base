@@ -1,11 +1,11 @@
-import { DeviceType } from '../../deviceType';
-import { Res, SonosService, TelegramService, Utils } from '../../../services';
-import { LogLevel } from '../../../../models';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { MagnetPosition } from '../../models';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iBatteryDevice, iMagnetSensor } from '../../baseDeviceInterfaces';
-import { Battery } from '../../sharedFunctions';
+import { DeviceType } from '../../deviceType.js';
+import { Res, SonosService, TelegramService, Utils } from '../../../services/index.js';
+import { LogLevel } from '../../../../models/index.js';
+import { ZigbeeDevice } from './zigbeeDevice.js';
+import { MagnetPosition } from '../../models/index.js';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
+import { iBatteryDevice, iMagnetSensor } from '../../baseDeviceInterfaces/index.js';
+import { Battery } from '../../sharedFunctions/index.js';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice, iMagnetSensor {
   /** @inheritDoc */

@@ -1,7 +1,6 @@
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { Utils } from '../../services';
-import { BatteryLevelChangeAction, VictronDeviceSettings } from '../../../models';
-import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
+import { iBatteryDevice } from '../baseDeviceInterfaces/index.js';
+import { Utils } from '../../services/index.js';
+import { BatteryLevelChangeAction, iJsonOmitKeys, VictronDeviceSettings } from '../../../models/index.js';
 
 export class Battery implements iJsonOmitKeys {
   /**

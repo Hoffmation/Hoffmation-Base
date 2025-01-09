@@ -6,10 +6,10 @@ import {
   CommandSource,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-} from '../../models';
-import { Utils } from './utils';
+} from '../../models/index.js';
+import { Utils } from './utils/index.js';
 import _ from 'lodash';
-import { LogDebugType } from './log-service';
+import { LogDebugType } from './log-service/index.js';
 
 /**
  * This class is responsible for blocking automatic actions for a specific duration.

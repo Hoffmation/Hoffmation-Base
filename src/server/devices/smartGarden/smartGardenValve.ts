@@ -1,5 +1,5 @@
-import { SmartGardenDevice } from './smartGardenDevice';
-import { iActuator } from '../baseDeviceInterfaces';
+import { SmartGardenDevice } from './smartGardenDevice.js';
+import { iActuator } from '../baseDeviceInterfaces/index.js';
 import {
   ActuatorSetStateCommand,
   ActuatorSettings,
@@ -7,13 +7,13 @@ import {
   ActuatorWriteStateToDeviceCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-} from '../../../models';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { LampUtils } from '../sharedFunctions';
-import { Utils } from '../../services';
+} from '../../../models/index.js';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceType } from '../deviceType.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { LampUtils } from '../sharedFunctions/index.js';
+import { Utils } from '../../services/index.js';
 
 // TODO: Add iValve interface and DeviceCapability
 export class SmartGardenValve extends SmartGardenDevice implements iActuator {

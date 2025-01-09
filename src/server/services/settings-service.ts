@@ -1,4 +1,4 @@
-import { HeatingMode, iConfig } from '../config';
+import { HeatingMode, iConfig } from '../config/index.js';
 
 export class SettingsService {
   /**

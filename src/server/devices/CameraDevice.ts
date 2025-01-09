@@ -1,11 +1,11 @@
-import { iBaseDevice, iCameraDevice, iRoomDevice } from './baseDeviceInterfaces';
-import { DeviceType } from './deviceType';
-import { DeviceCapability } from './DeviceCapability';
-import { Base64Image, CameraSettings, CountToday, LogLevel, MotionSensorAction, RoomBase } from '../../models';
-import { DeviceInfo } from './DeviceInfo';
-import { Devices } from './devices';
-import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../services';
+import { iBaseDevice, iCameraDevice, iRoomDevice } from './baseDeviceInterfaces/index.js';
+import { DeviceType } from './deviceType.js';
+import { DeviceCapability } from './DeviceCapability.js';
+import { Base64Image, CameraSettings, CountToday, LogLevel, MotionSensorAction, RoomBase } from '../../models/index.js';
+import { DeviceInfo } from './DeviceInfo.js';
+import { API, LogDebugType, ServerLogService, TelegramService, Utils } from '../services/index.js';
 import _ from 'lodash';
+import { Devices } from './devices.js';
 
 export abstract class CameraDevice implements iCameraDevice {
   /** @inheritDoc */

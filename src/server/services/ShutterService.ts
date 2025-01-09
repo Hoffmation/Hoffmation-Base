@@ -1,6 +1,6 @@
-import { Devices, DeviceType, iShutter, Window } from '../devices';
-import { API } from './api';
-import { ShutterSetLevelCommand } from '../../models';
+import { Devices, DeviceType, iShutter, Window } from '../devices/index.js';
+import { API } from './api/index.js';
+import { ShutterSetLevelCommand } from '../../models/index.js';
 
 export class ShutterService {
   public static anyRolloDown(rollo: iShutter[]): boolean {

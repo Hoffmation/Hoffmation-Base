@@ -1,6 +1,6 @@
-import { ServerLogService } from '../../../server';
-import { LogLevel } from '../../logLevel';
-import { RoomBase } from '../RoomBase';
+import { ServerLogService } from '../../../server/index.js';
+import { LogLevel } from '../../logLevel.js';
+import { RoomBase } from '../RoomBase.js';
 
 export class RoomAddDeviceItem {
   constructor(

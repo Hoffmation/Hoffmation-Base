@@ -1,5 +1,5 @@
-import { ActuatorSettings } from './actuatorSettings';
-import { Utils } from '../../server';
+import { ActuatorSettings } from './actuatorSettings.js';
+import { Utils } from '../../server/index.js';
 
 export class DimmerSettings extends ActuatorSettings {
   /**

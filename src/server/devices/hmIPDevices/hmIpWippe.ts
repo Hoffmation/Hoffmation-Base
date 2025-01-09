@@ -1,11 +1,11 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
-import { LogLevel } from '../../../models';
-import { iButtonSwitch } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { Utils } from '../../services';
+import { HmIPDevice } from './hmIpDevice.js';
+import { DeviceType } from '../deviceType.js';
+import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { iButtonSwitch } from '../baseDeviceInterfaces/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { Utils } from '../../services/index.js';
 
 export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {

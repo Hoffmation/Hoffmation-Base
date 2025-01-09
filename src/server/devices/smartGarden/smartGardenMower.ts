@@ -1,9 +1,9 @@
-import { SmartGardenDevice } from './smartGardenDevice';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iActuator } from '../baseDeviceInterfaces';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { SmartGardenDevice } from './smartGardenDevice.js';
+import { DeviceType } from '../deviceType.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { iActuator } from '../baseDeviceInterfaces/index.js';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler.js';
 import {
   ActuatorSetStateCommand,
   ActuatorSettings,
@@ -11,9 +11,9 @@ import {
   ActuatorWriteStateToDeviceCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-} from '../../../models';
-import { LampUtils } from '../sharedFunctions';
-import { Utils } from '../../services';
+} from '../../../models/index.js';
+import { LampUtils } from '../sharedFunctions/index.js';
+import { Utils } from '../../services/index.js';
 
 export class SmartGardenMower extends SmartGardenDevice implements iActuator {
   /** @inheritDoc */

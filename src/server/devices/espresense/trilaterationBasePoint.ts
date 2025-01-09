@@ -1,8 +1,8 @@
-import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
+import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate.js';
 
-import { TrilaterationPoint } from './trilaterationPoint';
-import { ServerLogService, Utils } from '../../services';
-import { LogLevel } from '../../../models';
+import { TrilaterationPoint } from './trilaterationPoint.js';
+import { ServerLogService, Utils } from '../../services/index.js';
+import { LogLevel } from '../../../models/index.js';
 
 export class TrilaterationBasePoint {
   /**

@@ -1,3 +1,3 @@
-export * from './telegram-Commands';
-export * from './telegram-service';
-export * from './telegramMessageCalback';
+export * from './telegram-Commands.js';
+export * from './telegram-service.js';
+export * from './telegramMessageCalback.js';

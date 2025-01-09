@@ -1,7 +1,7 @@
-import { ServerLogService } from '../../services';
-import { LogLevel } from '../../../models';
-import { iCameraDevice } from '../baseDeviceInterfaces';
-import { BlueIrisCameraDevice } from './blueIrisCameraDevice';
+import { ServerLogService } from '../../services/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { iCameraDevice } from '../baseDeviceInterfaces/index.js';
+import { BlueIrisCameraDevice } from './blueIrisCameraDevice.js';
 
 export class BlueIrisCoordinator {
   private static cameraDeviceMap: Map<string, iCameraDevice> = new Map<string, iCameraDevice>();

@@ -1,13 +1,13 @@
-import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
-import { DeviceList } from '../device-list';
-import { SpeakerGroup } from './speakerGroup';
-import { iButtonSwitch } from '../baseDeviceInterfaces';
-import { SettingsService } from '../../services';
-import { HeatGroup } from './heatGroup';
-import { ButtonPressType } from '../button';
-import { ActuatorSetStateCommand, CommandSource, WindowSetDesiredPositionCommand } from '../../../models';
+import { BaseGroup } from './base-group.js';
+import { DeviceClusterType } from '../device-cluster-type.js';
+import { GroupType } from './group-type.js';
+import { DeviceList } from '../device-list.js';
+import { SpeakerGroup } from './speakerGroup.js';
+import { iButtonSwitch } from '../baseDeviceInterfaces/index.js';
+import { SettingsService } from '../../services/index.js';
+import { HeatGroup } from './heatGroup.js';
+import { ButtonPressType } from '../button/index.js';
+import { ActuatorSetStateCommand, CommandSource, WindowSetDesiredPositionCommand } from '../../../models/index.js';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {

@@ -9,8 +9,8 @@ import {
   Utils,
   Window,
   WindowGroup,
-} from '../../src';
-import ExampleDevices from './exampleDevices.json';
+} from '../../src.js';
+import ExampleDevices from './exampledevices/index.json.js';
 
 describe('Devices', () => {
   Utils.testInitializeServices();

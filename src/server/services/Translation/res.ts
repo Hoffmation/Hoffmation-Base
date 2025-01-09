@@ -1,8 +1,8 @@
 /* eslint-disable jsdoc/require-description */
-import { IRessources } from './iRessources';
-import resJson from './resources.json';
-import { iTranslationSettings } from '../../config';
-import { IRessourceObject } from './IRessourceObject';
+import { IRessources } from './iRessources.js';
+import resJson from './resources.json' assert { type: 'json' };
+import { iTranslationSettings } from '../../config/index.js';
+import { IRessourceObject } from './IRessourceObject.js';
 
 export class Res {
   private static translations: IRessources;

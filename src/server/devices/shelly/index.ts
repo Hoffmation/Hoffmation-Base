@@ -1,3 +1,3 @@
-export { ShellyDevice } from './shellyDevice';
-export { ShellyTrv } from './shellyTrv';
-export { ShellyActuator } from './shellyActuator';
+export { ShellyDevice } from './shellyDevice.js';
+export { ShellyTrv } from './shellyTrv.js';
+export { ShellyActuator } from './shellyActuator.js';

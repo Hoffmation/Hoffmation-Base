@@ -1,6 +1,6 @@
-import { BaseAction } from './baseAction';
-import { CommandType } from '../command';
-import { iBatteryDevice } from '../../server';
+import { BaseAction } from './baseAction.js';
+import { CommandType } from '../command/index.js';
+import { iBatteryDevice } from '../../server/index.js';
 
 export class BatteryLevelChangeAction extends BaseAction {
   /** @inheritDoc */

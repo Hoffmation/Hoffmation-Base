@@ -1,5 +1,5 @@
-import { DeviceSettings } from './deviceSettings';
-import { Utils } from '../../server';
+import { DeviceSettings } from './deviceSettings.js';
+import { Utils } from '../../server/index.js';
 
 export class ActuatorSettings extends DeviceSettings {
   /**

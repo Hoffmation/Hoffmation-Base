@@ -7,12 +7,12 @@ import {
   iBatteryDevice,
   iEnergyManager,
   iExcessEnergyConsumer,
-} from '../../devices';
-import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../utils';
-import { EnergyCalculation, iJsonOmitKeys, LogLevel, TimeOfDay, VictronDeviceSettings } from '../../../models';
-import { LogDebugType, ServerLogService } from '../log-service';
+} from '../../devices/index.js';
+import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../utils/index.js';
+import { EnergyCalculation, iJsonOmitKeys, LogLevel, TimeOfDay, VictronDeviceSettings } from '../../../models/index.js';
+import { LogDebugType, ServerLogService } from '../log-service/index.js';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
-import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
+import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service.js';
 
 export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {
   /** @inheritDoc */

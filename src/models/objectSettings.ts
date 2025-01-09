@@ -1,6 +1,6 @@
-import { Utils } from '../server';
-import { LogLevel } from './logLevel';
-import { iIdHolder } from './iIdHolder';
+import { Utils } from '../server/index.js';
+import { LogLevel } from './logLevel.js';
+import { iIdHolder } from './iIdHolder.js';
 import _ from 'lodash';
 
 export abstract class ObjectSettings {

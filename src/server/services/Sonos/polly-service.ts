@@ -4,9 +4,9 @@ import * as fs from 'fs';
 // @ts-ignore
 import getMP3Duration from 'get-mp3-duration';
 import crypto from 'crypto';
-import { ServerLogService } from '../log-service';
-import { iPollySettings } from '../../config';
-import { LogLevel } from '../../../models';
+import { ServerLogService } from '../log-service/index.js';
+import { iPollySettings } from '../../config/index.js';
+import { LogLevel } from '../../../models/index.js';
 import path from 'path';
 
 export class PollyService {

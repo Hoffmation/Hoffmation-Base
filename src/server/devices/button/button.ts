@@ -1,8 +1,8 @@
-import { ServerLogService, Utils } from '../../services';
-import { LogLevel } from '../../../models';
-import { ButtonCapabilities } from './buttonCapabilities';
-import { ButtonPressType } from './buttonPressType';
-import { ButtonCallback } from './buttonCallback';
+import { ServerLogService, Utils } from '../../services/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { ButtonCapabilities } from './buttonCapabilities.js';
+import { ButtonPressType } from './buttonPressType.js';
+import { ButtonCallback } from './buttonCallback.js';
 
 export class Button {
   private _statesMap: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();

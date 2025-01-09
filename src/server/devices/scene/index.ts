@@ -1,1 +1,1 @@
-export * from './room-scene';
+export * from './room-scene.js';

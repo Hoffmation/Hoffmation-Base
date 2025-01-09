@@ -7,7 +7,7 @@ import {
   iBaseDevice,
   iBatteryDevice,
   LampUtils,
-} from '../../devices';
+} from '../../devices/index.js';
 import {
   ActuatorChangeAction,
   ActuatorSetStateCommand,
@@ -21,7 +21,7 @@ import {
   RoomBase,
   TemperatureSensorChangeAction,
   TimeOfDay,
-} from '../../../models';
+} from '../../../models/index.js';
 import {
   API,
   LogDebugType,
@@ -31,15 +31,15 @@ import {
   SunTimeOffsets,
   TimeCallbackService,
   Utils,
-} from '../../services';
+} from '../../services/index.js';
 import _ from 'lodash';
-import { iDachsSettings } from '../../config/iDachsSettings';
-import { DachsDeviceSettings } from '../../../models/deviceSettings/dachsSettings';
-import { DachsHttpClient, DachsInfluxClient } from './lib';
-import { iFlattenedCompleteResponse } from './interfaces';
-import { DachsTemperatureSensor } from './dachsTemperatureSensor';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { HeatingMode } from '../../config';
+import { iDachsSettings } from '../../config/iDachsSettings.js';
+import { DachsDeviceSettings } from '../../../models/deviceSettings/dachsSettings.js';
+import { DachsTemperatureSensor } from './dachsTemperatureSensor.js';
+import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler.js';
+import { HeatingMode } from '../../config/index.js';
+import { DachsHttpClient, DachsInfluxClient } from './lib/index.js';
+import { iFlattenedCompleteResponse } from './interfaces/index.js';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
@@ -219,13 +219,13 @@ export class Dachs implements iBaseDevice, iActuator {
           this._influxClient.addMeasurementToQueue(key, value ? '1' : '0');
         }
         this._influxClient.flush();
-        const isDachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
+        const isDachsOn = this.fetchedData!['Hka_Mw1.usDrehzahl'] >= 1;
         const didDachsChange = this._dachsOn !== isDachsOn;
         this._dachsOn = isDachsOn;
-        this._dachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
-        this._tempWarmWater = this.fetchedData['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
+        this._dachsOn = this.fetchedData!['Hka_Mw1.usDrehzahl'] >= 1;
+        this._tempWarmWater = this.fetchedData!['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
         this.warmWaterSensor.update(this._tempWarmWater);
-        this._tempHeatStorage = this.fetchedData['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
+        this._tempHeatStorage = this.fetchedData!['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
         this.heatStorageTempSensor.update(this._tempHeatStorage);
         if (didDachsChange) {
           this.onDachsRunningStateChange(new ActuatorChangeAction(this));

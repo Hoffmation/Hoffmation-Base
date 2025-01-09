@@ -1,5 +1,5 @@
-import { iRoomDevice } from './iRoomDevice';
-import { ProximityCallback, TrilaterationBasePoint } from '../espresense';
+import { iRoomDevice } from './iRoomDevice.js';
+import { ProximityCallback, TrilaterationBasePoint } from '../espresense/index.js';
 
 /**
  * Interface for Bluetooth detector devices, providing proximity information for tracked devices

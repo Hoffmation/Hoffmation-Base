@@ -1,7 +1,7 @@
-import { DeviceType } from './deviceType';
-import { HmIpHeizgruppe } from './hmIPDevices';
-import { Devices } from './devices';
-import { iHeater } from './baseDeviceInterfaces';
+import { DeviceType } from './deviceType.js';
+import { HmIpHeizgruppe } from './hmIPDevices/index.js';
+import { iHeater } from './baseDeviceInterfaces/index.js';
+import { Devices } from './devices.js';
 
 export class Heizgruppen {
   public static getProblems(): string {

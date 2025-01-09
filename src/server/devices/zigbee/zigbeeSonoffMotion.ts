@@ -1,7 +1,7 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { ZigbeeMotionSensor } from './BaseDevices';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { ZigbeeMotionSensor } from './BaseDevices/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
 
 export class ZigbeeSonoffMotion extends ZigbeeMotionSensor {
   public constructor(pInfo: IoBrokerDeviceInfo) {

@@ -1,5 +1,5 @@
-import { BaseAction } from './baseAction';
-import { CommandType } from '../command';
+import { BaseAction } from './baseAction.js';
+import { CommandType } from '../command/index.js';
 
 export class PresenceGroupLastLeftAction extends BaseAction {
   /** @inheritDoc */

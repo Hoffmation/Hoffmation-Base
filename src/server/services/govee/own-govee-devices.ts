@@ -1,6 +1,6 @@
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models';
-import { OwnGoveeDevice } from './own-govee-device';
+import { ServerLogService } from '../log-service/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { OwnGoveeDevice } from './own-govee-device.js';
 
 export class OwnGoveeDevices {
   /**

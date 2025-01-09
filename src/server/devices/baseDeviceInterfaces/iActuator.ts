@@ -3,9 +3,9 @@ import {
   ActuatorSettings,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
-} from '../../../models';
-import { iRoomDevice } from './iRoomDevice';
-import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
+} from '../../../models/index.js';
+import { iRoomDevice } from './iRoomDevice.js';
+import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic.js';
 
 /**
  * Interface for Actuators.

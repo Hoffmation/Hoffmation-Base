@@ -1,13 +1,12 @@
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models';
+import { ServerLogService } from '../log-service/index.js';
+import { iJsonOmitKeys, LogLevel } from '../../../models/index.js';
 import _ from 'lodash';
-import { Res } from '../Translation';
-import { iPersist } from '../dbo';
-import { SettingsService } from '../settings-service';
-import { CatchEmResult } from './catchEmResult';
-import { iTimePair } from '../../config';
-import { RGB } from './RGB';
-import { iJsonOmitKeys } from '../../../models/iJsonOmitKeys';
+import { Res } from '../Translation/index.js';
+import { iPersist } from '../dbo/index.js';
+import { SettingsService } from '../settings-service.js';
+import { CatchEmResult } from './catchEmResult.js';
+import { iTimePair } from '../../config/index.js';
+import { RGB } from './RGB.js';
 
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 

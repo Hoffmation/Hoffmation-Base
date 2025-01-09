@@ -1,13 +1,13 @@
-import { deviceConfig, LogLevel } from '../../../models';
-import { ServerLogService } from '../../services';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { Devices } from '../devices';
-import { SmartGardenDevice } from './smartGardenDevice';
-import { SmartGardenSensor } from './smartGardenSensor';
-import { SmartGardenMower } from './smartGardenMower';
-import { SmartGardenValve } from './smartGardenValve';
-import { SmartGardenDeviceRegistrationInfo } from './smartGardenDeviceRegistrationInfo';
+import { deviceConfig, LogLevel } from '../../../models/index.js';
+import { ServerLogService } from '../../services/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceType } from '../deviceType.js';
+import { Devices } from '../devices.js';
+import { SmartGardenDevice } from './smartGardenDevice.js';
+import { SmartGardenSensor } from './smartGardenSensor.js';
+import { SmartGardenMower } from './smartGardenMower.js';
+import { SmartGardenValve } from './smartGardenValve.js';
+import { SmartGardenDeviceRegistrationInfo } from './smartGardenDeviceRegistrationInfo.js';
 
 export class SmartGardenService {
   private static readonly _registeredDevices: Map<string, SmartGardenDeviceRegistrationInfo> = new Map();

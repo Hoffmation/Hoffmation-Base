@@ -1,4 +1,4 @@
-import { CollisionSolving } from './collisionSolving';
+import { CollisionSolving } from './collisionSolving.js';
 
 export class BlockAutomaticSettings {
   /**

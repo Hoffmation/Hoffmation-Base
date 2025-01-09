@@ -1,16 +1,16 @@
-import { iRoomDevice } from '../baseDeviceInterfaces';
-import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
-import { DeviceCapability } from '../DeviceCapability';
-import { LogLevel, RoomBase } from '../../../models';
-import { DeviceInfo } from '../DeviceInfo';
-import { DeviceType } from '../deviceType';
-import { API, LogDebugType, ServerLogService, Utils } from '../../services';
-import { Devices } from '../devices';
-import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
-import { ProximityCallback } from './proximityCallback';
-import { EspresenseCoordinator } from './espresenseCoordinator';
-import { TrilaterationBasePoint } from './trilaterationBasePoint';
-import { Trilateration } from './trilateration';
+import { iRoomDevice } from '../baseDeviceInterfaces/index.js';
+import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { LogLevel, RoomBase } from '../../../models/index.js';
+import { DeviceInfo } from '../DeviceInfo.js';
+import { DeviceType } from '../deviceType.js';
+import { API, LogDebugType, ServerLogService, Utils } from '../../services/index.js';
+import { DetectedBluetoothDevice } from './detectedBluetoothDevice.js';
+import { ProximityCallback } from './proximityCallback.js';
+import { EspresenseCoordinator } from './espresenseCoordinator.js';
+import { TrilaterationBasePoint } from './trilaterationBasePoint.js';
+import { Trilateration } from './trilateration.js';
+import { Devices } from '../devices.js';
 
 export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   /** @inheritDoc */

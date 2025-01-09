@@ -15,14 +15,14 @@ import {
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
   WindowSetRolloByWeatherStatusCommand,
-} from '../../../models';
-import { ShutterService, TimeCallbackService, Utils, WeatherService } from '../../services';
-import { Window } from './Window';
-import { WindowPosition } from '../models';
-import { BaseGroup } from './base-group';
-import { GroupType } from './group-type';
-import { DeviceList } from '../device-list';
-import { DeviceClusterType } from '../device-cluster-type';
+} from '../../../models/index.js';
+import { ShutterService, TimeCallbackService, Utils, WeatherService } from '../../services/index.js';
+import { Window } from './Window.js';
+import { WindowPosition } from '../models/index.js';
+import { BaseGroup } from './base-group.js';
+import { GroupType } from './group-type.js';
+import { DeviceList } from '../device-list.js';
+import { DeviceClusterType } from '../device-cluster-type.js';
 
 export class WindowGroup extends BaseGroup {
   /**

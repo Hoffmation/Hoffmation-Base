@@ -1,7 +1,7 @@
-import { DeviceType, ServerLogService } from '../../../server';
-import { RoomAddDeviceItem } from './roomAddDeviceItem';
-import { LogLevel } from '../../logLevel';
-import { RoomBase } from '../RoomBase';
+import { DeviceType, ServerLogService } from '../../../server/index.js';
+import { RoomAddDeviceItem } from './roomAddDeviceItem.js';
+import { LogLevel } from '../../logLevel.js';
+import { RoomBase } from '../RoomBase.js';
 
 export class RoomDeviceAddingSettings {
   /**

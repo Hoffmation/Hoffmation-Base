@@ -1,6 +1,6 @@
-import { iRoomDevice } from './iRoomDevice';
-import { HumiditySensorChangeAction } from '../../../models';
-import { HumiditySensor } from '../sharedFunctions';
+import { iRoomDevice } from './iRoomDevice.js';
+import { HumiditySensorChangeAction } from '../../../models/index.js';
+import { HumiditySensor } from '../sharedFunctions/index.js';
 
 export const UNDEFINED_HUMIDITY_VALUE = -1;
 

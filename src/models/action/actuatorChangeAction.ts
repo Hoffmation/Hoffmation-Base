@@ -1,6 +1,6 @@
-import { BaseAction } from './baseAction';
-import { CommandType } from '../command';
-import { iActuator } from '../../server';
+import { BaseAction } from './baseAction.js';
+import { CommandType } from '../command/index.js';
+import { iActuator } from '../../server/index.js';
 
 export class ActuatorChangeAction extends BaseAction {
   /** @inheritDoc */

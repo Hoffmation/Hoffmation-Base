@@ -1,7 +1,7 @@
-import { DeviceType } from '../deviceType';
-import { ZigbeeActuator } from './BaseDevices';
-import { LogLevel } from '../../../models';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../deviceType.js';
+import { ZigbeeActuator } from './BaseDevices/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
 
 export class ZigbeeIkeaSteckdose extends ZigbeeActuator {
   protected readonly _actuatorOnStateIdState: string;

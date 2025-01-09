@@ -1,4 +1,4 @@
-import { LogDebugType, Utils } from '../../../services';
+import { LogDebugType, Utils } from '../../../services/index.js';
 import {
   ActuatorSetStateCommand,
   ActuatorSettings,
@@ -6,14 +6,14 @@ import {
   ActuatorWriteStateToDeviceCommand,
   LogLevel,
   RestoreTargetAutomaticValueCommand,
-} from '../../../../models';
-import { DeviceType } from '../../deviceType';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iActuator } from '../../baseDeviceInterfaces';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceCapability } from '../../DeviceCapability';
-import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
-import { LampUtils } from '../../sharedFunctions';
+} from '../../../../models/index.js';
+import { DeviceType } from '../../deviceType.js';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo.js';
+import { iActuator } from '../../baseDeviceInterfaces/index.js';
+import { ZigbeeDevice } from './zigbeeDevice.js';
+import { DeviceCapability } from '../../DeviceCapability.js';
+import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler.js';
+import { LampUtils } from '../../sharedFunctions/index.js';
 
 export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */

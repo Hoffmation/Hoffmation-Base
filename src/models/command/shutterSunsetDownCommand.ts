@@ -1,6 +1,6 @@
-import { BaseCommand } from './baseCommand';
-import { CommandSource } from './commandSource';
-import { CommandType } from './commandType';
+import { BaseCommand } from './baseCommand.js';
+import { CommandSource } from './commandSource.js';
+import { CommandType } from './commandType.js';
 
 export class ShutterSunsetDownCommand extends BaseCommand {
   /** @inheritDoc */

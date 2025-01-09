@@ -1,6 +1,6 @@
-export { AcMode } from './ac-mode';
-export { AcDeviceType } from './acDeviceType';
-export * from './daikin-service';
-export * from './own-daikin-device';
-export * from './own-ac-devices';
-export { AcDevice } from './ac-device';
+export { AcMode } from './ac-mode.js';
+export { AcDeviceType } from './acDeviceType.js';
+export * from './daikin-service.js';
+export * from './own-daikin-device.js';
+export * from './own-ac-devices.js';
+export { AcDevice } from './ac-device.js';

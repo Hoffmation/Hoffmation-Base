@@ -1,4 +1,4 @@
-import { Daytime } from './daytime';
+import { Daytime } from './daytime.js';
 
 export class TemperatureSettings {
   public constructor(

@@ -1,8 +1,8 @@
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { BaseCommand } from './baseCommand';
-import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
-import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { CommandType } from './commandType.js';
+import { CommandSource } from './commandSource.js';
+import { BaseCommand } from './baseCommand.js';
+import { ActuatorSetStateCommand } from './actuatorSetStateCommand.js';
+import { BlockAutomaticCommand } from './blockAutomaticCommand.js';
 
 export class LampSetLightCommand extends ActuatorSetStateCommand {
   /** @inheritDoc */

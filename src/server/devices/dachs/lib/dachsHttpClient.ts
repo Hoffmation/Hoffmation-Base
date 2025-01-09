@@ -1,10 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import ReadKeyList from './ReadKeyList';
+import ReadKeyList from './ReadKeyList.js';
 import * as _ from 'lodash';
-import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse } from '../interfaces';
-import keyTemplates from './keyTemplates';
-import { LogDebugType } from '../../../services';
-import { LogLevel } from '../../../../models';
+import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse } from '../interfaces/index.js';
+import keyTemplates from './keyTemplates.js';
+import { LogDebugType } from '../../../services/index.js';
+import { LogLevel } from '../../../../models/index.js';
 import * as http from 'node:http';
 import * as https from 'node:https';
 

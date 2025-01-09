@@ -1,4 +1,4 @@
-import { MuellService, ServerLogService } from '../../src';
+import { MuellService, ServerLogService } from '../../src.js';
 
 describe('MuellService', () => {
   jest.setTimeout(10000);

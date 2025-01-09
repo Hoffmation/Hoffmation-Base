@@ -1,5 +1,5 @@
-import { iActuator, iLamp } from '../baseDeviceInterfaces';
-import { LogDebugType, TimeCallbackService, Utils } from '../../services';
+import { iActuator, iLamp } from '../baseDeviceInterfaces/index.js';
+import { LogDebugType, TimeCallbackService, Utils } from '../../services/index.js';
 import {
   ActuatorSetStateCommand,
   ActuatorWriteStateToDeviceCommand,
@@ -13,8 +13,8 @@ import {
   LampToggleLightCommand,
   LogLevel,
   TimeOfDay,
-} from '../../../models';
-import { iDimmableLamp } from '../baseDeviceInterfaces/iDimmableLamp';
+} from '../../../models/index.js';
+import { iDimmableLamp } from '../baseDeviceInterfaces/iDimmableLamp.js';
 
 export class LampUtils {
   private static stromStossContinueTimeouts: Map<string, NodeJS.Timeout> = new Map<string, NodeJS.Timeout>();

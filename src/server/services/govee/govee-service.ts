@@ -1,10 +1,10 @@
-import { ServerLogService } from '../log-service';
-import { LogLevel } from '../../../models';
-import { OwnGoveeDevice } from './own-govee-device';
-import { iGoveeSettings } from '../../config';
+import { ServerLogService } from '../log-service/index.js';
+import { LogLevel } from '../../../models/index.js';
+import { OwnGoveeDevice } from './own-govee-device.js';
+import { iGoveeSettings } from '../../config/index.js';
 import * as http from 'http';
-import { GoveeDeviceData } from './govee-device-data';
-import { Utils } from '../utils';
+import { GoveeDeviceData } from './govee-device-data.js';
+import { Utils } from '../utils/index.js';
 
 export class GooveeService {
   private static _serverUrl: string = 'http://127.0.0.1:3000';

@@ -1,4 +1,4 @@
-import { iBluetoothTrackingSettings } from './iBluetoothTrackingSettings';
+import { iBluetoothTrackingSettings } from './iBluetoothTrackingSettings.js';
 
 /**
  * The configuration for Espresense devices (if present)

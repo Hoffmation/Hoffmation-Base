@@ -1,16 +1,16 @@
 import * as fs from 'fs';
 import { Stats } from 'fs';
-import { HTTPSService } from './https-service';
-import { Utils } from './utils';
-import { ServerLogService } from './log-service';
-import { PollyService } from './Sonos';
-import { SettingsService } from './settings-service';
-import { LogLevel } from '../../models';
-import { iNewsSettings } from '../config';
+import { HTTPSService } from './https-service.js';
+import { Utils } from './utils/index.js';
+import { ServerLogService } from './log-service/index.js';
+import { PollyService } from './Sonos/index.js';
+import { SettingsService } from './settings-service.js';
+import { LogLevel } from '../../models/index.js';
+import { iNewsSettings } from '../config/index.js';
 import path from 'path';
 import Parser from 'rss-parser';
-import { LogSource } from '../../models/logSource';
-import { iSpeaker } from '../devices';
+import { LogSource } from '../../models/logSource.js';
+import { iSpeaker } from '../devices/index.js';
 import ErrnoException = NodeJS.ErrnoException;
 
 export class NewsService {

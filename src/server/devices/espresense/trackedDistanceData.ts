@@ -1,5 +1,5 @@
-import { Utils } from '../../services';
-import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
+import { Utils } from '../../services/index.js';
+import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector.js';
 
 export class TrackedDistanceData {
   /**

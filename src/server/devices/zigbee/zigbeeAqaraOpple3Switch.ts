@@ -1,8 +1,8 @@
-import { ZigbeeSwitch } from './BaseDevices';
-import { Button, ButtonCapabilities, ButtonPressType } from '../button';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ZigbeeSwitch } from './BaseDevices/index.js';
+import { Button, ButtonCapabilities, ButtonPressType } from '../button/index.js';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
 
 export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {

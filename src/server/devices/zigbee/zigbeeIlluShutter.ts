@@ -1,8 +1,8 @@
-import { ZigbeeShutter } from './BaseDevices';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { Utils } from '../../services';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ZigbeeShutter } from './BaseDevices/index.js';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { Utils } from '../../services/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
 
 enum MovementState {
   Down = 30,

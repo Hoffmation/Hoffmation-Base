@@ -1,10 +1,10 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models';
-import { Utils } from '../../services';
-import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
+import { HmIPDevice } from './hmIpDevice.js';
+import { DeviceType } from '../deviceType.js';
+import { CountToday, LogLevel, MotionSensorAction, MotionSensorSettings } from '../../../models/index.js';
+import { Utils } from '../../services/index.js';
+import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceCapability } from '../DeviceCapability.js';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';

@@ -1,6 +1,6 @@
-import { Window } from '../groups';
-import { iRoomDevice } from './iRoomDevice';
-import { ShutterSetLevelCommand, ShutterSettings } from '../../../models';
+import { Window } from '../groups/index.js';
+import { iRoomDevice } from './iRoomDevice.js';
+import { ShutterSetLevelCommand, ShutterSettings } from '../../../models/index.js';
 
 /**
  * This interface represents a shutter device.

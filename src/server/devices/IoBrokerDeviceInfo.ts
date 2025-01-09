@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { deviceConfig } from '../../models';
+import { deviceConfig } from '../../models/index.js';
 import _ from 'lodash';
-import { DeviceInfo } from './DeviceInfo';
+import { DeviceInfo } from './DeviceInfo.js';
 
 export class IoBrokerDeviceInfo extends DeviceInfo {
   public devID: string;
@@ -25,7 +25,7 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
 
   /**
    * Extracts the relevant infos from the passed deviceConfig and combines them in a new Info object
-   * @param pDevConf - The device Config based on the extracted devices.json from ioBroker
+   * @param pDevConf - The device Config based on the extracted devices/index.json from ioBroker
    * @param deviceId - The id of the device
    * @param deviceType - The type of the device
    * @param room - The room id of the device

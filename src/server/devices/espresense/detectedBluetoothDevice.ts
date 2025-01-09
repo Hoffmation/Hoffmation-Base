@@ -1,15 +1,15 @@
-import { iBluetoothTrackingSettings } from '../../config';
-import { iBaseDevice } from '../baseDeviceInterfaces';
-import { DeviceInfo } from '../DeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { API, LogDebugType, ServerLogService, SettingsService, Utils } from '../../services';
-import { Devices } from '../devices';
-import { TrackedDistanceData } from './trackedDistanceData';
-import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
-import { Trilateration } from './trilateration';
-import { TrilaterationPointDistance } from './trilaterationPointDistance';
+import { iBluetoothTrackingSettings } from '../../config/index.js';
+import { iBaseDevice } from '../baseDeviceInterfaces/index.js';
+import { DeviceInfo } from '../DeviceInfo.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { API, LogDebugType, ServerLogService, SettingsService, Utils } from '../../services/index.js';
+import { TrackedDistanceData } from './trackedDistanceData.js';
+import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector.js';
+import { Trilateration } from './trilateration.js';
+import { TrilaterationPointDistance } from './trilaterationPointDistance.js';
+import { Devices } from '../devices.js';
 
 export class DetectedBluetoothDevice implements iBaseDevice {
   /** @inheritDoc */

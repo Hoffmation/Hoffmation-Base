@@ -1,2 +1,2 @@
-export * from './tvDevice';
-export * from './tvDeviceType';
+export * from './tvDevice.js';
+export * from './tvDeviceType.js';

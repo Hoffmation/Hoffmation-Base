@@ -8,7 +8,7 @@ import {
   iRoomDevice,
   iTemporaryDisableAutomatic,
   UNDEFINED_TEMP_VALUE,
-} from '../../devices';
+} from '../../devices/index.js';
 import {
   AcSettings,
   BlockAutomaticCommand,
@@ -18,16 +18,16 @@ import {
   PresenceGroupFirstEnterAction,
   PresenceGroupLastLeftAction,
   RoomBase,
-} from '../../../models';
-import { Utils } from '../utils';
-import { LogDebugType, ServerLogService } from '../log-service';
-import { AcMode } from './ac-mode';
-import { AcDeviceType } from './acDeviceType';
+} from '../../../models/index.js';
+import { Utils } from '../utils/index.js';
+import { LogDebugType, ServerLogService } from '../log-service/index.js';
+import { AcMode } from './ac-mode.js';
+import { AcDeviceType } from './acDeviceType.js';
 import _ from 'lodash';
-import { SettingsService } from '../settings-service';
-import { HeatingMode } from '../../config';
-import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { WeatherService } from '../weather';
+import { SettingsService } from '../settings-service.js';
+import { HeatingMode } from '../../config/index.js';
+import { BlockAutomaticHandler } from '../blockAutomaticHandler.js';
+import { WeatherService } from '../weather/index.js';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   /** @inheritDoc */

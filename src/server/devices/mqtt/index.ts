@@ -1,1 +1,1 @@
-export * from './mqttCoordinator';
+export * from './mqttCoordinator.js';

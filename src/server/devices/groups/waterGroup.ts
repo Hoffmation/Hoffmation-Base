@@ -1,8 +1,8 @@
-import { ZigbeeAquaraWater } from '../zigbee';
-import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
-import { DeviceList } from '../device-list';
+import { ZigbeeAquaraWater } from '../zigbee/index.js';
+import { BaseGroup } from './base-group.js';
+import { DeviceClusterType } from '../device-cluster-type.js';
+import { GroupType } from './group-type.js';
+import { DeviceList } from '../device-list.js';
 
 export class WaterGroup extends BaseGroup {
   public constructor(roomName: string, waterDetectorIds: string[]) {

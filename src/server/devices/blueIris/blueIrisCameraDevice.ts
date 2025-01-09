@@ -1,8 +1,8 @@
-import { LogLevel } from '../../../models';
-import { BlueIrisCoordinator } from './blueIrisCoordinator';
-import { SettingsService } from '../../services';
-import { ioBrokerMain } from '../../ioBroker';
-import { CameraDevice } from '../CameraDevice';
+import { LogLevel } from '../../../models/index.js';
+import { BlueIrisCoordinator } from './blueIrisCoordinator.js';
+import { SettingsService } from '../../services/index.js';
+import { ioBrokerMain } from '../../ioBroker/index.js';
+import { CameraDevice } from '../CameraDevice.js';
 
 export class BlueIrisCameraDevice extends CameraDevice {
   /**

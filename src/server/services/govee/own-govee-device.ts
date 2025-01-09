@@ -1,4 +1,11 @@
-import { DeviceInfo, Devices, DeviceType, iTemporaryDisableAutomatic, LampUtils } from '../../devices';
+import {
+  DeviceCapability,
+  DeviceInfo,
+  Devices,
+  DeviceType,
+  iTemporaryDisableAutomatic,
+  LampUtils,
+} from '../../devices/index.js';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -10,16 +17,15 @@ import {
   LogLevel,
   RestoreTargetAutomaticValueCommand,
   RoomBase,
-} from '../../../models';
-import { LogDebugType, ServerLogService } from '../log-service';
-import { Utils } from '../utils';
+} from '../../../models/index.js';
+import { LogDebugType, ServerLogService } from '../log-service/index.js';
+import { Utils } from '../utils/index.js';
 import _ from 'lodash';
-import { DeviceCapability } from '../../devices/DeviceCapability';
-import { API } from '../api';
-import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
-import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { GoveeDeviceData } from './govee-device-data';
-import { GooveeService } from './govee-service';
+import { API } from '../api/index.js';
+import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct.js';
+import { BlockAutomaticHandler } from '../blockAutomaticHandler.js';
+import { GoveeDeviceData } from './govee-device-data.js';
+import { GooveeService } from './govee-service.js';
 
 export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */

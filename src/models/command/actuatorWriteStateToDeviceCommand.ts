@@ -1,7 +1,7 @@
-import { BaseCommand } from './baseCommand';
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
+import { BaseCommand } from './baseCommand.js';
+import { CommandType } from './commandType.js';
+import { CommandSource } from './commandSource.js';
+import { ActuatorSetStateCommand } from './actuatorSetStateCommand.js';
 
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   /** @inheritDoc */

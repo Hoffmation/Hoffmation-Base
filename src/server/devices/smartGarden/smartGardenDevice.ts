@@ -1,11 +1,11 @@
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { iDisposable } from '../../services';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../../models';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
-import { Battery } from '../sharedFunctions';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice.js';
+import { iDisposable } from '../../services/index.js';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo.js';
+import { DeviceType } from '../deviceType.js';
+import { LogLevel } from '../../../models/index.js';
+import { iBatteryDevice } from '../baseDeviceInterfaces/index.js';
+import { DeviceCapability } from '../DeviceCapability.js';
+import { Battery } from '../sharedFunctions/index.js';
 
 export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable, iBatteryDevice {
   /** @inheritDoc */

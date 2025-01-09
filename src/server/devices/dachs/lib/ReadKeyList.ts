@@ -1,4 +1,4 @@
-import { IReadKeyList, KeyListEntity } from '../interfaces';
+import { IReadKeyList, KeyListEntity } from '../interfaces/index.js';
 
 const ReadKeyList: IReadKeyList<KeyListEntity> = {
   Hka_Bd: {
