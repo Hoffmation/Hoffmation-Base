@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType } from '../enums';
-import { iHumiditySensor } from '../interfaces';
+import { iHumidityCollector } from '../interfaces';
 
 export class HumiditySensorChangeAction extends BaseAction {
   /** @inheritDoc */
@@ -12,9 +12,9 @@ export class HumiditySensorChangeAction extends BaseAction {
   /**
    * The sensor that triggered the action
    */
-  public readonly sensor: iHumiditySensor;
+  public readonly sensor: iHumidityCollector;
 
-  public constructor(sensor: iHumiditySensor, newHumidity: number) {
+  public constructor(sensor: iHumidityCollector, newHumidity: number) {
     super(undefined, `${sensor.customName} detected ${newHumidity} humidity`);
     this.newHumidity = newHumidity;
     this.sensor = sensor;

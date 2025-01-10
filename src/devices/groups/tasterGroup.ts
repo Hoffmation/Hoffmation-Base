@@ -1,10 +1,8 @@
 import { BaseGroup } from './base-group';
 import { ButtonPressType, CommandSource, DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
-import { iButtonSwitch } from '../../interfaces';
+import { iButtonSwitch, iHeatGroup, iSpeakerGroup } from '../../interfaces';
 import { ActuatorSetStateCommand, WindowSetDesiredPositionCommand } from '../../command';
-import { SpeakerGroup } from './speakerGroup';
-import { HeatGroup } from './heatGroup';
 import { SettingsService } from '../../settings-service';
 
 export class TasterGroup extends BaseGroup {
@@ -98,7 +96,7 @@ export class TasterGroup extends BaseGroup {
       );
 
       if (SettingsService.settings.sonos?.buttonBotRightForRadio === true) {
-        const sonosGroup: SpeakerGroup | undefined = this.getRoom().SonosGroup;
+        const sonosGroup: iSpeakerGroup | undefined = this.getRoom().SonosGroup;
         if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
           t.buttonBotRight?.addCb(
             ButtonPressType.long,
@@ -114,7 +112,7 @@ export class TasterGroup extends BaseGroup {
       }
 
       if (SettingsService.settings.daikin?.buttonBotRightForAc === true) {
-        const heatGroup: HeatGroup | undefined = this.getRoom().HeatGroup;
+        const heatGroup: iHeatGroup | undefined = this.getRoom().HeatGroup;
         if (heatGroup !== undefined && heatGroup.getOwnAcDevices().length > 0) {
           t.buttonBotRight?.addCb(
             ButtonPressType.short,
@@ -122,7 +120,7 @@ export class TasterGroup extends BaseGroup {
               if (!pValue) {
                 return;
               }
-              heatGroup.setAc(true);
+              heatGroup.setAc(true, false);
             },
             'Turn Ac On',
           );

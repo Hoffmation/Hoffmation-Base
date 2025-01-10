@@ -1,14 +1,13 @@
 import _ from 'lodash';
 import { HmIPDevice } from './hmIpDevice';
-import { iShutter } from '../../interfaces';
+import { iShutter, iWindow } from '../../interfaces';
 import { ShutterSettings } from '../deviceSettings';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
 import { Utils } from '../../utils';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { Window } from '../groups';
 import { ShutterPositionChangedAction } from '../../action';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */
@@ -58,13 +57,13 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     }
   }
 
-  private _window?: Window;
+  private _window?: iWindow;
 
-  public get window(): Window | undefined {
+  public get window(): iWindow | undefined {
     return this._window;
   }
 
-  public set window(value: Window | undefined) {
+  public set window(value: iWindow | undefined) {
     this._window = value;
   }
 

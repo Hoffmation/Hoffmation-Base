@@ -1,7 +1,7 @@
 import { ServerLogService } from '../logging';
 import { LogLevel } from '../enums';
 import { IOBrokerConnection } from './connection';
-import { IDeviceUpdater, iRoomBase } from '../interfaces';
+import { IDeviceUpdater, iIOBrokerConnection, iRoomBase } from '../interfaces';
 import { ConnectionCallbacks } from '../models';
 import { Utils } from '../utils';
 import { SettingsService } from '../settings-service';
@@ -11,7 +11,7 @@ export class ioBrokerMain {
   /**
    * The connection to the ioBroker server
    */
-  public static iOConnection: IOBrokerConnection | undefined;
+  public static iOConnection: iIOBrokerConnection | undefined;
   private static roomConstructors: { [roomName: string]: { new (): iRoomBase } } = {};
   private servConn: IOBrokerConnection;
   private deviceUpdater: IDeviceUpdater;

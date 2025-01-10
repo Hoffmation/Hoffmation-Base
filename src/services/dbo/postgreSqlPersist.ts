@@ -7,16 +7,16 @@ import {
   iButtonSwitch,
   iDesiredShutterPosition,
   iDimmableLamp,
-  iHandleSensor,
+  iHandle,
   iHeater,
-  iHumiditySensor,
+  iHumidityCollector,
   iIlluminationSensor,
   iMotionSensor,
   iPersist,
   iRoomBase,
   iShutter,
   iShutterCalibration,
-  iTemperatureSensor,
+  iTemperatureCollector,
   iZigbeeDevice,
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
@@ -451,7 +451,7 @@ $$;`,
   }
 
   /** @inheritDoc */
-  public persistHandleSensor(device: iHandleSensor): void {
+  public persistHandleSensor(device: iHandle): void {
     const currentPos: number = device.position;
     this.query(`
         insert into hoffmation_schema."HandleDeviceData" ("deviceID", "position", "date")
@@ -486,7 +486,7 @@ $$;`,
   }
 
   /** @inheritDoc */
-  public persistTemperatureSensor(device: iTemperatureSensor): void {
+  public persistTemperatureSensor(device: iTemperatureCollector): void {
     let roomTemp: number | null = device.roomTemperature;
     if (roomTemp === UNDEFINED_TEMP_VALUE) {
       roomTemp = null;
@@ -498,7 +498,7 @@ $$;`,
   }
 
   /** @inheritDoc */
-  public persistHumiditySensor(device: iHumiditySensor): void {
+  public persistHumiditySensor(device: iHumidityCollector): void {
     this.query(`
         insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
         values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');

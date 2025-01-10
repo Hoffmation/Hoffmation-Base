@@ -1,6 +1,6 @@
 // TODO: Migrate to new Command Structure
 import { iRoomDevice } from './iRoomDevice';
-import { SceneSettings } from '../../devices';
+import { iSceneSettings } from '../settings';
 
 /**
  * This interface represents a scene which for simplification is considered as a device.
@@ -11,7 +11,7 @@ export interface iScene extends iRoomDevice {
   /**
    * The settings for the scene
    */
-  settings: SceneSettings;
+  settings: iSceneSettings;
   /**
    * A description of the scene providing the user with information about what the scene does
    */

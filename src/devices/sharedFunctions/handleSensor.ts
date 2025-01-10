@@ -1,13 +1,12 @@
-import { iDisposable, iHandleSensor, iJsonOmitKeys } from '../../interfaces';
+import { iHandle, iHandleSensor, iHeatGroup, iJsonOmitKeys, iWindow } from '../../interfaces';
 import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
 import { HandleChangeAction } from '../../action';
 import { HandleSettings } from '../deviceSettings';
-import { HeatGroup, Window } from '../groups';
 import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';
 import { Persistence, TelegramService } from '../../services';
 
-export class HandleSensor implements iDisposable, iJsonOmitKeys {
+export class HandleSensor implements iHandleSensor, iJsonOmitKeys {
   /** @inheritDoc */
   public readonly jsonOmitKeys: string[] = ['_device', 'window'];
   /**
@@ -21,7 +20,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
   /**
    * The window this handle is attached to
    */
-  public window: Window | undefined;
+  public window: iWindow | undefined;
   private _lastPersist: number = 0;
   private _kippCallback: Array<(pValue: boolean) => void> = [];
   private _closedCallback: Array<(pValue: boolean) => void> = [];
@@ -30,7 +29,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
   private _iOpenTimeout: NodeJS.Timeout | undefined;
   private _helpingRoomTemp: boolean = false;
 
-  public constructor(private readonly _device: iHandleSensor) {}
+  public constructor(private readonly _device: iHandle) {}
 
   private get _settings(): HandleSettings {
     return this._device.settings as HandleSettings;
@@ -81,7 +80,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
     this._iOpenTimeout = Utils.guardedInterval(
       () => {
         this.minutesOpen++;
-        const heatgroup: HeatGroup | undefined = this.window?.getRoom().HeatGroup;
+        const heatgroup: iHeatGroup | undefined = this.window?.getRoom().HeatGroup;
         if (heatgroup !== undefined) {
           const desiredTemp: number = heatgroup.desiredTemp;
           const currentTemp: number = heatgroup.temperature;

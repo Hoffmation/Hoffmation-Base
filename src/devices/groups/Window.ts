@@ -1,6 +1,5 @@
-import { iHandleSensor, iShutter, iVibrationSensor } from '../../interfaces';
+import { iHandle, iShutter, iVibrationSensor } from '../../interfaces';
 import { HandleChangeAction, ShutterPositionChangedAction } from '../../action';
-import { BaseGroup } from './base-group';
 import {
   CommandSource,
   DeviceClusterType,
@@ -20,8 +19,10 @@ import {
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
 } from '../../command';
+import { BaseGroup } from './base-group';
+import { iWindow } from '../../interfaces/groups/iWindow';
 
-export class Window extends BaseGroup {
+export class Window extends BaseGroup implements iWindow {
   private _desiredPosition: number = 0;
 
   /**
@@ -42,28 +43,28 @@ export class Window extends BaseGroup {
     });
   }
 
-  /**
-   * Checks if any handle is not closed
-   * @returns {boolean} true if any handle is not closed
-   */
-  public get anyHandleNotClosed(): boolean {
-    return this.getHandle().some((h: iHandleSensor) => {
-      return h.position !== WindowPosition.closed;
-    });
-  }
-
   public constructor(
     roomName: string,
-    public readonly handleIds: string[] = [],
-    public readonly vibrationIds: string[] = [],
-    public readonly shutterIds: string[] = [],
-    public readonly magnetIds: string[] = [],
+    readonly handleIds: string[] = [],
+    readonly vibrationIds: string[] = [],
+    readonly shutterIds: string[] = [],
+    readonly magnetIds: string[] = [],
   ) {
     super(roomName, GroupType.Window);
     this.deviceCluster.deviceMap.set(DeviceClusterType.Handle, new DeviceList(handleIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Vibration, new DeviceList(vibrationIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.Shutter, new DeviceList(shutterIds));
     this.deviceCluster.deviceMap.set(DeviceClusterType.MagnetContact, new DeviceList(magnetIds));
+  }
+
+  /**
+   * Checks if any handle is not closed
+   * @returns {boolean} true if any handle is not closed
+   */
+  public get anyHandleNotClosed(): boolean {
+    return this.getHandle().some((h: iHandle) => {
+      return h.position !== WindowPosition.closed;
+    });
   }
 
   /**
@@ -75,8 +76,8 @@ export class Window extends BaseGroup {
     this.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));
   }
 
-  public getHandle(): iHandleSensor[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.Handle) as iHandleSensor[];
+  public getHandle(): iHandle[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.Handle) as iHandle[];
   }
 
   public getMagnetContact(): ZigbeeMagnetContact[] {
@@ -186,7 +187,7 @@ export class Window extends BaseGroup {
   }
 
   public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
-    this.getHandle().forEach((griff: iHandleSensor): void => {
+    this.getHandle().forEach((griff: iHandle): void => {
       griff.addHandleChangeCallback(cb);
     });
   }

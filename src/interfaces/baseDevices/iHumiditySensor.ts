@@ -1,27 +1,14 @@
-import { iRoomDevice } from './iRoomDevice';
-import { HumiditySensor } from '../../devices';
+import { iJsonOmitKeys } from '../iJsonOmitKeys';
 import { HumiditySensorChangeAction } from '../../action';
 
-export const UNDEFINED_HUMIDITY_VALUE = -1;
+export interface iHumiditySensor extends iJsonOmitKeys {
+  humidity: number;
 
-/**
- * This interface represents a humidity sensor device.
- *
- * For devices with {@link DeviceCapability.humiditySensor} capability.
- */
-export interface iHumiditySensor extends iRoomDevice {
-  /**
-   * Common humidity sensor handling like persisting
-   */
-  readonly humiditySensor: HumiditySensor;
-  /**
-   * The current humidity in percent
-   */
-  readonly humidity: number;
+  dispose(): void;
 
-  /**
-   * Add a callback that is called when the humidity changes
-   * @param pCallback - The callback to fire
-   */
+  persist(): void;
+
   addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void;
+
+  toJSON(): Partial<iHumiditySensor>;
 }

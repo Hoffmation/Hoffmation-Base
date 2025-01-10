@@ -1,8 +1,10 @@
-import { Devices, Window } from '../devices';
+import { Devices } from '../devices';
 import { iShutter } from '../interfaces';
 import { ShutterSetLevelCommand } from '../command';
 import { API } from '../api';
 import { DeviceType } from '../enums';
+
+import { iWindow } from '../interfaces/groups/iWindow';
 
 export class ShutterService {
   public static anyRolloDown(rollo: iShutter[]): boolean {
@@ -67,7 +69,7 @@ export class ShutterService {
     return rollos;
   }
 
-  public static windowAllToPosition(f: Window, c: ShutterSetLevelCommand): void {
+  public static windowAllToPosition(f: iWindow, c: ShutterSetLevelCommand): void {
     f.getShutter().forEach((s) => {
       s.setLevel(c);
     });

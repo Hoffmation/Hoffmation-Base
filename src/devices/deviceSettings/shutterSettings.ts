@@ -1,7 +1,8 @@
-import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../utils';
+import { DeviceSettings } from './deviceSettings';
+import { iShutterSettings } from '../../interfaces/settings/iShutterSettings';
 
-export class ShutterSettings extends DeviceSettings {
+export class ShutterSettings extends DeviceSettings implements iShutterSettings {
   /**
    * The time in ms it takes for the shutter to move to the top.
    * @default -1 (Not set)

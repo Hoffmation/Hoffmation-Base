@@ -2,8 +2,8 @@ import { LampSetLightCommand } from './lampSetLightCommand';
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
 import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { DimmerSettings } from '../devices';
 import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
+import { iDimmerSettings } from '../interfaces';
 
 export class DimmerSetLightCommand extends LampSetLightCommand {
   /** @inheritDoc */
@@ -35,7 +35,7 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
     return `Dimmer setLight to ${this.on} with Brightness ${this.brightness} with disable ${this.disableAutomaticCommand?.logMessage} for reason: ${this.reasonTrace}`;
   }
 
-  public static byTimeBased(s: DimmerSettings, c: LampSetTimeBasedCommand): DimmerSetLightCommand {
+  public static byTimeBased(s: iDimmerSettings, c: LampSetTimeBasedCommand): DimmerSetLightCommand {
     const manual: boolean = c.isForceAction;
     switch (c.time) {
       case TimeOfDay.Daylight:

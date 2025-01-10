@@ -50,7 +50,7 @@ import {
   iEnergyManager,
   iMotionSensor,
   iRoomImportEnforcer,
-  iTemperatureSensor,
+  iTemperatureCollector,
 } from '../interfaces';
 import { Dachs } from './dachs';
 import { ServerLogService } from '../logging';
@@ -121,7 +121,7 @@ export class Devices {
    * A reference to the temperature sensor measuring the warm water temperature
    * @default undefined (no warm water temperature sensor)
    */
-  public static temperatureWarmWater?: iTemperatureSensor = undefined;
+  public static temperatureWarmWater?: iTemperatureCollector = undefined;
 
   public constructor(
     pDeviceData: { [id: string]: iDeviceConfig },

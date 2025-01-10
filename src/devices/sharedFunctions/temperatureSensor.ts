@@ -1,10 +1,10 @@
 import { TemperatureSensorChangeAction } from '../../action';
-import { iJsonOmitKeys, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { iTemperatureCollector, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';
 import { Persistence } from '../../services';
 
-export class TemperatureSensor implements iJsonOmitKeys {
+export class TemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
   public readonly jsonOmitKeys: string[] = ['_device'];
   /**
@@ -35,7 +35,7 @@ export class TemperatureSensor implements iJsonOmitKeys {
    */
   public lastSeen: number = 0;
 
-  public constructor(private readonly _device: iTemperatureSensor) {}
+  public constructor(private readonly _device: iTemperatureCollector) {}
 
   public get temperature(): number {
     if (Utils.nowMS() - this.lastSeen > 60 * 60 * 1000) {

@@ -1,15 +1,15 @@
 import { SmartGardenDevice } from './smartGardenDevice';
-import { iHumiditySensor, iTemperatureSensor } from '../../interfaces';
+import { iHumidityCollector, iHumiditySensor, iTemperatureCollector } from '../../interfaces';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType } from '../../enums';
 import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
 
-export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySensor, iTemperatureSensor {
+export class SmartGardenSensor extends SmartGardenDevice implements iHumidityCollector, iTemperatureCollector {
   /** @inheritDoc */
   public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
-  public humiditySensor: HumiditySensor = new HumiditySensor(this);
+  public humiditySensor: iHumiditySensor = new HumiditySensor(this);
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.SmartGardenSensor);

@@ -7,12 +7,13 @@ import {
 } from '../command';
 import { CollisionSolving, CommandSource, LogDebugType, LogLevel } from '../enums';
 import { Utils } from '../utils';
+import { iBlockAutomaticHandler } from '../interfaces';
 
 /**
  * This class is responsible for blocking automatic actions for a specific duration.
  * It also provides the possibility to lift the block before the duration is over {@link BlockAutomaticLiftBlockCommand}.
  */
-export class BlockAutomaticHandler {
+export class BlockAutomaticHandler implements iBlockAutomaticHandler {
   private readonly _restoreAutomatic: (c: RestoreTargetAutomaticValueCommand) => void;
   private _automaticBlockedUntil: Date = new Date(0);
   private _restoreAutomaticStateTimeout: NodeJS.Timeout | null = null;
@@ -82,14 +83,14 @@ export class BlockAutomaticHandler {
     }
   }
 
-  private removeRestoreTimeout(): void {
+  public removeRestoreTimeout(): void {
     if (this._restoreAutomaticStateTimeout !== null) {
       clearTimeout(this._restoreAutomaticStateTimeout);
       this._restoreAutomaticStateTimeout = null;
     }
   }
 
-  private updateRestoreTimeout(c: RestoreTargetAutomaticValueCommand): void {
+  public updateRestoreTimeout(c: RestoreTargetAutomaticValueCommand): void {
     this.removeRestoreTimeout();
     this._restoreAutomaticStateTimeout = Utils.guardedTimeout(
       () => {

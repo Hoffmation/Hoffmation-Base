@@ -1,9 +1,10 @@
 import { ZigbeeAquaraWater } from '../zigbee';
-import { BaseGroup } from './base-group';
 import { DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
+import { BaseGroup } from './base-group';
+import { iWaterGroup } from '../../interfaces';
 
-export class WaterGroup extends BaseGroup {
+export class WaterGroup extends BaseGroup implements iWaterGroup {
   public constructor(roomName: string, waterDetectorIds: string[]) {
     super(roomName, GroupType.Water);
     this.deviceCluster.deviceMap.set(DeviceClusterType.WaterDetectors, new DeviceList(waterDetectorIds));

@@ -1,4 +1,4 @@
-import { iIdHolder, iRoomBase } from '../../interfaces';
+import { iBaseGroup, iRoomBase } from '../../interfaces';
 import { GroupSettings } from '../../models';
 import { GroupType, LogDebugType, LogLevel } from '../../enums';
 import { DeviceCluster } from '../device-cluster';
@@ -6,7 +6,7 @@ import { Utils } from '../../utils';
 import { API } from '../../api';
 import { ServerLogService } from '../../logging';
 
-export class BaseGroup implements iIdHolder {
+export abstract class BaseGroup implements iBaseGroup {
   /**
    * The settings of the group
    */

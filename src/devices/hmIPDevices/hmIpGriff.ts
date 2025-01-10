@@ -1,13 +1,12 @@
 import { HmIPDevice } from './hmIpDevice';
-import { iBatteryDevice, iDisposable, iHandleSensor } from '../../interfaces';
+import { iBatteryDevice, iDisposable, iHandle, iWindow } from '../../interfaces';
 import { Battery, HandleSensor } from '../sharedFunctions';
 import { HandleSettings } from '../deviceSettings';
 import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../enums';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HandleChangeAction } from '../../action';
-import { Window } from '../groups';
 
-export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
+export class HmIpGriff extends HmIPDevice implements iHandle, iBatteryDevice, iDisposable {
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
@@ -40,12 +39,12 @@ export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevi
     return this.battery.level;
   }
 
-  public get window(): Window | undefined {
+  public get window(): iWindow | undefined {
     return this.handleSensor.window;
   }
 
   /** @inheritDoc */
-  public set window(value: Window) {
+  public set window(value: iWindow) {
     this.handleSensor.window = value;
   }
 

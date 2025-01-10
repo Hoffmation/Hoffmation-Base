@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType } from '../enums';
-import { iTemperatureSensor } from '../interfaces';
+import { iTemperatureCollector } from '../interfaces';
 
 export class TemperatureSensorChangeAction extends BaseAction {
   /** @inheritDoc */
@@ -12,9 +12,9 @@ export class TemperatureSensorChangeAction extends BaseAction {
   /**
    * The sensor that triggered the action
    */
-  public readonly sensor: iTemperatureSensor;
+  public readonly sensor: iTemperatureCollector;
 
-  public constructor(sensor: iTemperatureSensor, newTemperature: number) {
+  public constructor(sensor: iTemperatureCollector, newTemperature: number) {
     super(undefined, `${sensor.customName} detected ${newTemperature} °C`);
     this.newTemperature = newTemperature;
     this.sensor = sensor;

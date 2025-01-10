@@ -1,12 +1,13 @@
 import {
   iHeater,
-  iHumiditySensor,
+  iHeatGroup,
+  iHumidityCollector,
   iRoomBase,
-  iTemperatureSensor,
+  iTemperatureCollector,
+  iTemperatureSettings,
   UNDEFINED_HUMIDITY_VALUE,
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
-import { BaseGroup } from './base-group';
 import { HeatGroupSettings, TemperatureSettings } from '../../models';
 import { CommandSource, DeviceClusterType, GroupType, LogLevel } from '../../enums';
 import { DeviceList } from '../device-list';
@@ -15,8 +16,9 @@ import { API } from '../../api';
 import { Utils } from '../../utils';
 import { HandleChangeAction } from '../../action';
 import { BlockAutomaticCommand } from '../../command';
+import { BaseGroup } from './base-group';
 
-export class HeatGroup extends BaseGroup {
+export class HeatGroup extends BaseGroup implements iHeatGroup {
   /** @inheritDoc */
   public settings: HeatGroupSettings = new HeatGroupSettings();
 
@@ -103,7 +105,7 @@ export class HeatGroup extends BaseGroup {
     if (!this.settings.automaticMode) {
       return this.settings.manualTemperature;
     }
-    const activeSetting: TemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
+    const activeSetting: iTemperatureSettings | undefined = TemperatureSettings.getActiveSetting(
       this.settings.automaticPoints,
       new Date(),
     );
@@ -136,12 +138,12 @@ export class HeatGroup extends BaseGroup {
     return this.deviceCluster.getDevicesByType(DeviceClusterType.Heater) as iHeater[];
   }
 
-  public getTempSensors(): iTemperatureSensor[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.TemperaturSensor) as iTemperatureSensor[];
+  public getTempSensors(): iTemperatureCollector[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.TemperaturSensor) as iTemperatureCollector[];
   }
 
-  public getHumiditySensors(): iHumiditySensor[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.HumiditySensor) as iHumiditySensor[];
+  public getHumiditySensors(): iHumidityCollector[] {
+    return this.deviceCluster.getDevicesByType(DeviceClusterType.HumiditySensor) as iHumidityCollector[];
   }
 
   public getOwnAcDevices(): AcDevice[] {
@@ -200,7 +202,7 @@ export class HeatGroup extends BaseGroup {
     this.settings.setAutomaticPoint(setting, this);
   }
 
-  private recalcRoomTemperatur(): void {
+  public recalcRoomTemperatur(): void {
     const temp: number = this.temperature;
     if (temp == UNDEFINED_TEMP_VALUE) {
       return;

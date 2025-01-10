@@ -1,6 +1,6 @@
 import { iDimmableLamp } from './iDimmableLamp';
-import { LedSettings } from '../../devices';
 import { LedSetLightCommand } from '../../command';
+import { iLedSettings } from '../settings';
 
 /**
  * Interface for RGB-CCT LED-Devices.
@@ -12,7 +12,7 @@ export interface iLedRgbCct extends iDimmableLamp {
   /**
    * The settings of the LED-Device (e.g. brightness, color, colortemp) for different times of the day
    */
-  settings: LedSettings;
+  settings: iLedSettings;
   /**
    * The currently active color in HEX representation
    */

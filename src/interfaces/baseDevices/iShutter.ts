@@ -1,6 +1,7 @@
 import { iRoomDevice } from './iRoomDevice';
-import { ShutterSettings, Window } from '../../devices';
 import { ShutterSetLevelCommand } from '../../command';
+import { iWindow } from '../groups';
+import { iShutterSettings } from '../settings/iShutterSettings';
 
 /**
  * This interface represents a shutter device.
@@ -11,7 +12,7 @@ export interface iShutter extends iRoomDevice {
   /**
    * The settings for the shutter
    */
-  settings: ShutterSettings;
+  settings: iShutterSettings;
   /**
    * The current level of the shutter (0 = closed, 100 = open)
    */
@@ -23,7 +24,7 @@ export interface iShutter extends iRoomDevice {
   /**
    * The window this shutter is located within
    */
-  window: Window | undefined;
+  window: iWindow | undefined;
 
   /**
    * Persists the current information of the shutter to the database

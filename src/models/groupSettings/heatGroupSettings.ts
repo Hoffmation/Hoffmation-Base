@@ -1,13 +1,12 @@
-import { GroupSettings } from './groupSettings';
-import { TemperatureSettings } from '../temperatureSettings';
 import { Utils } from '../../utils';
-import { iIdHolder } from '../../interfaces';
+import { iHeatGroupSettings, iIdHolder, iTemperatureSettings } from '../../interfaces';
+import { GroupSettings } from './groupSettings';
 
-export class HeatGroupSettings extends GroupSettings {
+export class HeatGroupSettings extends GroupSettings implements iHeatGroupSettings {
   /**
    * The automatic points to use for the temperature calculation in automatic mode
    */
-  public automaticPoints: TemperatureSettings[] = [];
+  public automaticPoints: iTemperatureSettings[] = [];
   /**
    * Whether the temperature should be calculated automatically, or the manualTemperature should be used
    * @default true
@@ -45,7 +44,7 @@ export class HeatGroupSettings extends GroupSettings {
     this.persist(device);
   }
 
-  public setAutomaticPoint(setting: TemperatureSettings, device: iIdHolder): void {
+  public setAutomaticPoint(setting: iTemperatureSettings, device: iIdHolder): void {
     const currentIndex = this.automaticPoints.findIndex((v) => v.name === setting.name);
     if (currentIndex === -1) {
       this.automaticPoints.push(setting);

@@ -1,6 +1,6 @@
 import { iBaseDevice } from './iBaseDevice';
-import { BlockAutomaticHandler } from '../../services';
 import { RestoreTargetAutomaticValueCommand } from '../../command';
+import { iBlockAutomaticHandler } from '../iBlockAutomaticHandler';
 
 /**
  * This interface represents a device which automatic action can be temporarily disabled.
@@ -12,7 +12,7 @@ export interface iTemporaryDisableAutomatic extends iBaseDevice {
   /**
    * The block automation handler containing the current block state/time, etc.
    */
-  readonly blockAutomationHandler: BlockAutomaticHandler;
+  readonly blockAutomationHandler: iBlockAutomaticHandler;
 
   /**
    * Restores the automatic value/state of the device

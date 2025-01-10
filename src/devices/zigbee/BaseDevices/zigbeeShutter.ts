@@ -1,13 +1,12 @@
 import _ from 'lodash';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iShutter, iShutterCalibration } from '../../../interfaces';
+import { iShutter, iShutterCalibration, iWindow } from '../../../interfaces';
 import { ShutterSettings } from '../../deviceSettings';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../../command';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../../enums';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { Utils } from '../../../utils';
-import { Window } from '../../groups';
 import { ShutterPositionChangedAction } from '../../../action';
 import { ShutterCalibration } from '../../../models';
 
@@ -20,7 +19,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   protected _setLevelTime: number = -1;
   protected _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
   protected _currentLevel: number = -1;
-  protected _window?: Window;
+  protected _window?: iWindow;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -56,12 +55,12 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   }
 
   /** @inheritDoc */
-  public get window(): Window | undefined {
+  public get window(): iWindow | undefined {
     return this._window;
   }
 
   /** @inheritDoc */
-  public set window(value: Window | undefined) {
+  public set window(value: iWindow | undefined) {
     this._window = value;
   }
 

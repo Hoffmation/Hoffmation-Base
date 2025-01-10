@@ -4,13 +4,13 @@ import {
   iBaseDevice,
   iBatteryDevice,
   iButtonSwitch,
-  iHandleSensor,
+  iHandle,
   iHeater,
-  iHumiditySensor,
+  iHumidityCollector,
   iIlluminationSensor,
   iMotionSensor,
   iShutter,
-  iTemperatureSensor,
+  iTemperatureCollector,
   iZigbeeDevice,
 } from './baseDevices';
 import { iRoomBase } from './iRoomBase';
@@ -129,19 +129,19 @@ export interface iPersist {
    * Persists data of a temperature sensor
    * @param device - The device to persist data for
    */
-  persistTemperatureSensor(device: iTemperatureSensor): void;
+  persistTemperatureSensor(device: iTemperatureCollector): void;
 
   /**
    * Persists data of a humidity sensor
    * @param device - The device to persist data for
    */
-  persistHumiditySensor(device: iHumiditySensor): void;
+  persistHumiditySensor(device: iHumidityCollector): void;
 
   /**
    * Persists data of a handle sensor
    * @param device - The device to persist data for
    */
-  persistHandleSensor(device: iHandleSensor): void;
+  persistHandleSensor(device: iHandle): void;
 
   /**
    * Persists data of a battery device

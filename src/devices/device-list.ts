@@ -1,7 +1,8 @@
 import { iBaseDevice } from '../interfaces';
 import { API } from '../api';
+import { iDeviceList } from '../interfaces/iDeviceList';
 
-export class DeviceList {
+export class DeviceList implements iDeviceList {
   public constructor(private _ids: string[] = []) {
     // Empty
   }

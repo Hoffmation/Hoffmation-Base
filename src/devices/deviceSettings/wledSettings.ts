@@ -1,7 +1,8 @@
-import { DimmerSettings } from './dimmerSettings';
 import { Utils } from '../../utils';
+import { DimmerSettings } from './dimmerSettings';
+import { iWledSettings } from '../../interfaces/settings/iWledSettings';
 
-export class WledSettings extends DimmerSettings {
+export class WledSettings extends DimmerSettings implements iWledSettings {
   /**
    * @inheritDoc
    * @default false

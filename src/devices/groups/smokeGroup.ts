@@ -1,10 +1,10 @@
-import { iSmokeDetectorDevice } from '../../interfaces';
-import { BaseGroup } from './base-group';
+import { iSmokeDetectorDevice, iSmokeGroup } from '../../interfaces';
 import { DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
 import { ZigbeeHeimanSmoke } from '../zigbee';
+import { BaseGroup } from './base-group';
 
-export class SmokeGroup extends BaseGroup {
+export class SmokeGroup extends BaseGroup implements iSmokeGroup {
   public constructor(roomName: string, smokeDetectorIds: string[]) {
     super(roomName, GroupType.Smoke);
     this.deviceCluster.deviceMap.set(DeviceClusterType.SmokeDetector, new DeviceList(smokeDetectorIds));

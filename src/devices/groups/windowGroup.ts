@@ -9,8 +9,6 @@ import {
   WindowSetRolloByWeatherStatusCommand,
 } from '../../command';
 import { ShutterService, TimeCallbackService } from '../../services';
-import { BaseGroup } from './base-group';
-import { Window } from './Window';
 import {
   CommandSource,
   DeviceClusterType,
@@ -24,11 +22,12 @@ import { DeviceList } from '../device-list';
 import { Utils } from '../../utils';
 import { ShutterSettings } from '../deviceSettings';
 import { WeatherService } from '../../services/weather';
-import { iRoomBase } from '../../interfaces';
+import { iRoomBase, iWindow, iWindowGroup } from '../../interfaces';
 import { TimeCallback } from '../../models';
 import { HandleChangeAction } from '../../action';
+import { BaseGroup } from './base-group';
 
-export class WindowGroup extends BaseGroup {
+export class WindowGroup extends BaseGroup implements iWindowGroup {
   /**
    * Timecallback for sunrise-shutter actions
    * @remarks This callback is only set if needed and already calculated.
@@ -42,29 +41,9 @@ export class WindowGroup extends BaseGroup {
    */
   public sunsetShutterCallback: TimeCallback | undefined;
 
-  /**
-   * Checks if any Shutter of any window is down
-   * @returns {boolean} True if there is atleast one shutte with level of 0%.
-   */
-  public get anyShutterDown(): boolean {
-    return this.windows.some((w: Window) => {
-      return w.anyShutterDown;
-    });
-  }
-
-  /**
-   * Checks if any handle of any window is open
-   * @returns {boolean} True if there is atleast one handle that is open.
-   */
-  public get anyWindowOpen(): boolean {
-    return this.windows.some((w: Window) => {
-      return w.anyHandleNotClosed;
-    });
-  }
-
   public constructor(
     roomName: string,
-    public windows: Window[],
+    public windows: iWindow[],
   ) {
     super(roomName, GroupType.WindowGroup);
     const shutterIds: string[] = [];
@@ -84,11 +63,31 @@ export class WindowGroup extends BaseGroup {
   }
 
   /**
+   * Checks if any Shutter of any window is down
+   * @returns {boolean} True if there is atleast one shutte with level of 0%.
+   */
+  public get anyShutterDown(): boolean {
+    return this.windows.some((w: iWindow) => {
+      return w.anyShutterDown;
+    });
+  }
+
+  /**
+   * Checks if any handle of any window is open
+   * @returns {boolean} True if there is atleast one handle that is open.
+   */
+  public get anyWindowOpen(): boolean {
+    return this.windows.some((w: iWindow) => {
+      return w.anyHandleNotClosed;
+    });
+  }
+
+  /**
    * Adds Callbacks to each window and their handles.
    * @param cb - The callback to execute on met condition.
    */
   public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {
-    this.windows.forEach((f: Window): void => {
+    this.windows.forEach((f: iWindow): void => {
       f.addHandleChangeCallback(cb);
     });
   }
@@ -202,13 +201,13 @@ export class WindowGroup extends BaseGroup {
     });
   }
 
-  private sunsetDown(c: ShutterSunsetDownCommand): void {
+  public sunsetDown(c: ShutterSunsetDownCommand): void {
     this.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
     const room: iRoomBase = this.getRoom();
     room.setLightTimeBased(new RoomSetLightTimeBasedCommand(c, true, 'sunsetDown'));
   }
 
-  private reconfigureSunsetShutterCallback(): void {
+  public reconfigureSunsetShutterCallback(): void {
     const room: iRoomBase = this.getRoom();
     if (!room.settings.sonnenUntergangRollos || !room.settings.rolloOffset) {
       if (this.sunsetShutterCallback !== undefined) {
@@ -252,7 +251,7 @@ export class WindowGroup extends BaseGroup {
     }
   }
 
-  private reconfigureSunriseShutterCallback(): void {
+  public reconfigureSunriseShutterCallback(): void {
     const room: iRoomBase = this.getRoom();
     if (!room.settings.sonnenAufgangRollos || !room.settings.rolloOffset) {
       if (this.sunriseShutterCallback !== undefined) {

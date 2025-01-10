@@ -1,10 +1,9 @@
-import { iBaseDevice, IDeviceUpdater } from '../interfaces';
+import { iBaseDevice, IDeviceUpdater, iIoBrokerBaseDevice } from '../interfaces';
 import { TimeCallbackService } from '../services';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { Devices } from './devices';
 import { MqttCoordinator } from './mqtt';
 import { API } from '../api';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { ServerLogService } from '../logging';
 import { LogLevel } from '../enums';
 
@@ -64,7 +63,7 @@ export class DeviceUpdater implements IDeviceUpdater {
     }
     const allDevicesKey: string = `${classifier}-${devId}`;
     const device: undefined | iBaseDevice = API.getDevice(allDevicesKey, false);
-    if (typeof device === 'undefined' || (device as IoBrokerBaseDevice).update === undefined) {
+    if (typeof device === 'undefined' || (device as iIoBrokerBaseDevice).update === undefined) {
       // classifier == Devices.IDENTIFIER_SMART_GARDEN &&
       //   ServerLogService.writeLog(
       //     LogLevel.Warn,
@@ -73,7 +72,7 @@ export class DeviceUpdater implements IDeviceUpdater {
       return;
     }
     try {
-      (device as IoBrokerBaseDevice).update(idSplit, state, initial, false);
+      (device as iIoBrokerBaseDevice).update(idSplit, state, initial, false);
     } catch (e) {
       ServerLogService.writeLog(
         LogLevel.Alert,

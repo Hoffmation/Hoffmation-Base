@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType, WindowPosition } from '../enums';
-import { iHandleSensor } from '../interfaces';
+import { iHandle } from '../interfaces';
 
 export class HandleChangeAction extends BaseAction {
   /** @inheritDoc */
@@ -8,9 +8,9 @@ export class HandleChangeAction extends BaseAction {
   /**
    * The window-handle that triggered the action
    */
-  public readonly handle: iHandleSensor;
+  public readonly handle: iHandle;
 
-  public constructor(handle: iHandleSensor) {
+  public constructor(handle: iHandle) {
     super(undefined, `${handle.customName} ${handle.position === WindowPosition.closed ? 'opened' : 'closed'}`);
     this.handle = handle;
   }

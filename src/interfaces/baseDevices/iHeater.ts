@@ -1,5 +1,5 @@
 // TODO: Migrate to new Command Structure
-import { iTemperatureSensor } from './iTemperatureSensor';
+import { iTemperatureCollector } from './iTemperatureCollector';
 import { iRoomDevice } from './iRoomDevice';
 import { iDisposable } from '../iDisposeable';
 import { HandleChangeAction } from '../../action';
@@ -10,7 +10,7 @@ import { iHeaterSettings } from '../settings';
  *
  * For devices with {@link DeviceCapability.heater} capability.
  */
-export interface iHeater extends iTemperatureSensor, iRoomDevice, iDisposable {
+export interface iHeater extends iTemperatureCollector, iRoomDevice, iDisposable {
   /**
    * The settings of the heater
    */

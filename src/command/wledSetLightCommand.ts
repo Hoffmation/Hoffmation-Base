@@ -2,8 +2,8 @@ import { DimmerSetLightCommand } from './dimmerSetLightCommand';
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
 import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { WledSettings } from '../devices';
 import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
+import { iWledSettings } from '../interfaces/settings/iWledSettings';
 
 export class WledSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -36,7 +36,7 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
     return `Dimmer setLight to ${this.on} with Brightness ${this.brightness}, disabelAutomatic ${this.disableAutomaticCommand?.logMessage} and preset ${this.preset} for reason: ${this.reasonTrace}`;
   }
 
-  public static override byTimeBased(settings: WledSettings, c: LampSetTimeBasedCommand): WledSetLightCommand {
+  public static override byTimeBased(settings: iWledSettings, c: LampSetTimeBasedCommand): WledSetLightCommand {
     switch (c.time) {
       case TimeOfDay.Daylight:
         return new WledSetLightCommand(

@@ -1,15 +1,15 @@
-import { Daytime } from './daytime';
+import { iDaytime, iTemperatureSettings } from '../interfaces';
 
-export class TemperatureSettings {
+export class TemperatureSettings implements iTemperatureSettings {
   public constructor(
-    public start: Daytime,
-    public end: Daytime,
+    public start: iDaytime,
+    public end: iDaytime,
     public temperature: number,
     public name: string,
     public active: boolean = true,
   ) {}
 
-  public static getActiveSetting(settings: TemperatureSettings[], date: Date): TemperatureSettings | undefined {
+  public static getActiveSetting(settings: iTemperatureSettings[], date: Date): iTemperatureSettings | undefined {
     for (const setting of settings) {
       if (TemperatureSettings.isNowInRange(setting, date)) {
         return setting;
@@ -17,7 +17,7 @@ export class TemperatureSettings {
     }
   }
 
-  public static isNowInRange(setting: TemperatureSettings, date: Date): boolean {
+  public static isNowInRange(setting: iTemperatureSettings, date: Date): boolean {
     const now: number = date.getTime();
     const todayStart: number = new Date(now).setHours(setting.start.hour, setting.start.minute);
     if (now < todayStart) {

@@ -1,17 +1,23 @@
 import { DeviceCapability, DeviceType, LogLevel, TimeCallbackType } from '../../enums';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { ShellyDevice } from './shellyDevice';
-import { iBatteryDevice, iHeater, iHeaterSettings, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import {
+  iBatteryDevice,
+  iHeater,
+  iHeaterSettings,
+  iHeatGroup,
+  iTemperatureCollector,
+  UNDEFINED_TEMP_VALUE,
+} from '../../interfaces';
 import { Battery, TemperatureSensor } from '../sharedFunctions';
 import { HeaterSettings } from '../deviceSettings';
 import { Utils } from '../../utils';
 import { PIDController } from '../../liquid-pid';
 import { TimeCallbackService } from '../../services';
 import { HandleChangeAction, TemperatureSensorChangeAction } from '../../action';
-import { HeatGroup } from '../groups';
 import { HeatGroupSettings, TimeCallback } from '../../models';
 
-export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSensor, iBatteryDevice {
+export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureCollector, iBatteryDevice {
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
@@ -199,7 +205,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
       this.setExternalTemperatureEnabled(true);
     }
 
-    const heatGroup: HeatGroup | undefined = this.room.HeatGroup;
+    const heatGroup: iHeatGroup | undefined = this.room.HeatGroup;
     if (heatGroup === undefined) {
       this.log(LogLevel.Warn, `HeatGroup is undefined for ${this.info.customName}`);
       return;

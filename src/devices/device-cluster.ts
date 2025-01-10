@@ -1,17 +1,18 @@
 import { DeviceClusterType, DeviceType } from '../enums';
-import { DeviceList } from './device-list';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { iBaseDevice } from '../interfaces';
+import { iBaseDevice, iDeviceCluster, iDeviceList, iIoBrokerBaseDevice } from '../interfaces';
 import { Utils } from '../utils';
+import { DeviceList } from './device-list';
 
-export class DeviceCluster {
-  public constructor(public deviceMap: Map<DeviceClusterType, DeviceList> = new Map<DeviceClusterType, DeviceList>()) {}
+export class DeviceCluster implements iDeviceCluster {
+  public constructor(
+    public deviceMap: Map<DeviceClusterType, iDeviceList> = new Map<DeviceClusterType, iDeviceList>(),
+  ) {}
 
-  public getIoBrokerDevicesByType(type: DeviceClusterType): IoBrokerBaseDevice[] {
+  public getIoBrokerDevicesByType(type: DeviceClusterType): iIoBrokerBaseDevice[] {
     if (type === DeviceClusterType.Speaker) {
       throw new Error('This is no IoBroker Device');
     }
-    return this.getDevicesByType(type) as Array<IoBrokerBaseDevice>;
+    return this.getDevicesByType(type) as Array<iIoBrokerBaseDevice>;
   }
 
   public getDevicesByType(type: DeviceClusterType): Array<iBaseDevice> {
@@ -135,7 +136,7 @@ export class DeviceCluster {
       /**
        * Dictionary representation of the normal device map
        */
-      deviceDict?: { [p: string]: DeviceList };
+      deviceDict?: { [p: string]: iDeviceList };
     }
   > {
     return Utils.jsonFilter(this);

@@ -1,10 +1,10 @@
 import { DeviceClusterType, GroupType } from '../../enums';
-import { BaseGroup } from './base-group';
 import { DeviceList } from '../device-list';
-import { iSpeaker } from '../../interfaces';
+import { iSpeaker, iSpeakerGroup } from '../../interfaces';
 import { Utils } from '../../utils';
+import { BaseGroup } from './base-group';
 
-export class SpeakerGroup extends BaseGroup {
+export class SpeakerGroup extends BaseGroup implements iSpeakerGroup {
   private _playing: boolean = false;
 
   public constructor(roomName: string, speakerIds: string[]) {

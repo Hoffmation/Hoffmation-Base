@@ -1,13 +1,12 @@
 import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../../enums';
-import { iBatteryDevice, iHandleSensor } from '../../../interfaces';
+import { iBatteryDevice, iHandle, iWindow } from '../../../interfaces';
 import { HandleSettings } from '../../deviceSettings';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { Battery, HandleSensor } from '../../sharedFunctions';
-import { Window } from '../../groups';
 import { HandleChangeAction } from '../../../action';
 
-export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, iBatteryDevice {
+export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandle, iBatteryDevice {
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
@@ -37,12 +36,12 @@ export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, i
   }
 
   /** @inheritDoc */
-  public get window(): Window | undefined {
+  public get window(): iWindow | undefined {
     return this.handleSensor.window;
   }
 
   /** @inheritDoc */
-  public set window(value: Window) {
+  public set window(value: iWindow) {
     this.handleSensor.window = value;
   }
 

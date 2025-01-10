@@ -1,12 +1,9 @@
-import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../utils';
+import { DeviceSettings } from './deviceSettings';
+import { iSceneSettings } from '../../interfaces';
 
-export class SceneSettings extends DeviceSettings {
-  /**
-   * The default turn off timeout in ms for the scene or undefined if not desired.
-   * @default undefined (No timeout)
-   */
-  defaultTurnOffTimeout?: number;
+export class SceneSettings extends DeviceSettings implements iSceneSettings {
+  public defaultTurnOffTimeout?: number;
 
   public fromPartialObject(data: Partial<SceneSettings>): void {
     this.defaultTurnOffTimeout = data.defaultTurnOffTimeout ?? this.defaultTurnOffTimeout;

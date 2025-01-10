@@ -1,5 +1,5 @@
 import { HmIPDevice } from './hmIpDevice';
-import { iDisposable, iHeater, iHumiditySensor, iTemperatureSensor } from '../../interfaces';
+import { iDisposable, iHeater, iHumidityCollector, iHumiditySensor, iTemperatureCollector } from '../../interfaces';
 import { Utils } from '../../utils';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 import { HeaterSettings } from '../deviceSettings';
@@ -9,7 +9,10 @@ import { TimeCallbackService } from '../../services';
 import { HeatGroupSettings, TimeCallback } from '../../models';
 import { HandleChangeAction, HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
 
-export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
+export class HmIpHeizgruppe
+  extends HmIPDevice
+  implements iTemperatureCollector, iHumidityCollector, iHeater, iDisposable
+{
   /** @inheritDoc */
   public readonly persistHeaterInterval: NodeJS.Timeout = Utils.guardedInterval(
     () => {
@@ -22,7 +25,7 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
   /** @inheritDoc */
   public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
-  public humiditySensor: HumiditySensor = new HumiditySensor(this);
+  public humiditySensor: iHumiditySensor = new HumiditySensor(this);
   /** @inheritDoc */
   public settings: HeaterSettings = new HeaterSettings();
   private readonly _setWindowOpenID: string = '';

@@ -10,15 +10,15 @@ import {
   WledSetLightCommand,
 } from '../command';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { iDimmableLamp } from '../interfaces';
+import { iWledDevice } from '../interfaces';
 import { WledSettings } from './deviceSettings';
 import { BlockAutomaticHandler } from '../services';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { ServerLogService } from '../logging';
 import { LampUtils } from './sharedFunctions';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 
-export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
+export class WledDevice extends IoBrokerBaseDevice implements iWledDevice {
   /** @inheritDoc */
   public brightness: number = -1;
   /** @inheritDoc */

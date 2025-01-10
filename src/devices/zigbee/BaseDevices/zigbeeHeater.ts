@@ -1,4 +1,4 @@
-import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../../interfaces';
+import { iBatteryDevice, iHeater, iHeatGroup, UNDEFINED_TEMP_VALUE } from '../../../interfaces';
 import { HeaterSettings } from '../../deviceSettings';
 import { Battery, TemperatureSensor } from '../../sharedFunctions';
 import { ZigbeeDevice } from './zigbeeDevice';
@@ -8,7 +8,6 @@ import { PIDController } from '../../../liquid-pid';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { TimeCallbackService } from '../../../services';
 import { HandleChangeAction, TemperatureSensorChangeAction } from '../../../action';
-import { HeatGroup } from '../../groups';
 import { TimeCallback } from '../../../models';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
@@ -151,7 +150,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
     if (!this._initialSeasonCheckDone) {
       this.checkSeasonTurnOff();
     }
-    const heatGroup: HeatGroup | undefined = this.room.HeatGroup;
+    const heatGroup: iHeatGroup | undefined = this.room.HeatGroup;
     if (this.seasonTurnOff || this.settings.manualDisabled) {
       this.desiredTemperature = 0;
       return;

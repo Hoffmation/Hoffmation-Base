@@ -24,3 +24,7 @@ export * from './iHeaterSettings';
 export * from './iGoveeSettings';
 export * from './iUnifiSettings';
 export * from './iVictronSettings';
+export { iGroupSettings } from './iGroupSettings';
+export { iTemperatureSettings } from './iTemperatureSettings';
+export { iLedSettings } from './iLedSettings';
+export { iSceneSettings } from './iSceneSettings';

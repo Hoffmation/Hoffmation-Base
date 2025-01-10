@@ -1,28 +1,31 @@
 import { RoomSetLightTimeBasedCommand } from '../command';
-import { DeviceCluster, HeatGroup, LightGroup, SmokeGroup, SpeakerGroup, WaterGroup, WindowGroup } from '../devices';
-import { iIdHolder, ITimeCallback } from './index';
-import { iPresenceGroup } from './groups/IPresenceGroup';
+import {
+  iHeatGroup,
+  iLightGroup,
+  iPresenceGroup,
+  iSmokeGroup,
+  iSpeakerGroup,
+  iWaterGroup,
+  iWindowGroup,
+} from './groups';
 import { LogLevel } from '../enums';
 
 import { iRoomSettingsController } from './iRoomSettingsController';
+import { iIdHolder } from './iIdHolder';
+import { iDeviceCluster } from './iDevicecluster';
+import { ITimeCallback } from './ITimeCallback';
 
 /**
  * This interface represents a room with it's base functionality.
  * Whilst accessing the custom rooms can be beneficial for direct device interaction, this provides interactions to e.g. device groups.
  */
 export interface iRoomBase extends iIdHolder {
-  // TODO: Interface bauen
-  WindowGroup?: WindowGroup;
-  // TODO: Interface bauen
-  LightGroup?: LightGroup;
-  // TODO: Interface bauen
-  WaterGroup?: WaterGroup;
-  // TODO: Interface bauen
-  SmokeGroup?: SmokeGroup;
-  // TODO: Interface bauen
-  SonosGroup?: SpeakerGroup;
-  // TODO: Interface bauen
-  deviceCluster: DeviceCluster;
+  WindowGroup?: iWindowGroup;
+  LightGroup?: iLightGroup;
+  WaterGroup?: iWaterGroup;
+  SmokeGroup?: iSmokeGroup;
+  SonosGroup?: iSpeakerGroup;
+  deviceCluster: iDeviceCluster;
   etage?: number;
   /**
    *
@@ -35,7 +38,7 @@ export interface iRoomBase extends iIdHolder {
   /**
    *
    */
-  HeatGroup: HeatGroup | undefined;
+  HeatGroup: iHeatGroup | undefined;
   /**
    * The time-callback for controlling shutters at sunrise
    */

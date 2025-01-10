@@ -4,12 +4,12 @@ import {
   PresenceGroupFirstEnterAction,
   PresenceGroupLastLeftAction,
 } from '../../action';
-import { iMotionSensor } from '../index';
+import { iBaseGroup, iMotionSensor } from '../index';
 
 /**
  *
  */
-export interface iPresenceGroup {
+export interface iPresenceGroup extends iBaseGroup {
   /**
    *
    */
@@ -28,7 +28,7 @@ export interface iPresenceGroup {
   /**
    *
    */
-  anyPresent(includeMovementResetDelayCheck: boolean): boolean;
+  anyPresent(includeMovementResetDelayCheck?: boolean): boolean;
 
   /**
    *

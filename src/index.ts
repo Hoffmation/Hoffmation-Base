@@ -169,3 +169,4 @@ export class HoffmationBase {
 }
 
 export { PIDOptions } from './interfaces/p-i-d-options';
+export { iDeviceList } from './interfaces/iDeviceList';

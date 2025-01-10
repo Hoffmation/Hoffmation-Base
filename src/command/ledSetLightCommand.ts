@@ -2,8 +2,8 @@ import { DimmerSetLightCommand } from './dimmerSetLightCommand';
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
 import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { LedSettings } from '../devices';
 import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
+import { iLedSettings } from '../interfaces';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -45,7 +45,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
    * @param c - The command to base the LedSetLightCommand on
    * @returns The created LedSetLightCommand
    */
-  public static byTimeBased(settings: LedSettings, c: LampSetTimeBasedCommand): LedSetLightCommand {
+  public static byTimeBased(settings: iLedSettings, c: LampSetTimeBasedCommand): LedSetLightCommand {
     switch (c.time) {
       case TimeOfDay.Daylight:
         return new LedSetLightCommand(

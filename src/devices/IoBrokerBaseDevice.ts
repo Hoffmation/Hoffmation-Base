@@ -1,5 +1,13 @@
 import { Persistence } from '../services';
-import { iJsonOmitKeys, iPersist, iRoomAddDeviceItem, iRoomBase, iRoomDevice } from '../interfaces';
+import {
+  iIoBrokerBaseDevice,
+  iIOBrokerConnection,
+  iJsonOmitKeys,
+  iPersist,
+  iRoomAddDeviceItem,
+  iRoomBase,
+  iRoomDeviceAddingSettings,
+} from '../interfaces';
 import { RoomDeviceAddingSettings } from '../models';
 import { DeviceSettings } from './deviceSettings';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
@@ -7,10 +15,9 @@ import { Utils } from '../utils';
 import { API } from '../api';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { ServerLogService } from '../logging';
-import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
-import { iRoomDeviceAddingSettings } from '../interfaces/iRoomDeviceAddingSettings';
+import { ioBrokerMain } from '../ioBroker';
 
-export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
+export abstract class IoBrokerBaseDevice implements iJsonOmitKeys, iIoBrokerBaseDevice {
   /** @inheritDoc */
   public readonly jsonOmitKeys: string[] = ['individualStateCallbacks'];
   /**
@@ -87,7 +94,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
     return this._info;
   }
 
-  public get ioConn(): IOBrokerConnection | undefined {
+  public get ioConn(): iIOBrokerConnection | undefined {
     return ioBrokerMain.iOConnection;
   }
 
@@ -175,7 +182,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
     );
   }
 
-  protected addToCorrectRoom(): void {
+  public addToCorrectRoom(): void {
     const settings: RoomDeviceAddingSettings | undefined = IoBrokerBaseDevice.roomAddingSettings[this.info.room];
     if (settings !== undefined) {
       if (settings.devices[this.deviceType] === undefined) {
@@ -218,7 +225,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
    * @param onSuccess - Callback to run on successfully written data
    * @param onError - Callback to run if an error has occurred during writing the data
    */
-  protected setState(
+  public setState(
     pointId: string,
     state: string | number | boolean | ioBroker.State | ioBroker.SettableState | null,
     onSuccess: (() => void) | undefined = undefined,

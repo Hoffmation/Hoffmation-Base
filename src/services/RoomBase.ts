@@ -1,23 +1,21 @@
 import _ from 'lodash';
-import {
-  BaseGroup,
-  DeviceCluster,
-  HeatGroup,
-  LightGroup,
-  PresenceGroup,
-  SmokeGroup,
-  SpeakerGroup,
-  TasterGroup,
-  Trilateration,
-  WaterGroup,
-  WindowGroup,
-} from '../devices';
+import { BaseGroup, DeviceCluster, HeatGroup, TasterGroup, Trilateration, WaterGroup } from '../devices';
 import {
   ActuatorSetStateCommand,
   LightGroupSwitchTimeConditionalCommand,
   RoomSetLightTimeBasedCommand,
 } from '../command';
-import { iIdHolder, iRoomBase, ITimeCallback, iTrilaterationPoint } from '../interfaces';
+import {
+  iIdHolder,
+  iLightGroup,
+  iPresenceGroup,
+  iRoomBase,
+  iSmokeGroup,
+  iSpeakerGroup,
+  ITimeCallback,
+  iTrilaterationPoint,
+  iWindowGroup,
+} from '../interfaces';
 import { RoomService } from './room-service';
 import { Utils } from '../utils';
 import { DeviceClusterType, GroupType, LogLevel, TimeOfDay } from '../enums';
@@ -25,7 +23,7 @@ import { ServerLogService } from '../logging';
 import { Persistence } from './dbo';
 import { TimeCallbackService } from './time-callback-service';
 import { ShutterService } from './ShutterService';
-import { RoomInfo, RoomSettingsController, TimeCallback } from '../models';
+import { RoomInfo, RoomSettingsController } from '../models';
 
 export class RoomBase implements iRoomBase, iIdHolder {
   /**
@@ -58,15 +56,15 @@ export class RoomBase implements iRoomBase, iIdHolder {
     return this.LightGroup?.sonnenUntergangLichtCallback;
   }
 
-  public get sonnenAufgangLichtCallback(): TimeCallback | undefined {
+  public get sonnenAufgangLichtCallback(): ITimeCallback | undefined {
     return this.LightGroup?.sonnenAufgangLichtCallback;
   }
 
-  public get sunriseShutterCallback(): TimeCallback | undefined {
+  public get sunriseShutterCallback(): ITimeCallback | undefined {
     return this.WindowGroup?.sunriseShutterCallback;
   }
 
-  public get sunsetShutterCallback(): TimeCallback | undefined {
+  public get sunsetShutterCallback(): ITimeCallback | undefined {
     return this.WindowGroup?.sunsetShutterCallback;
   }
 
@@ -88,28 +86,28 @@ export class RoomBase implements iRoomBase, iIdHolder {
     return this._deviceCluster;
   }
 
-  public get WindowGroup(): WindowGroup | undefined {
-    return this.groupMap.get(GroupType.Window) as WindowGroup | undefined;
+  public get WindowGroup(): iWindowGroup | undefined {
+    return this.groupMap.get(GroupType.Window) as iWindowGroup | undefined;
   }
 
-  public get PraesenzGroup(): PresenceGroup | undefined {
-    return this.groupMap.get(GroupType.Presence) as PresenceGroup | undefined;
+  public get PraesenzGroup(): iPresenceGroup | undefined {
+    return this.groupMap.get(GroupType.Presence) as iPresenceGroup | undefined;
   }
 
-  public get LightGroup(): LightGroup | undefined {
-    return this.groupMap.get(GroupType.Light) as LightGroup | undefined;
+  public get LightGroup(): iLightGroup | undefined {
+    return this.groupMap.get(GroupType.Light) as iLightGroup | undefined;
   }
 
   public get TasterGroup(): TasterGroup | undefined {
     return this.groupMap.get(GroupType.Buttons) as TasterGroup | undefined;
   }
 
-  public get SonosGroup(): SpeakerGroup | undefined {
-    return this.groupMap.get(GroupType.Speaker) as SpeakerGroup | undefined;
+  public get SonosGroup(): iSpeakerGroup | undefined {
+    return this.groupMap.get(GroupType.Speaker) as iSpeakerGroup | undefined;
   }
 
-  public get SmokeGroup(): SmokeGroup | undefined {
-    return this.groupMap.get(GroupType.Smoke) as SmokeGroup | undefined;
+  public get SmokeGroup(): iSmokeGroup | undefined {
+    return this.groupMap.get(GroupType.Smoke) as iSmokeGroup | undefined;
   }
 
   public get WaterGroup(): WaterGroup | undefined {

@@ -99,7 +99,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable, iZi
   }
 
   /** @inheritDoc */
-  protected override setState(
+  public override setState(
     pointId: string,
     state: string | number | boolean | ioBroker.State | ioBroker.SettableState | null,
     onSuccess: (() => void) | undefined = undefined,

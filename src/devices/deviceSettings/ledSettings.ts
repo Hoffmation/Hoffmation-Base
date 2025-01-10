@@ -1,7 +1,8 @@
-import { DimmerSettings } from './dimmerSettings';
 import { Utils } from '../../utils';
+import { DimmerSettings } from './dimmerSettings';
+import { iLedSettings } from '../../interfaces/settings/iLedSettings';
 
-export class LedSettings extends DimmerSettings {
+export class LedSettings extends DimmerSettings implements iLedSettings {
   /**
    * The default color for the LED if none was given.
    * @default '#fbbc32' (Warm yellow)

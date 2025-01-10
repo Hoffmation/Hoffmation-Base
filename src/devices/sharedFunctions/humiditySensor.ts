@@ -1,9 +1,9 @@
-import { iHumiditySensor, iJsonOmitKeys, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { iHumidityCollector, iHumiditySensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { HumiditySensorChangeAction } from '../../action';
 import { Utils } from '../../utils';
 import { Persistence } from '../../services';
 
-export class HumiditySensor implements iJsonOmitKeys {
+export class HumiditySensor implements iHumiditySensor {
   /** @inheritDoc */
   public readonly jsonOmitKeys: string[] = ['_device'];
   private _humidityCallbacks: ((action: HumiditySensorChangeAction) => void)[] = [];
@@ -17,7 +17,7 @@ export class HumiditySensor implements iJsonOmitKeys {
     false,
   );
 
-  public constructor(private readonly _device: iHumiditySensor) {}
+  public constructor(private readonly _device: iHumidityCollector) {}
 
   public get humidity(): number {
     return this._humidity;

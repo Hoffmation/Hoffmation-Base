@@ -1,13 +1,12 @@
-import { ZigbeeDevice } from './BaseDevices';
-import { iBatteryDevice } from '../../interfaces';
+import { iBatteryDevice, iWaterSensor } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { Res, SonosService } from '../../services';
 import { Utils } from '../../utils';
+import { ZigbeeDevice } from './BaseDevices';
 
-// TODO: Add iWaterSensor
-export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {
+export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice, iWaterSensor {
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
   /**

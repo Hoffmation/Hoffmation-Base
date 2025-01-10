@@ -1,15 +1,18 @@
-import { iBatteryDevice, iHumiditySensor, iTemperatureSensor } from '../../interfaces';
+import { iBatteryDevice, iHumidityCollector, iHumiditySensor, iTemperatureCollector } from '../../interfaces';
 import { BatteryLevelChangeAction, HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
 import { ZigbeeDevice } from './BaseDevices';
 import { Battery, HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
-export class ZigbeeSonoffTemp extends ZigbeeDevice implements iTemperatureSensor, iHumiditySensor, iBatteryDevice {
+export class ZigbeeSonoffTemp
+  extends ZigbeeDevice
+  implements iTemperatureCollector, iHumidityCollector, iBatteryDevice
+{
   /** @inheritDoc */
   public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
-  public humiditySensor: HumiditySensor = new HumiditySensor(this);
+  public humiditySensor: iHumiditySensor = new HumiditySensor(this);
   /** @inheritDoc */
   public battery: Battery = new Battery(this);
 

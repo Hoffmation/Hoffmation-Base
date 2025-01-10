@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { iobrokerConnectionLogging } from './iobrokerConnectionLogging';
 import { SocketIOVisCommand } from './socketIOVisCommand';
 import { IoBrokerAuthInfo } from './ioBrokerAuthInfo';
-import { iDisposable } from '../interfaces';
+import { iIOBrokerConnection } from '../interfaces';
 import { ConnectionCallbacks } from '../models';
 import { SocketIOConnectOpts } from './socketIOConnectOptions';
 import { iobrokerConnectionLogLevel } from '../enums';
@@ -25,7 +25,7 @@ enum ConnectionState {
   connected,
 }
 
-export class IOBrokerConnection implements iDisposable {
+export class IOBrokerConnection implements iIOBrokerConnection {
   private _authInfo: IoBrokerAuthInfo = new IoBrokerAuthInfo();
   private _authRunning: boolean = false;
   private _cmdData: unknown;

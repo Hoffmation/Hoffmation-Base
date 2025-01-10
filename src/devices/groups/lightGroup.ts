@@ -1,5 +1,5 @@
 import { CommandSource, DeviceClusterType, GroupType, LogLevel, TimeCallbackType, TimeOfDay } from '../../enums';
-import { iActuator, iLamp, iRoomBase } from '../../interfaces';
+import { iActuator, iLamp, iLightGroup, iRoomBase } from '../../interfaces';
 import {
   ActuatorSetStateCommand,
   LampSetLightCommand,
@@ -11,12 +11,12 @@ import {
 import { TimeCallbackService } from '../../services';
 import { Utils } from '../../utils';
 import { DeviceList } from '../device-list';
-import { BaseGroup } from './base-group';
 import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
 import { WledDevice } from '../wledDevice';
 import { TimeCallback } from '../../models';
+import { BaseGroup } from './base-group';
 
-export class LightGroup extends BaseGroup {
+export class LightGroup extends BaseGroup implements iLightGroup {
   /**
    * Time-Callback for the sunrise light off
    * @remark This is undefined if the light should not be turned off at sunrise or no calculation has been done yet
@@ -192,7 +192,7 @@ export class LightGroup extends BaseGroup {
     this.reconfigureSunsetTimeCallback();
   }
 
-  private reconfigureSunriseTimeCallback(): void {
+  public reconfigureSunriseTimeCallback(): void {
     const room: iRoomBase = this.getRoom();
     if (!room.settings.lichtSonnenAufgangAus || !room.settings.lampOffset) {
       if (this.sonnenAufgangLichtCallback !== undefined) {
@@ -221,7 +221,7 @@ export class LightGroup extends BaseGroup {
     }
   }
 
-  private reconfigureSunsetTimeCallback(): void {
+  public reconfigureSunsetTimeCallback(): void {
     const room: iRoomBase = this.getRoom();
     if (!room.settings.ambientLightAfterSunset || !room.settings.lampOffset) {
       if (this.sonnenUntergangLichtCallback !== undefined) {
@@ -248,7 +248,7 @@ export class LightGroup extends BaseGroup {
     }
   }
 
-  private ambientLightStartCallback(): void {
+  public ambientLightStartCallback(): void {
     this._ambientLightOn = true;
     this.log(LogLevel.Info, 'Draußen wird es dunkel --> Aktiviere Ambientenbeleuchtung');
 

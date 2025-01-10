@@ -1,9 +1,10 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import _ from 'lodash';
-import { DeviceInfo } from './DeviceInfo';
 import { iDeviceConfig } from '../interfaces/iDeviceConfig';
+import { DeviceInfo } from './DeviceInfo';
+import { iIoBrokerDeviceInfo } from '../interfaces';
 
-export class IoBrokerDeviceInfo extends DeviceInfo {
+export class IoBrokerDeviceInfo extends DeviceInfo implements iIoBrokerDeviceInfo {
   public devID: string;
   public deviceType: string;
   public deviceRoomIndex: number;

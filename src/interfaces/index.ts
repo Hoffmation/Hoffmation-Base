@@ -1,5 +1,6 @@
 export * from './baseDevices';
 export * from './dachs';
+export * from './groups';
 export * from './settings';
 export * from './deviceSettings';
 export * from './weather';
@@ -44,3 +45,10 @@ export { iDesiredShutterPosition } from './IDesiredShutterPosition';
 export { iCountToday } from './iCountToday';
 export { iEnergyCalculation } from './iEnergyCalculation';
 export { iShutterCalibration } from './iShutterCalibration';
+export { iDeviceList } from './iDeviceList';
+export { iIoBrokerBaseDevice } from './iIoBrokerBaseDevice';
+export { iIoBrokerDeviceInfo } from './IIoBrokerDeviceInfo';
+export { iIOBrokerConnection } from './iIOBrokerConnection';
+export { iDeviceCluster } from './iDevicecluster';
+export { iDaytime } from './iDaytime';
+export { iBlockAutomaticHandler } from './iBlockAutomaticHandler';

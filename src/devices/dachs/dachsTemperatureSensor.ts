@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { iRoomBase, iTemperatureSensor } from '../../interfaces';
+import { iRoomBase, iTemperatureCollector } from '../../interfaces';
 import { DeviceSettings } from '../deviceSettings';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { TemperatureSensor } from '../sharedFunctions';
@@ -11,7 +11,7 @@ import { ServerLogService } from '../../logging';
 import { OwnSonosDevice, Persistence } from '../../services';
 import { TemperatureSensorChangeAction } from '../../action';
 
-export class DachsTemperatureSensor implements iTemperatureSensor {
+export class DachsTemperatureSensor implements iTemperatureCollector {
   /** @inheritDoc */
   public settings: DeviceSettings | undefined = undefined;
   /** @inheritDoc */

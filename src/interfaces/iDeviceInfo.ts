@@ -1,5 +1,3 @@
-import { DeviceInfo } from '../devices';
-
 /**
  *
  */
@@ -24,5 +22,5 @@ export interface iDeviceInfo {
   /**
    *
    */
-  toJSON(): Partial<DeviceInfo>;
+  toJSON(): Partial<iDeviceInfo>;
 }

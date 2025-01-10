@@ -1,54 +1,32 @@
-import { iRoomDevice } from './iRoomDevice';
-import { WindowPosition } from '../../enums';
-import { HandleSensor, Window } from '../../devices';
+import { iDisposable } from '../iDisposeable';
+import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { iWindow } from '../groups';
 import { HandleChangeAction } from '../../action';
 
-/**
- * Interface for Handle Sensors.
- * A handle sensor can be any device that is capable of detecting the position of a window handle e.g. a sensor, a window handle, etc.
- *
- * For devices with {@link DeviceCapability.handleSensor} capability.
- */
-export interface iHandleSensor extends iRoomDevice {
-  /**
-   * A common object for all handle sensors handling stuff like persist and callbacks
-   */
-  handleSensor: HandleSensor;
-  /**
-   * The current position of the handle
-   */
+export interface iHandleSensor extends iDisposable {
   position: WindowPosition;
-  /**
-   * The time the handle was open in minutes
-   */
   minutesOpen: number;
+  window: iWindow | undefined;
 
-  /**
-   * If known the window this handle is attached to
-   */
-  window: Window | undefined;
+  updatePosition(pValue: WindowPosition): void;
 
-  /**
-   * Add a callback that is called when the handle is change to open
-   * @param pCallback - The callback to fire
-   */
+  /** @inheritDoc */
   addOffenCallback(pCallback: (pValue: boolean) => void): void;
 
-  /**
-   * Add a callback that is called when the handle is changed to ajar
-   * @param pCallback - The callback to fire
-   */
+  /** @inheritDoc */
   addKippCallback(pCallback: (pValue: boolean) => void): void;
 
-  /**
-   * Add a callback that is called when the handle is changed to closed
-   * @param pCallback - The callback to fire
-   */
+  /** @inheritDoc */
   addClosedCallback(pCallback: (pValue: boolean) => void): void;
 
-  /**
-   * Add a callback that is called when the handle is changed to any position
-   * @param cb - The callback to fire
-   */
   addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void;
+
+  /**
+   * Persists the handle sensor state to the persistence layer
+   */
+  persist(): void;
+
+  log(level: LogLevel, message: string, debugType: LogDebugType): void;
+
+  toJSON(): Partial<iHandleSensor>;
 }

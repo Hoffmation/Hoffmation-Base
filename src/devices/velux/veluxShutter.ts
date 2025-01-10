@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { VeluxDevice } from './veluxDevice';
-import { iShutter } from '../../interfaces';
+import { iShutter, iWindow } from '../../interfaces';
 import { ShutterSettings } from '../deviceSettings';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
@@ -8,7 +8,6 @@ import { ShutterPositionChangedAction } from '../../action';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { Utils } from '../../utils';
-import { Window } from '../groups';
 
 export class VeluxShutter extends VeluxDevice implements iShutter {
   /** @inheritDoc */
@@ -18,7 +17,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;
   private _currentLevel: number = -1;
-  private _window?: Window;
+  private _window?: iWindow;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.VeluxShutter);
@@ -45,11 +44,11 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
     return this._currentLevel;
   }
 
-  public get window(): Window | undefined {
+  public get window(): iWindow | undefined {
     return this._window;
   }
 
-  public set window(value: Window | undefined) {
+  public set window(value: iWindow | undefined) {
     this._window = value;
   }
 
