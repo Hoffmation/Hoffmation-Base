@@ -1,9 +1,7 @@
 import { DimmerSetLightCommand } from './dimmerSetLightCommand';
-import { CommandSource, CommandType, TimeOfDay } from '../enums';
+import { CommandSource, CommandType } from '../enums';
 import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
-import { iWledSettings } from '../interfaces/settings/iWledSettings';
 
 export class WledSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -34,52 +32,5 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
 
   public override get logMessage(): string {
     return `Dimmer setLight to ${this.on} with Brightness ${this.brightness}, disabelAutomatic ${this.disableAutomaticCommand?.logMessage} and preset ${this.preset} for reason: ${this.reasonTrace}`;
-  }
-
-  public static override byTimeBased(settings: iWledSettings, c: LampSetTimeBasedCommand): WledSetLightCommand {
-    switch (c.time) {
-      case TimeOfDay.Daylight:
-        return new WledSetLightCommand(
-          c,
-          settings.dayOn,
-          '',
-          c.disableAutomaticCommand,
-          settings.dayBrightness,
-          undefined,
-          settings.dayPreset,
-        );
-      case TimeOfDay.BeforeSunrise:
-        return new WledSetLightCommand(
-          c,
-          settings.dawnOn,
-          '',
-          c.disableAutomaticCommand,
-          settings.dawnBrightness,
-          undefined,
-          settings.dawnPreset,
-        );
-      case TimeOfDay.AfterSunset:
-        return new WledSetLightCommand(
-          c,
-          settings.duskOn,
-          '',
-          c.disableAutomaticCommand,
-          settings.duskBrightness,
-          undefined,
-          settings.duskPreset,
-        );
-      case TimeOfDay.Night:
-        return new WledSetLightCommand(
-          c,
-          settings.nightOn,
-          '',
-          c.disableAutomaticCommand,
-          settings.nightBrightness,
-          undefined,
-          settings.nightPreset,
-        );
-      default:
-        throw new Error(`TimeOfDay ${c.time} not supported`);
-    }
   }
 }

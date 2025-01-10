@@ -1,9 +1,8 @@
 import { RingStorage } from '../utils';
 import { LogObject } from './log-object';
-import { iLogSettings } from '../interfaces';
+import { iLogSettings, iSettingsProvider } from '../interfaces';
 import { DeviceType, LogDebugType, LogLevel, LogSource } from '../enums';
 import { LogFilterData } from './log-filter-data';
-import { SettingsService } from '../settings-service';
 
 export class ServerLogService {
   /**
@@ -30,13 +29,15 @@ export class ServerLogService {
     logLevel: LogLevel.Debug,
     useTimestamp: false,
   };
+  private static settingsProvider: iSettingsProvider;
 
   public static getLog(amount: number = 5000): LogObject[] {
     return this.storage.readAmount(amount);
   }
 
-  public static initialize(logSettings: iLogSettings): void {
+  public static initialize(logSettings: iLogSettings, settingsProvider: iSettingsProvider): void {
     this.settings = logSettings;
+    this.settingsProvider = settingsProvider;
   }
 
   public static writeLog(pLevel: LogLevel, pMessage: string, additionalLogInfo?: LogFilterData): void {
@@ -109,47 +110,47 @@ export class ServerLogService {
       case LogDebugType.None:
         return false;
       case LogDebugType.SkipUnchangedActuatorCommand:
-        if (SettingsService.settings.logSettings?.debugUnchangedActuator === true) {
+        if (this.settingsProvider.settings.logSettings?.debugUnchangedActuator === true) {
           return false;
         }
         break;
       case LogDebugType.SkipUnchangedRolloPosition:
-        if (SettingsService.settings.logSettings?.debugUchangedShutterPosition === true) {
+        if (this.settingsProvider.settings.logSettings?.debugUchangedShutterPosition === true) {
           return false;
         }
         break;
       case LogDebugType.SetActuator:
-        if (SettingsService.settings.logSettings?.debugActuatorChange === true) {
+        if (this.settingsProvider.settings.logSettings?.debugActuatorChange === true) {
           return false;
         }
         break;
       case LogDebugType.ShutterPositionChange:
-        if (SettingsService.settings.logSettings?.debugShutterPositionChange === true) {
+        if (this.settingsProvider.settings.logSettings?.debugShutterPositionChange === true) {
           return false;
         }
         break;
       case LogDebugType.NewMovementState:
-        if (SettingsService.settings.logSettings?.debugNewMovementState === true) {
+        if (this.settingsProvider.settings.logSettings?.debugNewMovementState === true) {
           return false;
         }
         break;
       case LogDebugType.SkipUnchangedMovementState:
-        if (SettingsService.settings.logSettings?.debugNewMovementState === true) {
+        if (this.settingsProvider.settings.logSettings?.debugNewMovementState === true) {
           return false;
         }
         break;
       case LogDebugType.DaikinSuccessfullControlInfo:
-        if (SettingsService.settings.logSettings?.debugDaikinSuccessfullControlInfo === true) {
+        if (this.settingsProvider.settings.logSettings?.debugDaikinSuccessfullControlInfo === true) {
           return false;
         }
         break;
       case LogDebugType.EuroHeaterValveLogging:
-        if (SettingsService.settings.logSettings?.debugEuroHeaterValve === true) {
+        if (this.settingsProvider.settings.logSettings?.debugEuroHeaterValve === true) {
           return false;
         }
         break;
       case LogDebugType.Trilateration:
-        if (SettingsService.settings.logSettings?.debugTrilateration === true) {
+        if (this.settingsProvider.settings.logSettings?.debugTrilateration === true) {
           return false;
         }
         break;

@@ -1,46 +1,42 @@
 import { HeatingMode } from './enums';
-import { iConfig } from './interfaces';
+import { iConfig, iSettingsProvider } from './interfaces';
+import { SettingsServiceInstance } from './settings-service-instance';
 
 export class SettingsService {
+  private static _instance: iSettingsProvider;
+  public static get instance(): iSettingsProvider {
+    this._instance ??= new SettingsServiceInstance(this.settings);
+    return this._instance;
+  }
+
   /**
    * The active settings for the Hoffmation system.
    */
   public static settings: iConfig;
 
   public static get TelegramActive(): boolean {
-    return this.settings.telegram !== undefined;
+    return this.instance.TelegramActive;
   }
 
   public static get Mp3Active(): boolean {
-    return this.settings.mp3Server !== undefined;
+    return this.instance.Mp3Active;
+  }
+
+  public static get heatMode(): HeatingMode {
+    return this.instance.heatMode;
+  }
+
+  public static get latitude(): number {
+    return this.instance.latitude;
+  }
+
+  public static get longitude(): number {
+    return this.instance.longitude;
   }
 
   public static initialize(config: iConfig): void {
     this.settings = config;
-  }
-
-  public static get heatMode(): HeatingMode {
-    return this.settings?.heaterSettings?.mode ?? HeatingMode.None;
-  }
-
-  public static get latitude(): number {
-    if (this.settings?.weather?.lattitude !== undefined) {
-      const lat = parseFloat(this.settings.weather.lattitude);
-      if (!Number.isNaN(lat)) {
-        return lat;
-      }
-    }
-    return 51.529556852253826;
-  }
-
-  public static get longitude(): number {
-    if (this.settings?.weather?.longitude !== undefined) {
-      const longitude = parseFloat(this.settings.weather.longitude);
-      if (!Number.isNaN(longitude)) {
-        return longitude;
-      }
-    }
-    return 7.097266042276687;
+    this._instance = new SettingsServiceInstance(config);
   }
 
   /**

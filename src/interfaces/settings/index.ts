@@ -28,3 +28,5 @@ export { iGroupSettings } from './iGroupSettings';
 export { iTemperatureSettings } from './iTemperatureSettings';
 export { iLedSettings } from './iLedSettings';
 export { iSceneSettings } from './iSceneSettings';
+export { iSettingsProvider } from './iSettingsProvider';
+export { iWledSettings } from './iWledSettings';

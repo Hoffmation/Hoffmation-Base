@@ -3,8 +3,22 @@ import { Utils } from '../../utils';
 import { BlockAutomaticSettings } from '../blockAutomaticSettings';
 import { ObjectSettings } from '../objectSettings';
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
+import { ActuatorSetStateCommand, BlockAutomaticCommand } from '../../command';
 
 export abstract class DeviceSettings extends ObjectSettings implements iDeviceSettings {
+  buildBlockAutomaticCommand(c: ActuatorSetStateCommand): BlockAutomaticCommand | null | undefined {
+    if (this.blockAutomaticSettings?.dontBlockAutomaticIfNotProvided) {
+      return null;
+    }
+    return new BlockAutomaticCommand(
+      c,
+      this.blockAutomaticSettings?.blockAutomaticDurationMS,
+      '',
+      this.blockAutomaticSettings?.defaultCollisionSolving,
+      this.blockAutomaticSettings?.revertToAutomaticAtBlockLift,
+    );
+  }
+
   /**
    * Any device could be an energy consumer, so we have to provide the settings for it
    * @default undefined

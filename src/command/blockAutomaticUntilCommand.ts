@@ -1,6 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CollisionSolving, CommandSource, CommandType } from '../enums';
-import { SettingsService } from '../settings-service';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
   /** @inheritDoc */
@@ -32,13 +32,9 @@ export class BlockAutomaticUntilCommand extends BaseCommand {
   ) {
     super(source, reason);
     this.onCollideAction =
-      onCollideAction ??
-      SettingsService.settings?.blockAutomaticHandlerDefaults?.defaultCollisionSolving ??
-      CollisionSolving.overrideIfGreater;
+      onCollideAction ?? BlockAutomaticCommand.defaultDefaultCollisionSolving ?? CollisionSolving.overrideIfGreater;
     this.revertToAutomaticAtBlockLift =
-      revertToAutomaticAtBlockLift ??
-      SettingsService.settings?.blockAutomaticHandlerDefaults?.revertToAutomaticAtBlockLift ??
-      true;
+      revertToAutomaticAtBlockLift ?? BlockAutomaticCommand.defaultRevertToAutomaticAtBlockLift ?? true;
   }
 
   public get logMessage(): string {

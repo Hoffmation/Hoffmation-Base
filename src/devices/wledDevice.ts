@@ -2,7 +2,6 @@ import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
-  BlockAutomaticCommand,
   DimmerSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
@@ -148,7 +147,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iWledDevice {
       return;
     }
     if (c.disableAutomaticCommand === undefined && c.isForceAction) {
-      c.disableAutomaticCommand = BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
+      c.disableAutomaticCommand = this.settings.buildBlockAutomaticCommand(c);
     }
 
     if (c.disableAutomaticCommand) {
@@ -157,7 +156,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iWledDevice {
   }
 
   public setTimeBased(c: LampSetTimeBasedCommand): void {
-    this.setWled(WledSetLightCommand.byTimeBased(this.settings, c));
+    this.setWled(this.settings.buildWledSetLightCommand(c));
   }
 
   /** @inheritDoc */
@@ -172,7 +171,12 @@ export class WledDevice extends IoBrokerBaseDevice implements iWledDevice {
 
   /** @inheritDoc */
   public toggleActuator(c: ActuatorToggleCommand): boolean {
-    const setActuatorCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, c);
+    const setActuatorCommand: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+      c,
+      this.queuedValue !== null ? !this.queuedValue : !this.actuatorOn,
+      'Due to ActuatorToggle',
+      c.isForceAction ? undefined : null,
+    );
     this.setActuator(setActuatorCommand);
     return setActuatorCommand.on;
   }

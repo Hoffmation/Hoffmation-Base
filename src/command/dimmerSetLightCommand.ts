@@ -1,9 +1,7 @@
 import { LampSetLightCommand } from './lampSetLightCommand';
-import { CommandSource, CommandType, TimeOfDay } from '../enums';
+import { CommandSource, CommandType } from '../enums';
 import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
-import { iDimmerSettings } from '../interfaces';
 
 export class DimmerSetLightCommand extends LampSetLightCommand {
   /** @inheritDoc */
@@ -33,42 +31,5 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
   /** @inheritDoc */
   public override get logMessage(): string {
     return `Dimmer setLight to ${this.on} with Brightness ${this.brightness} with disable ${this.disableAutomaticCommand?.logMessage} for reason: ${this.reasonTrace}`;
-  }
-
-  public static byTimeBased(s: iDimmerSettings, c: LampSetTimeBasedCommand): DimmerSetLightCommand {
-    const manual: boolean = c.isForceAction;
-    switch (c.time) {
-      case TimeOfDay.Daylight:
-        return new DimmerSetLightCommand(c, manual || s.dayOn, 'Daylight', c.disableAutomaticCommand, s.dayBrightness);
-      case TimeOfDay.BeforeSunrise:
-        return new DimmerSetLightCommand(
-          c,
-          manual || s.dawnOn,
-          'Dawn',
-          c.disableAutomaticCommand,
-          s.dawnBrightness,
-          undefined,
-        );
-      case TimeOfDay.AfterSunset:
-        return new DimmerSetLightCommand(
-          c,
-          manual || s.duskOn,
-          'Dusk',
-          c.disableAutomaticCommand,
-          s.duskBrightness,
-          undefined,
-        );
-      case TimeOfDay.Night:
-        return new DimmerSetLightCommand(
-          c,
-          manual || s.nightOn,
-          'Night',
-          c.disableAutomaticCommand,
-          s.nightBrightness,
-          undefined,
-        );
-      default:
-        throw new Error(`TimeOfDay ${c.time} not supported`);
-    }
   }
 }

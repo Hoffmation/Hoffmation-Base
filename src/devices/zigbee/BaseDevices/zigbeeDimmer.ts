@@ -1,9 +1,4 @@
-import {
-  ActuatorWriteStateToDeviceCommand,
-  BlockAutomaticCommand,
-  DimmerSetLightCommand,
-  LampSetTimeBasedCommand,
-} from '../../../command';
+import { ActuatorWriteStateToDeviceCommand, DimmerSetLightCommand, LampSetTimeBasedCommand } from '../../../command';
 import { ZigbeeLamp } from './zigbeeLamp';
 import { iDimmableLamp, iTemporaryDisableAutomatic } from '../../../interfaces';
 import { DimmerSettings } from '../../../settingsObjects';
@@ -53,7 +48,7 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
 
   /** @inheritDoc */
   public setTimeBased(c: LampSetTimeBasedCommand): void {
-    this.setLight(DimmerSetLightCommand.byTimeBased(this.settings, c));
+    this.setLight(this.settings.buildDimmerSetLightCommand(c));
   }
 
   /** @inheritDoc */
@@ -93,7 +88,7 @@ export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, 
 
     if (!dontBlock && c.disableAutomaticCommand !== null) {
       if (c.disableAutomaticCommand === undefined && c.isForceAction) {
-        c.disableAutomaticCommand = BlockAutomaticCommand.fromDeviceSettings(c, this.settings);
+        c.disableAutomaticCommand = this.settings.buildBlockAutomaticCommand(c);
       }
       if (c.disableAutomaticCommand) {
         this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);

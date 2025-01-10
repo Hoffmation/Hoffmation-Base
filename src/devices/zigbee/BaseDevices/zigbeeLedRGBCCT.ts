@@ -54,7 +54,7 @@ export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct
 
   /** @inheritDoc */
   public override setTimeBased(c: LampSetTimeBasedCommand): void {
-    this.setLight(LedSetLightCommand.byTimeBased(this.settings, c));
+    this.setLight(this.settings.buildLedSetLightCommand(c));
   }
 
   /** @inheritDoc */

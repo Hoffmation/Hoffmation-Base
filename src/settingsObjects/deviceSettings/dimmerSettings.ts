@@ -1,6 +1,8 @@
 import { ActuatorSettings } from './actuatorSettings';
 import { iDimmerSettings } from '../../interfaces';
 import { Utils } from '../../utils';
+import { DimmerSetLightCommand, LampSetTimeBasedCommand } from '../../command';
+import { TimeOfDay } from '../../enums';
 
 export class DimmerSettings extends ActuatorSettings implements iDimmerSettings {
   /**
@@ -40,5 +42,48 @@ export class DimmerSettings extends ActuatorSettings implements iDimmerSettings 
 
   public toJSON(): Partial<DimmerSettings> {
     return Utils.jsonFilter(this);
+  }
+
+  public buildDimmerSetLightCommand(c: LampSetTimeBasedCommand): DimmerSetLightCommand {
+    const manual: boolean = c.isForceAction;
+    switch (c.time) {
+      case TimeOfDay.Daylight:
+        return new DimmerSetLightCommand(
+          c,
+          manual || this.dayOn,
+          'Daylight',
+          c.disableAutomaticCommand,
+          this.dayBrightness,
+        );
+      case TimeOfDay.BeforeSunrise:
+        return new DimmerSetLightCommand(
+          c,
+          manual || this.dawnOn,
+          'Dawn',
+          c.disableAutomaticCommand,
+          this.dawnBrightness,
+          undefined,
+        );
+      case TimeOfDay.AfterSunset:
+        return new DimmerSetLightCommand(
+          c,
+          manual || this.duskOn,
+          'Dusk',
+          c.disableAutomaticCommand,
+          this.duskBrightness,
+          undefined,
+        );
+      case TimeOfDay.Night:
+        return new DimmerSetLightCommand(
+          c,
+          manual || this.nightOn,
+          'Night',
+          c.disableAutomaticCommand,
+          this.nightBrightness,
+          undefined,
+        );
+      default:
+        throw new Error(`TimeOfDay ${c.time} not supported`);
+    }
   }
 }

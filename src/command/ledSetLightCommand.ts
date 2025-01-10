@@ -1,9 +1,7 @@
 import { DimmerSetLightCommand } from './dimmerSetLightCommand';
-import { CommandSource, CommandType, TimeOfDay } from '../enums';
+import { CommandSource, CommandType } from '../enums';
 import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
-import { iLedSettings } from '../interfaces';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -37,60 +35,5 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
   public override get logMessage(): string {
     return `Led setLight to state: ${this.on}, blockAutomatic: ${this.disableAutomaticCommand?.logMessage}, brightness: ${this.brightness}, color: ${this.color}, colorTemp: ${this.colorTemp} for reason: ${this.reasonTrace}`;
-  }
-
-  /**
-   * Create a LedSetLightCommand based on a LampSetTimeBasedCommand and LedSettings by respecting the time of day
-   * @param settings - The settings for the Led
-   * @param c - The command to base the LedSetLightCommand on
-   * @returns The created LedSetLightCommand
-   */
-  public static byTimeBased(settings: iLedSettings, c: LampSetTimeBasedCommand): LedSetLightCommand {
-    switch (c.time) {
-      case TimeOfDay.Daylight:
-        return new LedSetLightCommand(
-          c,
-          settings.dayOn,
-          `byTimeBased(${TimeOfDay[c.time]})`,
-          c.disableAutomaticCommand,
-          settings.dayBrightness,
-          undefined,
-          settings.dayColor,
-          settings.dayColorTemp,
-        );
-      case TimeOfDay.BeforeSunrise:
-        return new LedSetLightCommand(
-          c,
-          settings.dawnOn,
-          `byTimeBased(${TimeOfDay[c.time]})`,
-          c.disableAutomaticCommand,
-          settings.dawnBrightness,
-          undefined,
-          settings.dawnColor,
-          settings.dawnColorTemp,
-        );
-      case TimeOfDay.AfterSunset:
-        return new LedSetLightCommand(
-          c,
-          settings.duskOn,
-          `byTimeBased(${TimeOfDay[c.time]})`,
-          c.disableAutomaticCommand,
-          settings.duskBrightness,
-          undefined,
-          settings.duskColor,
-          settings.duskColorTemp,
-        );
-      case TimeOfDay.Night:
-        return new LedSetLightCommand(
-          c,
-          settings.nightOn,
-          `byTimeBased(${TimeOfDay[c.time]})`,
-          c.disableAutomaticCommand,
-          settings.nightBrightness,
-          undefined,
-          settings.nightColor,
-          settings.nightColorTemp,
-        );
-    }
   }
 }

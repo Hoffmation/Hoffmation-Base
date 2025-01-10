@@ -89,7 +89,12 @@ export class SmartGardenMower extends SmartGardenDevice implements iActuator {
   /** @inheritDoc */
   public toggleActuator(command: ActuatorToggleCommand): boolean {
     const newVal = this.queuedValue !== null ? !this.queuedValue : !this._actuatorOn;
-    const setStateCommand: ActuatorSetStateCommand = ActuatorSetStateCommand.byActuatorAndToggleCommand(this, command);
+    const setStateCommand: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+      command,
+      this.queuedValue !== null ? !this.queuedValue : !this.actuatorOn,
+      'Due to ActuatorToggle',
+      command.isForceAction ? undefined : null,
+    );
     this.setActuator(setStateCommand);
     return newVal;
   }

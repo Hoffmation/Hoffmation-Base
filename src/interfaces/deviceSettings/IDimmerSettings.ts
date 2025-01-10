@@ -1,4 +1,5 @@
 import { iActuatorSettings } from './iActuatorSettings';
+import { DimmerSetLightCommand, LampSetTimeBasedCommand } from '../../command';
 
 /**
  *
@@ -34,4 +35,9 @@ export interface iDimmerSettings extends iActuatorSettings {
    *
    */
   toJSON(): Partial<iDimmerSettings>;
+
+  /**
+   *
+   */
+  buildDimmerSetLightCommand(c: LampSetTimeBasedCommand): DimmerSetLightCommand;
 }

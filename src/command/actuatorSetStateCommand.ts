@@ -1,8 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { iActuator } from '../interfaces';
-import { ActuatorToggleCommand } from './actuatorToggleCommand';
 
 export class ActuatorSetStateCommand extends BaseCommand {
   /** @inheritDoc */
@@ -34,10 +32,5 @@ export class ActuatorSetStateCommand extends BaseCommand {
 
   public get logMessage(): string {
     return `Actuator setState to ${this.on} with disableCommand ${this.disableAutomaticCommand?.logMessage} for reason: ${this.reasonTrace}`;
-  }
-
-  public static byActuatorAndToggleCommand(device: iActuator, c: ActuatorToggleCommand): ActuatorSetStateCommand {
-    const newVal: boolean = device.queuedValue !== null ? !device.queuedValue : !device.actuatorOn;
-    return new ActuatorSetStateCommand(c, newVal, 'Due to ActuatorToggle', c.isForceAction ? undefined : null);
   }
 }

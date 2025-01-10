@@ -1,9 +1,21 @@
 import { BaseCommand } from './baseCommand';
 import { CollisionSolving, CommandSource, CommandType } from '../enums';
-import { iDeviceSettings } from '../interfaces';
-import { SettingsService } from '../settings-service';
 
 export class BlockAutomaticCommand extends BaseCommand {
+  /**
+   * Whether at Block-Lift the desired automatic state should be restored.
+   */
+  public static defaultRevertToAutomaticAtBlockLift?: boolean;
+
+  /**
+   * The default duration in milliseconds for a block to be on any force action.
+   */
+  public static defaultBlockAutomaticDurationMS?: number;
+
+  /**
+   * The default collision solving strategy to use.
+   */
+  public static defaultDefaultCollisionSolving?: CollisionSolving;
   /** @inheritDoc */
   public type: CommandType = CommandType.BlockAutomaticCommand;
   /**
@@ -37,32 +49,14 @@ export class BlockAutomaticCommand extends BaseCommand {
     revertToAutomaticAtBlockLift?: boolean,
   ) {
     super(source, reason);
-    this.durationMS =
-      durationMS ?? SettingsService.settings?.blockAutomaticHandlerDefaults?.blockAutomaticDurationMS ?? 30 * 60 * 1000;
+    this.durationMS = durationMS ?? BlockAutomaticCommand.defaultBlockAutomaticDurationMS ?? 30 * 60 * 1000;
     this.revertToAutomaticAtBlockLift =
-      revertToAutomaticAtBlockLift ??
-      SettingsService.settings?.blockAutomaticHandlerDefaults?.revertToAutomaticAtBlockLift ??
-      true;
+      revertToAutomaticAtBlockLift ?? BlockAutomaticCommand.defaultRevertToAutomaticAtBlockLift ?? true;
     this.onCollideAction =
-      onCollideAction ??
-      SettingsService.settings?.blockAutomaticHandlerDefaults?.defaultCollisionSolving ??
-      CollisionSolving.overrideIfGreater;
+      onCollideAction ?? BlockAutomaticCommand.defaultDefaultCollisionSolving ?? CollisionSolving.overrideIfGreater;
   }
 
   public get logMessage(): string {
     return `BlockAutomatic for ${this.durationMS}ms with onCollideAction ${this.onCollideAction} for reason: ${this.reasonTrace}`;
-  }
-
-  public static fromDeviceSettings(c: BaseCommand, deviceSettings: iDeviceSettings): BlockAutomaticCommand | null {
-    if (deviceSettings.blockAutomaticSettings?.dontBlockAutomaticIfNotProvided) {
-      return null;
-    }
-    return new BlockAutomaticCommand(
-      c,
-      deviceSettings.blockAutomaticSettings?.blockAutomaticDurationMS,
-      '',
-      deviceSettings.blockAutomaticSettings?.defaultCollisionSolving,
-      deviceSettings.blockAutomaticSettings?.revertToAutomaticAtBlockLift,
-    );
   }
 }

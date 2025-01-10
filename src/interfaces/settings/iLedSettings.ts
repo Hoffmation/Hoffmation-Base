@@ -1,4 +1,5 @@
 import { iDimmerSettings } from '../deviceSettings';
+import { LampSetTimeBasedCommand, LedSetLightCommand } from '../../command';
 
 /**
  *
@@ -40,4 +41,9 @@ export interface iLedSettings extends iDimmerSettings {
    *
    */
   nightColorTemp: number;
+
+  /**
+   *
+   */
+  buildLedSetLightCommand(c: LampSetTimeBasedCommand): LedSetLightCommand;
 }

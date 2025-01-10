@@ -1,6 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
-import { SettingsService } from '../settings-service';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
   /** @inheritDoc */
@@ -18,9 +18,6 @@ export class BlockAutomaticLiftBlockCommand extends BaseCommand {
    */
   public constructor(source: CommandSource | BaseCommand, reason: string = '', revertToAutomatic?: boolean) {
     super(source, reason);
-    this.revertToAutomatic =
-      revertToAutomatic ??
-      SettingsService.settings?.blockAutomaticHandlerDefaults?.revertToAutomaticAtBlockLift ??
-      true;
+    this.revertToAutomatic = revertToAutomatic ?? BlockAutomaticCommand.defaultRevertToAutomaticAtBlockLift ?? true;
   }
 }

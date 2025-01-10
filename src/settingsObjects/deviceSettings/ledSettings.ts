@@ -1,6 +1,8 @@
 import { Utils } from '../../utils';
 import { DimmerSettings } from './dimmerSettings';
 import { iLedSettings } from '../../interfaces';
+import { TimeOfDay } from '../../enums';
+import { LampSetTimeBasedCommand, LedSetLightCommand } from '../../command';
 
 export class LedSettings extends DimmerSettings implements iLedSettings {
   /**
@@ -103,5 +105,54 @@ export class LedSettings extends DimmerSettings implements iLedSettings {
 
   public toJSON(): Partial<LedSettings> {
     return Utils.jsonFilter(this);
+  }
+
+  public buildLedSetLightCommand(c: LampSetTimeBasedCommand): LedSetLightCommand {
+    switch (c.time) {
+      case TimeOfDay.Daylight:
+        return new LedSetLightCommand(
+          c,
+          this.dayOn,
+          `byTimeBased(${TimeOfDay[c.time]})`,
+          c.disableAutomaticCommand,
+          this.dayBrightness,
+          undefined,
+          this.dayColor,
+          this.dayColorTemp,
+        );
+      case TimeOfDay.BeforeSunrise:
+        return new LedSetLightCommand(
+          c,
+          this.dawnOn,
+          `byTimeBased(${TimeOfDay[c.time]})`,
+          c.disableAutomaticCommand,
+          this.dawnBrightness,
+          undefined,
+          this.dawnColor,
+          this.dawnColorTemp,
+        );
+      case TimeOfDay.AfterSunset:
+        return new LedSetLightCommand(
+          c,
+          this.duskOn,
+          `byTimeBased(${TimeOfDay[c.time]})`,
+          c.disableAutomaticCommand,
+          this.duskBrightness,
+          undefined,
+          this.duskColor,
+          this.duskColorTemp,
+        );
+      case TimeOfDay.Night:
+        return new LedSetLightCommand(
+          c,
+          this.nightOn,
+          `byTimeBased(${TimeOfDay[c.time]})`,
+          c.disableAutomaticCommand,
+          this.nightBrightness,
+          undefined,
+          this.nightColor,
+          this.nightColorTemp,
+        );
+    }
   }
 }

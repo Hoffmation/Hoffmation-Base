@@ -1,4 +1,5 @@
 import { iBlockAutomaticSettings, iExcessEnergyConsumerSettings, iObjectSettings } from '../settings';
+import { ActuatorSetStateCommand, BlockAutomaticCommand } from '../../command';
 
 /**
  *
@@ -26,4 +27,9 @@ export interface iDeviceSettings extends iObjectSettings {
    *
    */
   toJSON(): Partial<iDeviceSettings>;
+
+  /**
+   *
+   */
+  buildBlockAutomaticCommand(c: ActuatorSetStateCommand): BlockAutomaticCommand | null | undefined;
 }

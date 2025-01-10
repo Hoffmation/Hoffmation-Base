@@ -1,6 +1,8 @@
 import { Utils } from '../../utils';
 import { DimmerSettings } from './dimmerSettings';
-import { iWledSettings } from '../../interfaces/settings/iWledSettings';
+import { iWledSettings } from '../../interfaces';
+import { TimeOfDay } from '../../enums';
+import { LampSetTimeBasedCommand, WledSetLightCommand } from '../../command';
 
 export class WledSettings extends DimmerSettings implements iWledSettings {
   /**
@@ -74,5 +76,52 @@ export class WledSettings extends DimmerSettings implements iWledSettings {
 
   public toJSON(): Partial<WledSettings> {
     return Utils.jsonFilter(this);
+  }
+
+  public buildWledSetLightCommand(c: LampSetTimeBasedCommand): WledSetLightCommand {
+    switch (c.time) {
+      case TimeOfDay.Daylight:
+        return new WledSetLightCommand(
+          c,
+          this.dayOn,
+          '',
+          c.disableAutomaticCommand,
+          this.dayBrightness,
+          undefined,
+          this.dayPreset,
+        );
+      case TimeOfDay.BeforeSunrise:
+        return new WledSetLightCommand(
+          c,
+          this.dawnOn,
+          '',
+          c.disableAutomaticCommand,
+          this.dawnBrightness,
+          undefined,
+          this.dawnPreset,
+        );
+      case TimeOfDay.AfterSunset:
+        return new WledSetLightCommand(
+          c,
+          this.duskOn,
+          '',
+          c.disableAutomaticCommand,
+          this.duskBrightness,
+          undefined,
+          this.duskPreset,
+        );
+      case TimeOfDay.Night:
+        return new WledSetLightCommand(
+          c,
+          this.nightOn,
+          '',
+          c.disableAutomaticCommand,
+          this.nightBrightness,
+          undefined,
+          this.nightPreset,
+        );
+      default:
+        throw new Error(`TimeOfDay ${c.time} not supported`);
+    }
   }
 }

@@ -61,7 +61,7 @@ export class HoffmationBase {
     SettingsService.initialize(initObject.config);
     Res.initialize(initObject.config.translationSettings);
     if (initObject.config.logSettings) {
-      ServerLogService.initialize(initObject.config.logSettings);
+      ServerLogService.initialize(initObject.config.logSettings, SettingsService.instance);
     }
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Startup');
     if (initObject.config.persistence) {
@@ -171,3 +171,4 @@ export class HoffmationBase {
 
 export { PIDOptions } from './interfaces/p-i-d-options';
 export { iDeviceList } from './interfaces/iDeviceList';
+export { SettingsServiceInstance } from './settings-service-instance';
