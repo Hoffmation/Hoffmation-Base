@@ -10,6 +10,9 @@ import { AcMode } from '../../enums';
  * TODO: Extend from iActuator
  */
 export interface iAcDevice extends iBaseDevice {
+  /**
+   *
+   */
   heatingAllowed: boolean;
   /**
    * The settings of the air-conditioning device
@@ -61,5 +64,8 @@ export interface iAcDevice extends iBaseDevice {
    */
   calculateDesiredMode(): AcMode;
 
+  /**
+   *
+   */
   setState(desiredMode: AcMode, desiredTemperature: number | undefined, forceTime: number): void;
 }

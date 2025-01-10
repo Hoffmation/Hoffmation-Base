@@ -16,15 +16,45 @@ export interface iHeaterSettings extends iDeviceSettings {
    * TODO: Add heating Mode change to persisted settings and allow controlling it via the app
    */
   mode?: HeatingMode;
+  /**
+   *
+   */
   automaticMode: boolean;
+  /**
+   *
+   */
   useOwnTemperatur: boolean;
+  /**
+   *
+   */
   useOwnTemperatureForRoomTemperature: boolean;
+  /**
+   *
+   */
   controlByPid: boolean;
+  /**
+   *
+   */
   controlByTempDiff: boolean;
+  /**
+   *
+   */
   seasonalTurnOffActive: boolean;
+  /**
+   *
+   */
   seasonTurnOffDay: number;
+  /**
+   *
+   */
   seasonTurnOnDay: number;
+  /**
+   *
+   */
   pidForcedMinimum: number;
+  /**
+   *
+   */
   manualDisabled: boolean;
 
   /**

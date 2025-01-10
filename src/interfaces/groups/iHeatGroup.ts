@@ -3,20 +3,50 @@ import { iAcDevice, iHeater, iHumidityCollector, iTemperatureCollector } from '.
 import { iTemperatureSettings } from '../settings';
 import { iHeatGroupSettings } from './iHeatGroupSettings';
 
+/**
+ *
+ */
 export interface iHeatGroup extends iBaseGroup {
+  /**
+   *
+   */
   settings: iHeatGroupSettings;
+  /**
+   *
+   */
   readonly humidity: number;
+  /**
+   *
+   */
   readonly temperature: number;
+  /**
+   *
+   */
   readonly desiredTemp: number;
 
+  /**
+   *
+   */
   getHeater(): iHeater[];
 
+  /**
+   *
+   */
   getTempSensors(): iTemperatureCollector[];
 
+  /**
+   *
+   */
   getHumiditySensors(): iHumidityCollector[];
 
+  /**
+   *
+   */
   getOwnAcDevices(): iAcDevice[];
 
+  /**
+   *
+   */
   initialize(): void;
 
   /**
@@ -27,9 +57,18 @@ export interface iHeatGroup extends iBaseGroup {
    */
   setAc(newDesiredState: boolean, force: boolean): void;
 
+  /**
+   *
+   */
   deleteAutomaticPoint(name: string): void;
 
+  /**
+   *
+   */
   setAutomaticPoint(setting: iTemperatureSettings): void;
 
+  /**
+   *
+   */
   recalcRoomTemperatur(): void;
 }

@@ -1,10 +1,25 @@
 import { iJsonOmitKeys } from '../iJsonOmitKeys';
 import { TemperatureSensorChangeAction } from '../../action';
 
+/**
+ *
+ */
 export interface iTemperatureSensor extends iJsonOmitKeys {
+  /**
+   *
+   */
   roomTemperature: number;
+  /**
+   *
+   */
   outdoorTemperatureCorrectionCoefficient: number;
+  /**
+   *
+   */
   lastSeen: number;
+  /**
+   *
+   */
   temperature: number;
 
   /**
@@ -18,7 +33,13 @@ export interface iTemperatureSensor extends iJsonOmitKeys {
    */
   addTempChangeCallback(pCallback: (action: TemperatureSensorChangeAction) => void): void;
 
+  /**
+   *
+   */
   dispose(): void;
 
+  /**
+   *
+   */
   toJSON(): Partial<iTemperatureSensor>;
 }

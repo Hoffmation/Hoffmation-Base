@@ -3,6 +3,7 @@ import { DeviceSettings } from './deviceSettings';
 import { iSceneSettings } from '../../interfaces';
 
 export class SceneSettings extends DeviceSettings implements iSceneSettings {
+  /** @inheritdoc */
   public defaultTurnOffTimeout?: number;
 
   public fromPartialObject(data: Partial<SceneSettings>): void {

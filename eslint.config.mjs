@@ -64,7 +64,7 @@ export default [
       'jsdoc/implements-on-classes': 'error',
       'jsdoc/multiline-blocks': 'error',
       'jsdoc/no-bad-blocks': 'error',
-      'jsdoc/no-blank-blocks': 'warning',
+      'jsdoc/no-blank-blocks': 'off',
       'jsdoc/no-blank-block-descriptions': 2,
       'jsdoc/no-defaults': 'error',
       'jsdoc/no-multi-asterisks': 'error',

@@ -4,14 +4,38 @@ import { iHandle, iMagnetSensor, iShutter, iVibrationSensor } from '../baseDevic
 import { WindowPosition } from '../../enums';
 import { HandleChangeAction, ShutterPositionChangedAction } from '../../action';
 
+/**
+ *
+ */
 export interface iWindow extends iBaseGroup {
+  /**
+   *
+   */
   readonly desiredPosition: number;
+  /**
+   *
+   */
   readonly anyShutterDown: boolean;
+  /**
+   *
+   */
   readonly anyHandleNotClosed: boolean;
 
+  /**
+   *
+   */
   readonly handleIds: string[];
+  /**
+   *
+   */
   readonly vibrationIds: string[];
+  /**
+   *
+   */
   readonly shutterIds: string[];
+  /**
+   *
+   */
   readonly magnetIds: string[];
 
   /**
@@ -20,21 +44,48 @@ export interface iWindow extends iBaseGroup {
    */
   setDesiredPosition(c: WindowSetDesiredPositionCommand): void;
 
+  /**
+   *
+   */
   getHandle(): iHandle[];
 
+  /**
+   *
+   */
   getMagnetContact(): iMagnetSensor[];
 
+  /**
+   *
+   */
   getShutter(): iShutter[];
 
+  /**
+   *
+   */
   getVibration(): iVibrationSensor[];
 
+  /**
+   *
+   */
   griffeInPosition(pPosition: WindowPosition): number;
 
+  /**
+   *
+   */
   initialize(): void;
 
+  /**
+   *
+   */
   rolloPositionChange(action: ShutterPositionChangedAction): void;
 
+  /**
+   *
+   */
   restoreDesiredPosition(c: WindowRestoreDesiredPositionCommand): void;
 
+  /**
+   *
+   */
   addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void;
 }

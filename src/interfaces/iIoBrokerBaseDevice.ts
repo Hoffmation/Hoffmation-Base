@@ -3,12 +3,30 @@ import { DeviceType } from '../enums';
 import { iIoBrokerDeviceInfo } from './IIoBrokerDeviceInfo';
 import { iIOBrokerConnection } from './iIOBrokerConnection';
 
+/**
+ *
+ */
 export interface iIoBrokerBaseDevice extends iRoomDevice {
+  /**
+   *
+   */
   deviceType: DeviceType;
+  /**
+   *
+   */
   readonly id: string;
+  /**
+   *
+   */
   readonly info: iIoBrokerDeviceInfo;
+  /**
+   *
+   */
   readonly ioConn: iIOBrokerConnection | undefined;
 
+  /**
+   *
+   */
   update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean): void;
 
   /**
@@ -25,6 +43,9 @@ export interface iIoBrokerBaseDevice extends iRoomDevice {
    */
   checkIoConnection(showError: boolean): boolean;
 
+  /**
+   *
+   */
   addToCorrectRoom(): void;
 
   /**

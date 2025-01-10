@@ -20,12 +20,33 @@ import { ITimeCallback } from './ITimeCallback';
  * Whilst accessing the custom rooms can be beneficial for direct device interaction, this provides interactions to e.g. device groups.
  */
 export interface iRoomBase extends iIdHolder {
+  /**
+   *
+   */
   WindowGroup?: iWindowGroup;
+  /**
+   *
+   */
   LightGroup?: iLightGroup;
+  /**
+   *
+   */
   WaterGroup?: iWaterGroup;
+  /**
+   *
+   */
   SmokeGroup?: iSmokeGroup;
+  /**
+   *
+   */
   SonosGroup?: iSpeakerGroup;
+  /**
+   *
+   */
   deviceCluster: iDeviceCluster;
+  /**
+   *
+   */
   etage?: number;
   /**
    *
@@ -56,6 +77,9 @@ export interface iRoomBase extends iIdHolder {
    */
   sonnenUntergangLichtCallback: ITimeCallback | undefined;
 
+  /**
+   *
+   */
   log(level: LogLevel, message: string): unknown;
 
   /**
