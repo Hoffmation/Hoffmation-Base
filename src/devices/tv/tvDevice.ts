@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel, TvDeviceType } from '../../enums';
 import { iTvDevice } from '../../interfaces';
-import { TvSettings } from '../deviceSettings';
+import { TvSettings } from '../../settingsObjects';
 import { Persistence, RoomBase } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
 import { Utils } from '../../utils';

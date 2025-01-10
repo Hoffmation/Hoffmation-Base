@@ -1,7 +1,6 @@
 import { LogLevel } from '../../../enums';
 import { ServerLogService } from '../../../logging';
-import { iRoomBase } from '../../../interfaces';
-import { iRoomAddDeviceItem } from '../../../interfaces/iRoomAddDeviceItem';
+import { iRoomAddDeviceItem, iRoomBase } from '../../../interfaces';
 
 export class RoomAddDeviceItem implements iRoomAddDeviceItem {
   constructor(

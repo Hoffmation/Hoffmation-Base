@@ -1,4 +1,4 @@
-import { iButtonCallback } from '../../interfaces/iButtonCallback';
+import { iButtonCallback } from '../../interfaces';
 
 export class ButtonCallback implements iButtonCallback {
   public constructor(

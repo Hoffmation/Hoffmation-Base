@@ -1,5 +1,4 @@
-import { ExampleConfig, HoffmationBase, HoffmationInitializationObject } from '../src';
-import { Dachs } from '../src/devices/dachs';
+import { Dachs, ExampleConfig, HoffmationBase, HoffmationInitializationObject } from '../src';
 
 export class DachsTest {
   public static async start(): Promise<void> {

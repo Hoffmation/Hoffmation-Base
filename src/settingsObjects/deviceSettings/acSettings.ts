@@ -1,5 +1,5 @@
 import { iAcSettings, iExcessEnergyConsumerSettings } from '../../interfaces';
-import { ExcessEnergyConsumerSettings } from '../../models';
+import { ExcessEnergyConsumerSettings } from '../../settingsObjects';
 import { Utils } from '../../utils';
 import { DeviceSettings } from './deviceSettings';
 

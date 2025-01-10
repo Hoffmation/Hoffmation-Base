@@ -1,4 +1,4 @@
-export * from './deviceSettings';
+export * from '../settingsObjects/deviceSettings';
 export * from './blueIris';
 export * from './button';
 export * from './dachs';

@@ -6,7 +6,7 @@ import {
 } from '../../../command';
 import { ZigbeeLamp } from './zigbeeLamp';
 import { iDimmableLamp, iTemporaryDisableAutomatic } from '../../../interfaces';
-import { DimmerSettings } from '../../deviceSettings';
+import { DimmerSettings } from '../../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
 import { LampUtils } from '../../sharedFunctions';

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { iRoomBase, iTimePair } from '../../../interfaces';
+import { iRoomBase, iRoomSettingsController, iTimePair } from '../../../interfaces';
 import { SunTimeOffsets } from '../../sun-time-offsets';
 import { RoomSettings } from './roomSettings';
 import { RoomBase } from '../../../services';
@@ -8,8 +8,6 @@ import { API } from '../../../api';
 import { Utils } from '../../../utils';
 import { ServerLogService } from '../../../logging';
 import { LogLevel } from '../../../enums';
-
-import { iRoomSettingsController } from '../../../interfaces/iRoomSettingsController';
 
 export class RoomSettingsController {
   /**

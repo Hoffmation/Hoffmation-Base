@@ -1,4 +1,4 @@
-import { iDeviceInfo } from '../interfaces/iDeviceInfo';
+import { iDeviceInfo } from '../interfaces';
 
 export class DeviceInfo implements iDeviceInfo {
   /**

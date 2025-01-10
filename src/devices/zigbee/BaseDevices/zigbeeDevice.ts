@@ -1,7 +1,6 @@
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
-import { iDisposable } from '../../../interfaces';
-import { iZigbeeDevice } from '../../../interfaces/baseDevices/IZigbeeDevice';
+import { iDisposable, iZigbeeDevice } from '../../../interfaces';
 import { Utils } from '../../../utils';
 import { DeviceType, LogLevel } from '../../../enums';
 

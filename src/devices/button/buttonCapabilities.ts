@@ -1,4 +1,4 @@
-import { iButtonCapabilities } from '../../interfaces/iButtonCapabilities';
+import { iButtonCapabilities } from '../../interfaces';
 
 export class ButtonCapabilities implements iButtonCapabilities {
   /**

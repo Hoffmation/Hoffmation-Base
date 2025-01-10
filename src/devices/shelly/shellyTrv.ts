@@ -10,12 +10,12 @@ import {
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
 import { Battery, TemperatureSensor } from '../sharedFunctions';
-import { HeaterSettings } from '../deviceSettings';
+import { HeaterSettings, HeatGroupSettings } from '../../settingsObjects';
 import { Utils } from '../../utils';
 import { PIDController } from '../../liquid-pid';
 import { TimeCallbackService } from '../../services';
 import { HandleChangeAction, TemperatureSensorChangeAction } from '../../action';
-import { HeatGroupSettings, TimeCallback } from '../../models';
+import { TimeCallback } from '../../models';
 
 export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureCollector, iBatteryDevice {
   /** @inheritDoc */

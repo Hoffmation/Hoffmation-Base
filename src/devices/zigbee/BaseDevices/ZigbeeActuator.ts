@@ -7,7 +7,7 @@ import {
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iActuator } from '../../../interfaces';
 import { BlockAutomaticHandler } from '../../../services';
-import { ActuatorSettings } from '../../deviceSettings';
+import { ActuatorSettings } from '../../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
 import { LampUtils } from '../../sharedFunctions';

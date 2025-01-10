@@ -1,4 +1,4 @@
-import { iTrilaterationRatedCoordinate } from '../../interfaces/iTrilaterationRatedCoordinate';
+import { iTrilaterationRatedCoordinate } from '../../interfaces';
 
 export class TrilaterationRatedCoordinate implements iTrilaterationRatedCoordinate {
   constructor(

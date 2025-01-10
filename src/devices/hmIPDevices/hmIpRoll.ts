@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { HmIPDevice } from './hmIpDevice';
 import { iShutter, iWindow } from '../../interfaces';
-import { ShutterSettings } from '../deviceSettings';
+import { ShutterSettings } from '../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';

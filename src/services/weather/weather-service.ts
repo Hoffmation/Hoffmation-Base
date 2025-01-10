@@ -1,16 +1,20 @@
 import SunCalc from 'suncalc';
 import { TimeCallbackService } from '../time-callback-service';
-import { WeatherResponse } from '../../interfaces/weather/weather-response';
+import {
+  iSpeaker,
+  iWeatherSettings,
+  UNDEFINED_TEMP_VALUE,
+  WeatherAlert,
+  WeatherMinutes,
+  WeatherResponse,
+} from '../../interfaces';
 import { Utils } from '../../utils';
 import { LogDebugType, LogLevel } from '../../enums';
 import { ServerLogService } from '../../logging';
 import { HTTPSOptions } from '../HTTPSOptions';
 import { HTTPSService } from '../https-service';
-import { WeatherAlert } from '../../interfaces/weather/weather-alert';
-import { iSpeaker, iWeatherSettings, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { ShutterSettings } from '../../devices';
 import { RainNextMinutesInfo } from './rain-next-minutes-info';
-import { WeatherMinutes } from '../../interfaces/weather/weather-minutes';
 
 export class WeatherService {
   /**

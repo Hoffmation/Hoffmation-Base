@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iDisposable, iHandle, iWindow } from '../../interfaces';
 import { Battery, HandleSensor } from '../sharedFunctions';
-import { HandleSettings } from '../deviceSettings';
+import { HandleSettings } from '../../settingsObjects';
 import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../enums';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HandleChangeAction } from '../../action';

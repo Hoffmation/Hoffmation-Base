@@ -1,5 +1,5 @@
 import { iBatteryDevice, iHeater, iHeatGroup, UNDEFINED_TEMP_VALUE } from '../../../interfaces';
-import { HeaterSettings } from '../../deviceSettings';
+import { HeaterSettings } from '../../../settingsObjects';
 import { Battery, TemperatureSensor } from '../../sharedFunctions';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { Utils } from '../../../utils';

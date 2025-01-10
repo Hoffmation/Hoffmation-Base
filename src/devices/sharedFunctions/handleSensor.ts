@@ -1,7 +1,7 @@
 import { iHandle, iHandleSensor, iHeatGroup, iJsonOmitKeys, iWindow } from '../../interfaces';
 import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
 import { HandleChangeAction } from '../../action';
-import { HandleSettings } from '../deviceSettings';
+import { HandleSettings } from '../../settingsObjects';
 import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';
 import { Persistence, TelegramService } from '../../services';

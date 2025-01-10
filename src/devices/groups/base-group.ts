@@ -1,5 +1,5 @@
 import { iBaseGroup, iRoomBase } from '../../interfaces';
-import { GroupSettings } from '../../models';
+import { GroupSettings } from '../../settingsObjects';
 import { GroupType, LogDebugType, LogLevel } from '../../enums';
 import { DeviceCluster } from '../device-cluster';
 import { Utils } from '../../utils';

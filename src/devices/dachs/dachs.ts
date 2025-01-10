@@ -14,7 +14,7 @@ import {
   iFlattenedCompleteResponse,
   iRoomBase,
 } from '../../interfaces';
-import { DachsDeviceSettings } from '../deviceSettings';
+import { DachsDeviceSettings } from '../../settingsObjects';
 import {
   CommandSource,
   DeviceCapability,

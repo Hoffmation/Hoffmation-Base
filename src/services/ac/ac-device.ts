@@ -25,7 +25,7 @@ import { WeatherService } from '../weather';
 import { Utils } from '../../utils';
 import { Persistence } from '../dbo';
 import { ServerLogService } from '../../logging';
-import { ExcessEnergyConsumerSettings } from '../../models';
+import { ExcessEnergyConsumerSettings } from '../../settingsObjects';
 import { PresenceGroupFirstEnterAction, PresenceGroupLastLeftAction } from '../../action';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {

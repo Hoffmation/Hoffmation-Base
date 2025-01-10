@@ -9,7 +9,7 @@ import {
 } from '../../command';
 import { HmIPDevice } from './hmIpDevice';
 import { iLamp, iTemporaryDisableAutomatic } from '../../interfaces';
-import { ActuatorSettings } from '../deviceSettings';
+import { ActuatorSettings } from '../../settingsObjects';
 import { BlockAutomaticHandler } from '../../services';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';

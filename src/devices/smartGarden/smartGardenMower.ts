@@ -4,7 +4,7 @@ import {
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../command';
-import { ActuatorSettings } from '../deviceSettings';
+import { ActuatorSettings } from '../../settingsObjects';
 import { SmartGardenDevice } from './smartGardenDevice';
 import { iActuator } from '../../interfaces';
 import { BlockAutomaticHandler } from '../../services';

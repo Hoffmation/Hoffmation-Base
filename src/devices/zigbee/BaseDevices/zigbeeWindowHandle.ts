@@ -1,6 +1,6 @@
 import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../../enums';
 import { iBatteryDevice, iHandle, iWindow } from '../../../interfaces';
-import { HandleSettings } from '../../deviceSettings';
+import { HandleSettings } from '../../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { Battery, HandleSensor } from '../../sharedFunctions';

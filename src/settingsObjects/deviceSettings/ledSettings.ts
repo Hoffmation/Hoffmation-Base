@@ -1,6 +1,6 @@
 import { Utils } from '../../utils';
 import { DimmerSettings } from './dimmerSettings';
-import { iLedSettings } from '../../interfaces/settings/iLedSettings';
+import { iLedSettings } from '../../interfaces';
 
 export class LedSettings extends DimmerSettings implements iLedSettings {
   /**

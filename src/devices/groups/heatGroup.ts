@@ -8,7 +8,7 @@ import {
   UNDEFINED_HUMIDITY_VALUE,
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
-import { HeatGroupSettings, TemperatureSettings } from '../../models';
+import { HeatGroupSettings, TemperatureSettings } from '../../settingsObjects';
 import { CommandSource, DeviceClusterType, GroupType, LogLevel } from '../../enums';
 import { DeviceList } from '../device-list';
 import { AcDevice } from '../../services';

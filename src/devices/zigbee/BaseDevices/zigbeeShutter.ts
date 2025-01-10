@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter, iShutterCalibration, iWindow } from '../../../interfaces';
-import { ShutterSettings } from '../../deviceSettings';
+import { ShutterSettings } from '../../../settingsObjects';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../../command';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../../enums';

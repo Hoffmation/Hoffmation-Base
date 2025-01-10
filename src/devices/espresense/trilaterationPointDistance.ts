@@ -1,4 +1,4 @@
-import { iTrilaterationPointDistance } from '../../interfaces/iTrilaterationPointDistance';
+import { iTrilaterationPointDistance } from '../../interfaces';
 
 export class TrilaterationPointDistance implements iTrilaterationPointDistance {
   constructor(

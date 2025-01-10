@@ -2,10 +2,9 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { ZigbeeActuator } from './BaseDevices';
 import { iExcessEnergyConsumer } from '../../interfaces';
 import { iLoadMeter } from '../../interfaces/baseDevices/iLoadMeter';
-import { ActuatorSettings } from '../deviceSettings';
+import { ActuatorSettings, ExcessEnergyConsumerSettings } from '../../settingsObjects';
 import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { ActuatorSetStateCommand } from '../../command';
-import { ExcessEnergyConsumerSettings } from '../../models';
 
 export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsumer, iLoadMeter {
   /** @inheritDoc */

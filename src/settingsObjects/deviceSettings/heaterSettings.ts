@@ -1,5 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
-import { Utils } from '../../utils/utils';
+import { Utils } from '../../utils';
 import { iHeaterSettings } from '../../interfaces';
 
 export class HeaterSettings extends DeviceSettings implements iHeaterSettings {

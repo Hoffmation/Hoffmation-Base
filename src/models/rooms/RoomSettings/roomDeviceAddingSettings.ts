@@ -1,8 +1,7 @@
 import { RoomAddDeviceItem } from './roomAddDeviceItem';
 import { DeviceType, LogLevel } from '../../../enums';
 import { ServerLogService } from '../../../logging';
-import { iRoomAddDeviceItem, iRoomBase } from '../../../interfaces';
-import { iRoomDeviceAddingSettings } from '../../../interfaces/iRoomDeviceAddingSettings';
+import { iRoomAddDeviceItem, iRoomBase, iRoomDeviceAddingSettings } from '../../../interfaces';
 
 export class RoomDeviceAddingSettings implements iRoomDeviceAddingSettings {
   /**

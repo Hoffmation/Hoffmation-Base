@@ -11,7 +11,7 @@ import {
 } from '../command';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { iWledDevice } from '../interfaces';
-import { WledSettings } from './deviceSettings';
+import { WledSettings } from '../settingsObjects';
 import { BlockAutomaticHandler } from '../services';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { ServerLogService } from '../logging';

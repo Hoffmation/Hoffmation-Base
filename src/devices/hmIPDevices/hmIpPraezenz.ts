@@ -1,7 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iCountToday, iIlluminationSensor, iMotionSensor } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
-import { MotionSensorSettings } from '../deviceSettings';
+import { MotionSensorSettings } from '../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { Persistence } from '../../services';

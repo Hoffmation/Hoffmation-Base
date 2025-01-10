@@ -2,12 +2,12 @@ import { HmIPDevice } from './hmIpDevice';
 import { iDisposable, iHeater, iHumidityCollector, iHumiditySensor, iTemperatureCollector } from '../../interfaces';
 import { Utils } from '../../utils';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
-import { HeaterSettings } from '../deviceSettings';
+import { HeaterSettings, HeatGroupSettings } from '../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceClusterType, DeviceType, LogLevel, TimeCallbackType } from '../../enums';
 import { TimeCallbackService } from '../../services';
-import { HeatGroupSettings, TimeCallback } from '../../models';
 import { HandleChangeAction, HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
+import { TimeCallback } from '../../models';
 
 export class HmIpHeizgruppe
   extends HmIPDevice

@@ -1,4 +1,4 @@
-import { iHandle, iShutter, iVibrationSensor } from '../../interfaces';
+import { iHandle, iShutter, iVibrationSensor, iWindow } from '../../interfaces';
 import { HandleChangeAction, ShutterPositionChangedAction } from '../../action';
 import {
   CommandSource,
@@ -20,7 +20,6 @@ import {
   WindowSetDesiredPositionCommand,
 } from '../../command';
 import { BaseGroup } from './base-group';
-import { iWindow } from '../../interfaces/groups/iWindow';
 
 export class Window extends BaseGroup implements iWindow {
   private _desiredPosition: number = 0;

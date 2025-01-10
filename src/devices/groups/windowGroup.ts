@@ -20,7 +20,7 @@ import {
 } from '../../enums';
 import { DeviceList } from '../device-list';
 import { Utils } from '../../utils';
-import { ShutterSettings } from '../deviceSettings';
+import { ShutterSettings } from '../../settingsObjects';
 import { WeatherService } from '../../services/weather';
 import { iRoomBase, iWindow, iWindowGroup } from '../../interfaces';
 import { TimeCallback } from '../../models';

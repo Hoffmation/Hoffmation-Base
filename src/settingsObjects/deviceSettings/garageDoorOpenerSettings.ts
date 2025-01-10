@@ -1,5 +1,5 @@
 import { Utils } from '../../utils';
-import { iGarageDoorOpenerSettings } from '../../interfaces/deviceSettings/iGarageDoorOpenerSettings';
+import { iGarageDoorOpenerSettings } from '../../interfaces';
 import { DeviceSettings } from './deviceSettings';
 
 export class GarageDoorOpenerSettings extends DeviceSettings implements iGarageDoorOpenerSettings {

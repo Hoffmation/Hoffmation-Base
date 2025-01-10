@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { iRoomBase, iScene } from '../../interfaces';
 import { Persistence } from '../../services';
-import { SceneSettings } from '../deviceSettings';
+import { SceneSettings } from '../../settingsObjects';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';

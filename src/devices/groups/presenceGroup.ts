@@ -7,8 +7,7 @@ import {
 import { BaseGroup } from './base-group';
 import { DeviceClusterType, GroupType, LogDebugType, LogLevel } from '../../enums';
 import { DeviceList } from '../device-list';
-import { iMotionSensor } from '../../interfaces';
-import { iPresenceGroup } from '../../interfaces/groups/IPresenceGroup';
+import { iMotionSensor, iPresenceGroup } from '../../interfaces';
 import { ActuatorSetStateCommand, RoomSetLightTimeBasedCommand } from '../../command';
 import { RoomService } from '../../services';
 import { Utils } from '../../utils';

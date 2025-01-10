@@ -1,7 +1,7 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iBatteryDevice, iCountToday, iMotionSensor } from '../../../interfaces';
 import { Battery } from '../../sharedFunctions';
-import { MotionSensorSettings } from '../../deviceSettings';
+import { MotionSensorSettings } from '../../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
 import { Utils } from '../../../utils';

@@ -42,6 +42,7 @@ export * from './logging';
 export * from './server';
 export * from './services';
 export * from './utils';
+export * from './settingsObjects';
 export * from './devices';
 export * from './liquid-pid';
 

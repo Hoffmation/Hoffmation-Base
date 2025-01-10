@@ -1,6 +1,6 @@
 import { TuyaDevice } from './tuyaDevice';
 import { iGarageDoorOpener } from '../../interfaces';
-import { GarageDoorOpenerSettings } from '../deviceSettings';
+import { GarageDoorOpenerSettings } from '../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 

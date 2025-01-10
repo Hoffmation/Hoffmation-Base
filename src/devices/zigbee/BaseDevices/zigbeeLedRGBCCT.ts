@@ -1,6 +1,6 @@
 import { ZigbeeDimmer } from './zigbeeDimmer';
 import { iLedRgbCct } from '../../../interfaces/baseDevices/iLedRgbCct';
-import { LedSettings } from '../../deviceSettings';
+import { LedSettings } from '../../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../../enums';
 import { ActuatorSetStateCommand, LampSetTimeBasedCommand, LedSetLightCommand } from '../../../command';

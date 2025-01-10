@@ -1,4 +1,4 @@
-import { iMotionSensorSettings } from '../../interfaces/deviceSettings/iMotionSensorSettings';
+import { iMotionSensorSettings } from '../../interfaces';
 import { DeviceSettings } from './deviceSettings';
 import { Utils } from '../../utils';
 

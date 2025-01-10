@@ -8,7 +8,7 @@ import {
   iRoomBase,
   iRoomDevice,
 } from '../interfaces';
-import { CameraSettings } from './deviceSettings';
+import { CameraSettings } from '../settingsObjects';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { Base64Image } from '../models';
 import { MotionSensorAction } from '../action';

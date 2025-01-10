@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { iRoomBase, iTemperatureCollector } from '../../interfaces';
-import { DeviceSettings } from '../deviceSettings';
+import { DeviceSettings } from '../../settingsObjects';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { TemperatureSensor } from '../sharedFunctions';
 import { DeviceInfo } from '../DeviceInfo';

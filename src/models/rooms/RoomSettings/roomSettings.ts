@@ -1,7 +1,6 @@
-import { iTimePair } from '../../../interfaces';
+import { iRoomSettings, iTimePair } from '../../../interfaces';
 import { SettingsService } from '../../../settings-service';
-import { ObjectSettings } from '../../objectSettings';
-import { iRoomSettings } from '../../../interfaces/iRoomSettings';
+import { ObjectSettings } from '../../../settingsObjects';
 
 export class RoomSettings extends ObjectSettings implements iRoomSettings {
   /**

@@ -1,6 +1,8 @@
 import { iBlockAutomaticSettings, iDeviceSettings, iExcessEnergyConsumerSettings } from '../../interfaces';
-import { BlockAutomaticSettings, ExcessEnergyConsumerSettings, ObjectSettings } from '../../models';
 import { Utils } from '../../utils';
+import { BlockAutomaticSettings } from '../blockAutomaticSettings';
+import { ObjectSettings } from '../objectSettings';
+import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 
 export abstract class DeviceSettings extends ObjectSettings implements iDeviceSettings {
   /**

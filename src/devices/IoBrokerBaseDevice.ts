@@ -9,7 +9,7 @@ import {
   iRoomDeviceAddingSettings,
 } from '../interfaces';
 import { RoomDeviceAddingSettings } from '../models';
-import { DeviceSettings } from './deviceSettings';
+import { DeviceSettings } from '../settingsObjects';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { Utils } from '../utils';
 import { API } from '../api';

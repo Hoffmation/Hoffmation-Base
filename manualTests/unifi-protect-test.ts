@@ -1,5 +1,4 @@
-import { ExampleConfig, HoffmationBase, HoffmationInitializationObject, UnifiProtect } from '../src';
-import { OwnUnifiCamera } from '../src/services/unifi';
+import { ExampleConfig, HoffmationBase, HoffmationInitializationObject, OwnUnifiCamera, UnifiProtect } from '../src';
 
 export class UnifiProtectTest {
   public static async start(): Promise<void> {

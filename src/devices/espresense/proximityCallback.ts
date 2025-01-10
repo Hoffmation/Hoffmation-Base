@@ -1,4 +1,4 @@
-import { iProximityCallback } from '../../interfaces/iProximityCallback';
+import { iProximityCallback } from '../../interfaces';
 
 export class ProximityCallback implements iProximityCallback {
   public constructor(

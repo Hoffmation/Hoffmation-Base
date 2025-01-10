@@ -36,7 +36,7 @@ import {
 import { LogObject, ServerLogService } from '../logging';
 import { DaikinService, RoomService } from '../services';
 import { iLedRgbCct } from '../interfaces/baseDevices/iLedRgbCct';
-import { GroupSettings } from '../models';
+import { GroupSettings } from '../settingsObjects';
 
 export class API {
   /**
