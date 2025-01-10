@@ -6,7 +6,7 @@ import { ServerLogService } from '../logging';
 import { LogLevel, LogSource } from '../enums';
 import { iNewsSettings, iSpeaker } from '../interfaces';
 import { Utils } from '../utils';
-import { SettingsService } from './settings-service';
+import { SettingsService } from '../settings-service';
 import { PollyService } from './Sonos';
 import { HTTPSService } from './https-service';
 import ErrnoException = NodeJS.ErrnoException;

@@ -1,5 +1,5 @@
 import { BatteryLevelChangeAction } from '../../action';
-import { iBatteryDevice } from '../../interfaces';
+import { iBatteryDevice } from './iBatteryDevice';
 
 /**
  *

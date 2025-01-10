@@ -20,7 +20,7 @@ import {
 } from '../../enums';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
 import { BlockAutomaticCommand } from '../../command';
-import { SettingsService } from '../settings-service';
+import { SettingsService } from '../../settings-service';
 import { WeatherService } from '../weather';
 import { Utils } from '../../utils';
 import { Persistence } from '../dbo';

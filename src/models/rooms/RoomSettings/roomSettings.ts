@@ -1,8 +1,9 @@
-import { ObjectSettings } from '../../objectSettings';
-import { SettingsService } from '../../../services';
 import { iTimePair } from '../../../interfaces';
+import { SettingsService } from '../../../settings-service';
+import { ObjectSettings } from '../../objectSettings';
+import { iRoomSettings } from '../../../interfaces/iRoomSettings';
 
-export class RoomSettings extends ObjectSettings {
+export class RoomSettings extends ObjectSettings implements iRoomSettings {
   /**
    * Whether this room should always have ambient light on after sunset (regardless of motion e.g. Gardenlights).
    */

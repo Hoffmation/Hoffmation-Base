@@ -3,7 +3,8 @@ import { DeviceCluster, HeatGroup, LightGroup, SmokeGroup, SpeakerGroup, WaterGr
 import { iIdHolder, ITimeCallback } from './index';
 import { iPresenceGroup } from './groups/IPresenceGroup';
 import { LogLevel } from '../enums';
-import { RoomSettingsController } from '../models';
+
+import { iRoomSettingsController } from './iRoomSettingsController';
 
 /**
  * This interface represents a room with it's base functionality.
@@ -26,7 +27,7 @@ export interface iRoomBase extends iIdHolder {
   /**
    *
    */
-  settings: RoomSettingsController;
+  settings: iRoomSettingsController;
   /**
    *
    */

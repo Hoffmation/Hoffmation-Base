@@ -6,10 +6,11 @@ import { TrackedDistanceData } from './trackedDistanceData';
 import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
 import { ServerLogService } from '../../logging';
 import { Utils } from '../../utils';
-import { Persistence, SettingsService } from '../../services';
+import { Persistence } from '../../services';
 import { API } from '../../api';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
 import { Trilateration } from './trilateration';
+import { SettingsService } from '../../settings-service';
 
 export class DetectedBluetoothDevice implements iBaseDevice {
   /** @inheritDoc */

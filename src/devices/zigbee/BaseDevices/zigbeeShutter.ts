@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iShutter } from '../../../interfaces';
+import { iShutter, iShutterCalibration } from '../../../interfaces';
 import { ShutterSettings } from '../../deviceSettings';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../../command';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
@@ -8,8 +8,8 @@ import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, Wi
 import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { Utils } from '../../../utils';
 import { Window } from '../../groups';
-import { ShutterCalibration } from '../../../models';
 import { ShutterPositionChangedAction } from '../../../action';
+import { ShutterCalibration } from '../../../models';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** @inheritDoc */
@@ -27,7 +27,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this.dbo
       ?.getShutterCalibration(this)
-      .then((calibrationData: ShutterCalibration) => {
+      .then((calibrationData: iShutterCalibration) => {
         this._shutterCalibrationData = calibrationData;
         this.log(LogLevel.DeepTrace, 'ZigbeeShutter  initialized with calibration data');
       })

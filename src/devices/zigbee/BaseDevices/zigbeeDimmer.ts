@@ -10,8 +10,8 @@ import { DimmerSettings } from '../../deviceSettings';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
 import { LampUtils } from '../../sharedFunctions';
-import { SettingsService } from '../../../services';
 import { Utils } from '../../../utils';
+import { SettingsService } from '../../../settings-service';
 
 export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, iTemporaryDisableAutomatic {
   /** @inheritDoc */

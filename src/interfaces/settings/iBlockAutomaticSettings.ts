@@ -1,5 +1,4 @@
 import { CollisionSolving } from '../../enums';
-import { BlockAutomaticSettings } from '../../models';
 
 /**
  *
@@ -25,5 +24,5 @@ export interface iBlockAutomaticSettings {
   /**
    *
    */
-  fromPartialObject(obj: Partial<BlockAutomaticSettings>): void;
+  fromPartialObject(obj: Partial<iBlockAutomaticSettings>): void;
 }

@@ -2,9 +2,10 @@ import _ from 'lodash';
 import { ServerLogService } from '../logging';
 import { LogLevel } from '../enums';
 import { CatchEmResult } from './catchEmResult';
-import { Res, SettingsService } from '../services';
+import { Res } from '../services';
 import { iJsonOmitKeys, iTimePair } from '../interfaces';
 import { RGB } from './RGB';
+import { SettingsService } from '../settings-service';
 
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { iRoomBase, iRoomDefaultSettings, iTimePair } from '../../../interfaces';
+import { iRoomBase, iTimePair } from '../../../interfaces';
 import { SunTimeOffsets } from '../../sun-time-offsets';
 import { RoomSettings } from './roomSettings';
 import { RoomBase } from '../../../services';
@@ -9,7 +9,9 @@ import { Utils } from '../../../utils';
 import { ServerLogService } from '../../../logging';
 import { LogLevel } from '../../../enums';
 
-export class RoomSettingsController implements iRoomDefaultSettings {
+import { iRoomSettingsController } from '../../../interfaces/iRoomSettingsController';
+
+export class RoomSettingsController {
   /**
    * The name of the room this settings are for
    */
@@ -48,75 +50,75 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     return this._settingsContainer;
   }
 
-  get lichtSonnenAufgangAus(): boolean {
+  public get lichtSonnenAufgangAus(): boolean {
     return this._settingsContainer.lichtSonnenAufgangAus;
   }
 
-  get ambientLightAfterSunset(): boolean {
+  public get ambientLightAfterSunset(): boolean {
     return this._settingsContainer.ambientLightAfterSunset;
   }
 
-  get rolloHeatReduction(): boolean {
+  public get rolloHeatReduction(): boolean {
     return this._settingsContainer.rolloHeatReduction;
   }
 
-  get sonnenAufgangRollos(): boolean {
+  public get sonnenAufgangRollos(): boolean {
     return this._settingsContainer.sonnenAufgangRollos;
   }
 
-  get sonnenUntergangRolloMaxTime(): iTimePair {
+  public get sonnenUntergangRolloMaxTime(): iTimePair {
     return this._settingsContainer.sonnenUntergangRolloMaxTime;
   }
 
-  get sonnenAufgangRolloMinTime(): iTimePair {
+  public get sonnenAufgangRolloMinTime(): iTimePair {
     return this._settingsContainer.sonnenAufgangRolloMinTime;
   }
 
-  get lightIfNoWindows(): boolean {
+  public get lightIfNoWindows(): boolean {
     return this._settingsContainer.lightIfNoWindows;
   }
 
-  get lampenBeiBewegung(): boolean {
+  public get lampenBeiBewegung(): boolean {
     return this._settingsContainer.lampenBeiBewegung;
   }
 
-  get sonnenUntergangRollos(): boolean {
+  public get sonnenUntergangRollos(): boolean {
     return this._settingsContainer.sonnenUntergangRollos;
   }
 
-  get movementResetTimer(): number {
+  public get movementResetTimer(): number {
     return this._settingsContainer.movementResetTimer;
   }
 
-  get sonnenUntergangRolloDelay(): number {
+  public get sonnenUntergangRolloDelay(): number {
     return this._settingsContainer.sonnenUntergangRolloDelay;
   }
 
-  get sonnenUntergangLampenDelay(): number {
+  public get sonnenUntergangLampenDelay(): number {
     return this._settingsContainer.sonnenUntergangLampenDelay;
   }
 
-  get sonnenUntergangRolloAdditionalOffsetPerCloudiness(): number {
+  public get sonnenUntergangRolloAdditionalOffsetPerCloudiness(): number {
     return this._settingsContainer.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
   }
 
-  get sonnenAufgangRolloDelay(): number {
+  public get sonnenAufgangRolloDelay(): number {
     return this._settingsContainer.sonnenAufgangRolloDelay;
   }
 
-  get sonnenAufgangLampenDelay(): number {
+  public get sonnenAufgangLampenDelay(): number {
     return this._settingsContainer.sonnenAufgangLampenDelay;
   }
 
-  get roomIsAlwaysDark(): boolean {
+  public get roomIsAlwaysDark(): boolean {
     return this._settingsContainer.roomIsAlwaysDark;
   }
 
-  get radioUrl(): string {
+  public get radioUrl(): string {
     return this._settingsContainer.radioUrl;
   }
 
-  get includeLampsInNormalMovementLightning(): boolean {
+  public get includeLampsInNormalMovementLightning(): boolean {
     return this._settingsContainer.includeLampsInNormalMovementLightning;
   }
 
@@ -127,18 +129,18 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     return API.getRoom(this.roomName);
   }
 
-  public toJSON(): Partial<RoomSettingsController> {
-    const result: Partial<RoomSettingsController> = Utils.jsonFilter(this);
+  public toJSON(): Partial<iRoomSettingsController> {
+    const result: Partial<iRoomSettingsController> = Utils.jsonFilter(this);
     return _.omit(result, ['defaultSettings', 'deviceAddidngSettings']);
   }
 
-  private onSettingChange(): void {
+  public onSettingChange(): void {
     ServerLogService.writeLog(LogLevel.Info, `${this.roomName} RoomSettingsController.onSettingChange`);
     this.recalcLampOffset();
     this.recalcRolloOffset();
   }
 
-  private recalcRolloOffset(): void {
+  public recalcRolloOffset(): void {
     this.rolloOffset = new SunTimeOffsets(
       this.sonnenAufgangRolloDelay,
       this.sonnenUntergangRolloDelay,
@@ -150,7 +152,7 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     this.room?.recalcTimeCallbacks();
   }
 
-  private recalcLampOffset(): void {
+  public recalcLampOffset(): void {
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
     this.room?.recalcTimeCallbacks();
   }

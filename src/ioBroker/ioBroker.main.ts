@@ -3,8 +3,8 @@ import { LogLevel } from '../enums';
 import { IOBrokerConnection } from './connection';
 import { IDeviceUpdater, iRoomBase } from '../interfaces';
 import { ConnectionCallbacks } from '../models';
-import { SettingsService } from '../services';
 import { Utils } from '../utils';
+import { SettingsService } from '../settings-service';
 
 export class ioBrokerMain {
   private static readonly SplitKeys: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

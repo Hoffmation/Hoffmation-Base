@@ -14,8 +14,11 @@ import {
   iZigbeeDevice,
 } from './baseDevices';
 import { iRoomBase } from './iRoomBase';
-import { CountToday, DesiredShutterPosition, EnergyCalculation, ShutterCalibration } from '../models';
 import { ButtonPressType } from '../enums';
+import { iDesiredShutterPosition } from './IDesiredShutterPosition';
+import { iCountToday } from './iCountToday';
+import { iEnergyCalculation } from './iEnergyCalculation';
+import { iShutterCalibration } from './iShutterCalibration';
 
 /**
  * The interface to interact with the persistence layer.
@@ -44,21 +47,21 @@ export interface iPersist {
    * @param device - The device to get the count for
    * @returns - The count of the motion sensor today
    */
-  motionSensorTodayCount(device: iMotionSensor): Promise<CountToday>;
+  motionSensorTodayCount(device: iMotionSensor): Promise<iCountToday>;
 
   /**
    * Gets the last desired position of the shutter
    * @param device - The device to get the last desired position for
    * @returns - The last desired position of the shutter
    */
-  getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition>;
+  getLastDesiredPosition(device: iShutter): Promise<iDesiredShutterPosition>;
 
   /**
    * Gets the shutter calibration
    * @param device - The device to get the shutter calibration for
    * @returns - The shutter calibration
    */
-  getShutterCalibration(device: iShutter): Promise<ShutterCalibration>;
+  getShutterCalibration(device: iShutter): Promise<iShutterCalibration>;
 
   /**
    * Initializes the database-connection and prepares the database
@@ -70,7 +73,7 @@ export interface iPersist {
    * Persists the shutter calibration
    * @param data - The shutter calibration data to persist
    */
-  persistShutterCalibration(data: ShutterCalibration): void;
+  persistShutterCalibration(data: iShutterCalibration): void;
 
   /**
    * Persists data for an illumination sensor
@@ -82,7 +85,7 @@ export interface iPersist {
    * Persists data for an energy manager
    * @param energyData - The energy data to persist
    */
-  persistEnergyManager(energyData: EnergyCalculation): void;
+  persistEnergyManager(energyData: iEnergyCalculation): void;
 
   /**
    * Persists data of an AC device

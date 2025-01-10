@@ -1,6 +1,6 @@
 import { Persistence } from '../services';
-import { iJsonOmitKeys, iPersist, iRoomBase, iRoomDevice } from '../interfaces';
-import { RoomAddDeviceItem, RoomDeviceAddingSettings } from '../models';
+import { iJsonOmitKeys, iPersist, iRoomAddDeviceItem, iRoomBase, iRoomDevice } from '../interfaces';
+import { RoomDeviceAddingSettings } from '../models';
 import { DeviceSettings } from './deviceSettings';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { Utils } from '../utils';
@@ -8,6 +8,7 @@ import { API } from '../api';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { ServerLogService } from '../logging';
 import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
+import { iRoomDeviceAddingSettings } from '../interfaces/iRoomDeviceAddingSettings';
 
 export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
   /** @inheritDoc */
@@ -15,7 +16,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
   /**
    * The settings for adding devices to Rooms
    */
-  public static roomAddingSettings: { [id: string]: RoomDeviceAddingSettings } = {};
+  public static roomAddingSettings: { [id: string]: iRoomDeviceAddingSettings } = {};
   /**
    * @inheritDoc
    * @default undefined (no Settings)
@@ -90,7 +91,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
     return ioBrokerMain.iOConnection;
   }
 
-  public static addRoom(shortName: string, settings: RoomDeviceAddingSettings): void {
+  public static addRoom(shortName: string, settings: iRoomDeviceAddingSettings): void {
     if (this.roomAddingSettings[shortName] !== undefined) {
       ServerLogService.writeLog(
         LogLevel.Alert,
@@ -181,7 +182,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
         ServerLogService.missingRoomHandling(settings.RoomName, this.deviceType);
         return;
       }
-      const deviceSettings: RoomAddDeviceItem | undefined =
+      const deviceSettings: iRoomAddDeviceItem | undefined =
         settings.devices[this.deviceType][this.info.deviceRoomIndex];
       if (deviceSettings === undefined) {
         ServerLogService.missingRoomIndexHandling(settings.RoomName, this.info.deviceRoomIndex, this.deviceType);

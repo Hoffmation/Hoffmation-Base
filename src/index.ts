@@ -1,4 +1,5 @@
 import '@iobroker/types';
+import { SettingsService } from './settings-service';
 import { ServerLogService } from './logging';
 import { LogLevel } from './enums';
 import {
@@ -15,7 +16,6 @@ import {
   PollyService,
   PostgreSqlPersist,
   Res,
-  SettingsService,
   SonosService,
   TelegramCommands,
   TelegramService,
@@ -35,6 +35,7 @@ export * from './enums';
 export * from './action';
 export * from './command';
 export * from './interfaces';
+export * from './settings-service';
 export * from './ioBroker';
 export * from './models';
 export * from './logging';

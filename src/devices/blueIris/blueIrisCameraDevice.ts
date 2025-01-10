@@ -1,8 +1,8 @@
 import { CameraDevice } from '../CameraDevice';
 import { BlueIrisCoordinator } from './blueIrisCoordinator';
-import { SettingsService } from '../../services';
 import { LogLevel } from '../../enums';
 import { ioBrokerMain } from '../../ioBroker';
+import { SettingsService } from '../../settings-service';
 
 export class BlueIrisCameraDevice extends CameraDevice {
   /**

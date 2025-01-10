@@ -1,13 +1,14 @@
 import { RoomAddDeviceItem } from './roomAddDeviceItem';
 import { DeviceType, LogLevel } from '../../../enums';
 import { ServerLogService } from '../../../logging';
-import { iRoomBase } from '../../../interfaces/iRoomBase';
+import { iRoomAddDeviceItem, iRoomBase } from '../../../interfaces';
+import { iRoomDeviceAddingSettings } from '../../../interfaces/iRoomDeviceAddingSettings';
 
-export class RoomDeviceAddingSettings {
+export class RoomDeviceAddingSettings implements iRoomDeviceAddingSettings {
   /**
    * The devices that are to be added to the room
    */
-  public devices: RoomAddDeviceItem[][] = [];
+  public devices: iRoomAddDeviceItem[][] = [];
 
   constructor(public RoomName: string) {}
 

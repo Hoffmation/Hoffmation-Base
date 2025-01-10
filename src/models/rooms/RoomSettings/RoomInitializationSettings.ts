@@ -1,10 +1,9 @@
-import { iRoomInitializationSettings } from '../../../interfaces';
-import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
+import { iRoomDeviceAddingSettings, iRoomInitializationSettings } from '../../../interfaces';
 import { IoBrokerBaseDevice } from '../../../devices';
 
 export class RoomInitializationSettings implements iRoomInitializationSettings {
   /** @inheritDoc */
-  public deviceAddingSettings?: RoomDeviceAddingSettings;
+  public deviceAddingSettings?: iRoomDeviceAddingSettings;
 
   public constructor(public shortName: string) {}
 

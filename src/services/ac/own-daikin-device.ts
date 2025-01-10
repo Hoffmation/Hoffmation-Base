@@ -3,7 +3,7 @@ import { AcDevice } from './ac-device';
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
 import { AcDeviceType, AcMode, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { UNDEFINED_TEMP_VALUE } from '../../interfaces';
-import { SettingsService } from '../settings-service';
+import { SettingsService } from '../../settings-service';
 import { ServerLogService } from '../../logging';
 import { DaikinService } from './daikin-service';
 import { Utils } from '../../utils';

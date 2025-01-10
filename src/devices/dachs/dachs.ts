@@ -15,7 +15,6 @@ import {
   iRoomBase,
 } from '../../interfaces';
 import { DachsDeviceSettings } from '../deviceSettings';
-import { BlockAutomaticHandler, Persistence, SettingsService, TimeCallbackService } from '../../services';
 import {
   CommandSource,
   DeviceCapability,
@@ -40,6 +39,8 @@ import {
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../command';
+import { BlockAutomaticHandler, Persistence, TimeCallbackService } from '../../services';
+import { SettingsService } from '../../settings-service';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */

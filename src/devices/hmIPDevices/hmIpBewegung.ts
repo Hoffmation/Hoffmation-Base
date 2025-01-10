@@ -1,7 +1,6 @@
 import { HmIPDevice } from './hmIpDevice';
-import { iIlluminationSensor, iMotionSensor } from '../../interfaces';
+import { iCountToday, iIlluminationSensor, iMotionSensor } from '../../interfaces';
 import { MotionSensorSettings } from '../deviceSettings';
-import { CountToday } from '../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { Persistence } from '../../services';
@@ -33,7 +32,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     } else {
       Persistence.dbo
         ?.motionSensorTodayCount(this)
-        .then((todayCount: CountToday) => {
+        .then((todayCount: iCountToday) => {
           this.detectionsToday = todayCount.count;
           this.log(LogLevel.Debug, `Bewegungscounter vorinitialisiert mit ${this.detectionsToday}`);
           this.initialized = true;

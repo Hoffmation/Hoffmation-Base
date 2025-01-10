@@ -1,4 +1,6 @@
-export class SunTimeOffsets {
+import { iSunTimeOffsets } from '../interfaces';
+
+export class SunTimeOffsets implements iSunTimeOffsets {
   public constructor(
     public sunrise: number = 0,
     public sunset: number = 0,

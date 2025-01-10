@@ -4,7 +4,7 @@ import { iRoomBase, iSpeaker } from '../../interfaces';
 import { DeviceInfo, Devices, SonosDeviceSettings } from '../../devices';
 import { SonosDevice } from '@svrooij/sonos/lib';
 import { API } from '../../api';
-import { SettingsService } from '../settings-service';
+import { SettingsService } from '../../settings-service';
 import { ServerLogService } from '../../logging';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import { Utils } from '../../utils';

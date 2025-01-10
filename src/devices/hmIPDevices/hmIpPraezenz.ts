@@ -1,8 +1,7 @@
 import { HmIPDevice } from './hmIpDevice';
-import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../../interfaces';
+import { iBatteryDevice, iCountToday, iIlluminationSensor, iMotionSensor } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
 import { MotionSensorSettings } from '../deviceSettings';
-import { CountToday } from '../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { Persistence } from '../../services';
@@ -38,7 +37,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     } else {
       Persistence.dbo
         ?.motionSensorTodayCount(this)
-        .then((todayCount: CountToday) => {
+        .then((todayCount: iCountToday) => {
           this.detectionsToday = todayCount.count;
           this.log(LogLevel.Debug, `Präsenzcounter vorinitialisiert mit ${this.detectionsToday}`);
           this.initialized = true;

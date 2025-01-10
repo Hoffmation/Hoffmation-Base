@@ -1,12 +1,12 @@
 import { LogLevel, TimeCallbackType, TimeOfDay } from '../enums';
 import { TimeCallback } from '../models';
-import { SunTimeOffsets } from '../models/sun-time-offsets';
 import { ITimeCallback, iTimePair } from '../interfaces';
-import { SettingsService } from './settings-service';
+import { SettingsService } from '../settings-service';
 import { ServerLogService } from '../logging';
 import { Devices } from '../devices';
 import { Utils } from '../utils';
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
+import { iSunTimeOffsets } from '../interfaces/iSunTimeOffsets';
 
 export class TimeCallbackService {
   private static _startTime: Date;
@@ -33,7 +33,7 @@ export class TimeCallbackService {
     return TimeCallbackService._nextSunSet;
   }
 
-  public static dayType(pOffset: SunTimeOffsets, now: Date = new Date()): TimeOfDay {
+  public static dayType(pOffset: iSunTimeOffsets, now: Date = new Date()): TimeOfDay {
     const hours = now.getHours();
     const minutes = now.getMinutes();
 

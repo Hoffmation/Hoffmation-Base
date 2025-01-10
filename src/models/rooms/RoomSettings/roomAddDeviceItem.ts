@@ -1,8 +1,9 @@
 import { LogLevel } from '../../../enums';
 import { ServerLogService } from '../../../logging';
 import { iRoomBase } from '../../../interfaces';
+import { iRoomAddDeviceItem } from '../../../interfaces/iRoomAddDeviceItem';
 
-export class RoomAddDeviceItem {
+export class RoomAddDeviceItem implements iRoomAddDeviceItem {
   constructor(
     public setID: (value: string) => iRoomBase | undefined,
     public index: number,

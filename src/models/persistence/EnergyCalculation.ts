@@ -1,8 +1,10 @@
 import { LogDebugType, LogLevel } from '../../enums';
-import { Persistence, SettingsService } from '../../services';
+import { Persistence } from '../../services';
 import { Utils } from '../../utils';
+import { SettingsService } from '../../settings-service';
+import { iEnergyCalculation } from '../../interfaces';
 
-export class EnergyCalculation {
+export class EnergyCalculation implements iEnergyCalculation {
   /**
    * The amount of energy drawn from the grid in kWh since the last calculation
    */
@@ -43,7 +45,7 @@ export class EnergyCalculation {
   constructor(public startMs: number) {}
 
   public static persist(
-    obj: EnergyCalculation,
+    obj: iEnergyCalculation,
     endMs: number,
     logger: (level: LogLevel, message: string, logDebugType?: LogDebugType) => void,
   ): boolean {

@@ -5,7 +5,7 @@ import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
 import { OwnSonosDevice } from './own-sonos-device';
 import { TimeCallback } from '../../models';
 import { iSonosSettings } from '../../interfaces';
-import { SettingsService } from '../settings-service';
+import { SettingsService } from '../../settings-service';
 import { TimeCallbackService } from '../time-callback-service';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import { PollyService } from './polly-service';

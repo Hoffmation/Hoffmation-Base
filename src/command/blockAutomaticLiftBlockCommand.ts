@@ -1,6 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
-import { SettingsService } from '../services';
+import { SettingsService } from '../settings-service';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
   /** @inheritDoc */

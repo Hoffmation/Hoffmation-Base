@@ -1,5 +1,5 @@
-import { HeatingMode } from '../enums';
-import { iConfig } from '../interfaces';
+import { HeatingMode } from './enums';
+import { iConfig } from './interfaces';
 
 export class SettingsService {
   /**

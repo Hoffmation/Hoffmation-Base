@@ -1,8 +1,7 @@
 import { ZigbeeDevice } from './zigbeeDevice';
-import { iBatteryDevice, iMotionSensor } from '../../../interfaces';
+import { iBatteryDevice, iCountToday, iMotionSensor } from '../../../interfaces';
 import { Battery } from '../../sharedFunctions';
 import { MotionSensorSettings } from '../../deviceSettings';
-import { CountToday } from '../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
 import { Utils } from '../../../utils';
@@ -31,7 +30,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     } else {
       this.dbo
         ?.motionSensorTodayCount(this)
-        .then((todayCount: CountToday) => {
+        .then((todayCount: iCountToday) => {
           this.detectionsToday = todayCount.count ?? 0;
           this.log(LogLevel.Debug, `Reinitialized movement counter with ${this.detectionsToday}`);
           this._initialized = true;

@@ -1,7 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CollisionSolving, CommandSource, CommandType } from '../enums';
-import { SettingsService } from '../services';
-import { DeviceSettings } from '../devices';
+import { iDeviceSettings } from '../interfaces';
+import { SettingsService } from '../settings-service';
 
 export class BlockAutomaticCommand extends BaseCommand {
   /** @inheritDoc */
@@ -53,7 +53,7 @@ export class BlockAutomaticCommand extends BaseCommand {
     return `BlockAutomatic for ${this.durationMS}ms with onCollideAction ${this.onCollideAction} for reason: ${this.reasonTrace}`;
   }
 
-  public static fromDeviceSettings(c: BaseCommand, deviceSettings: DeviceSettings): BlockAutomaticCommand | null {
+  public static fromDeviceSettings(c: BaseCommand, deviceSettings: iDeviceSettings): BlockAutomaticCommand | null {
     if (deviceSettings.blockAutomaticSettings?.dontBlockAutomaticIfNotProvided) {
       return null;
     }

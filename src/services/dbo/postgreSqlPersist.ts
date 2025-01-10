@@ -5,6 +5,7 @@ import {
   iBaseDevice,
   iBatteryDevice,
   iButtonSwitch,
+  iDesiredShutterPosition,
   iDimmableLamp,
   iHandleSensor,
   iHeater,
@@ -14,11 +15,12 @@ import {
   iPersist,
   iRoomBase,
   iShutter,
+  iShutterCalibration,
   iTemperatureSensor,
   iZigbeeDevice,
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
-import { CountToday, DesiredShutterPosition, EnergyCalculation, idSettings, ShutterCalibration } from '../../models';
+import { CountToday, DesiredShutterPosition, EnergyCalculation, idSettings } from '../../models';
 import { ServerLogService } from '../../logging';
 import { ButtonPressType, DeviceCapability, LogLevel } from '../../enums';
 import { Utils } from '../../utils';
@@ -63,8 +65,8 @@ export class PostgreSqlPersist implements iPersist {
   }
 
   /** @inheritDoc */
-  async getLastDesiredPosition(device: iShutter): Promise<DesiredShutterPosition> {
-    const dbResult: DesiredShutterPosition[] | null = await this.query<DesiredShutterPosition>(
+  async getLastDesiredPosition(device: iShutter): Promise<iDesiredShutterPosition> {
+    const dbResult: iDesiredShutterPosition[] | null = await this.query<DesiredShutterPosition>(
       `SELECT position
        from hoffmation_schema."ShutterDeviceData"
        WHERE "deviceID" = '${device.id}'
@@ -110,9 +112,9 @@ export class PostgreSqlPersist implements iPersist {
   }
 
   /** @inheritDoc */
-  getShutterCalibration(_device: iShutter): Promise<ShutterCalibration> {
+  getShutterCalibration(_device: iShutter): Promise<iShutterCalibration> {
     ServerLogService.writeLog(LogLevel.Warn, "Postgres doesn't support Shutter Calibration yet.");
-    return new Promise<ShutterCalibration>((_res, reject) => {
+    return new Promise<iShutterCalibration>((_res, reject) => {
       reject('Not Implemented');
     });
   }
@@ -529,7 +531,7 @@ $$;`,
   }
 
   /** @inheritDoc */
-  public persistShutterCalibration(_data: ShutterCalibration): void {
+  public persistShutterCalibration(_data: iShutterCalibration): void {
     ServerLogService.writeLog(LogLevel.Warn, "Postgres doesn't support Shutter Calibration yet.");
   }
 

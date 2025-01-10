@@ -1,5 +1,5 @@
-import { SunTimeOffsets } from '../models/sun-time-offsets';
 import { TimeCallbackType } from '../enums';
+import { iSunTimeOffsets } from './iSunTimeOffsets';
 
 /**
  *
@@ -46,7 +46,7 @@ export interface ITimeCallback {
   /**
    *
    */
-  sunTimeOffset?: SunTimeOffsets;
+  sunTimeOffset?: iSunTimeOffsets;
   /**
    *
    */

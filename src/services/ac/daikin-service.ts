@@ -4,7 +4,7 @@ import { DaikinAC, DaikinManager } from 'daikin-controller';
 import { AcDevice } from './ac-device';
 import { AcDeviceType, CommandSource, LogLevel } from '../../enums';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
-import { SettingsService } from '../settings-service';
+import { SettingsService } from '../../settings-service';
 import { ServerLogService } from '../../logging';
 import { BlockAutomaticCommand } from '../../command';
 import { Router } from '../network';

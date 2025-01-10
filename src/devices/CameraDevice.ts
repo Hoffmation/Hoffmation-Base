@@ -1,8 +1,16 @@
 import _ from 'lodash';
-import { iBaseDevice, iCameraDevice, iCameraSettings, iDeviceInfo, iRoomBase, iRoomDevice } from '../interfaces';
+import {
+  iBaseDevice,
+  iCameraDevice,
+  iCameraSettings,
+  iCountToday,
+  iDeviceInfo,
+  iRoomBase,
+  iRoomDevice,
+} from '../interfaces';
 import { CameraSettings } from './deviceSettings';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
-import { Base64Image, CountToday } from '../models';
+import { Base64Image } from '../models';
 import { MotionSensorAction } from '../action';
 import { DeviceInfo } from './DeviceInfo';
 import { Devices } from './devices';
@@ -60,7 +68,7 @@ export abstract class CameraDevice implements iCameraDevice {
     } else {
       Persistence.dbo
         ?.motionSensorTodayCount(this)
-        .then((todayCount: CountToday) => {
+        .then((todayCount: iCountToday) => {
           this.detectionsToday = todayCount.count ?? 0;
           this.log(LogLevel.Debug, `Reinitialized movement counter with ${this.detectionsToday}`);
           this._initialized = true;
