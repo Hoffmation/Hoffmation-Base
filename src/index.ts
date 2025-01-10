@@ -1,41 +1,31 @@
-import {
-  AsusRouter,
-  Dachs,
-  DaikinService,
-  Devices,
-  DeviceUpdater,
-  GooveeService,
-  iConfig,
-  ioBrokerMain,
-  iSpeaker,
-  MP3Server,
-  MuellService,
-  NewsService,
-  OwnAcDevices,
-  OwnGoveeDevices,
-  OwnSonosDevices,
-  PollyService,
-  PostgreSqlPersist,
-  Res,
-  ServerLogService,
-  SettingsService,
-  SonosService,
-  TelegramCommands,
-  TelegramService,
-  TibberService,
-  TimeCallbackService,
-  Trilateration,
-  UnifiProtect,
-  UnifiRouter,
-  Utils,
-  VictronService,
-  WeatherService,
-} from './server';
-import { LogLevel } from './models';
+import { LogLevel, ServerLogService } from './logging';
 import '@iobroker/types';
+import { ioBrokerMain } from './ioBroker';
+import { Dachs, Devices, DeviceUpdater, iSpeaker, Trilateration } from './devices';
+import { iConfig } from './server';
+import { Utils } from './utils/utils';
+import { Res } from './services/Translation';
+import { PostgreSqlPersist } from './services/dbo';
+import { SettingsService } from './services/settings-service';
+import { TelegramCommands, TelegramService } from './services/Telegram';
+import { MP3Server, OwnSonosDevices, PollyService, SonosService } from './services/Sonos';
+import { TibberService } from './services/tibber-service';
+import { AsusRouter, UnifiRouter } from './services/network';
+import { UnifiProtect } from './services/unifi';
+import { TimeCallbackService } from './services/time-callback-service';
+import { GooveeService, OwnGoveeDevices } from './services/govee';
+import { DaikinService, OwnAcDevices } from './services/ac';
+import { MuellService } from './services/calendar';
+import { NewsService } from './services/news-service';
+import { WeatherService } from './services/weather';
+import { VictronService } from './services/victron';
 
-export * from './models/index';
-export * from './server/index';
+export * from './models';
+export * from './logging';
+export * from './server';
+export * from './services';
+export * from './utils';
+export * from './devices';
 export * from './liquid-pid';
 
 export class HoffmationInitializationObject {

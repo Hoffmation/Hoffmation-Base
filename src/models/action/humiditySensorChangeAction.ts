@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType } from '../command';
-import { iHumiditySensor } from '../../server';
+import { iHumiditySensor } from '../../devices';
 
 export class HumiditySensorChangeAction extends BaseAction {
   /** @inheritDoc */

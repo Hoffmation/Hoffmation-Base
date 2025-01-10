@@ -2,8 +2,8 @@ import { CommandType } from './commandType';
 import { CommandSource } from './commandSource';
 import { CollisionSolving } from '../collisionSolving';
 import { BaseCommand } from './baseCommand';
-import { SettingsService } from '../../server';
 import { DeviceSettings } from '../deviceSettings';
+import { SettingsService } from '../../services/settings-service';
 
 export class BlockAutomaticCommand extends BaseCommand {
   /** @inheritDoc */

@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType } from '../command';
-import { iActuator } from '../../server';
+import { iActuator } from '../../devices/baseDeviceInterfaces';
 
 export class ActuatorChangeAction extends BaseAction {
   /** @inheritDoc */

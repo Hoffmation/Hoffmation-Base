@@ -1,4 +1,4 @@
-import { CollisionSolving } from '../../models';
+import { CollisionSolving } from '../../models/collisionSolving';
 
 /**
  * These settings control the desired behaviour of {@link BlockAutomaticHandler}.

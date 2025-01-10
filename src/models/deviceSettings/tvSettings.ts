@@ -1,6 +1,6 @@
 import { DeviceSettings } from './deviceSettings';
 import { Daytime } from '../daytime';
-import { Utils } from '../../server';
+import { Utils } from '../../utils/utils';
 
 export class TvSettings extends DeviceSettings {
   /**

@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType } from '../command';
-import { iShutter } from '../../server';
+import { iShutter } from '../../devices';
 
 export class ShutterPositionChangedAction extends BaseAction {
   /** @inheritDoc */

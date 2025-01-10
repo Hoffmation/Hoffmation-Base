@@ -1,6 +1,6 @@
 import { iRoomInitializationSettings } from './iRoomInitializationSettings';
 import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
-import { IoBrokerBaseDevice } from '../../../server';
+import { IoBrokerBaseDevice } from '../../../devices';
 
 export class RoomInitializationSettings implements iRoomInitializationSettings {
   /** @inheritDoc */

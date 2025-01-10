@@ -1,5 +1,6 @@
-import { LogLevel } from '../logLevel';
-import { LogDebugType, SettingsService, Utils } from '../../server';
+import { Utils } from '../../utils/utils';
+import { SettingsService } from '../../services/settings-service';
+import { LogDebugType, LogLevel } from '../../logging';
 
 export class EnergyCalculation {
   /**

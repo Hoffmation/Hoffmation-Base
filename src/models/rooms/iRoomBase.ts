@@ -32,6 +32,11 @@ export interface iRoomBase {
   roomName: string;
 
   /**
+   * The custom name of the room
+   */
+  customName: string;
+
+  /**
    * This function initializes the roomBase object of this room
    */
   initializeBase(): void;

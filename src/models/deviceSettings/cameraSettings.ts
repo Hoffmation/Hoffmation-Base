@@ -1,5 +1,5 @@
-import { Utils } from '../../server';
 import { MotionSensorSettings } from './motionSensorSettings';
+import { Utils } from '../../utils/utils';
 
 export class CameraSettings extends MotionSensorSettings {
   /**

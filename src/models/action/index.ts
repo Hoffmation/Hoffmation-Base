@@ -1,10 +1,10 @@
 export { BaseAction } from './baseAction';
-export * from './humiditySensorChangeAction';
-export * from './motionSensorAction';
-export * from './presenceGroupLastLeftAction';
-export * from './presenceGroupFirstEnterAction';
-export * from './shutterPositionChangedAction';
-export * from './temperatureSensorChangeAction';
+export { HumiditySensorChangeAction } from './humiditySensorChangeAction';
+export { MotionSensorAction } from './motionSensorAction';
+export { PresenceGroupLastLeftAction } from './presenceGroupLastLeftAction';
+export { PresenceGroupFirstEnterAction } from './presenceGroupFirstEnterAction';
+export { ShutterPositionChangedAction } from './shutterPositionChangedAction';
+export { TemperatureSensorChangeAction } from './temperatureSensorChangeAction';
 export { ActuatorChangeAction } from './actuatorChangeAction';
 export { BatteryLevelChangeAction } from './batteryLevelChangeAction';
 export { PresenceGroupAnyMovementAction } from './presenceGroupAnyMovementAction';

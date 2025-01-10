@@ -1,4 +1,4 @@
-import { DachsClientOptions, InfluxDbConnectionOptions } from '../devices/dachs';
+import { DachsClientOptions, InfluxDbConnectionOptions } from '../../devices';
 
 /**
  * The configuration for the Dachs CHP (if present)

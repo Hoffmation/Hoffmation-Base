@@ -1,5 +1,5 @@
 import { DeviceSettings } from './deviceSettings';
-import { Utils } from '../../server';
+import { Utils } from '../../utils/utils';
 
 export class HeaterSettings extends DeviceSettings {
   /**

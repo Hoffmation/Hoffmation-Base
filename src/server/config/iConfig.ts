@@ -1,6 +1,5 @@
-import { iLogSettings } from './iLogSettings';
+import { iLogSettings } from '../../logging';
 import { iSonosSettings } from './iSonosSettings';
-import { iRoomDefaultSettings } from '../../models';
 import { iNewsSettings } from './iNewsSettings';
 import { iIobrokerSettigns } from './iIobrokerSettigns';
 import { iPollySettings } from './iPollySettings';
@@ -24,6 +23,7 @@ import { iUnifiSettings } from './iUnifiSettings';
 import { iBlockAutomaticHandlerDefaults } from './iBlockAutomaticHandlerDefaults';
 import { iRestSettings } from './iRestSettings';
 import { iGoveeSettings } from './iGoveeSettings';
+import { iRoomDefaultSettings } from '../../models/rooms';
 
 /**
  * The main configuration for Hoffmation normally stored in the `main-config.json` file.

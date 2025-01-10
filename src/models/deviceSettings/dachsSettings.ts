@@ -1,5 +1,5 @@
-import { Utils } from '../../server';
 import { ActuatorSettings } from './actuatorSettings';
+import { Utils } from '../../utils/utils';
 
 export class DachsDeviceSettings extends ActuatorSettings {
   /**

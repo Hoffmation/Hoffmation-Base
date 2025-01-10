@@ -1,6 +1,6 @@
 import { CommandType } from '../command';
 import { BaseAction } from './baseAction';
-import { iMotionSensor } from '../../server';
+import { iMotionSensor } from '../../devices';
 
 export class MotionSensorAction extends BaseAction {
   /** @inheritDoc */

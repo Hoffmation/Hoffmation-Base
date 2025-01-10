@@ -1,5 +1,5 @@
-import { LogLevel } from './logLevel';
-import { LogDebugType } from '../server';
+import { LogLevel } from '../logging/logLevel';
+import { LogDebugType } from '../logging/log-debug-type';
 
 /**
  * Interface for objects that have an unique id and a custom name

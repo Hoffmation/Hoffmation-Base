@@ -45,7 +45,8 @@
     "manual-test-samsungTV": "tsc && ts-node ./manualTests/samsung-tv-test.ts",
     "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts",
     "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts",
-    "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts"
+    "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts",
+    "manual-test-unifi-protect": "tsc && tsx ./manualTests/unifi-protect-test.ts"
   },
   "dependencies": {
     "@svrooij/sonos": "^2.6.0-beta.11",

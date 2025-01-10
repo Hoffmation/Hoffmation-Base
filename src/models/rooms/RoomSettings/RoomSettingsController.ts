@@ -1,9 +1,13 @@
-import { RoomBase } from '../RoomBase';
+import { RoomBase } from '../../../services/RoomBase';
 import { iRoomDefaultSettings } from './iRoomDefaultSettings';
-import { API, iTimePair, ServerLogService, SunTimeOffsets, Utils, WeatherService } from '../../../server';
 import _ from 'lodash';
 import { RoomSettings } from './roomSettings';
-import { LogLevel } from '../../logLevel';
+import { LogLevel, ServerLogService } from '../../../logging';
+import { iTimePair } from '../../../server';
+import { Utils } from '../../../utils/utils';
+import { SunTimeOffsets } from '../../../services/time-callback-service';
+import { WeatherService } from '../../../services/weather';
+import { API } from '../../../services/api';
 
 export class RoomSettingsController implements iRoomDefaultSettings {
   /**

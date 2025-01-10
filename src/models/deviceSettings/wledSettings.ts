@@ -1,5 +1,5 @@
 import { DimmerSettings } from './dimmerSettings';
-import { Utils } from '../../server';
+import { Utils } from '../../utils/utils';
 
 export class WledSettings extends DimmerSettings {
   /**

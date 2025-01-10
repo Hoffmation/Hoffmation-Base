@@ -1,4 +1,4 @@
-import { LogLevel } from '../../models';
+import { LogLevel } from '../../logging';
 
 /**
  * The settings for the telegram-service (if needed).

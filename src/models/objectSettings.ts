@@ -1,5 +1,5 @@
-import { Utils } from '../server';
-import { LogLevel } from './logLevel';
+import { Utils } from '../utils/utils';
+import { LogLevel } from '../logging';
 import { iIdHolder } from './iIdHolder';
 import _ from 'lodash';
 

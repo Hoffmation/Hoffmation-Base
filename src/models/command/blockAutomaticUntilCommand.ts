@@ -2,7 +2,7 @@ import { CommandType } from './commandType';
 import { CommandSource } from './commandSource';
 import { CollisionSolving } from '../collisionSolving';
 import { BaseCommand } from './baseCommand';
-import { SettingsService } from '../../server';
+import { SettingsService } from '../../services/settings-service';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
   /** @inheritDoc */

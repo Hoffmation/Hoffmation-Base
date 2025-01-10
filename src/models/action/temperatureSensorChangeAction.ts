@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
 import { CommandType } from '../command';
-import { iTemperatureSensor } from '../../server';
+import { iTemperatureSensor } from '../../devices';
 
 export class TemperatureSensorChangeAction extends BaseAction {
   /** @inheritDoc */

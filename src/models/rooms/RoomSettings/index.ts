@@ -1,7 +1,7 @@
-export * from './iRoomDefaultSettings';
-export * from './iRoomInitializationSettings';
-export * from './roomAddDeviceItem';
-export * from './roomDeviceAddingSettings';
-export * from './RoomInitializationSettings';
-export * from './roomSettings';
-export * from './RoomSettingsController';
+export { iRoomDefaultSettings } from './iRoomDefaultSettings';
+export { iRoomInitializationSettings } from './iRoomInitializationSettings';
+export { RoomAddDeviceItem } from './roomAddDeviceItem';
+export { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
+export { RoomInitializationSettings } from './RoomInitializationSettings';
+export { RoomSettings } from './roomSettings';
+export { RoomSettingsController } from './RoomSettingsController';

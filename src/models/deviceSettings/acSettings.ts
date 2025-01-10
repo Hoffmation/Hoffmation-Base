@@ -1,6 +1,6 @@
 import { DeviceSettings } from './deviceSettings';
-import { Utils } from '../../server';
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
+import { Utils } from '../../utils/utils';
 
 export class AcSettings extends DeviceSettings {
   /** The energy consumer settings for this AC */

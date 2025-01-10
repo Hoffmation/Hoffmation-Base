@@ -2,8 +2,8 @@ import { BaseCommand } from './baseCommand';
 import { CommandSource } from './commandSource';
 import { CommandType } from './commandType';
 import { ActuatorToggleCommand } from './actuatorToggleCommand';
-import { iActuator } from '../../server';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iActuator } from '../../devices/baseDeviceInterfaces';
 
 export class ActuatorSetStateCommand extends BaseCommand {
   /** @inheritDoc */

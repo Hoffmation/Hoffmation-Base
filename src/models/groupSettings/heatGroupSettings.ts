@@ -1,7 +1,7 @@
-import { Utils } from '../../server';
 import { TemperatureSettings } from '../temperatureSettings';
 import { iIdHolder } from '../iIdHolder';
 import { GroupSettings } from './groupSettings';
+import { Utils } from '../../utils';
 
 export class HeatGroupSettings extends GroupSettings {
   /**

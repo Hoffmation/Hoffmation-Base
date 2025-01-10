@@ -1,5 +1,5 @@
-import { Utils } from '../../server';
 import { DeviceSettings } from './deviceSettings';
+import { Utils } from '../../utils/utils';
 
 export class HandleSettings extends DeviceSettings {
   /**

@@ -13,8 +13,8 @@ notifications or really just any code or service you want the devices to connect
 Built on other open source projects that take care of the technical level, this project is made to provide a tool for
 the coding on the logical level. It is built as base to write automation code independent of the ioBroker user interface
 and currently provides support for the interaction with **devices** specified in [
-`src/server/devices`](src/server/devices) and **services** that can be found in [
-`src/server/services`](src/server/devices).
+`src/server/devices`](src/devices) and **services** that can be found in [
+`src/server/services`](src/devices).
 
 Those include, but are not limited to:
 
