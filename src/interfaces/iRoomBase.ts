@@ -1,8 +1,9 @@
-import { RoomSetLightTimeBasedCommand, RoomSettingsController } from '../models';
+import { RoomSetLightTimeBasedCommand } from '../command';
 import { DeviceCluster, HeatGroup, LightGroup, SmokeGroup, SpeakerGroup, WaterGroup, WindowGroup } from '../devices';
 import { iIdHolder, ITimeCallback } from './index';
 import { iPresenceGroup } from './groups/IPresenceGroup';
 import { LogLevel } from '../enums';
+import { RoomSettingsController } from '../models';
 
 /**
  * This interface represents a room with it's base functionality.

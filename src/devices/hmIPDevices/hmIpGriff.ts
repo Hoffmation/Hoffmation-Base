@@ -4,7 +4,7 @@ import { Battery, HandleSensor } from '../sharedFunctions';
 import { HandleSettings } from '../deviceSettings';
 import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../enums';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { HandleChangeAction } from '../../models';
+import { HandleChangeAction } from '../../action';
 import { Window } from '../groups';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {

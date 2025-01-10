@@ -1,12 +1,5 @@
 import { iHandleSensor, iShutter, iVibrationSensor } from '../../interfaces';
-import {
-  HandleChangeAction,
-  RoomSetLightTimeBasedCommand,
-  ShutterPositionChangedAction,
-  ShutterSetLevelCommand,
-  WindowRestoreDesiredPositionCommand,
-  WindowSetDesiredPositionCommand,
-} from '../../models';
+import { HandleChangeAction, ShutterPositionChangedAction } from '../../action';
 import { BaseGroup } from './base-group';
 import {
   CommandSource,
@@ -21,6 +14,12 @@ import { DeviceList } from '../device-list';
 import { ZigbeeMagnetContact } from '../zigbee';
 import { ShutterService, TimeCallbackService } from '../../services';
 import { Utils } from '../../utils';
+import {
+  RoomSetLightTimeBasedCommand,
+  ShutterSetLevelCommand,
+  WindowRestoreDesiredPositionCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../command';
 
 export class Window extends BaseGroup {
   private _desiredPosition: number = 0;

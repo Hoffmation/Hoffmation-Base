@@ -3,7 +3,7 @@ import {
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../../models';
+} from '../../command';
 import { ShellyDevice } from './shellyDevice';
 import { iActuator } from '../../interfaces';
 import { BlockAutomaticHandler } from '../../services';

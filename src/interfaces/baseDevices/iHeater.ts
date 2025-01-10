@@ -2,7 +2,7 @@
 import { iTemperatureSensor } from './iTemperatureSensor';
 import { iRoomDevice } from './iRoomDevice';
 import { iDisposable } from '../iDisposeable';
-import { HandleChangeAction } from '../../models';
+import { HandleChangeAction } from '../../action';
 import { iHeaterSettings } from '../settings';
 
 /**

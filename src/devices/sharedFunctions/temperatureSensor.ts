@@ -1,4 +1,4 @@
-import { TemperatureSensorChangeAction } from '../../models';
+import { TemperatureSensorChangeAction } from '../../action';
 import { iJsonOmitKeys, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';

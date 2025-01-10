@@ -4,7 +4,7 @@ import {
   BlockAutomaticLiftBlockCommand,
   BlockAutomaticUntilCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../models';
+} from '../command';
 import { CollisionSolving, CommandSource, LogDebugType, LogLevel } from '../enums';
 import { Utils } from '../utils';
 

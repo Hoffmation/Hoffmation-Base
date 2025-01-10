@@ -7,12 +7,14 @@ import {
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
 import { BaseGroup } from './base-group';
-import { BlockAutomaticCommand, HandleChangeAction, HeatGroupSettings, TemperatureSettings } from '../../models';
+import { HeatGroupSettings, TemperatureSettings } from '../../models';
 import { CommandSource, DeviceClusterType, GroupType, LogLevel } from '../../enums';
 import { DeviceList } from '../device-list';
 import { AcDevice } from '../../services';
 import { API } from '../../api';
 import { Utils } from '../../utils';
+import { HandleChangeAction } from '../../action';
+import { BlockAutomaticCommand } from '../../command';
 
 export class HeatGroup extends BaseGroup {
   /** @inheritDoc */

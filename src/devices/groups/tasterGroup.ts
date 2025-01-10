@@ -2,7 +2,7 @@ import { BaseGroup } from './base-group';
 import { ButtonPressType, CommandSource, DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
 import { iButtonSwitch } from '../../interfaces';
-import { ActuatorSetStateCommand, WindowSetDesiredPositionCommand } from '../../models';
+import { ActuatorSetStateCommand, WindowSetDesiredPositionCommand } from '../../command';
 import { SettingsService } from '../../services';
 import { SpeakerGroup } from './speakerGroup';
 import { HeatGroup } from './heatGroup';

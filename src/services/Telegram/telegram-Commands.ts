@@ -5,7 +5,7 @@ import { TelegramMessageCallback } from './telegramMessageCalback';
 import { Devices, Griffe, HeatGroup, Heizgruppen, HmIpTaster, ZigbeeAquaraVibra } from '../../devices';
 import { RoomService } from '../room-service';
 import { ShutterService } from '../ShutterService';
-import { FloorSetAllShuttersCommand } from '../../models';
+import { FloorSetAllShuttersCommand } from '../../command';
 
 export class TelegramCommands {
   public static initialize(): void {

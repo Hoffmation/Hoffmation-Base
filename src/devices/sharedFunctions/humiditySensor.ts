@@ -1,5 +1,5 @@
 import { iHumiditySensor, iJsonOmitKeys, UNDEFINED_TEMP_VALUE } from '../../interfaces';
-import { HumiditySensorChangeAction } from '../../models';
+import { HumiditySensorChangeAction } from '../../action';
 import { Utils } from '../../utils';
 import { Persistence } from '../../services';
 

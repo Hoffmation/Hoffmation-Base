@@ -1,6 +1,6 @@
 import { iBaseDevice } from './iBaseDevice';
 import { BlockAutomaticHandler } from '../../services';
-import { RestoreTargetAutomaticValueCommand } from '../../models';
+import { RestoreTargetAutomaticValueCommand } from '../../command';
 
 /**
  * This interface represents a device which automatic action can be temporarily disabled.

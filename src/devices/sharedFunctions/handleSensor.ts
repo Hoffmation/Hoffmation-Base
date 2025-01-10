@@ -1,6 +1,6 @@
 import { iDisposable, iHandleSensor, iJsonOmitKeys } from '../../interfaces';
 import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
-import { HandleChangeAction } from '../../models';
+import { HandleChangeAction } from '../../action';
 import { HandleSettings } from '../deviceSettings';
 import { HeatGroup, Window } from '../groups';
 import { Utils } from '../../utils';

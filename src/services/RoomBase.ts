@@ -15,11 +15,8 @@ import {
 import {
   ActuatorSetStateCommand,
   LightGroupSwitchTimeConditionalCommand,
-  RoomInfo,
   RoomSetLightTimeBasedCommand,
-  RoomSettingsController,
-  TimeCallback,
-} from '../models';
+} from '../command';
 import { iIdHolder, iRoomBase, ITimeCallback, iTrilaterationPoint } from '../interfaces';
 import { RoomService } from './room-service';
 import { Utils } from '../utils';
@@ -28,6 +25,7 @@ import { ServerLogService } from '../logging';
 import { Persistence } from './dbo';
 import { TimeCallbackService } from './time-callback-service';
 import { ShutterService } from './ShutterService';
+import { RoomInfo, RoomSettingsController, TimeCallback } from '../models';
 
 export class RoomBase implements iRoomBase, iIdHolder {
   /**

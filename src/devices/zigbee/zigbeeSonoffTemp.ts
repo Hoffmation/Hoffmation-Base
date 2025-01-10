@@ -1,9 +1,5 @@
 import { iBatteryDevice, iHumiditySensor, iTemperatureSensor } from '../../interfaces';
-import {
-  BatteryLevelChangeAction,
-  HumiditySensorChangeAction,
-  TemperatureSensorChangeAction,
-} from '../../models/action';
+import { BatteryLevelChangeAction, HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
 import { ZigbeeDevice } from './BaseDevices';
 import { Battery, HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';

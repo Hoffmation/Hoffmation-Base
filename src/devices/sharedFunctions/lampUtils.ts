@@ -7,7 +7,7 @@ import {
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
-} from '../../models';
+} from '../../command';
 import { iActuator, iDimmableLamp, iLamp } from '../../interfaces';
 import { Utils } from '../../utils';
 import { CommandSource, CommandType, LogDebugType, LogLevel, TimeOfDay } from '../../enums';

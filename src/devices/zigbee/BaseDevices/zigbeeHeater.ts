@@ -7,8 +7,9 @@ import { DeviceCapability, DeviceType, LogLevel, TimeCallbackType } from '../../
 import { PIDController } from '../../../liquid-pid';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { TimeCallbackService } from '../../../services';
-import { HandleChangeAction, TemperatureSensorChangeAction, TimeCallback } from '../../../models';
+import { HandleChangeAction, TemperatureSensorChangeAction } from '../../../action';
 import { HeatGroup } from '../../groups';
+import { TimeCallback } from '../../../models';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   /** @inheritDoc */

@@ -7,7 +7,7 @@ import {
   RoomSetLightTimeBasedCommand,
   WindowSetDesiredPositionCommand,
   WledSetLightCommand,
-} from '../../models';
+} from '../../command';
 import { BaseGroup } from '../../devices';
 import { RingStorage, Utils } from '../../utils';
 import { CommandSource, LogLevel } from '../../enums';

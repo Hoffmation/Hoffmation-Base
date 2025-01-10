@@ -1,7 +1,7 @@
 import { iBattery, iBatteryDevice, iJsonOmitKeys } from '../../interfaces';
 import { Utils } from '../../utils';
 import { Persistence } from '../../services';
-import { BatteryLevelChangeAction } from '../../models';
+import { BatteryLevelChangeAction } from '../../action';
 import { VictronDeviceSettings } from '../deviceSettings';
 
 export class Battery implements iJsonOmitKeys, iBattery {

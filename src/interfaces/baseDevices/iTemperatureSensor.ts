@@ -1,6 +1,6 @@
 import { iRoomDevice } from './iRoomDevice';
 import { TemperatureSensor } from '../../devices';
-import { TemperatureSensorChangeAction } from '../../models';
+import { TemperatureSensorChangeAction } from '../../action';
 
 export const UNDEFINED_TEMP_VALUE = -99;
 

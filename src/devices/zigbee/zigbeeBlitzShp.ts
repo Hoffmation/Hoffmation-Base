@@ -4,7 +4,8 @@ import { iExcessEnergyConsumer } from '../../interfaces';
 import { iLoadMeter } from '../../interfaces/baseDevices/iLoadMeter';
 import { ActuatorSettings } from '../deviceSettings';
 import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
-import { ActuatorSetStateCommand, ExcessEnergyConsumerSettings } from '../../models';
+import { ActuatorSetStateCommand } from '../../command';
+import { ExcessEnergyConsumerSettings } from '../../models';
 
 export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsumer, iLoadMeter {
   /** @inheritDoc */

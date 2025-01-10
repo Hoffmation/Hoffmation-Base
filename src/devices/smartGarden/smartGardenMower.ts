@@ -3,7 +3,7 @@ import {
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../../models';
+} from '../../command';
 import { ActuatorSettings } from '../deviceSettings';
 import { SmartGardenDevice } from './smartGardenDevice';
 import { iActuator } from '../../interfaces';

@@ -1,5 +1,5 @@
 import { iRoomDevice } from './iRoomDevice';
-import { MotionSensorAction } from '../../models';
+import { MotionSensorAction } from '../../action';
 import { iMotionSensorSettings } from '../deviceSettings';
 
 /**

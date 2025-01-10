@@ -1,15 +1,13 @@
 import {
-  HandleChangeAction,
   RoomRestoreShutterPositionCommand,
   RoomSetLightTimeBasedCommand,
   ShutterSetLevelCommand,
   ShutterSunriseUpCommand,
   ShutterSunsetDownCommand,
-  TimeCallback,
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
   WindowSetRolloByWeatherStatusCommand,
-} from '../../models';
+} from '../../command';
 import { ShutterService, TimeCallbackService } from '../../services';
 import { BaseGroup } from './base-group';
 import { Window } from './Window';
@@ -27,6 +25,8 @@ import { Utils } from '../../utils';
 import { ShutterSettings } from '../deviceSettings';
 import { WeatherService } from '../../services/weather';
 import { iRoomBase } from '../../interfaces';
+import { TimeCallback } from '../../models';
+import { HandleChangeAction } from '../../action';
 
 export class WindowGroup extends BaseGroup {
   /**

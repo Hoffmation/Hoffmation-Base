@@ -5,7 +5,7 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { PollyService, Res, RoomService, SonosService } from '../../services';
 import { Utils } from '../../utils';
-import { FloorSetAllShuttersCommand } from '../../models';
+import { FloorSetAllShuttersCommand } from '../../command';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, iSmokeDetectorDevice {
   /** @inheritDoc */

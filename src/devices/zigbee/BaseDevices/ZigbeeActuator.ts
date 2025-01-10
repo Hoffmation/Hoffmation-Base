@@ -3,7 +3,7 @@ import {
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../../../models/command';
+} from '../../../command';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iActuator } from '../../../interfaces';
 import { BlockAutomaticHandler } from '../../../services';

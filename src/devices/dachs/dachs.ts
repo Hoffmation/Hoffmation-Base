@@ -1,14 +1,10 @@
 import _ from 'lodash';
 import {
   ActuatorChangeAction,
-  ActuatorSetStateCommand,
-  ActuatorToggleCommand,
-  ActuatorWriteStateToDeviceCommand,
   BaseAction,
   BatteryLevelChangeAction,
-  RestoreTargetAutomaticValueCommand,
   TemperatureSensorChangeAction,
-} from '../../models';
+} from '../../action';
 import {
   iActuator,
   iBaseDevice,
@@ -38,6 +34,12 @@ import { API } from '../../api';
 import { ServerLogService } from '../../logging';
 import { LampUtils } from '../sharedFunctions';
 import { SunTimeOffsets } from '../../models/sun-time-offsets';
+import {
+  ActuatorSetStateCommand,
+  ActuatorToggleCommand,
+  ActuatorWriteStateToDeviceCommand,
+  RestoreTargetAutomaticValueCommand,
+} from '../../command';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */

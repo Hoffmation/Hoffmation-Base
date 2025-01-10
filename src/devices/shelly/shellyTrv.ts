@@ -7,8 +7,9 @@ import { HeaterSettings } from '../deviceSettings';
 import { Utils } from '../../utils';
 import { PIDController } from '../../liquid-pid';
 import { TimeCallbackService } from '../../services';
-import { HandleChangeAction, HeatGroupSettings, TemperatureSensorChangeAction, TimeCallback } from '../../models';
+import { HandleChangeAction, TemperatureSensorChangeAction } from '../../action';
 import { HeatGroup } from '../groups';
+import { HeatGroupSettings, TimeCallback } from '../../models';
 
 export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSensor, iBatteryDevice {
   /** @inheritDoc */

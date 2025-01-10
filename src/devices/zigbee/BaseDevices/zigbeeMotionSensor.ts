@@ -2,10 +2,11 @@ import { ZigbeeDevice } from './zigbeeDevice';
 import { iBatteryDevice, iMotionSensor } from '../../../interfaces';
 import { Battery } from '../../sharedFunctions';
 import { MotionSensorSettings } from '../../deviceSettings';
-import { CountToday, MotionSensorAction } from '../../../models';
+import { CountToday } from '../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
 import { Utils } from '../../../utils';
+import { MotionSensorAction } from '../../../action';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
   /** @inheritDoc */

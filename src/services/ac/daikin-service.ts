@@ -6,7 +6,7 @@ import { AcDeviceType, CommandSource, LogLevel } from '../../enums';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import { SettingsService } from '../settings-service';
 import { ServerLogService } from '../../logging';
-import { BlockAutomaticCommand } from '../../models';
+import { BlockAutomaticCommand } from '../../command';
 import { Router } from '../network';
 import { Utils } from '../../utils';
 import { Devices } from '../../devices';

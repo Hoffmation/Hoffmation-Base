@@ -3,7 +3,7 @@ import {
   PresenceGroupAnyMovementAction,
   PresenceGroupFirstEnterAction,
   PresenceGroupLastLeftAction,
-} from '../../models';
+} from '../../action';
 import { iMotionSensor } from '../index';
 
 /**

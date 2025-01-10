@@ -4,10 +4,11 @@ import { iShutter } from '../../interfaces';
 import { ShutterSettings } from '../deviceSettings';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
-import { ShutterPositionChangedAction, ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../models';
+import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
 import { Utils } from '../../utils';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { Window } from '../groups';
+import { ShutterPositionChangedAction } from '../../action';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */

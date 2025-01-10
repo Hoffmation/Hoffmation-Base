@@ -1,4 +1,4 @@
-import { BatteryLevelChangeAction } from '../../models';
+import { BatteryLevelChangeAction } from '../../action';
 import { iBatteryDevice } from '../../interfaces';
 
 /**

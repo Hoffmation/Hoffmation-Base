@@ -3,7 +3,7 @@ import {
   BlockAutomaticCommand,
   DimmerSetLightCommand,
   LampSetTimeBasedCommand,
-} from '../../../models/command';
+} from '../../../command';
 import { ZigbeeLamp } from './zigbeeLamp';
 import { iDimmableLamp, iTemporaryDisableAutomatic } from '../../../interfaces';
 import { DimmerSettings } from '../../deviceSettings';

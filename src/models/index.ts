@@ -1,5 +1,3 @@
-export * from './action';
-export * from './command';
 export * from './groupSettings';
 export * from './persistence';
 export * from './rooms';

@@ -1,6 +1,6 @@
 // TODO: Add missing Comments
 import { iActuator } from './iActuator';
-import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../models';
+import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../command';
 
 /**
  * This interface represents a lamp device.

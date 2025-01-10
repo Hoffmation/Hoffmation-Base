@@ -7,7 +7,7 @@ import {
   LampToggleLightCommand,
   LedSetLightCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../../models/command';
+} from '../../command';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
 import { GoveeDeviceData, iRoomBase, iTemporaryDisableAutomatic } from '../../interfaces';

@@ -2,7 +2,7 @@ import { ZigbeeActuator } from './ZigbeeActuator';
 import { iLamp, iTemporaryDisableAutomatic } from '../../../interfaces';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../../enums';
-import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models';
+import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../command';
 import { LampUtils } from '../../sharedFunctions';
 
 export abstract class ZigbeeLamp extends ZigbeeActuator implements iLamp, iTemporaryDisableAutomatic {

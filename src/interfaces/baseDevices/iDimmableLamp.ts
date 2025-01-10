@@ -1,6 +1,6 @@
 import { iLamp } from './iLamp';
 import { iDimmerSettings } from '../deviceSettings';
-import { DimmerSetLightCommand, LampToggleLightCommand } from '../../models';
+import { DimmerSetLightCommand, LampToggleLightCommand } from '../../command';
 
 /**
  * This interface represents a dimmable lamp device.

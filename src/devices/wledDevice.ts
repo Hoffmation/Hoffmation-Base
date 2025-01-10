@@ -8,7 +8,7 @@ import {
   LampToggleLightCommand,
   RestoreTargetAutomaticValueCommand,
   WledSetLightCommand,
-} from '../models';
+} from '../command';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
 import { iDimmableLamp } from '../interfaces';

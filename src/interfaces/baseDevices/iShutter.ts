@@ -1,7 +1,6 @@
 import { iRoomDevice } from './iRoomDevice';
-import { ShutterSettings } from '../../devices/deviceSettings';
-import { ShutterSetLevelCommand } from '../../models';
-import { Window } from '../../devices';
+import { ShutterSettings, Window } from '../../devices';
+import { ShutterSetLevelCommand } from '../../command';
 
 /**
  * This interface represents a shutter device.

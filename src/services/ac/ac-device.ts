@@ -19,17 +19,14 @@ import {
   LogLevel,
 } from '../../enums';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import {
-  BlockAutomaticCommand,
-  ExcessEnergyConsumerSettings,
-  PresenceGroupFirstEnterAction,
-  PresenceGroupLastLeftAction,
-} from '../../models';
+import { BlockAutomaticCommand } from '../../command';
 import { SettingsService } from '../settings-service';
 import { WeatherService } from '../weather';
 import { Utils } from '../../utils';
 import { Persistence } from '../dbo';
 import { ServerLogService } from '../../logging';
+import { ExcessEnergyConsumerSettings } from '../../models';
+import { PresenceGroupFirstEnterAction, PresenceGroupLastLeftAction } from '../../action';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   /** @inheritDoc */

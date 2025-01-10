@@ -5,7 +5,7 @@ import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
 import { ZigbeeDevice } from './zigbeeDevice';
 import { Battery, HandleSensor } from '../../sharedFunctions';
 import { Window } from '../../groups';
-import { HandleChangeAction } from '../../../models';
+import { HandleChangeAction } from '../../../action';
 
 export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, iBatteryDevice {
   /** @inheritDoc */

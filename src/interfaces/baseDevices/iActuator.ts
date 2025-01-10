@@ -1,4 +1,4 @@
-import { ActuatorSetStateCommand, ActuatorToggleCommand, ActuatorWriteStateToDeviceCommand } from '../../models';
+import { ActuatorSetStateCommand, ActuatorToggleCommand, ActuatorWriteStateToDeviceCommand } from '../../command';
 import { iRoomDevice } from './iRoomDevice';
 import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 import { iActuatorSettings } from '../deviceSettings';

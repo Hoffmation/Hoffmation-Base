@@ -3,11 +3,8 @@ import { iHumiditySensor, iTemperatureSensor } from '../../interfaces';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
-import {
-  HumiditySensorChangeAction,
-  TemperatureSensorChangeAction,
-  WindowSetDesiredPositionCommand,
-} from '../../models';
+import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
+import { WindowSetDesiredPositionCommand } from '../../command';
 
 /**
  * A smart window handle with integrated temperature and humidity sensor.

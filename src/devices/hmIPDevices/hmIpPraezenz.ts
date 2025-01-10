@@ -2,11 +2,12 @@ import { HmIPDevice } from './hmIpDevice';
 import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
 import { MotionSensorSettings } from '../deviceSettings';
-import { CountToday, MotionSensorAction } from '../../models';
+import { CountToday } from '../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { Persistence } from '../../services';
 import { Utils } from '../../utils';
+import { MotionSensorAction } from '../../action';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
   /** @inheritDoc */

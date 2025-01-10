@@ -1,6 +1,6 @@
 import { Devices, Window } from '../devices';
 import { iShutter } from '../interfaces';
-import { ShutterSetLevelCommand } from '../models';
+import { ShutterSetLevelCommand } from '../command';
 import { API } from '../api';
 import { DeviceType } from '../enums';
 

@@ -6,15 +6,15 @@ import {
   LampSetTimeBasedCommand,
   LedSetLightCommand,
   LightGroupSwitchTimeConditionalCommand,
-  TimeCallback,
   WledSetLightCommand,
-} from '../../models';
+} from '../../command';
 import { TimeCallbackService } from '../../services';
 import { Utils } from '../../utils';
 import { DeviceList } from '../device-list';
 import { BaseGroup } from './base-group';
 import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
 import { WledDevice } from '../wledDevice';
+import { TimeCallback } from '../../models';
 
 export class LightGroup extends BaseGroup {
   /**

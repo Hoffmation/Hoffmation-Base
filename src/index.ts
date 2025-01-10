@@ -32,6 +32,8 @@ import { Utils } from './utils';
 import { WeatherService } from './services/weather';
 
 export * from './enums';
+export * from './action';
+export * from './command';
 export * from './interfaces';
 export * from './ioBroker';
 export * from './models';

@@ -6,7 +6,7 @@ import {
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../../models/command';
+} from '../../command';
 import { HmIPDevice } from './hmIpDevice';
 import { iLamp, iTemporaryDisableAutomatic } from '../../interfaces';
 import { ActuatorSettings } from '../deviceSettings';

@@ -13,12 +13,11 @@ import {
   BlockAutomaticCommand,
   BlockAutomaticLiftBlockCommand,
   DimmerSetLightCommand,
-  GroupSettings,
   LampSetLightCommand,
   LedSetLightCommand,
   ShutterSetLevelCommand,
   WindowSetDesiredPositionCommand,
-} from '../models';
+} from '../command';
 import {
   iAcDevice,
   iActuator,
@@ -37,6 +36,7 @@ import {
 import { LogObject, ServerLogService } from '../logging';
 import { DaikinService, RoomService } from '../services';
 import { iLedRgbCct } from '../interfaces/baseDevices/iLedRgbCct';
+import { GroupSettings } from '../models';
 
 export class API {
   /**

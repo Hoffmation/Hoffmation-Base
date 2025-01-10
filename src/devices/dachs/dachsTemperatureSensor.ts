@@ -9,7 +9,7 @@ import { Utils } from '../../utils';
 import { API } from '../../api';
 import { ServerLogService } from '../../logging';
 import { OwnSonosDevice, Persistence } from '../../services';
-import { TemperatureSensorChangeAction } from '../../models';
+import { TemperatureSensorChangeAction } from '../../action';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */

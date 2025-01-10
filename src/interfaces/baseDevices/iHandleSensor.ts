@@ -1,7 +1,7 @@
 import { iRoomDevice } from './iRoomDevice';
 import { WindowPosition } from '../../enums';
 import { HandleSensor, Window } from '../../devices';
-import { HandleChangeAction } from '../../models';
+import { HandleChangeAction } from '../../action';
 
 /**
  * Interface for Handle Sensors.

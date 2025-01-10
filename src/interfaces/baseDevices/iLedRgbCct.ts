@@ -1,6 +1,6 @@
 import { iDimmableLamp } from './iDimmableLamp';
 import { LedSettings } from '../../devices';
-import { LedSetLightCommand } from '../../models';
+import { LedSetLightCommand } from '../../command';
 
 /**
  * Interface for RGB-CCT LED-Devices.

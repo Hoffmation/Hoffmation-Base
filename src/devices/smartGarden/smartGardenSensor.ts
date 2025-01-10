@@ -3,7 +3,7 @@ import { iHumiditySensor, iTemperatureSensor } from '../../interfaces';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceType } from '../../enums';
-import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../models';
+import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
 
 export class SmartGardenSensor extends SmartGardenDevice implements iHumiditySensor, iTemperatureSensor {
   /** @inheritDoc */

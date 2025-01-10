@@ -6,13 +6,8 @@ import { HeaterSettings } from '../deviceSettings';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { DeviceCapability, DeviceClusterType, DeviceType, LogLevel, TimeCallbackType } from '../../enums';
 import { TimeCallbackService } from '../../services';
-import {
-  HandleChangeAction,
-  HeatGroupSettings,
-  HumiditySensorChangeAction,
-  TemperatureSensorChangeAction,
-  TimeCallback,
-} from '../../models';
+import { HeatGroupSettings, TimeCallback } from '../../models';
+import { HandleChangeAction, HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../action';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */
