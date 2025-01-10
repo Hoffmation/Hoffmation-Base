@@ -1,5 +1,5 @@
 import { BaseAction } from './baseAction';
-import { CommandType } from '../command';
+import { CommandType } from '../../enums';
 
 export class PresenceGroupFirstEnterAction extends BaseAction {
   /** @inheritDoc */

@@ -1,7 +1,6 @@
 import { ZigbeeAquaraWater } from '../zigbee';
 import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
+import { DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
 
 export class WaterGroup extends BaseGroup {

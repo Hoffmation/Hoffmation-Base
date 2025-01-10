@@ -1,7 +1,5 @@
 import { BaseCommand } from './baseCommand';
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { TimeOfDay } from '../timeCallback';
+import { CommandSource, CommandType, TimeOfDay } from '../../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LampSetTimeBasedCommand extends BaseCommand {

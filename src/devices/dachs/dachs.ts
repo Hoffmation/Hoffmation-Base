@@ -1,38 +1,47 @@
-import { DeviceCapability, DeviceInfo, Devices, iActuator, iBaseDevice, iBatteryDevice, LampUtils } from '../index';
 import _ from 'lodash';
-import { DachsHttpClient, DachsInfluxClient } from './lib';
-import { iFlattenedCompleteResponse } from './interfaces';
-import { DachsTemperatureSensor } from './dachsTemperatureSensor';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { iDachsSettings } from '../../server/config/iDachsSettings';
-import { Utils } from '../../utils/utils';
-import { HeatingMode } from '../../server';
-import { RoomBase } from '../../services/RoomBase';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
 import {
+  ActuatorChangeAction,
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
-  CommandSource,
-  RestoreTargetAutomaticValueCommand,
-} from '../../models/command';
-import { DachsDeviceSettings } from '../../models/deviceSettings';
-import { DeviceType } from '../deviceType';
-import {
-  ActuatorChangeAction,
   BaseAction,
   BatteryLevelChangeAction,
+  RestoreTargetAutomaticValueCommand,
   TemperatureSensorChangeAction,
-} from '../../models/action';
-import { TimeOfDay } from '../../models/timeCallback';
-import { API } from '../../services/api';
-import { OwnSonosDevice } from '../../services/Sonos';
-import { SettingsService } from '../../services/settings-service';
-import { SunTimeOffsets, TimeCallbackService } from '../../services/time-callback-service';
+} from '../../models';
+import {
+  iActuator,
+  iBaseDevice,
+  iBatteryDevice,
+  iDachsDeviceSettings,
+  iDachsSettings,
+  iFlattenedCompleteResponse,
+  iRoomBase,
+} from '../../interfaces';
+import { DachsDeviceSettings } from '../deviceSettings';
+import { BlockAutomaticHandler, Persistence, SettingsService, TimeCallbackService } from '../../services';
+import {
+  CommandSource,
+  DeviceCapability,
+  DeviceType,
+  HeatingMode,
+  LogDebugType,
+  LogLevel,
+  TimeOfDay,
+} from '../../enums';
+import { DachsTemperatureSensor } from './dachsTemperatureSensor';
+import { DachsHttpClient, DachsInfluxClient } from './lib';
+import { DeviceInfo } from '../DeviceInfo';
+import { Devices } from '../devices';
+import { Utils } from '../../utils';
+import { API } from '../../api';
+import { ServerLogService } from '../../logging';
+import { LampUtils } from '../sharedFunctions';
+import { SunTimeOffsets } from '../../models/sun-time-offsets';
 
 export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
-  public settings: DachsDeviceSettings = new DachsDeviceSettings();
+  public settings: iDachsDeviceSettings = new DachsDeviceSettings();
   /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   /** @inheritDoc */
@@ -132,7 +141,7 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   /** @inheritDoc */
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
@@ -157,7 +166,7 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   /** @inheritDoc */
-  public toJSON(): Partial<OwnSonosDevice> {
+  public toJSON(): Partial<Dachs> {
     return Utils.jsonFilter(
       _.omit(this, [
         'room',
@@ -178,7 +187,7 @@ export class Dachs implements iBaseDevice, iActuator {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,
@@ -188,6 +197,11 @@ export class Dachs implements iBaseDevice, iActuator {
   /** @inheritDoc */
   public loadDeviceSettings(): void {
     this.settings.initializeFromDb(this);
+  }
+
+  /** @inheritDoc */
+  public persist(): void {
+    Persistence.dbo?.persistActuator(this);
   }
 
   private loadData(): void {
@@ -208,13 +222,13 @@ export class Dachs implements iBaseDevice, iActuator {
           this._influxClient.addMeasurementToQueue(key, value ? '1' : '0');
         }
         this._influxClient.flush();
-        const isDachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
+        const isDachsOn = this.fetchedData!['Hka_Mw1.usDrehzahl'] >= 1;
         const didDachsChange = this._dachsOn !== isDachsOn;
         this._dachsOn = isDachsOn;
-        this._dachsOn = this.fetchedData['Hka_Mw1.usDrehzahl'] >= 1;
-        this._tempWarmWater = this.fetchedData['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
+        this._dachsOn = this.fetchedData!['Hka_Mw1.usDrehzahl'] >= 1;
+        this._tempWarmWater = this.fetchedData!['Hka_Mw1.Temp.sbZS_Warmwasser'] ?? 0;
         this.warmWaterSensor.update(this._tempWarmWater);
-        this._tempHeatStorage = this.fetchedData['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
+        this._tempHeatStorage = this.fetchedData!['Hka_Mw1.Temp.sbFuehler1'] ?? 0;
         this.heatStorageTempSensor.update(this._tempHeatStorage);
         if (didDachsChange) {
           this.onDachsRunningStateChange(new ActuatorChangeAction(this));
@@ -224,11 +238,6 @@ export class Dachs implements iBaseDevice, iActuator {
       .catch((error) => {
         this.log(LogLevel.Error, `Error while fetching data: ${error}`, LogDebugType.DachsUnreach);
       });
-  }
-
-  /** @inheritDoc */
-  public persist(): void {
-    Utils.dbo?.persistActuator(this);
   }
 
   /** @inheritDoc */

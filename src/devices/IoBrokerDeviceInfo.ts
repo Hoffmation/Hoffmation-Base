@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import _ from 'lodash';
 import { DeviceInfo } from './DeviceInfo';
-import { deviceConfig } from '../models/deviceConfig';
+import { iDeviceConfig } from '../interfaces/iDeviceConfig';
 
 export class IoBrokerDeviceInfo extends DeviceInfo {
   public devID: string;
@@ -9,7 +9,7 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
   public deviceRoomIndex: number;
   public type: 'device' | 'channel' | 'state';
   public fullID: string;
-  public devConf: deviceConfig;
+  public devConf: iDeviceConfig;
 
   public static idSplitter(id: string): string[] {
     const split = id.split('.');
@@ -32,7 +32,7 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
    * @param deviceRoomIndex - Index of this device in regards to the devicetype.
    */
   public constructor(
-    pDevConf: deviceConfig,
+    pDevConf: iDeviceConfig,
     deviceId: string,
     deviceType: string,
     room: string,
@@ -49,7 +49,7 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
     this.room = room;
   }
 
-  public static byStateJsSplit(pDevConf: deviceConfig): IoBrokerDeviceInfo {
+  public static byStateJsSplit(pDevConf: iDeviceConfig): IoBrokerDeviceInfo {
     const nameSplit: string[] = (pDevConf.common!.name as string).split('-');
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pDevConf._id);
     /**
@@ -67,7 +67,7 @@ export class IoBrokerDeviceInfo extends DeviceInfo {
     return new IoBrokerDeviceInfo(pDevConf, idSplit[2], deviceType, room, deviceRoomIndex);
   }
 
-  public static byDeviceConfig(pDevConf: deviceConfig): IoBrokerDeviceInfo {
+  public static byDeviceConfig(pDevConf: iDeviceConfig): IoBrokerDeviceInfo {
     const nameSplit: string[] = (pDevConf.common!.name as string).split('-');
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pDevConf._id);
     /**

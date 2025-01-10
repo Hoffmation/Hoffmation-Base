@@ -1,8 +1,7 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { iDisposable } from '../../interfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
+import { DeviceType, LogLevel } from '../../enums';
 
 export class TuyaDevice extends IoBrokerBaseDevice implements iDisposable {
   private _lastUpdate: Date = new Date(0);

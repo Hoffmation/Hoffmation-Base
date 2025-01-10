@@ -1,9 +1,10 @@
-import { Utils } from '../../utils/utils';
+import { Utils } from '../../utils';
+import { iTrilaterationPoint } from '../../interfaces';
 
-export class TrilaterationPoint {
+export class TrilaterationPoint implements iTrilaterationPoint {
   public static getPointsInRange(
-    a: TrilaterationPoint,
-    b: TrilaterationPoint,
+    a: iTrilaterationPoint,
+    b: iTrilaterationPoint,
     roomName: string = '',
   ): TrilaterationPoint[] {
     const points: TrilaterationPoint[] = [];
@@ -31,11 +32,11 @@ export class TrilaterationPoint {
     return `${this.x}-${this.y}-${this.z}`;
   }
 
-  public getDistance(other: TrilaterationPoint): number {
+  public getDistance(other: iTrilaterationPoint): number {
     return Math.sqrt((this.x - other.x) ** 2 + (this.y - other.y) ** 2 + (this.z - other.z) ** 2);
   }
 
-  public getDot5Distance(other: TrilaterationPoint): number {
+  public getDot5Distance(other: iTrilaterationPoint): number {
     return Utils.roundDot5(this.getDistance(other));
   }
 }

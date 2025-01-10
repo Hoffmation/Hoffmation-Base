@@ -1,5 +1,5 @@
-import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
-import { Utils } from '../../utils/utils';
+import { Utils } from '../../utils';
+import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
 
 export class TrackedDistanceData {
   /**

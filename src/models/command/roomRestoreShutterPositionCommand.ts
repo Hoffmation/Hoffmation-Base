@@ -1,6 +1,5 @@
-import { CommandSource } from './commandSource';
 import { BaseCommand } from './baseCommand';
-import { CommandType } from './commandType';
+import { CommandSource, CommandType } from '../../enums';
 
 export class RoomRestoreShutterPositionCommand extends BaseCommand {
   /** @inheritDoc */

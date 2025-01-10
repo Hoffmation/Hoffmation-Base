@@ -1,6 +1,6 @@
-import { CommandType } from '../command';
 import { BaseAction } from './baseAction';
-import { iMotionSensor } from '../../devices';
+import { CommandType } from '../../enums';
+import { iMotionSensor } from '../../interfaces';
 
 export class MotionSensorAction extends BaseAction {
   /** @inheritDoc */

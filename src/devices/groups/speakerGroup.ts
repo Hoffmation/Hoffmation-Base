@@ -1,9 +1,8 @@
+import { DeviceClusterType, GroupType } from '../../enums';
 import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
 import { DeviceList } from '../device-list';
-import { iSpeaker } from '../baseDeviceInterfaces';
-import { Utils } from '../../utils/utils';
+import { iSpeaker } from '../../interfaces';
+import { Utils } from '../../utils';
 
 export class SpeakerGroup extends BaseGroup {
   private _playing: boolean = false;

@@ -1,11 +1,11 @@
-import { ZigbeeSwitch } from './BaseDevices';
-import { Button, ButtonCapabilities, ButtonPressType } from '../button';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ZigbeeSwitch } from './BaseDevices';
+import { Button } from '../button';
+import { ButtonPressType, DeviceType, LogLevel } from '../../enums';
+import { iButtonCapabilities } from '../../interfaces';
 
 export class ZigbeeAqaraOpple3Switch extends ZigbeeSwitch {
-  private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
+  private static readonly BUTTON_CAPABILLITIES: iButtonCapabilities = {
     shortPress: true,
     longPress: true,
     doublePress: true,

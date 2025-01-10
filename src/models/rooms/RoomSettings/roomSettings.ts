@@ -1,6 +1,6 @@
 import { ObjectSettings } from '../../objectSettings';
-import { iTimePair } from '../../../server';
-import { SettingsService } from '../../../services/settings-service';
+import { SettingsService } from '../../../services';
+import { iTimePair } from '../../../interfaces';
 
 export class RoomSettings extends ObjectSettings {
   /**

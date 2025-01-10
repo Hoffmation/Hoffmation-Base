@@ -1,10 +1,8 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
-import { iLamp } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { ZigbeeLamp } from './BaseDevices';
-import { DeviceCapability } from '../DeviceCapability';
-import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
+import { iLamp } from '../../interfaces';
+import { iLoadMeter } from '../../interfaces/baseDevices/iLoadMeter';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class ZigbeeUbisysLampe extends ZigbeeLamp implements iLamp, iLoadMeter {
   protected readonly _actuatorOnStateIdState: string;

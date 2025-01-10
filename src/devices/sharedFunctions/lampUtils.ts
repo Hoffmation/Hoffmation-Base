@@ -1,20 +1,17 @@
-import { Utils } from '../../utils/utils';
-import { iActuator, iDimmableLamp, iLamp } from '../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../logging';
-import { ActuatorSetStateCommand } from '../../models/command/actuatorSetStateCommand';
-import { CommandSource } from '../../models/command/commandSource';
-import { TimeOfDay } from '../../models/timeCallback';
 import {
+  ActuatorSetStateCommand,
   ActuatorWriteStateToDeviceCommand,
   BlockAutomaticCommand,
   BlockAutomaticLiftBlockCommand,
-  CommandType,
   DimmerSetLightCommand,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LampToggleLightCommand,
-} from '../../models/command';
-import { TimeCallbackService } from '../../services/time-callback-service';
+} from '../../models';
+import { iActuator, iDimmableLamp, iLamp } from '../../interfaces';
+import { Utils } from '../../utils';
+import { CommandSource, CommandType, LogDebugType, LogLevel, TimeOfDay } from '../../enums';
+import { TimeCallbackService } from '../../services';
 
 export class LampUtils {
   private static stromStossContinueTimeouts: Map<string, NodeJS.Timeout> = new Map<string, NodeJS.Timeout>();

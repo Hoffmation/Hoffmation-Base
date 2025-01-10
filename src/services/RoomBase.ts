@@ -1,10 +1,7 @@
 import _ from 'lodash';
-import { iIdHolder } from '../models/iIdHolder';
 import {
   BaseGroup,
   DeviceCluster,
-  DeviceClusterType,
-  GroupType,
   HeatGroup,
   LightGroup,
   PresenceGroup,
@@ -12,20 +9,23 @@ import {
   SpeakerGroup,
   TasterGroup,
   Trilateration,
-  TrilaterationPoint,
   WaterGroup,
   WindowGroup,
 } from '../devices';
-import { Utils } from '../utils/utils';
-import { LogLevel, ServerLogService } from '../logging';
-import { iRoomBase, RoomInfo, RoomSettingsController } from '../models/rooms';
-import { RoomService } from './room-service';
-import { TimeCallback, TimeOfDay } from '../models/timeCallback';
 import {
   ActuatorSetStateCommand,
   LightGroupSwitchTimeConditionalCommand,
+  RoomInfo,
   RoomSetLightTimeBasedCommand,
-} from '../models/command';
+  RoomSettingsController,
+  TimeCallback,
+} from '../models';
+import { iIdHolder, iRoomBase, ITimeCallback, iTrilaterationPoint } from '../interfaces';
+import { RoomService } from './room-service';
+import { Utils } from '../utils';
+import { DeviceClusterType, GroupType, LogLevel, TimeOfDay } from '../enums';
+import { ServerLogService } from '../logging';
+import { Persistence } from './dbo';
 import { TimeCallbackService } from './time-callback-service';
 import { ShutterService } from './ShutterService';
 
@@ -45,8 +45,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
     public groupMap: Map<GroupType, BaseGroup>,
     roomName: string,
     etage: number = 99,
-    startPoint?: TrilaterationPoint,
-    endPoint?: TrilaterationPoint,
+    startPoint?: iTrilaterationPoint,
+    endPoint?: iTrilaterationPoint,
   ) {
     this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
@@ -56,7 +56,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
     }
   }
 
-  public get sonnenUntergangLichtCallback(): TimeCallback | undefined {
+  public get sonnenUntergangLichtCallback(): ITimeCallback | undefined {
     return this.LightGroup?.sonnenUntergangLichtCallback;
   }
 
@@ -144,7 +144,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
   }
 
   public persist(): void {
-    Utils.dbo?.addRoom(this);
+    Persistence.dbo?.addRoom(this);
   }
 
   public recalcTimeCallbacks(): void {
@@ -227,7 +227,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
   }
 
   public toJSON(): Partial<
-    RoomBase & {
+    iRoomBase & {
       /**
        * The dictionary representation of the group map
        */

@@ -1,19 +1,17 @@
-import { DeviceType } from '../../deviceType';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iActuator } from '../../baseDeviceInterfaces';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceCapability } from '../../DeviceCapability';
-import { LampUtils } from '../../sharedFunctions';
-import { Utils } from '../../../utils/utils';
-import { BlockAutomaticHandler } from '../../../services/blockAutomaticHandler';
-import { LogDebugType, LogLevel } from '../../../logging';
-import { ActuatorSettings } from '../../../models/deviceSettings';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../../models/command';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { iActuator } from '../../../interfaces';
+import { BlockAutomaticHandler } from '../../../services';
+import { ActuatorSettings } from '../../deviceSettings';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
+import { LampUtils } from '../../sharedFunctions';
+import { Utils } from '../../../utils';
 
 export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
   /** @inheritDoc */
@@ -88,7 +86,7 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
     if (this._lastPersist + 1000 > now) {
       return;
     }
-    Utils.dbo?.persistActuator(this);
+    this.dbo?.persistActuator(this);
     this._lastPersist = now;
   }
 

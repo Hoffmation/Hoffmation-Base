@@ -1,6 +1,6 @@
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
 import { ZigbeeLedRGBCCT } from './BaseDevices';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../../enums';
 
 export class ZigbeeIlluLedRGBCCT extends ZigbeeLedRGBCCT {
   protected readonly _stateIdBrightness: string;

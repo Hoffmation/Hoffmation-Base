@@ -1,6 +1,6 @@
-import { Utils } from '../../utils/utils';
-import { SettingsService } from '../../services/settings-service';
-import { LogDebugType, LogLevel } from '../../logging';
+import { LogDebugType, LogLevel } from '../../enums';
+import { Persistence, SettingsService } from '../../services';
+import { Utils } from '../../utils';
 
 export class EnergyCalculation {
   /**
@@ -69,7 +69,7 @@ export class EnergyCalculation {
     obj.drawnKwH = Utils.round(obj.drawnKwH, 4);
     obj.batteryStoredKwH = Utils.round(obj.batteryStoredKwH, 3);
     obj.batteryLevel = Utils.round(obj.batteryLevel, 3);
-    Utils.dbo?.persistEnergyManager(obj);
+    Persistence.dbo?.persistEnergyManager(obj);
     logger(LogLevel.Info, 'Persisting energy Manager Data.');
     return true;
   }

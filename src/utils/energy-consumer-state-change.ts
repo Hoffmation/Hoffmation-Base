@@ -1,4 +1,4 @@
-import { iExcessEnergyConsumer } from '../devices';
+import { iExcessEnergyConsumer } from '../interfaces';
 
 export class EnergyConsumerStateChange {
   public constructor(

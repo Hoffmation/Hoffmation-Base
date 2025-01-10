@@ -1,14 +1,11 @@
-import { WindowPosition } from '../models';
+import { iDisposable, iHandleSensor, iJsonOmitKeys } from '../../interfaces';
+import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { HandleChangeAction } from '../../models';
+import { HandleSettings } from '../deviceSettings';
 import { HeatGroup, Window } from '../groups';
-import { iHandleSensor } from '../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
-import { Utils } from '../../utils/utils';
-import { HandleChangeAction } from '../../models/action';
-import { iJsonOmitKeys } from '../../models/iJsonOmitKeys';
-import { HandleSettings } from '../../models/deviceSettings';
+import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';
-import { TelegramService } from '../../services/Telegram';
+import { Persistence, TelegramService } from '../../services';
 
 export class HandleSensor implements iDisposable, iJsonOmitKeys {
   /** @inheritDoc */
@@ -172,7 +169,7 @@ export class HandleSensor implements iDisposable, iJsonOmitKeys {
       return;
     }
     this.log(LogLevel.Debug, `Persist handle state: ${this.position}`);
-    Utils.dbo?.persistHandleSensor(this._device);
+    Persistence.dbo?.persistHandleSensor(this._device);
     this._lastPersist = now;
   }
 

@@ -1,20 +1,19 @@
-import { iScene } from '../baseDeviceInterfaces';
-import { TvDevice } from '../tv';
-import { DeviceInfo } from '../DeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { DeviceType } from '../deviceType';
-import { Devices } from '../devices';
 import _ from 'lodash';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { Utils } from '../../utils/utils';
-import { SceneSettings } from '../../models/deviceSettings';
-import { RoomBase } from '../../services/RoomBase';
+import { iRoomBase, iScene } from '../../interfaces';
+import { Persistence } from '../../services';
+import { SceneSettings } from '../deviceSettings';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { DeviceInfo } from '../DeviceInfo';
+import { Devices } from '../devices';
+import { Utils } from '../../utils';
+import { ServerLogService } from '../../logging';
+import { TvDevice } from '../tv';
 
 export class RoomScene implements iScene {
   /** @inheritDoc */
   public description: string = '';
   /** @inheritDoc */
-  public room: RoomBase | undefined;
+  public room: iRoomBase | undefined;
   /** @inheritDoc */
   public settings: SceneSettings = new SceneSettings();
   protected _deviceType: DeviceType;
@@ -27,7 +26,7 @@ export class RoomScene implements iScene {
 
   public constructor(
     name: string,
-    room: RoomBase,
+    room: iRoomBase,
     onSceneStart: () => void,
     onSceneEnd: () => void,
     turnOffTimeout?: number,
@@ -146,7 +145,7 @@ export class RoomScene implements iScene {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

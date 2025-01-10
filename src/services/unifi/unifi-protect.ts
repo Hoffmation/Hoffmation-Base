@@ -1,5 +1,3 @@
-import { LogLevel, ServerLogService } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
 import {
   ProtectApi,
   ProtectCameraConfig,
@@ -7,10 +5,10 @@ import {
   ProtectNvrBootstrap,
   ProtectNvrBootstrapInterface,
 } from 'unifi-protect';
-import { iCameraDevice } from '../../devices';
 import { OwnUnifiCamera } from './own-unifi-camera';
-import { iUnifiProtectOptions } from '../../server';
-import { LogSource } from '../../logging/logSource';
+import { LogLevel, LogSource } from '../../enums';
+import { iCameraDevice, iDisposable, iUnifiProtectOptions } from '../../interfaces';
+import { ServerLogService } from '../../logging';
 
 export class UnifiProtect implements iDisposable {
   private readonly unifiLogger: UnifiLogger = new UnifiLogger();

@@ -1,4 +1,4 @@
-import { iRoomInitializationSettings } from './iRoomInitializationSettings';
+import { iRoomInitializationSettings } from '../../../interfaces';
 import { RoomDeviceAddingSettings } from './roomDeviceAddingSettings';
 import { IoBrokerBaseDevice } from '../../../devices';
 

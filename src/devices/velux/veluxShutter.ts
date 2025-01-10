@@ -1,17 +1,13 @@
-import { DeviceType } from '../deviceType';
-import { Window } from '../groups';
-import { WindowPosition } from '../models';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
 import { VeluxDevice } from './veluxDevice';
-import { Utils } from '../../utils/utils';
-import { iShutter } from '../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../logging';
-import { CommandSource, ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../models/command';
-import { ShutterSettings } from '../../models/deviceSettings';
-import { ShutterPositionChangedAction } from '../../models/action';
+import { iShutter } from '../../interfaces';
+import { ShutterSettings } from '../deviceSettings';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { ShutterPositionChangedAction, ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../models';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { Utils } from '../../utils';
+import { Window } from '../groups';
 
 export class VeluxShutter extends VeluxDevice implements iShutter {
   /** @inheritDoc */
@@ -27,7 +23,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
     super(pInfo, DeviceType.VeluxShutter);
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.targetPosition`;
-    Utils.dbo?.getLastDesiredPosition(this).then((val) => {
+    this.dbo?.getLastDesiredPosition(this).then((val) => {
       if (val.desiredPosition === -1) {
         return;
       }
@@ -75,7 +71,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
   }
 
   public persist(): void {
-    Utils.dbo?.persistShutter(this);
+    this.dbo?.persistShutter(this);
   }
 
   public setLevel(command: ShutterSetLevelCommand): void {

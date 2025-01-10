@@ -1,7 +1,7 @@
-import { DeviceType } from './deviceType';
 import { HmIpHeizgruppe } from './hmIPDevices';
+import { iHeater } from '../interfaces';
 import { Devices } from './devices';
-import { iHeater } from './baseDeviceInterfaces';
+import { DeviceType } from '../enums';
 
 export class Heizgruppen {
   public static getProblems(): string {

@@ -1,6 +1,6 @@
 import { InfluxDB } from 'influx';
-import { DachsInfluxDataPoint } from '../interfaces/dachsInfluxDataPoint';
-import { InfluxDbConnectionOptions } from '../interfaces';
+import { DachsInfluxDataPoint } from '../../../interfaces/dachs/dachsInfluxDataPoint';
+import { InfluxDbConnectionOptions } from '../../../interfaces';
 
 const ignoredMeasurements: string[] = ['solarcharger/History/Daily'];
 

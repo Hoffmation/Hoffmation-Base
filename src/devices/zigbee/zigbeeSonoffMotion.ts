@@ -1,7 +1,6 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
 import { ZigbeeMotionSensor } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType, LogLevel } from '../../enums';
 
 export class ZigbeeSonoffMotion extends ZigbeeMotionSensor {
   public constructor(pInfo: IoBrokerDeviceInfo) {

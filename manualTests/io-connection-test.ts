@@ -1,4 +1,4 @@
-import { deviceConfig, Devices, HoffmationBase, HoffmationInitializationObject } from '../src';
+import { Devices, HoffmationBase, HoffmationInitializationObject, iDeviceConfig } from '../src';
 import config from './mainConfig.example.json';
 import devs from './exampleDevice.json';
 import { MockRoomImportEnforcer } from './mockRoomImportEnforcer';
@@ -15,7 +15,7 @@ export class ioBrokerConnectionTest {
     init.config.ioBrokerUrl = 'xxx:8084';
 
     await HoffmationBase.initializeBeforeIoBroker(init);
-    const devices: Devices = new Devices(devs as { [id: string]: deviceConfig }, new MockRoomImportEnforcer());
+    const devices: Devices = new Devices(devs as { [id: string]: iDeviceConfig }, new MockRoomImportEnforcer());
     HoffmationBase.startIoBroker(devices);
     setTimeout(() => {
       console.log('shutdown-now');

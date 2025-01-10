@@ -1,4 +1,5 @@
-/* eslint-disable jsdoc/require-jsdoc */
+import { PIDOptions } from './interfaces';
+
 /**
  * !!Ported from liquid pid!!!!
  * Control the PWM relays from the temperature
@@ -116,12 +117,4 @@ export class PIDController {
     // and transform U to the [0..1] interval
     return (this._U / 1000) * this._Pmax;
   }
-}
-
-export interface PIDOptions {
-  Kp?: number;
-  Ki?: number;
-  Kd?: number;
-  Pmax?: number;
-  temp?: { ref: number };
 }

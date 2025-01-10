@@ -1,7 +1,7 @@
 import { RoomAddDeviceItem } from './roomAddDeviceItem';
-import { LogLevel, ServerLogService } from '../../../logging';
-import { RoomBase } from '../../../services/RoomBase';
-import { DeviceType } from '../../../devices/deviceType';
+import { DeviceType, LogLevel } from '../../../enums';
+import { ServerLogService } from '../../../logging';
+import { iRoomBase } from '../../../interfaces/iRoomBase';
 
 export class RoomDeviceAddingSettings {
   /**
@@ -13,7 +13,7 @@ export class RoomDeviceAddingSettings {
 
   public addDevice(
     deviceType: DeviceType,
-    setID: (value: string) => RoomBase,
+    setID: (value: string) => iRoomBase,
     index: number,
     customName: string | undefined = undefined,
   ): void {

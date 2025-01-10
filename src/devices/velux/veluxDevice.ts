@@ -1,9 +1,7 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { iDisposable } from '../../interfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { LogLevel } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class VeluxDevice extends IoBrokerBaseDevice implements iDisposable {
   private _lastUpdate: Date = new Date(0);

@@ -1,13 +1,13 @@
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
 import { Devices } from '../devices';
 import { SmartGardenDevice } from './smartGardenDevice';
 import { SmartGardenSensor } from './smartGardenSensor';
 import { SmartGardenMower } from './smartGardenMower';
 import { SmartGardenValve } from './smartGardenValve';
 import { SmartGardenDeviceRegistrationInfo } from './smartGardenDeviceRegistrationInfo';
-import { LogLevel, ServerLogService } from '../../logging';
-import { deviceConfig } from '../../models/deviceConfig';
+import { ServerLogService } from '../../logging';
+import { iDeviceConfig } from '../../interfaces/iDeviceConfig';
+import { DeviceType, LogLevel } from '../../enums';
 
 export class SmartGardenService {
   private static readonly _registeredDevices: Map<string, SmartGardenDeviceRegistrationInfo> = new Map();
@@ -16,7 +16,7 @@ export class SmartGardenService {
     this._registeredDevices.set(id, registrationInfo);
   }
 
-  public static processSmartGardenDevice(cDevConf: deviceConfig): void {
+  public static processSmartGardenDevice(cDevConf: iDeviceConfig): void {
     const devName = cDevConf.common?.name;
     if (!devName || typeof devName !== 'string') {
       return;

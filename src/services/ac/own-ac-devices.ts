@@ -1,5 +1,6 @@
-import { LogLevel, ServerLogService } from '../../logging';
 import { AcDevice } from './ac-device';
+import { ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
 import { Devices } from '../../devices';
 
 export class OwnAcDevices {

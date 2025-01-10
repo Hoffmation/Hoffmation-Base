@@ -1,11 +1,11 @@
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
 import { Devices } from '../devices';
 import { VeluxDeviceRegistrationInfo } from './veluxDeviceRegistrationInfo';
+import { DeviceType, LogLevel } from '../../enums';
+import { ServerLogService } from '../../logging';
 import { VeluxShutter } from './veluxShutter';
+import { iDeviceConfig } from '../../interfaces/iDeviceConfig';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { VeluxDevice } from './veluxDevice';
-import { LogLevel, ServerLogService } from '../../logging';
-import { deviceConfig } from '../../models/deviceConfig';
 
 export class VeluxService {
   private static readonly _registeredDevices: Map<string, VeluxDeviceRegistrationInfo> = new Map();
@@ -14,7 +14,7 @@ export class VeluxService {
     this._registeredDevices.set(devName, registrationInfo);
   }
 
-  public static processVeluxDevice(cDevConf: deviceConfig): void {
+  public static processVeluxDevice(cDevConf: iDeviceConfig): void {
     const devName = cDevConf.common?.name;
     if (!devName || typeof devName !== 'string') {
       return;

@@ -1,5 +1,5 @@
+import { LogLevel } from '../enums';
 import { LogFilterData } from './log-filter-data';
-import { LogLevel } from './logLevel';
 
 export class LogObject {
   public constructor(

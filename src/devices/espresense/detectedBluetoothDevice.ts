@@ -1,17 +1,15 @@
-import { iBaseDevice } from '../baseDeviceInterfaces';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { iBaseDevice, iBluetoothTrackingSettings } from '../../interfaces';
 import { DeviceInfo } from '../DeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { DeviceType } from '../deviceType';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
 import { Devices } from '../devices';
 import { TrackedDistanceData } from './trackedDistanceData';
-import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
-import { Trilateration } from './trilateration';
+import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
+import { ServerLogService } from '../../logging';
+import { Utils } from '../../utils';
+import { Persistence, SettingsService } from '../../services';
+import { API } from '../../api';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
-import { Utils } from '../../utils/utils';
-import { iBluetoothTrackingSettings } from '../../server';
-import { SettingsService } from '../../services/settings-service';
-import { API } from '../../services/api';
+import { Trilateration } from './trilateration';
 
 export class DetectedBluetoothDevice implements iBaseDevice {
   /** @inheritDoc */
@@ -127,7 +125,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

@@ -1,6 +1,5 @@
-import { CommandType } from './commandType';
 import { BaseCommand } from './baseCommand';
-import { CommandSource } from './commandSource';
+import { CommandSource, CommandType } from '../../enums';
 
 export class ActuatorToggleCommand extends BaseCommand {
   /** @inheritDoc */

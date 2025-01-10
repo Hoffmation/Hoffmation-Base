@@ -1,6 +1,6 @@
-import { iExcessEnergyConsumer } from '../devices';
-import { LogLevel } from '../logging';
+import { iExcessEnergyConsumer } from '../interfaces';
 import { EnergyConsumerStateChange } from './energy-consumer-state-change';
+import { LogLevel } from '../enums';
 
 export class EnergyManagerUtils {
   public static turnOnAdditionalConsumer(

@@ -1,8 +1,9 @@
 import * as http from 'http';
 import * as url from 'url';
 import * as fs from 'fs';
-import { LogLevel, ServerLogService } from '../../logging';
-import { iMp3Settings } from '../../server';
+import { iMp3Settings } from '../../interfaces';
+import { ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
 
 export class MP3Server {
   /**

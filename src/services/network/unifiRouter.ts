@@ -1,9 +1,10 @@
-import { Router } from './router';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import Unifi from 'node-unifi';
-import { LogLevel, ServerLogService } from '../../logging';
-import { iUnifiConnectionOptions } from '../../server';
+import { LogLevel } from '../../enums';
+import { ServerLogService } from '../../logging';
+import { Router } from './router';
+import { iUnifiConnectionOptions } from '../../interfaces';
 
 export class UnifiRouter extends Router {
   public get loggedIn(): boolean {

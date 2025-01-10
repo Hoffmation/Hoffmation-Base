@@ -1,23 +1,26 @@
-import { WindowPosition } from '../models';
-import { iHandleSensor, iShutter, iVibrationSensor } from '../baseDeviceInterfaces';
-import { BaseGroup } from './base-group';
-import { GroupType } from './group-type';
-import { DeviceClusterType } from '../device-cluster-type';
-import { DeviceList } from '../device-list';
-import { ZigbeeMagnetContact } from '../zigbee';
-import { Utils } from '../../utils/utils';
-import { LogDebugType, LogLevel } from '../../logging';
-import { ShutterService } from '../../services/ShutterService';
-import { TimeCallbackService } from '../../services/time-callback-service';
+import { iHandleSensor, iShutter, iVibrationSensor } from '../../interfaces';
 import {
-  CommandSource,
+  HandleChangeAction,
   RoomSetLightTimeBasedCommand,
+  ShutterPositionChangedAction,
   ShutterSetLevelCommand,
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
-} from '../../models/command';
-import { TimeOfDay } from '../../models/timeCallback';
-import { HandleChangeAction, ShutterPositionChangedAction } from '../../models/action';
+} from '../../models';
+import { BaseGroup } from './base-group';
+import {
+  CommandSource,
+  DeviceClusterType,
+  GroupType,
+  LogDebugType,
+  LogLevel,
+  TimeOfDay,
+  WindowPosition,
+} from '../../enums';
+import { DeviceList } from '../device-list';
+import { ZigbeeMagnetContact } from '../zigbee';
+import { ShutterService, TimeCallbackService } from '../../services';
+import { Utils } from '../../utils';
 
 export class Window extends BaseGroup {
   private _desiredPosition: number = 0;

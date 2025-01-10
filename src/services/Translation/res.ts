@@ -1,8 +1,6 @@
 /* eslint-disable jsdoc/require-description */
-import { IRessources } from './iRessources';
 import resJson from './resources.json';
-import { IRessourceObject } from './IRessourceObject';
-import { iTranslationSettings } from '../../server';
+import { iRessourceObject, IRessources, iTranslationSettings } from '../../interfaces';
 
 export class Res {
   private static translations: IRessources;
@@ -161,7 +159,7 @@ export class Res {
     return this.fill(this.translations.wasOpened, [deviceCustomName]);
   }
 
-  private static fill(ressource: IRessourceObject, replacements?: string[]): string {
+  private static fill(ressource: iRessourceObject, replacements?: string[]): string {
     let result: string | undefined;
     switch (this.selectedLanguage) {
       case 'de':

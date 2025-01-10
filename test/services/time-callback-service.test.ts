@@ -1,4 +1,5 @@
 import {
+  ITimeCallback,
   SettingsService,
   SunTimeOffsets,
   TimeCallback,
@@ -38,7 +39,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunrise is calculated correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 4, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
       () => {
@@ -59,7 +60,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunrise respects offset', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(10, 0, 4, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
       () => {
@@ -80,7 +81,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunrise respects min hours', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
       () => {
@@ -101,7 +102,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunrise respects min hours in winter', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 8, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
       () => {
@@ -122,7 +123,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunrise handles recalculation correctly', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 8, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.Sunrise,
       () => {
@@ -167,7 +168,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunset is calculated correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.SunSet,
       () => {
@@ -188,7 +189,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunset respects offset', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, -20, 5, 30, 22, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.SunSet,
       () => {
@@ -209,7 +210,7 @@ describe('TimeCallbackService', () => {
   });
   it('Time Callback for Rollo Sunset respects maximum Hours', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 5, 30, 18, 30);
-    const cb: TimeCallback = new TimeCallback(
+    const cb: ITimeCallback = new TimeCallback(
       '',
       TimeCallbackType.SunSet,
       () => {

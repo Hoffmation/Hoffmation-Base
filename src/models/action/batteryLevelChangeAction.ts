@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
-import { CommandType } from '../command';
-import { iBatteryDevice } from '../../devices';
+import { CommandType } from '../../enums';
+import { iBatteryDevice } from '../../interfaces';
 
 export class BatteryLevelChangeAction extends BaseAction {
   /** @inheritDoc */

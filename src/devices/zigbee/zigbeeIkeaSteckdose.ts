@@ -1,7 +1,6 @@
-import { DeviceType } from '../deviceType';
 import { ZigbeeActuator } from './BaseDevices';
-import { LogLevel } from '../../logging';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType, LogLevel } from '../../enums';
 
 export class ZigbeeIkeaSteckdose extends ZigbeeActuator {
   protected readonly _actuatorOnStateIdState: string;

@@ -1,13 +1,10 @@
-import { DeviceType } from '../deviceType';
 import { ZigbeeDevice } from './BaseDevices';
-import { LogLevel } from '../../logging';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
+import { iBatteryDevice } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { Res } from '../../services/Translation';
-import { SonosService } from '../../services/Sonos';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { Res, SonosService } from '../../services';
+import { Utils } from '../../utils';
 
 // TODO: Add iWaterSensor
 export class ZigbeeAquaraWater extends ZigbeeDevice implements iBatteryDevice {

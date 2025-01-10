@@ -1,4 +1,5 @@
-import { BaseCommand, CommandSource } from '../command';
+import { BaseCommand } from '../command';
+import { CommandSource } from '../../enums';
 
 export abstract class BaseAction extends BaseCommand {
   protected constructor(source?: BaseAction, reason?: string) {

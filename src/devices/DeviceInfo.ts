@@ -1,4 +1,6 @@
-export class DeviceInfo {
+import { iDeviceInfo } from '../interfaces/iDeviceInfo';
+
+export class DeviceInfo implements iDeviceInfo {
   /**
    * The complete name of the device in a human readable format
    */

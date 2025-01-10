@@ -1,5 +1,6 @@
-import { LogLevel, ServerLogService } from '../../logging';
 import { OwnGoveeDevice } from './own-govee-device';
+import { ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
 
 export class OwnGoveeDevices {
   /**

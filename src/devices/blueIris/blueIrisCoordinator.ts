@@ -1,5 +1,6 @@
-import { LogLevel, ServerLogService } from '../../logging';
-import { iCameraDevice } from '../baseDeviceInterfaces';
+import { iCameraDevice } from '../../interfaces';
+import { ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
 import { BlueIrisCameraDevice } from './blueIrisCameraDevice';
 
 export class BlueIrisCoordinator {

@@ -1,39 +1,12 @@
-import { getSunrise, getSunset } from 'sunrise-sunset-js';
-import { LogLevel, ServerLogService } from '../logging';
-import { Utils } from '../utils/utils';
+import { LogLevel, TimeCallbackType, TimeOfDay } from '../enums';
+import { TimeCallback } from '../models';
+import { SunTimeOffsets } from '../models/sun-time-offsets';
+import { ITimeCallback, iTimePair } from '../interfaces';
 import { SettingsService } from './settings-service';
+import { ServerLogService } from '../logging';
 import { Devices } from '../devices';
-import { iTimePair } from '../server';
-import { TimeCallback, TimeCallbackType, TimeOfDay } from '../models/timeCallback';
-
-export class SunTimeOffsets {
-  public constructor(
-    public sunrise: number = 0,
-    public sunset: number = 0,
-    public minimumHours: number = 6,
-    public minimumMinutes: number = 24,
-    public maximumHours: number = 22,
-    public maximumMinutes: number = 30,
-  ) {}
-
-  public getNextMinimumSunrise(date: Date = new Date()): Date {
-    const dateCopy: Date = new Date(date);
-    const today: Date = new Date(dateCopy.setHours(this.minimumHours, this.minimumMinutes, 0, 0));
-    if (today > date) {
-      return today;
-    }
-    return new Date(today.setDate(today.getDate() + 1));
-  }
-
-  public getNextMaximumSunset(date: Date = new Date()): Date {
-    const dateCopy: Date = new Date(date);
-    const today = new Date(dateCopy.setHours(this.maximumHours, this.maximumMinutes, 0, 0));
-    if (today > date) {
-      return today;
-    }
-    return new Date(today.setDate(today.getDate() + 1));
-  }
-}
+import { Utils } from '../utils';
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
 
 export class TimeCallbackService {
   private static _startTime: Date;
@@ -223,7 +196,7 @@ Next Sunset: ${TimeCallbackService._nextSunSet.toLocaleString('de-DE')}`,
     );
   }
 
-  public static removeCallback(pCallback: TimeCallback): void {
+  public static removeCallback(pCallback: ITimeCallback): void {
     if (TimeCallbackService._callbacks.has(pCallback.name)) {
       TimeCallbackService._callbacks.delete(pCallback.name);
     } else {

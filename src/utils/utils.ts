@@ -1,25 +1,14 @@
 import _ from 'lodash';
+import { ServerLogService } from '../logging';
+import { LogLevel } from '../enums';
 import { CatchEmResult } from './catchEmResult';
+import { Res, SettingsService } from '../services';
+import { iJsonOmitKeys, iTimePair } from '../interfaces';
 import { RGB } from './RGB';
-import { iTimePair } from '../server';
-import { LogLevel, ServerLogService } from '../logging';
-import { iPersist } from '../services/dbo';
-import { SettingsService } from '../services/settings-service';
-import { Res } from '../services/Translation';
-import { iJsonOmitKeys } from '../models/iJsonOmitKeys';
 
 export const DAYMS: number = 24 * 60 * 60 * 1000;
 
 export class Utils {
-  /**
-   * The persitence layer object
-   */
-  public static dbo: iPersist | undefined;
-
-  public static get anyDboActive(): boolean {
-    return SettingsService.settings.persistence?.postgreSql !== undefined;
-  }
-
   public static get timeTilMidnight(): number {
     return new Date(Utils.nowMS() + DAYMS).setHours(0, 0, 0, 0) - Utils.nowMS();
   }

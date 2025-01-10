@@ -1,8 +1,6 @@
+import { CommandSource, CommandType, TimeOfDay } from '../../enums';
 import { ActuatorToggleCommand } from './actuatorToggleCommand';
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
 import { BaseCommand } from './baseCommand';
-import { TimeOfDay } from '../timeCallback';
 
 export class LampToggleLightCommand extends ActuatorToggleCommand {
   /** @inheritDoc */

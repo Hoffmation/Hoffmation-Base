@@ -1,6 +1,6 @@
 import { BaseAction } from './baseAction';
-import { CommandType } from '../command';
-import { iHandleSensor, WindowPosition } from '../../devices';
+import { CommandType, WindowPosition } from '../../enums';
+import { iHandleSensor } from '../../interfaces';
 
 export class HandleChangeAction extends BaseAction {
   /** @inheritDoc */

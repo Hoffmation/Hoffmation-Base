@@ -1,10 +1,8 @@
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
+import { iBatteryDevice } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class HmIpTherm extends HmIPDevice implements iBatteryDevice {
   /** @inheritDoc */

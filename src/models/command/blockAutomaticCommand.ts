@@ -1,9 +1,7 @@
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { CollisionSolving } from '../collisionSolving';
 import { BaseCommand } from './baseCommand';
-import { DeviceSettings } from '../deviceSettings';
-import { SettingsService } from '../../services/settings-service';
+import { CollisionSolving, CommandSource, CommandType } from '../../enums';
+import { SettingsService } from '../../services';
+import { DeviceSettings } from '../../devices';
 
 export class BlockAutomaticCommand extends BaseCommand {
   /** @inheritDoc */

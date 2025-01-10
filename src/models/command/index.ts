@@ -6,8 +6,6 @@ export { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 export { ActuatorToggleCommand } from './actuatorToggleCommand';
 export { ActuatorWriteStateToDeviceCommand } from './actuatorWriteStateToDeviceCommand';
 export { BaseCommand } from './baseCommand';
-export { CommandSource } from './commandSource';
-export { CommandType } from './commandType';
 export { DimmerSetLightCommand } from './dimmerSetLightCommand';
 export { FloorSetAllShuttersCommand } from './floorSetAllShuttersCommand';
 export { LampSetLightCommand } from './lampSetLightCommand';

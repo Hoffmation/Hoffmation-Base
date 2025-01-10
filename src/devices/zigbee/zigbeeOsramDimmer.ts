@@ -1,6 +1,6 @@
 import { ZigbeeDimmer } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
+import { DeviceType } from '../../enums';
 
 export class ZigbeeOsramDimmer extends ZigbeeDimmer {
   protected _stateNameBrightness: string = 'brightness';

@@ -1,7 +1,8 @@
-import { API } from './api';
-import { Devices, iShutter, Window } from '../devices';
-import { DeviceType } from '../devices/deviceType';
-import { ShutterSetLevelCommand } from '../models/command';
+import { Devices, Window } from '../devices';
+import { iShutter } from '../interfaces';
+import { ShutterSetLevelCommand } from '../models';
+import { API } from '../api';
+import { DeviceType } from '../enums';
 
 export class ShutterService {
   public static anyRolloDown(rollo: iShutter[]): boolean {

@@ -1,8 +1,7 @@
 import { ZigbeeShutter } from './BaseDevices';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { Utils } from '../../utils/utils';
+import { DeviceType, LogLevel } from '../../enums';
+import { Utils } from '../../utils';
 
 enum MovementState {
   Down = 30,

@@ -1,5 +1,5 @@
 import { IConfig, TibberFeed, TibberQueryBase } from 'tibber-api';
-import { iTibberSettings } from '../server';
+import { iTibberSettings } from '../interfaces';
 
 export class TibberService {
   private static _tibberQueryBase: TibberQueryBase;

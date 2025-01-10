@@ -1,15 +1,13 @@
-import { iRoomDevice } from './baseDeviceInterfaces';
-import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
-import { DeviceType } from './deviceType';
+import { Persistence } from '../services';
+import { iJsonOmitKeys, iPersist, iRoomBase, iRoomDevice } from '../interfaces';
+import { RoomAddDeviceItem, RoomDeviceAddingSettings } from '../models';
+import { DeviceSettings } from './deviceSettings';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
+import { Utils } from '../utils';
+import { API } from '../api';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { DeviceCapability } from './DeviceCapability';
-import { Utils } from '../utils/utils';
-import { RoomBase } from '../services/RoomBase';
-import { LogDebugType, LogLevel, ServerLogService } from '../logging';
-import { RoomAddDeviceItem, RoomDeviceAddingSettings } from '../models/rooms';
-import { iJsonOmitKeys } from '../models/iJsonOmitKeys';
-import { DeviceSettings } from '../models/deviceSettings';
-import { API } from '../services/api';
+import { ServerLogService } from '../logging';
+import { IOBrokerConnection, ioBrokerMain } from '../ioBroker';
 
 export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
   /** @inheritDoc */
@@ -23,7 +21,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
    * @default undefined (no Settings)
    */
   public settings: DeviceSettings | undefined = undefined;
-  private _room: RoomBase | undefined = undefined;
+  private _room: iRoomBase | undefined = undefined;
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
 
@@ -34,16 +32,24 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
   protected stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
 
   /** @inheritDoc */
+  public get room(): iRoomBase {
+    if (this._room === undefined) {
+      this._room = Utils.guard<iRoomBase>(API.getRoom(this.info.room));
+    }
+    return this._room;
+  }
+
+  protected get dbo(): iPersist | undefined {
+    return Persistence.dbo;
+  }
+
+  /** @inheritDoc */
   public get customName(): string {
     return this.info.customName;
   }
 
-  /** @inheritDoc */
-  public get room(): RoomBase {
-    if (this._room === undefined) {
-      this._room = Utils.guard<RoomBase>(API.getRoom(this.info.room));
-    }
-    return this._room;
+  protected get anyDboActive(): boolean {
+    return Persistence.anyDboActive;
   }
 
   protected readonly individualStateCallbacks: Map<string, Array<(val: ioBroker.StateValue) => void>> = new Map<
@@ -161,7 +167,7 @@ export abstract class IoBrokerBaseDevice implements iRoomDevice, iJsonOmitKeys {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

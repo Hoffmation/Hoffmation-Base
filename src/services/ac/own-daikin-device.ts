@@ -1,14 +1,12 @@
-import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { SettingsService } from '../settings-service';
-import { DaikinService } from './daikin-service';
-import { Utils } from '../../utils/utils';
-import { AcDevice } from './ac-device';
-import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
-import { DeviceType } from '../../devices/deviceType';
-import { UNDEFINED_TEMP_VALUE } from '../../devices';
-import { AcMode } from '../../models/deviceSettings';
+import { AcDevice } from './ac-device';
+import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
+import { AcDeviceType, AcMode, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { SettingsService } from '../settings-service';
+import { ServerLogService } from '../../logging';
+import { DaikinService } from './daikin-service';
+import { Utils } from '../../utils';
 
 export class OwnDaikinDevice extends AcDevice {
   /**

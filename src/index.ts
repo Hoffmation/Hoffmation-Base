@@ -1,25 +1,39 @@
-import { LogLevel, ServerLogService } from './logging';
 import '@iobroker/types';
+import { ServerLogService } from './logging';
+import { LogLevel } from './enums';
+import {
+  AsusRouter,
+  DaikinService,
+  GooveeService,
+  MP3Server,
+  MuellService,
+  NewsService,
+  OwnAcDevices,
+  OwnGoveeDevices,
+  OwnSonosDevices,
+  Persistence,
+  PollyService,
+  PostgreSqlPersist,
+  Res,
+  SettingsService,
+  SonosService,
+  TelegramCommands,
+  TelegramService,
+  TibberService,
+  TimeCallbackService,
+  UnifiProtect,
+  UnifiRouter,
+  VictronService,
+} from './services';
+import { iConfig, iSpeaker } from './interfaces';
 import { ioBrokerMain } from './ioBroker';
-import { Dachs, Devices, DeviceUpdater, iSpeaker, Trilateration } from './devices';
-import { iConfig } from './server';
-import { Utils } from './utils/utils';
-import { Res } from './services/Translation';
-import { PostgreSqlPersist } from './services/dbo';
-import { SettingsService } from './services/settings-service';
-import { TelegramCommands, TelegramService } from './services/Telegram';
-import { MP3Server, OwnSonosDevices, PollyService, SonosService } from './services/Sonos';
-import { TibberService } from './services/tibber-service';
-import { AsusRouter, UnifiRouter } from './services/network';
-import { UnifiProtect } from './services/unifi';
-import { TimeCallbackService } from './services/time-callback-service';
-import { GooveeService, OwnGoveeDevices } from './services/govee';
-import { DaikinService, OwnAcDevices } from './services/ac';
-import { MuellService } from './services/calendar';
-import { NewsService } from './services/news-service';
+import { Dachs, Devices, DeviceUpdater, Trilateration } from './devices';
+import { Utils } from './utils';
 import { WeatherService } from './services/weather';
-import { VictronService } from './services/victron';
 
+export * from './enums';
+export * from './interfaces';
+export * from './ioBroker';
 export * from './models';
 export * from './logging';
 export * from './server';
@@ -48,9 +62,9 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Startup');
     if (initObject.config.persistence) {
       if (initObject.config.persistence.postgreSql) {
-        Utils.dbo = new PostgreSqlPersist(initObject.config.persistence.postgreSql);
+        Persistence.dbo = new PostgreSqlPersist(initObject.config.persistence.postgreSql);
       }
-      await Utils.dbo?.initialize();
+      await Persistence.dbo?.initialize();
     }
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, 'Mp3Server settings detected --> initializing');
@@ -150,3 +164,5 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base: ioBroker Connection established');
   }
 }
+
+export { PIDOptions } from './interfaces/p-i-d-options';

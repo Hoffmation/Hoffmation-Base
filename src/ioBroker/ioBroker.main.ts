@@ -1,11 +1,10 @@
-import { DeviceUpdater, IDeviceUpdater } from '../devices';
+import { ServerLogService } from '../logging';
+import { LogLevel } from '../enums';
 import { IOBrokerConnection } from './connection';
-import { Utils } from '../utils/utils';
-import { LogLevel, ServerLogService } from '../logging';
-import { ConnectionCallbacks } from '../models/connectionCallbacks';
-import { iRoomBase } from '../models/rooms';
-import { SettingsService } from '../services/settings-service';
-import { TimeCallbackService } from '../services/time-callback-service';
+import { IDeviceUpdater, iRoomBase } from '../interfaces';
+import { ConnectionCallbacks } from '../models';
+import { SettingsService } from '../services';
+import { Utils } from '../utils';
 
 export class ioBrokerMain {
   private static readonly SplitKeys: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -19,7 +18,7 @@ export class ioBrokerMain {
   private states: Record<string, ioBroker.State> = {};
   private connectionCallbacks: ConnectionCallbacks;
 
-  public constructor(pDeviceUpdater: DeviceUpdater) {
+  public constructor(pDeviceUpdater: IDeviceUpdater) {
     this.deviceUpdater = pDeviceUpdater;
     this.connectionCallbacks = new ConnectionCallbacks();
     this.initConnCallbacks();
@@ -136,7 +135,6 @@ export class ioBrokerMain {
     }
     ServerLogService.writeLog(LogLevel.Info, `Received ${count} states.`);
     this.states = allStates;
-    TimeCallbackService.performCheck();
-    TimeCallbackService.performCheck();
+    this.deviceUpdater.onConnChanged();
   }
 }

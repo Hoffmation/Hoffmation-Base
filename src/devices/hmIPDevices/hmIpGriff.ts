@@ -1,15 +1,11 @@
-import { DeviceType } from '../deviceType';
-import { WindowPosition } from '../models';
-import { Window } from '../groups';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceCapability } from '../DeviceCapability';
+import { iBatteryDevice, iDisposable, iHandleSensor } from '../../interfaces';
 import { Battery, HandleSensor } from '../sharedFunctions';
-import { iBatteryDevice, iHandleSensor } from '../baseDeviceInterfaces';
-import { LogLevel } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
-import { HandleSettings } from '../../models/deviceSettings';
-import { HandleChangeAction } from '../../models/action';
+import { HandleSettings } from '../deviceSettings';
+import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../enums';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { HandleChangeAction } from '../../models';
+import { Window } from '../groups';
 
 export class HmIpGriff extends HmIPDevice implements iHandleSensor, iBatteryDevice, iDisposable {
   /** @inheritDoc */

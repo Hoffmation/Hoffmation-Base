@@ -1,9 +1,7 @@
+import { iLoadMeter } from '../../interfaces/baseDevices/iLoadMeter';
 import { ZigbeeActuator } from './BaseDevices';
-import { LogLevel } from '../../logging';
-import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { iLoadMeter } from '../baseDeviceInterfaces/iLoadMeter';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class ZigbeeUbisysActuator extends ZigbeeActuator implements iLoadMeter {
   private _loadPower: number = 0;

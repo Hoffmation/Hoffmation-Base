@@ -1,8 +1,8 @@
-import { iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { Utils } from '../../utils/utils';
-import { TemperatureSensorChangeAction } from '../../models/action';
-import { iJsonOmitKeys } from '../../models/iJsonOmitKeys';
+import { TemperatureSensorChangeAction } from '../../models';
+import { iJsonOmitKeys, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';
+import { Persistence } from '../../services';
 
 export class TemperatureSensor implements iJsonOmitKeys {
   /** @inheritDoc */
@@ -61,7 +61,7 @@ export class TemperatureSensor implements iJsonOmitKeys {
    * Persists the current temperature sensor information to the database
    */
   public persist(): void {
-    Utils.dbo?.persistTemperatureSensor(this._device);
+    Persistence.dbo?.persistTemperatureSensor(this._device);
   }
 
   /**

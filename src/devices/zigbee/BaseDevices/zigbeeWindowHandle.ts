@@ -1,14 +1,11 @@
-import { ZigbeeDevice } from './index';
-import { Battery, HandleSensor } from '../../sharedFunctions';
-import { iBatteryDevice, iHandleSensor } from '../../baseDeviceInterfaces';
-import { DeviceCapability } from '../../DeviceCapability';
-import { DeviceType } from '../../deviceType';
+import { DeviceCapability, DeviceType, LogLevel, WindowPosition } from '../../../enums';
+import { iBatteryDevice, iHandleSensor } from '../../../interfaces';
+import { HandleSettings } from '../../deviceSettings';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { WindowPosition } from '../../models';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { Battery, HandleSensor } from '../../sharedFunctions';
 import { Window } from '../../groups';
-import { LogLevel } from '../../../logging';
-import { HandleSettings } from '../../../models/deviceSettings';
-import { HandleChangeAction } from '../../../models/action';
+import { HandleChangeAction } from '../../../models';
 
 export class ZigbeeWindowHandle extends ZigbeeDevice implements iHandleSensor, iBatteryDevice {
   /** @inheritDoc */

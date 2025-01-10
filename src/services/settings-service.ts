@@ -1,4 +1,5 @@
-import { HeatingMode, iConfig } from '../server';
+import { HeatingMode } from '../enums';
+import { iConfig } from '../interfaces';
 
 export class SettingsService {
   /**

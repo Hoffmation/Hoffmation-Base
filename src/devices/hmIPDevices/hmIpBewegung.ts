@@ -1,13 +1,11 @@
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
+import { iIlluminationSensor, iMotionSensor } from '../../interfaces';
+import { MotionSensorSettings } from '../deviceSettings';
+import { CountToday, MotionSensorAction } from '../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { Utils } from '../../utils/utils';
-import { LogLevel } from '../../logging';
-import { MotionSensorSettings } from '../../models/deviceSettings';
-import { MotionSensorAction } from '../../models/action';
-import { CountToday } from '../../models/persistence';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { Persistence } from '../../services';
+import { Utils } from '../../utils';
 
 export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMotionSensor {
   private static MOVEMENT_DETECTION: string = 'MOTION';
@@ -29,10 +27,10 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
     super(pInfo, DeviceType.HmIpBewegung);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
     this.deviceCapabilities.push(DeviceCapability.illuminationSensor);
-    if (!Utils.anyDboActive) {
+    if (!Persistence.anyDboActive) {
       this.initialized = true;
     } else {
-      Utils.dbo
+      Persistence.dbo
         ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
           this.detectionsToday = todayCount.count;
@@ -56,7 +54,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
 
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
-    Utils.dbo?.persistIlluminationSensor(this);
+    this.dbo?.persistIlluminationSensor(this);
   }
 
   public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
@@ -64,7 +62,7 @@ export class HmIpBewegung extends HmIPDevice implements iIlluminationSensor, iMo
   }
 
   public persistMotionSensor(): void {
-    Utils.dbo?.persistMotionSensor(this);
+    this.dbo?.persistMotionSensor(this);
   }
 
   /** @inheritDoc */

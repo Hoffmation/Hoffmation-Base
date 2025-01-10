@@ -1,18 +1,18 @@
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { iHeater, iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
-import { DeviceClusterType } from '../device-cluster-type';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { HeatGroupSettings } from '../../models/groupSettings/heatGroupSettings';
+import { iDisposable, iHeater, iHumiditySensor, iTemperatureSensor } from '../../interfaces';
+import { Utils } from '../../utils';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
-import { LogLevel } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
-import { Utils } from '../../utils/utils';
-import { HeaterSettings } from '../../models/deviceSettings';
-import { TimeCallbackService } from '../../services/time-callback-service';
-import { TimeCallback, TimeCallbackType } from '../../models/timeCallback';
-import { HandleChangeAction, HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../models/action';
+import { HeaterSettings } from '../deviceSettings';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceClusterType, DeviceType, LogLevel, TimeCallbackType } from '../../enums';
+import { TimeCallbackService } from '../../services';
+import {
+  HandleChangeAction,
+  HeatGroupSettings,
+  HumiditySensorChangeAction,
+  TemperatureSensorChangeAction,
+  TimeCallback,
+} from '../../models';
 
 export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iHumiditySensor, iHeater, iDisposable {
   /** @inheritDoc */
@@ -192,12 +192,12 @@ export class HmIpHeizgruppe extends HmIPDevice implements iTemperatureSensor, iH
 
   /** @inheritDoc */
   public persistTemperaturSensor(): void {
-    Utils.dbo?.persistTemperatureSensor(this);
+    this.dbo?.persistTemperatureSensor(this);
   }
 
   /** @inheritDoc */
   public persistHeater(): void {
-    Utils.dbo?.persistHeater(this);
+    this.dbo?.persistHeater(this);
   }
 
   public onHandleChange(_action: HandleChangeAction): void {

@@ -1,4 +1,6 @@
-export class ExcessEnergyConsumerSettings {
+import { iExcessEnergyConsumerSettings } from '../interfaces';
+
+export class ExcessEnergyConsumerSettings implements iExcessEnergyConsumerSettings {
   public constructor(
     /**
      * Priority in comparision to other ExcessEnergyConsumer Devices

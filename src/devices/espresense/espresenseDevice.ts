@@ -1,22 +1,21 @@
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { iBluetoothDetector } from '../baseDeviceInterfaces/iBluetoothDetector';
-import { DeviceCapability } from '../DeviceCapability';
-import { DeviceInfo } from '../DeviceInfo';
-import { DeviceType } from '../deviceType';
-import { Devices } from '../devices';
+import { TrilaterationBasePoint } from './trilaterationBasePoint';
+import { iRoomBase, iRoomDevice, iTrilaterationBasePoint } from '../../interfaces';
+import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
+import { DeviceInfo } from '../DeviceInfo';
+import { Devices } from '../devices';
 import { EspresenseCoordinator } from './espresenseCoordinator';
-import { TrilaterationBasePoint } from './trilaterationBasePoint';
 import { Trilateration } from './trilateration';
-import { Utils } from '../../utils/utils';
-import { iRoomDevice } from '../baseDeviceInterfaces';
-import { RoomBase } from '../../services/RoomBase';
-import { API } from '../../services/api';
+import { Persistence } from '../../services';
+import { API } from '../../api';
+import { ServerLogService } from '../../logging';
+import { Utils } from '../../utils';
 
 export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   /** @inheritDoc */
-  public readonly position: TrilaterationBasePoint;
+  public readonly position: iTrilaterationBasePoint;
   /** @inheritDoc */
   public settings: undefined = undefined;
   /** @inheritDoc */
@@ -71,7 +70,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   }
 
   /** @inheritDoc */
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
@@ -157,7 +156,7 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

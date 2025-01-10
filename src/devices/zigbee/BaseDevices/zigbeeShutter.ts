@@ -1,18 +1,18 @@
-import { DeviceType } from '../../deviceType';
-import { ZigbeeDevice } from './zigbeeDevice';
-import { Window } from '../../groups';
-import { WindowPosition } from '../../models';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { iShutter } from '../../../interfaces';
+import { ShutterSettings } from '../../deviceSettings';
+import {
+  ShutterCalibration,
+  ShutterPositionChangedAction,
+  ShutterSetLevelCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../../models';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../../DeviceCapability';
-import { Utils } from '../../../utils/utils';
-import { iShutter } from '../../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../../logging';
-import { CommandSource, ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../../models/command';
-import { ShutterSettings } from '../../../models/deviceSettings';
-import { ShutterCalibration } from '../../../models/persistence';
-import { ShutterPositionChangedAction } from '../../../models/action';
+import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../../enums';
+import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { Utils } from '../../../utils';
+import { Window } from '../../groups';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** @inheritDoc */
@@ -28,7 +28,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this.deviceCapabilities.push(DeviceCapability.shutter);
-    Utils.dbo
+    this.dbo
       ?.getShutterCalibration(this)
       .then((calibrationData: ShutterCalibration) => {
         this._shutterCalibrationData = calibrationData;
@@ -37,7 +37,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       .catch((err: Error) => {
         this.log(LogLevel.Warn, `Failed to initialize Calibration data, err ${err?.message ?? err}`);
       });
-    Utils.dbo?.getLastDesiredPosition(this).then((val) => {
+    this.dbo?.getLastDesiredPosition(this).then((val) => {
       if (val.desiredPosition >= -1) {
         this._window?.setDesiredPosition(
           new WindowSetDesiredPositionCommand(
@@ -78,7 +78,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   /** @inheritDoc */
   public persist(): void {
-    Utils.dbo?.persistShutter(this);
+    this.dbo?.persistShutter(this);
   }
 
   /** @inheritDoc */
@@ -176,7 +176,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       LogLevel.Trace,
       `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
     );
-    Utils.dbo?.persistShutterCalibration(this._shutterCalibrationData);
+    this.dbo?.persistShutterCalibration(this._shutterCalibrationData);
   }
 
   protected initializeMovementFinishTimeout(duration: number, endPosition: number): void {

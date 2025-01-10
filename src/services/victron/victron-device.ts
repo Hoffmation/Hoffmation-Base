@@ -1,23 +1,13 @@
-import {
-  Battery,
-  DeviceCapability,
-  DeviceInfo,
-  Devices,
-  iBatteryDevice,
-  iEnergyManager,
-  iExcessEnergyConsumer,
-} from '../../devices';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
+import { Battery, DeviceInfo, Devices, VictronDeviceSettings } from '../../devices';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel, TimeOfDay } from '../../enums';
+import { iBatteryDevice, iEnergyManager, iExcessEnergyConsumer, iJsonOmitKeys } from '../../interfaces';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
-import { SunTimeOffsets, TimeCallbackService } from '../time-callback-service';
-import { EnergyConsumerStateChange } from '../../utils/energy-consumer-state-change';
-import { Utils } from '../../utils/utils';
-import { EnergyManagerUtils } from '../../utils/energy-manager-utils';
-import { VictronDeviceSettings } from '../../models/deviceSettings';
-import { TimeOfDay } from '../../models/timeCallback';
-import { iJsonOmitKeys } from '../../models/iJsonOmitKeys';
-import { EnergyCalculation } from '../../models/persistence';
-import { DeviceType } from '../../devices/deviceType';
+import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../../utils';
+import { EnergyCalculation } from '../../models';
+import { ServerLogService } from '../../logging';
+import { Persistence } from '../dbo';
+import { TimeCallbackService } from '../time-callback-service';
+import { SunTimeOffsets } from '../../models/sun-time-offsets';
 
 export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {
   /** @inheritDoc */
@@ -190,7 +180,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

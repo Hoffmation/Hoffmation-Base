@@ -1,11 +1,10 @@
-import { GroupType } from './group-type';
+import { iIdHolder, iRoomBase } from '../../interfaces';
+import { GroupSettings } from '../../models';
+import { GroupType, LogDebugType, LogLevel } from '../../enums';
 import { DeviceCluster } from '../device-cluster';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { iIdHolder } from '../../models/iIdHolder';
-import { GroupSettings } from '../../models/groupSettings/groupSettings';
-import { Utils } from '../../utils/utils';
-import { RoomBase } from '../../services/RoomBase';
-import { API } from '../../services/api';
+import { Utils } from '../../utils';
+import { API } from '../../api';
+import { ServerLogService } from '../../logging';
 
 export class BaseGroup implements iIdHolder {
   /**
@@ -33,8 +32,8 @@ export class BaseGroup implements iIdHolder {
     return this._deviceCluster;
   }
 
-  public getRoom(): RoomBase {
-    return Utils.guard<RoomBase>(API.getRoom(this.roomName));
+  public getRoom(): iRoomBase {
+    return Utils.guard<iRoomBase>(API.getRoom(this.roomName));
   }
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {

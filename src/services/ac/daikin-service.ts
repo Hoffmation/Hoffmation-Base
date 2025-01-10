@@ -1,15 +1,15 @@
-import { DaikinAC, DaikinManager } from 'daikin-controller';
-import { LogLevel, ServerLogService } from '../../logging';
-import { OwnDaikinDevice } from './own-daikin-device';
-import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import TelegramBot from 'node-telegram-bot-api';
-import { SettingsService } from '../settings-service';
-import { Devices } from '../../devices';
-import { Router } from '../network';
-import { Utils } from '../../utils/utils';
+import { OwnDaikinDevice } from './own-daikin-device';
+import { DaikinAC, DaikinManager } from 'daikin-controller';
 import { AcDevice } from './ac-device';
-import { AcDeviceType } from './acDeviceType';
-import { BlockAutomaticCommand, CommandSource } from '../../models/command';
+import { AcDeviceType, CommandSource, LogLevel } from '../../enums';
+import { TelegramMessageCallback, TelegramService } from '../Telegram';
+import { SettingsService } from '../settings-service';
+import { ServerLogService } from '../../logging';
+import { BlockAutomaticCommand } from '../../models';
+import { Router } from '../network';
+import { Utils } from '../../utils';
+import { Devices } from '../../devices';
 
 export class DaikinService {
   private static _ownDevices: { [name: string]: OwnDaikinDevice } = {};

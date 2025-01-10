@@ -1,16 +1,16 @@
-import { WeatherMinutes } from './weather-minutes';
-import { WeatherAlert } from './weather-alert';
-import { HTTPSOptions } from '../HTTPSOptions';
-import { HTTPSService } from '../https-service';
-import { Utils } from '../../utils/utils';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
 import SunCalc from 'suncalc';
 import { TimeCallbackService } from '../time-callback-service';
-import { iSpeaker, UNDEFINED_TEMP_VALUE } from '../../devices';
-import { WeatherResponse } from './weather-response';
+import { WeatherResponse } from '../../interfaces/weather/weather-response';
+import { Utils } from '../../utils';
+import { LogDebugType, LogLevel } from '../../enums';
+import { ServerLogService } from '../../logging';
+import { HTTPSOptions } from '../HTTPSOptions';
+import { HTTPSService } from '../https-service';
+import { WeatherAlert } from '../../interfaces/weather/weather-alert';
+import { iSpeaker, iWeatherSettings, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { ShutterSettings } from '../../devices';
 import { RainNextMinutesInfo } from './rain-next-minutes-info';
-import { iWeatherSettings } from '../../server';
-import { ShutterSettings } from '../../models/deviceSettings';
+import { WeatherMinutes } from '../../interfaces/weather/weather-minutes';
 
 export class WeatherService {
   /**

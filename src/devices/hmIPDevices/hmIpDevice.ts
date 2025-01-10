@@ -1,7 +1,6 @@
-import { LogLevel } from '../../logging';
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType, LogLevel } from '../../enums';
 
 export class HmIPDevice extends IoBrokerBaseDevice {
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {

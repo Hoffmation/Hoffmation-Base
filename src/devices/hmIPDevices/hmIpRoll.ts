@@ -1,17 +1,13 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { Window } from '../groups';
-import { WindowPosition } from '../models';
 import _ from 'lodash';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { HmIPDevice } from './hmIpDevice';
+import { iShutter } from '../../interfaces';
+import { ShutterSettings } from '../deviceSettings';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { Utils } from '../../utils/utils';
-import { iShutter } from '../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../logging';
-import { ShutterSettings } from '../../models/deviceSettings';
-import { CommandSource, ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../models/command';
-import { ShutterPositionChangedAction } from '../../models/action';
+import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { ShutterPositionChangedAction, ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../models';
+import { Utils } from '../../utils';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { Window } from '../groups';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */
@@ -25,7 +21,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     super(pInfo, DeviceType.HmIpRoll);
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
-    Utils.dbo?.getLastDesiredPosition(this).then((val) => {
+    this.dbo?.getLastDesiredPosition(this).then((val) => {
       if (val.desiredPosition === -1) {
         return;
       }
@@ -79,7 +75,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   }
 
   public persist(): void {
-    Utils.dbo?.persistShutter(this);
+    this.dbo?.persistShutter(this);
   }
 
   private setCurrentLevel(value: number, initial: boolean = false): void {

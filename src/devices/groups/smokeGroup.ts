@@ -1,9 +1,8 @@
-import { ZigbeeHeimanSmoke } from '../zigbee';
+import { iSmokeDetectorDevice } from '../../interfaces';
 import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
+import { DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
-import { iSmokeDetectorDevice } from '../baseDeviceInterfaces';
+import { ZigbeeHeimanSmoke } from '../zigbee';
 
 export class SmokeGroup extends BaseGroup {
   public constructor(roomName: string, smokeDetectorIds: string[]) {

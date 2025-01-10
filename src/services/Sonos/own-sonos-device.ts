@@ -1,16 +1,16 @@
-import { SonosDevice } from '@svrooij/sonos/lib';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { Utils } from '../../utils/utils';
 import _ from 'lodash';
-import { SonosService } from './sonos-service';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { iRoomBase, iSpeaker } from '../../interfaces';
+import { DeviceInfo, Devices, SonosDeviceSettings } from '../../devices';
+import { SonosDevice } from '@svrooij/sonos/lib';
+import { API } from '../../api';
 import { SettingsService } from '../settings-service';
+import { ServerLogService } from '../../logging';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
+import { Utils } from '../../utils';
+import { SonosService } from './sonos-service';
 import { PollyService } from './polly-service';
-import { API } from '../api';
-import { RoomBase } from '../RoomBase';
-import { SonosDeviceSettings } from '../../models/deviceSettings';
-import { DeviceCapability, DeviceInfo, Devices, iSpeaker } from '../../devices';
-import { DeviceType } from '../../devices/deviceType';
+import { Persistence } from '../dbo';
 
 export class OwnSonosDevice implements iSpeaker {
   /** @inheritDoc */
@@ -48,7 +48,7 @@ export class OwnSonosDevice implements iSpeaker {
     return this._info;
   }
 
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
@@ -150,7 +150,7 @@ export class OwnSonosDevice implements iSpeaker {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

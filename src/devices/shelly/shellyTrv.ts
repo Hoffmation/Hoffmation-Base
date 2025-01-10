@@ -1,24 +1,20 @@
-import { ShellyDevice } from './shellyDevice';
-import { iBatteryDevice, iHeater, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { PIDController } from '../../liquid-pid';
+import { DeviceCapability, DeviceType, LogLevel, TimeCallbackType } from '../../enums';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { HeatGroupSettings } from '../../models/groupSettings/heatGroupSettings';
-import { HeatGroup } from '../groups';
+import { ShellyDevice } from './shellyDevice';
+import { iBatteryDevice, iHeater, iHeaterSettings, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { Battery, TemperatureSensor } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { LogLevel } from '../../logging';
-import { HeaterSettings } from '../../models/deviceSettings/heaterSettings';
-import { TimeCallback, TimeCallbackType } from '../../models/timeCallback';
-import { TimeCallbackService } from '../../services/time-callback-service';
-import { HandleChangeAction, TemperatureSensorChangeAction } from '../../models/action';
+import { HeaterSettings } from '../deviceSettings';
+import { Utils } from '../../utils';
+import { PIDController } from '../../liquid-pid';
+import { TimeCallbackService } from '../../services';
+import { HandleChangeAction, HeatGroupSettings, TemperatureSensorChangeAction, TimeCallback } from '../../models';
+import { HeatGroup } from '../groups';
 
 export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSensor, iBatteryDevice {
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
   /** @inheritDoc */
-  public settings: HeaterSettings = new HeaterSettings();
+  public settings: iHeaterSettings = new HeaterSettings();
   /** @inheritDoc */
   public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
   /** @inheritDoc */
@@ -234,7 +230,7 @@ export class ShellyTrv extends ShellyDevice implements iHeater, iTemperatureSens
 
   /** @inheritDoc */
   public persistHeater(): void {
-    Utils.dbo?.persistHeater(this);
+    this.dbo?.persistHeater(this);
   }
 
   /** @inheritDoc */

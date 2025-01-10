@@ -1,11 +1,11 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { TelegramMessageCallback } from './telegramMessageCalback';
-import { ShutterService } from '../ShutterService';
+import { CommandSource, DeviceType } from '../../enums';
 import { TelegramService } from './telegram-service';
-import { RoomService } from '../room-service';
-import { CommandSource, FloorSetAllShuttersCommand } from '../../models/command';
+import { TelegramMessageCallback } from './telegramMessageCalback';
 import { Devices, Griffe, HeatGroup, Heizgruppen, HmIpTaster, ZigbeeAquaraVibra } from '../../devices';
-import { DeviceType } from '../../devices/deviceType';
+import { RoomService } from '../room-service';
+import { ShutterService } from '../ShutterService';
+import { FloorSetAllShuttersCommand } from '../../models';
 
 export class TelegramCommands {
   public static initialize(): void {

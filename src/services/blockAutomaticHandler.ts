@@ -1,14 +1,12 @@
-import { Utils } from '../utils/utils';
 import _ from 'lodash';
-import { LogDebugType, LogLevel } from '../logging';
 import {
   BlockAutomaticCommand,
   BlockAutomaticLiftBlockCommand,
   BlockAutomaticUntilCommand,
-  CommandSource,
   RestoreTargetAutomaticValueCommand,
-} from '../models/command';
-import { CollisionSolving } from '../models/collisionSolving';
+} from '../models';
+import { CollisionSolving, CommandSource, LogDebugType, LogLevel } from '../enums';
+import { Utils } from '../utils';
 
 /**
  * This class is responsible for blocking automatic actions for a specific duration.

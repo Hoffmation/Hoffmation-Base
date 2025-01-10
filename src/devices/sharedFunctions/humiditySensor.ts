@@ -1,7 +1,7 @@
-import { iHumiditySensor, UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { iJsonOmitKeys } from '../../models/iJsonOmitKeys';
-import { Utils } from '../../utils/utils';
-import { HumiditySensorChangeAction } from '../../models/action';
+import { iHumiditySensor, iJsonOmitKeys, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { HumiditySensorChangeAction } from '../../models';
+import { Utils } from '../../utils';
+import { Persistence } from '../../services';
 
 export class HumiditySensor implements iJsonOmitKeys {
   /** @inheritDoc */
@@ -37,7 +37,7 @@ export class HumiditySensor implements iJsonOmitKeys {
   }
 
   public persist(): void {
-    Utils.dbo?.persistHumiditySensor(this._device);
+    Persistence.dbo?.persistHumiditySensor(this._device);
   }
 
   public addHumidityCallback(pCallback: (action: HumiditySensorChangeAction) => void): void {

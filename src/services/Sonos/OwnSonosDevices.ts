@@ -1,5 +1,6 @@
-import { LogLevel, ServerLogService } from '../../logging';
+import { ServerLogService } from '../../logging';
 import { OwnSonosDevice } from './own-sonos-device';
+import { LogLevel } from '../../enums';
 
 export class OwnSonosDevices {
   /**

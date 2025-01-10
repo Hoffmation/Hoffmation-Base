@@ -1,6 +1,5 @@
 import { BaseCommand } from './baseCommand';
-import { CommandSource } from './commandSource';
-import { CommandType } from './commandType';
+import { CommandSource, CommandType } from '../../enums';
 
 export class ShutterSetLevelCommand extends BaseCommand {
   /** @inheritDoc */

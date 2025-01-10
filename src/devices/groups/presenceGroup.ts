@@ -1,20 +1,19 @@
-import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
-import { DeviceList } from '../device-list';
-import { Utils } from '../../utils/utils';
-import { iMotionSensor } from '../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../logging';
 import {
   MotionSensorAction,
   PresenceGroupAnyMovementAction,
   PresenceGroupFirstEnterAction,
   PresenceGroupLastLeftAction,
 } from '../../models/action';
-import { ActuatorSetStateCommand, RoomSetLightTimeBasedCommand } from '../../models/command';
-import { RoomService } from '../../services/room-service';
+import { BaseGroup } from './base-group';
+import { DeviceClusterType, GroupType, LogDebugType, LogLevel } from '../../enums';
+import { DeviceList } from '../device-list';
+import { iMotionSensor } from '../../interfaces';
+import { iPresenceGroup } from '../../interfaces/groups/IPresenceGroup';
+import { ActuatorSetStateCommand, RoomSetLightTimeBasedCommand } from '../../models';
+import { RoomService } from '../../services';
+import { Utils } from '../../utils';
 
-export class PresenceGroup extends BaseGroup {
+export class PresenceGroup extends BaseGroup implements iPresenceGroup {
   private _lastMovement: Date = new Date(0);
   private _lastLeftTimeout: NodeJS.Timeout | null = null;
   private _lastLeftCbs: ((action: PresenceGroupLastLeftAction) => void)[] = [];
@@ -26,7 +25,7 @@ export class PresenceGroup extends BaseGroup {
     this.deviceCluster.deviceMap.set(DeviceClusterType.MotionDetection, new DeviceList(motionSensorIds));
   }
 
-  private get lastLeftDelayActive(): boolean {
+  public get lastLeftDelayActive(): boolean {
     return this.getTimeAfterReset() < 0;
   }
 
@@ -91,11 +90,11 @@ export class PresenceGroup extends BaseGroup {
     this._anyMovementCbs.push(cb);
   }
 
-  private presentAmount(): number {
+  public presentAmount(): number {
     return this.getMotionDetector().filter((b) => b.movementDetected).length;
   }
 
-  private fireFistEnterCBs(action: MotionSensorAction): void {
+  public fireFistEnterCBs(action: MotionSensorAction): void {
     for (const cb of this._firstEnterCbs) {
       cb(new PresenceGroupFirstEnterAction(action));
     }
@@ -105,7 +104,7 @@ export class PresenceGroup extends BaseGroup {
     this._firstEnterCbs.push(cb);
   }
 
-  private motionSensorOnAnyMovement(action: MotionSensorAction): void {
+  public motionSensorOnAnyMovement(action: MotionSensorAction): void {
     this._lastMovement = new Date();
     if (RoomService.awayModeActive || (RoomService.nightAlarmActive && !action.sensor.settings.excludeFromNightAlarm)) {
       RoomService.startIntrusionAlarm(this.getRoom(), action.sensor);
@@ -119,7 +118,7 @@ export class PresenceGroup extends BaseGroup {
     this.executeAnyMovementCbs(new PresenceGroupAnyMovementAction(action));
   }
 
-  private motionSensorOnLastLeft(action: MotionSensorAction): void {
+  public motionSensorOnLastLeft(action: MotionSensorAction): void {
     let timeAfterReset: number = this.getTimeAfterReset();
     if (timeAfterReset > 0) {
       this._lastLeftTimeout = null;
@@ -159,14 +158,14 @@ export class PresenceGroup extends BaseGroup {
    * reset timer should have reset the movement.
    * @returns The time in milliseconds after the reset time.
    */
-  private getTimeAfterReset(): number {
+  public getTimeAfterReset(): number {
     return Utils.nowMS() - this._lastMovement.getTime() - this.getRoom().settings.movementResetTimer * 1000;
   }
 
   /**
    * In case of an existing delayed last left callback timeout, this removes it.
    */
-  private resetLastLeftTimeout() {
+  public resetLastLeftTimeout() {
     if (this._lastLeftTimeout === null) {
       return;
     }
@@ -174,13 +173,13 @@ export class PresenceGroup extends BaseGroup {
     this._lastLeftTimeout = null;
   }
 
-  private executeAnyMovementCbs(action: PresenceGroupAnyMovementAction): void {
+  public executeAnyMovementCbs(action: PresenceGroupAnyMovementAction): void {
     for (const cb of this._anyMovementCbs) {
       cb(action);
     }
   }
 
-  private executeLastLeftCbs(action: PresenceGroupLastLeftAction): void {
+  public executeLastLeftCbs(action: PresenceGroupLastLeftAction): void {
     for (const cb of this._lastLeftCbs) {
       cb(action);
     }

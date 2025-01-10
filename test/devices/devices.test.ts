@@ -1,9 +1,10 @@
 import {
   BaseGroup,
   DeviceCluster,
-  deviceConfig,
   Devices,
   GroupType,
+  iDeviceConfig,
+  iRoomBase,
   PresenceGroup,
   RoomBase,
   Utils,
@@ -15,8 +16,8 @@ import ExampleDevices from './exampleDevices.json';
 describe('Devices', () => {
   Utils.testInitializeServices();
   jest.setTimeout(10000);
-  const deviceJSON: { [id: string]: deviceConfig } = ExampleDevices as {
-    [id: string]: deviceConfig;
+  const deviceJSON: { [id: string]: iDeviceConfig } = ExampleDevices as {
+    [id: string]: iDeviceConfig;
   };
   new Devices(deviceJSON);
   it('Should be able to create device JSON', () => {
@@ -38,7 +39,7 @@ describe('Devices', () => {
     const groups: Map<GroupType, BaseGroup> = new Map<GroupType, BaseGroup>();
     groups.set(GroupType.Window, new WindowGroup('Testroom', [new Window('Testroom', ['hm-rpc-0007DA49A781DF'])]));
     groups.set(GroupType.Presence, new PresenceGroup('Testroom', ['zigbee-00124b0022cd373c']));
-    const room: RoomBase = new RoomBase(groups, 'Testroom', 1);
+    const room: iRoomBase = new RoomBase(groups, 'Testroom', 1);
     const json: string = JSON.stringify(room);
     expect(json !== '').toBeTruthy();
     const newObject: string = JSON.parse(json);

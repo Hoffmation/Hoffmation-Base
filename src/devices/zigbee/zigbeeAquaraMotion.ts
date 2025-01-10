@@ -1,10 +1,7 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
-import { iIlluminationSensor } from '../baseDeviceInterfaces';
-import { ZigbeeMotionSensor } from './BaseDevices';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { Utils } from '../../utils/utils';
+import { ZigbeeMotionSensor } from './BaseDevices';
+import { iIlluminationSensor } from '../../interfaces';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminationSensor {
   private _illuminance: number = 0;
@@ -47,7 +44,7 @@ export class ZigbeeAquaraMotion extends ZigbeeMotionSensor implements iIlluminat
 
   private set currentIllumination(value: number) {
     this._illuminance = value;
-    Utils.dbo?.persistIlluminationSensor(this);
+    this.dbo?.persistIlluminationSensor(this);
   }
 
   /** @inheritDoc */

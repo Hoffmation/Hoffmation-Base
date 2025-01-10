@@ -1,6 +1,5 @@
+import { CommandSource, CommandType } from '../../enums';
 import { BaseCommand } from './baseCommand';
-import { CommandSource } from './commandSource';
-import { CommandType } from './commandType';
 
 export class WindowRestoreDesiredPositionCommand extends BaseCommand {
   /** @inheritDoc */

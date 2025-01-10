@@ -1,7 +1,7 @@
-import { TemperatureSettings } from '../temperatureSettings';
-import { iIdHolder } from '../iIdHolder';
 import { GroupSettings } from './groupSettings';
+import { TemperatureSettings } from '../temperatureSettings';
 import { Utils } from '../../utils';
+import { iIdHolder } from '../../interfaces';
 
 export class HeatGroupSettings extends GroupSettings {
   /**
@@ -32,7 +32,7 @@ export class HeatGroupSettings extends GroupSettings {
     super.fromPartialObject(data);
   }
 
-  protected toJSON(): Partial<HeatGroupSettings> {
+  public toJSON(): Partial<HeatGroupSettings> {
     return Utils.jsonFilter(this);
   }
 

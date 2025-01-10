@@ -1,5 +1,4 @@
 export * from './catchEmResult';
-export * from './iDisposeable';
 export * from './RGB';
 export * from './utils';
 export * from './ringStorage';

@@ -1,15 +1,11 @@
-import { DeviceType } from '../deviceType';
 import { ZigbeeDevice } from './BaseDevices';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iBatteryDevice, iSmokeDetectorDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
+import { iBatteryDevice, iSmokeDetectorDevice } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { LogLevel } from '../../logging';
-import { Res } from '../../services/Translation';
-import { PollyService, SonosService } from '../../services/Sonos';
-import { RoomService } from '../../services/room-service';
-import { CommandSource, FloorSetAllShuttersCommand } from '../../models/command';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { PollyService, Res, RoomService, SonosService } from '../../services';
+import { Utils } from '../../utils';
+import { FloorSetAllShuttersCommand } from '../../models';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, iSmokeDetectorDevice {
   /** @inheritDoc */

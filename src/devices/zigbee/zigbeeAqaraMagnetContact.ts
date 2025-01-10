@@ -1,8 +1,6 @@
 import { ZigbeeMagnetContact } from './BaseDevices';
-import { LogLevel } from '../../logging';
-import { MagnetPosition } from '../models';
-import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType, LogLevel, MagnetPosition } from '../../enums';
 
 export class ZigbeeAqaraMagnetContact extends ZigbeeMagnetContact {
   public constructor(pInfo: IoBrokerDeviceInfo) {

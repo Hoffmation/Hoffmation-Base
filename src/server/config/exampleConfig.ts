@@ -1,4 +1,4 @@
-import { iConfig } from './iConfig';
+import { iConfig } from '../../interfaces';
 
 export const ExampleConfig = {
   timeSettings: {

@@ -1,11 +1,9 @@
 import { ZigbeeActuator } from './ZigbeeActuator';
-import { iLamp, iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
-import { LampUtils } from '../../sharedFunctions';
-import { DeviceCapability } from '../../DeviceCapability';
+import { iLamp, iTemporaryDisableAutomatic } from '../../../interfaces';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceType } from '../../deviceType';
-import { LogLevel } from '../../../logging';
-import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models/command';
+import { DeviceCapability, DeviceType, LogLevel } from '../../../enums';
+import { LampSetLightCommand, LampSetTimeBasedCommand, LampToggleLightCommand } from '../../../models';
+import { LampUtils } from '../../sharedFunctions';
 
 export abstract class ZigbeeLamp extends ZigbeeActuator implements iLamp, iTemporaryDisableAutomatic {
   public constructor(pInfo: IoBrokerDeviceInfo, deviceType: DeviceType) {

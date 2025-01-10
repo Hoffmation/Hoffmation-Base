@@ -1,7 +1,6 @@
-import { ZigbeeShutter } from './BaseDevices';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ZigbeeShutter } from './BaseDevices';
+import { DeviceType, LogLevel } from '../../enums';
 
 export class ZigbeeUbisysShutter extends ZigbeeShutter {
   private readonly _positionStateId: string;

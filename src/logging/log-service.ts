@@ -1,12 +1,9 @@
+import { RingStorage } from '../utils';
 import { LogObject } from './log-object';
+import { iLogSettings } from '../interfaces/iLogSettings';
+import { DeviceType, LogDebugType, LogLevel, LogSource } from '../enums';
 import { LogFilterData } from './log-filter-data';
-import { LogLevel } from './logLevel';
-import { LogDebugType } from './log-debug-type';
-import { iLogSettings } from './iLogSettings';
-import { RingStorage } from '../utils/ringStorage';
-import { LogSource } from './logSource';
-import { DeviceType } from '../devices/deviceType';
-import { SettingsService } from '../services/settings-service';
+import { SettingsService } from '../services';
 
 export class ServerLogService {
   /**

@@ -1,8 +1,6 @@
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { CollisionSolving } from '../collisionSolving';
 import { BaseCommand } from './baseCommand';
-import { SettingsService } from '../../services/settings-service';
+import { CollisionSolving, CommandSource, CommandType } from '../../enums';
+import { SettingsService } from '../../services';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
   /** @inheritDoc */

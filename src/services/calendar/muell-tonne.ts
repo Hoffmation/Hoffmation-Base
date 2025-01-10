@@ -1,6 +1,7 @@
-import { LogLevel, ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
+import { ServerLogService } from '../../logging';
+import { iSpeaker } from '../../interfaces';
 import { TelegramService } from '../Telegram';
-import { iSpeaker } from '../../devices';
 
 export class MuellTonne {
   /**

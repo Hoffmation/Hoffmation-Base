@@ -1,7 +1,9 @@
-export class ProximityCallback {
+import { iProximityCallback } from '../../interfaces/iProximityCallback';
+
+export class ProximityCallback implements iProximityCallback {
   public constructor(
-    public readonly deviceName: string,
-    public readonly distanceTrigger: number,
-    public readonly callback: (present: boolean, distance: number | undefined) => void,
+    readonly deviceName: string,
+    readonly distanceTrigger: number,
+    readonly callback: (present: boolean, distance: number | undefined) => void,
   ) {}
 }

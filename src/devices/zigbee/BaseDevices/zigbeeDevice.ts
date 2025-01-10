@@ -1,11 +1,11 @@
-import { DeviceType } from '../../deviceType';
-import { LogLevel } from '../../../logging';
-import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { iDisposable } from '../../../utils/iDisposeable';
-import { Utils } from '../../../utils/utils';
+import { IoBrokerBaseDevice } from '../../IoBrokerBaseDevice';
+import { iDisposable } from '../../../interfaces';
+import { iZigbeeDevice } from '../../../interfaces/baseDevices/IZigbeeDevice';
+import { Utils } from '../../../utils';
+import { DeviceType, LogLevel } from '../../../enums';
 
-export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
+export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable, iZigbeeDevice {
   protected _available: boolean = false;
   protected _dontSendOnUnavailable: boolean = false;
   private readonly _deviceQueryId: string;
@@ -95,7 +95,7 @@ export class ZigbeeDevice extends IoBrokerBaseDevice implements iDisposable {
   }
 
   public persistZigbeeDevice(): void {
-    Utils.dbo?.persistZigbeeDevice(this);
+    this.dbo?.persistZigbeeDevice(this);
   }
 
   /** @inheritDoc */

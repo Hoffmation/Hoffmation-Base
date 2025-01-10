@@ -1,19 +1,17 @@
-import { DeviceType } from '../../deviceType';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../../DeviceCapability';
-import { LampUtils } from '../../sharedFunctions';
-import { ZigbeeLamp } from './zigbeeLamp';
-import { Utils } from '../../../utils/utils';
-import { iDimmableLamp, iTemporaryDisableAutomatic } from '../../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../../logging';
-import { DimmerSettings } from '../../../models/deviceSettings';
 import {
   ActuatorWriteStateToDeviceCommand,
   BlockAutomaticCommand,
   DimmerSetLightCommand,
   LampSetTimeBasedCommand,
 } from '../../../models/command';
-import { SettingsService } from '../../../services/settings-service';
+import { ZigbeeLamp } from './zigbeeLamp';
+import { iDimmableLamp, iTemporaryDisableAutomatic } from '../../../interfaces';
+import { DimmerSettings } from '../../deviceSettings';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
+import { LampUtils } from '../../sharedFunctions';
+import { SettingsService } from '../../../services';
+import { Utils } from '../../../utils';
 
 export abstract class ZigbeeDimmer extends ZigbeeLamp implements iDimmableLamp, iTemporaryDisableAutomatic {
   /** @inheritDoc */

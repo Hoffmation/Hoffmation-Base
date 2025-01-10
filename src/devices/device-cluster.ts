@@ -1,9 +1,8 @@
-import { DeviceClusterType } from './device-cluster-type';
+import { DeviceClusterType, DeviceType } from '../enums';
 import { DeviceList } from './device-list';
 import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { DeviceType } from './deviceType';
-import { iBaseDevice } from './baseDeviceInterfaces';
-import { Utils } from '../utils/utils';
+import { iBaseDevice } from '../interfaces';
+import { Utils } from '../utils';
 
 export class DeviceCluster {
   public constructor(public deviceMap: Map<DeviceClusterType, DeviceList> = new Map<DeviceClusterType, DeviceList>()) {}

@@ -1,9 +1,8 @@
 import { ZigbeeHeater } from './BaseDevices';
-import { DeviceType } from '../deviceType';
-import { UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { LogLevel } from '../../logging';
+import { UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { Utils } from '../../utils/utils';
+import { DeviceType, LogLevel } from '../../enums';
+import { Utils } from '../../utils';
 
 export class ZigbeeTuyaValve extends ZigbeeHeater {
   private readonly _setLocalTempCalibrationId: string;

@@ -1,11 +1,8 @@
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
 import { Battery } from '../sharedFunctions';
-import { iDisposable } from '../../utils/iDisposeable';
+import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
+import { iBatteryDevice, iDisposable } from '../../interfaces';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class SmartGardenDevice extends IoBrokerBaseDevice implements iDisposable, iBatteryDevice {
   /** @inheritDoc */

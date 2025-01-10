@@ -1,10 +1,10 @@
-import { Utils } from '../../utils/utils';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { iJsonOmitKeys } from '../../models/iJsonOmitKeys';
-import { BatteryLevelChangeAction } from '../../models/action';
-import { VictronDeviceSettings } from '../../models/deviceSettings';
+import { iBattery, iBatteryDevice, iJsonOmitKeys } from '../../interfaces';
+import { Utils } from '../../utils';
+import { Persistence } from '../../services';
+import { BatteryLevelChangeAction } from '../../models';
+import { VictronDeviceSettings } from '../deviceSettings';
 
-export class Battery implements iJsonOmitKeys {
+export class Battery implements iJsonOmitKeys, iBattery {
   /**
    * The last time the battery was persisted (in milliseconds since 1970)
    */
@@ -34,7 +34,7 @@ export class Battery implements iJsonOmitKeys {
     if (this._lastPersist + 60000 > now) {
       return;
     }
-    Utils.dbo?.persistBatteryDevice(this._device);
+    Persistence.dbo?.persistBatteryDevice(this._device);
     this._lastPersist = now;
   }
 

@@ -1,19 +1,17 @@
-import { SmartGardenDevice } from './smartGardenDevice';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iActuator } from '../baseDeviceInterfaces';
-import { LampUtils } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { LogLevel } from '../../logging';
-import { ActuatorSettings } from '../../models/deviceSettings';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
-} from '../../models/command';
+} from '../../models';
+import { ActuatorSettings } from '../deviceSettings';
+import { SmartGardenDevice } from './smartGardenDevice';
+import { iActuator } from '../../interfaces';
+import { BlockAutomaticHandler } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { LampUtils } from '../sharedFunctions';
+import { Utils } from '../../utils';
 
 export class SmartGardenMower extends SmartGardenDevice implements iActuator {
   /** @inheritDoc */
@@ -84,7 +82,7 @@ export class SmartGardenMower extends SmartGardenDevice implements iActuator {
     if (this._lastPersist + 1000 > now) {
       return;
     }
-    Utils.dbo?.persistActuator(this);
+    this.dbo?.persistActuator(this);
     this._lastPersist = now;
   }
 

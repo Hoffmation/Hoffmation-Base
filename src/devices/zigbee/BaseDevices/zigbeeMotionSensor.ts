@@ -1,14 +1,11 @@
-import { DeviceType } from '../../deviceType';
-import { ZigbeeDevice } from './index';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../../DeviceCapability';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { iBatteryDevice, iMotionSensor } from '../../../interfaces';
 import { Battery } from '../../sharedFunctions';
-import { Utils } from '../../../utils/utils';
-import { iBatteryDevice, iMotionSensor } from '../../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../../logging';
-import { MotionSensorSettings } from '../../../models/deviceSettings';
-import { MotionSensorAction } from '../../../models/action';
-import { CountToday } from '../../../models/persistence';
+import { MotionSensorSettings } from '../../deviceSettings';
+import { CountToday, MotionSensorAction } from '../../../models';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../../enums';
+import { Utils } from '../../../utils';
 
 export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, iBatteryDevice {
   /** @inheritDoc */
@@ -28,10 +25,10 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
     super(pInfo, type);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
-    if (!Utils.anyDboActive) {
+    if (!this.anyDboActive) {
       this._initialized = true;
     } else {
-      Utils.dbo
+      this.dbo
         ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
           this.detectionsToday = todayCount.count ?? 0;
@@ -81,7 +78,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
 
   /** @inheritDoc */
   public persistMotionSensor(): void {
-    Utils.dbo?.persistMotionSensor(this);
+    this.dbo?.persistMotionSensor(this);
   }
 
   public updateMovement(newState: boolean): void {

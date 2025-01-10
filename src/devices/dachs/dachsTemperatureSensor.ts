@@ -1,17 +1,15 @@
-import { iTemperatureSensor } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
-import { DeviceType } from '../deviceType';
+import _ from 'lodash';
+import { iRoomBase, iTemperatureSensor } from '../../interfaces';
+import { DeviceSettings } from '../deviceSettings';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { TemperatureSensor } from '../sharedFunctions';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
-import _ from 'lodash';
-import { TemperatureSensor } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { RoomBase } from '../../services/RoomBase';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { DeviceSettings } from '../../models/deviceSettings';
-import { API } from '../../services/api';
-import { TemperatureSensorChangeAction } from '../../models/action';
-import { OwnSonosDevice } from '../../services/Sonos';
+import { Utils } from '../../utils';
+import { API } from '../../api';
+import { ServerLogService } from '../../logging';
+import { OwnSonosDevice, Persistence } from '../../services';
+import { TemperatureSensorChangeAction } from '../../models';
 
 export class DachsTemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
@@ -58,7 +56,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   }
 
   /** @inheritDoc */
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
@@ -115,7 +113,7 @@ export class DachsTemperatureSensor implements iTemperatureSensor {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

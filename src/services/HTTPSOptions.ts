@@ -1,4 +1,5 @@
-import { LogLevel, ServerLogService } from '../logging';
+import { ServerLogService } from '../logging';
+import { LogLevel } from '../enums';
 
 export class HTTPSOptions {
   constructor(

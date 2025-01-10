@@ -1,22 +1,18 @@
-import { iBaseDevice, iCameraDevice, iRoomDevice } from './baseDeviceInterfaces';
-import { DeviceType } from './deviceType';
-import { DeviceCapability } from './DeviceCapability';
+import _ from 'lodash';
+import { iBaseDevice, iCameraDevice, iCameraSettings, iDeviceInfo, iRoomBase, iRoomDevice } from '../interfaces';
+import { CameraSettings } from './deviceSettings';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
+import { Base64Image, CountToday, MotionSensorAction } from '../models';
 import { DeviceInfo } from './DeviceInfo';
 import { Devices } from './devices';
-import _ from 'lodash';
-import { Utils } from '../utils/utils';
-import { RoomBase } from '../services/RoomBase';
-import { LogDebugType, LogLevel, ServerLogService } from '../logging';
-import { CameraSettings } from '../models/deviceSettings';
-import { MotionSensorAction } from '../models/action';
-import { CountToday } from '../models/persistence';
-import { Base64Image } from '../models/base64Image';
-import { API } from '../services/api';
-import { TelegramService } from '../services/Telegram';
+import { Persistence, TelegramService } from '../services';
+import { Utils } from '../utils';
+import { API } from '../api';
+import { ServerLogService } from '../logging';
 
 export abstract class CameraDevice implements iCameraDevice {
   /** @inheritDoc */
-  public settings: CameraSettings = new CameraSettings();
+  public settings: iCameraSettings = new CameraSettings();
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.camera, DeviceCapability.motionSensor];
   /** @inheritDoc */
@@ -43,7 +39,7 @@ export abstract class CameraDevice implements iCameraDevice {
   protected _dogDetected: boolean = false;
   protected _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
   protected _movementDetected: boolean = false;
-  protected _info: DeviceInfo;
+  protected _info: iDeviceInfo;
   private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
@@ -58,10 +54,10 @@ export abstract class CameraDevice implements iCameraDevice {
     Devices.alLDevices[this._info.allDevicesKey] = this;
     this.persistDeviceInfo();
     this.loadDeviceSettings();
-    if (!Utils.anyDboActive) {
+    if (!Persistence.anyDboActive) {
       this._initialized = true;
     } else {
-      Utils.dbo
+      Persistence.dbo
         ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
           this.detectionsToday = todayCount.count ?? 0;
@@ -120,7 +116,7 @@ export abstract class CameraDevice implements iCameraDevice {
   }
 
   /** @inheritDoc */
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     return API.getRoom(this.info.room);
   }
 
@@ -144,7 +140,7 @@ export abstract class CameraDevice implements iCameraDevice {
 
   /** @inheritDoc */
   public persistMotionSensor(): void {
-    Utils.dbo?.persistMotionSensor(this);
+    Persistence.dbo?.persistMotionSensor(this);
   }
 
   public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
@@ -168,7 +164,7 @@ export abstract class CameraDevice implements iCameraDevice {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

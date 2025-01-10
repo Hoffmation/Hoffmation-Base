@@ -1,12 +1,9 @@
+import { iBatteryDevice, iButtonSwitch } from '../../interfaces';
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { iBatteryDevice, iButtonSwitch } from '../baseDeviceInterfaces';
-import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
-import { LogLevel } from '../../logging';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
 import { Battery } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
+import { Button, ButtonCapabilities } from '../button';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { ButtonPosition, ButtonPressType, DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDevice {
   /** @inheritDoc */
@@ -57,7 +54,7 @@ export class HmIpTaster extends HmIPDevice implements iButtonSwitch, iBatteryDev
   }
 
   public persist(buttonName: string, pressType: ButtonPressType): void {
-    Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
+    this.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
   /** @inheritDoc */

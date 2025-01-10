@@ -1,5 +1,4 @@
-import { LogDebugType } from './log-debug-type';
-import { LogSource } from './logSource';
+import { LogDebugType, LogSource } from '../enums';
 
 export class LogFilterData {
   /**

@@ -1,7 +1,8 @@
-import { Client, DeviceAction, NodeMerlinWrtApi } from 'node-merlin-wrt-api';
 import { Router } from './router';
-import { LogLevel, ServerLogService } from '../../logging';
-import { iAsusConfig } from '../../server';
+import { Client, DeviceAction, NodeMerlinWrtApi } from 'node-merlin-wrt-api';
+import { iAsusConfig } from '../../interfaces';
+import { ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
 
 export class AsusRouter extends Router {
   public authorizeDevice(

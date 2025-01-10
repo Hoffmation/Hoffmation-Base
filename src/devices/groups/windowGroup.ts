@@ -1,29 +1,32 @@
-import { Window } from './Window';
-import { WindowPosition } from '../models';
-import { BaseGroup } from './base-group';
-import { GroupType } from './group-type';
-import { DeviceList } from '../device-list';
-import { DeviceClusterType } from '../device-cluster-type';
-import { Utils } from '../../utils/utils';
-import { RoomBase } from '../../services/RoomBase';
-import { LogLevel } from '../../logging';
-import { TimeCallback, TimeCallbackType, TimeOfDay } from '../../models/timeCallback';
-import { HandleChangeAction } from '../../models/action';
 import {
-  CommandSource,
+  HandleChangeAction,
   RoomRestoreShutterPositionCommand,
   RoomSetLightTimeBasedCommand,
   ShutterSetLevelCommand,
   ShutterSunriseUpCommand,
   ShutterSunsetDownCommand,
+  TimeCallback,
   WindowRestoreDesiredPositionCommand,
   WindowSetDesiredPositionCommand,
   WindowSetRolloByWeatherStatusCommand,
-} from '../../models/command';
-import { TimeCallbackService } from '../../services/time-callback-service';
-import { ShutterSettings } from '../../models/deviceSettings';
+} from '../../models';
+import { ShutterService, TimeCallbackService } from '../../services';
+import { BaseGroup } from './base-group';
+import { Window } from './Window';
+import {
+  CommandSource,
+  DeviceClusterType,
+  GroupType,
+  LogLevel,
+  TimeCallbackType,
+  TimeOfDay,
+  WindowPosition,
+} from '../../enums';
+import { DeviceList } from '../device-list';
+import { Utils } from '../../utils';
+import { ShutterSettings } from '../deviceSettings';
 import { WeatherService } from '../../services/weather';
-import { ShutterService } from '../../services/ShutterService';
+import { iRoomBase } from '../../interfaces';
 
 export class WindowGroup extends BaseGroup {
   /**
@@ -97,7 +100,7 @@ export class WindowGroup extends BaseGroup {
   }
 
   public initialize(): void {
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     this.recalcTimeCallbacks();
 
     if (room.settings.rolloHeatReduction) {
@@ -133,7 +136,7 @@ export class WindowGroup extends BaseGroup {
   }
 
   public setRolloByWeatherStatus(c: WindowSetRolloByWeatherStatusCommand): void {
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
     this.windows.forEach((f) => {
@@ -201,12 +204,12 @@ export class WindowGroup extends BaseGroup {
 
   private sunsetDown(c: ShutterSunsetDownCommand): void {
     this.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     room.setLightTimeBased(new RoomSetLightTimeBasedCommand(c, true, 'sunsetDown'));
   }
 
   private reconfigureSunsetShutterCallback(): void {
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     if (!room.settings.sonnenUntergangRollos || !room.settings.rolloOffset) {
       if (this.sunsetShutterCallback !== undefined) {
         this.log(LogLevel.Debug, `Remove Sunset Shutter callback for ${this.roomName}`);
@@ -250,7 +253,7 @@ export class WindowGroup extends BaseGroup {
   }
 
   private reconfigureSunriseShutterCallback(): void {
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     if (!room.settings.sonnenAufgangRollos || !room.settings.rolloOffset) {
       if (this.sunriseShutterCallback !== undefined) {
         this.log(LogLevel.Debug, `Remove Sunrise Shutter callback for ${this.roomName}`);

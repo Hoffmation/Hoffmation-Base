@@ -1,19 +1,17 @@
-import { SmartGardenDevice } from './smartGardenDevice';
-import { iActuator } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { LampUtils } from '../sharedFunctions';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { Utils } from '../../utils/utils';
-import { LogLevel } from '../../logging';
-import { ActuatorSettings } from '../../models/deviceSettings';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../models/command';
+import { SmartGardenDevice } from './smartGardenDevice';
+import { iActuator } from '../../interfaces';
+import { BlockAutomaticHandler } from '../../services';
+import { ActuatorSettings } from '../deviceSettings';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { LampUtils } from '../sharedFunctions';
+import { Utils } from '../../utils';
 
 // TODO: Add iValve interface and DeviceCapability
 export class SmartGardenValve extends SmartGardenDevice implements iActuator {
@@ -87,7 +85,7 @@ export class SmartGardenValve extends SmartGardenDevice implements iActuator {
     if (this._lastPersist + 1000 > now) {
       return;
     }
-    Utils.dbo?.persistActuator(this);
+    this.dbo?.persistActuator(this);
     this._lastPersist = now;
   }
 

@@ -1,13 +1,13 @@
-import { RoomBase } from '../../../services/RoomBase';
-import { iRoomDefaultSettings } from './iRoomDefaultSettings';
 import _ from 'lodash';
+import { iRoomBase, iRoomDefaultSettings, iTimePair } from '../../../interfaces';
+import { SunTimeOffsets } from '../../sun-time-offsets';
 import { RoomSettings } from './roomSettings';
-import { LogLevel, ServerLogService } from '../../../logging';
-import { iTimePair } from '../../../server';
-import { Utils } from '../../../utils/utils';
-import { SunTimeOffsets } from '../../../services/time-callback-service';
+import { RoomBase } from '../../../services';
 import { WeatherService } from '../../../services/weather';
-import { API } from '../../../services/api';
+import { API } from '../../../api';
+import { Utils } from '../../../utils';
+import { ServerLogService } from '../../../logging';
+import { LogLevel } from '../../../enums';
 
 export class RoomSettingsController implements iRoomDefaultSettings {
   /**
@@ -120,7 +120,7 @@ export class RoomSettingsController implements iRoomDefaultSettings {
     return this._settingsContainer.includeLampsInNormalMovementLightning;
   }
 
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     if (!this.roomName) {
       return undefined;
     }

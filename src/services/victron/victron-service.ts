@@ -1,6 +1,6 @@
-import { VictronDeviceData, VictronMqttConnectionOptions } from 'victron-mqtt-consumer';
 import { VictronDevice } from './victron-device';
-import { iVictronSettings } from '../../server';
+import { iVictronSettings } from '../../interfaces';
+import { VictronDeviceData, VictronMqttConnectionOptions } from 'victron-mqtt-consumer';
 
 export class VictronService {
   private static _settings: iVictronSettings | undefined = undefined;

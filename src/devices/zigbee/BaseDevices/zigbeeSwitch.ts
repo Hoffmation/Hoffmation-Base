@@ -1,11 +1,8 @@
-import { iButtonSwitch } from '../../baseDeviceInterfaces';
+import { iButtonSwitch } from '../../../interfaces';
 import { ZigbeeDevice } from './zigbeeDevice';
-import { DeviceType } from '../../deviceType';
-import { Button, ButtonPosition, ButtonPressType } from '../../button';
+import { Button } from '../../button';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../../DeviceCapability';
-import { LogLevel } from '../../../logging';
-import { Utils } from '../../../utils/utils';
+import { ButtonPosition, ButtonPressType, DeviceCapability, DeviceType, LogLevel } from '../../../enums';
 
 export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch {
   /**
@@ -29,7 +26,7 @@ export abstract class ZigbeeSwitch extends ZigbeeDevice implements iButtonSwitch
 
   /** @inheritDoc */
   public persist(buttonName: string, pressType: ButtonPressType): void {
-    Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
+    this.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
   /** @inheritDoc */

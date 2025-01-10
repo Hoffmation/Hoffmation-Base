@@ -1,11 +1,11 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import ReadKeyList from './ReadKeyList';
 import * as _ from 'lodash';
-import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse } from '../interfaces';
 import keyTemplates from './keyTemplates';
-import { LogDebugType, LogLevel } from '../../../logging';
 import * as http from 'node:http';
 import * as https from 'node:https';
+import { DachsClientOptions, iFlattenedCompleteResponse, KeyListEntityResponse } from '../../../interfaces';
+import { LogDebugType, LogLevel } from '../../../enums';
 
 /**
  * axios HTTP Client Class

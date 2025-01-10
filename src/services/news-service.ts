@@ -1,15 +1,14 @@
 import * as fs from 'fs';
 import { Stats } from 'fs';
-import { HTTPSService } from './https-service';
-import { Utils } from '../utils/utils';
-import { LogLevel, ServerLogService } from '../logging';
-import { PollyService } from './Sonos';
-import { SettingsService } from './settings-service';
 import path from 'path';
 import Parser from 'rss-parser';
-import { iSpeaker } from '../devices';
-import { iNewsSettings } from '../server';
-import { LogSource } from '../logging/logSource';
+import { ServerLogService } from '../logging';
+import { LogLevel, LogSource } from '../enums';
+import { iNewsSettings, iSpeaker } from '../interfaces';
+import { Utils } from '../utils';
+import { SettingsService } from './settings-service';
+import { PollyService } from './Sonos';
+import { HTTPSService } from './https-service';
 import ErrnoException = NodeJS.ErrnoException;
 
 export class NewsService {

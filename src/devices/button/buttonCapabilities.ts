@@ -1,18 +1,20 @@
-export class ButtonCapabilities {
+import { iButtonCapabilities } from '../../interfaces/iButtonCapabilities';
+
+export class ButtonCapabilities implements iButtonCapabilities {
   /**
    * Whether the button supports short press
    */
-  shortPress: boolean = true;
+  public shortPress: boolean = true;
   /**
    * Whether the button supports double press
    */
-  doublePress: boolean = true;
+  public doublePress: boolean = true;
   /**
    * Whether the button supports triple press
    */
-  triplePress: boolean = true;
+  public triplePress: boolean = true;
   /**
    * Whether the button supports long press
    */
-  longPress: boolean = true;
+  public longPress: boolean = true;
 }

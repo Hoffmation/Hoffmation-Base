@@ -1,10 +1,8 @@
 import { TuyaDevice } from './tuyaDevice';
+import { iGarageDoorOpener } from '../../interfaces';
+import { GarageDoorOpenerSettings } from '../deviceSettings';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceType } from '../deviceType';
-import { DeviceCapability } from '../DeviceCapability';
-import { iGarageDoorOpener } from '../baseDeviceInterfaces';
-import { LogLevel } from '../../logging';
-import { GarageDoorOpenerSettings } from '../../models/deviceSettings';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class TuyaGarageOpener extends TuyaDevice implements iGarageDoorOpener {
   /** @inheritDoc */

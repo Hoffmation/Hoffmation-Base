@@ -1,23 +1,18 @@
-import { BaseGroup } from './base-group';
-import { GroupType } from './group-type';
-import { DeviceClusterType } from '../device-cluster-type';
-import { DeviceList } from '../device-list';
 import {
   iHeater,
   iHumiditySensor,
+  iRoomBase,
   iTemperatureSensor,
   UNDEFINED_HUMIDITY_VALUE,
   UNDEFINED_TEMP_VALUE,
-} from '../baseDeviceInterfaces';
-import { HeatGroupSettings } from '../../models/groupSettings/heatGroupSettings';
-import { Utils } from '../../utils/utils';
-import { RoomBase } from '../../services/RoomBase';
-import { LogLevel } from '../../logging';
-import { TemperatureSettings } from '../../models/temperatureSettings';
-import { API } from '../../services/api';
-import { AcDevice } from '../../services/ac';
-import { HandleChangeAction } from '../../models/action';
-import { BlockAutomaticCommand, CommandSource } from '../../models/command';
+} from '../../interfaces';
+import { BaseGroup } from './base-group';
+import { BlockAutomaticCommand, HandleChangeAction, HeatGroupSettings, TemperatureSettings } from '../../models';
+import { CommandSource, DeviceClusterType, GroupType, LogLevel } from '../../enums';
+import { DeviceList } from '../device-list';
+import { AcDevice } from '../../services';
+import { API } from '../../api';
+import { Utils } from '../../utils';
 
 export class HeatGroup extends BaseGroup {
   /** @inheritDoc */
@@ -117,7 +112,7 @@ export class HeatGroup extends BaseGroup {
   }
 
   public static getInfo(): string {
-    const rooms: RoomBase[] = Array.from(API.getRooms().values()).filter((r) => {
+    const rooms: iRoomBase[] = Array.from(API.getRooms().values()).filter((r) => {
       return r.HeatGroup !== undefined;
     });
     rooms.sort((a, b): number => {

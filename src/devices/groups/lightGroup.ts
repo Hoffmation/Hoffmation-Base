@@ -1,24 +1,20 @@
-import { BaseGroup } from './base-group';
-import { GroupType } from './group-type';
-import { DeviceClusterType } from '../device-cluster-type';
-import { DeviceList } from '../device-list';
-import { iActuator, iLamp } from '../baseDeviceInterfaces';
-import { WledDevice } from '../wledDevice';
-import { iLedRgbCct } from '../baseDeviceInterfaces/iLedRgbCct';
-import { Utils } from '../../utils/utils';
-import { RoomBase } from '../../services/RoomBase';
-import { LogLevel } from '../../logging';
-import { TimeCallback, TimeCallbackType, TimeOfDay } from '../../models/timeCallback';
+import { CommandSource, DeviceClusterType, GroupType, LogLevel, TimeCallbackType, TimeOfDay } from '../../enums';
+import { iActuator, iLamp, iRoomBase } from '../../interfaces';
 import {
   ActuatorSetStateCommand,
-  CommandSource,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LedSetLightCommand,
   LightGroupSwitchTimeConditionalCommand,
+  TimeCallback,
   WledSetLightCommand,
-} from '../../models/command';
-import { TimeCallbackService } from '../../services/time-callback-service';
+} from '../../models';
+import { TimeCallbackService } from '../../services';
+import { Utils } from '../../utils';
+import { DeviceList } from '../device-list';
+import { BaseGroup } from './base-group';
+import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
+import { WledDevice } from '../wledDevice';
 
 export class LightGroup extends BaseGroup {
   /**
@@ -197,7 +193,7 @@ export class LightGroup extends BaseGroup {
   }
 
   private reconfigureSunriseTimeCallback(): void {
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     if (!room.settings.lichtSonnenAufgangAus || !room.settings.lampOffset) {
       if (this.sonnenAufgangLichtCallback !== undefined) {
         this.log(LogLevel.Debug, `Remove Sunrise Lamp callback for ${this.roomName}`);
@@ -226,7 +222,7 @@ export class LightGroup extends BaseGroup {
   }
 
   private reconfigureSunsetTimeCallback(): void {
-    const room: RoomBase = this.getRoom();
+    const room: iRoomBase = this.getRoom();
     if (!room.settings.ambientLightAfterSunset || !room.settings.lampOffset) {
       if (this.sonnenUntergangLichtCallback !== undefined) {
         this.log(LogLevel.Debug, `Remove Sunset Lamp callback for ${this.roomName}`);

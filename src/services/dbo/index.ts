@@ -1,2 +1,2 @@
 export * from './postgreSqlPersist';
-export * from './iPersist';
+export * from './persistence';

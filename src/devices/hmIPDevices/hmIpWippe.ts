@@ -1,11 +1,8 @@
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { Button, ButtonCapabilities, ButtonPosition, ButtonPressType } from '../button';
-import { LogLevel } from '../../logging';
-import { iButtonSwitch } from '../baseDeviceInterfaces';
+import { iButtonSwitch } from '../../interfaces';
+import { Button, ButtonCapabilities } from '../button';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { Utils } from '../../utils/utils';
+import { ButtonPosition, ButtonPressType, DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   private static readonly BUTTON_CAPABILLITIES: ButtonCapabilities = {
@@ -97,7 +94,7 @@ export class HmIpWippe extends HmIPDevice implements iButtonSwitch {
   }
 
   public persist(buttonName: string, pressType: ButtonPressType): void {
-    Utils.dbo?.persistSwitchInput(this, pressType, buttonName);
+    this.dbo?.persistSwitchInput(this, pressType, buttonName);
   }
 
   public getButtonAssignment(): string {

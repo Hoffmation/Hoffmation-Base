@@ -43,22 +43,27 @@ import {
   ZigbeeUbisysLampe,
   ZigbeeUbisysShutter,
 } from './zigbee';
-import { DeviceType } from './deviceType';
-import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { iBaseDevice, iBatteryDevice, iEnergyManager, iMotionSensor, iTemperatureSensor } from './baseDeviceInterfaces';
-import { JsObjectEnergyManager } from './jsObject';
-import { WledDevice } from './wledDevice';
-import { DeviceCapability } from './DeviceCapability';
+import {
+  iBaseDevice,
+  iBatteryDevice,
+  iConfig,
+  iEnergyManager,
+  iMotionSensor,
+  iRoomImportEnforcer,
+  iTemperatureSensor,
+} from '../interfaces';
 import { Dachs } from './dachs';
+import { ServerLogService } from '../logging';
+import { DeviceCapability, DeviceType, LogLevel } from '../enums';
 import { ShellyActuator, ShellyDevice, ShellyTrv } from './shelly';
 import { TuyaDevice, TuyaGarageOpener } from './tuya';
 import { NameAmountValuePair } from './nameAmountValuePair';
-import { SmartGardenService } from './smartGarden';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { VeluxService } from './velux';
-import { LogLevel, ServerLogService } from '../logging';
-import { iConfig } from '../server';
-import { deviceConfig } from '../models/deviceConfig';
-import { iRoomImportEnforcer } from '../models/rooms';
+import { SmartGardenService } from './smartGarden';
+import { WledDevice } from './wledDevice';
+import { JsObjectEnergyManager } from './jsObject';
+import { iDeviceConfig } from '../interfaces/iDeviceConfig';
 
 export class Devices {
   /**
@@ -119,7 +124,7 @@ export class Devices {
   public static temperatureWarmWater?: iTemperatureSensor = undefined;
 
   public constructor(
-    pDeviceData: { [id: string]: deviceConfig },
+    pDeviceData: { [id: string]: iDeviceConfig },
     pRoomImportEnforcer?: iRoomImportEnforcer,
     config?: iConfig,
   ) {
@@ -128,7 +133,7 @@ export class Devices {
 
     ServerLogService.writeLog(LogLevel.Info, 'Constructing devices now');
     for (const cID in pDeviceData) {
-      const cDevConf: deviceConfig = pDeviceData[cID];
+      const cDevConf: iDeviceConfig = pDeviceData[cID];
       if (!cDevConf.common || !cDevConf.common.name || typeof cDevConf.common.name === 'object' || !cDevConf.type) {
         continue;
       }
@@ -210,7 +215,7 @@ export class Devices {
     return result.join('\n');
   }
 
-  private static processShellyDevice(cDevConf: deviceConfig) {
+  private static processShellyDevice(cDevConf: iDeviceConfig) {
     const shellyInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_Shelly}-${shellyInfo.devID}`;
     shellyInfo.allDevicesKey = fullName;
@@ -238,7 +243,7 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
-  private static processTuyaDevice(cDevConf: deviceConfig) {
+  private static processTuyaDevice(cDevConf: iDeviceConfig) {
     const tuyaInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_TUYA}-${tuyaInfo.devID}`;
     tuyaInfo.allDevicesKey = fullName;
@@ -263,7 +268,7 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
-  private static processZigbeeDevice(cDevConf: deviceConfig) {
+  private static processZigbeeDevice(cDevConf: iDeviceConfig) {
     const zigbeeInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const apiDevId: string = zigbeeInfo.devID.startsWith('0x') ? zigbeeInfo.devID.substring(2) : zigbeeInfo.devID;
     const fullName: string = `zigbee-${apiDevId}`;
@@ -367,15 +372,15 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
-  private static processVeluxDevice(cDevConf: deviceConfig) {
+  private static processVeluxDevice(cDevConf: iDeviceConfig) {
     VeluxService.processVeluxDevice(cDevConf);
   }
 
-  private static processSmartGardenDevice(cDevConf: deviceConfig) {
+  private static processSmartGardenDevice(cDevConf: iDeviceConfig) {
     SmartGardenService.processSmartGardenDevice(cDevConf);
   }
 
-  private static processWledDevice(cDevConf: deviceConfig) {
+  private static processWledDevice(cDevConf: iDeviceConfig) {
     const wledIoBrokerDeviceInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_WLED}-${wledIoBrokerDeviceInfo.devID}`;
     wledIoBrokerDeviceInfo.allDevicesKey = fullName;
@@ -391,7 +396,7 @@ export class Devices {
     Devices.alLDevices[fullName] = new WledDevice(wledIoBrokerDeviceInfo);
   }
 
-  private static processHMIPDevice(cDevConf: deviceConfig) {
+  private static processHMIPDevice(cDevConf: iDeviceConfig) {
     const hmIPInfo: IoBrokerDeviceInfo = IoBrokerDeviceInfo.byDeviceConfig(cDevConf);
     const fullName: string = `${Devices.IDENTIFIER_HOMEMATIC}-${hmIPInfo.devID}`;
     hmIPInfo.allDevicesKey = fullName;
@@ -450,7 +455,7 @@ export class Devices {
     Devices.alLDevices[fullName] = d;
   }
 
-  private static createEnergyManager(cDevConf: deviceConfig) {
+  private static createEnergyManager(cDevConf: iDeviceConfig) {
     if (Devices.energymanager !== undefined) {
       return;
     }

@@ -1,14 +1,11 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
-import { iBatteryDevice, iVibrationSensor } from '../baseDeviceInterfaces';
-import { ZigbeeDevice } from './BaseDevices';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
 import * as console from 'console';
+import { ZigbeeDevice } from './BaseDevices';
+import { iBatteryDevice, iVibrationSensor } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { PollyService, SonosService } from '../../services/Sonos';
-import { Res } from '../../services/Translation';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { PollyService, Res, SonosService } from '../../services';
+import { Utils } from '../../utils';
 
 export class ZigbeeAquaraVibra extends ZigbeeDevice implements iVibrationSensor, iBatteryDevice {
   /** @inheritDoc */

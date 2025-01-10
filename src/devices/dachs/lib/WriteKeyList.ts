@@ -1,4 +1,4 @@
-import { IWriteKeyList } from '../interfaces';
+import { IWriteKeyList } from '../../../interfaces';
 
 const WriteKeyList: IWriteKeyList = {
   Stromf_Ew: {

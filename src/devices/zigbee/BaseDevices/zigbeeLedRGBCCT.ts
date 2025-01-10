@@ -1,12 +1,10 @@
-import { DeviceType } from '../../deviceType';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../../DeviceCapability';
-import { iLedRgbCct } from '../../baseDeviceInterfaces/iLedRgbCct';
 import { ZigbeeDimmer } from './zigbeeDimmer';
-import { Utils } from '../../../utils/utils';
-import { LogLevel } from '../../../logging';
-import { LedSettings } from '../../../models/deviceSettings';
-import { ActuatorSetStateCommand, LampSetTimeBasedCommand, LedSetLightCommand } from '../../../models/command';
+import { iLedRgbCct } from '../../../interfaces/baseDevices/iLedRgbCct';
+import { LedSettings } from '../../deviceSettings';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../../enums';
+import { ActuatorSetStateCommand, LampSetTimeBasedCommand, LedSetLightCommand } from '../../../models';
+import { Utils } from '../../../utils';
 
 export abstract class ZigbeeLedRGBCCT extends ZigbeeDimmer implements iLedRgbCct {
   /** @inheritDoc */

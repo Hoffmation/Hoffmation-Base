@@ -1,10 +1,8 @@
 import { ZigbeeHeater } from './BaseDevices';
-import { DeviceType } from '../deviceType';
+import { iDisposable, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { UNDEFINED_TEMP_VALUE } from '../baseDeviceInterfaces';
-import { LogDebugType, LogLevel } from '../../logging';
-import { iDisposable } from '../../utils/iDisposeable';
-import { Utils } from '../../utils/utils';
+import { DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { Utils } from '../../utils';
 
 export class ZigbeeEuroHeater extends ZigbeeHeater implements iDisposable {
   private readonly _setLocalTempCalibrationId: string;

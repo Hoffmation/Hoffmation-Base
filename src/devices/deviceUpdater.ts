@@ -1,13 +1,19 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { IDeviceUpdater } from './iDeviceUpdater';
-import { LogLevel, ServerLogService } from '../logging';
-import { Devices } from './devices';
-import { iBaseDevice } from './baseDeviceInterfaces';
-import { MqttCoordinator } from './mqtt';
+import { iBaseDevice, IDeviceUpdater } from '../interfaces';
+import { TimeCallbackService } from '../services';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { API } from '../services/api';
+import { Devices } from './devices';
+import { MqttCoordinator } from './mqtt';
+import { API } from '../api';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { ServerLogService } from '../logging';
+import { LogLevel } from '../enums';
 
 export class DeviceUpdater implements IDeviceUpdater {
+  public onConnChanged(): void {
+    TimeCallbackService.performCheck();
+    TimeCallbackService.performCheck();
+  }
+
   public updateObject(pId: string, pObj: ioBroker.Object): void {
     const idSplit: string[] = IoBrokerDeviceInfo.idSplitter(pId);
     if (idSplit.length < 2) return;

@@ -1,10 +1,11 @@
 import * as fs from 'fs';
 import HTTPS from 'https';
-import { LogLevel, ServerLogService } from '../logging';
-import { Utils } from '../utils/utils';
-import { HTTPSOptions } from './HTTPSOptions';
 import path from 'path';
+import { HTTPSOptions } from './HTTPSOptions';
 import { IncomingMessage } from 'http';
+import { ServerLogService } from '../logging';
+import { LogLevel } from '../enums';
+import { Utils } from '../utils';
 import { FileInfo } from './file-info';
 
 export class HTTPSService {

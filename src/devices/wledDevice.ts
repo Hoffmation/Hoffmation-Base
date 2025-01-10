@@ -1,13 +1,3 @@
-import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
-import { DeviceType } from './deviceType';
-import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
-import { iDimmableLamp } from './baseDeviceInterfaces';
-import { LampUtils } from './sharedFunctions';
-import { DeviceCapability } from './DeviceCapability';
-import { BlockAutomaticHandler } from '../services/blockAutomaticHandler';
-import { Utils } from '../utils/utils';
-import { LogDebugType, LogLevel, ServerLogService } from '../logging';
-import { WledSettings } from '../models/deviceSettings';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -18,7 +8,15 @@ import {
   LampToggleLightCommand,
   RestoreTargetAutomaticValueCommand,
   WledSetLightCommand,
-} from '../models/command';
+} from '../models';
+import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
+import { IoBrokerBaseDevice } from './IoBrokerBaseDevice';
+import { iDimmableLamp } from '../interfaces';
+import { WledSettings } from './deviceSettings';
+import { BlockAutomaticHandler } from '../services';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
+import { ServerLogService } from '../logging';
+import { LampUtils } from './sharedFunctions';
 
 export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
   /** @inheritDoc */
@@ -164,7 +162,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iDimmableLamp {
 
   /** @inheritDoc */
   public persist(): void {
-    Utils.dbo?.persistActuator(this);
+    this.dbo?.persistActuator(this);
   }
 
   /** @inheritDoc */

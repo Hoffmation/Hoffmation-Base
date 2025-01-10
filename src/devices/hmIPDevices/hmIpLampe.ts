@@ -1,13 +1,3 @@
-import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { iLamp, iTemporaryDisableAutomatic } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
-import { LampUtils } from '../sharedFunctions';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
-import { Utils } from '../../utils/utils';
-import { LogDebugType, LogLevel } from '../../logging';
-import { ActuatorSettings } from '../../models/deviceSettings';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -17,6 +7,13 @@ import {
   LampToggleLightCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../models/command';
+import { HmIPDevice } from './hmIpDevice';
+import { iLamp, iTemporaryDisableAutomatic } from '../../interfaces';
+import { ActuatorSettings } from '../deviceSettings';
+import { BlockAutomaticHandler } from '../../services';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { LampUtils } from '../sharedFunctions';
 
 export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAutomatic {
   /** @inheritDoc */
@@ -100,6 +97,6 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
   }
 
   public persist(): void {
-    Utils.dbo?.persistActuator(this);
+    this.dbo?.persistActuator(this);
   }
 }

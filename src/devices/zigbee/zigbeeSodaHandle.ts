@@ -1,12 +1,13 @@
 import { ZigbeeWindowHandle } from './BaseDevices';
-import { iHumiditySensor, iTemperatureSensor } from '../baseDeviceInterfaces';
-import { DeviceType } from '../deviceType';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
+import { iHumiditySensor, iTemperatureSensor } from '../../interfaces';
 import { HumiditySensor, TemperatureSensor } from '../sharedFunctions';
-import { LogLevel } from '../../logging';
-import { HumiditySensorChangeAction, TemperatureSensorChangeAction } from '../../models/action';
-import { CommandSource, WindowSetDesiredPositionCommand } from '../../models/command';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import {
+  HumiditySensorChangeAction,
+  TemperatureSensorChangeAction,
+  WindowSetDesiredPositionCommand,
+} from '../../models';
 
 /**
  * A smart window handle with integrated temperature and humidity sensor.

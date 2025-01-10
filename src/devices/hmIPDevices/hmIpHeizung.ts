@@ -1,10 +1,8 @@
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
 import { HmIPDevice } from './hmIpDevice';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iBatteryDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
+import { iBatteryDevice } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 
 enum HmIpHeizungAdaptionStates {
   StateNotAvailable = 0,

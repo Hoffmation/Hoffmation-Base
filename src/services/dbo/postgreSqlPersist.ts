@@ -1,7 +1,5 @@
-import { iPersist } from './iPersist';
+import { Pool, PoolConfig, QueryResultRow } from 'pg';
 import {
-  ButtonPressType,
-  DeviceCapability,
   iAcDevice,
   iActuator,
   iBaseDevice,
@@ -13,22 +11,17 @@ import {
   iHumiditySensor,
   iIlluminationSensor,
   iMotionSensor,
+  iPersist,
+  iRoomBase,
   iShutter,
   iTemperatureSensor,
+  iZigbeeDevice,
   UNDEFINED_TEMP_VALUE,
-  ZigbeeDevice,
-} from '../../devices';
-import { Pool, PoolConfig, QueryResultRow } from 'pg';
-import { LogLevel, ServerLogService } from '../../logging';
-import { Utils } from '../../utils/utils';
-import { RoomBase } from '../RoomBase';
-import {
-  CountToday,
-  DesiredShutterPosition,
-  EnergyCalculation,
-  idSettings,
-  ShutterCalibration,
-} from '../../models/persistence';
+} from '../../interfaces';
+import { CountToday, DesiredShutterPosition, EnergyCalculation, idSettings, ShutterCalibration } from '../../models';
+import { ServerLogService } from '../../logging';
+import { ButtonPressType, DeviceCapability, LogLevel } from '../../enums';
+import { Utils } from '../../utils';
 
 export class PostgreSqlPersist implements iPersist {
   /** @inheritDoc */
@@ -42,7 +35,7 @@ export class PostgreSqlPersist implements iPersist {
   }
 
   /** @inheritDoc */
-  addRoom(room: RoomBase): void {
+  addRoom(room: iRoomBase): void {
     this.query(`
         insert into hoffmation_schema."BasicRooms" (name, etage)
         values ('${room.roomName}', ${room.etage}) ON CONFLICT (name)
@@ -519,7 +512,7 @@ $$;`,
   }
 
   /** @inheritDoc */
-  public persistZigbeeDevice(device: ZigbeeDevice): void {
+  public persistZigbeeDevice(device: iZigbeeDevice): void {
     const dateValue = device.lastUpdate.getTime() > 0 ? `'${device.lastUpdate.toISOString()}'` : 'null';
     this.query(`
         insert into hoffmation_schema."ZigbeeDeviceData" ("deviceID", "date", "available", "linkQuality", "lastUpdate")

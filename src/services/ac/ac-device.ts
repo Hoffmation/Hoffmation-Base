@@ -1,27 +1,35 @@
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { AcDeviceType } from './acDeviceType';
 import _ from 'lodash';
-import { SettingsService } from '../settings-service';
-import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { WeatherService } from '../weather';
-import { HeatingMode } from '../../server';
-import { RoomBase } from '../RoomBase';
-import { Utils } from '../../utils/utils';
+import { AcSettings, DeviceInfo, Devices } from '../../devices';
 import {
-  DeviceCapability,
-  DeviceInfo,
-  Devices,
   iAcDevice,
   iExcessEnergyConsumer,
+  iRoomBase,
   iRoomDevice,
   iTemporaryDisableAutomatic,
   UNDEFINED_TEMP_VALUE,
-} from '../../devices';
-import { AcMode, AcSettings } from '../../models/deviceSettings';
-import { ExcessEnergyConsumerSettings } from '../../models/excessEnergyConsumerSettings';
-import { DeviceType } from '../../devices/deviceType';
-import { BlockAutomaticCommand, CommandSource } from '../../models/command';
-import { PresenceGroupFirstEnterAction, PresenceGroupLastLeftAction } from '../../models/action';
+} from '../../interfaces';
+import {
+  AcDeviceType,
+  AcMode,
+  CommandSource,
+  DeviceCapability,
+  DeviceType,
+  HeatingMode,
+  LogDebugType,
+  LogLevel,
+} from '../../enums';
+import { BlockAutomaticHandler } from '../blockAutomaticHandler';
+import {
+  BlockAutomaticCommand,
+  ExcessEnergyConsumerSettings,
+  PresenceGroupFirstEnterAction,
+  PresenceGroupLastLeftAction,
+} from '../../models';
+import { SettingsService } from '../settings-service';
+import { WeatherService } from '../weather';
+import { Utils } from '../../utils';
+import { Persistence } from '../dbo';
+import { ServerLogService } from '../../logging';
 
 export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
   /** @inheritDoc */
@@ -36,7 +44,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
 
   protected _info: DeviceInfo;
-  protected _room: RoomBase | undefined;
+  protected _room: iRoomBase | undefined;
   protected _mode: AcMode = AcMode.Off;
   private _movementCallbackAdded: boolean = false;
 
@@ -78,12 +86,12 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   /** @inheritDoc */
-  public get room(): RoomBase | undefined {
+  public get room(): iRoomBase | undefined {
     return this._room;
   }
 
   /** @inheritDoc */
-  public set room(room: RoomBase | undefined) {
+  public set room(room: iRoomBase | undefined) {
     this._room = room;
     if (room !== undefined && !this._movementCallbackAdded) {
       this._movementCallbackAdded = true;
@@ -299,10 +307,10 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
    * Persists the current AC-Information to the database
    */
   public persist(): void {
-    if (!Utils.anyDboActive || this.on === undefined) {
+    if (!Persistence.anyDboActive || this.on === undefined) {
       return;
     }
-    Utils.dbo?.persistAC(this);
+    Persistence.dbo?.persistAC(this);
   }
 
   /** @inheritDoc */
@@ -373,7 +381,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

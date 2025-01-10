@@ -1,14 +1,5 @@
-import { LogLevel, ServerLogService } from '../../logging';
-import { SonosService } from '../Sonos';
-import { Res } from '../Translation';
-import { TelegramService } from '../Telegram';
-import { BaseGroup, iRoomDevice } from '../../devices';
-import { RoomBase } from '../RoomBase';
-import { RingStorage } from '../../utils/ringStorage';
-import { Utils } from '../../utils/utils';
 import {
   ActuatorSetStateCommand,
-  CommandSource,
   FloorSetAllShuttersCommand,
   LedSetLightCommand,
   RoomRestoreLightCommand,
@@ -16,14 +7,21 @@ import {
   RoomSetLightTimeBasedCommand,
   WindowSetDesiredPositionCommand,
   WledSetLightCommand,
-} from '../../models/command';
-import { iRoomBase } from '../../models/rooms';
+} from '../../models';
+import { BaseGroup } from '../../devices';
+import { RingStorage, Utils } from '../../utils';
+import { CommandSource, LogLevel } from '../../enums';
+import { ServerLogService } from '../../logging';
+import { SonosService } from '../Sonos';
+import { Res } from '../Translation';
+import { TelegramService } from '../Telegram';
+import { iRoomBase, iRoomDevice } from '../../interfaces';
 
 export class RoomService {
   /**
    * A Map containing all rooms in the house identified by their name
    */
-  public static Rooms: Map<string, RoomBase> = new Map<string, RoomBase>();
+  public static Rooms: Map<string, iRoomBase> = new Map<string, iRoomBase>();
   /**
    * A Map containing all groups in the house identified by {@link BaseGroup.id}
    */
@@ -46,11 +44,11 @@ export class RoomService {
   private static _intrusionAlarmLevel: number = 0;
   private static _intrusionAlarmTimeout: NodeJS.Timeout | undefined;
 
-  public static addToRoomList(room: RoomBase): void {
+  public static addToRoomList(room: iRoomBase): void {
     RoomService.Rooms.set(room.roomName, room);
   }
 
-  public static getAllRoomsOfFloor(floor: number): IterableIterator<[string, RoomBase]> {
+  public static getAllRoomsOfFloor(floor: number): IterableIterator<[string, iRoomBase]> {
     return [...this.Rooms].filter(([_name, room]) => room.etage === floor).values();
   }
 
@@ -59,7 +57,7 @@ export class RoomService {
    * @param c - the command to be executed on all windows of the desired floor(s)
    */
   public static setAllShutterOfFloor(c: FloorSetAllShuttersCommand): void {
-    const rooms: IterableIterator<[string, RoomBase]> =
+    const rooms: IterableIterator<[string, iRoomBase]> =
       c.specificFloor != undefined ? this.getAllRoomsOfFloor(c.specificFloor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
       room.WindowGroup?.setDesiredPosition(new WindowSetDesiredPositionCommand(c, c.position));
@@ -74,7 +72,7 @@ export class RoomService {
    */
   public static setAllLampsOfFloor(floor: number, command: ActuatorSetStateCommand): void {
     ServerLogService.writeLog(LogLevel.Info, `Schalte alle Lampen in Etage ${floor} auf den Wert ${command.on}`);
-    const rooms: IterableIterator<[string, RoomBase]> =
+    const rooms: IterableIterator<[string, iRoomBase]> =
       floor > -1 ? this.getAllRoomsOfFloor(floor) : this.Rooms.entries();
     for (const [_name, room] of rooms) {
       room.LightGroup?.setAllLampen(command);

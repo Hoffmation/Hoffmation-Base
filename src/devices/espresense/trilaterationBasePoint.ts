@@ -1,32 +1,33 @@
-import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
-
 import { TrilaterationPoint } from './trilaterationPoint';
-import { LogLevel, ServerLogService } from '../../logging';
-import { Utils } from '../../utils/utils';
+import { iTrilaterationBasePoint, iTrilaterationPoint, iTrilaterationRatedCoordinate } from '../../interfaces';
+import { Utils } from '../../utils';
+import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
+import { ServerLogService } from '../../logging';
+import { LogLevel } from '../../enums';
 
-export class TrilaterationBasePoint {
+export class TrilaterationBasePoint implements iTrilaterationBasePoint {
   /**
    * The coordinates of this point in Space
    */
-  public readonly ownPoint: TrilaterationPoint;
+  public readonly ownPoint: iTrilaterationPoint;
   /**
    * A precalculated map of distances to all existing points in the home (@see {@link Trilateration.possiblePoints})
    */
   public readonly precalculatedDistancesMap: Map<number, string[]> = new Map<number, string[]>();
 
   constructor(
-    public readonly x: number,
-    public readonly y: number,
-    public readonly z: number,
-    public readonly roomName: string,
+    readonly x: number,
+    readonly y: number,
+    readonly z: number,
+    readonly roomName: string,
     private readonly _maximumDistance: number = 8,
   ) {
     this.ownPoint = new TrilaterationPoint(x, y, z, roomName);
   }
 
-  public getRatedCoordinates(distance: number): TrilaterationRatedCoordinate[] {
+  public getRatedCoordinates(distance: number): iTrilaterationRatedCoordinate[] {
     const roundedDistance: number = Utils.roundDot5(distance);
-    const result: TrilaterationRatedCoordinate[] = [];
+    const result: iTrilaterationRatedCoordinate[] = [];
     this.rateCoordinates(roundedDistance, result, 100);
     this.rateCoordinates(roundedDistance - 0.5, result, 30);
     this.rateCoordinates(roundedDistance + 0.5, result, 30);
@@ -37,7 +38,7 @@ export class TrilaterationBasePoint {
     return result;
   }
 
-  private rateCoordinates(distance: number, result: TrilaterationRatedCoordinate[], rating: number): void {
+  public rateCoordinates(distance: number, result: iTrilaterationRatedCoordinate[], rating: number): void {
     const possiblePoints: string[] | undefined = this.precalculatedDistancesMap.get(distance);
     if (possiblePoints !== undefined) {
       for (const point of possiblePoints) {
@@ -46,7 +47,7 @@ export class TrilaterationBasePoint {
     }
   }
 
-  public fillMap(points: TrilaterationPoint[]): void {
+  public fillMap(points: iTrilaterationPoint[]): void {
     let count: number = 0;
     for (const point of points) {
       const distance: number = point.getDot5Distance(this.ownPoint);

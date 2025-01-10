@@ -1,4 +1,4 @@
-import { DeviceType } from '../deviceType';
+import { DeviceType } from '../../enums';
 
 export class VeluxDeviceRegistrationInfo {
   public constructor(

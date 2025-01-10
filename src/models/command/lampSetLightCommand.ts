@@ -1,7 +1,6 @@
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { BaseCommand } from './baseCommand';
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
+import { CommandSource, CommandType } from '../../enums';
+import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class LampSetLightCommand extends ActuatorSetStateCommand {

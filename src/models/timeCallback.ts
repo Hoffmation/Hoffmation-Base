@@ -1,21 +1,11 @@
-import { LogLevel, ServerLogService } from '../logging';
-import { Utils } from '../utils/utils';
-import { SunTimeOffsets, TimeCallbackService } from '../services/time-callback-service';
+import { LogLevel, TimeCallbackType } from '../enums';
+import { ITimeCallback } from '../interfaces';
+import { TimeCallbackService } from '../services';
+import { SunTimeOffsets } from './sun-time-offsets';
+import { Utils } from '../utils';
+import { ServerLogService } from '../logging';
 
-export enum TimeCallbackType {
-  TimeOfDay = 1,
-  Sunrise = 2,
-  SunSet = 3,
-}
-
-export enum TimeOfDay {
-  BeforeSunrise = 1,
-  Daylight = 2,
-  AfterSunset = 3,
-  Night = 4,
-}
-
-export class TimeCallback {
+export class TimeCallback implements ITimeCallback {
   private _calculationSunrise?: Date;
 
   public get calculationSunrise(): Date {
@@ -27,8 +17,7 @@ export class TimeCallback {
    */
   public lastDone: Date = new Date(0);
   /**
-   * The calculated date when this callback should be fired next
-   * @warning This might have not yet been recalculated
+   *
    */
   public nextToDo?: Date;
 

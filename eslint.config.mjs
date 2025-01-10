@@ -1,10 +1,10 @@
-import unusedImports from 'eslint-plugin-unused-imports';
-import jsdoc from 'eslint-plugin-jsdoc';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
+import unusedImports from "eslint-plugin-unused-imports";
+import jsdoc from "eslint-plugin-jsdoc";
+import tsParser from "@typescript-eslint/parser";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import js from "@eslint/js";
+import { FlatCompat } from "@eslint/eslintrc";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -64,7 +64,7 @@ export default [
       'jsdoc/implements-on-classes': 'error',
       'jsdoc/multiline-blocks': 'error',
       'jsdoc/no-bad-blocks': 'error',
-      'jsdoc/no-blank-blocks': 'error',
+      'jsdoc/no-blank-blocks': 'warning',
       'jsdoc/no-blank-block-descriptions': 2,
       'jsdoc/no-defaults': 'error',
       'jsdoc/no-multi-asterisks': 'error',

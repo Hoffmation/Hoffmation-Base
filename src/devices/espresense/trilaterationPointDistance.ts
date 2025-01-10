@@ -1,6 +1,8 @@
-export class TrilaterationPointDistance {
+import { iTrilaterationPointDistance } from '../../interfaces/iTrilaterationPointDistance';
+
+export class TrilaterationPointDistance implements iTrilaterationPointDistance {
   constructor(
-    public readonly pointName: string,
-    public readonly distance: number,
+    readonly pointName: string,
+    readonly distance: number,
   ) {}
 }

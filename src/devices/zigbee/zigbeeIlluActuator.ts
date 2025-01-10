@@ -1,6 +1,6 @@
 import { ZigbeeActuator } from './BaseDevices';
-import { DeviceType } from '../deviceType';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceType } from '../../enums';
 
 export class ZigbeeIlluActuator extends ZigbeeActuator {
   protected readonly _actuatorOnStateIdState: string;

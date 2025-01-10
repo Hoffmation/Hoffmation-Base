@@ -1,16 +1,17 @@
-import { Utils } from '../utils/utils';
-import { LogLevel } from '../logging';
-import { iIdHolder } from './iIdHolder';
 import _ from 'lodash';
+import { iIdHolder, iObjectSettings } from '../interfaces';
+import { Utils } from '../utils';
+import { Persistence } from '../services';
+import { LogLevel } from '../enums';
 
-export abstract class ObjectSettings {
+export abstract class ObjectSettings implements iObjectSettings {
   /**
    * Callback to be fired when the settings change
    */
   public onChangeCb?: () => void;
 
   public persist(holder: iIdHolder) {
-    Utils.dbo?.persistSettings(holder.id, JSON.stringify(this), holder.customName);
+    Persistence.dbo?.persistSettings(holder.id, JSON.stringify(this), holder.customName);
   }
 
   /**
@@ -19,7 +20,7 @@ export abstract class ObjectSettings {
    * @param loadDoneCb - Callback when loading is done
    */
   public initializeFromDb(holder: iIdHolder, loadDoneCb?: () => void) {
-    Utils.dbo?.loadSettings(holder.id).then((data) => {
+    Persistence.dbo?.loadSettings(holder.id).then((data) => {
       if (!data) {
         // Nothing in db yet
         return;
@@ -47,7 +48,7 @@ export abstract class ObjectSettings {
     }
   }
 
-  protected toJSON(): Partial<ObjectSettings> {
+  public toJSON(): Partial<ObjectSettings> {
     return Utils.jsonFilter(_.omit(this, ['onChangeCb']));
   }
 }

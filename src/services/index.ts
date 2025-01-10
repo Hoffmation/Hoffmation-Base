@@ -8,7 +8,6 @@ export * from './network';
 export * from './unifi';
 export * from './ac';
 export * from './govee';
-export * from './api';
 export * from './victron';
 export * from './calendar';
 export * from './blockAutomaticHandler';

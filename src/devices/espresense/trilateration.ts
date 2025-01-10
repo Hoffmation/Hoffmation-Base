@@ -1,22 +1,26 @@
-import { TrilaterationBasePoint } from './trilaterationBasePoint';
+import { LogDebugType, LogLevel } from '../../enums';
+import { ServerLogService } from '../../logging';
+import { RoomBase } from '../../services';
+import {
+  iTrilaterationBasePoint,
+  iTrilaterationPoint,
+  iTrilaterationPointDistance,
+  iTrilaterationRatedCoordinate,
+} from '../../interfaces';
 import { TrilaterationPoint } from './trilaterationPoint';
-import { TrilaterationRatedCoordinate } from './trilaterationRatedCoordinate';
-import { TrilaterationPointDistance } from './trilaterationPointDistance';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { RoomBase } from '../../services/RoomBase';
 
 export class Trilateration {
   /**
    * A list of all reference points for trilateration (e.g. Rooms, {@link iBluetoothDetector}s)
    */
-  public static readonly basePoints: TrilaterationBasePoint[] = [];
+  public static readonly basePoints: iTrilaterationBasePoint[] = [];
   /**
    * A list of all possible points for trilateration in this home, used for increased calculation speed
    * This list is filled mostly by {@link Trilateration.addRoom} thus resulting in the air outside the house not being included
    */
-  public static possiblePoints: TrilaterationPoint[] = [];
+  public static possiblePoints: iTrilaterationPoint[] = [];
 
-  public static addRoom(room: RoomBase, startPoint: TrilaterationPoint, endPoint: TrilaterationPoint): void {
+  public static addRoom(room: RoomBase, startPoint: iTrilaterationPoint, endPoint: iTrilaterationPoint): void {
     const points = TrilaterationPoint.getPointsInRange(startPoint, endPoint, room.roomName);
     ServerLogService.writeLog(
       LogLevel.Debug,
@@ -35,15 +39,15 @@ export class Trilateration {
     }
   }
 
-  public static getBestMatches(distances: TrilaterationPointDistance[]): TrilaterationPoint[] {
-    const bestRatedCoordinates: TrilaterationRatedCoordinate[] = this.getBestRatedCoordinates(distances);
+  public static getBestMatches(distances: iTrilaterationPointDistance[]): iTrilaterationPoint[] {
+    const bestRatedCoordinates: iTrilaterationRatedCoordinate[] = this.getBestRatedCoordinates(distances);
     if (bestRatedCoordinates.length === 0) {
       ServerLogService.writeLog(LogLevel.Debug, `No best rated coordinates found for ${distances.length} distances.`, {
         debugType: LogDebugType.Trilateration,
       });
       return [];
     }
-    const bestMatches: TrilaterationPoint[] = [];
+    const bestMatches: iTrilaterationPoint[] = [];
     for (const bestRatedCoordinate of bestRatedCoordinates) {
       const point = this.possiblePoints.find((point) => point.coordinateName === bestRatedCoordinate.coordinateName);
       if (point === undefined) {
@@ -54,10 +58,34 @@ export class Trilateration {
     return bestMatches;
   }
 
-  private static getBestRatedCoordinates(distances: TrilaterationPointDistance[]): TrilaterationRatedCoordinate[] {
-    const allRatedCoordinatesMap: Map<string, TrilaterationRatedCoordinate> = new Map<
+  public static checkRoom(distances: iTrilaterationPointDistance[]): string | undefined {
+    const bestMatches = this.getBestMatches(distances);
+    ServerLogService.writeLog(
+      LogLevel.Debug,
+      `Found ${bestMatches.length} best matches for ${distances.length} distances.`,
+      { debugType: LogDebugType.Trilateration },
+    );
+    if (bestMatches.length === 0) {
+      return undefined;
+    }
+    if (bestMatches.length === 1) {
+      return bestMatches[0].roomName;
+    }
+    // As we have multiple possible winners, we need to check how often which room occurs
+    const roomCountMap: Map<string, number> = new Map<string, number>();
+    for (const point of bestMatches) {
+      const room = point.roomName;
+      const existingCount = roomCountMap.get(room) ?? 0;
+      roomCountMap.set(room, existingCount + 1);
+    }
+
+    return Array.from(roomCountMap.entries()).sort((a, b) => b[1] - a[1])[0][0];
+  }
+
+  private static getBestRatedCoordinates(distances: iTrilaterationPointDistance[]): iTrilaterationRatedCoordinate[] {
+    const allRatedCoordinatesMap: Map<string, iTrilaterationRatedCoordinate> = new Map<
       string,
-      TrilaterationRatedCoordinate
+      iTrilaterationRatedCoordinate
     >();
     for (const dist of distances) {
       const point = this.basePoints.find((basePoint) => basePoint.ownPoint.coordinateName === dist.pointName);
@@ -92,33 +120,9 @@ export class Trilateration {
     return this.getBestRatedCoordinatesFromMap(allRatedCoordinatesMap);
   }
 
-  public static checkRoom(distances: TrilaterationPointDistance[]): string | undefined {
-    const bestMatches = this.getBestMatches(distances);
-    ServerLogService.writeLog(
-      LogLevel.Debug,
-      `Found ${bestMatches.length} best matches for ${distances.length} distances.`,
-      { debugType: LogDebugType.Trilateration },
-    );
-    if (bestMatches.length === 0) {
-      return undefined;
-    }
-    if (bestMatches.length === 1) {
-      return bestMatches[0].roomName;
-    }
-    // As we have multiple possible winners, we need to check how often which room occurs
-    const roomCountMap: Map<string, number> = new Map<string, number>();
-    for (const point of bestMatches) {
-      const room = point.roomName;
-      const existingCount = roomCountMap.get(room) ?? 0;
-      roomCountMap.set(room, existingCount + 1);
-    }
-
-    return Array.from(roomCountMap.entries()).sort((a, b) => b[1] - a[1])[0][0];
-  }
-
   private static getBestRatedCoordinatesFromMap(
-    allRatedCoordinates: Map<string, TrilaterationRatedCoordinate>,
-  ): TrilaterationRatedCoordinate[] {
+    allRatedCoordinates: Map<string, iTrilaterationRatedCoordinate>,
+  ): iTrilaterationRatedCoordinate[] {
     const sortedCoordinates = Array.from(allRatedCoordinates.values()).sort((a, b) => {
       if (a.matchCount !== b.matchCount) {
         return b.matchCount - a.matchCount;
@@ -128,7 +132,7 @@ export class Trilateration {
     ServerLogService.writeLog(LogLevel.Debug, `First sorted coordinate: ${JSON.stringify(sortedCoordinates[0])}`, {
       debugType: LogDebugType.Trilateration,
     });
-    const possibleWinner: TrilaterationRatedCoordinate[] = [];
+    const possibleWinner: iTrilaterationRatedCoordinate[] = [];
     for (const coordinate of sortedCoordinates) {
       if (possibleWinner.length === 0) {
         possibleWinner.push(coordinate);

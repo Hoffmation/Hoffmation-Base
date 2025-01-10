@@ -1,6 +1,7 @@
-import { CollisionSolving } from './collisionSolving';
+import { CollisionSolving } from '../enums';
+import { iBlockAutomaticSettings } from '../interfaces';
 
-export class BlockAutomaticSettings {
+export class BlockAutomaticSettings implements iBlockAutomaticSettings {
   /**
    * The duration in ms at which the automatic block should be disabled on force actions.
    * If not set {@link iBlockAutomaticHandlerDefaults.blockAutomaticDurationMS} will be used.

@@ -1,14 +1,12 @@
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../baseDeviceInterfaces';
-import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../DeviceCapability';
+import { iBatteryDevice, iIlluminationSensor, iMotionSensor } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
-import { Utils } from '../../utils/utils';
-import { LogLevel } from '../../logging';
-import { MotionSensorSettings } from '../../models/deviceSettings';
-import { MotionSensorAction } from '../../models/action';
-import { CountToday } from '../../models/persistence';
+import { MotionSensorSettings } from '../deviceSettings';
+import { CountToday, MotionSensorAction } from '../../models';
+import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { Persistence } from '../../services';
+import { Utils } from '../../utils';
 
 export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBatteryDevice, iMotionSensor {
   /** @inheritDoc */
@@ -34,10 +32,10 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
     this.deviceCapabilities.push(DeviceCapability.batteryDriven);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
     // this.presenceStateID = `${this.info.fullID}.1.${HmIpPraezenz.PRESENCE_DETECTION}`;
-    if (!Utils.anyDboActive) {
+    if (!Persistence.anyDboActive) {
       this.initialized = true;
     } else {
-      Utils.dbo
+      Persistence.dbo
         ?.motionSensorTodayCount(this)
         .then((todayCount: CountToday) => {
           this.detectionsToday = todayCount.count;
@@ -72,7 +70,7 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
 
   private set currentIllumination(value: number) {
     this._currentIllumination = value;
-    Utils.dbo?.persistIlluminationSensor(this);
+    this.dbo?.persistIlluminationSensor(this);
   }
 
   public addMovementCallback(pCallback: (action: MotionSensorAction) => void): void {
@@ -140,6 +138,6 @@ export class HmIpPraezenz extends HmIPDevice implements iIlluminationSensor, iBa
   }
 
   public persistMotionSensor(): void {
-    Utils.dbo?.persistMotionSensor(this);
+    this.dbo?.persistMotionSensor(this);
   }
 }

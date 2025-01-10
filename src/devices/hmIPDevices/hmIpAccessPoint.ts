@@ -1,6 +1,5 @@
+import { DeviceType, LogLevel } from '../../enums';
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { LogLevel } from '../../logging';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 
 export class HmIpAccessPoint extends HmIPDevice {

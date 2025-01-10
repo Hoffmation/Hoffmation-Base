@@ -1,17 +1,14 @@
-import { ZigbeeDevice } from './zigbeeDevice';
-import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../baseDeviceInterfaces';
-import { DeviceType } from '../../deviceType';
-import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { DeviceCapability } from '../../DeviceCapability';
-import { PIDController } from '../../../liquid-pid';
-import { HeatGroup } from '../../groups';
+import { iBatteryDevice, iHeater, UNDEFINED_TEMP_VALUE } from '../../../interfaces';
+import { HeaterSettings } from '../../deviceSettings';
 import { Battery, TemperatureSensor } from '../../sharedFunctions';
-import { Utils } from '../../../utils/utils';
-import { LogLevel } from '../../../logging';
-import { HeaterSettings } from '../../../models/deviceSettings';
-import { TimeCallbackService } from '../../../services/time-callback-service';
-import { TimeCallback, TimeCallbackType } from '../../../models/timeCallback';
-import { HandleChangeAction, TemperatureSensorChangeAction } from '../../../models/action';
+import { ZigbeeDevice } from './zigbeeDevice';
+import { Utils } from '../../../utils';
+import { DeviceCapability, DeviceType, LogLevel, TimeCallbackType } from '../../../enums';
+import { PIDController } from '../../../liquid-pid';
+import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
+import { TimeCallbackService } from '../../../services';
+import { HandleChangeAction, TemperatureSensorChangeAction, TimeCallback } from '../../../models';
+import { HeatGroup } from '../../groups';
 
 export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevice {
   /** @inheritDoc */
@@ -194,7 +191,7 @@ export class ZigbeeHeater extends ZigbeeDevice implements iHeater, iBatteryDevic
   }
 
   public persistHeater(): void {
-    Utils.dbo?.persistHeater(this);
+    this.dbo?.persistHeater(this);
   }
 
   /** @inheritDoc */

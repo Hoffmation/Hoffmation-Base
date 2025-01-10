@@ -1,11 +1,11 @@
-import { ActuatorSettings, deviceConfig, Devices, DimmerSettings, Utils } from '../../src';
+import { ActuatorSettings, Devices, DimmerSettings, iDeviceConfig, Utils } from '../../src';
 import ExampleDevices from './exampleDevices.json';
 
 describe('Device Settings', () => {
   Utils.testInitializeServices();
   jest.setTimeout(10000);
-  const deviceJSON: { [id: string]: deviceConfig } = ExampleDevices as {
-    [id: string]: deviceConfig;
+  const deviceJSON: { [id: string]: iDeviceConfig } = ExampleDevices as {
+    [id: string]: iDeviceConfig;
   };
   new Devices(deviceJSON);
   it('Acutator Settings should respect partial Object', () => {

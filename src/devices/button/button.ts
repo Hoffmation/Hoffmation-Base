@@ -1,10 +1,10 @@
-import { LogLevel, ServerLogService } from '../../logging';
-import { ButtonCapabilities } from './buttonCapabilities';
-import { ButtonPressType } from './buttonPressType';
+import { ButtonPressType, LogLevel } from '../../enums';
 import { ButtonCallback } from './buttonCallback';
-import { Utils } from '../../utils/utils';
+import { ServerLogService } from '../../logging';
+import { Utils } from '../../utils';
+import { iButton, iButtonCapabilities } from '../../interfaces';
 
-export class Button {
+export class Button implements iButton {
   private _statesMap: Map<ButtonPressType, boolean> = new Map<ButtonPressType, boolean>();
   private _callbacksMap: Map<ButtonPressType, Array<ButtonCallback>> = new Map<
     ButtonPressType,
@@ -14,7 +14,7 @@ export class Button {
 
   public constructor(
     public name: string,
-    public buttonCapabilities: ButtonCapabilities,
+    public buttonCapabilities: iButtonCapabilities,
   ) {
     if (buttonCapabilities.shortPress) {
       this._callbacksMap.set(ButtonPressType.short, []);
@@ -55,7 +55,7 @@ export class Button {
   }
 
   public isPressActive(type: ButtonPressType) {
-    return this._statesMap.get(type);
+    return this._statesMap.get(type) ?? false;
   }
 
   public getDescription(): string {

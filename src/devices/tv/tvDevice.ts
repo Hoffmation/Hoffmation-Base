@@ -1,13 +1,11 @@
 import _ from 'lodash';
-import { iTvDevice } from '../baseDeviceInterfaces';
-import { DeviceCapability } from '../DeviceCapability';
-import { TvDeviceType } from './tvDeviceType';
-import { RoomBase } from '../../services/RoomBase';
-import { Utils } from '../../utils/utils';
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { TvSettings } from '../../models/deviceSettings';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel, TvDeviceType } from '../../enums';
+import { iTvDevice } from '../../interfaces';
+import { TvSettings } from '../deviceSettings';
+import { Persistence, RoomBase } from '../../services';
 import { DeviceInfo } from '../DeviceInfo';
-import { DeviceType } from '../deviceType';
+import { Utils } from '../../utils';
+import { ServerLogService } from '../../logging';
 
 export abstract class TvDevice implements iTvDevice {
   /** @inheritDoc */
@@ -87,7 +85,7 @@ export abstract class TvDevice implements iTvDevice {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,

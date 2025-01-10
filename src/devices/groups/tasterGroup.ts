@@ -1,13 +1,11 @@
 import { BaseGroup } from './base-group';
-import { DeviceClusterType } from '../device-cluster-type';
-import { GroupType } from './group-type';
+import { ButtonPressType, CommandSource, DeviceClusterType, GroupType } from '../../enums';
 import { DeviceList } from '../device-list';
+import { iButtonSwitch } from '../../interfaces';
+import { ActuatorSetStateCommand, WindowSetDesiredPositionCommand } from '../../models';
+import { SettingsService } from '../../services';
 import { SpeakerGroup } from './speakerGroup';
-import { iButtonSwitch } from '../baseDeviceInterfaces';
 import { HeatGroup } from './heatGroup';
-import { ButtonPressType } from '../button';
-import { ActuatorSetStateCommand, CommandSource, WindowSetDesiredPositionCommand } from '../../models/command';
-import { SettingsService } from '../../services/settings-service';
 
 export class TasterGroup extends BaseGroup {
   public constructor(roomName: string, buttonIds: string[]) {
@@ -102,30 +100,42 @@ export class TasterGroup extends BaseGroup {
       if (SettingsService.settings.sonos?.buttonBotRightForRadio === true) {
         const sonosGroup: SpeakerGroup | undefined = this.getRoom().SonosGroup;
         if (sonosGroup !== undefined && sonosGroup.getOwnSonosDevices().length > 0) {
-          t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
-            if (!pValue) {
-              return;
-            }
-            sonosGroup.trigger(this.getRoom().settings.radioUrl);
-          });
+          t.buttonBotRight?.addCb(
+            ButtonPressType.long,
+            (pValue: boolean) => {
+              if (!pValue) {
+                return;
+              }
+              sonosGroup.trigger(this.getRoom().settings.radioUrl);
+            },
+            'Play Radio',
+          );
         }
       }
 
       if (SettingsService.settings.daikin?.buttonBotRightForAc === true) {
         const heatGroup: HeatGroup | undefined = this.getRoom().HeatGroup;
         if (heatGroup !== undefined && heatGroup.getOwnAcDevices().length > 0) {
-          t.buttonBotRight?.addCb(ButtonPressType.short, (pValue: boolean) => {
-            if (!pValue) {
-              return;
-            }
-            heatGroup.setAc(true);
-          });
-          t.buttonBotRight?.addCb(ButtonPressType.long, (pValue: boolean) => {
-            if (!pValue) {
-              return;
-            }
-            heatGroup.setAc(false, true);
-          });
+          t.buttonBotRight?.addCb(
+            ButtonPressType.short,
+            (pValue: boolean) => {
+              if (!pValue) {
+                return;
+              }
+              heatGroup.setAc(true);
+            },
+            'Turn Ac On',
+          );
+          t.buttonBotRight?.addCb(
+            ButtonPressType.long,
+            (pValue: boolean) => {
+              if (!pValue) {
+                return;
+              }
+              heatGroup.setAc(false, true);
+            },
+            'Turn Ac Off',
+          );
         }
       }
     });

@@ -1,12 +1,12 @@
-import { async, VEvent } from 'node-ical';
-import { LogLevel, ServerLogService } from '../../logging';
-import { Utils } from '../../utils/utils';
 import { MuellTonne } from './muell-tonne';
-import { TimeCallbackService } from '../time-callback-service';
-import { iSpeaker } from '../../devices';
+import { TimeCallback } from '../../models';
 import { NameDatePair } from './name-date-pair';
-import { iMuellSettings } from '../../server';
-import { TimeCallback, TimeCallbackType } from '../../models/timeCallback';
+import { iMuellSettings, iSpeaker } from '../../interfaces';
+import { LogLevel, TimeCallbackType } from '../../enums';
+import { TimeCallbackService } from '../time-callback-service';
+import { ServerLogService } from '../../logging';
+import { async, VEvent } from 'node-ical';
+import { Utils } from '../../utils';
 
 export class MuellService {
   /**

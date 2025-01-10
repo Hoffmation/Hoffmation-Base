@@ -1,14 +1,9 @@
 import { HmIPDevice } from './hmIpDevice';
-import { DeviceType } from '../deviceType';
-import { MagnetPosition } from '../models';
-import { LogLevel } from '../../logging';
+import { iDisposable, iMagnetSensor } from '../../interfaces';
+import { DeviceType, LogLevel, MagnetPosition } from '../../enums';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { iMagnetSensor } from '../baseDeviceInterfaces';
-import { iDisposable } from '../../utils/iDisposeable';
-import { Utils } from '../../utils/utils';
-import { TelegramService } from '../../services/Telegram';
-import { Res } from '../../services/Translation';
-import { SonosService } from '../../services/Sonos';
+import { Res, SonosService, TelegramService } from '../../services';
+import { Utils } from '../../utils';
 
 export class HmIpTuer extends HmIPDevice implements iDisposable, iMagnetSensor {
   /** @inheritDoc */

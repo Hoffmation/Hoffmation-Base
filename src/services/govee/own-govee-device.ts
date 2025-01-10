@@ -1,15 +1,4 @@
-import { LogDebugType, LogLevel, ServerLogService } from '../../logging';
-import { Utils } from '../../utils/utils';
 import _ from 'lodash';
-import { API } from '../api';
-import { iLedRgbCct } from '../../devices/baseDeviceInterfaces/iLedRgbCct';
-import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { GoveeDeviceData } from './govee-device-data';
-import { GooveeService } from './govee-service';
-import { RoomBase } from '../RoomBase';
-import { LedSettings } from '../../models/deviceSettings';
-import { DeviceCapability, DeviceInfo, Devices, iTemporaryDisableAutomatic, LampUtils } from '../../devices';
-import { DeviceType } from '../../devices/deviceType';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -19,6 +8,16 @@ import {
   LedSetLightCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../models/command';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
+import { GoveeDeviceData, iRoomBase, iTemporaryDisableAutomatic } from '../../interfaces';
+import { DeviceInfo, Devices, LampUtils, LedSettings } from '../../devices';
+import { BlockAutomaticHandler } from '../blockAutomaticHandler';
+import { Utils } from '../../utils';
+import { API } from '../../api';
+import { ServerLogService } from '../../logging';
+import { Persistence } from '../dbo';
+import { GooveeService } from './govee-service';
 
 export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */
@@ -48,7 +47,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   private _actuatorOn: boolean = false;
   private _color: string = '#fcba32';
   private _colortemp: number = 500;
-  private _room: RoomBase | undefined = undefined;
+  private _room: iRoomBase | undefined = undefined;
   protected _lastPersist: number = 0;
 
   public constructor(deviceId: string, ownDeviceName: string, roomName: string) {
@@ -75,9 +74,9 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     return this._colortemp;
   }
 
-  public get room(): RoomBase {
+  public get room(): iRoomBase {
     if (this._room === undefined) {
-      this._room = Utils.guard<RoomBase>(API.getRoom(this.info.room));
+      this._room = Utils.guard<iRoomBase>(API.getRoom(this.info.room));
     }
     return this._room;
   }
@@ -118,7 +117,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   public persistDeviceInfo(): void {
     Utils.guardedTimeout(
       () => {
-        Utils.dbo?.addDevice(this);
+        Persistence.dbo?.addDevice(this);
       },
       5000,
       this,
@@ -189,7 +188,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     if (this._lastPersist + 1000 > now) {
       return;
     }
-    Utils.dbo?.persistActuator(this);
+    Persistence.dbo?.persistActuator(this);
     this._lastPersist = now;
   }
 

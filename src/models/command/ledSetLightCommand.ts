@@ -1,11 +1,9 @@
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
-import { BaseCommand } from './baseCommand';
 import { DimmerSetLightCommand } from './dimmerSetLightCommand';
-import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
-import { TimeOfDay } from '../timeCallback';
-import { LedSettings } from '../deviceSettings';
+import { CommandSource, CommandType, TimeOfDay } from '../../enums';
+import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { LedSettings } from '../../devices';
+import { LampSetTimeBasedCommand } from './lampSetTimeBasedCommand';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */

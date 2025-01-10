@@ -1,6 +1,5 @@
 import { BaseCommand } from './baseCommand';
-import { CommandType } from './commandType';
-import { CommandSource } from './commandSource';
+import { CommandSource, CommandType } from '../../enums';
 
 export class RoomSetLightTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */

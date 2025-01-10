@@ -1,5 +1,5 @@
-import { iBaseDevice } from './baseDeviceInterfaces';
-import { API } from '../services/api';
+import { iBaseDevice } from '../interfaces';
+import { API } from '../api';
 
 export class DeviceList {
   public constructor(private _ids: string[] = []) {
