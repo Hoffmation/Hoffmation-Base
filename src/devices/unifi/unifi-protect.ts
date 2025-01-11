@@ -1,13 +1,18 @@
 import {
   ProtectApi,
   ProtectCameraConfig,
+  ProtectChimeConfig,
+  ProtectEventPacket,
+  ProtectLightConfig,
   ProtectLogging,
   ProtectNvrBootstrap,
   ProtectNvrBootstrapInterface,
+  ProtectSensorConfig,
+  ProtectViewerConfig,
 } from 'unifi-protect';
 import { OwnUnifiCamera } from './own-unifi-camera';
 import { LogLevel, LogSource } from '../../enums';
-import { iCameraDevice, iDisposable, iUnifiProtectOptions } from '../../interfaces';
+import { iDisposable, iUnifiProtectOptions } from '../../interfaces';
 import { ServerLogService } from '../../logging';
 
 export class UnifiProtect implements iDisposable {
@@ -16,7 +21,9 @@ export class UnifiProtect implements iDisposable {
   /**
    * Mapping for own devices
    */
-  private static readonly ownDevices: Map<string, iCameraDevice> = new Map<string, iCameraDevice>();
+  public static readonly ownCameras: Map<string, OwnUnifiCamera> = new Map<string, OwnUnifiCamera>();
+  private _deviceStates: Map<string, unknown> = new Map<string, unknown>();
+  private _idMap: Map<string, string> = new Map<string, string>();
 
   public constructor(settings: iUnifiProtectOptions) {
     this._api = new ProtectApi(this.unifiLogger);
@@ -34,6 +41,10 @@ export class UnifiProtect implements iDisposable {
     this._api.logout();
   }
 
+  public static addDevice(camera: OwnUnifiCamera): void {
+    this.ownCameras.set((camera as OwnUnifiCamera).unifiCameraName, camera);
+  }
+
   private async initialize(): Promise<void> {
     this.unifiLogger.info('Unifi-Protect: Login successful');
     const bootstrap: boolean = await this._api.getBootstrap();
@@ -45,19 +56,67 @@ export class UnifiProtect implements iDisposable {
     for (const camera of info.cameras) {
       this.initializeCamera(camera);
     }
+    this._api.on('message', this.onMessage.bind(this));
   }
 
-  public static addDevice(camera: iCameraDevice): void {
-    this.ownDevices.set((camera as OwnUnifiCamera).unifiCameraName, camera);
+  private onMessage(packet: ProtectEventPacket): void {
+    switch (packet.header.action) {
+      case 'add':
+        // this.onAdd(packet);
+        break;
+
+      case 'remove':
+        // this.onRemove(packet);
+
+        break;
+
+      case 'update':
+        this.onUpdate(packet);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  private onUpdate(packet: ProtectEventPacket): void {
+    const payload = packet.payload as ProtectDeviceConfigTypes;
+
+    switch (packet.header.modelKey) {
+      case 'nvr':
+        // Update for NVR itselft
+
+        break;
+
+      default:
+        // Lookup the device.
+        const ownName: string | undefined = this._idMap.get(packet.header.id);
+        if (!ownName) {
+          break;
+        }
+        const ownCamera: OwnUnifiCamera | undefined = UnifiProtect.ownCameras.get(ownName);
+        if (ownCamera !== undefined) {
+          ownCamera.update(packet.payload as unknown as ProtectCameraConfig);
+          break;
+        }
+
+        // TODO: Add more Device Types
+
+        break;
+    }
+
+    // Update the internal list we maintain.
+    this._deviceStates.set(packet.header.id, Object.assign(this._deviceStates.get(packet.header.id) ?? {}, payload));
   }
 
   private initializeCamera(data: ProtectCameraConfig): void {
     ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Camera ${data.name} initialized`);
-    if (!UnifiProtect.ownDevices.has(data.name)) {
+    if (!UnifiProtect.ownCameras.has(data.name)) {
       return;
     }
-    const camera: OwnUnifiCamera = UnifiProtect.ownDevices.get(data.name) as OwnUnifiCamera;
+    const camera: OwnUnifiCamera = UnifiProtect.ownCameras.get(data.name) as OwnUnifiCamera;
     camera.initialize(data);
+    this._idMap.set(data.id, data.name);
   }
 }
 
@@ -86,3 +145,10 @@ class UnifiLogger implements ProtectLogging {
     });
   }
 }
+
+type ProtectDeviceConfigTypes =
+  | ProtectCameraConfig
+  | ProtectChimeConfig
+  | ProtectLightConfig
+  | ProtectSensorConfig
+  | ProtectViewerConfig;

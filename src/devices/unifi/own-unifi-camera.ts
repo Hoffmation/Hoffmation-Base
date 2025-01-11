@@ -1,4 +1,4 @@
-import { CameraDevice } from '../../devices';
+import { CameraDevice } from '../index';
 import { ProtectCameraConfig } from 'unifi-protect';
 
 export class OwnUnifiCamera extends CameraDevice {
@@ -25,7 +25,7 @@ export class OwnUnifiCamera extends CameraDevice {
   /**
    * @inheritDoc
    */
-  public update(): void {
+  public update(_packet: ProtectCameraConfig): void {
     // const stateName = idSplit[4];
     // switch (stateName) {
     //   case 'MotionDetected':

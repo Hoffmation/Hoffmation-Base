@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { ServerLogService } from '../logging';
 import { LogLevel } from '../enums';
 import { CatchEmResult } from './catchEmResult';
-import { Res } from '../services';
+import { Res } from '../i18n';
 import { iJsonOmitKeys, iTimePair } from '../interfaces';
 import { RGB } from './RGB';
 import { SettingsService } from '../settings-service';

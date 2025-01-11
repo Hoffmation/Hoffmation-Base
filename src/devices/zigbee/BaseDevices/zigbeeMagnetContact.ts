@@ -3,8 +3,9 @@ import { iBatteryDevice, iMagnetSensor } from '../../../interfaces';
 import { Battery } from '../../sharedFunctions';
 import { DeviceType, LogLevel, MagnetPosition } from '../../../enums';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { Res, SonosService, TelegramService } from '../../../services';
+import { SonosService, TelegramService } from '../../../services';
 import { Utils } from '../../../utils';
+import { Res } from '../../../i18n';
 
 export class ZigbeeMagnetContact extends ZigbeeDevice implements iBatteryDevice, iMagnetSensor {
   /** @inheritDoc */

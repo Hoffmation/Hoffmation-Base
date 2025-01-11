@@ -13,7 +13,7 @@ import { RingStorage, Utils } from '../../utils';
 import { CommandSource, LogLevel } from '../../enums';
 import { ServerLogService } from '../../logging';
 import { SonosService } from '../Sonos';
-import { Res } from '../Translation';
+import { Res } from '../../i18n';
 import { TelegramService } from '../Telegram';
 import { iRoomBase, iRoomDevice } from '../../interfaces';
 

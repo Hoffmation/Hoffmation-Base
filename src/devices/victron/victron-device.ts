@@ -1,12 +1,14 @@
-import { Battery, DeviceInfo, Devices, VictronDeviceSettings } from '../../devices';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel, TimeOfDay } from '../../enums';
 import { iBatteryDevice, iEnergyManager, iExcessEnergyConsumer, iJsonOmitKeys } from '../../interfaces';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel, TimeOfDay } from '../../enums';
+import { VictronDeviceSettings } from '../../settingsObjects';
+import { Battery } from '../sharedFunctions';
+import { DeviceInfo } from '../DeviceInfo';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../../utils';
 import { EnergyCalculation } from '../../models';
+import { Devices } from '../devices';
 import { ServerLogService } from '../../logging';
-import { Persistence } from '../dbo';
-import { TimeCallbackService } from '../time-callback-service';
+import { Persistence, TimeCallbackService } from '../../services';
 import { SunTimeOffsets } from '../../models/sun-time-offsets';
 
 export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {

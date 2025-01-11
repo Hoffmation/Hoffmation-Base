@@ -3,9 +3,10 @@ import { iBatteryDevice, iSmokeDetectorDevice } from '../../interfaces';
 import { Battery } from '../sharedFunctions';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
-import { PollyService, Res, RoomService, SonosService } from '../../services';
+import { PollyService, RoomService, SonosService } from '../../services';
 import { Utils } from '../../utils';
 import { FloorSetAllShuttersCommand } from '../../command';
+import { Res } from '../../i18n';
 
 export class ZigbeeHeimanSmoke extends ZigbeeDevice implements iBatteryDevice, iSmokeDetectorDevice {
   /** @inheritDoc */

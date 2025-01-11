@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/require-description */
 import resJson from './resources.json';
-import { iRessourceObject, IRessources, iTranslationSettings } from '../../interfaces';
+import { iRessourceObject, IRessources, iTranslationSettings } from '../interfaces';
 
 export class Res {
   private static translations: IRessources;

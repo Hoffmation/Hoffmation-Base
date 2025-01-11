@@ -5,31 +5,36 @@ import { LogLevel } from './enums';
 import {
   AsusRouter,
   DaikinService,
-  GooveeService,
   MP3Server,
   MuellService,
   NewsService,
   OwnAcDevices,
-  OwnGoveeDevices,
   OwnSonosDevices,
   Persistence,
   PollyService,
   PostgreSqlPersist,
-  Res,
   SonosService,
   TelegramCommands,
   TelegramService,
   TibberService,
   TimeCallbackService,
-  UnifiProtect,
   UnifiRouter,
-  VictronService,
 } from './services';
 import { iConfig, iSpeaker } from './interfaces';
 import { ioBrokerMain } from './ioBroker';
-import { Dachs, Devices, DeviceUpdater, Trilateration } from './devices';
+import {
+  Dachs,
+  Devices,
+  DeviceUpdater,
+  GooveeService,
+  OwnGoveeDevices,
+  Trilateration,
+  UnifiProtect,
+  VictronService,
+} from './devices';
 import { Utils } from './utils';
 import { WeatherService } from './services/weather';
+import { Res } from './i18n';
 
 export * from './enums';
 export * from './action';

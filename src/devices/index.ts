@@ -28,3 +28,6 @@ export * from './IoBrokerDeviceInfo';
 export { NameAmountValuePair } from './nameAmountValuePair';
 export * from './wledDevice';
 export * from './CameraDevice';
+export * from './govee';
+export * from './unifi';
+export * from './victron';
