@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.1.0 (2025-01-12)
 
 * (theimo1221) Refactorings to reduce circular dependencies
 * (theimo1221) First Unifi Protect Camera implementation
