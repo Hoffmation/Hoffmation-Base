@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix config export
+
 ## 3.1.0 (2025-01-12)
 
 * (theimo1221) Refactorings to reduce circular dependencies

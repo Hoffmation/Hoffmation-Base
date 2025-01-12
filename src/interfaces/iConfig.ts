@@ -6,8 +6,8 @@ import {
   iDaikinSettings,
   iEnergyManagerSettings,
   iEspresenseSettings,
+  iGlobalHeaterSettings,
   iGoveeSettings,
-  iHeaterSettings,
   iMp3Settings,
   iMuellSettings,
   iNewsSettings,
@@ -66,7 +66,7 @@ export interface iConfig {
   /**
    * @see iHeaterSettings
    */
-  heaterSettings?: iHeaterSettings;
+  heaterSettings?: iGlobalHeaterSettings;
   /**
    * The URL to the ioBroker instance.
    * @deprecated Please use the ioBroker property instead
