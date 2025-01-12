@@ -42,6 +42,7 @@ export * from './command';
 export * from './interfaces';
 export * from './settings-service';
 export * from './ioBroker';
+export * from './api';
 export * from './i18n';
 export * from './models';
 export * from './logging';
