@@ -3,6 +3,7 @@ import {
   DeviceCluster,
   Devices,
   GroupType,
+  iDeviceConfig,
   iRoomBase,
   PresenceGroup,
   RoomBase,
@@ -11,7 +12,8 @@ import {
   WindowGroup,
 } from '../../src';
 import ExampleDevices from './exampleDevices.json';
-import { iDeviceConfig } from '../../src/interfaces/iDeviceConfig';
+
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
 
 describe('Devices', () => {
   Utils.testInitializeServices();

@@ -1,5 +1,7 @@
 import { ServerLogService, WeatherService } from '../../src';
 
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+
 describe('WeatherService', () => {
   jest.setTimeout(10000);
   beforeAll(async () => {

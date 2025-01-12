@@ -8,6 +8,8 @@ import {
   TimeOfDay,
 } from '../../src';
 
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+
 describe('TimeCallbackService', () => {
   it('next Maximum Time is Today and correct', async () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(0, 0, 6, 30, 22, 30);

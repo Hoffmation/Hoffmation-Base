@@ -1,5 +1,7 @@
 import { Daytime, TemperatureSettings } from '../../lib';
 
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+
 describe('TemperatureSettings', () => {
   const setting: TemperatureSettings = new TemperatureSettings(new Daytime(0, 0), new Daytime(6, 0), 20, 'Nacht');
   const setting2: TemperatureSettings = new TemperatureSettings(new Daytime(22, 0), new Daytime(24, 0), 20, 'Abend');

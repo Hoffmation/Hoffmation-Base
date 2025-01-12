@@ -128,6 +128,10 @@ export class Utils {
   public static testInitializeServices(): void {
     ServerLogService.settings.logLevel = -1;
     SettingsService.initialize({
+      logSettings: {
+        logLevel: -1,
+        useTimestamp: false,
+      },
       ioBrokerUrl: '',
       timeSettings: {
         nightEnd: {
@@ -168,6 +172,7 @@ export class Utils {
         includeLampsInNormalMovementLightning: false,
       },
     });
+    ServerLogService.initialize(SettingsService.settings.logSettings!, SettingsService.instance);
     Res.initialize(SettingsService.settings.translationSettings);
   }
 

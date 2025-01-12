@@ -1,5 +1,7 @@
 import { MuellService, ServerLogService } from '../../src';
 
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+
 describe('MuellService', () => {
   jest.setTimeout(10000);
   ServerLogService.settings.logLevel = -1;

@@ -1,6 +1,8 @@
 import { ActuatorSettings, Devices, DimmerSettings, iDeviceConfig, Utils } from '../../src';
 import ExampleDevices from './exampleDevices.json';
 
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+
 describe('Device Settings', () => {
   Utils.testInitializeServices();
   jest.setTimeout(10000);

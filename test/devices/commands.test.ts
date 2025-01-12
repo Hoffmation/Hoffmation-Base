@@ -1,5 +1,7 @@
 import { ActuatorSetStateCommand, CommandSource, LampSetLightCommand } from '../../src';
 
+jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+
 describe('Commands', () => {
   it('Should print a proper reason Tree', () => {
     const c1 = new LampSetLightCommand(CommandSource.Force, false, 'Testreason Lamp');

@@ -1,5 +1,6 @@
 export * from './room-service';
 export * from './dbo';
+export * from './weather';
 export * from './Telegram';
 export * from './Sonos';
 export * from './time-callback-service';
