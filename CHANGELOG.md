@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Refactorings to reduce circular dependencies
+* (theimo1221) First Unifi Protect Camera implementation
+
 ## 3.0.3 (2025-01-02)
 
 * (theimo1221) Remove experimental Samsung TV implementation

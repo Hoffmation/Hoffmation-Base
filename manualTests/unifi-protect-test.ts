@@ -9,14 +9,14 @@ export class UnifiProtectTest {
     init.config.muell = undefined;
     init.config.unifiSettings = {
       nvrOptions: {
-        nvrAddress: 'protect.hoffmation.com',
+        nvrAddress: 'xxx',
         username: 'api_hoffmation',
-        password: 'HoffmationUser1',
+        password: 'yyy',
       },
     };
     await HoffmationBase.initializeBeforeIoBroker(init);
     if (!init.config.unifiSettings.nvrOptions) throw new Error('No unifi config found');
-    const cam: OwnUnifiCamera = new OwnUnifiCamera('Test', 'Kind1', 'Kind1');
+    const cam: OwnUnifiCamera = new OwnUnifiCamera('Test', 'xxx', 'xxx');
     UnifiProtect.addDevice(cam);
     const protect: UnifiProtect = new UnifiProtect(init.config.unifiSettings.nvrOptions);
     // Test some device reconnect
@@ -28,7 +28,7 @@ export class UnifiProtectTest {
       console.log('shutdown-now');
       protect.dispose();
       process.exit(1);
-    }, 15000);
+    }, 25000);
   }
 }
 

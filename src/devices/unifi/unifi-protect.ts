@@ -2,6 +2,7 @@ import {
   ProtectApi,
   ProtectCameraConfig,
   ProtectChimeConfig,
+  ProtectEventAdd,
   ProtectEventPacket,
   ProtectLightConfig,
   ProtectLogging,
@@ -60,53 +61,34 @@ export class UnifiProtect implements iDisposable {
   }
 
   private onMessage(packet: ProtectEventPacket): void {
-    switch (packet.header.action) {
-      case 'add':
-        // this.onAdd(packet);
-        break;
-
-      case 'remove':
-        // this.onRemove(packet);
-
-        break;
-
-      case 'update':
-        this.onUpdate(packet);
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  private onUpdate(packet: ProtectEventPacket): void {
     const payload = packet.payload as ProtectDeviceConfigTypes;
-
     switch (packet.header.modelKey) {
       case 'nvr':
-        // Update for NVR itselft
-
         break;
 
       default:
         // Lookup the device.
-        const ownName: string | undefined = this._idMap.get(packet.header.id);
+        let id: string = packet.header.id;
+        if (packet.header.action === 'add') {
+          id = (packet.payload as ProtectEventAdd).camera ?? (packet.payload as ProtectEventAdd).cameraId;
+        }
+        const ownName: string | undefined = this._idMap.get(id);
         if (!ownName) {
           break;
         }
         const ownCamera: OwnUnifiCamera | undefined = UnifiProtect.ownCameras.get(ownName);
         if (ownCamera !== undefined) {
-          ownCamera.update(packet.payload as unknown as ProtectCameraConfig);
+          ownCamera.update(packet);
           break;
         }
-
-        // TODO: Add more Device Types
 
         break;
     }
 
     // Update the internal list we maintain.
-    this._deviceStates.set(packet.header.id, Object.assign(this._deviceStates.get(packet.header.id) ?? {}, payload));
+    if (packet.header.action === 'update') {
+      this._deviceStates.set(packet.header.id, Object.assign(this._deviceStates.get(packet.header.id) ?? {}, payload));
+    }
   }
 
   private initializeCamera(data: ProtectCameraConfig): void {

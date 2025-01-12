@@ -98,10 +98,12 @@ export class HoffmationBase {
       ServerLogService.writeLog(LogLevel.Info, 'Unifi Router settings detected --> initializing');
       new UnifiRouter(SettingsService.settings.unifiSettings.loginOptions);
     }
-    if (SettingsService.settings.unifiSettings?.nvrOptions) {
-      ServerLogService.writeLog(LogLevel.Info, 'Unifi Protect settings detected --> initializing');
-      new UnifiProtect(SettingsService.settings.unifiSettings.nvrOptions);
-    }
+    Utils.guardedFunction(() => {
+      if (SettingsService.settings.unifiSettings?.nvrOptions) {
+        ServerLogService.writeLog(LogLevel.Info, 'Unifi Protect settings detected --> initializing');
+        Devices.unifiProtect = new UnifiProtect(SettingsService.settings.unifiSettings.nvrOptions);
+      }
+    }, this);
     TimeCallbackService.init();
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base First Initializations finished');
   }

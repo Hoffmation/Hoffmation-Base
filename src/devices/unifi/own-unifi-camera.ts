@@ -1,5 +1,6 @@
 import { CameraDevice } from '../index';
-import { ProtectCameraConfig } from 'unifi-protect';
+import { ProtectCameraConfig, ProtectEventAdd, ProtectEventPacket } from 'unifi-protect';
+import { LogLevel } from '../../enums';
 
 export class OwnUnifiCamera extends CameraDevice {
   /**
@@ -25,27 +26,34 @@ export class OwnUnifiCamera extends CameraDevice {
   /**
    * @inheritDoc
    */
-  public update(_packet: ProtectCameraConfig): void {
-    // const stateName = idSplit[4];
-    // switch (stateName) {
-    //   case 'MotionDetected':
-    //     this._movementDetectedStateId = idSplit.join('.');
-    //     this.onNewMotionDetectedValue((state.val as number) === 1);
-    //     break;
-    //   case 'PersonDetected':
-    //     this._personDetectedStateId = idSplit.join('.');
-    //     const newValue: boolean = (state.val as number) === 1;
-    //     this.onNewPersonDetectedValue(newValue);
-    //     break;
-    //   case 'DogDetected':
-    //     const newDogDetectionVal: boolean = (state.val as number) === 1;
-    //     this.log(LogLevel.Debug, `Update for "${stateName}" to value: ${state.val}`);
-    //     this.onNewDogDetectionValue(newDogDetectionVal);
-    //     break;
-    //   case 'MotionSnapshot':
-    //     this.onNewImageSnapshot(state.val as string);
-    //     break;
-    // }
+  public update(packet: ProtectEventPacket): void {
+    this.checkForMotionUpdate(packet);
+  }
+
+  private checkForMotionUpdate(packet: ProtectEventPacket): void {
+    const payload = packet.payload as ProtectEventAdd | ProtectCameraConfig;
+    const eventAdd: ProtectEventAdd = payload as ProtectEventAdd;
+    if (
+      packet.header.modelKey !== 'smartDetectObject' &&
+      (packet.header.modelKey !== 'event' ||
+        !['smartDetectLine', 'smartDetectZone'].includes(payload.type) ||
+        !eventAdd.smartDetectTypes.length)
+    ) {
+      return;
+    }
+    this.log(LogLevel.Debug, `Update for "${packet.header.modelKey}" to value: ${JSON.stringify(payload)}`);
+    const detectedTypes: string[] =
+      packet.header.modelKey === 'smartDetectObject' ? [eventAdd.type] : (eventAdd?.smartDetectTypes ?? []);
+    for (const smartDetectType of detectedTypes) {
+      switch (smartDetectType) {
+        case 'licensePlate':
+          this.log(LogLevel.Debug, `Detected "licensePlate": ${JSON.stringify(eventAdd.metadata.licensePlate)}`);
+          break;
+        case 'person':
+          this.onNewPersonDetectedValue(true);
+          break;
+      }
+    }
   }
 
   public initialize(data: ProtectCameraConfig): void {

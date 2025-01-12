@@ -64,6 +64,7 @@ import { SmartGardenService } from './smartGarden';
 import { WledDevice } from './wledDevice';
 import { JsObjectEnergyManager } from './jsObject';
 import { iDeviceConfig } from '../interfaces/iDeviceConfig';
+import { UnifiProtect } from './unifi';
 
 export class Devices {
   /**
@@ -122,6 +123,10 @@ export class Devices {
    * @default undefined (no warm water temperature sensor)
    */
   public static temperatureWarmWater?: iTemperatureCollector = undefined;
+  /**
+   * A reference to the Unifi Protect device
+   */
+  public static unifiProtect?: UnifiProtect;
 
   public constructor(
     pDeviceData: { [id: string]: iDeviceConfig },
