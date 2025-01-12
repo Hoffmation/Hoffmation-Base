@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.1.2 (2025-01-12)
 
 * (theimo1221) Fix i18n export
 
