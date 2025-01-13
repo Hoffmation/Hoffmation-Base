@@ -53,6 +53,12 @@ export abstract class CameraDevice implements iCameraDevice {
   private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
 
+  protected _lastUpdate: Date = new Date(0);
+
+  public get lastUpdate(): Date {
+    return this._lastUpdate;
+  }
+
   protected constructor(name: string, roomName: string) {
     this.name = name;
     this._info = new DeviceInfo();

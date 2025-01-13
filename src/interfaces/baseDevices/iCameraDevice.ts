@@ -39,6 +39,10 @@ export interface iCameraDevice extends iMotionSensor {
    * Whether the camera has currently detected a human
    */
   readonly personDetected: boolean;
+  /**
+   *
+   */
+  readonly lastUpdate: Date;
 
   /**
    * Inform this camera of a device, which blocks the alarm (or should unlift its block)

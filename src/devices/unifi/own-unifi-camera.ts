@@ -28,6 +28,7 @@ export class OwnUnifiCamera extends CameraDevice {
    */
   public update(packet: ProtectEventPacket): void {
     this.checkForMotionUpdate(packet);
+    this._lastUpdate = new Date();
   }
 
   private checkForMotionUpdate(packet: ProtectEventPacket): void {

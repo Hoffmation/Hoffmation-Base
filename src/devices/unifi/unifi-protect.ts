@@ -15,6 +15,7 @@ import { OwnUnifiCamera } from './own-unifi-camera';
 import { LogLevel, LogSource } from '../../enums';
 import { iDisposable, iUnifiProtectOptions } from '../../interfaces';
 import { ServerLogService } from '../../logging';
+import { Utils } from '../../utils';
 
 export class UnifiProtect implements iDisposable {
   private readonly unifiLogger: UnifiLogger = new UnifiLogger();
@@ -25,9 +26,24 @@ export class UnifiProtect implements iDisposable {
   public static readonly ownCameras: Map<string, OwnUnifiCamera> = new Map<string, OwnUnifiCamera>();
   private _deviceStates: Map<string, unknown> = new Map<string, unknown>();
   private _idMap: Map<string, string> = new Map<string, string>();
+  private _lastUpdate: Date = new Date(0);
 
   public constructor(settings: iUnifiProtectOptions) {
     this._api = new ProtectApi(this.unifiLogger);
+    this.reconnect(settings);
+    Utils.guardedInterval(
+      () => {
+        if (new Date().getTime() - this._lastUpdate.getTime() < 180 * 1000) {
+          // We had an update within the last 3 minutes --> no need to reconnect
+          return;
+        }
+        this.reconnect(settings);
+      },
+      5 * 60 * 1000,
+    );
+  }
+
+  private reconnect(settings: iUnifiProtectOptions): void {
     this._api
       .login(settings.nvrAddress, settings.username, settings.password)
       .then((_loggedIn: boolean): void => {
@@ -62,6 +78,7 @@ export class UnifiProtect implements iDisposable {
 
   private onMessage(packet: ProtectEventPacket): void {
     const payload = packet.payload as ProtectDeviceConfigTypes;
+    this._lastUpdate = new Date();
     switch (packet.header.modelKey) {
       case 'nvr':
         break;
@@ -92,12 +109,13 @@ export class UnifiProtect implements iDisposable {
   }
 
   private initializeCamera(data: ProtectCameraConfig): void {
-    ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Camera ${data.name} initialized`);
     if (!UnifiProtect.ownCameras.has(data.name)) {
+      ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Ignoring camera ${data.name}`);
       return;
     }
     const camera: OwnUnifiCamera = UnifiProtect.ownCameras.get(data.name) as OwnUnifiCamera;
     camera.initialize(data);
+    ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Camera ${data.name} (re)initialized`);
     this._idMap.set(data.id, data.name);
   }
 }

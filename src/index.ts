@@ -19,6 +19,7 @@ import {
   TibberService,
   TimeCallbackService,
   UnifiRouter,
+  WeatherService,
 } from './services';
 import { iConfig, iSpeaker } from './interfaces';
 import { ioBrokerMain } from './ioBroker';
@@ -33,7 +34,6 @@ import {
   VictronService,
 } from './devices';
 import { Utils } from './utils';
-import { WeatherService } from './services/weather';
 import { Res } from './i18n';
 
 export * from './enums';

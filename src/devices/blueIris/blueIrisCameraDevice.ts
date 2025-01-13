@@ -63,6 +63,7 @@ export class BlueIrisCameraDevice extends CameraDevice {
         this.onNewImageSnapshot(state.val as string);
         break;
     }
+    this._lastUpdate = new Date();
   }
 
   protected resetPersonDetectedState(): void {
