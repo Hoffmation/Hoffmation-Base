@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.1.4 (2025-01-13)
 
 * (theimo1221) Reconnect Unifi Protect if no update for some minutes is received.
 
