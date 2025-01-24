@@ -63,7 +63,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
       this.restoreTargetAutomaticValue.bind(this),
       this.log.bind(this),
     );
-    Utils.guardedTimeout(this.loadDeviceSettings, 300, this);
+    Utils.guardedTimeout(this.loadDeviceSettings, 4800, this);
   }
 
   public get color(): string {
