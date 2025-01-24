@@ -109,7 +109,7 @@ export class Dachs implements iBaseDevice, iActuator {
       this._influxClient = new DachsInfluxClient(options.influxDb);
     }
     this.persistDeviceInfo();
-    this.loadDeviceSettings();
+    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     const modifiedOptions = _.cloneDeep(options);
     modifiedOptions.connectionOptions.resultConfig = {
       flatten: true,

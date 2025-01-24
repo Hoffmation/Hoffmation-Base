@@ -33,7 +33,7 @@ export class DachsTemperatureSensor implements iTemperatureCollector {
     Devices.alLDevices[this._info.allDevicesKey] = this;
     Devices.temperatureWarmWater = this;
     this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 200, this);
+    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
   }
 
   /** @inheritDoc */

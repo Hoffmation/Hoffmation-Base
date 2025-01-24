@@ -8,6 +8,7 @@
 
 ## **WORK IN PROGRESS**
 
+* (theimo1221) Delay some more device settings initializations
 * (theimo1221) Delay Govee Settings initialization
 
 ## 3.1.4 (2025-01-13)

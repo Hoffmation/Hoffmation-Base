@@ -39,7 +39,7 @@ export class OwnSonosDevice implements iSpeaker {
     this._info.allDevicesKey = `sonos-${roomName}-${discoveryName}`;
     Devices.alLDevices[`sonos-${roomName}-${discoveryName}`] = this;
     this.persistDeviceInfo();
-    this.loadDeviceSettings();
+    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
   }
 
   protected _info: DeviceInfo;

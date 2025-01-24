@@ -117,7 +117,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, false);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.persistDeviceInfo();
-    this.loadDeviceSettings();
+    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     this.blockAutomationHandler = new BlockAutomaticHandler(
       this.restoreTargetAutomaticValue.bind(this),
       this.log.bind(this),

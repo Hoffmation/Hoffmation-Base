@@ -45,7 +45,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
     Devices.alLDevices['victron'] = this;
     Devices.energymanager = this;
     this.persistDeviceInfo();
-    this.loadDeviceSettings();
+    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     this._victronConsumer = new VictronMqttConsumer(opts);
     this._iCalculationInterval = Utils.guardedInterval(
       () => {

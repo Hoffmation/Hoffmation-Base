@@ -68,7 +68,7 @@ export abstract class CameraDevice implements iCameraDevice {
     this._info.allDevicesKey = `camera-${roomName}-${name}`;
     Devices.alLDevices[this._info.allDevicesKey] = this;
     this.persistDeviceInfo();
-    this.loadDeviceSettings();
+    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     if (!Persistence.anyDboActive) {
       this._initialized = true;
     } else {
