@@ -101,6 +101,19 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     info.allDevicesKey = allDevicesKey;
     info.room = options.roomName;
     super(info, DeviceType.Dachs);
+    this.jsonOmitKeys.push(
+      ...[
+        'client',
+        'config',
+        '_influxClient',
+        'warmWaterSensor',
+        'heatStorageTempSensor',
+        'warmWaterPump',
+        'heatingRod',
+        'blockDachsStart',
+        'warmWaterDachsAlternativeActuator',
+      ],
+    );
     Devices.alLDevices[allDevicesKey] = this;
     this.deviceCapabilities.push(DeviceCapability.actuator);
     if (options.influxDb) {
@@ -140,24 +153,6 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
   public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
     this.log(LogLevel.Debug, 'Restore Target Automatic value');
     this.setActuator(new ActuatorSetStateCommand(c, this.targetAutomaticState, 'Restore Target Automatic value'));
-  }
-
-  /** @inheritDoc */
-  public toJSON(): Partial<Dachs> {
-    return Utils.jsonFilter(
-      _.omit(super.toJSON(), [
-        'room',
-        'client',
-        'config',
-        '_influxClient',
-        'warmWaterSensor',
-        'heatStorageTempSensor',
-        'warmWaterPump',
-        'heatingRod',
-        'blockDachsStart',
-        'warmWaterDachsAlternativeActuator',
-      ]),
-    );
   }
 
   /** @inheritDoc */
