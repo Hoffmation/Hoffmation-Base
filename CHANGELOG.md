@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) LastCommands as Array in JSON
+
 ## 3.2.1-alpha.4 (2025-01-26)
 
 * (theimo1221) Fix JSON Dachs ommit keys

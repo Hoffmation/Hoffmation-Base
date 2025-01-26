@@ -5,6 +5,7 @@ import { ServerLogService } from '../logging';
 import { Persistence } from '../services';
 import { RoomBaseDevice } from './RoomBaseDevice';
 import { iBaseCommand } from '../command';
+import _ from 'lodash';
 
 export abstract class BaseDevice implements iBaseDevice {
   /** @inheritDoc */
@@ -109,6 +110,9 @@ export abstract class BaseDevice implements iBaseDevice {
 
   /** @inheritDoc */
   public toJSON(): Partial<RoomBaseDevice> {
+    // eslint-disable-next-line
+    const returnValue: any = _.omit(this, 'lastCommands');
+    returnValue['lastCommands'] = this.lastCommands.readAmount(this.lastCommands.maximumSize);
     return Utils.jsonFilter(this, this.jsonOmitKeys);
   }
 }

@@ -2,6 +2,10 @@ export class RingStorage<T> {
   private storage: T[] = [];
   private pointer: number = 0;
 
+  public get maximumSize(): number {
+    return this.maxSize;
+  }
+
   public constructor(private maxSize: number = 10) {}
 
   public add(object: T): void {
