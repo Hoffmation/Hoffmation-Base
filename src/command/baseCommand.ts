@@ -46,7 +46,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
     if (this.overrideCommandSource !== undefined) {
       return this.overrideCommandSource === CommandSource.Automatic;
     }
-    if (this.source instanceof BaseCommand) {
+    if (typeof this.source === 'object') {
       return this.source.isAutomaticAction;
     }
     return this.source === CommandSource.Automatic;
@@ -60,7 +60,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
         this.overrideCommandSource === CommandSource.Force
       );
     }
-    if (this.source instanceof BaseCommand) {
+    if (typeof this.source === 'object') {
       return this.source.isForceAction;
     }
     return (
@@ -72,7 +72,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
     if (this.overrideCommandSource !== undefined) {
       return this.overrideCommandSource === CommandSource.Manual || this.overrideCommandSource === CommandSource.API;
     }
-    if (this.source instanceof BaseCommand) {
+    if (typeof this.source === 'object') {
       return this.source.isManual;
     }
     return this.source === CommandSource.Manual || this.source === CommandSource.API;
@@ -82,7 +82,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
     if (this.overrideCommandSource !== undefined) {
       return this.overrideCommandSource === CommandSource.Initial;
     }
-    if (this.source instanceof BaseCommand) {
+    if (typeof this.source === 'object') {
       return this.source.isInitial;
     }
     return this.source === CommandSource.Initial;
@@ -96,7 +96,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
     if (this.ignoreReason !== undefined) {
       ownPart += ` ignored due to: "${this.ignoreReason}"`;
     }
-    if (this.source instanceof BaseCommand) {
+    if (typeof this.source === 'object') {
       return `${this.source.reasonTrace} -> ${ownPart}`;
     }
 
@@ -107,7 +107,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
     if (this.type === type) {
       return true;
     }
-    if (this.source instanceof BaseCommand) {
+    if (typeof this.source === 'object') {
       return this.source.containsType(type);
     }
     return false;
