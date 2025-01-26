@@ -82,9 +82,9 @@ export class EspresenseDevice extends RoomBaseDevice implements iBluetoothDetect
       this.log(LogLevel.Error, `Recieved malformed update data: ${state.val}`);
       return;
     }
-    let dev = this.deviceMap.get(devName);
+    const dev = this.deviceMap.get(devName) ?? this.addDeviceTracking(devName);
     if (dev === undefined) {
-      dev = this.addDeviceTracking(devName);
+      return;
     }
     dev.updateDistance(this, data.distance);
     dev.guessRoom();
@@ -135,9 +135,11 @@ export class EspresenseDevice extends RoomBaseDevice implements iBluetoothDetect
     this.proximityCallbackMap.set(cb.deviceName, currentValue);
   }
 
-  private addDeviceTracking(devName: string): DetectedBluetoothDevice {
+  private addDeviceTracking(devName: string): DetectedBluetoothDevice | undefined {
     const dev = DetectedBluetoothDevice.getOrCreate(devName);
-    this.deviceMap.set(devName, dev);
+    if (dev) {
+      this.deviceMap.set(devName, dev);
+    }
     return dev;
   }
 }

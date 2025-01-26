@@ -31,11 +31,8 @@ export class DetectedBluetoothDevice extends BaseDevice {
 
   constructor(
     public trackedDeviceId: string,
-    settings?: iBluetoothTrackingSettings,
+    settings: iBluetoothTrackingSettings,
   ) {
-    if (settings === undefined) {
-      return;
-    }
     const info: DeviceInfo = new DeviceInfo();
     info.customName = settings.customName;
     const allDevicesKey = DetectedBluetoothDevice.deviceKeyBySettings(settings);
@@ -108,10 +105,10 @@ export class DetectedBluetoothDevice extends BaseDevice {
     return result.join('\n');
   }
 
-  public static getOrCreate(devName: string): DetectedBluetoothDevice {
+  public static getOrCreate(devName: string): DetectedBluetoothDevice | undefined {
     const settings = SettingsService.settings.espresense?.deviceMap[devName];
     if (settings === undefined) {
-      return new DetectedBluetoothDevice(devName);
+      return undefined;
     }
     const dev = API.getDevice(this.deviceKeyBySettings(settings));
     return (dev as DetectedBluetoothDevice | undefined) ?? new DetectedBluetoothDevice(devName, settings);
