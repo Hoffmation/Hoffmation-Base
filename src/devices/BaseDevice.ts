@@ -1,9 +1,10 @@
-import { iBaseCommand, iBaseDevice, iDeviceInfo, iDeviceSettings, iPersist } from '../interfaces';
+import { iBaseDevice, iDeviceInfo, iDeviceSettings, iPersist } from '../interfaces';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { RingStorage, Utils } from '../utils';
 import { ServerLogService } from '../logging';
 import { Persistence } from '../services';
 import { RoomBaseDevice } from './RoomBaseDevice';
+import { iBaseCommand } from '../command';
 
 export abstract class BaseDevice implements iBaseDevice {
   /** @inheritDoc */

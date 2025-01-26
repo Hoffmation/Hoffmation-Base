@@ -1,6 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
   /** @inheritDoc */

@@ -1,7 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
   /** @inheritDoc */

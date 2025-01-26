@@ -1,7 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   /** @inheritDoc */

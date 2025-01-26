@@ -1,7 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CollisionSolving, CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class BlockAutomaticUntilCommand extends BaseCommand {
   /** @inheritDoc */

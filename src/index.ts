@@ -38,8 +38,9 @@ import { Res } from './i18n';
 
 export * from './enums';
 export * from './action';
-export * from './command';
 export * from './interfaces';
+export * from './command';
+export * from './utils';
 export * from './settings-service';
 export * from './ioBroker';
 export * from './api';
@@ -48,7 +49,6 @@ export * from './models';
 export * from './logging';
 export * from './server';
 export * from './services';
-export * from './utils';
 export * from './settingsObjects';
 export * from './devices';
 export * from './liquid-pid';

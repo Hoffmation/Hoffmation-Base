@@ -1,7 +1,6 @@
 import { CommandSource, CommandType } from '../enums';
 
-import { iBaseCommand } from '../interfaces';
-import { Utils } from '../utils';
+import { iBaseCommand } from './iBaseCommand';
 import _ from 'lodash';
 
 export abstract class BaseCommand implements iBaseCommand {
@@ -117,6 +116,6 @@ export abstract class BaseCommand implements iBaseCommand {
     // eslint-disable-next-line
     const result: any = _.omit(this, ['source']);
     result['logMessage'] = this.logMessage;
-    return Utils.jsonFilter(result);
+    return result;
   }
 }

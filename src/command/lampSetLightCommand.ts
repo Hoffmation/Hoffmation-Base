@@ -1,7 +1,7 @@
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 import { CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class LampSetLightCommand extends ActuatorSetStateCommand {
   /** @inheritDoc */

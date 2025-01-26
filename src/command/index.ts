@@ -5,6 +5,7 @@ export { RestoreTargetAutomaticValueCommand } from './restoreTargetAutomaticValu
 export { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 export { ActuatorToggleCommand } from './actuatorToggleCommand';
 export { ActuatorWriteStateToDeviceCommand } from './actuatorWriteStateToDeviceCommand';
+export { iBaseCommand } from './iBaseCommand';
 export { BaseCommand } from './baseCommand';
 export { DimmerSetLightCommand } from './dimmerSetLightCommand';
 export { FloorSetAllShuttersCommand } from './floorSetAllShuttersCommand';

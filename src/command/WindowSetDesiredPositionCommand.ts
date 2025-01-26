@@ -1,6 +1,6 @@
 import { CommandSource, CommandType } from '../enums';
 import { BaseCommand } from './baseCommand';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class WindowSetDesiredPositionCommand extends BaseCommand {
   /** @inheritDoc */

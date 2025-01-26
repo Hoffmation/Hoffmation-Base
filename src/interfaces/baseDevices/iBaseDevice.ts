@@ -3,7 +3,7 @@ import { iDeviceSettings } from '../deviceSettings';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { iDeviceInfo } from '../iDeviceInfo';
 import { RingStorage } from '../../utils';
-import { iBaseCommand } from '../iBaseCommand';
+import { iBaseCommand } from '../../command';
 
 /**
  * This is the main interface for all devices as it ensures certain base functionality.

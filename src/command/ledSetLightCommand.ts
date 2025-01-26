@@ -1,7 +1,7 @@
 import { DimmerSetLightCommand } from './dimmerSetLightCommand';
 import { CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
-import { iBaseCommand } from '../interfaces';
+import { iBaseCommand } from './iBaseCommand';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
