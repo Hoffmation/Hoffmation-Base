@@ -1,5 +1,5 @@
 import { BaseAction } from './baseAction';
-import { CommandType } from '../enums';
+import { CommandSource, CommandType } from '../enums';
 import { iShutter } from '../interfaces';
 
 export class ShutterPositionChangedAction extends BaseAction {
@@ -14,7 +14,7 @@ export class ShutterPositionChangedAction extends BaseAction {
     shutter: iShutter,
     public readonly newPosition: number,
   ) {
-    super(undefined, `${shutter.customName} changed position to ${newPosition}`);
+    super(CommandSource.Automatic, `${shutter.customName} changed position to ${newPosition}`);
     this.shutter = shutter;
   }
 }

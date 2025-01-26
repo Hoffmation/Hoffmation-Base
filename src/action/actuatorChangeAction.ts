@@ -1,5 +1,5 @@
 import { BaseAction } from './baseAction';
-import { CommandType } from '../enums';
+import { CommandSource, CommandType } from '../enums';
 import { iActuator } from '../interfaces';
 
 export class ActuatorChangeAction extends BaseAction {
@@ -12,7 +12,7 @@ export class ActuatorChangeAction extends BaseAction {
   public readonly actuatorOn: boolean;
 
   public constructor(device: iActuator) {
-    super(undefined, `New Actuator state (${device.actuatorOn}) received`);
+    super(CommandSource.Automatic, `New Actuator state (${device.actuatorOn}) received`);
     this.actuatorOn = device.actuatorOn;
   }
 }

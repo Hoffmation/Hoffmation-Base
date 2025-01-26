@@ -1,5 +1,5 @@
 import { BaseAction } from './baseAction';
-import { CommandType, WindowPosition } from '../enums';
+import { CommandSource, CommandType, WindowPosition } from '../enums';
 import { iHandle } from '../interfaces';
 
 export class HandleChangeAction extends BaseAction {
@@ -11,7 +11,10 @@ export class HandleChangeAction extends BaseAction {
   public readonly handle: iHandle;
 
   public constructor(handle: iHandle) {
-    super(undefined, `${handle.customName} ${handle.position === WindowPosition.closed ? 'opened' : 'closed'}`);
+    super(
+      CommandSource.Automatic,
+      `${handle.customName} ${handle.position === WindowPosition.closed ? 'opened' : 'closed'}`,
+    );
     this.handle = handle;
   }
 }

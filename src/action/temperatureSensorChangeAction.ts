@@ -1,5 +1,5 @@
 import { BaseAction } from './baseAction';
-import { CommandType } from '../enums';
+import { CommandSource, CommandType } from '../enums';
 import { iTemperatureCollector } from '../interfaces';
 
 export class TemperatureSensorChangeAction extends BaseAction {
@@ -15,7 +15,7 @@ export class TemperatureSensorChangeAction extends BaseAction {
   public readonly sensor: iTemperatureCollector;
 
   public constructor(sensor: iTemperatureCollector, newTemperature: number) {
-    super(undefined, `${sensor.customName} detected ${newTemperature} °C`);
+    super(CommandSource.Automatic, `${sensor.customName} detected ${newTemperature} °C`);
     this.newTemperature = newTemperature;
     this.sensor = sensor;
   }
