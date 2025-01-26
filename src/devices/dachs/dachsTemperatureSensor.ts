@@ -1,12 +1,9 @@
-import _ from 'lodash';
 import { iTemperatureCollector } from '../../interfaces';
 import { DeviceSettings } from '../../settingsObjects';
 import { DeviceCapability, DeviceType } from '../../enums';
 import { TemperatureSensor } from '../sharedFunctions';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
-import { Utils } from '../../utils';
-import { Persistence } from '../../services';
 import { TemperatureSensorChangeAction } from '../../action';
 import { RoomBaseDevice } from '../RoomBaseDevice';
 
@@ -25,6 +22,7 @@ export class DachsTemperatureSensor extends RoomBaseDevice implements iTemperatu
     info.room = roomName;
     super(info, DeviceType.DachsWarmWaterTemperature);
     this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
+    this.jsonOmitKeys.push(...['room', 'client', 'config', '_influxClient']);
     Devices.alLDevices[allDevicesKey] = this;
     Devices.temperatureWarmWater = this;
   }
@@ -70,29 +68,6 @@ export class DachsTemperatureSensor extends RoomBaseDevice implements iTemperatu
   /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
     this.roomTemperature = newTemperatur;
-  }
-
-  /** @inheritDoc */
-  public toJSON(): Partial<DachsTemperatureSensor> {
-    return Utils.jsonFilter(
-      _.omit(super.toJSON() as Partial<DachsTemperatureSensor>, ['room', 'client', 'config', '_influxClient']),
-    );
-  }
-
-  /** @inheritDoc */
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  /** @inheritDoc */
-  public loadDeviceSettings(): void {
-    this.settings?.initializeFromDb(this);
   }
 
   /** @inheritDoc */
