@@ -31,3 +31,4 @@ export * from './CameraDevice';
 export * from './govee';
 export * from './unifi';
 export * from './victron';
+export { RoomBaseDevice } from './RoomBaseDevice';

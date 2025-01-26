@@ -12,7 +12,6 @@ import {
   iDachsDeviceSettings,
   iDachsSettings,
   iFlattenedCompleteResponse,
-  iRoomBase,
 } from '../../interfaces';
 import { DachsDeviceSettings } from '../../settingsObjects';
 import {
@@ -29,8 +28,6 @@ import { DachsHttpClient, DachsInfluxClient } from './lib';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import { Utils } from '../../utils';
-import { API } from '../../api';
-import { ServerLogService } from '../../logging';
 import { LampUtils } from '../sharedFunctions';
 import { SunTimeOffsets } from '../../models/sun-time-offsets';
 import {
@@ -41,14 +38,13 @@ import {
 } from '../../command';
 import { BlockAutomaticHandler, Persistence, TimeCallbackService } from '../../services';
 import { SettingsService } from '../../settings-service';
+import { RoomBaseDevice } from '../RoomBaseDevice';
 
-export class Dachs implements iBaseDevice, iActuator {
+export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
   /** @inheritDoc */
   public settings: iDachsDeviceSettings = new DachsDeviceSettings();
   /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
-  /** @inheritDoc */
-  public readonly deviceType: DeviceType = DeviceType.Dachs;
   /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
   /**
@@ -98,18 +94,18 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   public constructor(options: iDachsSettings) {
+    const info = new DeviceInfo();
+    info.fullName = 'Dachs';
+    info.customName = `Dachs ${options.roomName}`;
+    const allDevicesKey = `dachs-${options.roomName}`;
+    info.allDevicesKey = allDevicesKey;
+    info.room = options.roomName;
+    super(info, DeviceType.Dachs);
+    Devices.alLDevices[allDevicesKey] = this;
     this.deviceCapabilities.push(DeviceCapability.actuator);
-    this._info = new DeviceInfo();
-    this._info.fullName = 'Dachs';
-    this._info.customName = `Dachs ${options.roomName}`;
-    this._info.allDevicesKey = `dachs-${options.roomName}`;
-    this._info.room = options.roomName;
-    Devices.alLDevices[this._info.allDevicesKey] = this;
     if (options.influxDb) {
       this._influxClient = new DachsInfluxClient(options.influxDb);
     }
-    this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     const modifiedOptions = _.cloneDeep(options);
     modifiedOptions.connectionOptions.resultConfig = {
       flatten: true,
@@ -132,20 +128,8 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   /** @inheritDoc */
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
-  protected _info: DeviceInfo;
-
-  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `sonos-${this.info.room}-${this.info.customName}`;
-  }
-
-  /** @inheritDoc */
-  public get room(): iRoomBase | undefined {
-    return API.getRoom(this.info.room);
   }
 
   public get name(): string {
@@ -159,19 +143,9 @@ export class Dachs implements iBaseDevice, iActuator {
   }
 
   /** @inheritDoc */
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      deviceId: this.name,
-      room: this._info.room,
-      deviceName: this.name,
-    });
-  }
-
-  /** @inheritDoc */
   public toJSON(): Partial<Dachs> {
     return Utils.jsonFilter(
-      _.omit(this, [
+      _.omit(super.toJSON(), [
         'room',
         'client',
         'config',
@@ -184,22 +158,6 @@ export class Dachs implements iBaseDevice, iActuator {
         'warmWaterDachsAlternativeActuator',
       ]),
     );
-  }
-
-  /** @inheritDoc */
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  /** @inheritDoc */
-  public loadDeviceSettings(): void {
-    this.settings.initializeFromDb(this);
   }
 
   /** @inheritDoc */
@@ -272,7 +230,7 @@ export class Dachs implements iBaseDevice, iActuator {
 
   /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
-    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.logCommand(c, undefined, LogDebugType.SetActuator);
     if (!c.stateValue) {
       return;
     }

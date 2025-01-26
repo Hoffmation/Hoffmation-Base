@@ -1,6 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class ActuatorSetStateCommand extends BaseCommand {
   /** @inheritDoc */
@@ -21,7 +22,7 @@ export class ActuatorSetStateCommand extends BaseCommand {
    * If unset the default value in accordance to settings will be used
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly on: boolean,
     reason: string = '',
     disableAutomatic?: BlockAutomaticCommand | null,

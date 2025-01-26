@@ -1,5 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
+import { iBaseCommand } from '../interfaces';
 
 export class RoomSetLightTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */
@@ -12,7 +13,7 @@ export class RoomSetLightTimeBasedCommand extends BaseCommand {
    * @param reason - You can provide a reason for clarity
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly movementDependant: boolean = false,
     reason: string = '',
   ) {

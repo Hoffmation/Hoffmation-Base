@@ -1,4 +1,12 @@
-import { CommandSource, DeviceClusterType, GroupType, LogLevel, TimeCallbackType, TimeOfDay } from '../../enums';
+import {
+  CommandSource,
+  DeviceClusterType,
+  GroupType,
+  LogDebugType,
+  LogLevel,
+  TimeCallbackType,
+  TimeOfDay,
+} from '../../enums';
 import { iActuator, iLamp, iLightGroup, iRoomBase } from '../../interfaces';
 import {
   ActuatorSetStateCommand,
@@ -87,9 +95,11 @@ export class LightGroup extends BaseGroup implements iLightGroup {
   public switchAll(c: ActuatorSetStateCommand): void {
     this.getAllAsActuator().forEach((a) => {
       if (a.settings.includeInAmbientLight && !c.isForceAction && !c.on && this._ambientLightOn) {
-        a.log(
+        a.logCommand(
+          c,
+          `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`,
+          LogDebugType.None,
           LogLevel.Info,
-          `Ambient light mode is active --> Skip non force light off command in ${this.roomName}; command: ${c.logMessage}`,
         );
         return;
       }

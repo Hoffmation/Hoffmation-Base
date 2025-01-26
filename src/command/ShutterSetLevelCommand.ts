@@ -1,5 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
+import { iBaseCommand } from '../interfaces';
 
 export class ShutterSetLevelCommand extends BaseCommand {
   /** @inheritDoc */
@@ -13,7 +14,7 @@ export class ShutterSetLevelCommand extends BaseCommand {
    * @param skipOpenWarning - Whether to skip the warning of window being open
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly level: number,
     reason: string = '',
     public readonly skipOpenWarning: boolean = false,

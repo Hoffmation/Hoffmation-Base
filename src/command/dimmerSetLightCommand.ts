@@ -1,7 +1,7 @@
 import { LampSetLightCommand } from './lampSetLightCommand';
 import { CommandSource, CommandType } from '../enums';
-import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class DimmerSetLightCommand extends LampSetLightCommand {
   /** @inheritDoc */
@@ -18,7 +18,7 @@ export class DimmerSetLightCommand extends LampSetLightCommand {
    * @param transitionTime - The transition time during turnOn/turnOff
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     on: boolean,
     reason: string = '',
     disableAutomatic?: BlockAutomaticCommand | null,

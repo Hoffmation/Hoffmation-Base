@@ -1,27 +1,19 @@
-import _ from 'lodash';
 import { iRoomBase, iScene } from '../../interfaces';
-import { Persistence } from '../../services';
 import { SceneSettings } from '../../settingsObjects';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import { Utils } from '../../utils';
-import { ServerLogService } from '../../logging';
-import { TvDevice } from '../tv';
+import { RoomBaseDevice } from '../RoomBaseDevice';
 
-export class RoomScene implements iScene {
+export class RoomScene extends RoomBaseDevice implements iScene {
   /** @inheritDoc */
   public description: string = '';
   /** @inheritDoc */
-  public room: iRoomBase | undefined;
-  /** @inheritDoc */
   public settings: SceneSettings = new SceneSettings();
-  protected _deviceType: DeviceType;
-  protected _info: DeviceInfo;
   private readonly _onSceneStart: () => void;
   private readonly _onSceneEnd: () => void;
   private _automaticEndTimeout: NodeJS.Timeout | null = null;
-  private _deviceCapabilities: DeviceCapability[] = [DeviceCapability.scene];
   private _on: boolean = false;
 
   public constructor(
@@ -31,19 +23,19 @@ export class RoomScene implements iScene {
     onSceneEnd: () => void,
     turnOffTimeout?: number,
   ) {
+    const info = new DeviceInfo();
+    info.fullName = `Scene ${name}`;
+    info.customName = `${room.roomName} ${name}`;
+    info.room = room.roomName;
+    const allDevicesKey = `scene-${room.roomName}-${name}`;
+    info.allDevicesKey = allDevicesKey;
+    super(info, DeviceType.RoomScene);
+    this.jsonOmitKeys.push(...['_onSceneStart', '_onSceneEnd']);
+    this.deviceCapabilities.push(DeviceCapability.scene);
+    Devices.alLDevices[allDevicesKey] = this;
     this._onSceneStart = onSceneStart;
     this._onSceneEnd = onSceneEnd;
-    this.room = room;
     this.settings.defaultTurnOffTimeout = turnOffTimeout;
-    this._info = new DeviceInfo();
-    this._info.fullName = `Scene ${name}`;
-    this._info.customName = `${room.roomName} ${name}`;
-    this._info.room = room.roomName;
-    this._info.allDevicesKey = `scene-${room.roomName}-${name}`;
-    this._deviceType = DeviceType.RoomScene;
-    Devices.alLDevices[this._info.allDevicesKey] = this;
-    this.persistDeviceInfo();
-    this.loadDeviceSettings();
   }
 
   /** @inheritDoc */
@@ -52,23 +44,8 @@ export class RoomScene implements iScene {
   }
 
   /** @inheritDoc */
-  public get deviceType(): DeviceType {
-    return this._deviceType;
-  }
-
-  /** @inheritDoc */
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
-  /** @inheritDoc */
   public get automaticEndTimeout(): NodeJS.Timeout | null {
     return this._automaticEndTimeout;
-  }
-
-  /** @inheritDoc */
-  public get deviceCapabilities(): DeviceCapability[] {
-    return this._deviceCapabilities;
   }
 
   /** @inheritDoc */
@@ -129,38 +106,5 @@ export class RoomScene implements iScene {
     this.log(LogLevel.Info, 'Ending scene');
     this._on = false;
     this._onSceneEnd();
-  }
-
-  /** @inheritDoc */
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      room: this.room?.roomName ?? '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  /** @inheritDoc */
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  /** @inheritDoc */
-  public loadDeviceSettings(): void {
-    this.settings.initializeFromDb(this);
-  }
-
-  /** @inheritDoc */
-  public toJSON(): Partial<TvDevice> {
-    // eslint-disable-next-line
-    const result: any = _.omit(this, ['room', '_onSceneStart', '_onSceneEnd']);
-    return Utils.jsonFilter(result);
   }
 }

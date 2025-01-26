@@ -1,5 +1,6 @@
 import { CommandSource, CommandType } from '../enums';
 import { BaseCommand } from './baseCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class WindowRestoreDesiredPositionCommand extends BaseCommand {
   /** @inheritDoc */
@@ -10,7 +11,7 @@ export class WindowRestoreDesiredPositionCommand extends BaseCommand {
    * @param source - The source of the command
    * @param reason - You can provide a reason for clarification
    */
-  public constructor(source: CommandSource | BaseCommand, reason: string = '') {
+  public constructor(source: CommandSource | iBaseCommand, reason: string = '') {
     super(source, reason);
   }
 }

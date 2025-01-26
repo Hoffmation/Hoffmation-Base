@@ -1,6 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class BlockAutomaticLiftBlockCommand extends BaseCommand {
   /** @inheritDoc */
@@ -16,7 +17,7 @@ export class BlockAutomaticLiftBlockCommand extends BaseCommand {
    * @param reason - You can provide an individual reason here for debugging purpose.
    * @param revertToAutomatic - Whether the device should revert to automatic afterward. --> Default: {@link SettingsService.settings.blockAutomaticHandlerDefaults.revertToAutomaticAtBlockLift}
    */
-  public constructor(source: CommandSource | BaseCommand, reason: string = '', revertToAutomatic?: boolean) {
+  public constructor(source: CommandSource | iBaseCommand, reason: string = '', revertToAutomatic?: boolean) {
     super(source, reason);
     this.revertToAutomatic = revertToAutomatic ?? BlockAutomaticCommand.defaultRevertToAutomaticAtBlockLift ?? true;
   }

@@ -36,6 +36,11 @@ export interface iAcDevice extends iBaseDevice {
   readonly mode: AcMode;
 
   /**
+   *
+   */
+  initializeRoomCbs(): void;
+
+  /**
    * This function should be called to inform the air-conditioning device about a change of the room temperature
    * @param newTemperatur - The new temperature of the room in degrees Celsius
    */

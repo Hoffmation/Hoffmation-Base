@@ -105,7 +105,7 @@ export abstract class ZigbeeActuator extends ZigbeeDevice implements iActuator {
 
   /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
-    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.logCommand(c, undefined, LogDebugType.SetActuator);
     this.setState(this._actuatorOnStateIdState, c.stateValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });

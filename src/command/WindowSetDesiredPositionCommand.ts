@@ -1,5 +1,6 @@
 import { CommandSource, CommandType } from '../enums';
 import { BaseCommand } from './baseCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class WindowSetDesiredPositionCommand extends BaseCommand {
   /** @inheritDoc */
@@ -13,7 +14,7 @@ export class WindowSetDesiredPositionCommand extends BaseCommand {
    * @param applyNewPosition - Whether this new position should be applied immediately
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly position: number,
     reason: string = '',
     public readonly applyNewPosition: boolean = true,

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -10,31 +9,19 @@ import {
 } from '../../command';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
-import { GoveeDeviceData, iRoomBase, iTemporaryDisableAutomatic } from '../../interfaces';
-import { DeviceInfo, Devices, LampUtils, LedSettings } from '../index';
-import { BlockAutomaticHandler } from '../../services/blockAutomaticHandler';
+import { GoveeDeviceData, iTemporaryDisableAutomatic } from '../../interfaces';
+import { DeviceInfo, Devices, LampUtils, LedSettings, RoomBaseDevice } from '../index';
+import { BlockAutomaticHandler, Persistence } from '../../services';
 import { Utils } from '../../utils';
-import { API } from '../../api';
-import { ServerLogService } from '../../logging';
-import { Persistence } from '../../services/dbo';
 import { GooveeService } from './govee-service';
 
-export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
+export class OwnGoveeDevice extends RoomBaseDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */
   public settings: LedSettings = new LedSettings();
-  /** @inheritDoc */
-  public readonly deviceType: DeviceType = DeviceType.GoveeLed;
   /**
    * The id of the device
    */
   public readonly deviceId: string;
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [
-    DeviceCapability.ledLamp,
-    DeviceCapability.lamp,
-    DeviceCapability.dimmablelamp,
-    DeviceCapability.blockAutomatic,
-  ];
   /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   /** @inheritDoc */
@@ -43,27 +30,34 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   public brightness: number = -1;
   /** @inheritDoc */
   public targetAutomaticState: boolean = false;
-  protected _info: DeviceInfo;
   private _actuatorOn: boolean = false;
   private _color: string = '#fcba32';
   private _colortemp: number = 500;
-  private _room: iRoomBase | undefined = undefined;
   protected _lastPersist: number = 0;
 
   public constructor(deviceId: string, ownDeviceName: string, roomName: string) {
+    const info = new DeviceInfo();
+    info.fullName = `Govee ${roomName} ${ownDeviceName}`;
+    info.customName = `Govee ${ownDeviceName}`;
+    info.room = roomName;
+    const allDevicesKey = `govee-${roomName}-${deviceId}`;
+    info.allDevicesKey = allDevicesKey;
+    super(info, DeviceType.GoveeLed);
+    this.jsonOmitKeys.push('device');
     this.deviceId = deviceId;
-    this._info = new DeviceInfo();
-    this._info.fullName = `Govee ${roomName} ${ownDeviceName}`;
-    this._info.customName = `Govee ${ownDeviceName}`;
-    this._info.room = roomName;
-    this._info.allDevicesKey = `govee-${roomName}-${deviceId}`;
-    Devices.alLDevices[`govee-${roomName}-${deviceId}`] = this;
-    this.persistDeviceInfo();
+    this.deviceCapabilities.push(
+      ...[
+        DeviceCapability.ledLamp,
+        DeviceCapability.lamp,
+        DeviceCapability.dimmablelamp,
+        DeviceCapability.blockAutomatic,
+      ],
+    );
+    Devices.alLDevices[allDevicesKey] = this;
     this.blockAutomationHandler = new BlockAutomaticHandler(
       this.restoreTargetAutomaticValue.bind(this),
       this.log.bind(this),
     );
-    Utils.guardedTimeout(this.loadDeviceSettings, 4800, this);
   }
 
   public get color(): string {
@@ -74,23 +68,8 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
     return this._colortemp;
   }
 
-  public get room(): iRoomBase {
-    if (this._room === undefined) {
-      this._room = Utils.guard<iRoomBase>(API.getRoom(this.info.room));
-    }
-    return this._room;
-  }
-
-  public get customName(): string {
-    return this.info.customName;
-  }
-
   public get actuatorOn(): boolean {
     return this._actuatorOn;
-  }
-
-  public get info(): DeviceInfo {
-    return this._info;
   }
 
   public get id(): string {
@@ -99,33 +78,6 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
 
   public get name(): string {
     return this.info.customName;
-  }
-
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, message, {
-      debugType: debugType,
-      room: this._room?.roomName ?? '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  public toJSON(): Partial<OwnGoveeDevice> {
-    return Utils.jsonFilter(_.omit(this, ['room', 'device']));
-  }
-
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  public loadDeviceSettings(): void {
-    this.settings.initializeFromDb(this);
   }
 
   /** @inheritDoc */
@@ -208,7 +160,7 @@ export class OwnGoveeDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   }
 
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
-    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.logCommand(c, undefined, LogDebugType.SetActuator);
     if (c.stateValue) {
       this.turnOn();
     } else {

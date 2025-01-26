@@ -1,27 +1,21 @@
 import { TrilaterationBasePoint } from './trilaterationBasePoint';
-import { iRoomBase, iRoomDevice, iTrilaterationBasePoint } from '../../interfaces';
+import { iRoomDevice, iTrilaterationBasePoint } from '../../interfaces';
 import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
 import { ProximityCallback } from './proximityCallback';
 import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import { EspresenseCoordinator } from './espresenseCoordinator';
 import { Trilateration } from './trilateration';
-import { Persistence } from '../../services';
-import { API } from '../../api';
-import { ServerLogService } from '../../logging';
 import { Utils } from '../../utils';
+import { RoomBaseDevice } from '../RoomBaseDevice';
 
-export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
+export class EspresenseDevice extends RoomBaseDevice implements iBluetoothDetector {
   /** @inheritDoc */
   public readonly position: iTrilaterationBasePoint;
   /** @inheritDoc */
   public settings: undefined = undefined;
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.bluetoothDetector];
-  /** @inheritDoc */
-  public deviceType: DeviceType = DeviceType.Espresense;
   /**
    * The name of this device
    */
@@ -38,40 +32,24 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
    * @param z - The z coordinate of the device in the house
    */
   public constructor(name: string, roomName: string, x: number, y: number, z: number) {
+    const info = new DeviceInfo();
+    info.fullName = `Espresense ${roomName} ${name}`;
+    info.customName = `Espresense ${name}`;
+    info.room = roomName;
+    const allDevicesKey = `espresense-${roomName}-${name}`;
+    info.allDevicesKey = allDevicesKey;
+    super(info, DeviceType.Espresense);
+    this.deviceCapabilities.push(DeviceCapability.bluetoothDetector);
     this.position = new TrilaterationBasePoint(x, y, z, roomName);
     this.name = name;
-    this._info = new DeviceInfo();
-    this._info.fullName = `Espresense ${roomName} ${name}`;
-    this._info.customName = `Espresense ${name}`;
-    this._info.room = roomName;
-    this._info.allDevicesKey = `espresense-${roomName}-${name}`;
-    Devices.alLDevices[this._info.allDevicesKey] = this;
+    Devices.alLDevices[allDevicesKey] = this;
     EspresenseCoordinator.addDevice(this, name);
-    this.persistDeviceInfo();
-    this.loadDeviceSettings();
     Trilateration.basePoints.push(this.position);
-  }
-
-  /** @inheritDoc */
-  public get customName(): string {
-    return this.info.customName;
-  }
-
-  protected _info: DeviceInfo;
-
-  /** @inheritDoc */
-  public get info(): DeviceInfo {
-    return this._info;
   }
 
   /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `espresense-${this.info.room}-${this.info.customName}`;
-  }
-
-  /** @inheritDoc */
-  public get room(): iRoomBase | undefined {
-    return API.getRoom(this.info.room);
   }
 
   /** @inheritDoc */
@@ -138,29 +116,8 @@ export class EspresenseDevice implements iRoomDevice, iBluetoothDetector {
   }
 
   /** @inheritDoc */
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      room: this.room?.roomName ?? '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  /** @inheritDoc */
   public toJSON(): Partial<iRoomDevice> {
     return Utils.jsonFilter(this);
-  }
-
-  /** @inheritDoc */
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
   }
 
   /** @inheritDoc */

@@ -1,7 +1,7 @@
 import { DimmerSetLightCommand } from './dimmerSetLightCommand';
 import { CommandSource, CommandType } from '../enums';
-import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class WledSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -19,7 +19,7 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
    * @param preset - The preset to use
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     on: boolean,
     reason: string = '',
     disableAutomatic?: BlockAutomaticCommand | null,
@@ -31,6 +31,6 @@ export class WledSetLightCommand extends DimmerSetLightCommand {
   }
 
   public override get logMessage(): string {
-    return `Dimmer setLight to ${this.on} with Brightness ${this.brightness}, disabelAutomatic ${this.disableAutomaticCommand?.logMessage} and preset ${this.preset} for reason: ${this.reasonTrace}`;
+    return `Dimmer setLight to ${this.on} with Brightness ${this.brightness}, disableAutomatic ${this.disableAutomaticCommand?.logMessage} and preset ${this.preset} for reason: ${this.reasonTrace}`;
   }
 }

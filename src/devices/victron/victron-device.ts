@@ -1,31 +1,20 @@
 import { iBatteryDevice, iEnergyManager, iExcessEnergyConsumer, iJsonOmitKeys } from '../../interfaces';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel, TimeOfDay } from '../../enums';
+import { DeviceCapability, DeviceType, LogLevel, TimeOfDay } from '../../enums';
 import { VictronDeviceSettings } from '../../settingsObjects';
 import { Battery } from '../sharedFunctions';
 import { DeviceInfo } from '../DeviceInfo';
 import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } from 'victron-mqtt-consumer';
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../../utils';
-import { EnergyCalculation } from '../../models';
+import { EnergyCalculation, SunTimeOffsets } from '../../models';
 import { Devices } from '../devices';
-import { ServerLogService } from '../../logging';
-import { Persistence, TimeCallbackService } from '../../services';
-import { SunTimeOffsets } from '../../models/sun-time-offsets';
+import { TimeCallbackService } from '../../services';
+import { BaseDevice } from '../BaseDevice';
 
-export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {
-  /** @inheritDoc */
-  public readonly jsonOmitKeys: string[] = ['_victronConsumer', '_excessEnergyConsumer'];
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [
-    DeviceCapability.energyManager,
-    DeviceCapability.batteryDriven,
-  ];
-  /** @inheritDoc */
-  public deviceType: DeviceType = DeviceType.Victron;
+export class VictronDevice extends BaseDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {
   /** @inheritDoc */
   public readonly settings: VictronDeviceSettings;
   /** @inheritDoc */
   public readonly battery: Battery = new Battery(this);
-  protected _info: DeviceInfo;
   private readonly _victronConsumer: VictronMqttConsumer;
   private _excessEnergyConsumer: iExcessEnergyConsumer[] = [];
   private blockDeviceChangeTime: number = -1;
@@ -37,15 +26,16 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
   private _excessEnergy: number = 0;
 
   public constructor(opts: VictronMqttConnectionOptions) {
+    const info = new DeviceInfo();
+    info.fullName = 'Victron Device';
+    info.customName = 'Victron';
+    info.allDevicesKey = 'victron';
+    super(info, DeviceType.Victron);
     this.settings = new VictronDeviceSettings();
-    this._info = new DeviceInfo();
-    this._info.fullName = 'Victron Device';
-    this._info.customName = 'Victron';
-    this._info.allDevicesKey = 'victron';
+    this.deviceCapabilities.push(...[DeviceCapability.energyManager, DeviceCapability.batteryDriven]);
+    this.jsonOmitKeys.push(...['_victronConsumer', '_excessEnergyConsumer']);
     Devices.alLDevices['victron'] = this;
     Devices.energymanager = this;
-    this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     this._victronConsumer = new VictronMqttConsumer(opts);
     this._iCalculationInterval = Utils.guardedInterval(
       () => {
@@ -82,10 +72,6 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
     return false;
   }
 
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
   /** @inheritDoc */
   public get batteryLevel(): number {
     const level: number | null = this.data.battery.soc;
@@ -109,10 +95,6 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
   }
 
   public get name(): string {
-    return this.info.customName;
-  }
-
-  public get customName(): string {
     return this.info.customName;
   }
 
@@ -166,29 +148,6 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
     }
   }
 
-  public loadDeviceSettings(): void {
-    this.settings.initializeFromDb(this);
-  }
-
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      room: '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
   public toJSON(): Partial<VictronDevice> {
     return {
       ...{
@@ -199,7 +158,7 @@ export class VictronDevice implements iEnergyManager, iBatteryDevice, iJsonOmitK
         injectingWattage: this.injectingWattage,
         selfConsumingWattage: this.selfConsumingWattage,
       },
-      ...Utils.jsonFilter(this, this.jsonOmitKeys),
+      ...Utils.jsonFilter(super.toJSON() as Partial<VictronDevice>, this.jsonOmitKeys),
     };
   }
 

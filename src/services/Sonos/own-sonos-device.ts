@@ -1,55 +1,36 @@
-import _ from 'lodash';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
-import { iRoomBase, iSpeaker } from '../../interfaces';
-import { DeviceInfo, Devices, SonosDeviceSettings } from '../../devices';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { iSpeaker } from '../../interfaces';
+import { DeviceInfo, Devices, RoomBaseDevice, SonosDeviceSettings } from '../../devices';
 import { SonosDevice } from '@svrooij/sonos/lib';
-import { API } from '../../api';
 import { SettingsService } from '../../settings-service';
 import { ServerLogService } from '../../logging';
 import { PlayNotificationTwoOptions } from '@svrooij/sonos/lib/models/notificationQueue';
 import { Utils } from '../../utils';
 import { SonosService } from './sonos-service';
 import { PollyService } from './polly-service';
-import { Persistence } from '../dbo';
 
-export class OwnSonosDevice implements iSpeaker {
+export class OwnSonosDevice extends RoomBaseDevice implements iSpeaker {
   /** @inheritDoc */
   public settings: SonosDeviceSettings = new SonosDeviceSettings();
   /** @inheritDoc */
   public readonly deviceType: DeviceType = DeviceType.Sonos;
   /** @inheritDoc */
   public readonly discoveryName: string;
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.speaker];
-
-  public get customName(): string {
-    return this.info.customName;
-  }
 
   public constructor(
     discoveryName: string,
     roomName: string,
     public device: SonosDevice | undefined,
   ) {
+    const info: DeviceInfo = new DeviceInfo();
+    info.fullName = `Sonos ${roomName} ${discoveryName}`;
+    info.customName = `Sonos ${discoveryName}`;
+    info.room = roomName;
+    info.allDevicesKey = `sonos-${roomName}-${discoveryName}`;
+    super(info, DeviceType.Sonos);
+    this.deviceCapabilities.push(DeviceCapability.speaker);
     this.discoveryName = discoveryName;
-    this._info = new DeviceInfo();
-    this._info.fullName = `Sonos ${roomName} ${discoveryName}`;
-    this._info.customName = `Sonos ${discoveryName}`;
-    this._info.room = roomName;
-    this._info.allDevicesKey = `sonos-${roomName}-${discoveryName}`;
     Devices.alLDevices[`sonos-${roomName}-${discoveryName}`] = this;
-    this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
-  }
-
-  protected _info: DeviceInfo;
-
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
-  public get room(): iRoomBase | undefined {
-    return API.getRoom(this.info.room);
   }
 
   public get id(): string {
@@ -132,32 +113,5 @@ export class OwnSonosDevice implements iSpeaker {
 
   public playUrl(url: string): void {
     this.device?.SetAVTransportURI(url);
-  }
-
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      room: this.room?.roomName ?? '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  public toJSON(): Partial<OwnSonosDevice> {
-    return Utils.jsonFilter(_.omit(this, ['room']));
-  }
-
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  public loadDeviceSettings(): void {
-    this.settings.initializeFromDb(this);
   }
 }

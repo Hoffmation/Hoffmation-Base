@@ -1,6 +1,5 @@
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
+import { DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { iBaseDevice, iBluetoothTrackingSettings } from '../../interfaces';
-import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import { TrackedDistanceData } from './trackedDistanceData';
 import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
@@ -11,20 +10,16 @@ import { API } from '../../api';
 import { TrilaterationPointDistance } from './trilaterationPointDistance';
 import { Trilateration } from './trilateration';
 import { SettingsService } from '../../settings-service';
+import { BaseDevice } from '../BaseDevice';
+import { DeviceInfo } from '../DeviceInfo';
 
-export class DetectedBluetoothDevice implements iBaseDevice {
+export class DetectedBluetoothDevice extends BaseDevice {
   /** @inheritDoc */
   public settings: undefined = undefined;
   /**
    * A Map matching the distances to the trackers identified by {@link iBluetoothDetector.id}
    */
   public distanceMap: Map<string, TrackedDistanceData> = new Map<string, TrackedDistanceData>();
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.trackableDevice];
-  /** @inheritDoc */
-  public deviceType: DeviceType = DeviceType.TrackableDevice;
-  /** @inheritDoc */
-  public info: DeviceInfo = new DeviceInfo();
   /**
    * The last room the device was guessed to be in {@link iRoomBase.roomName}
    */
@@ -35,16 +30,19 @@ export class DetectedBluetoothDevice implements iBaseDevice {
   public present: boolean = false;
 
   constructor(
-    public id: string,
+    public trackedDeviceId: string,
     settings?: iBluetoothTrackingSettings,
   ) {
     if (settings === undefined) {
       return;
     }
-    this.info.customName = settings.customName;
-    this.info.allDevicesKey = DetectedBluetoothDevice.deviceKeyBySettings(settings);
+    const info: DeviceInfo = new DeviceInfo();
+    info.customName = settings.customName;
+    const allDevicesKey = DetectedBluetoothDevice.deviceKeyBySettings(settings);
+    info.allDevicesKey = allDevicesKey;
+    super(info, DeviceType.TrackableDevice);
     if (settings.activeTracking) {
-      Devices.alLDevices[this.info.allDevicesKey] = this;
+      Devices.alLDevices[allDevicesKey] = this;
       this.persistDeviceInfo();
       this.loadDeviceSettings();
     }
@@ -55,7 +53,7 @@ export class DetectedBluetoothDevice implements iBaseDevice {
   }
 
   public get name(): string {
-    return this.info.customName ?? `Unknown ${this.id}`;
+    return this.info.customName ?? `Unknown ${this.trackedDeviceId}`;
   }
 
   public updateDistance(tracker: iBluetoothDetector, distance: number) {

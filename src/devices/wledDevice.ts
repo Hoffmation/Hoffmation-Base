@@ -121,7 +121,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iWledDevice {
       return;
     }
 
-    this.log(LogLevel.Debug, c.logMessage);
+    this.logCommand(c);
 
     if (c.on && c.brightness !== -1 && this.brightness < 10) {
       c.brightness = 10;
@@ -188,7 +188,7 @@ export class WledDevice extends IoBrokerBaseDevice implements iWledDevice {
 
   /** @inheritDoc */
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
-    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.logCommand(c, undefined, LogDebugType.SetActuator);
     this.setState(this._onID, c.stateValue, undefined, (err) => {
       ServerLogService.writeLog(LogLevel.Error, `WLED schalten ergab Fehler: ${err}`);
     });

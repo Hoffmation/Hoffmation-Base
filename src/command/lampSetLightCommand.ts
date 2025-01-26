@@ -1,7 +1,7 @@
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
 import { CommandSource, CommandType } from '../enums';
-import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class LampSetLightCommand extends ActuatorSetStateCommand {
   /** @inheritDoc */
@@ -16,7 +16,7 @@ export class LampSetLightCommand extends ActuatorSetStateCommand {
    * If undefined the default value will be used in case it's a non automatic action: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     on: boolean,
     reason: string = '',
     disableAutomatic?: BlockAutomaticCommand | null,

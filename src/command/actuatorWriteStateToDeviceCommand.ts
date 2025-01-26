@@ -1,6 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { ActuatorSetStateCommand } from './actuatorSetStateCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
   /** @inheritDoc */
@@ -13,7 +14,7 @@ export class ActuatorWriteStateToDeviceCommand extends BaseCommand {
    * @param reason - You can provide a reason for clarification
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly stateValue: boolean,
     reason: string = '',
   ) {

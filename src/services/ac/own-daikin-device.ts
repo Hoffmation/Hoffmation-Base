@@ -34,7 +34,7 @@ export class OwnDaikinDevice extends AcDevice {
     private _device: DaikinAC | undefined,
     private _mac: string | undefined = undefined,
   ) {
-    super(name, roomName, ip, AcDeviceType.Daikin);
+    super(name, roomName, ip, AcDeviceType.Daikin, DeviceType.Daikin);
   }
 
   public get device(): DaikinAC | undefined {
@@ -209,7 +209,7 @@ export class OwnDaikinDevice extends AcDevice {
   /** @inheritDoc */
   public override toJSON(): Partial<OwnDaikinDevice> {
     // eslint-disable-next-line
-    const result: any = _.omit(this, ['room', '_room', 'device', '_device']);
+    const result: any = _.omit(super.toJSON() as Partial<OwnDaikinDevice>, ['device', '_device']);
     result['on'] = this.on;
     return Utils.jsonFilter(result);
   }

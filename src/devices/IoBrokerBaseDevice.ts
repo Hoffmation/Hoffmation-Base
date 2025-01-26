@@ -1,97 +1,47 @@
-import { Persistence } from '../services';
 import {
   iIoBrokerBaseDevice,
   iIOBrokerConnection,
+  iIoBrokerDeviceInfo,
   iJsonOmitKeys,
-  iPersist,
   iRoomAddDeviceItem,
-  iRoomBase,
   iRoomDeviceAddingSettings,
 } from '../interfaces';
 import { RoomDeviceAddingSettings } from '../models';
-import { DeviceSettings } from '../settingsObjects';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
+import { DeviceType, LogLevel } from '../enums';
 import { Utils } from '../utils';
-import { API } from '../api';
 import { IoBrokerDeviceInfo } from './IoBrokerDeviceInfo';
 import { ServerLogService } from '../logging';
 import { ioBrokerMain } from '../ioBroker';
+import { RoomBaseDevice } from './RoomBaseDevice';
 
-export abstract class IoBrokerBaseDevice implements iJsonOmitKeys, iIoBrokerBaseDevice {
-  /** @inheritDoc */
-  public readonly jsonOmitKeys: string[] = ['individualStateCallbacks'];
+export abstract class IoBrokerBaseDevice extends RoomBaseDevice implements iJsonOmitKeys, iIoBrokerBaseDevice {
   /**
    * The settings for adding devices to Rooms
    */
   public static roomAddingSettings: { [id: string]: iRoomDeviceAddingSettings } = {};
-  /**
-   * @inheritDoc
-   * @default undefined (no Settings)
-   */
-  public settings: DeviceSettings | undefined = undefined;
-  private _room: iRoomBase | undefined = undefined;
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [];
 
   // If configured > 0, this indicates the minimum time between state writes in ms
   protected _debounceStateDelay: number = 0;
-  protected _lastWrite: number = 0;
 
   protected stateMap: Map<string, ioBroker.State> = new Map<string, ioBroker.State>();
-
-  /** @inheritDoc */
-  public get room(): iRoomBase {
-    if (this._room === undefined) {
-      this._room = Utils.guard<iRoomBase>(API.getRoom(this.info.room));
-    }
-    return this._room;
-  }
-
-  protected get dbo(): iPersist | undefined {
-    return Persistence.dbo;
-  }
-
-  /** @inheritDoc */
-  public get customName(): string {
-    return this.info.customName;
-  }
-
-  protected get anyDboActive(): boolean {
-    return Persistence.anyDboActive;
-  }
 
   protected readonly individualStateCallbacks: Map<string, Array<(val: ioBroker.StateValue) => void>> = new Map<
     string,
     Array<(val: ioBroker.StateValue) => void>
   >();
 
-  protected constructor(
-    protected _info: IoBrokerDeviceInfo,
-    public deviceType: DeviceType,
-  ) {
+  protected constructor(info: IoBrokerDeviceInfo, deviceType: DeviceType) {
+    super(info, deviceType);
+    this.jsonOmitKeys.push('individualStateCallbacks');
     this.addToCorrectRoom();
-    this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 300, this);
-  }
-
-  /** @inheritDoc */
-  public get id(): string {
-    const result: string = Utils.guard(this.info.allDevicesKey);
-    if (result === '0' || result === '1') {
-      ServerLogService.writeLog(
-        LogLevel.Warn,
-        `Device "${this.info.fullName}" has an akward allDevicesKey of "${result}"`,
-      );
-    }
-    return result;
   }
 
   /**
    * Getter info
    * @returns The device info
    */
-  public get info(): IoBrokerDeviceInfo {
-    return this._info;
+  public get info(): iIoBrokerDeviceInfo {
+    return this._info as iIoBrokerDeviceInfo;
   }
 
   public get ioConn(): iIOBrokerConnection | undefined {
@@ -113,11 +63,6 @@ export abstract class IoBrokerBaseDevice implements iJsonOmitKeys, iIoBrokerBase
     for (const rName in this.roomAddingSettings) {
       this.roomAddingSettings[rName].checkMissing();
     }
-  }
-
-  /** @inheritDoc */
-  public loadDeviceSettings(): void {
-    this.settings?.initializeFromDb(this);
   }
 
   /**
@@ -156,31 +101,6 @@ export abstract class IoBrokerBaseDevice implements iJsonOmitKeys, iIoBrokerBase
    * @param {boolean} pOverride - Whether the child class did override this method
    */
   public abstract update(idSplit: string[], state: ioBroker.State, initial: boolean, pOverride: boolean): void;
-
-  public log(level: LogLevel, message: string, logDebugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, message, {
-      room: this.info.room,
-      deviceId: this.id,
-      deviceName: this.info.customName,
-      debugType: logDebugType,
-    });
-  }
-
-  /** @inheritDoc */
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    return Utils.jsonFilter(this, this.jsonOmitKeys, ['_room']);
-  }
-
-  /** @inheritDoc */
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
 
   public addToCorrectRoom(): void {
     const settings: RoomDeviceAddingSettings | undefined = IoBrokerBaseDevice.roomAddingSettings[this.info.room];

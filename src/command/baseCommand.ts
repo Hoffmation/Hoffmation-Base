@@ -1,6 +1,10 @@
 import { CommandSource, CommandType } from '../enums';
 
-export abstract class BaseCommand {
+import { iBaseCommand } from '../interfaces';
+import { Utils } from '../utils';
+import _ from 'lodash';
+
+export abstract class BaseCommand implements iBaseCommand {
   /**
    * The timestamp of the command being created
    */
@@ -18,12 +22,17 @@ export abstract class BaseCommand {
   public overrideCommandSource: CommandSource | undefined;
 
   /**
+   * If set, describes why this command wasn't executed.
+   */
+  public ignoreReason: string | undefined;
+
+  /**
    * Base class for all commands
    * @param source - The source of the command
    * @param reason - You can provide a reason for clarification
    */
   protected constructor(
-    public readonly source: CommandSource | BaseCommand = CommandSource.Unknown,
+    public readonly source: CommandSource | iBaseCommand = CommandSource.Unknown,
     public readonly reason: string = '',
   ) {
     this.timestamp = new Date();
@@ -76,7 +85,13 @@ export abstract class BaseCommand {
   }
 
   public get reasonTrace(): string {
-    const ownPart: string = this.reason !== '' ? `${this.type}("${this.reason}")` : `${this.type}`;
+    let ownPart: string = `${this.type}`;
+    if (this.reason !== undefined) {
+      ownPart += `("${this.reason}")`;
+    }
+    if (this.ignoreReason !== undefined) {
+      ownPart += ` ignored due to: "${this.ignoreReason}"`;
+    }
     if (typeof this.source === 'object') {
       return `${this.source.reasonTrace} -> ${ownPart}`;
     }
@@ -92,5 +107,16 @@ export abstract class BaseCommand {
       return this.source.containsType(type);
     }
     return false;
+  }
+
+  public get logMessage(): string {
+    return this.reasonTrace;
+  }
+
+  public toJSON(): Partial<BaseCommand> {
+    // eslint-disable-next-line
+    const result: any = _.omit(this, ['source']);
+    result['logMessage'] = this.logMessage;
+    return Utils.jsonFilter(result);
   }
 }

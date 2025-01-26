@@ -5,4 +5,8 @@ export abstract class BaseAction extends BaseCommand {
   protected constructor(source?: BaseAction, reason?: string) {
     super(source ?? CommandSource.Automatic, reason);
   }
+
+  public get logMessage(): string {
+    return this.reasonTrace;
+  }
 }

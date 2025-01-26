@@ -164,7 +164,7 @@ export class HeatGroup extends BaseGroup implements iHeatGroup {
       });
     });
     this.getOwnAcDevices().forEach((acDev: AcDevice) => {
-      acDev.room = this.getRoom();
+      acDev.initializeRoomCbs();
     });
     this.getRoom().WindowGroup?.addHandleChangeCallback((handleChangeAction: HandleChangeAction): void => {
       this.getHeater().forEach((heater: iHeater) => {

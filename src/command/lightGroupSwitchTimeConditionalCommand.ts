@@ -1,5 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
+import { iBaseCommand } from '../interfaces';
 
 export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
   /** @inheritDoc */
@@ -12,7 +13,7 @@ export class LightGroupSwitchTimeConditionalCommand extends BaseCommand {
    * @param reason - You can provide a reason for clarification
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly time: TimeOfDay,
     reason: string = '',
   ) {

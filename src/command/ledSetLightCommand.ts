@@ -1,7 +1,7 @@
 import { DimmerSetLightCommand } from './dimmerSetLightCommand';
 import { CommandSource, CommandType } from '../enums';
-import { BaseCommand } from './baseCommand';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class LedSetLightCommand extends DimmerSetLightCommand {
   /** @inheritDoc */
@@ -20,7 +20,7 @@ export class LedSetLightCommand extends DimmerSetLightCommand {
    * @param colorTemp - The desired color Temperature (0 = more White)
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     on: boolean,
     reason: string = '',
     disableAutomatic?: BlockAutomaticCommand | null,

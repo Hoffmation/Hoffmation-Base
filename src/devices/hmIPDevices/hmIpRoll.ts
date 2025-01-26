@@ -101,9 +101,9 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
       return;
     }
     if (this.currentLevel === targetLevel && !command.isForceAction) {
-      this.log(
-        LogLevel.Debug,
-        `Skip Rollo command to Position ${targetLevel} as this is the current one, commandLog: ${command.logMessage}`,
+      this.logCommand(
+        command,
+        `Skip Rollo command to Position ${targetLevel} as this is the current one`,
         LogDebugType.SkipUnchangedRolloPosition,
       );
       return;
@@ -116,7 +116,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     if (!this.checkIoConnection(true)) {
       return;
     }
-    this.log(LogLevel.Debug, command.logMessage);
+    this.logCommand(command);
 
     if (this._window !== undefined) {
       if (this._window.griffeInPosition(WindowPosition.open) > 0 && command.level < 100) {
@@ -139,6 +139,6 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_window']);
+    return _.omit(super.toJSON() as Partial<IoBrokerBaseDevice>, ['_window']);
   }
 }

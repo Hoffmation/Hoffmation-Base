@@ -1,6 +1,7 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
 import { BlockAutomaticCommand } from './blockAutomaticCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class LampSetTimeBasedCommand extends BaseCommand {
   /** @inheritDoc */
@@ -21,7 +22,7 @@ export class LampSetTimeBasedCommand extends BaseCommand {
    * If undefined the default value will be used in case it's a non automatic action: {@link SettingsService.settings.blockAutomaticHandlerDefaults}
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public time: TimeOfDay,
     reason: string = '',
     disableAutomatic?: BlockAutomaticCommand | null,

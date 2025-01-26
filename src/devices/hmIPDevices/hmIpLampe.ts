@@ -87,7 +87,7 @@ export class HmIpLampe extends HmIPDevice implements iLamp, iTemporaryDisableAut
   }
 
   public writeActuatorStateToDevice(c: ActuatorWriteStateToDeviceCommand): void {
-    this.log(LogLevel.Debug, c.logMessage, LogDebugType.SetActuator);
+    this.logCommand(c, undefined, LogDebugType.SetActuator);
     this.setState(this.lightOnSwitchID, c.stateValue, undefined, (err) => {
       this.log(LogLevel.Error, `Lampe schalten ergab Fehler: ${err}`);
     });

@@ -1,5 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
+import { iBaseCommand } from '../interfaces';
 
 export class FloorSetAllShuttersCommand extends BaseCommand {
   /** @inheritDoc */
@@ -13,7 +14,7 @@ export class FloorSetAllShuttersCommand extends BaseCommand {
    * @param reason - You can provide a reason for clarity
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     public readonly position: number,
     public readonly specificFloor: number | undefined = undefined,
     reason: string = '',

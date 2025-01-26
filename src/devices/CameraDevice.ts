@@ -1,13 +1,5 @@
 import _ from 'lodash';
-import {
-  iBaseDevice,
-  iCameraDevice,
-  iCameraSettings,
-  iCountToday,
-  iDeviceInfo,
-  iRoomBase,
-  iRoomDevice,
-} from '../interfaces';
+import { iBaseDevice, iCameraDevice, iCameraSettings, iCountToday, iRoomDevice } from '../interfaces';
 import { CameraSettings } from '../settingsObjects';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { Base64Image } from '../models';
@@ -16,16 +8,12 @@ import { DeviceInfo } from './DeviceInfo';
 import { Devices } from './devices';
 import { Persistence, TelegramService } from '../services';
 import { Utils } from '../utils';
-import { API } from '../api';
 import { ServerLogService } from '../logging';
+import { RoomBaseDevice } from './RoomBaseDevice';
 
-export abstract class CameraDevice implements iCameraDevice {
+export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevice {
   /** @inheritDoc */
   public settings: iCameraSettings = new CameraSettings();
-  /** @inheritDoc */
-  public readonly deviceCapabilities: DeviceCapability[] = [DeviceCapability.camera, DeviceCapability.motionSensor];
-  /** @inheritDoc */
-  public deviceType: DeviceType = DeviceType.Camera;
   /**
    * The human readable name of this device
    */
@@ -48,7 +36,6 @@ export abstract class CameraDevice implements iCameraDevice {
   protected _dogDetected: boolean = false;
   protected _devicesBlockingAlarmMap: Map<string, iBaseDevice> = new Map<string, iBaseDevice>();
   protected _movementDetected: boolean = false;
-  protected _info: iDeviceInfo;
   private _personDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _movementDetectFallbackTimeout: NodeJS.Timeout | null = null;
   private _dogDetectFallbackTimeout: NodeJS.Timeout | null = null;
@@ -60,29 +47,27 @@ export abstract class CameraDevice implements iCameraDevice {
   }
 
   protected constructor(name: string, roomName: string) {
+    const info = new DeviceInfo();
+    info.fullName = `Camera ${roomName} ${name}`;
+    info.customName = `Camera ${name}`;
+    info.room = roomName;
+    const allDevicesKey = `camera-${roomName}-${name}`;
+    info.allDevicesKey = allDevicesKey;
+    super(info, DeviceType.Camera);
+    this.deviceCapabilities.push(DeviceCapability.camera);
+    this.deviceCapabilities.push(DeviceCapability.motionSensor);
     this.name = name;
-    this._info = new DeviceInfo();
-    this._info.fullName = `Camera ${roomName} ${name}`;
-    this._info.customName = `Camera ${name}`;
-    this._info.room = roomName;
-    this._info.allDevicesKey = `camera-${roomName}-${name}`;
-    Devices.alLDevices[this._info.allDevicesKey] = this;
-    this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
-    if (!Persistence.anyDboActive) {
-      this._initialized = true;
-    } else {
-      Persistence.dbo
-        ?.motionSensorTodayCount(this)
-        .then((todayCount: iCountToday) => {
-          this.detectionsToday = todayCount.count ?? 0;
-          this.log(LogLevel.Debug, `Reinitialized movement counter with ${this.detectionsToday}`);
-          this._initialized = true;
-        })
-        .catch((err: Error) => {
-          this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err?.message ?? err}`);
-        });
-    }
+    Devices.alLDevices[allDevicesKey] = this;
+    Utils.guardedTimeout(this.initializeMovementCounter, 4000, this);
+  }
+
+  public toJSON(): Partial<iRoomDevice> {
+    return Utils.jsonFilter(
+      _.omit(super.toJSON(), [
+        // To reduce Byte-size on cyclic update
+        '_lastImage',
+      ]),
+    );
   }
 
   /** @inheritDoc */
@@ -121,18 +106,8 @@ export abstract class CameraDevice implements iCameraDevice {
   }
 
   /** @inheritDoc */
-  public get customName(): string {
-    return this.info.customName;
-  }
-
-  /** @inheritDoc */
   public get id(): string {
     return this.info.allDevicesKey ?? `camera-${this.info.room}-${this.info.customName}`;
-  }
-
-  /** @inheritDoc */
-  public get room(): iRoomBase | undefined {
-    return API.getRoom(this.info.room);
   }
 
   /** @inheritDoc */
@@ -167,27 +142,21 @@ export abstract class CameraDevice implements iCameraDevice {
     });
   }
 
-  public toJSON(): Partial<iRoomDevice> {
-    return Utils.jsonFilter(
-      _.omit(this, [
-        // To reduce Byte-size on cyclic update
-        '_lastImage',
-      ]),
-    );
-  }
-
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
-  }
-
-  public loadDeviceSettings(): void {
-    this.settings?.initializeFromDb(this);
+  private initializeMovementCounter(): void {
+    if (!Persistence.anyDboActive) {
+      this._initialized = true;
+      return;
+    }
+    Persistence.dbo
+      ?.motionSensorTodayCount(this)
+      .then((todayCount: iCountToday) => {
+        this.detectionsToday = todayCount.count ?? 0;
+        this.log(LogLevel.Debug, `Reinitialized movement counter with ${this.detectionsToday}`);
+        this._initialized = true;
+      })
+      .catch((err: Error) => {
+        this.log(LogLevel.Warn, `Failed to initialize movement counter, err ${err?.message ?? err}`);
+      });
   }
 
   protected onNewMotionDetectedValue(newValue: boolean): void {

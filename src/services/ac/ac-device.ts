@@ -1,47 +1,28 @@
 import _ from 'lodash';
-import { AcSettings, DeviceInfo, Devices } from '../../devices';
-import {
-  iAcDevice,
-  iExcessEnergyConsumer,
-  iRoomBase,
-  iRoomDevice,
-  iTemporaryDisableAutomatic,
-  UNDEFINED_TEMP_VALUE,
-} from '../../interfaces';
-import {
-  AcDeviceType,
-  AcMode,
-  CommandSource,
-  DeviceCapability,
-  DeviceType,
-  HeatingMode,
-  LogDebugType,
-  LogLevel,
-} from '../../enums';
+import { AcSettings, DeviceInfo, Devices, RoomBaseDevice } from '../../devices';
+import { iAcDevice, iExcessEnergyConsumer, iTemporaryDisableAutomatic, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import { AcDeviceType, AcMode, CommandSource, DeviceCapability, DeviceType, HeatingMode, LogLevel } from '../../enums';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
 import { BlockAutomaticCommand } from '../../command';
 import { SettingsService } from '../../settings-service';
 import { WeatherService } from '../weather';
 import { Utils } from '../../utils';
 import { Persistence } from '../dbo';
-import { ServerLogService } from '../../logging';
 import { ExcessEnergyConsumerSettings } from '../../settingsObjects';
 import { PresenceGroupFirstEnterAction, PresenceGroupLastLeftAction } from '../../action';
 
-export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iAcDevice, iTemporaryDisableAutomatic {
+export abstract class AcDevice
+  extends RoomBaseDevice
+  implements iExcessEnergyConsumer, iAcDevice, iTemporaryDisableAutomatic
+{
   /** @inheritDoc */
   public currentConsumption: number = -1;
   /** @inheritDoc */
   public settings: AcSettings = new AcSettings();
   /** @inheritDoc */
-  public deviceCapabilities: DeviceCapability[] = [DeviceCapability.ac, DeviceCapability.blockAutomatic];
-  /** @inheritDoc */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   protected _activatedByExcessEnergy: boolean = false;
   protected _desiredTemperatur: number = UNDEFINED_TEMP_VALUE;
-
-  protected _info: DeviceInfo;
-  protected _room: iRoomBase | undefined;
   protected _mode: AcMode = AcMode.Off;
   private _movementCallbackAdded: boolean = false;
 
@@ -83,22 +64,6 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   /** @inheritDoc */
-  public get room(): iRoomBase | undefined {
-    return this._room;
-  }
-
-  /** @inheritDoc */
-  public set room(room: iRoomBase | undefined) {
-    this._room = room;
-    if (room !== undefined && !this._movementCallbackAdded) {
-      this._movementCallbackAdded = true;
-      // TODO: Maybe change to any Movement
-      room?.PraesenzGroup?.addAnyMovementCallback(this.onRoomAnyMovement.bind(this));
-      room?.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
-    }
-  }
-
-  /** @inheritDoc */
   public get mode(): AcMode {
     return this._mode;
   }
@@ -108,16 +73,18 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     roomName: string,
     public ip: string,
     public acDeviceType: AcDeviceType,
+    deviceType: DeviceType,
   ) {
-    this._info = new DeviceInfo();
-    this._info.fullName = `AC ${name}`;
-    this._info.customName = `${roomName} ${name}`;
-    this._info.room = roomName;
-    this._info.allDevicesKey = `ac-${roomName}-${name}`;
+    const info: DeviceInfo = new DeviceInfo();
+    info.fullName = `AC ${name}`;
+    info.customName = `${roomName} ${name}`;
+    info.room = roomName;
+    info.allDevicesKey = `ac-${roomName}-${name}`;
+    super(info, deviceType);
+    this.deviceCapabilities.push(DeviceCapability.ac);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, false);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
-    this.persistDeviceInfo();
-    Utils.guardedTimeout(this.loadDeviceSettings, 4500, this);
     this.blockAutomationHandler = new BlockAutomaticHandler(
       this.restoreTargetAutomaticValue.bind(this),
       this.log.bind(this),
@@ -136,16 +103,9 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
     return this._roomTemperature;
   }
 
-  /** @inheritDoc */
-  public get info(): DeviceInfo {
-    return this._info;
-  }
-
   protected set roomTemperatur(val: number) {
     this._roomTemperature = val;
   }
-
-  public abstract get deviceType(): DeviceType;
 
   /**
    * The name of this device
@@ -161,6 +121,18 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   public abstract get on(): boolean;
+
+  public initializeRoomCbs(): void {
+    if (this._movementCallbackAdded) {
+      return;
+    }
+    Utils.guardedFunction(() => {
+      // TODO: Maybe change to any Movement
+      this.room.PraesenzGroup?.addAnyMovementCallback(this.onRoomAnyMovement.bind(this));
+      this.room.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
+      this._movementCallbackAdded = true;
+    }, this);
+  }
 
   /** @inheritDoc */
   public restoreTargetAutomaticValue(): void {
@@ -355,34 +327,8 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   }
 
   /** @inheritDoc */
-  public log(level: LogLevel, message: string, debugType: LogDebugType = LogDebugType.None): void {
-    ServerLogService.writeLog(level, `${this.name}: ${message}`, {
-      debugType: debugType,
-      room: this.room?.roomName ?? '',
-      deviceId: this.name,
-      deviceName: this.name,
-    });
-  }
-
-  /** @inheritDoc */
   public wasActivatedByExcessEnergy(): boolean {
     return this._activatedByExcessEnergy;
-  }
-
-  /** @inheritDoc */
-  public loadDeviceSettings(): void {
-    this.settings.initializeFromDb(this);
-  }
-
-  /** @inheritDoc */
-  public persistDeviceInfo(): void {
-    Utils.guardedTimeout(
-      () => {
-        Persistence.dbo?.addDevice(this);
-      },
-      5000,
-      this,
-    );
   }
 
   protected automaticCheck(): void {
@@ -432,7 +378,7 @@ export abstract class AcDevice implements iExcessEnergyConsumer, iRoomDevice, iA
   /** @inheritDoc */
   public toJSON(): Partial<AcDevice> {
     // eslint-disable-next-line
-    const result: any = _.omit(this, ['room', '_room']);
+    const result: any = _.omit(super.toJSON() as Partial<AcDevice>, ['room', '_room']);
     result['on'] = this.on;
     return Utils.jsonFilter(result);
   }

@@ -1,6 +1,6 @@
 import { CommandSource, CommandType, TimeOfDay } from '../enums';
 import { ActuatorToggleCommand } from './actuatorToggleCommand';
-import { BaseCommand } from './baseCommand';
+import { iBaseCommand } from '../interfaces';
 
 export class LampToggleLightCommand extends ActuatorToggleCommand {
   /** @inheritDoc */
@@ -14,7 +14,7 @@ export class LampToggleLightCommand extends ActuatorToggleCommand {
    * @param calculateTime - Alternative to "time", if set the time will be calculated by the lamps room and its settings
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     reason: string = '',
     public time?: TimeOfDay,
     public readonly calculateTime: boolean = false,

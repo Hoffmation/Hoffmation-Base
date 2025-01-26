@@ -99,7 +99,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
     if (!this.checkIoConnection(true)) {
       return;
     }
-    this.log(LogLevel.Debug, command.logMessage);
+    this.logCommand(command);
 
     if (this._window !== undefined) {
       if (this._window.griffeInPosition(WindowPosition.open) > 0 && command.level < 100) {
@@ -123,7 +123,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
   }
 
   public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON(), ['_window']);
+    return _.omit(super.toJSON() as Partial<IoBrokerBaseDevice>, ['_window']);
   }
 
   private setCurrentLevel(value: number, initial: boolean = false): void {

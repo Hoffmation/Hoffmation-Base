@@ -5,6 +5,7 @@ export * from './settings';
 export * from './deviceSettings';
 export * from './weather';
 
+export * from './iBaseCommand';
 export * from './iDeviceUpdater';
 export * from './iDeviceConfig';
 export * from './govee-device-data';

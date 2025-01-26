@@ -1,7 +1,9 @@
 import { iIdHolder } from '../iIdHolder';
 import { iDeviceSettings } from '../deviceSettings';
-import { DeviceCapability, DeviceType } from '../../enums';
+import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { iDeviceInfo } from '../iDeviceInfo';
+import { RingStorage } from '../../utils';
+import { iBaseCommand } from '../iBaseCommand';
 
 /**
  * This is the main interface for all devices as it ensures certain base functionality.
@@ -11,6 +13,11 @@ export interface iBaseDevice extends iIdHolder {
    * The settings of the device which are overridden by the specific device implementation
    */
   readonly settings: iDeviceSettings | undefined;
+
+  /**
+   *
+   */
+  readonly lastCommands: RingStorage<iBaseCommand>;
   /**
    * The hardware-type of the device.
    */
@@ -23,6 +30,11 @@ export interface iBaseDevice extends iIdHolder {
    * The capabilities of the device thus referencing other interfaces which then can be used to treat devices regardless of their hardware-type.
    */
   readonly deviceCapabilities: DeviceCapability[];
+
+  /**
+   * Logs a executed/cancelled Command
+   */
+  logCommand(c: iBaseCommand, ignoreReason?: string, logDebugType?: LogDebugType, logLevel?: LogLevel): void;
 
   /**
    * This method writes the device Info to the configured persistence layer, to ensure having foreign keys for all other persisted data.

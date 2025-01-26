@@ -1,5 +1,6 @@
 import { BaseCommand } from './baseCommand';
 import { CollisionSolving, CommandSource, CommandType } from '../enums';
+import { iBaseCommand } from '../interfaces';
 
 export class BlockAutomaticCommand extends BaseCommand {
   /**
@@ -42,7 +43,7 @@ export class BlockAutomaticCommand extends BaseCommand {
    * @param revertToAutomaticAtBlockLift - Whether the device should revert to automatic afterward. --> Default: {@link SettingsService.settings.blockAutomaticHandlerDefaults.revertToAutomaticAtBlockLift}
    */
   public constructor(
-    source: CommandSource | BaseCommand,
+    source: CommandSource | iBaseCommand,
     durationMS?: number,
     reason: string = '',
     onCollideAction?: CollisionSolving,

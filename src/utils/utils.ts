@@ -26,16 +26,16 @@ export class Utils {
       }));
   }
 
-  public static guardedFunction(
-    func: (...args: unknown[]) => void,
+  public static guardedFunction<T>(
+    func: (...args: unknown[]) => T,
     thisContext: unknown | undefined,
     additionalErrorMsg?: string,
-  ): void {
+  ): T | void {
     try {
       if (thisContext) {
-        func.bind(thisContext)();
+        return func.bind(thisContext)();
       } else {
-        func();
+        return func();
       }
     } catch (e) {
       const message = `Guarded Function failed: ${(e as Error).message}\n Stack: ${(e as Error).stack}`;
@@ -72,6 +72,31 @@ export class Utils {
     return setTimeout(() => {
       Utils.guardedFunction(func, thisContext);
     }, time);
+  }
+
+  public static retryAction(
+    func: (...args: unknown[]) => boolean,
+    thisContext?: unknown | undefined,
+    retriesLeft: number = 5,
+    intervalBetweenRetries: number = 1000,
+    successCB?: () => void,
+    failureCB?: () => void,
+  ): void {
+    if (Utils.guardedFunction(func, thisContext)) {
+      successCB?.();
+      return;
+    }
+    if (retriesLeft === 0) {
+      failureCB?.();
+      return;
+    }
+    Utils.guardedTimeout(
+      () => {
+        Utils.retryAction(func, thisContext, retriesLeft - 1, intervalBetweenRetries, successCB, failureCB);
+      },
+      intervalBetweenRetries,
+      thisContext,
+    );
   }
 
   public static guardedInterval(

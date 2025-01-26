@@ -96,11 +96,11 @@ export class LampUtils {
 
   public static checkBlockActive(device: iActuator, c: ActuatorSetStateCommand): boolean {
     if (!c.isForceAction && device.blockAutomationHandler.automaticBlockActive) {
-      device.log(
-        LogLevel.Debug,
+      device.logCommand(
+        c,
         `Skip command to ${c.on} as it is locked until ${new Date(
           device.blockAutomationHandler.automaticBlockedUntil,
-        ).toLocaleTimeString('de-DE')}; command Log: ${c.logMessage}`,
+        ).toLocaleTimeString('de-DE')}`,
       );
       device.targetAutomaticState = c.on;
       return true;
@@ -149,9 +149,9 @@ export class LampUtils {
     }
 
     if (!noLog) {
-      device.log(
-        LogLevel.DeepTrace,
-        `Light command can be skipped as device is already in desired state; command: ${c.logMessage}`,
+      device.logCommand(
+        c,
+        `Light command can be skipped as device is already in desired state`,
         LogDebugType.SkipUnchangedActuatorCommand,
       );
     }
@@ -164,7 +164,7 @@ export class LampUtils {
       c.on &&
       c.containsType(CommandType.ActuatorRestoreTargetAutomaticValueCommand)
     ) {
-      // Don't restore automatic state on Strommstoss-Relais as this might result in a loop.
+      device.logCommand(c, "Don't restore automatic state on Strommstoss-Relais as this might result in a loop.");
       return;
     }
     const dontBlock: boolean = LampUtils.checkUnBlock(device, c);
@@ -176,6 +176,7 @@ export class LampUtils {
       device.targetAutomaticState = c.on;
     }
     if (LampUtils.canActuatorChangeBeSkipped(device, c)) {
+      device.logCommand(c, 'Actuator change can be skipped');
       return;
     }
 
