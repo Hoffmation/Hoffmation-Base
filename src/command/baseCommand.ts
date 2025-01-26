@@ -2,8 +2,13 @@ import { CommandSource, CommandType } from '../enums';
 
 import { iBaseCommand } from './iBaseCommand';
 import _ from 'lodash';
+import { iJsonOmitKeys } from '../interfaces';
 
-export abstract class BaseCommand implements iBaseCommand {
+export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
+  /**
+   *
+   */
+  public jsonOmitKeys = ['source'];
   /**
    * The timestamp of the command being created
    */
