@@ -22,7 +22,7 @@ export class DachsTemperatureSensor extends RoomBaseDevice implements iTemperatu
     info.room = roomName;
     super(info, DeviceType.DachsWarmWaterTemperature);
     this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
-    this.jsonOmitKeys.push(...['room', 'client', 'config', '_influxClient']);
+    this.jsonOmitKeys.push(...['client', 'config', '_influxClient']);
     Devices.alLDevices[allDevicesKey] = this;
     Devices.temperatureWarmWater = this;
   }
