@@ -10,10 +10,14 @@ import {
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { iLedRgbCct } from '../../interfaces/baseDevices/iLedRgbCct';
 import { GoveeDeviceData, iTemporaryDisableAutomatic } from '../../interfaces';
-import { DeviceInfo, Devices, LampUtils, LedSettings, RoomBaseDevice } from '../index';
 import { BlockAutomaticHandler, Persistence } from '../../services';
 import { Utils } from '../../utils';
 import { GooveeService } from './govee-service';
+import { RoomBaseDevice } from '../RoomBaseDevice';
+import { LedSettings } from '../../settingsObjects';
+import { DeviceInfo } from '../DeviceInfo';
+import { Devices } from '../devices';
+import { LampUtils } from '../sharedFunctions';
 
 export class OwnGoveeDevice extends RoomBaseDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */
