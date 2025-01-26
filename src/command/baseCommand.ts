@@ -90,25 +90,25 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
 
   public get reasonTrace(): string {
     let ownPart: string = `${this.type}`;
-    if (this.reason !== undefined) {
+    if (this.reason) {
       ownPart += `("${this.reason}")`;
     }
     if (this.ignoreReason !== undefined) {
       ownPart += ` ignored due to: "${this.ignoreReason}"`;
     }
-    if (typeof this.source === 'object') {
-      return `${this.source.reasonTrace} -> ${ownPart}`;
+    if ((this.source as iBaseCommand).timestamp) {
+      return `${(this.source as iBaseCommand).reasonTrace} -> ${ownPart}`;
     }
 
-    return `CommandType("${CommandSource[this.source]}") stack => ${ownPart}`;
+    return `CommandType("${CommandSource[this.source as CommandSource]}") stack => ${ownPart}`;
   }
 
   public containsType(type: CommandType): boolean {
     if (this.type === type) {
       return true;
     }
-    if (this.source instanceof BaseCommand) {
-      return this.source.containsType(type);
+    if ((this.source as iBaseCommand).timestamp) {
+      return (this.source as iBaseCommand).containsType(type);
     }
     return false;
   }

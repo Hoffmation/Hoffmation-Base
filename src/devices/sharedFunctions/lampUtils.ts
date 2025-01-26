@@ -176,7 +176,6 @@ export class LampUtils {
       device.targetAutomaticState = c.on;
     }
     if (LampUtils.canActuatorChangeBeSkipped(device, c)) {
-      device.logCommand(c, 'Actuator change can be skipped');
       return;
     }
 
