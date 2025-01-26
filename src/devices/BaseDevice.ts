@@ -113,6 +113,6 @@ export abstract class BaseDevice implements iBaseDevice {
     // eslint-disable-next-line
     const returnValue: any = _.omit(this, 'lastCommands');
     returnValue['lastCommands'] = this.lastCommands.readAmount(this.lastCommands.maximumSize);
-    return Utils.jsonFilter(this, this.jsonOmitKeys);
+    return Utils.jsonFilter(returnValue, this.jsonOmitKeys);
   }
 }

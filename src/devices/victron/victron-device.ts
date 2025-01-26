@@ -158,7 +158,7 @@ export class VictronDevice extends BaseDevice implements iEnergyManager, iBatter
         injectingWattage: this.injectingWattage,
         selfConsumingWattage: this.selfConsumingWattage,
       },
-      ...Utils.jsonFilter(super.toJSON() as Partial<VictronDevice>, this.jsonOmitKeys),
+      ...(super.toJSON() as Partial<VictronDevice>),
     };
   }
 

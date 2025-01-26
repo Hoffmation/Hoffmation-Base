@@ -1,5 +1,5 @@
 import { DeviceType, LogDebugType, LogLevel } from '../../enums';
-import { iBaseDevice, iBluetoothTrackingSettings } from '../../interfaces';
+import { iBluetoothTrackingSettings } from '../../interfaces';
 import { Devices } from '../devices';
 import { TrackedDistanceData } from './trackedDistanceData';
 import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
@@ -66,10 +66,6 @@ export class DetectedBluetoothDevice extends BaseDevice {
       deviceId: this.info.allDevicesKey,
       deviceName: this.name,
     });
-  }
-
-  public toJSON(): Partial<iBaseDevice> {
-    return Utils.jsonFilter(this);
   }
 
   public getDistance(id: string, maxAge: number = 120): TrackedDistanceData | undefined {

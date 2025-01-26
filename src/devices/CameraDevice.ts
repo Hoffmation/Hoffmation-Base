@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import { iBaseDevice, iCameraDevice, iCameraSettings, iCountToday, iRoomDevice } from '../interfaces';
+import { iBaseDevice, iCameraDevice, iCameraSettings, iCountToday } from '../interfaces';
 import { CameraSettings } from '../settingsObjects';
 import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { Base64Image } from '../models';
@@ -54,20 +53,12 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
     const allDevicesKey = `camera-${roomName}-${name}`;
     info.allDevicesKey = allDevicesKey;
     super(info, DeviceType.Camera);
+    this.jsonOmitKeys.push('_lastImage');
     this.deviceCapabilities.push(DeviceCapability.camera);
     this.deviceCapabilities.push(DeviceCapability.motionSensor);
     this.name = name;
     Devices.alLDevices[allDevicesKey] = this;
     Utils.guardedTimeout(this.initializeMovementCounter, 4000, this);
-  }
-
-  public toJSON(): Partial<iRoomDevice> {
-    return Utils.jsonFilter(
-      _.omit(super.toJSON(), [
-        // To reduce Byte-size on cyclic update
-        '_lastImage',
-      ]),
-    );
   }
 
   /** @inheritDoc */

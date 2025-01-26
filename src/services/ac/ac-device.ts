@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { AcSettings, DeviceInfo, Devices, RoomBaseDevice } from '../../devices';
 import { iAcDevice, iExcessEnergyConsumer, iTemporaryDisableAutomatic, UNDEFINED_TEMP_VALUE } from '../../interfaces';
 import { AcDeviceType, AcMode, CommandSource, DeviceCapability, DeviceType, HeatingMode, LogLevel } from '../../enums';
@@ -378,8 +377,8 @@ export abstract class AcDevice
   /** @inheritDoc */
   public toJSON(): Partial<AcDevice> {
     // eslint-disable-next-line
-    const result: any = _.omit(super.toJSON() as Partial<AcDevice>, ['room', '_room']);
+    const result: any = super.toJSON() as Partial<AcDevice>;
     result['on'] = this.on;
-    return Utils.jsonFilter(result);
+    return result;
   }
 }

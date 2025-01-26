@@ -5,17 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.2.1-alpha.6 (2025-01-26)
 
-* (theimo1221) Fix some undefined in Command Sources
+## **WORK IN PROGRESS**
 
-## 3.2.1-alpha.5 (2025-01-26)
-
-* (theimo1221) LastCommands as Array in JSON
-
-## 3.2.1-alpha.4 (2025-01-26)
-
-* (theimo1221) Fix JSON Dachs ommit keys
+* (theimo1221) Improve JSON Output
 
 ## 3.2.1-alpha.0 (2025-01-26)
 

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { AcDevice } from './ac-device';
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
 import { AcDeviceType, AcMode, DeviceType, LogDebugType, LogLevel } from '../../enums';
@@ -35,6 +34,7 @@ export class OwnDaikinDevice extends AcDevice {
     private _mac: string | undefined = undefined,
   ) {
     super(name, roomName, ip, AcDeviceType.Daikin, DeviceType.Daikin);
+    this.jsonOmitKeys.push('_device');
   }
 
   public get device(): DaikinAC | undefined {
@@ -204,13 +204,5 @@ export class OwnDaikinDevice extends AcDevice {
         this.setDesiredInfo(true);
       }
     });
-  }
-
-  /** @inheritDoc */
-  public override toJSON(): Partial<OwnDaikinDevice> {
-    // eslint-disable-next-line
-    const result: any = _.omit(super.toJSON() as Partial<OwnDaikinDevice>, ['device', '_device']);
-    result['on'] = this.on;
-    return Utils.jsonFilter(result);
   }
 }

@@ -1,5 +1,5 @@
 import { TrilaterationBasePoint } from './trilaterationBasePoint';
-import { iRoomDevice, iTrilaterationBasePoint } from '../../interfaces';
+import { iTrilaterationBasePoint } from '../../interfaces';
 import { iBluetoothDetector } from '../../interfaces/baseDevices/iBluetoothDetector';
 import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { DetectedBluetoothDevice } from './detectedBluetoothDevice';
@@ -8,7 +8,6 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import { EspresenseCoordinator } from './espresenseCoordinator';
 import { Trilateration } from './trilateration';
-import { Utils } from '../../utils';
 import { RoomBaseDevice } from '../RoomBaseDevice';
 
 export class EspresenseDevice extends RoomBaseDevice implements iBluetoothDetector {
@@ -113,11 +112,6 @@ export class EspresenseDevice extends RoomBaseDevice implements iBluetoothDetect
         cb.callback(true, distance);
       }
     }
-  }
-
-  /** @inheritDoc */
-  public toJSON(): Partial<iRoomDevice> {
-    return Utils.jsonFilter(this);
   }
 
   /** @inheritDoc */

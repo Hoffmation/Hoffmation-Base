@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { DeviceCapability, DeviceType, TvDeviceType } from '../../enums';
 import { iTvDevice } from '../../interfaces';
 import { TvSettings } from '../../settingsObjects';
@@ -60,8 +59,8 @@ export abstract class TvDevice extends RoomBaseDevice implements iTvDevice {
 
   public toJSON(): Partial<TvDevice> {
     // eslint-disable-next-line
-    const result: any = _.omit(super.toJSON() as Partial<TvDevice>, ['room']);
+    const result: any = super.toJSON() as Partial<TvDevice>;
     result['on'] = this.on;
-    return Utils.jsonFilter(result);
+    return result;
   }
 }

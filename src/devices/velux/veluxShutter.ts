@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { VeluxDevice } from './veluxDevice';
 import { iShutter, iWindow } from '../../interfaces';
 import { ShutterSettings } from '../../settingsObjects';
@@ -6,7 +5,6 @@ import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
 import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
 import { ShutterPositionChangedAction } from '../../action';
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 import { Utils } from '../../utils';
 
 export class VeluxShutter extends VeluxDevice implements iShutter {
@@ -21,6 +19,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.VeluxShutter);
+    this.jsonOmitKeys.push('_window');
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.targetPosition`;
     this.dbo?.getLastDesiredPosition(this).then((val) => {
@@ -120,10 +119,6 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
     this.log(LogLevel.Debug, `Fahre Rollo auf Position ${targetLevel}`);
     // Level is inverted for Velux Adapter (100 = 0, 0 = 100, 25 = 75, etc.)
     this.setState(this._setLevelSwitchID, Math.abs(targetLevel - 100));
-  }
-
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON() as Partial<IoBrokerBaseDevice>, ['_window']);
   }
 
   private setCurrentLevel(value: number, initial: boolean = false): void {

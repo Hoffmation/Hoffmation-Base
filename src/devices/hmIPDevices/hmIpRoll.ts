@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { HmIPDevice } from './hmIpDevice';
 import { iShutter, iWindow } from '../../interfaces';
 import { ShutterSettings } from '../../settingsObjects';
@@ -7,7 +6,6 @@ import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, Wi
 import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
 import { Utils } from '../../utils';
 import { ShutterPositionChangedAction } from '../../action';
-import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */
@@ -19,6 +17,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.HmIpRoll);
+    this.jsonOmitKeys.push('_window');
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
     this.dbo?.getLastDesiredPosition(this).then((val) => {
@@ -136,9 +135,5 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this._setLevel = targetLevel;
     this.log(LogLevel.Debug, `Fahre Rollo auf Position ${targetLevel}`);
     this.setState(this._setLevelSwitchID, targetLevel);
-  }
-
-  public toJSON(): Partial<IoBrokerBaseDevice> {
-    return _.omit(super.toJSON() as Partial<IoBrokerBaseDevice>, ['_window']);
   }
 }
