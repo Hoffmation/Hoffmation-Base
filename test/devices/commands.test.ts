@@ -3,7 +3,10 @@ import {
   ActuatorWriteStateToDeviceCommand,
   CommandSource,
   LampSetLightCommand,
+  PresenceGroupAnyMovementAction,
   PresenceGroupLastLeftAction,
+  RoomSetLightTimeBasedCommand,
+  Utils,
 } from '../../src';
 
 jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
@@ -15,7 +18,7 @@ describe('Commands', () => {
 
     const result = c2.logMessage;
     expect(result).toBe(
-      'Actuator setState to true with disableCommand undefined for reason: CommandType("Force") stack => LampSetLightCommand("Testreason Lamp") -> ActuatorSetStateCommand("Testreason Actuator")',
+      'Actuator setState to true with disableCommand undefined for reason: CommandSource("Force") stack => LampSetLightCommand("Testreason Lamp") -> ActuatorSetStateCommand("Testreason Actuator")',
     );
   });
   it('Action should print a proper reason Tree', () => {
@@ -26,7 +29,16 @@ describe('Commands', () => {
 
     const result = c3.logMessage;
     expect(result).toBe(
-      'Actuator Write StateToDevice original Log-message: Actuator setState to true with disableCommand undefined for reason: CommandType("Automatic") stack => PresenceGroupLastLeftAction("Testreason") -> LampSetLightCommand("Testreason Lamp") -> ActuatorSetStateCommand("Testreason Actuator")',
+      'Actuator Write StateToDevice original Log-message: Actuator setState to true with disableCommand undefined for reason: CommandSource("Automatic") stack => PresenceGroupLastLeftAction("Testreason") -> LampSetLightCommand("Testreason Lamp") -> ActuatorSetStateCommand("Testreason Actuator")',
     );
+  });
+  it('Action should be JSON exportable', () => {
+    const a1 = new PresenceGroupAnyMovementAction(CommandSource.Automatic, 'Testreason');
+    const c1 = new RoomSetLightTimeBasedCommand(a1, false, 'Testreason Lamp');
+    const c2 = new ActuatorSetStateCommand(c1, false, 'No one is present --> Turn off lights.');
+    const c3 = new ActuatorWriteStateToDeviceCommand(c2, true);
+
+    const jsonMessage = JSON.parse(JSON.stringify(Utils.jsonFilter(c3))).logMessage;
+    expect(jsonMessage).toBe(c3.logMessage);
   });
 });

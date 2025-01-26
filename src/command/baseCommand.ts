@@ -2,9 +2,9 @@ import { CommandSource, CommandType } from '../enums';
 
 import { iBaseCommand } from './iBaseCommand';
 import _ from 'lodash';
-import { iJsonOmitKeys } from '../interfaces';
+import { iJsonCustomPrepend, iJsonOmitKeys } from '../interfaces';
 
-export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
+export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys, iJsonCustomPrepend {
   /**
    *
    */
@@ -100,7 +100,7 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
       return `${this.source.reasonTrace} -> ${ownPart}`;
     }
 
-    return `CommandType("${CommandSource[this.source as CommandSource]}") stack => ${ownPart}`;
+    return `CommandSource("${CommandSource[this.source as CommandSource]}") stack => ${ownPart}`;
   }
 
   public containsType(type: CommandType): boolean {
@@ -117,8 +117,14 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys {
     return this.reasonTrace;
   }
 
+  public customPrepend(): Partial<unknown> {
+    return {
+      logMessage: this.logMessage,
+    };
+  }
+
   public toJSON(): Partial<BaseCommand> {
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: any = _.omit(this, ['source']);
     result['logMessage'] = this.logMessage;
     return result;

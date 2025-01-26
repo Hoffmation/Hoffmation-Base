@@ -3,7 +3,7 @@ import { ServerLogService } from '../logging';
 import { LogLevel } from '../enums';
 import { CatchEmResult } from './catchEmResult';
 import { Res } from '../i18n';
-import { iJsonOmitKeys, iTimePair } from '../interfaces';
+import { iJsonCustomPrepend, iJsonOmitKeys, iTimePair } from '../interfaces';
 import { RGB } from './RGB';
 import { SettingsService } from '../settings-service';
 
@@ -255,6 +255,12 @@ export class Utils {
       ServerLogService.writeLog(LogLevel.Warn, `DeepOmit Loop Level ${level} reached for ${currentKey}`);
     }
     const combinedOmmitKeys: string[] = [...keysToOmit, ...((obj as iJsonOmitKeys)?.jsonOmitKeys ?? [])];
+    if ((obj as iJsonCustomPrepend)?.customPrepend) {
+      obj = {
+        ...obj,
+        ...(obj as iJsonCustomPrepend).customPrepend(),
+      };
+    }
     // the inner function which will be called recursivley
     return _.transform(obj, (result: { [name: string]: unknown }, value, key: string | number) => {
       if (value === undefined || value === null) {
@@ -268,10 +274,10 @@ export class Utils {
             return;
           }
         }
-        // transform to a new object
         if (level === 1 && topLevelOmitKeys.includes(lowerKey)) {
           return;
         }
+        // transform to a new object
         if (lowerKey.endsWith('map')) {
           const newKey: string = lowerKey.replace('map', 'dict');
           const dict: { [key: string | number]: unknown } = {};

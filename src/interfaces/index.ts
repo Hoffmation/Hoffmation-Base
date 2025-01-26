@@ -17,6 +17,7 @@ export * from './iButtonCallback';
 export * from './iButtonCapabilities';
 export * from './iDeviceInfo';
 export * from './iIdHolder';
+export * from './iJsonCustomPrepend';
 export * from './iJsonOmitKeys';
 export * from './iLogSettings';
 export * from './iAsusConfig';
