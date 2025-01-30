@@ -47,7 +47,6 @@ export class OwnGoveeDevice extends RoomBaseDevice implements iLedRgbCct, iTempo
     const allDevicesKey = `govee-${roomName}-${deviceId}`;
     info.allDevicesKey = allDevicesKey;
     super(info, DeviceType.GoveeLed);
-    this.jsonOmitKeys.push('device');
     this.deviceId = deviceId;
     this.deviceCapabilities.push(
       ...[

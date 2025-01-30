@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Reduce Govee JSON Ommit Keys
+
 ## 3.2.1-alpha.9 (2025-01-26)
 
 * (theimo1221) Fix Commands stack within json
