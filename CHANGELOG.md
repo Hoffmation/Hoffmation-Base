@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Dachs to respect block automatic
+
 ## 3.2.1-alpha.10 (2025-01-30)
 
 * (theimo1221) Reduce Govee JSON Ommit Keys

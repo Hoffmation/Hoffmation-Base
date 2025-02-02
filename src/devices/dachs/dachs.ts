@@ -29,7 +29,7 @@ import { DeviceInfo } from '../DeviceInfo';
 import { Devices } from '../devices';
 import { Utils } from '../../utils';
 import { LampUtils } from '../sharedFunctions';
-import { SunTimeOffsets } from '../../models/sun-time-offsets';
+import { SunTimeOffsets } from '../../models';
 import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
@@ -116,6 +116,7 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     );
     Devices.alLDevices[allDevicesKey] = this;
     this.deviceCapabilities.push(DeviceCapability.actuator);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     if (options.influxDb) {
       this._influxClient = new DachsInfluxClient(options.influxDb);
     }
@@ -265,6 +266,9 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
   }
 
   private checkAllDesiredStates(action: BaseAction, batteryLevel: number): void {
+    if (this.blockAutomationHandler.automaticBlockActive) {
+      return;
+    }
     const shouldDachsBeStarted: boolean = this.shouldDachsBeStarted(action, batteryLevel);
     this.checkHeatingRod(action, batteryLevel);
     this.checkAlternativeActuator(shouldDachsBeStarted, action);
