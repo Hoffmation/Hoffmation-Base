@@ -66,13 +66,22 @@ export abstract class BaseDevice implements iBaseDevice {
 
   /** @inheritDoc */
   public loadDeviceSettings(): void {
-    Utils.retryAction((): boolean => {
-      if (this.settings === undefined || Persistence.dbo === undefined) {
-        return false;
-      }
-      this.settings?.initializeFromDb(this);
-      return true;
-    }, this);
+    Utils.retryAction(
+      (): boolean => {
+        if (this.settings === undefined || Persistence.dbo === undefined) {
+          return false;
+        }
+        this.settings?.initializeFromDb(this);
+        return true;
+      },
+      this,
+      5,
+      2000,
+      undefined,
+      () => {
+        this.log(LogLevel.Error, 'Could not load device settings within 5 retries.');
+      },
+    );
   }
 
   public log(level: LogLevel, message: string, logDebugType: LogDebugType = LogDebugType.None): void {

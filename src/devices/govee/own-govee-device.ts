@@ -21,7 +21,7 @@ import { LampUtils } from '../sharedFunctions';
 
 export class OwnGoveeDevice extends RoomBaseDevice implements iLedRgbCct, iTemporaryDisableAutomatic {
   /** @inheritDoc */
-  public settings: LedSettings = new LedSettings();
+  public override settings: LedSettings = new LedSettings();
   /**
    * The id of the device
    */
