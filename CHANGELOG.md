@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix dbo initialize
+
 ## 3.2.1-alpha.12 (2025-02-07)
 
 * (theimo1221) Fixes for devices which tried to restore their settings to early.

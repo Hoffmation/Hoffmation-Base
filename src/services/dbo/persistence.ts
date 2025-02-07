@@ -14,7 +14,7 @@ export class Persistence {
       return undefined;
     }
 
-    if (this._dbo.initialized === false) {
+    if (!this._dbo.initialized) {
       const err: Error = new Error('Db is not yet initialized');
       ServerLogService.writeLog(LogLevel.Warn, 'Db is not yet initialized, Stack: ' + err.stack);
       return undefined;

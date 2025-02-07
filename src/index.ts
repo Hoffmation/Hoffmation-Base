@@ -73,9 +73,12 @@ export class HoffmationBase {
     ServerLogService.writeLog(LogLevel.Info, 'Hoffmation-Base Startup');
     if (initObject.config.persistence) {
       if (initObject.config.persistence.postgreSql) {
-        Persistence.dbo = new PostgreSqlPersist(initObject.config.persistence.postgreSql);
+        ServerLogService.writeLog(LogLevel.Info, 'Creating PostgresSQL Client');
+        const dbo: PostgreSqlPersist = new PostgreSqlPersist(initObject.config.persistence.postgreSql);
+        await dbo.initialize();
+        Persistence.dbo = dbo;
+        ServerLogService.writeLog(LogLevel.Info, 'Persistence initialized');
       }
-      await Persistence.dbo?.initialize();
     }
     if (SettingsService.settings.mp3Server) {
       ServerLogService.writeLog(LogLevel.Info, 'Mp3Server settings detected --> initializing');
