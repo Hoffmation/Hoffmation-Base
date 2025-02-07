@@ -68,7 +68,7 @@ export abstract class BaseDevice implements iBaseDevice {
   public loadDeviceSettings(): void {
     Utils.retryAction(
       (): boolean => {
-        if (this.settings === undefined || Persistence.dbo === undefined) {
+        if (this.settings === undefined || !Persistence.dboReady) {
           return false;
         }
         this.settings?.initializeFromDb(this);
