@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Allow Heating rod earlier in winter mode
+
 ## 3.2.1 (2025-02-18)
 
 * (theimo1221) Lift dachs block after 3 hours below turn-off threshold.

@@ -147,7 +147,7 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
 
   /** @inheritDoc */
   public get id(): string {
-    return this.info.allDevicesKey ?? `sonos-${this.info.room}-${this.info.customName}`;
+    return this.info.allDevicesKey ?? `dachs-${this.info.room}-${this.info.customName}`;
   }
 
   public get name(): string {
@@ -346,7 +346,13 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     if (this.heatingRod === undefined) {
       return;
     }
-    const shouldBeOff: boolean = batteryLevel < this.settings.batteryLevelHeatingRodThreshold;
+    const shouldBeOff: boolean =
+      batteryLevel < this.settings.batteryLevelHeatingRodThreshold &&
+      !(
+        SettingsService.heatMode === HeatingMode.Winter &&
+        batteryLevel > this.settings.batteryLevelPreventStartThreshold &&
+        this.heatStorageTempSensor.temperatureSensor.temperature < 60
+      );
 
     if (this.heatingRod.actuatorOn !== shouldBeOff) {
       return;
