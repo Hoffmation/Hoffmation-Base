@@ -5,6 +5,12 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Lift dachs block after 3 hours below turn-off threshold.
+* (theimo1221) Additional dachs night-/evening-time turn-off-threshold level.
+
 ## 3.2.1-alpha.13 (2025-02-07)
 
 * (theimo1221) Fix dbo initialize

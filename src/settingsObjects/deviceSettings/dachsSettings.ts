@@ -3,53 +3,33 @@ import { iDachsDeviceSettings } from '../../interfaces';
 import { ActuatorSettings } from './actuatorSettings';
 
 export class DachsDeviceSettings extends ActuatorSettings implements iDachsDeviceSettings {
-  /**
-   * The refresh interval in ms to pull the data from the device.
-   */
+  /** @inheritDoc */
   public refreshIntervalTime: number = 30000;
 
-  /**
-   * Defines the battery level at which the dachs should be turned on,
-   * to prevent a battery based island-system to be out of power.
-   * @default -1 --> No turn on for battery loading
-   *
-   * Uses {@link iBatteryDevice.addBatteryLevelCallback}
-   */
+  /** @inheritDoc */
   public batteryLevelTurnOnThreshold: number = -1;
 
-  /**
-   * Defines the battery level at which the dachs should be turned on,
-   * in evening hours to prevent a battery based island-system to run out of
-   * power overnight.
-   * @default -1 --> No turn on for battery loading
-   *
-   * Uses {@link iBatteryDevice.addBatteryLevelCallback}
-   */
+  /** @inheritDoc */
   public batteryLevelBeforeNightTurnOnThreshold: number = -1;
 
-  /**
-   * Defines the battery level below which the dachs should be allowed to start
-   */
+  /** @inheritDoc */
   public batteryLevelAllowStartThreshold: number = 50;
-  /**
-   * Defines the battery level above which the dachs should be prevented from starting/running.
-   */
+
+  /** @inheritDoc */
   public batteryLevelPreventStartThreshold: number = 70;
-  /**
-   * Defines the battery level above which the external heating rod should be turned on
-   */
+
+  /** @inheritDoc */
+  public batteryLevelPreventStartAtNightThreshold: number = 90;
+
+  /** @inheritDoc */
   public batteryLevelHeatingRodThreshold: number = 80;
-  /**
-   * Defines the desired minimum temperature for warm water.
-   */
+
+  /** @inheritDoc */
   public warmWaterDesiredMinTemp: number = 45;
-  /**
-   * Defines the desired minimum temperature for heat storage during winter.
-   */
+
+  /** @inheritDoc */
   public winterMinimumHeatStorageTemp: number = 55;
-  /**
-   * Defines the desired minimum temperature for heat storage during winter.
-   */
+  /** @inheritDoc */
   public winterMinimumPreNightHeatStorageTemp: number = 65;
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
@@ -60,6 +40,8 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
     this.batteryLevelHeatingRodThreshold = data.batteryLevelHeatingRodThreshold ?? this.batteryLevelHeatingRodThreshold;
     this.batteryLevelPreventStartThreshold =
       data.batteryLevelPreventStartThreshold ?? this.batteryLevelPreventStartThreshold;
+    this.batteryLevelPreventStartAtNightThreshold =
+      data.batteryLevelPreventStartAtNightThreshold ?? this.batteryLevelPreventStartAtNightThreshold;
     this.batteryLevelAllowStartThreshold = data.batteryLevelAllowStartThreshold ?? this.batteryLevelAllowStartThreshold;
     this.warmWaterDesiredMinTemp = data.warmWaterDesiredMinTemp ?? this.warmWaterDesiredMinTemp;
     this.winterMinimumHeatStorageTemp = data.winterMinimumHeatStorageTemp ?? this.winterMinimumHeatStorageTemp;

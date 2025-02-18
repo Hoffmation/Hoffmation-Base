@@ -82,6 +82,10 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
   private _tempWarmWater: number = 0;
   private _tempHeatStorage: number = 0;
   private fetchedData: iFlattenedCompleteResponse | undefined;
+  /*
+   * The timestamp of the last time the Block was enforced.
+   */
+  private _blockStarted: number = 0;
 
   /** @inheritDoc */
   public get customName(): string {
@@ -358,8 +362,12 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
   }
 
   private shouldDachsBeStarted(action: BaseAction, batteryLevel: number): boolean {
+    const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
     if (this.blockDachsStart !== undefined) {
-      if (batteryLevel > this.settings.batteryLevelPreventStartThreshold) {
+      if (
+        (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
+        batteryLevel > this.settings.batteryLevelPreventStartThreshold
+      ) {
         const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
           action,
           true,
@@ -368,12 +376,32 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
         );
         blockAction.overrideCommandSource = CommandSource.Force;
         this.blockDachsStart.setActuator(blockAction);
+        this._blockStarted = Utils.nowMS();
+        return false;
+      } else if (batteryLevel > this.settings.batteryLevelPreventStartAtNightThreshold) {
+        const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          true,
+          `Battery reached ${batteryLevel}%, Dachs should not run any more`,
+          null,
+        );
+        blockAction.overrideCommandSource = CommandSource.Force;
+        this.blockDachsStart.setActuator(blockAction);
+        this._blockStarted = Utils.nowMS();
         return false;
       } else if (batteryLevel < this.settings.batteryLevelAllowStartThreshold) {
         const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
           action,
           false,
           `Battery reached ${batteryLevel}%, Dachs is now allowed to run if needed`,
+          null,
+        );
+        this.blockDachsStart.setActuator(liftAction);
+      } else if (Utils.nowMS() - this._blockStarted > 180 * 60 * 60) {
+        const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          false,
+          `Battery is at ${batteryLevel}%, but Dachs wasn't allowed to run for 3 hours, Dachs is now allowed to run if needed`,
           null,
         );
         this.blockDachsStart.setActuator(liftAction);
@@ -406,8 +434,6 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       // It is winter and heat storage is kinda cold --> Start
       return true;
     }
-
-    const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
 
     if (
       (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
