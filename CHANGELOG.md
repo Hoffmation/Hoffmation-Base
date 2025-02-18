@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.2 (2025-02-18)
 
 * (theimo1221) Allow Heating rod earlier in winter mode
 
