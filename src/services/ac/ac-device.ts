@@ -30,7 +30,7 @@ export abstract class AcDevice
    * @returns {boolean} True if the AC is allowed to cool
    */
   public get coolingAllowed(): boolean {
-    if (SettingsService.heatMode !== HeatingMode.Summer) {
+    if (SettingsService.heatMode === HeatingMode.Winter) {
       return false;
     }
     if (
