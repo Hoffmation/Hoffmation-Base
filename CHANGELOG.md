@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.3-alpha.0 (2025-04-28)
 
 * (theimo1221) Allow Ac-Cooling in transitional season
 
