@@ -403,7 +403,11 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
           null,
         );
         this.blockDachsStart.setActuator(liftAction);
-      } else if (Utils.nowMS() - this._blockStarted > 180 * 60 * 60) {
+      } else if (
+        Utils.nowMS() - this._blockStarted > 180 * 60 * 60 &&
+        (SettingsService.settings.heaterSettings?.mode === HeatingMode.Winter ||
+          this.warmWaterDachsAlternativeActuator === undefined)
+      ) {
         const liftAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
           action,
           false,
