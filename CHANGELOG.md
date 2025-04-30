@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.3-alpha.1 (2025-04-30)
 
 * (theimo1221) Lift dachs block after 3 hours below turn-off threshold (in winter or without alternativ heating source)
 
