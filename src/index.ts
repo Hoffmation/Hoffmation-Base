@@ -30,6 +30,7 @@ import {
   GooveeService,
   OwnGoveeDevices,
   Trilateration,
+  UnifiAccess,
   UnifiProtect,
   VictronService,
 } from './devices';
@@ -107,6 +108,10 @@ export class HoffmationBase {
       if (SettingsService.settings.unifiSettings?.nvrOptions) {
         ServerLogService.writeLog(LogLevel.Info, 'Unifi Protect settings detected --> initializing');
         Devices.unifiProtect = new UnifiProtect(SettingsService.settings.unifiSettings.nvrOptions);
+      }
+      if (SettingsService.settings.unifiSettings?.nvrOptions) {
+        ServerLogService.writeLog(LogLevel.Info, 'Unifi Access settings detected --> initializing');
+        Devices.unifiAccess = new UnifiAccess(SettingsService.settings.unifiSettings.nvrOptions);
       }
     }, this);
     TimeCallbackService.init();

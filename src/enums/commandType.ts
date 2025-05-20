@@ -33,4 +33,5 @@ export enum CommandType {
   WindowSetDesiredPositionCommand = 'WindowSetDesiredPositionCommand',
   WindowSetRolloByWeatherStatusCommand = 'WindowSetRolloByWeatherStatusCommand',
   WledSetLightCommand = 'WledSetLightCommand',
+  DingSensorAction = 'DingSensorAction',
 }

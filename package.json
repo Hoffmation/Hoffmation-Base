@@ -46,7 +46,8 @@
     "manual-test-dachs": "tsc && ts-node ./manualTests/dachs-test.ts",
     "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts",
     "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts",
-    "manual-test-unifi-protect": "tsc && tsx ./manualTests/unifi-protect-test.ts"
+    "manual-test-unifi-protect": "tsc && tsx ./manualTests/unifi-protect-test.ts",
+    "manual-test-unifi-access": "tsc && tsx ./manualTests/unifi-access-test.ts"
   },
   "dependencies": {
     "@svrooij/sonos": "^2.6.0-beta.11",
@@ -66,6 +67,7 @@
     "sunrise-sunset-js": "^2.2.1",
     "tibber-api": "^5.3.1",
     "unifi-protect": "^4.19.0",
+    "unifi-access": "^1.2.0",
     "victron-mqtt-consumer": "^0.1.14"
   },
   "devDependencies": {

@@ -47,6 +47,7 @@ import {
   iBaseDevice,
   iBatteryDevice,
   iConfig,
+  iDeviceConfig,
   iEnergyManager,
   iMotionSensor,
   iRoomImportEnforcer,
@@ -63,8 +64,7 @@ import { VeluxService } from './velux';
 import { SmartGardenService } from './smartGarden';
 import { WledDevice } from './wledDevice';
 import { JsObjectEnergyManager } from './jsObject';
-import { iDeviceConfig } from '../interfaces/iDeviceConfig';
-import { UnifiProtect } from './unifi';
+import { UnifiAccess, UnifiProtect } from './unifi';
 
 export class Devices {
   /**
@@ -127,6 +127,10 @@ export class Devices {
    * A reference to the Unifi Protect device
    */
   public static unifiProtect?: UnifiProtect;
+  /**
+   * A reference to the Unifi Access device
+   */
+  public static unifiAccess?: UnifiAccess;
 
   public constructor(
     pDeviceData: { [id: string]: iDeviceConfig },

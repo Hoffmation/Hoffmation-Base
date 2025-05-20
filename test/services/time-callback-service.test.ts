@@ -9,6 +9,7 @@ import {
 } from '../../src';
 
 jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+jest.mock('unifi-access', () => jest.fn()); // Working now, phew
 
 describe('TimeCallbackService', () => {
   it('next Maximum Time is Today and correct', async () => {

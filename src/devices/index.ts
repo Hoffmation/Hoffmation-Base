@@ -20,6 +20,7 @@ export * from './device-list';
 export * from './DeviceInfo';
 export * from './devices';
 export * from './deviceUpdater';
+export * from './DoorDevice';
 export * from './Griffe';
 export * from './Heizgruppen';
 export * from './mqtt';

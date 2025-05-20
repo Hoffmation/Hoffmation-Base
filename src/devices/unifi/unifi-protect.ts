@@ -5,7 +5,6 @@ import {
   ProtectEventAdd,
   ProtectEventPacket,
   ProtectLightConfig,
-  ProtectLogging,
   ProtectNvrBootstrap,
   ProtectNvrBootstrapInterface,
   ProtectSensorConfig,
@@ -16,9 +15,10 @@ import { LogLevel, LogSource } from '../../enums';
 import { iDisposable, iUnifiProtectOptions } from '../../interfaces';
 import { ServerLogService } from '../../logging';
 import { Utils } from '../../utils';
+import { UnifiLogger } from './unifi-logger';
 
 export class UnifiProtect implements iDisposable {
-  private readonly unifiLogger: UnifiLogger = new UnifiLogger();
+  private readonly unifiLogger: UnifiLogger = new UnifiLogger(LogSource.UnifiProtect);
   private readonly _api: ProtectApi;
   /**
    * Mapping for own devices
@@ -117,32 +117,6 @@ export class UnifiProtect implements iDisposable {
     camera.initialize(data);
     ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Camera ${data.name} (re)initialized`);
     this._idMap.set(data.id, data.name);
-  }
-}
-
-class UnifiLogger implements ProtectLogging {
-  public debug(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Debug, message, {
-      source: LogSource.UnifiProtect,
-    });
-  }
-
-  public error(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Error, message, {
-      source: LogSource.UnifiProtect,
-    });
-  }
-
-  public info(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Info, message, {
-      source: LogSource.UnifiProtect,
-    });
-  }
-
-  public warn(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Warn, message, {
-      source: LogSource.UnifiProtect,
-    });
   }
 }
 

@@ -10,6 +10,7 @@ import {
 } from '../../src';
 
 jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
+jest.mock('unifi-access', () => jest.fn()); // Working now, phew
 
 describe('Commands', () => {
   it('Should print a proper reason Tree', () => {

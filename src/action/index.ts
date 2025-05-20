@@ -9,3 +9,4 @@ export { ActuatorChangeAction } from './actuatorChangeAction';
 export { BatteryLevelChangeAction } from './batteryLevelChangeAction';
 export { PresenceGroupAnyMovementAction } from './presenceGroupAnyMovementAction';
 export { HandleChangeAction } from './handleChangeAction';
+export { DingSensorAction } from './dingSensorAction';

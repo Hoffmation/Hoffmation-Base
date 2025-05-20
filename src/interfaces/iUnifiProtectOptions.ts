@@ -11,6 +11,10 @@ export interface iUnifiProtectOptions {
    */
   username: string;
   /**
+   * Separate Username for Unifi Access
+   */
+  usernameAccess: string;
+  /**
    * The password for connecting to the NVR API.
    */
   password: string;

@@ -32,3 +32,4 @@ export { iWaterSensor } from './iWaterSensor';
 export { iWledDevice } from './iWledDevice';
 export { iTemperatureSensor } from './iTemperatureSensor';
 export { iHumiditySensor } from './iHumiditySensor';
+export { iDoorDevice } from './iDoorDevice';

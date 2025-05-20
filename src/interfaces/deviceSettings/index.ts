@@ -6,3 +6,4 @@ export * from './iDeviceSettings';
 export * from './IDimmerSettings';
 export * from './iGarageDoorOpenerSettings';
 export * from './iMotionSensorSettings';
+export { iDoorSettings } from './iDoorSettings';
