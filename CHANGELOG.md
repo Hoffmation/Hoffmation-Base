@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.3-alpha.2 (2025-05-20)
 
 * (theimo1221) Add first version with Unifi-Access support
 
