@@ -40,6 +40,15 @@ export class OwnUnifiDoor extends DoorDevice {
       case 'access.data.device.remote_unlock':
         this.log(LogLevel.Debug, `Device ${this.unifiDeviceName} was unlocked`);
         return;
+      case 'access.logs.add':
+        const event: AccessLogEvent = packet.data as AccessLogEvent;
+        if (
+          event._source.authentication?.credential_provider === 'BUTTON_DOOR_BELL' &&
+          event._source.event.type === 'access.door.unlock'
+        ) {
+          this.onNewDingActiveValue(true);
+        }
+        return;
       case 'access.remote_view':
         const ringEvent: AccessEventDoorbellRing = packet.data as AccessEventDoorbellRing;
         this._lastDoorbellRingRequestId = ringEvent.request_id;
@@ -61,3 +70,24 @@ export class OwnUnifiDoor extends DoorDevice {
     }
   }
 }
+
+type AccessLogEvent = {
+  tag: string;
+  _source: {
+    actor: {
+      id: string;
+      type: string;
+      display_name: string;
+    };
+    authentication?: {
+      credential_provider: string;
+    };
+    event: {
+      display_message: string;
+      log_key: string;
+      published: number;
+      result: string;
+      type: 'access.door.unlock';
+    };
+  };
+};

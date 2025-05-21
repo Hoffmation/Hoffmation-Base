@@ -77,9 +77,9 @@ export class UnifiAccess implements iDisposable {
         break;
 
       default:
+        // this.unifiLogger.debug(`onMessage: ${JSON.stringify(packet)}`);
         // Lookup the device.
-        const id: string = packet.event_object_id;
-        const ownName: string | undefined = this._idMap.get(id);
+        const ownName: string | undefined = this._idMap.get(packet.event_object_id);
         if (!ownName) {
           break;
         }
@@ -105,7 +105,10 @@ export class UnifiAccess implements iDisposable {
     }
     const door: OwnUnifiDoor = UnifiAccess.ownDoors.get(data.alias) as OwnUnifiDoor;
     door.initialize(data);
-    ServerLogService.writeLog(LogLevel.Info, `Unifi-Access: ${data.name} (re)initialized`);
+    ServerLogService.writeLog(
+      LogLevel.Info,
+      `Unifi-Access: ${data.name} (re)initialized with unique_id: ${data.unique_id}`,
+    );
     this._idMap.set(data.unique_id, data.alias);
   }
 }
