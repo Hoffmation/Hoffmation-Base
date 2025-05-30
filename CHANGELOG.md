@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Debug Log Door Events and reduce duplicate event handling.
+
 ## 3.2.3-alpha.3 (2025-05-21)
 
 * (theimo1221) Fix Unifi Doorbell "Ding"

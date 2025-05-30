@@ -26,7 +26,14 @@ export class UnifiAccess implements iDisposable {
           // We had an update within the last 3 minutes --> no need to reconnect
           return;
         }
-        this.reconnect(settings);
+        this._api.logout();
+        Utils.guardedTimeout(
+          () => {
+            this.reconnect(settings);
+          },
+          5000,
+          this,
+        );
       },
       5 * 60 * 1000,
     );
@@ -66,6 +73,7 @@ export class UnifiAccess implements iDisposable {
     for (const device of this._api.devices) {
       this.initializeDevice(device);
     }
+    this._api.off('message', this.onMessage.bind(this));
     this._api.on('message', this.onMessage.bind(this));
   }
 
