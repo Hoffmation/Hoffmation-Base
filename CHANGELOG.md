@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent ding spam
+
 ## 3.2.3-alpha.4 (2025-05-30)
 
 * (theimo1221) Debug Log Door Events and reduce duplicate event handling.

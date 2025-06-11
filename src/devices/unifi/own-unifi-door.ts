@@ -7,7 +7,6 @@ import {
 } from 'unifi-access';
 import { DoorDevice } from '../DoorDevice';
 import { LogLevel } from '../../enums';
-import * as Util from 'node:util';
 
 export class OwnUnifiDoor extends DoorDevice {
   /**
@@ -47,7 +46,7 @@ export class OwnUnifiDoor extends DoorDevice {
           event._source.authentication?.credential_provider === 'BUTTON_DOOR_BELL' &&
           event._source.event.type === 'access.door.unlock'
         ) {
-          this.log(LogLevel.Debug, `Ding Event details: ${Util.inspect(event, false, 5)}`);
+          // this.log(LogLevel.Debug, `Ding Event details: ${Util.inspect(event, false, 5)}`);
           this.onNewDingActiveValue(true);
         }
         return;

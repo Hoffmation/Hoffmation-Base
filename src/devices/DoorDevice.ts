@@ -82,6 +82,10 @@ export abstract class DoorDevice extends RoomBaseDevice implements iDoorDevice {
   }
 
   protected onNewDingActiveValue(newValue: boolean): void {
+    if (this._dingActive && newValue && Utils.nowMS() - this._lastDing < 5000) {
+      // Ignore duplicate dings
+      return;
+    }
     this.log(LogLevel.Debug, `Update for DingActive to value: ${newValue}`);
     this._dingActive = newValue;
     if (newValue) {
