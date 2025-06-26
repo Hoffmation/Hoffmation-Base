@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.3-alpha.6 (2025-06-26)
 
 * (theimo1221) Add Api endpoint to externally trigger Camera person detection
 
