@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Api endpoint to externally trigger Camera person detection
+
 ## 3.2.3-alpha.5 (2025-06-11)
 
 * (theimo1221) Prevent ding spam

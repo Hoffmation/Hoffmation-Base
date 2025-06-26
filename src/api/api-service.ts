@@ -473,6 +473,17 @@ export class API {
     return null;
   }
 
+  public static cameraInformPersonDetected(deviceId: string): Error | void {
+    const d = this.getDevice(deviceId) as iCameraDevice | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.camera)) {
+      return new Error(`Device with ID ${deviceId} is no camera`);
+    }
+    d.setPersonDetected();
+  }
+
   // TODO: Missing Comment
   public static getLastCameraImage(deviceId: string): Error | string {
     const d = this.getDevice(deviceId) as iCameraDevice | undefined;

@@ -1,6 +1,6 @@
 import { iBaseDevice, iCameraDevice, iCameraSettings, iCountToday } from '../interfaces';
 import { CameraSettings } from '../settingsObjects';
-import { DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
+import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel } from '../enums';
 import { Base64Image } from '../models';
 import { MotionSensorAction } from '../action';
 import { DeviceInfo } from './DeviceInfo';
@@ -120,6 +120,11 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
   }
 
   /** @inheritDoc */
+  public setPersonDetected(): void {
+    this.onNewPersonDetectedValue(true, CommandSource.API);
+  }
+
+  /** @inheritDoc */
   public persistMotionSensor(): void {
     Persistence.dbo?.persistMotionSensor(this);
   }
@@ -161,7 +166,7 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
     }
   }
 
-  protected onNewPersonDetectedValue(newValue: boolean): void {
+  protected onNewPersonDetectedValue(newValue: boolean, source: CommandSource = CommandSource.Automatic): void {
     this.log(LogLevel.Debug, `Update for PersonDetected to value: ${newValue}`);
     if (newValue) {
       this.log(LogLevel.Info, 'Person Detected');
@@ -169,7 +174,7 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
     }
     this._personDetected = newValue;
     if (this.settings.movementDetectionOnPersonOnly) {
-      this.updateMovement(newValue);
+      this.updateMovement(newValue, source);
     }
   }
 
@@ -200,12 +205,12 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
 
   protected abstract resetMovementDetectedState(): void;
 
-  private updateMovement(newState: boolean): void {
+  private updateMovement(newState: boolean, source: CommandSource = CommandSource.Automatic): void {
     if (!this._initialized && newState) {
       this.log(LogLevel.Trace, 'Movement recognized, but database initialization has not finished yet --> delay.');
       Utils.guardedTimeout(
         () => {
-          this.updateMovement(newState);
+          this.updateMovement(newState, source);
         },
         1000,
         this,
@@ -232,7 +237,7 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
     }
 
     for (const c of this._movementDetectedCallback) {
-      c(new MotionSensorAction(this));
+      c(new MotionSensorAction(this, source));
     }
   }
 

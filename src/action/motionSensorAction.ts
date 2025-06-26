@@ -14,8 +14,8 @@ export class MotionSensorAction extends BaseAction {
    */
   public readonly sensor: iMotionSensor;
 
-  public constructor(sensor: iMotionSensor) {
-    super(CommandSource.Automatic, `${sensor.customName} ${sensor.movementDetected ? 'detected' : 'cleared'} motion`);
+  public constructor(sensor: iMotionSensor, source: CommandSource = CommandSource.Automatic) {
+    super(source, `${sensor.customName} ${sensor.movementDetected ? 'detected' : 'cleared'} motion`);
     this.motionDetected = sensor.movementDetected;
     this.sensor = sensor;
   }

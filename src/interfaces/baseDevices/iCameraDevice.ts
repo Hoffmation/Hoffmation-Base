@@ -50,4 +50,9 @@ export interface iCameraDevice extends iMotionSensor {
    * @param block - Whether to block the alarm for the device or lift the block
    */
   blockForDevice(device: iBaseDevice, block: boolean): void;
+
+  /**
+   * Externally trigger/set Person detected
+   */
+  setPersonDetected(): void;
 }
