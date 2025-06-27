@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.3-alpha.8 (2025-06-27)
 
 * (theimo1221) Update some packages
 
