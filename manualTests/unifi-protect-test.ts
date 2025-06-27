@@ -1,4 +1,14 @@
-import { ExampleConfig, HoffmationBase, HoffmationInitializationObject, OwnUnifiCamera, UnifiProtect } from '../src';
+import {
+  BaseGroup,
+  ExampleConfig,
+  GroupType,
+  HoffmationBase,
+  HoffmationInitializationObject,
+  OwnUnifiCamera,
+  RoomBase,
+  RoomService,
+  UnifiProtect,
+} from '../src';
 
 export class UnifiProtectTest {
   public static async start(): Promise<void> {
@@ -11,12 +21,14 @@ export class UnifiProtectTest {
       nvrOptions: {
         nvrAddress: 'xxx',
         username: 'api_hoffmation',
+        usernameAccess: 'api_hoffmation',
         password: 'yyy',
       },
     };
     await HoffmationBase.initializeBeforeIoBroker(init);
+    RoomService.Rooms.set('TestRoom', new RoomBase(new Map<GroupType, BaseGroup>(), 'Test Room'));
     if (!init.config.unifiSettings.nvrOptions) throw new Error('No unifi config found');
-    const cam: OwnUnifiCamera = new OwnUnifiCamera('Test', 'xxx', 'xxx');
+    const cam: OwnUnifiCamera = new OwnUnifiCamera('Kamera Vorne Links', 'TestRoom', 'Vorne Links');
     UnifiProtect.addDevice(cam);
     const protect: UnifiProtect = new UnifiProtect(init.config.unifiSettings.nvrOptions);
     // Test some device reconnect
@@ -28,7 +40,7 @@ export class UnifiProtectTest {
       console.log('shutdown-now');
       protect.dispose();
       process.exit(1);
-    }, 25000);
+    }, 45000);
   }
 }
 

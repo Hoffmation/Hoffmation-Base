@@ -26,29 +26,35 @@ export class OwnUnifiCamera extends CameraDevice {
   /**
    * @inheritDoc
    */
-  public update(packet: ProtectEventPacket): void {
-    this.checkForMotionUpdate(packet);
+  public update(packet: ProtectEventPacket, baseEvent?: ProtectEventAdd): void {
+    this.checkForMotionUpdate(packet, baseEvent);
     this._lastUpdate = new Date();
   }
 
-  private checkForMotionUpdate(packet: ProtectEventPacket): void {
+  private checkForMotionUpdate(packet: ProtectEventPacket, baseEvent?: ProtectEventAdd): void {
     const payload = packet.payload as ProtectEventAdd | ProtectCameraConfig;
-    const eventAdd: ProtectEventAdd = payload as ProtectEventAdd;
+    const eventAddInfo: ProtectEventAdd = baseEvent ?? (payload as ProtectEventAdd);
+    const payloadAsEventAdd: ProtectEventAdd = payload as ProtectEventAdd;
     if (
       packet.header.modelKey !== 'smartDetectObject' &&
       (packet.header.modelKey !== 'event' ||
-        !['smartDetectLine', 'smartDetectZone'].includes(payload.type) ||
-        !eventAdd.smartDetectTypes.length)
+        !['smartDetectLine', 'smartDetectZone'].includes(eventAddInfo.type) ||
+        (payloadAsEventAdd.smartDetectTypes?.length ?? 0 === 0))
     ) {
       return;
     }
     this.log(LogLevel.Debug, `Update for "${packet.header.modelKey}" to value: ${JSON.stringify(payload)}`);
     const detectedTypes: string[] =
-      packet.header.modelKey === 'smartDetectObject' ? [eventAdd.type] : (eventAdd?.smartDetectTypes ?? []);
+      packet.header.modelKey === 'smartDetectObject'
+        ? [payloadAsEventAdd.type]
+        : (payloadAsEventAdd?.smartDetectTypes ?? []);
     for (const smartDetectType of detectedTypes) {
       switch (smartDetectType) {
         case 'licensePlate':
-          this.log(LogLevel.Debug, `Detected "licensePlate": ${JSON.stringify(eventAdd.metadata.licensePlate)}`);
+          this.log(
+            LogLevel.Debug,
+            `Detected "licensePlate": ${JSON.stringify(payloadAsEventAdd.metadata.licensePlate)}`,
+          );
           break;
         case 'person':
           this.onNewPersonDetectedValue(true);

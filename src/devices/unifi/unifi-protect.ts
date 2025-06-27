@@ -26,6 +26,7 @@ export class UnifiProtect implements iDisposable {
   public static readonly ownCameras: Map<string, OwnUnifiCamera> = new Map<string, OwnUnifiCamera>();
   private _deviceStates: Map<string, unknown> = new Map<string, unknown>();
   private _idMap: Map<string, string> = new Map<string, string>();
+  private _eventMap: Map<string, ProtectEventAdd> = new Map<string, ProtectEventAdd>();
   private _lastUpdate: Date = new Date(0);
 
   public constructor(settings: iUnifiProtectOptions) {
@@ -44,6 +45,7 @@ export class UnifiProtect implements iDisposable {
   }
 
   private reconnect(settings: iUnifiProtectOptions): void {
+    this._eventMap = new Map<string, ProtectEventAdd>();
     this._api
       .login(settings.nvrAddress, settings.username, settings.password)
       .then((_loggedIn: boolean): void => {
@@ -86,8 +88,14 @@ export class UnifiProtect implements iDisposable {
       default:
         // Lookup the device.
         let id: string = packet.header.id;
+        let baseEvent: ProtectEventAdd | undefined;
         if (packet.header.action === 'add') {
-          id = (packet.payload as ProtectEventAdd).camera ?? (packet.payload as ProtectEventAdd).cameraId;
+          const addEvent: ProtectEventAdd = packet.payload as ProtectEventAdd;
+          id = addEvent.camera ?? addEvent.cameraId;
+          this.rememberAddEvent(packet, addEvent);
+        } else if (packet.header.action === 'update' && this._eventMap.has(id)) {
+          baseEvent = this._eventMap.get(packet.header.id);
+          id = baseEvent?.camera ?? baseEvent?.cameraId ?? '';
         }
         const ownName: string | undefined = this._idMap.get(id);
         if (!ownName) {
@@ -95,7 +103,7 @@ export class UnifiProtect implements iDisposable {
         }
         const ownCamera: OwnUnifiCamera | undefined = UnifiProtect.ownCameras.get(ownName);
         if (ownCamera !== undefined) {
-          ownCamera.update(packet);
+          ownCamera.update(packet, baseEvent);
           break;
         }
 
@@ -105,6 +113,19 @@ export class UnifiProtect implements iDisposable {
     // Update the internal list we maintain.
     if (packet.header.action === 'update') {
       this._deviceStates.set(packet.header.id, Object.assign(this._deviceStates.get(packet.header.id) ?? {}, payload));
+    }
+  }
+
+  private rememberAddEvent(packet: ProtectEventPacket, addEvent: ProtectEventAdd): void {
+    if (packet.header.modelKey === 'event') {
+      this._eventMap.set(addEvent.id, addEvent);
+      Utils.guardedTimeout(
+        () => {
+          this._eventMap.delete(addEvent.id);
+        },
+        5 * 60 * 1000,
+        this,
+      );
     }
   }
 
