@@ -121,7 +121,7 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
 
   /** @inheritDoc */
   public setPersonDetected(): void {
-    this.onNewPersonDetectedValue(true, CommandSource.API);
+    this.onNewPersonDetectedValue(true, CommandSource.ApiAutomatic);
   }
 
   /** @inheritDoc */

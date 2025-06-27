@@ -13,6 +13,11 @@ export enum CommandSource {
    */
   Automatic,
   /**
+   * This should mark all commands/sources which resulted of an automatic api call, e.g an external service webhook.
+   * @type {CommandSource.ApiAutomatic}
+   */
+  ApiAutomatic,
+  /**
    * This should mark all commands that are executed by a user thus having a higher priority than other automatic commands.
    */
   Manual,

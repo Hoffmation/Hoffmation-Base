@@ -44,12 +44,15 @@ export abstract class BaseCommand implements iBaseCommand, iJsonOmitKeys, iJsonC
 
   public get isAutomaticAction(): boolean {
     if (this.overrideCommandSource !== undefined) {
-      return this.overrideCommandSource === CommandSource.Automatic;
+      return (
+        this.overrideCommandSource === CommandSource.Automatic ||
+        this.overrideCommandSource === CommandSource.ApiAutomatic
+      );
     }
     if (typeof this.source === 'object') {
       return this.source.isAutomaticAction;
     }
-    return this.source === CommandSource.Automatic;
+    return this.source === CommandSource.Automatic || this.source === CommandSource.ApiAutomatic;
   }
 
   public get isForceAction(): boolean {
