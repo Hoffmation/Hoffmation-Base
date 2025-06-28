@@ -1,6 +1,6 @@
 import { CameraDevice } from '../index';
 import { ProtectCameraConfig, ProtectEventAdd, ProtectEventPacket } from 'unifi-protect';
-import { LogLevel } from '../../enums';
+import { CommandSource, LogLevel } from '../../enums';
 
 export class OwnUnifiCamera extends CameraDevice {
   /**
@@ -39,8 +39,10 @@ export class OwnUnifiCamera extends CameraDevice {
       packet.header.modelKey !== 'smartDetectObject' &&
       (packet.header.modelKey !== 'event' ||
         !['smartDetectLine', 'smartDetectZone'].includes(eventAddInfo.type) ||
-        (payloadAsEventAdd.smartDetectTypes?.length ?? 0 === 0))
+        !(payloadAsEventAdd.smartDetectTypes ?? []).length)
     ) {
+      // this.log(LogLevel.Debug, `Ignored event: ${JSON.stringify(packet)}`);
+      // this.log(LogLevel.Debug, `Ignored event initial Info: ${JSON.stringify(baseEvent)}`);
       return;
     }
     this.log(LogLevel.Debug, `Update for "${packet.header.modelKey}" to value: ${JSON.stringify(payload)}`);
@@ -57,7 +59,7 @@ export class OwnUnifiCamera extends CameraDevice {
           );
           break;
         case 'person':
-          this.onNewPersonDetectedValue(true);
+          this.onNewPersonDetectedValue(true, CommandSource.Automatic);
           break;
       }
     }

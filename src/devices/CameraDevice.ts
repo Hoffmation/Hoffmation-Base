@@ -169,7 +169,7 @@ export abstract class CameraDevice extends RoomBaseDevice implements iCameraDevi
   protected onNewPersonDetectedValue(newValue: boolean, source: CommandSource = CommandSource.Automatic): void {
     this.log(LogLevel.Debug, `Update for PersonDetected to value: ${newValue}`);
     if (newValue) {
-      this.log(LogLevel.Info, 'Person Detected');
+      this.log(LogLevel.Info, `Person Detected (${CommandSource[source]})`);
       this.resetPersonDetectFallbackTimer();
     }
     this._personDetected = newValue;

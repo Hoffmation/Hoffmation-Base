@@ -94,7 +94,7 @@ export class UnifiProtect implements iDisposable {
           id = addEvent.camera ?? addEvent.cameraId;
           this.rememberAddEvent(packet, addEvent);
         } else if (packet.header.action === 'update' && this._eventMap.has(id)) {
-          baseEvent = this._eventMap.get(packet.header.id);
+          baseEvent = this._eventMap.get(id);
           id = baseEvent?.camera ?? baseEvent?.cameraId ?? '';
         }
         const ownName: string | undefined = this._idMap.get(id);

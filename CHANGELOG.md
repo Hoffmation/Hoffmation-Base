@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix detection by event update
+
 ## 3.2.3 (2025-06-27)
 
 * (theimo1221) Add unifi event storage to allow faster camera reaction times
