@@ -347,12 +347,13 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       return;
     }
     const shouldBeOff: boolean =
-      batteryLevel < this.settings.batteryLevelHeatingRodThreshold &&
-      !(
-        SettingsService.heatMode === HeatingMode.Winter &&
-        batteryLevel > this.settings.batteryLevelPreventStartThreshold &&
-        this.heatStorageTempSensor.temperatureSensor.temperature < 60
-      );
+      this.settings.disableHeatingRod ||
+      (batteryLevel < this.settings.batteryLevelHeatingRodThreshold &&
+        !(
+          SettingsService.heatMode === HeatingMode.Winter &&
+          batteryLevel > this.settings.batteryLevelPreventStartThreshold &&
+          this.heatStorageTempSensor.temperatureSensor.temperature < 60
+        ));
 
     if (this.heatingRod.actuatorOn !== shouldBeOff) {
       return;

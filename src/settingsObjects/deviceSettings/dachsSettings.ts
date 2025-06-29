@@ -7,6 +7,9 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
   public refreshIntervalTime: number = 30000;
 
   /** @inheritDoc */
+  public disableHeatingRod: boolean = false;
+
+  /** @inheritDoc */
   public batteryLevelTurnOnThreshold: number = -1;
 
   /** @inheritDoc */
@@ -33,6 +36,7 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
   public winterMinimumPreNightHeatStorageTemp: number = 65;
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
+    this.disableHeatingRod = data.disableHeatingRod ?? this.disableHeatingRod;
     this.refreshIntervalTime = data.refreshIntervalTime ?? this.refreshIntervalTime;
     this.batteryLevelBeforeNightTurnOnThreshold =
       data.batteryLevelBeforeNightTurnOnThreshold ?? this.batteryLevelBeforeNightTurnOnThreshold;

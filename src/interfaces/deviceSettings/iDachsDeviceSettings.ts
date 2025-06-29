@@ -8,6 +8,12 @@ export interface iDachsDeviceSettings extends iActuatorSettings {
    * The refresh interval in ms to pull the data from the device.
    */
   refreshIntervalTime: number;
+
+  /**
+   * Whether the secondary water heating source should be disabled regardless of battery level.
+   */
+  disableHeatingRod: boolean;
+
   /**
    * Defines the battery level at which the dachs should be turned on,
    * to prevent a battery based island-system to be out of power.

@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to disable heating rod completely.
+
 ## 3.2.4 (2025-06-28)
 
 * (theimo1221) Fix detection by event update
