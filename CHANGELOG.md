@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Add option to disable heating rod completely.
+* (theimo1221) Heat reduction regardless of direction
 
 ## 3.2.4 (2025-06-28)
 

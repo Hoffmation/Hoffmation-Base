@@ -240,6 +240,8 @@ export class WeatherService {
     } else if (this.hoursTilSunset() < 1) {
       logger(LogLevel.Trace, "RolloWeatherPosition: It's close to or after todays sunset");
       return result;
+    } else if (this.willOutsideBeWarmer(shutterSettings.heatReductionThreshold, logger)) {
+      result = shutterSettings.heatReductionPosition;
     } else if (
       shutterSettings.direction !== undefined &&
       !Utils.degreeInBetween(shutterSettings.direction - 50, shutterSettings.direction + 50, this.sunDirection)
@@ -248,7 +250,7 @@ export class WeatherService {
       return result;
     } else if (this.getCurrentCloudiness() > 40) {
       logger(LogLevel.Trace, 'RolloWeatherPosition: It´s cloudy now.');
-    } else if (this.willOutsideBeWarmer(26, logger)) {
+    } else if (this.willOutsideBeWarmer(shutterSettings.heatReductionDirectionThreshold, logger)) {
       result = shutterSettings.heatReductionPosition;
     }
 
