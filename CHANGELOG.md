@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.6 (2025-06-30)
 
 * (theimo1221) Reduce json filter on dachs to include more settings
 
