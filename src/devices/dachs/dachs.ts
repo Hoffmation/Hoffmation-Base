@@ -105,6 +105,7 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     info.allDevicesKey = allDevicesKey;
     info.room = options.roomName;
     super(info, DeviceType.Dachs);
+    this.jsonOmitTopLevelKeys.push(...['warmWaterPump', 'heatingRod']);
     this.jsonOmitKeys.push(
       ...[
         'client',
@@ -112,8 +113,6 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
         '_influxClient',
         'warmWaterSensor',
         'heatStorageTempSensor',
-        'warmWaterPump',
-        'heatingRod',
         'blockDachsStart',
         'warmWaterDachsAlternativeActuator',
       ],

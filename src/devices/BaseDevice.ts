@@ -11,6 +11,8 @@ export abstract class BaseDevice implements iBaseDevice {
   /** @inheritDoc */
   public readonly jsonOmitKeys: string[] = [];
   /** @inheritDoc */
+  public readonly jsonOmitTopLevelKeys: string[] = [];
+  /** @inheritDoc */
   public readonly deviceCapabilities: DeviceCapability[] = [];
   /**
    * @inheritDoc
@@ -122,6 +124,6 @@ export abstract class BaseDevice implements iBaseDevice {
     // eslint-disable-next-line
     const returnValue: any = _.omit(this, 'lastCommands');
     returnValue['lastCommands'] = this.lastCommands.readAmount(this.lastCommands.maximumSize);
-    return Utils.jsonFilter(returnValue, this.jsonOmitKeys);
+    return Utils.jsonFilter(returnValue, this.jsonOmitKeys, this.jsonOmitTopLevelKeys);
   }
 }

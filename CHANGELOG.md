@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Reduce json filter on dachs to include more settings
+
 ## 3.2.5 (2025-06-29)
 
 * (theimo1221) Add option to disable heating rod completely.
