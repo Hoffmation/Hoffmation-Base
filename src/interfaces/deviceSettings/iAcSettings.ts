@@ -51,6 +51,12 @@ export interface iAcSettings extends iDeviceSettings {
   minOutdoorTempForCooling: number;
 
   /**
+   * Set's a specific override temperature as cooling target (e.g. to maximize cooling)
+   * -1 = Off
+   */
+  overrideCoolingTargetTemp?: number;
+
+  /**
    *
    */
   fromPartialObject(data: Partial<iAcSettings>): void;

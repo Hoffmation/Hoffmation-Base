@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to set a specific cooling temperature
+
 ## 3.2.6 (2025-06-30)
 
 * (theimo1221) Reduce json filter on dachs to include more settings

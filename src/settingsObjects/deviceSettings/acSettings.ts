@@ -51,6 +51,9 @@ export class AcSettings extends DeviceSettings implements iAcSettings {
    */
   public minOutdoorTempForCooling: number = 21;
 
+  /** @inheritDoc */
+  public overrideCoolingTargetTemp: number = -1;
+
   public fromPartialObject(data: Partial<AcSettings>): void {
     this.minimumHours = data.minimumHours ?? this.minimumHours;
     this.minimumMinutes = data.minimumMinutes ?? this.minimumMinutes;
@@ -62,6 +65,7 @@ export class AcSettings extends DeviceSettings implements iAcSettings {
     this.useAutomatic = data.useAutomatic ?? this.useAutomatic;
     this.manualDisabled = data.manualDisabled ?? this.manualDisabled;
     this.minOutdoorTempForCooling = data.minOutdoorTempForCooling ?? this.minOutdoorTempForCooling;
+    this.overrideCoolingTargetTemp = data.overrideCoolingTargetTemp ?? this.overrideCoolingTargetTemp;
     super.fromPartialObject(data);
   }
 

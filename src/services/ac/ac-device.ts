@@ -216,6 +216,9 @@ export abstract class AcDevice
       if (this.heatingAllowed) {
         return AcMode.Heating;
       } else if (this.coolingAllowed) {
+        if (this.settings.overrideCoolingTargetTemp > 0) {
+          this._desiredTemperatur = this.settings.overrideCoolingTargetTemp;
+        }
         return AcMode.Cooling;
       }
       return AcMode.Off;
