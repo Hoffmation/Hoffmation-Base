@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add AC-Battery setting, to allow cooling sooner on sunny days even though the battery is kinda empty.
+
 ## 3.2.7 (2025-06-30)
 
 * (theimo1221) Add option to set a specific cooling temperature

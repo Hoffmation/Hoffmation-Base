@@ -47,6 +47,10 @@ export class WeatherService {
     return WeatherService.lastResponse?.daily[0]?.temp.max ?? UNDEFINED_TEMP_VALUE;
   }
 
+  public static get todayCloudiness(): number | undefined {
+    return WeatherService.lastResponse?.daily[0]?.clouds;
+  }
+
   public static initialize(config: iWeatherSettings): void {
     this.active = true;
     this.longitude = config.longitude;

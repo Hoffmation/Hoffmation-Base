@@ -32,6 +32,11 @@ export class VictronDeviceSettings extends DeviceSettings {
    */
   public minimumDayTimeAcBatteryLevel: number = 60;
   /**
+   * The minimum battery level at which the system should be allowed to use AC on expectetly hot/sunny days mornings
+   * @type {number}
+   */
+  public minimumMorningSunnyDayAcBatteryLevel: number = 30;
+  /**
    * If the system has a grid
    * @default true
    */
@@ -72,6 +77,8 @@ export class VictronDeviceSettings extends DeviceSettings {
     this.hasGrid = data.hasGrid ?? this.hasGrid;
     this.hasSolar = data.hasSolar ?? this.hasSolar;
     this.minimumNightTimeAcBatteryLevel = data.minimumNightTimeAcBatteryLevel ?? this.minimumNightTimeAcBatteryLevel;
+    this.minimumMorningSunnyDayAcBatteryLevel =
+      data.minimumMorningSunnyDayAcBatteryLevel ?? this.minimumMorningSunnyDayAcBatteryLevel;
     this.minimumTransientTimeAcBatteryLevel =
       data.minimumTransientTimeAcBatteryLevel ?? this.minimumTransientTimeAcBatteryLevel;
     this.minimumDayTimeAcBatteryLevel = data.minimumDayTimeAcBatteryLevel ?? this.minimumDayTimeAcBatteryLevel;

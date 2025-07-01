@@ -7,7 +7,7 @@ import { VictronDeviceData, VictronMqttConnectionOptions, VictronMqttConsumer } 
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../../utils';
 import { EnergyCalculation, SunTimeOffsets } from '../../models';
 import { Devices } from '../devices';
-import { TimeCallbackService } from '../../services';
+import { TimeCallbackService, WeatherService } from '../../services';
 import { BaseDevice } from '../BaseDevice';
 
 export class VictronDevice extends BaseDevice implements iEnergyManager, iBatteryDevice, iJsonOmitKeys {
@@ -59,17 +59,27 @@ export class VictronDevice extends BaseDevice implements iEnergyManager, iBatter
 
   /** @inheritDoc */
   public get acBlocked(): boolean {
-    if (this.settings.hasBattery) {
-      const hours: number = new Date().getHours();
-      if (hours < 6 || hours > 18) {
-        return this.batteryLevel < this.settings.minimumNightTimeAcBatteryLevel;
-      }
-      if (hours < 10 || hours > 16) {
-        return this.batteryLevel < this.settings.minimumTransientTimeAcBatteryLevel;
-      }
-      return this.batteryLevel < this.settings.minimumDayTimeAcBatteryLevel;
+    if (!this.settings.hasBattery) {
+      return false;
     }
-    return false;
+    const hours: number = new Date().getHours();
+    if (hours > 18) {
+      return this.batteryLevel < this.settings.minimumNightTimeAcBatteryLevel;
+    } else if (hours > 16) {
+      return this.batteryLevel < this.settings.minimumTransientTimeAcBatteryLevel;
+    } else if (
+      hours > 5 &&
+      hours < 12 &&
+      (WeatherService.todayCloudiness ?? 99) < 30 &&
+      WeatherService.todayMaxTemp > 25
+    ) {
+      // During morning hours battery still might be kinda empty but if it gets sunny again, we should go for ac anyways.
+      return this.batteryLevel > this.settings.minimumMorningSunnyDayAcBatteryLevel;
+    } else if (hours < 10) {
+      return this.batteryLevel > this.settings.minimumTransientTimeAcBatteryLevel;
+    }
+
+    return this.batteryLevel < this.settings.minimumDayTimeAcBatteryLevel;
   }
 
   /** @inheritDoc */
