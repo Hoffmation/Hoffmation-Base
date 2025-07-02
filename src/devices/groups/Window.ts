@@ -22,14 +22,12 @@ import {
 import { BaseGroup } from './base-group';
 
 export class Window extends BaseGroup implements iWindow {
-  private _desiredPosition: number = 0;
-
   /**
    * The desired shutter level for the window
    * @returns {number} The level (0 closed, 100 open)
    */
   public get desiredPosition(): number {
-    return this._desiredPosition;
+    return this.getShutter().targetAutomaticValue;
   }
 
   /**
@@ -37,9 +35,7 @@ export class Window extends BaseGroup implements iWindow {
    * @returns {boolean} true if any shutter is down
    */
   public get anyShutterDown(): boolean {
-    return this.getShutter().some((s: iShutter) => {
-      return s.currentLevel === 0;
-    });
+    return this.getShutter().currentLevel === 0;
   }
 
   public constructor(
@@ -71,8 +67,7 @@ export class Window extends BaseGroup implements iWindow {
    * @param c - The command to execute
    */
   public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {
-    this._desiredPosition = c.position;
-    this.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c));
+    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, c.position));
   }
 
   public getHandle(): iHandle[] {
@@ -83,8 +78,8 @@ export class Window extends BaseGroup implements iWindow {
     return this.deviceCluster.getIoBrokerDevicesByType(DeviceClusterType.MagnetContact) as ZigbeeMagnetContact[];
   }
 
-  public getShutter(): iShutter[] {
-    return this.deviceCluster.getDevicesByType(DeviceClusterType.Shutter) as iShutter[];
+  public getShutter(): iShutter {
+    return (this.deviceCluster.getDevicesByType(DeviceClusterType.Shutter) as iShutter[])[0];
   }
 
   public getVibration(): iVibrationSensor[] {
@@ -157,9 +152,10 @@ export class Window extends BaseGroup implements iWindow {
     });
     Utils.guardedTimeout(
       () => {
-        this.getShutter().forEach((shutter) => {
+        const shutter = this.getShutter();
+        if (shutter) {
           shutter.window = this;
-        });
+        }
         this.getHandle().forEach((g) => {
           g.window = this;
         });
@@ -173,7 +169,7 @@ export class Window extends BaseGroup implements iWindow {
     this.log(
       LogLevel.Debug,
       `Rollo Position Change in ${this.roomName}: ${action.reasonTrace}`,
-      action.newPosition == this._desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
+      action.newPosition == this.desiredPosition ? LogDebugType.None : LogDebugType.ShutterPositionChange,
     );
 
     if (action.newPosition === 0 || action.newPosition === 100) {
@@ -182,7 +178,7 @@ export class Window extends BaseGroup implements iWindow {
   }
 
   public restoreDesiredPosition(c: WindowRestoreDesiredPositionCommand): void {
-    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this._desiredPosition));
+    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this.desiredPosition));
   }
 
   public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {

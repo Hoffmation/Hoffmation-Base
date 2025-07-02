@@ -1,27 +1,42 @@
 import { VeluxDevice } from './veluxDevice';
-import { iShutter, iWindow } from '../../interfaces';
+import { iShutter, iTemporaryDisableAutomatic, iWindow } from '../../interfaces';
 import { ShutterSettings } from '../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
 import { ShutterPositionChangedAction } from '../../action';
-import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
+import {
+  RestoreTargetAutomaticValueCommand,
+  ShutterSetLevelCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../command';
 import { Utils } from '../../utils';
+import { ShutterUtils } from '../sharedFunctions';
+import { BlockAutomaticHandler } from '../../services';
 
-export class VeluxShutter extends VeluxDevice implements iShutter {
+export class VeluxShutter extends VeluxDevice implements iShutter, iTemporaryDisableAutomatic {
   /** @inheritDoc */
   public settings: ShutterSettings = new ShutterSettings();
   private readonly _setLevelSwitchID: string;
-  private _firstCommandRecieved: boolean = false;
+  /** @inheritDoc */
+  public firstCommandRecieved: boolean = false;
+  /** @inheritDoc */
+  public targetAutomaticValue: number = 0;
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;
   private _currentLevel: number = -1;
   private _window?: iWindow;
+  /** @inheritDoc */
+  public blockAutomationHandler: BlockAutomaticHandler;
 
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.VeluxShutter);
     this.jsonOmitKeys.push('_window');
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.targetPosition`;
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
     this.dbo?.getLastDesiredPosition(this).then((val) => {
       if (val.desiredPosition === -1) {
         return;
@@ -74,51 +89,17 @@ export class VeluxShutter extends VeluxDevice implements iShutter {
   }
 
   public setLevel(command: ShutterSetLevelCommand): void {
-    let targetLevel: number = command.level;
-    if (!this._firstCommandRecieved && !command.isInitial) {
-      this._firstCommandRecieved = true;
-    }
-    if (this._firstCommandRecieved && command.isInitial) {
-      this.log(LogLevel.Debug, `Skipped initial Rollo to ${targetLevel} as we recieved a command already`);
-      return;
-    }
-    if (this.currentLevel === targetLevel && !command.isForceAction) {
-      this.log(
-        LogLevel.Debug,
-        `Skip Rollo command to Position ${targetLevel} as this is the current one, commandLog: ${command.logMessage}`,
-        LogDebugType.SkipUnchangedRolloPosition,
-      );
-      return;
-    }
-    if (this._setLevelSwitchID === '') {
-      this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
-      return;
-    }
+    ShutterUtils.setLevel(this, command);
+  }
 
-    if (!this.checkIoConnection(true)) {
-      return;
-    }
-    this.logCommand(command);
-
-    if (this._window !== undefined) {
-      if (this._window.griffeInPosition(WindowPosition.open) > 0 && command.level < 100) {
-        if (!command.skipOpenWarning) {
-          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
-        }
-        return;
-      }
-      if (this._window.griffeInPosition(WindowPosition.tilted) > 0 && targetLevel < 50) {
-        targetLevel = 50;
-        if (!command.skipOpenWarning) {
-          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');
-        }
-      }
-    }
-
-    this._setLevel = targetLevel;
-    this.log(LogLevel.Debug, `Fahre Rollo auf Position ${targetLevel}`);
+  public writePositionStateToDevice(pPosition: number): void {
+    this._setLevel = pPosition;
     // Level is inverted for Velux Adapter (100 = 0, 0 = 100, 25 = 75, etc.)
-    this.setState(this._setLevelSwitchID, Math.abs(targetLevel - 100));
+    this.setState(this._setLevelSwitchID, Math.abs(pPosition - 100));
+  }
+
+  public restoreTargetAutomaticValue(command: RestoreTargetAutomaticValueCommand): void {
+    this.setLevel(new ShutterSetLevelCommand(command, this.targetAutomaticValue));
   }
 
   private setCurrentLevel(value: number, initial: boolean = false): void {

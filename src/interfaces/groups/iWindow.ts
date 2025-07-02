@@ -57,7 +57,7 @@ export interface iWindow extends iBaseGroup {
   /**
    *
    */
-  getShutter(): iShutter[];
+  getShutter(): iShutter | undefined;
 
   /**
    *

@@ -1,28 +1,43 @@
 import { ZigbeeDevice } from './zigbeeDevice';
 import { iShutter, iShutterCalibration, iWindow } from '../../../interfaces';
 import { ShutterSettings } from '../../../settingsObjects';
-import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../../command';
+import {
+  RestoreTargetAutomaticValueCommand,
+  ShutterSetLevelCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../../command';
 import { IoBrokerDeviceInfo } from '../../IoBrokerDeviceInfo';
-import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../../enums';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../../enums';
 import { Utils } from '../../../utils';
 import { ShutterPositionChangedAction } from '../../../action';
 import { ShutterCalibration } from '../../../models';
+import { BlockAutomaticHandler } from '../../../services';
+import { ShutterUtils } from '../../sharedFunctions';
 
 export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** @inheritDoc */
   public settings: ShutterSettings = new ShutterSettings();
   protected _iMovementFinishTimeout: NodeJS.Timeout | null = null;
-  protected _firstCommandRecieved: boolean = false;
+  /** @inheritDoc */
+  public firstCommandRecieved: boolean = false;
   protected _setLevel: number = -1;
   protected _setLevelTime: number = -1;
   protected _shutterCalibrationData: ShutterCalibration = new ShutterCalibration(this.info.fullID, 0, 0, 0, 0);
   protected _currentLevel: number = -1;
   protected _window?: iWindow;
+  /** Implements iTemporaryDisableAutomatic */
+  public readonly blockAutomationHandler: BlockAutomaticHandler;
+  private _targetAutomaticValue: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this.jsonOmitKeys.push('_window');
+    // Initialize blockAutomationHandler for iTemporaryDisableAutomatic
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
     this.dbo
       ?.getShutterCalibration(this)
       .then((calibrationData: iShutterCalibration) => {
@@ -43,6 +58,11 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
         );
       }
     });
+  }
+
+  /** @inheritDoc */
+  public get targetAutomaticValue(): number {
+    return this._targetAutomaticValue;
   }
 
   /** @inheritDoc */
@@ -83,41 +103,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
 
   /** @inheritDoc */
   public setLevel(c: ShutterSetLevelCommand): void {
-    let pPosition: number = c.level;
-    if (!this._firstCommandRecieved && !c.isInitial) {
-      this._firstCommandRecieved = true;
-    } else if (this._firstCommandRecieved && c.isInitial) {
-      this.logCommand(c, `Skipped initial shutter to ${pPosition} as we recieved a command already`);
-      return;
-    }
-    if (this.currentLevel === pPosition && !c.isForceAction) {
-      this.logCommand(
-        c,
-        `Skip shutter command to Position ${pPosition} as this is the current one`,
-        LogDebugType.SkipUnchangedRolloPosition,
-      );
-      return;
-    }
-    this.logCommand(c);
-
-    if (this._window !== undefined) {
-      if (this._window.griffeInPosition(WindowPosition.open) > 0 && pPosition < 100) {
-        if (!c.skipOpenWarning) {
-          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
-        }
-        return;
-      }
-      if (this._window.griffeInPosition(WindowPosition.tilted) > 0 && pPosition < 50) {
-        pPosition = 50;
-        if (!c.skipOpenWarning) {
-          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');
-        }
-      }
-    }
-
-    this._setLevel = pPosition;
-    this.log(LogLevel.Debug, `Move  to position ${pPosition}`);
-    this.moveToPosition(pPosition);
+    ShutterUtils.setLevel(this, c);
   }
 
   protected setCurrentLevel(value: number, isInitial: boolean = false) {
@@ -133,7 +119,8 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
     this._currentLevel = value;
   }
 
-  protected moveToPosition(pPosition: number): void {
+  public writePositionStateToDevice(pPosition: number): void {
+    this._setLevel = pPosition;
     this.log(LogLevel.Error, `Implement own moveToPosition(${pPosition}) Function`);
   }
 
@@ -167,6 +154,17 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
       `Persiting Calibration Data. Average Up: ${this._shutterCalibrationData.averageUp}, Down: ${this._shutterCalibrationData.averageDown}`,
     );
     this.dbo?.persistShutterCalibration(this._shutterCalibrationData);
+  }
+
+  /**
+   * Restores the automatic value/state of the device
+   * @param command - The command to restore the automatic value/state
+   */
+  public restoreTargetAutomaticValue(command: RestoreTargetAutomaticValueCommand): void {
+    // Implement logic to restore automatic value, e.g., set desired shutter position
+    // You may want to use a similar pattern as actuators, e.g.,
+    // this.setLevel(new ShutterSetLevelCommand(command, this.desiredWindowShutterLevel));
+    this.setLevel(new ShutterSetLevelCommand(command, this._targetAutomaticValue));
   }
 
   protected initializeMovementFinishTimeout(duration: number, endPosition: number): void {

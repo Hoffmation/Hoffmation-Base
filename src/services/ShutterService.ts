@@ -33,7 +33,8 @@ export class ShutterService {
         continue;
       }
       for (const f of r.WindowGroup.windows) {
-        f.getShutter().forEach((shutter) => {
+        const shutter: iShutter | undefined = f.getShutter();
+        if (shutter) {
           response.push(
             `Shutter: "${shutter.info.customName}"\t${
               shutter.room?.settings.sonnenAufgangRollos === true
@@ -44,7 +45,7 @@ export class ShutterService {
           down.push(
             `Shutter: "${shutter.info.customName}"\t${r.sunsetShutterCallback?.nextToDo?.toLocaleTimeString('de-DE')}`,
           );
-        });
+        }
       }
     }
     response.push(down.join('\n'));
@@ -68,8 +69,6 @@ export class ShutterService {
   }
 
   public static windowAllToPosition(f: iWindow, c: ShutterSetLevelCommand): void {
-    f.getShutter().forEach((s) => {
-      s.setLevel(c);
-    });
+    f.getShutter()?.setLevel(c);
   }
 }

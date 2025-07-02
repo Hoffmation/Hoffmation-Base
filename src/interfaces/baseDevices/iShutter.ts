@@ -1,4 +1,5 @@
 import { iRoomDevice } from './iRoomDevice';
+import { iTemporaryDisableAutomatic } from './iTemporaryDisableAutomatic';
 import { ShutterSetLevelCommand } from '../../command';
 import { iWindow } from '../groups';
 import { iShutterSettings } from '../settings/iShutterSettings';
@@ -8,7 +9,11 @@ import { iShutterSettings } from '../settings/iShutterSettings';
  *
  * For devices with {@link DeviceCapability.shutter} capability.
  */
-export interface iShutter extends iRoomDevice {
+export interface iShutter extends iRoomDevice, iTemporaryDisableAutomatic {
+  /**
+   * Whether the first command has been received
+   */
+  firstCommandRecieved: boolean;
   /**
    * The settings for the shutter
    */
@@ -17,6 +22,10 @@ export interface iShutter extends iRoomDevice {
    * The current level of the shutter (0 = closed, 100 = open)
    */
   readonly currentLevel: number;
+  /**
+   * The target level of the shutter (0 = closed, 100 = open)
+   */
+  targetAutomaticValue: number;
   /**
    * The desired level of the shutter for this window (this might be different from the current level due to the desired level being set by the user)
    */
@@ -36,4 +45,10 @@ export interface iShutter extends iRoomDevice {
    * @param command - The command to execute
    */
   setLevel(command: ShutterSetLevelCommand): void;
+
+  /**
+   * Moves the shutter to a specific position
+   * @param pPosition
+   */
+  writePositionStateToDevice(pPosition: number): void;
 }

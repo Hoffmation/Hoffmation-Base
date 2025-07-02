@@ -33,7 +33,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
     super.update(idSplit, state, initial, true);
   }
 
-  protected override moveToPosition(targetPosition: number): void {
+  public override writePositionStateToDevice(targetPosition: number): void {
     if (this._movementState !== MovementState.Stop) {
       this.log(
         LogLevel.Info,
@@ -46,7 +46,7 @@ export class ZigbeeIlluShutter extends ZigbeeShutter {
       this._iMovementTimeout = Utils.guardedTimeout(
         () => {
           this._iMovementTimeout = undefined;
-          this.moveToPosition(targetPosition);
+          this.writePositionStateToDevice(targetPosition);
         },
         2000,
         this,

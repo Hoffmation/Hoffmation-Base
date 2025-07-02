@@ -2,16 +2,28 @@ import { HmIPDevice } from './hmIpDevice';
 import { iShutter, iWindow } from '../../interfaces';
 import { ShutterSettings } from '../../settingsObjects';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { CommandSource, DeviceCapability, DeviceType, LogDebugType, LogLevel, WindowPosition } from '../../enums';
-import { ShutterSetLevelCommand, WindowSetDesiredPositionCommand } from '../../command';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import {
+  RestoreTargetAutomaticValueCommand,
+  ShutterSetLevelCommand,
+  WindowSetDesiredPositionCommand,
+} from '../../command';
 import { Utils } from '../../utils';
 import { ShutterPositionChangedAction } from '../../action';
+import { BlockAutomaticHandler } from '../../services';
+import { ShutterUtils } from '../sharedFunctions';
 
 export class HmIpRoll extends HmIPDevice implements iShutter {
   /** @inheritDoc */
   public settings: ShutterSettings = new ShutterSettings();
+
+  /** @inheritDoc */
+  public firstCommandRecieved: boolean = false;
+  /** @inheritDoc */
+  public targetAutomaticValue: number = 0;
+  /** @inheritDoc */
+  public blockAutomationHandler: BlockAutomaticHandler;
   private _setLevelSwitchID: string;
-  private _firstCommandRecieved: boolean = false;
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;
 
@@ -20,6 +32,10 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     this.jsonOmitKeys.push('_window');
     this.deviceCapabilities.push(DeviceCapability.shutter);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
+    this.blockAutomationHandler = new BlockAutomaticHandler(
+      this.restoreTargetAutomaticValue.bind(this),
+      this.log.bind(this),
+    );
     this.dbo?.getLastDesiredPosition(this).then((val) => {
       if (val.desiredPosition === -1) {
         return;
@@ -91,49 +107,15 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   }
 
   public setLevel(command: ShutterSetLevelCommand): void {
-    let targetLevel: number = command.level;
-    if (!this._firstCommandRecieved && !command.isInitial) {
-      this._firstCommandRecieved = true;
-    }
-    if (this._firstCommandRecieved && command.isInitial) {
-      this.log(LogLevel.Debug, `Skipped initial Rollo to ${targetLevel} as we recieved a command already`);
-      return;
-    }
-    if (this.currentLevel === targetLevel && !command.isForceAction) {
-      this.logCommand(
-        command,
-        `Skip Rollo command to Position ${targetLevel} as this is the current one`,
-        LogDebugType.SkipUnchangedRolloPosition,
-      );
-      return;
-    }
-    if (this._setLevelSwitchID === '') {
-      this.log(LogLevel.Error, 'Keine Switch ID bekannt.');
-      return;
-    }
+    ShutterUtils.setLevel(this, command);
+  }
 
-    if (!this.checkIoConnection(true)) {
-      return;
-    }
-    this.logCommand(command);
+  public writePositionStateToDevice(pPosition: number): void {
+    this._setLevel = pPosition;
+    this.setState(this._setLevelSwitchID, pPosition);
+  }
 
-    if (this._window !== undefined) {
-      if (this._window.griffeInPosition(WindowPosition.open) > 0 && command.level < 100) {
-        if (!command.skipOpenWarning) {
-          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
-        }
-        return;
-      }
-      if (this._window.griffeInPosition(WindowPosition.tilted) > 0 && targetLevel < 50) {
-        targetLevel = 50;
-        if (!command.skipOpenWarning) {
-          this.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');
-        }
-      }
-    }
-
-    this._setLevel = targetLevel;
-    this.log(LogLevel.Debug, `Fahre Rollo auf Position ${targetLevel}`);
-    this.setState(this._setLevelSwitchID, targetLevel);
+  public restoreTargetAutomaticValue(command: RestoreTargetAutomaticValueCommand): void {
+    this.setLevel(new ShutterSetLevelCommand(command, this.targetAutomaticValue));
   }
 }

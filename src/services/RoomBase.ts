@@ -22,7 +22,6 @@ import { DeviceClusterType, GroupType, LogLevel, TimeOfDay } from '../enums';
 import { ServerLogService } from '../logging';
 import { Persistence } from './dbo';
 import { TimeCallbackService } from './time-callback-service';
-import { ShutterService } from './ShutterService';
 import { RoomInfo, RoomSettingsController } from '../models';
 
 export class RoomBase implements iRoomBase, iIdHolder {
@@ -190,7 +189,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
       timeOfDay === TimeOfDay.Daylight &&
       ((this.settings.lightIfNoWindows && (!this.WindowGroup || this.WindowGroup.windows.length === 0)) ||
         this.WindowGroup?.windows.some((f) => {
-          return ShutterService.anyRolloDown(f.getShutter());
+          return f.getShutter()?.currentLevel === 0;
         }))
     ) {
       timeOfDay = Utils.nowTime().hours > 16 ? TimeOfDay.AfterSunset : TimeOfDay.BeforeSunrise;
@@ -214,7 +213,7 @@ export class RoomBase implements iRoomBase, iIdHolder {
     if (
       timeOfDay === TimeOfDay.Daylight &&
       this.WindowGroup?.windows.some((f) => {
-        return ShutterService.anyRolloDown(f.getShutter());
+        return f.getShutter()?.currentLevel === 0;
       })
     ) {
       timeOfDay = TimeOfDay.AfterSunset;

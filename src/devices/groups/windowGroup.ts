@@ -8,7 +8,7 @@ import {
   WindowSetDesiredPositionCommand,
   WindowSetRolloByWeatherStatusCommand,
 } from '../../command';
-import { ShutterService, TimeCallbackService } from '../../services';
+import { ShutterService, TimeCallbackService, WeatherService } from '../../services';
 import {
   CommandSource,
   DeviceClusterType,
@@ -21,7 +21,6 @@ import {
 import { DeviceList } from '../device-list';
 import { Utils } from '../../utils';
 import { ShutterSettings } from '../../settingsObjects';
-import { WeatherService } from '../../services/weather';
 import { iRoomBase, iWindow, iWindowGroup } from '../../interfaces';
 import { TimeCallback } from '../../models';
 import { HandleChangeAction } from '../../action';
@@ -139,7 +138,7 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
     const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
     this.windows.forEach((f) => {
-      const shutterSettings: ShutterSettings | undefined = f.getShutter()?.[0]?.settings;
+      const shutterSettings: ShutterSettings | undefined = f.getShutter()?.settings;
       if (!shutterSettings) {
         return;
       }
@@ -169,7 +168,7 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
 
   public sunriseUp(c: ShutterSunriseUpCommand): void {
     this.windows.forEach((w) => {
-      if (!this.getRoom().settings.sonnenAufgangRollos || w.getShutter().length === 0) {
+      if (!this.getRoom().settings.sonnenAufgangRollos || w.getShutter() === undefined) {
         return;
       }
       w.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 100));

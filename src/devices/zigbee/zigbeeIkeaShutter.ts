@@ -23,7 +23,7 @@ export class ZigbeeIkeaShutter extends ZigbeeShutter {
     super.update(idSplit, state, initial, true);
   }
 
-  protected override moveToPosition(pPosition: number): void {
+  public override writePositionStateToDevice(pPosition: number): void {
     this.setState(this._positionStateId, pPosition);
   }
 }
