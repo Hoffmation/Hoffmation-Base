@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.9 (2025-07-02)
 
 * (theimo1221) Some fixes for Victron Energy Manager
 
