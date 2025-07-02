@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Some fixes for Victron Energy Manager
+
 ## 3.2.8 (2025-07-01)
 
 * (theimo1221) Add AC-Battery setting, to allow cooling sooner on sunny days even though the battery is kinda empty.

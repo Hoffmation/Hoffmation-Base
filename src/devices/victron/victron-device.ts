@@ -70,13 +70,15 @@ export class VictronDevice extends BaseDevice implements iEnergyManager, iBatter
     } else if (
       hours > 5 &&
       hours < 12 &&
-      (WeatherService.todayCloudiness ?? 99) < 30 &&
+      (WeatherService.todayCloudiness ?? 99) < 40 &&
       WeatherService.todayMaxTemp > 25
     ) {
       // During morning hours battery still might be kinda empty but if it gets sunny again, we should go for ac anyways.
-      return this.batteryLevel > this.settings.minimumMorningSunnyDayAcBatteryLevel;
-    } else if (hours < 10) {
-      return this.batteryLevel > this.settings.minimumTransientTimeAcBatteryLevel;
+      return this.batteryLevel < this.settings.minimumMorningSunnyDayAcBatteryLevel;
+    } else if (hours < 8) {
+      return this.batteryLevel < this.settings.minimumNightTimeAcBatteryLevel;
+    } else if (hours < 11) {
+      return this.batteryLevel < this.settings.minimumTransientTimeAcBatteryLevel;
     }
 
     return this.batteryLevel < this.settings.minimumDayTimeAcBatteryLevel;
