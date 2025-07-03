@@ -28,7 +28,7 @@ export class Window extends BaseGroup implements iWindow {
    * @returns {number} The level (0 closed, 100 open)
    */
   public get desiredPosition(): number {
-    return this.getShutter().baseAutomaticLevel;
+    return this.getShutter()?.baseAutomaticLevel ?? 0;
   }
 
   /**
@@ -36,7 +36,7 @@ export class Window extends BaseGroup implements iWindow {
    * @returns {boolean} true if any shutter is down
    */
   public get anyShutterDown(): boolean {
-    return this.getShutter().currentLevel === 0;
+    return this.getShutter()?.currentLevel === 0;
   }
 
   public constructor(
@@ -125,7 +125,7 @@ export class Window extends BaseGroup implements iWindow {
           this.getVibration().forEach((element) => {
             element.vibrationBlockedByHandle = true;
           });
-          this.getShutter().setLevel(new ShutterSetLevelCommand(CommandSource.Force, 100, 'Window opened by handle'));
+          this.getShutter()?.setLevel(new ShutterSetLevelCommand(CommandSource.Force, 100, 'Window opened by handle'));
           return;
         }
       });

@@ -5,9 +5,10 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## 3.2.10-alpha.1 (2025-07-03)
 
-* (theimo1221) Fix zigbee shutter property access
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix conditional access to getShutter
 
 ## 3.2.10-alpha.0 (2025-07-03)
 
