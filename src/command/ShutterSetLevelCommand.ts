@@ -1,10 +1,17 @@
 import { BaseCommand } from './baseCommand';
 import { CommandSource, CommandType } from '../enums';
 import { iBaseCommand } from './iBaseCommand';
+import { BlockAutomaticCommand } from './blockAutomaticCommand';
 
 export class ShutterSetLevelCommand extends BaseCommand {
   /** @inheritDoc */
   public override type: CommandType = CommandType.ShutterSetLevelCommand;
+  /**
+   * The command to disable automatic actions for a specific duration.
+   * Null = no automatic actions will be disabled.
+   * Undefined = use device or global default
+   */
+  public disableAutomaticCommand: BlockAutomaticCommand | null | undefined;
 
   /**
    * Command to set the level of a shutter

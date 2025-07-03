@@ -235,17 +235,20 @@ export class WeatherService {
     shutterSettings: ShutterSettings,
   ): number {
     let result: number = normalPos;
-    if (currentTemperatur < desiredTemperatur) {
+    if (currentTemperatur < desiredTemperatur && currentTemperatur < shutterSettings.heatReductionThreshold) {
       logger(LogLevel.Trace, 'RolloWeatherPosition: Room needs to heat up anyways.');
       return result;
-    } else if (normalPos < 30) {
+    } else if (normalPos < shutterSettings.heatReductionPosition) {
       logger(LogLevel.Trace, 'RolloWeatherPosition: Shutter should be down anyways.');
       return result;
+    } else if (
+      this.willOutsideBeWarmer(shutterSettings.heatReductionThreshold, logger) &&
+      currentTemperatur > shutterSettings.heatReductionDirectionThreshold
+    ) {
+      result = shutterSettings.heatReductionPosition;
     } else if (this.hoursTilSunset() < 1) {
       logger(LogLevel.Trace, "RolloWeatherPosition: It's close to or after todays sunset");
       return result;
-    } else if (this.willOutsideBeWarmer(shutterSettings.heatReductionThreshold, logger)) {
-      result = shutterSettings.heatReductionPosition;
     } else if (
       shutterSettings.direction !== undefined &&
       !Utils.degreeInBetween(shutterSettings.direction - 50, shutterSettings.direction + 50, this.sunDirection)

@@ -8,7 +8,7 @@ import {
   WindowSetDesiredPositionCommand,
   WindowSetRolloByWeatherStatusCommand,
 } from '../../command';
-import { ShutterService, TimeCallbackService, WeatherService } from '../../services';
+import { TimeCallbackService, WeatherService } from '../../services';
 import {
   CommandSource,
   DeviceClusterType,
@@ -21,7 +21,7 @@ import {
 import { DeviceList } from '../device-list';
 import { Utils } from '../../utils';
 import { ShutterSettings } from '../../settingsObjects';
-import { iRoomBase, iWindow, iWindowGroup } from '../../interfaces';
+import { iRoomBase, iShutter, iWindow, iWindowGroup } from '../../interfaces';
 import { TimeCallback } from '../../models';
 import { HandleChangeAction } from '../../action';
 import { BaseGroup } from './base-group';
@@ -142,31 +142,33 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
       if (!shutterSettings) {
         return;
       }
+      const shutter: iShutter | undefined = f.getShutter();
+      if (!shutter || shutter.blockAutomationHandler.automaticBlockActive) {
+        return;
+      }
       if (darkOutside) {
         f.restoreDesiredPosition(new WindowRestoreDesiredPositionCommand(c, "It's dark outside."));
+        return;
+      }
+      if (f.griffeInPosition(WindowPosition.open) > 0 || f.griffeInPosition(WindowPosition.tilted) > 0) {
         return;
       }
       let desiredPos: number = f.desiredPosition;
       if (desiredPos > 0) {
         desiredPos = WeatherService.weatherRolloPosition(
-          desiredPos,
+          f.getShutter()?.baseAutomaticLevel ?? 0,
           room.HeatGroup?.desiredTemp ?? -99,
           room.HeatGroup?.temperature ?? -99,
           this.log.bind(this),
           shutterSettings,
         );
       }
-      if (f.griffeInPosition(WindowPosition.open) > 0 && desiredPos < 100) {
-        return;
-      }
-      if (f.griffeInPosition(WindowPosition.tilted) > 0) {
-        desiredPos = Math.max(30, desiredPos);
-      }
-      ShutterService.windowAllToPosition(f, new ShutterSetLevelCommand(c, desiredPos, '', true));
+      f.getShutter()?.setLevel(new ShutterSetLevelCommand(c, desiredPos, '', true));
     });
   }
 
   public sunriseUp(c: ShutterSunriseUpCommand): void {
+    this.setWindowShutterBaseAutomaticLevel(100);
     this.windows.forEach((w) => {
       if (!this.getRoom().settings.sonnenAufgangRollos || w.getShutter() === undefined) {
         return;
@@ -201,7 +203,14 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
   }
 
   public sunsetDown(c: ShutterSunsetDownCommand): void {
-    this.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
+    this.windows.forEach((w) => {
+      const shutter: iShutter | undefined = w.getShutter();
+      if (!shutter) {
+        return;
+      }
+      shutter.baseAutomaticLevel = 0;
+      w.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
+    });
     const room: iRoomBase = this.getRoom();
     room.setLightTimeBased(new RoomSetLightTimeBasedCommand(c, true, 'sunsetDown'));
   }
@@ -238,6 +247,7 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
       if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
         Utils.guardedTimeout(
           () => {
+            this.setWindowShutterBaseAutomaticLevel(0);
             this.setDesiredPosition(
               new WindowSetDesiredPositionCommand(CommandSource.Initial, 0, 'It is dark outside'),
             );
@@ -248,6 +258,16 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
       }
       TimeCallbackService.addCallback(this.sunsetShutterCallback);
     }
+  }
+
+  private setWindowShutterBaseAutomaticLevel(level: number): void {
+    this.windows.forEach((f) => {
+      const shutter: iShutter | undefined = f.getShutter();
+      if (!shutter) {
+        return;
+      }
+      shutter.baseAutomaticLevel = level;
+    });
   }
 
   public reconfigureSunriseShutterCallback(): void {

@@ -1,6 +1,5 @@
 import { Devices } from '../devices';
-import { iShutter, iWindow } from '../interfaces';
-import { ShutterSetLevelCommand } from '../command';
+import { iShutter } from '../interfaces';
 import { API } from '../api';
 import { DeviceType } from '../enums';
 
@@ -66,9 +65,5 @@ export class ShutterService {
       }
     }
     return rollos;
-  }
-
-  public static windowAllToPosition(f: iWindow, c: ShutterSetLevelCommand): void {
-    f.getShutter()?.setLevel(c);
   }
 }

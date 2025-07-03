@@ -28,6 +28,8 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   /** Implements iTemporaryDisableAutomatic */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
   private _targetAutomaticValue: number = 0;
+  /** @inheritDoc */
+  public baseAutomaticLevel: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
@@ -161,9 +163,6 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
    * @param command - The command to restore the automatic value/state
    */
   public restoreTargetAutomaticValue(command: RestoreTargetAutomaticValueCommand): void {
-    // Implement logic to restore automatic value, e.g., set desired shutter position
-    // You may want to use a similar pattern as actuators, e.g.,
-    // this.setLevel(new ShutterSetLevelCommand(command, this.desiredWindowShutterLevel));
     this.setLevel(new ShutterSetLevelCommand(command, this._targetAutomaticValue));
   }
 

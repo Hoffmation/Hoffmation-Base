@@ -29,11 +29,15 @@ export interface iShutter extends iRoomDevice, iTemporaryDisableAutomatic {
   /**
    * The desired level of the shutter for this window (this might be different from the current level due to the desired level being set by the user)
    */
-  desiredWindowShutterLevel: number;
+  readonly desiredWindowShutterLevel: number;
   /**
    * The window this shutter is located within
    */
   window: iWindow | undefined;
+  /**
+   * The base automation level (e.g., 0 = closed at night, 100 = open at day)
+   */
+  baseAutomaticLevel: number;
 
   /**
    * Persists the current information of the shutter to the database

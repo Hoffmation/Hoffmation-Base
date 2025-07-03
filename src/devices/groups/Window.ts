@@ -11,9 +11,10 @@ import {
 } from '../../enums';
 import { DeviceList } from '../device-list';
 import { ZigbeeMagnetContact } from '../zigbee';
-import { ShutterService, TimeCallbackService } from '../../services';
+import { TimeCallbackService } from '../../services';
 import { Utils } from '../../utils';
 import {
+  BlockAutomaticLiftBlockCommand,
   RoomSetLightTimeBasedCommand,
   ShutterSetLevelCommand,
   WindowRestoreDesiredPositionCommand,
@@ -27,7 +28,7 @@ export class Window extends BaseGroup implements iWindow {
    * @returns {number} The level (0 closed, 100 open)
    */
   public get desiredPosition(): number {
-    return this.getShutter().targetAutomaticValue;
+    return this.getShutter().baseAutomaticLevel;
   }
 
   /**
@@ -67,7 +68,11 @@ export class Window extends BaseGroup implements iWindow {
    * @param c - The command to execute
    */
   public setDesiredPosition(c: WindowSetDesiredPositionCommand): void {
-    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, c.position));
+    const shutter: iShutter | undefined = this.getShutter();
+    if (!shutter) {
+      return;
+    }
+    shutter.setLevel(new ShutterSetLevelCommand(c, c.position));
   }
 
   public getHandle(): iHandle[] {
@@ -106,10 +111,9 @@ export class Window extends BaseGroup implements iWindow {
           element.vibrationBlockedByHandle = true;
         });
         const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().settings.rolloOffset);
-        ShutterService.windowAllToPosition(
-          this,
+        this.getShutter()?.setLevel(
           new ShutterSetLevelCommand(
-            CommandSource.Automatic,
+            CommandSource.Force,
             TimeCallbackService.darkOutsideOrNight(timeOfDay) ? 50 : 100,
             'Window ajar by handle',
           ),
@@ -121,10 +125,7 @@ export class Window extends BaseGroup implements iWindow {
           this.getVibration().forEach((element) => {
             element.vibrationBlockedByHandle = true;
           });
-          ShutterService.windowAllToPosition(
-            this,
-            new ShutterSetLevelCommand(CommandSource.Automatic, 100, 'Window opened by handle'),
-          );
+          this.getShutter().setLevel(new ShutterSetLevelCommand(CommandSource.Force, 100, 'Window opened by handle'));
           return;
         }
       });
@@ -178,7 +179,9 @@ export class Window extends BaseGroup implements iWindow {
   }
 
   public restoreDesiredPosition(c: WindowRestoreDesiredPositionCommand): void {
-    ShutterService.windowAllToPosition(this, new ShutterSetLevelCommand(c, this.desiredPosition));
+    this.getShutter()?.blockAutomationHandler.liftAutomaticBlock(
+      new BlockAutomaticLiftBlockCommand(c, 'Window restore desired position', true),
+    );
   }
 
   public addHandleChangeCallback(cb: (handleChangeAction: HandleChangeAction) => void): void {

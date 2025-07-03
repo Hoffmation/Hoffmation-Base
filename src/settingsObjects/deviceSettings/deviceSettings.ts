@@ -3,10 +3,10 @@ import { Utils } from '../../utils';
 import { BlockAutomaticSettings } from '../blockAutomaticSettings';
 import { ObjectSettings } from '../objectSettings';
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
-import { ActuatorSetStateCommand, BlockAutomaticCommand } from '../../command';
+import { BlockAutomaticCommand, iBaseCommand } from '../../command';
 
 export abstract class DeviceSettings extends ObjectSettings implements iDeviceSettings {
-  buildBlockAutomaticCommand(c: ActuatorSetStateCommand): BlockAutomaticCommand | null | undefined {
+  buildBlockAutomaticCommand(c: iBaseCommand): BlockAutomaticCommand | null | undefined {
     if (this.blockAutomaticSettings?.dontBlockAutomaticIfNotProvided) {
       return null;
     }

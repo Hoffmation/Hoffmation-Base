@@ -1,6 +1,7 @@
 import { ShutterSetLevelCommand } from '../../command';
 import { iShutter } from '../../interfaces';
-import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { LogDebugType, LogLevel, TimeOfDay, WindowPosition } from '../../enums';
+import { TimeCallbackService } from '../../services';
 
 export class ShutterUtils {
   /**
@@ -9,6 +10,10 @@ export class ShutterUtils {
    * @param c - The command
    */
   public static setLevel(device: iShutter, c: ShutterSetLevelCommand): void {
+    if (!c.isForceAction) {
+      // Set the target automatic value
+      device.targetAutomaticValue = c.level;
+    }
     // Respect block automation
     if (!c.isForceAction && device.blockAutomationHandler.automaticBlockActive) {
       device.logCommand(
@@ -17,9 +22,28 @@ export class ShutterUtils {
           device.blockAutomationHandler.automaticBlockedUntil,
         ).toLocaleTimeString('de-DE')}`,
       );
-      // Set the target automatic value
-      device.targetAutomaticValue = c.level;
       return;
+    }
+    if (
+      c.isManual &&
+      c.level > 0 &&
+      device.baseAutomaticLevel === 0 &&
+      !device.room?.settings?.sonnenAufgangRollos &&
+      device.room?.settings?.rolloOffset &&
+      ![TimeOfDay.Night, TimeOfDay.AfterSunset].includes(TimeCallbackService.dayType(device.room.settings.rolloOffset))
+    ) {
+      // First manual up command of the day on a window with no automatic up.
+      device.baseAutomaticLevel = 100;
+    } else if (
+      c.isManual &&
+      c.level === 0 &&
+      device.baseAutomaticLevel === 100 &&
+      !device.room?.settings?.sonnenUntergangRollos &&
+      device.room?.settings?.rolloOffset &&
+      [TimeOfDay.Night, TimeOfDay.AfterSunset].includes(TimeCallbackService.dayType(device.room.settings.rolloOffset))
+    ) {
+      // First manual down command of the day on a window with no automatic up.
+      device.baseAutomaticLevel = 0;
     }
     let pPosition: number = c.level;
     if (!device.firstCommandRecieved && !c.isInitial) {
@@ -35,6 +59,12 @@ export class ShutterUtils {
         LogDebugType.SkipUnchangedRolloPosition,
       );
       return;
+    }
+    if (c.disableAutomaticCommand === undefined && c.isForceAction) {
+      c.disableAutomaticCommand = device.settings.buildBlockAutomaticCommand(c);
+    }
+    if (c.disableAutomaticCommand) {
+      device.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
     }
     device.logCommand(c);
 
