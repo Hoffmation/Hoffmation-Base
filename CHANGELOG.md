@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.10-alpha.0 (2025-07-03)
 
 * (theimo1221) Centralise some shutter functions
 * (theimo1221) Add block automatic for shutter devices and optimizes automatic actions to respect user manual actions
