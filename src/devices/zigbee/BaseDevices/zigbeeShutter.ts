@@ -27,7 +27,8 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   protected _window?: iWindow;
   /** Implements iTemporaryDisableAutomatic */
   public readonly blockAutomationHandler: BlockAutomaticHandler;
-  private _targetAutomaticValue: number = 0;
+  /** @inheritDoc */
+  public targetAutomaticValue: number = 0;
   /** @inheritDoc */
   public baseAutomaticLevel: number = 0;
 
@@ -60,11 +61,6 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
         );
       }
     });
-  }
-
-  /** @inheritDoc */
-  public get targetAutomaticValue(): number {
-    return this._targetAutomaticValue;
   }
 
   /** @inheritDoc */
@@ -163,7 +159,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
    * @param command - The command to restore the automatic value/state
    */
   public restoreTargetAutomaticValue(command: RestoreTargetAutomaticValueCommand): void {
-    this.setLevel(new ShutterSetLevelCommand(command, this._targetAutomaticValue));
+    this.setLevel(new ShutterSetLevelCommand(command, this.targetAutomaticValue));
   }
 
   protected initializeMovementFinishTimeout(duration: number, endPosition: number): void {
