@@ -34,6 +34,7 @@ export class ShutterUtils {
     ) {
       // First manual up command of the day on a window with no automatic up.
       device.baseAutomaticLevel = 100;
+      device.targetAutomaticValue = 100;
     } else if (
       c.isManual &&
       c.level === 0 &&
@@ -44,6 +45,7 @@ export class ShutterUtils {
     ) {
       // First manual down command of the day on a window with no automatic up.
       device.baseAutomaticLevel = 0;
+      device.targetAutomaticValue = 0;
     }
     let pPosition: number = c.level;
     if (!device.firstCommandRecieved && !c.isInitial) {

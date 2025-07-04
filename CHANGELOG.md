@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Change TargetAutomaticValue as well
+
 ## 3.2.10-alpha.2 (2025-07-03)
 
 * (theimo1221) Fix conditional access to getShutter
