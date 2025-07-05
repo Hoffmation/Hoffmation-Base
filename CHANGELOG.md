@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Reduce json filter
+
 ## 3.2.10-alpha.3 (2025-07-04)
 
 * (theimo1221) Change TargetAutomaticValue as well

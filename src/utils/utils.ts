@@ -266,6 +266,13 @@ export class Utils {
       if (value === undefined || value === null) {
         return;
       }
+      if (typeof value === 'function') {
+        return;
+      } else if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') {
+        // Always include basic types
+        result[key] = value;
+        return;
+      }
       if (typeof key == 'string') {
         const lowerKey: string = key.toLowerCase();
         for (const checkKey of combinedOmmitKeys) {
