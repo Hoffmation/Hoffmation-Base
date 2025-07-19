@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.10-alpha.5 (2025-07-19)
 
 * (theimo1221) Fix shutter logic
 
