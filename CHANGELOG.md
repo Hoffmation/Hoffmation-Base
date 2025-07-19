@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Fix shutter logic
+
 ## 3.2.10-alpha.4 (2025-07-05)
 
 * (theimo1221) Reduce json filter
