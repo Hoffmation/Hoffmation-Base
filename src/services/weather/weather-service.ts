@@ -38,13 +38,23 @@ export class WeatherService {
   private static latitude: string;
   private static longitude: string;
   private static appID?: string;
+  /**
+   * The highest maximum temperature forecast for today (prevents oscillation)
+   */
+  private static _todayMaxMaxTemperature: number = UNDEFINED_TEMP_VALUE;
+  /**
+   * The date of the last weather update (for daily reset)
+   */
+  private static _lastUpdateDate: string = '';
 
   public static addWeatherUpdateCb(name: string, cb: () => void) {
     this._dataUpdateCbs[name] = cb;
   }
 
   public static get todayMaxTemp(): number {
-    return WeatherService.lastResponse?.daily[0]?.temp.max ?? UNDEFINED_TEMP_VALUE;
+    return this._todayMaxMaxTemperature !== UNDEFINED_TEMP_VALUE
+      ? this._todayMaxMaxTemperature
+      : (WeatherService.lastResponse?.daily[0]?.temp.max ?? UNDEFINED_TEMP_VALUE);
   }
 
   public static get todayCloudiness(): number | undefined {
@@ -178,6 +188,10 @@ export class WeatherService {
 
   public static processHourlyWeather(response: WeatherResponse): void {
     this.lastResponse = response;
+
+    // Update daily maximum temperature to prevent shutter oscillation
+    this.updateDailyMaxTemperature();
+
     ServerLogService.writeLog(
       LogLevel.Info,
       `Es sind gerade ${this.lastResponse.current.temp} Grad (gefühlt ${this.lastResponse.current.feels_like}).`,
@@ -193,6 +207,26 @@ export class WeatherService {
       });
       ServerLogService.writeLog(LogLevel.Info, message.join('\n'));
     }
+  }
+
+  /**
+   * Updates the daily maximum temperature to prevent shutter oscillation
+   * Tracks the highest forecasted maximum temperature for today
+   */
+  private static updateDailyMaxTemperature(): void {
+    if (!this.lastResponse?.daily?.[0]?.temp?.max) {
+      return;
+    }
+
+    const today = new Date().toDateString();
+    const currentForecastMax = this.lastResponse.daily[0].temp.max;
+
+    if (this._lastUpdateDate === today && currentForecastMax < this._todayMaxMaxTemperature) {
+      return;
+    }
+    this._todayMaxMaxTemperature = currentForecastMax;
+    this._lastUpdateDate = today;
+    ServerLogService.writeLog(LogLevel.Debug, `Daily max temperature updated to ${currentForecastMax}°C`);
   }
 
   public static get currentHumidity(): number {
