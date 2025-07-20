@@ -5,8 +5,9 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## **WORK IN PROGRESS**
-* (theimo1221) Prevent heat reduction oscillation 
+## 3.2.10-alpha.6 (2025-07-20)
+* (theimo1221) Prevent heat reduction oscillation
+
 ## 3.2.10-alpha.5 (2025-07-19)
 
 * (theimo1221) Fix shutter logic
