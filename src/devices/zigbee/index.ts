@@ -2,6 +2,7 @@ export * from './BaseDevices';
 export * from './zigbeeAqaraMagnetContact';
 export * from './zigbeeAqaraOpple3Switch';
 export * from './zigbeeAquaraMotion';
+export * from './zigbeeAqaraPresence';
 export * from './zigbeeAquaraVibra';
 export * from './zigbeeAquaraWater';
 export * from './zigbeeBlitzShp';

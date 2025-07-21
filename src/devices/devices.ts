@@ -16,6 +16,7 @@ import {
 import {
   ZigbeeAqaraMagnetContact,
   ZigbeeAqaraOpple3Switch,
+  ZigbeeAqaraPresence,
   ZigbeeAquaraMotion,
   ZigbeeAquaraVibra,
   ZigbeeAquaraWater,
@@ -301,6 +302,9 @@ export class Devices {
         break;
       case 'AquaraMotion':
         d = new ZigbeeAquaraMotion(zigbeeInfo);
+        break;
+      case 'AqaraFp1':
+        d = new ZigbeeAqaraPresence(zigbeeInfo);
         break;
       case 'AquaraVibra':
         d = new ZigbeeAquaraVibra(zigbeeInfo);

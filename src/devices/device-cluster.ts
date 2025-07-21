@@ -79,6 +79,7 @@ export class DeviceCluster implements iDeviceCluster {
         break;
       case DeviceType.HmIpBewegung:
       case DeviceType.ZigbeeAquaraMotion:
+      case DeviceType.ZigbeeAqaraPresence:
       case DeviceType.ZigbeeSonoffMotion:
       case DeviceType.ZigbeeTuyaMotion:
       case DeviceType.HmIpPraezenz:
