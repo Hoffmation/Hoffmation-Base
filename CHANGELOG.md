@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.10 (2025-07-21)
 
 * (theimo1221) Add support for AqaraFp1
 
