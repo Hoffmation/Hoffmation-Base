@@ -19,6 +19,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
   protected _timeSinceLastMotion: number = 0;
+  protected readonly _occupancyStateId: string = 'occupancy';
   private _movementDetected: boolean = false;
 
   public constructor(pInfo: IoBrokerDeviceInfo, type: DeviceType) {
@@ -136,7 +137,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
           this.log(LogLevel.Warn, 'Das Zigbee Gerät hat unter 20% Batterie.');
         }
         break;
-      case 'occupancy':
+      case this._occupancyStateId:
         this.log(LogLevel.Trace, `Motion sensor: Update for motion state of ${this.info.customName}: ${state.val}`);
         this.updateMovement(state.val as boolean);
         break;
