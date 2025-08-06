@@ -9,4 +9,8 @@ export class ZigbeeAqaraPresence extends ZigbeeMotionSensor {
   public constructor(pInfo: IoBrokerDeviceInfo) {
     super(pInfo, DeviceType.ZigbeeAqaraPresence);
   }
+
+  public update(idSplit: string[], state: ioBroker.State, initial: boolean = false): void {
+    super.update(idSplit, state, initial, true);
+  }
 }
