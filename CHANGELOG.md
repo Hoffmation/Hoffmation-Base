@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Shutter to allow disable automatic capabilities
+
 ## 3.2.11-alpha.0 (2025-07-21)
 
 * (theimo1221) Improve AqaraFp1 Handling

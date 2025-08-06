@@ -35,6 +35,7 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);
     this.deviceCapabilities.push(DeviceCapability.shutter);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.jsonOmitKeys.push('_window');
     // Initialize blockAutomationHandler for iTemporaryDisableAutomatic
     this.blockAutomationHandler = new BlockAutomaticHandler(

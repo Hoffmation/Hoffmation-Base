@@ -34,6 +34,7 @@ export class VeluxShutter extends VeluxDevice implements iShutter, iTemporaryDis
     super(pInfo, DeviceType.VeluxShutter);
     this.jsonOmitKeys.push('_window');
     this.deviceCapabilities.push(DeviceCapability.shutter);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this._setLevelSwitchID = `${this.info.fullID}.targetPosition`;
     this.blockAutomationHandler = new BlockAutomaticHandler(
       this.restoreTargetAutomaticValue.bind(this),

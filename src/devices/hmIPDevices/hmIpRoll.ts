@@ -33,6 +33,7 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
     super(pInfo, DeviceType.HmIpRoll);
     this.jsonOmitKeys.push('_window');
     this.deviceCapabilities.push(DeviceCapability.shutter);
+    this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this._setLevelSwitchID = `${this.info.fullID}.4.LEVEL`;
     this.blockAutomationHandler = new BlockAutomaticHandler(
       this.restoreTargetAutomaticValue.bind(this),
