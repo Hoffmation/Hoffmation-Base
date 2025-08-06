@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.11-alpha.1 (2025-08-06)
 
 * (theimo1221) Shutter to allow disable automatic capabilities
 
