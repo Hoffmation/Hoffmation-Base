@@ -53,10 +53,7 @@ export class OwnUnifiCamera extends CameraDevice {
     for (const smartDetectType of detectedTypes) {
       switch (smartDetectType) {
         case 'licensePlate':
-          this.log(
-            LogLevel.Debug,
-            `Detected "licensePlate": ${JSON.stringify(payloadAsEventAdd.metadata.licensePlate)}`,
-          );
+          this.log(LogLevel.Debug, `Detected "licensePlate" Data: ${JSON.stringify(payloadAsEventAdd)}`);
           break;
         case 'person':
           this.onNewPersonDetectedValue(true, CommandSource.Automatic);

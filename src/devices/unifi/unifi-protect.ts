@@ -103,7 +103,9 @@ export class UnifiProtect implements iDisposable {
         }
         const ownCamera: OwnUnifiCamera | undefined = UnifiProtect.ownCameras.get(ownName);
         if (ownCamera !== undefined) {
-          ownCamera.update(packet, baseEvent);
+          Utils.guardedFunction(() => {
+            ownCamera.update(packet, baseEvent);
+          }, this);
           break;
         }
 

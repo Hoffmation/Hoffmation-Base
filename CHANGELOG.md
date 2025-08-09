@@ -9,6 +9,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Reduce aqara presence logging
+* (theimo1221) Fix crash on faulty unifi data, harden unifi camera updates and add logging
 
 ## 3.2.11-alpha.1 (2025-08-06)
 
