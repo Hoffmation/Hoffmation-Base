@@ -5,8 +5,7 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.11 (2025-08-09)
 
 * (theimo1221) Reduce aqara presence logging
 * (theimo1221) Fix crash on faulty unifi data, harden unifi camera updates and add logging
