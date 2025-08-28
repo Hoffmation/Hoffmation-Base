@@ -10,6 +10,9 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
   public disableHeatingRod: boolean = false;
 
   /** @inheritDoc */
+  public disableDachsOwnWW: boolean = false;
+
+  /** @inheritDoc */
   public batteryLevelTurnOnThreshold: number = -1;
 
   /** @inheritDoc */
@@ -37,6 +40,7 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
 
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
     this.disableHeatingRod = data.disableHeatingRod ?? this.disableHeatingRod;
+    this.disableDachsOwnWW = data.disableDachsOwnWW ?? this.disableDachsOwnWW;
     this.refreshIntervalTime = data.refreshIntervalTime ?? this.refreshIntervalTime;
     this.batteryLevelBeforeNightTurnOnThreshold =
       data.batteryLevelBeforeNightTurnOnThreshold ?? this.batteryLevelBeforeNightTurnOnThreshold;

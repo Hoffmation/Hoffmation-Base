@@ -15,6 +15,11 @@ export interface iDachsDeviceSettings extends iActuatorSettings {
   disableHeatingRod: boolean;
 
   /**
+   * Option to disable Warm-Water production from dachs completely.
+   */
+  disableDachsOwnWW: boolean;
+
+  /**
    * Defines the battery level at which the dachs should be turned on,
    * to prevent a battery based island-system to be out of power.
    * @default -1 --> No turn on for battery loading

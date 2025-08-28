@@ -5,6 +5,11 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add option to disable Dachs WW altogether
+
 ## 3.2.11 (2025-08-09)
 
 * (theimo1221) Reduce aqara presence logging

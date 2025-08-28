@@ -308,7 +308,10 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     const heatStorageTemp: number = this._tempHeatStorage;
     let desiredWwPumpState: boolean = false;
     let reason: string = '';
-    if (this.warmWaterDachsAlternativeActuator?.actuatorOn === true) {
+    if (this.settings.disableDachsOwnWW) {
+      desiredWwPumpState = false;
+      reason = 'Dachs own WW is disabled';
+    } else if (this.warmWaterDachsAlternativeActuator?.actuatorOn === true) {
       desiredWwPumpState = false;
       reason = 'Alternative heating source is on';
     } else if (wwTemp > heatStorageTemp) {
@@ -466,7 +469,11 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     }
     let desiredState: boolean = false;
     let reason: string = 'Dachs is allowed to run --> Block alternative heating source';
-    if (shouldDachsBeStarted || this._dachsOn) {
+
+    if (this.settings.disableDachsOwnWW) {
+      reason = 'Dachs own WW is disabled';
+      desiredState = true;
+    } else if (shouldDachsBeStarted || this._dachsOn) {
       reason = 'Dachs is running or should be started';
       desiredState = false;
     } else if (this.blockDachsStart?.actuatorOn === true || this.blockDachsStart?.queuedValue === true) {
