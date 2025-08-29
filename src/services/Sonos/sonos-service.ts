@@ -1,10 +1,10 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { LogLevel, TimeCallbackType } from '../../enums';
+import { LogLevel, TimeCallbackType, TimeOfDay } from '../../enums';
 import { ServerLogService } from '../../logging';
 import { SonosDevice, SonosManager } from '@svrooij/sonos/lib';
 import { OwnSonosDevice } from './own-sonos-device';
 import { TimeCallback } from '../../models';
-import { iSonosSettings } from '../../interfaces';
+import { iRoomBase, iSonosSettings } from '../../interfaces';
 import { SettingsService } from '../../settings-service';
 import { TimeCallbackService } from '../time-callback-service';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
@@ -115,10 +115,14 @@ export class SonosService {
       ServerLogService.writeLog(LogLevel.Alert, 'SonosService noch nicht initialisiert.');
     }
     PollyService.tts(pMessage, (networkPath: string, duration: number) => {
-      const hours: number = new Date().getHours();
-      const volume: number = hours < 10 || hours > 22 ? 40 : 80;
-
       for (const deviceName in this.ownDevices) {
+        const snDevice: OwnSonosDevice = this.ownDevices[deviceName];
+        const room: iRoomBase = snDevice.room;
+        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
+        const volume: number =
+          timeOfDay == TimeOfDay.Night
+            ? snDevice.settings.defaultNightAnounceVolume
+            : snDevice.settings.defaultDayAnounceVolume;
         this.ownDevices[deviceName].playOnDevice(
           networkPath,
           duration,

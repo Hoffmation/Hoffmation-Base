@@ -5,6 +5,8 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Settings for sonos Announcement volume
 ## 3.2.12 (2025-08-28)
 
 * (theimo1221) Add option to disable Dachs WW altogether
