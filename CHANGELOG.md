@@ -5,8 +5,9 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
-## **WORK IN PROGRESS**
+## 3.2.14 (2025-08-29)
 * (theimo1221) Revert packae-lock
+
 ## 3.2.13 (2025-08-29)
 * (theimo1221) Settings for sonos Announcement volume
 
