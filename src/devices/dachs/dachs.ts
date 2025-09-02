@@ -308,7 +308,10 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     const heatStorageTemp: number = this._tempHeatStorage;
     let desiredWwPumpState: boolean = false;
     let reason: string = '';
-    if (this.settings.disableDachsOwnWW) {
+    if (this.settings.disableDachsTemporarily) {
+      reason = 'Dachs itself is disabled temporarily';
+      desiredWwPumpState = false;
+    } else if (this.settings.disableDachsOwnWW) {
       desiredWwPumpState = false;
       reason = 'Dachs own WW is disabled';
     } else if (this.warmWaterDachsAlternativeActuator?.actuatorOn === true) {
@@ -373,7 +376,18 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
   private shouldDachsBeStarted(action: BaseAction, batteryLevel: number): boolean {
     const dayType: TimeOfDay = TimeCallbackService.dayType(new SunTimeOffsets());
     if (this.blockDachsStart !== undefined) {
-      if (
+      if (this.settings.disableDachsTemporarily) {
+        const blockAction: ActuatorSetStateCommand = new ActuatorSetStateCommand(
+          action,
+          true,
+          `Dachs is disabled temporarily`,
+          null,
+        );
+        blockAction.overrideCommandSource = CommandSource.Force;
+        this.blockDachsStart.setActuator(blockAction);
+        this._blockStarted = Utils.nowMS();
+        return false;
+      } else if (
         (dayType === TimeOfDay.Daylight || dayType === TimeOfDay.BeforeSunrise) &&
         batteryLevel > this.settings.batteryLevelPreventStartThreshold
       ) {
@@ -470,7 +484,10 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     let desiredState: boolean = false;
     let reason: string = 'Dachs is allowed to run --> Block alternative heating source';
 
-    if (this.settings.disableDachsOwnWW) {
+    if (this.settings.disableDachsTemporarily) {
+      reason = 'Dachs itself is disabled temporarily';
+      desiredState = true;
+    } else if (this.settings.disableDachsOwnWW) {
       reason = 'Dachs own WW is disabled';
       desiredState = true;
     } else if (shouldDachsBeStarted || this._dachsOn) {

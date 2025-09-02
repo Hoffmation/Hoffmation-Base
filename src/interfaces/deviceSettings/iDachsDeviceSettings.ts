@@ -20,6 +20,11 @@ export interface iDachsDeviceSettings extends iActuatorSettings {
   disableDachsOwnWW: boolean;
 
   /**
+   * Option to disable Dachs altogether, e.g. if no additional heat should be produced during summer times.
+   */
+  disableDachsTemporarily: boolean;
+
+  /**
    * Defines the battery level at which the dachs should be turned on,
    * to prevent a battery based island-system to be out of power.
    * @default -1 --> No turn on for battery loading
