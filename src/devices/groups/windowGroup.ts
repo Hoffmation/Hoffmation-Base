@@ -210,6 +210,7 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
       }
       shutter.baseAutomaticLevel = 0;
       w.setDesiredPosition(new WindowSetDesiredPositionCommand(c, 0));
+      shutter.lastAutomaticDownTime = Utils.nowMS();
     });
     const room: iRoomBase = this.getRoom();
     room.setLightTimeBased(new RoomSetLightTimeBasedCommand(c, true, 'sunsetDown'));

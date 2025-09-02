@@ -23,6 +23,8 @@ export class VeluxShutter extends VeluxDevice implements iShutter, iTemporaryDis
   public targetAutomaticValue: number = 0;
   /** @inheritDoc */
   public baseAutomaticLevel: number = 0;
+  /** @inheritDoc */
+  public lastAutomaticDownTime: number = 0;
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;
   private _currentLevel: number = -1;

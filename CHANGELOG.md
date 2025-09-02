@@ -5,6 +5,8 @@
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Fix manual shutter down in evening hours messing up automatic movement
 ## 3.2.15 (2025-08-29)
 * (theimo1221) Update packages
 

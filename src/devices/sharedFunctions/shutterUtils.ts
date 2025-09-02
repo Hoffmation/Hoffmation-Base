@@ -1,7 +1,7 @@
 import { ShutterSetLevelCommand } from '../../command';
 import { iShutter } from '../../interfaces';
-import { LogDebugType, LogLevel, TimeOfDay, WindowPosition } from '../../enums';
-import { TimeCallbackService } from '../../services';
+import { LogDebugType, LogLevel, WindowPosition } from '../../enums';
+import { Utils } from '../../utils';
 
 export class ShutterUtils {
   /**
@@ -11,7 +11,8 @@ export class ShutterUtils {
    */
   public static setLevel(device: iShutter, c: ShutterSetLevelCommand): void {
     if (!c.isForceAction) {
-      // Set the target automatic value
+      // Only automatic commands should update the target automatic value
+      // Manual/Force commands should not override the automatic target
       device.targetAutomaticValue = c.level;
     }
     // Respect block automation
@@ -27,10 +28,11 @@ export class ShutterUtils {
     if (
       c.isManual &&
       c.level > 0 &&
+      !Utils.isToday(device.lastAutomaticDownTime) &&
       device.baseAutomaticLevel === 0 &&
       !device.room?.settings?.sonnenAufgangRollos &&
       device.room?.settings?.rolloOffset &&
-      ![TimeOfDay.Night, TimeOfDay.AfterSunset].includes(TimeCallbackService.dayType(device.room.settings.rolloOffset))
+      Utils.timeWithinBorders(6, 0, 20, 0, new Date())
     ) {
       // First manual up command of the day on a window with no automatic up.
       device.baseAutomaticLevel = 100;
@@ -41,9 +43,9 @@ export class ShutterUtils {
       device.baseAutomaticLevel === 100 &&
       !device.room?.settings?.sonnenUntergangRollos &&
       device.room?.settings?.rolloOffset &&
-      [TimeOfDay.Night, TimeOfDay.AfterSunset].includes(TimeCallbackService.dayType(device.room.settings.rolloOffset))
+      (Utils.timeWithinBorders(0, 0, 2, 0) || Utils.timeWithinBorders(16, 0, 24, 0))
     ) {
-      // First manual down command of the day on a window with no automatic up.
+      // First manual down command of the day on a window with no automatic down.
       device.baseAutomaticLevel = 0;
       device.targetAutomaticValue = 0;
     }

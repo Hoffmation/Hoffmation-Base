@@ -25,6 +25,8 @@ export class HmIpRoll extends HmIPDevice implements iShutter {
   public blockAutomationHandler: BlockAutomaticHandler;
   /** @inheritDoc */
   public baseAutomaticLevel: number = 0;
+  /** @inheritDoc */
+  public lastAutomaticDownTime: number = 0;
   private _setLevelSwitchID: string;
   private _setLevel: number = -1;
   private _setLevelTime: number = -1;

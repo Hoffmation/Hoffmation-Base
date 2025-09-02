@@ -382,4 +382,17 @@ export class Utils {
     }
     return { r, g, b };
   }
+
+  public static isToday(msToCheck: number, now?: Date): boolean {
+    if (msToCheck === 0) {
+      return false;
+    }
+    const date: Date = new Date(msToCheck);
+    const nowDate: Date = now ?? new Date();
+    return (
+      date.getFullYear() === nowDate.getFullYear() &&
+      date.getMonth() === nowDate.getMonth() &&
+      date.getDate() === nowDate.getDate()
+    );
+  }
 }

@@ -31,6 +31,8 @@ export class ZigbeeShutter extends ZigbeeDevice implements iShutter {
   public targetAutomaticValue: number = 0;
   /** @inheritDoc */
   public baseAutomaticLevel: number = 0;
+  /** @inheritDoc */
+  public lastAutomaticDownTime: number = 0;
 
   public constructor(pInfo: IoBrokerDeviceInfo, pType: DeviceType) {
     super(pInfo, pType);

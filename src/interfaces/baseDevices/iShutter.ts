@@ -40,6 +40,11 @@ export interface iShutter extends iRoomDevice, iTemporaryDisableAutomatic {
   baseAutomaticLevel: number;
 
   /**
+   * The last time the shutter was automatically closed
+   */
+  lastAutomaticDownTime: number;
+
+  /**
    * Persists the current information of the shutter to the database
    */
   persist(): void;
