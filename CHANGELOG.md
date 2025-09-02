@@ -7,8 +7,9 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## **WORK IN PROGRESS**
+## 3.2.16 (2025-09-02)
 * (theimo1221) Fix manual shutter down in evening hours messing up automatic movement
+
 ## 3.2.15 (2025-08-29)
 * (theimo1221) Update packages
 
