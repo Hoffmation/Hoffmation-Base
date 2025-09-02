@@ -4,6 +4,7 @@
   Placeholder for the next version (at the beginning of the line):
   ## **WORK IN PROGRESS**
   * (theimo1221) Update packages
+  * (theimo1221) Add option to run specific ac's regardless of energy level
 -->
 ## **WORK IN PROGRESS**
 * (theimo1221) Fix manual shutter down in evening hours messing up automatic movement

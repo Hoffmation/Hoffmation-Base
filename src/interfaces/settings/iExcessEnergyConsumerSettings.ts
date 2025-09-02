@@ -14,6 +14,10 @@ export interface iExcessEnergyConsumerSettings {
    *
    */
   powerReactionTime: number;
+  /**
+   * Option to run the device even if it is not in the excess energy consumer group
+   */
+  runAnyways: boolean;
 
   /**
    *

@@ -1,6 +1,8 @@
 import { iExcessEnergyConsumerSettings } from '../interfaces';
 
 export class ExcessEnergyConsumerSettings implements iExcessEnergyConsumerSettings {
+  /** @inheritDoc */
+  public runAnyways: boolean = false;
   public constructor(
     /**
      * Priority in comparision to other ExcessEnergyConsumer Devices
@@ -17,5 +19,6 @@ export class ExcessEnergyConsumerSettings implements iExcessEnergyConsumerSettin
     this.priority = obj.priority ?? this.priority;
     this.rampUpOnSpareEnergy = obj.rampUpOnSpareEnergy ?? this.rampUpOnSpareEnergy;
     this.powerReactionTime = obj.powerReactionTime ?? this.powerReactionTime;
+    this.runAnyways = obj.runAnyways ?? this.runAnyways;
   }
 }

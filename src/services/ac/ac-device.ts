@@ -185,7 +185,7 @@ export abstract class AcDevice
       return AcMode.Off;
     }
 
-    if (Devices.energymanager?.acBlocked) {
+    if (Devices.energymanager?.acBlocked && !this.settings.energySettings.runAnyways) {
       if (acOn) {
         this.log(LogLevel.Info, 'We should turn off now, as energy-manager demands off.');
       }
