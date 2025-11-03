@@ -7,7 +7,8 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## 3.2.17-alpha.0 (2025-11-03)
+
+## **WORK IN PROGRESS**
 
 * (theimo1221) Improve Dachs behaviour to prevent multiple Start Commands
 
