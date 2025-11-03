@@ -15,6 +15,7 @@ import {
 } from '../../interfaces';
 import { DachsDeviceSettings } from '../../settingsObjects';
 import {
+  CollisionSolving,
   CommandSource,
   DeviceCapability,
   DeviceType,
@@ -34,6 +35,7 @@ import {
   ActuatorSetStateCommand,
   ActuatorToggleCommand,
   ActuatorWriteStateToDeviceCommand,
+  BlockAutomaticCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../command';
 import { BlockAutomaticHandler, Persistence, TimeCallbackService } from '../../services';
@@ -207,7 +209,8 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       !c.on ||
       !this.warmWaterPump ||
       (this.queuedValue === false && !this._dachsOn) ||
-      this.heatStorageTempSensor.temperatureSensor.temperature < this.warmWaterSensor.temperatureSensor.temperature
+      this.heatStorageTempSensor.temperatureSensor.temperature < this.warmWaterSensor.temperatureSensor.temperature ||
+      this.warmWaterSensor.temperatureSensor.temperature > 70
     ) {
       return;
     }
@@ -284,9 +287,9 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       action,
       true,
       'Energy Level of battery dropped to critical level',
-      null,
+      new BlockAutomaticCommand(action, 60000, 'Dachs is starting/on', CollisionSolving.overrideIfGreater, false),
     );
-    setStateCommand.overrideCommandSource = CommandSource.Force;
+    setStateCommand.overrideCommandSource = CommandSource.Automatic;
     this.setActuator(setStateCommand);
   }
 
@@ -474,7 +477,7 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       // It is not daylight but battery level is high enough
       return false;
     }
-    return true;
+    return !this.settings.blockAutomaticSettings;
   }
 
   private checkAlternativeActuator(shouldDachsBeStarted: boolean, action: BaseAction): void {
