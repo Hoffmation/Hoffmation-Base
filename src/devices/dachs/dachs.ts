@@ -289,7 +289,7 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       'Energy Level of battery dropped to critical level',
       new BlockAutomaticCommand(
         action,
-        5 * 60 * 1000,
+        15 * 60 * 1000,
         'Dachs is starting/on',
         CollisionSolving.overrideIfGreater,
         false,

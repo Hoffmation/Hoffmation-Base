@@ -7,9 +7,9 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## 3.2.18 (2025-11-03)
+## **WORK IN PROGRESS**
 
-* (theimo1221) Increase Block duration to 5 minutes
+* (theimo1221) Increase Block duration to 15 minutes
 
 ## 3.2.17 (2025-11-03)
 
