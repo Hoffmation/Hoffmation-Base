@@ -329,6 +329,9 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     } else if (wwTemp > heatStorageTemp) {
       desiredWwPumpState = false;
       reason = `Temperature of warm water pump ${wwTemp}°C is higher than temperature of heat storage ${heatStorageTemp}°C`;
+    } else if (wwTemp > this.settings.warmWaterDesiredMaxTemp) {
+      desiredWwPumpState = false;
+      reason = `Temperature of warm water pump ${wwTemp}°C is higher than the desired max value`;
     } else if (this._dachsOn) {
       desiredWwPumpState = true;
       reason = 'Dachs is on anyways';

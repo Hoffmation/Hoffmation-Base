@@ -36,6 +36,9 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
   public warmWaterDesiredMinTemp: number = 45;
 
   /** @inheritDoc */
+  public warmWaterDesiredMaxTemp: number = 75;
+
+  /** @inheritDoc */
   public winterMinimumHeatStorageTemp: number = 55;
   /** @inheritDoc */
   public winterMinimumPreNightHeatStorageTemp: number = 65;
@@ -55,6 +58,7 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
       data.batteryLevelPreventStartAtNightThreshold ?? this.batteryLevelPreventStartAtNightThreshold;
     this.batteryLevelAllowStartThreshold = data.batteryLevelAllowStartThreshold ?? this.batteryLevelAllowStartThreshold;
     this.warmWaterDesiredMinTemp = data.warmWaterDesiredMinTemp ?? this.warmWaterDesiredMinTemp;
+    this.warmWaterDesiredMaxTemp = data.warmWaterDesiredMaxTemp ?? this.warmWaterDesiredMaxTemp;
     this.winterMinimumHeatStorageTemp = data.winterMinimumHeatStorageTemp ?? this.winterMinimumHeatStorageTemp;
     this.winterMinimumPreNightHeatStorageTemp =
       data.winterMinimumPreNightHeatStorageTemp ?? this.winterMinimumPreNightHeatStorageTemp;

@@ -63,6 +63,10 @@ export interface iDachsDeviceSettings extends iActuatorSettings {
    */
   warmWaterDesiredMinTemp: number;
   /**
+   * Defines the desired maximum temperature for warm water using dachs.
+   */
+  warmWaterDesiredMaxTemp: number;
+  /**
    * Defines the desired minimum temperature for heat storage during winter.
    */
   winterMinimumHeatStorageTemp: number;
