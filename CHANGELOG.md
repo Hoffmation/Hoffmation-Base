@@ -11,6 +11,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Prevent dachs start command on high heat Storage
+* (theimo1221) Dachs WW Regelung härten
 
 ## 3.2.21 (2025-11-08)
 

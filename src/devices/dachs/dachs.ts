@@ -209,8 +209,10 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
       !c.on ||
       !this.warmWaterPump ||
       (this.queuedValue === false && !this._dachsOn) ||
+      this.settings.disableDachsOwnWW ||
+      this.warmWaterDachsAlternativeActuator?.actuatorOn ||
       this.heatStorageTempSensor.temperatureSensor.temperature < this.warmWaterSensor.temperatureSensor.temperature ||
-      this.warmWaterSensor.temperatureSensor.temperature > 70
+      this.warmWaterSensor.temperatureSensor.temperature > this.settings.warmWaterDesiredMaxTemp
     ) {
       return;
     }
