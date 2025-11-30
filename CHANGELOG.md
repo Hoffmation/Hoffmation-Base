@@ -7,8 +7,7 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-
-## **WORK IN PROGRESS**
+## 3.2.22 (2025-11-30)
 
 * (theimo1221) Prevent dachs start command on high heat Storage
 * (theimo1221) Dachs WW Regelung härten
