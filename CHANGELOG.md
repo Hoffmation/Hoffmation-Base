@@ -7,6 +7,11 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Prevent dachs start command on high heat Storage
+
 ## 3.2.21 (2025-11-08)
 
 * (theimo1221) Enforce warm water pump to be off if the temperature is too high

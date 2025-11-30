@@ -70,6 +70,10 @@ export interface iDachsDeviceSettings extends iActuatorSettings {
    * Defines the desired minimum temperature for heat storage during winter.
    */
   winterMinimumHeatStorageTemp: number;
+  /**
+   * Defines the maximum temperature for heat storage at start requests.
+   */
+  heatStorageMaxStartTemp: number;
 
   /**
    * Defines the desired minimum temperature for heat storage during winter.

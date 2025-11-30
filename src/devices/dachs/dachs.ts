@@ -472,6 +472,9 @@ export class Dachs extends RoomBaseDevice implements iBaseDevice, iActuator {
     ) {
       // It is winter and heat storage is kinda cold --> Start
       return true;
+    } else if (this.heatStorageTempSensor.temperatureSensor.temperature > this.settings.heatStorageMaxStartTemp) {
+      // Heat Storage is already quite full, don't start
+      return false;
     }
 
     if (
