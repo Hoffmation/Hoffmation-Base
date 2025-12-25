@@ -49,7 +49,20 @@ export class TemperatureSensor implements iTemperatureSensor {
     this.lastSeen = Utils.nowMS();
     let correctedValue: number = val;
     if (this.outdoorTemperatureCorrectionCoefficient !== 0 && WeatherService.currentTemp !== UNDEFINED_TEMP_VALUE) {
-      correctedValue = val + this.outdoorTemperatureCorrectionCoefficient * (21 - WeatherService.currentTemp);
+      const tempDiff: number = 21 - WeatherService.currentTemp;
+      // Use degressive correction: full coefficient up to 18K diff, then reduce linearly
+      // This prevents over-correction at very low outdoor temperatures
+      const maxLinearDiff: number = 18;
+      if (tempDiff <= maxLinearDiff) {
+        correctedValue = val + this.outdoorTemperatureCorrectionCoefficient * tempDiff;
+      } else {
+        // Reduce coefficient for the portion beyond maxLinearDiff
+        // e.g. at 26K diff (=-5°C): first 18K at full coeff, remaining 8K at half coeff
+        const linearPart: number = maxLinearDiff * this.outdoorTemperatureCorrectionCoefficient;
+        const excessDiff: number = tempDiff - maxLinearDiff;
+        const reducedPart: number = excessDiff * this.outdoorTemperatureCorrectionCoefficient * 0.5;
+        correctedValue = val + linearPart + reducedPart;
+      }
     }
     this._temperature = correctedValue;
     for (const cb of this._temperaturCallbacks) {
