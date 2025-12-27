@@ -30,4 +30,5 @@ export { iLedSettings } from './iLedSettings';
 export { iSceneSettings } from './iSceneSettings';
 export { iSettingsProvider } from './iSettingsProvider';
 export { iWledSettings } from './iWledSettings';
+export { iRestUser } from './iRestUser';
 export { iGlobalHeaterSettings } from './iGlobalHeaterSettings';

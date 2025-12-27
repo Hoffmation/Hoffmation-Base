@@ -1,3 +1,4 @@
+import { iRestUser } from './iRestUser';
 /**
  * Interface for the REST settings.
  * This is primarily used to configure the REST service within Hoffmation-Express.
@@ -15,4 +16,8 @@ export interface iRestSettings {
    * The port the REST service should listen on.
    */
   port?: number;
+  /**
+   * The allowed users for the REST service.
+   */
+  user?: iRestUser[];
 }
