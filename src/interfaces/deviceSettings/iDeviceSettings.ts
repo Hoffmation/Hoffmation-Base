@@ -9,6 +9,13 @@ export interface iDeviceSettings extends iObjectSettings {
    *
    */
   energySettings: iExcessEnergyConsumerSettings | undefined;
+
+  /**
+   * The position of the device in the room in meters
+   * @default {x: 0, y: 0, z: 0}
+   */
+  trilaterationRoomPosition: { x: number; y: number; z: number };
+
   /**
    *
    */

@@ -7,6 +7,8 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Add trilateration room position to devices
 ## 3.2.26 (2025-12-27)
 * (theimo1221) Extend RestServer with WebUI settings
 

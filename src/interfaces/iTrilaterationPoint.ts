@@ -1,19 +1,9 @@
+import { iTrilaterationCoordinate } from './iTrilaterationCoordinate';
+
 /**
  *
  */
-export interface iTrilaterationPoint {
-  /**
-   *
-   */
-  x: number;
-  /**
-   *
-   */
-  y: number;
-  /**
-   *
-   */
-  z: number;
+export interface iTrilaterationPoint extends iTrilaterationCoordinate {
   /**
    *
    */

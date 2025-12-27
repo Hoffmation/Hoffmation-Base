@@ -1,4 +1,9 @@
-import { iBlockAutomaticSettings, iDeviceSettings, iExcessEnergyConsumerSettings } from '../../interfaces';
+import {
+  iBlockAutomaticSettings,
+  iDeviceSettings,
+  iExcessEnergyConsumerSettings,
+  iTrilaterationCoordinate,
+} from '../../interfaces';
 import { Utils } from '../../utils';
 import { BlockAutomaticSettings } from '../blockAutomaticSettings';
 import { ObjectSettings } from '../objectSettings';
@@ -18,6 +23,12 @@ export abstract class DeviceSettings extends ObjectSettings implements iDeviceSe
       this.blockAutomaticSettings?.revertToAutomaticAtBlockLift,
     );
   }
+
+  /**
+   * The position of the device in the room in meters
+   * @default {x: 0, y: 0, z: 0}
+   */
+  public trilaterationRoomPosition: iTrilaterationCoordinate = { x: 0, y: 0, z: 0 };
 
   /**
    * Any device could be an energy consumer, so we have to provide the settings for it
@@ -50,6 +61,7 @@ export abstract class DeviceSettings extends ObjectSettings implements iDeviceSe
       this.blockAutomaticSettings.fromPartialObject(_obj.blockAutomaticSettings);
     }
     this.skipInHomebridge = _obj.skipInHomebridge ?? this.skipInHomebridge;
+    this.trilaterationRoomPosition = _obj.trilaterationRoomPosition ?? this.trilaterationRoomPosition;
     super.fromPartialObject(_obj);
   }
 
