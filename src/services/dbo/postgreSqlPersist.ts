@@ -17,6 +17,7 @@ import {
   iShutter,
   iShutterCalibration,
   iTemperatureCollector,
+  iTemperatureMeasurement,
   iZigbeeDevice,
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
@@ -39,28 +40,28 @@ export class PostgreSqlPersist implements iPersist {
   /** @inheritDoc */
   addRoom(room: iRoomBase): void {
     this.query(`
-        insert into hoffmation_schema."BasicRooms" (name, etage)
-        values ('${room.roomName}', ${room.etage}) ON CONFLICT (name)
+      insert into hoffmation_schema."BasicRooms" (name, etage)
+      values ('${room.roomName}', ${room.etage}) ON CONFLICT (name)
     DO
-        UPDATE SET
-            etage = ${room.etage}
-        ;
+      UPDATE SET
+        etage = ${room.etage}
+      ;
     `);
   }
 
   /** @inheritDoc */
   addDevice(device: iBaseDevice): void {
     this.query(`
-        insert into hoffmation_schema."DeviceInfo" ("deviceid", "roomname", "alldeviceskey", "customname", "devtype")
-        values ('${device.id}', '${device.info.room}', '${device.info.allDevicesKey}', '${device.info.customName}',
-                ${device.deviceType}) ON CONFLICT ("deviceid")
+      insert into hoffmation_schema."DeviceInfo" ("deviceid", "roomname", "alldeviceskey", "customname", "devtype")
+      values ('${device.id}', '${device.info.room}', '${device.info.allDevicesKey}', '${device.info.customName}',
+              ${device.deviceType}) ON CONFLICT ("deviceid")
     DO
-        UPDATE SET
-            "roomname" = '${device.info.room}',
-            "alldeviceskey" = '${device.info.allDevicesKey}',
-            "customname" = '${device.info.customName}',
-            "devtype" = ${device.deviceType}
-        ;
+      UPDATE SET
+        "roomname" = '${device.info.room}',
+        "alldeviceskey" = '${device.info.allDevicesKey}',
+        "customname" = '${device.info.customName}',
+        "devtype" = ${device.deviceType}
+      ;
     `);
   }
 
@@ -74,7 +75,7 @@ export class PostgreSqlPersist implements iPersist {
          AND date
            < CURRENT_DATE + INTERVAL '1 DAY'
        ORDER BY date desc
-           Limit 1`,
+         Limit 1`,
     );
     if (dbResult !== null && dbResult.length > 0) {
       return dbResult[0];
@@ -117,6 +118,36 @@ export class PostgreSqlPersist implements iPersist {
     return new Promise<iShutterCalibration>((_res, reject) => {
       reject('Not Implemented');
     });
+  }
+
+  async getTempMeasurements(device: iTemperatureCollector): Promise<iTemperatureMeasurement[]> {
+    return this.getTemperatureHistory(device.id);
+  }
+
+  /** @inheritDoc */
+  async getTemperatureHistory(deviceId: string, startDate?: Date, endDate?: Date): Promise<iTemperatureMeasurement[]> {
+    const end = endDate ?? new Date();
+    const start = startDate ?? new Date(end.getTime() - 24 * 60 * 60 * 1000);
+
+    const dbResult: iTemperatureMeasurement[] | null = await this.query<iTemperatureMeasurement>(
+      `SELECT temperature, date
+       from hoffmation_schema."TemperatureSensorDeviceData"
+       WHERE "deviceID" = '${deviceId}'
+         and date >= '${start.toISOString()}'
+         AND date <= '${end.toISOString()}'
+       ORDER BY DATE DESC`,
+    );
+    if (dbResult === null || dbResult.length === 0) {
+      return [];
+    }
+    const result: iTemperatureMeasurement[] = [];
+    for (const entry of dbResult) {
+      result.push({
+        temperature: Number(entry.temperature),
+        date: new Date(entry.date),
+      });
+    }
+    return result;
   }
 
   /** @inheritDoc */
@@ -414,8 +445,8 @@ $$;`,
   /** @inheritDoc */
   public persistAC(device: iAcDevice): void {
     this.query(`
-        insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date", "roomTemperature")
-        values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.temperature});
+      insert into hoffmation_schema."AcDeviceData" ("deviceID", "on", "date", "roomTemperature")
+      values ('${device.id}', ${device.on}, '${new Date().toISOString()}', ${device.temperature});
     `);
   }
 
@@ -426,8 +457,8 @@ $$;`,
       percentage = (device as iDimmableLamp).brightness;
     }
     this.query(`
-        insert into hoffmation_schema."ActuatorDeviceData" ("deviceID", "on", "date", "percentage")
-        values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${percentage ?? 'null'});
+      insert into hoffmation_schema."ActuatorDeviceData" ("deviceID", "on", "date", "percentage")
+      values ('${device.id}', ${device.actuatorOn}, '${new Date().toISOString()}', ${percentage ?? 'null'});
     `);
   }
 
@@ -442,11 +473,11 @@ $$;`,
       desiredTemperature = null;
     }
     void this.query(`
-        insert into hoffmation_schema."HeaterDeviceData"
-        ("deviceID", "level", "date", "roomTemperature", "desiredTemperature", "seasonTurnOff", "windowOpen")
-        values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp ?? 'null'}, ${
-          desiredTemperature ?? 'null'
-        }, ${device.seasonTurnOff}, ${device.windowOpen});
+      insert into hoffmation_schema."HeaterDeviceData"
+      ("deviceID", "level", "date", "roomTemperature", "desiredTemperature", "seasonTurnOff", "windowOpen")
+      values ('${device.id}', ${device.iLevel}, '${new Date().toISOString()}', ${roomTemp ?? 'null'}, ${
+        desiredTemperature ?? 'null'
+      }, ${device.seasonTurnOff}, ${device.windowOpen});
     `);
   }
 
@@ -454,24 +485,24 @@ $$;`,
   public persistHandleSensor(device: iHandle): void {
     const currentPos: number = device.position;
     this.query(`
-        insert into hoffmation_schema."HandleDeviceData" ("deviceID", "position", "date")
-        values ('${device.id}', ${currentPos}, '${new Date().toISOString()}');
+      insert into hoffmation_schema."HandleDeviceData" ("deviceID", "position", "date")
+      values ('${device.id}', ${currentPos}, '${new Date().toISOString()}');
     `);
   }
 
   /** @inheritDoc */
   public persistSwitchInput(device: iButtonSwitch, pressType: ButtonPressType, buttonName: string): void {
     this.query(`
-        insert into hoffmation_schema."ButtonSwitchPresses" ("deviceID", "pressType", "buttonName", "date")
-        values ('${device.id}', ${pressType}, '${buttonName}', '${new Date().toISOString()}');
+      insert into hoffmation_schema."ButtonSwitchPresses" ("deviceID", "pressType", "buttonName", "date")
+      values ('${device.id}', ${pressType}, '${buttonName}', '${new Date().toISOString()}');
     `);
   }
 
   /** @inheritDoc */
   public persistMotionSensor(device: iMotionSensor): void {
     this.query(`
-        insert into hoffmation_schema."MotionSensorDeviceData" ("deviceID", "movementDetected", "date")
-        values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}');
+      insert into hoffmation_schema."MotionSensorDeviceData" ("deviceID", "movementDetected", "date")
+      values ('${device.id}', ${device.movementDetected}, '${new Date().toISOString()}');
     `);
   }
 
@@ -480,8 +511,8 @@ $$;`,
     const currentLevel: number | null = device.currentLevel >= 0 ? device.currentLevel : null;
     const desiredLevel: number | null = device.desiredWindowShutterLevel >= 0 ? device.desiredWindowShutterLevel : null;
     this.query(`
-        insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date", "desiredPosition")
-        values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desiredLevel});
+      insert into hoffmation_schema."ShutterDeviceData" ("deviceID", "position", "date", "desiredPosition")
+      values ('${device.id}', ${currentLevel}, '${new Date().toISOString()}', ${desiredLevel});
     `);
   }
 
@@ -492,24 +523,24 @@ $$;`,
       roomTemp = null;
     }
     this.query(`
-        insert into hoffmation_schema."TemperatureSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
-        values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp ?? 'null'});
+      insert into hoffmation_schema."TemperatureSensorDeviceData" ("deviceID", "temperature", "date", "roomTemperature")
+      values ('${device.id}', ${device.iTemperature}, '${new Date().toISOString()}', ${roomTemp ?? 'null'});
     `);
   }
 
   /** @inheritDoc */
   public persistHumiditySensor(device: iHumidityCollector): void {
     this.query(`
-        insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
-        values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
+      insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
+      values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
     `);
   }
 
   /** @inheritDoc */
   public persistBatteryDevice(device: iBatteryDevice): void {
     this.query(`
-        insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
-        values ('${device.id}', ${Utils.round(device.batteryLevel, 1)}, '${new Date().toISOString()}');
+      insert into hoffmation_schema."BatteryDeviceData" ("deviceID", "battery", "date")
+      values ('${device.id}', ${Utils.round(device.batteryLevel, 1)}, '${new Date().toISOString()}');
     `);
   }
 
@@ -517,17 +548,17 @@ $$;`,
   public persistZigbeeDevice(device: iZigbeeDevice): void {
     const dateValue = device.lastUpdate.getTime() > 0 ? `'${device.lastUpdate.toISOString()}'` : 'null';
     this.query(`
-        insert into hoffmation_schema."ZigbeeDeviceData" ("deviceID", "date", "available", "linkQuality", "lastUpdate")
-        values ('${device.id}', '${new Date().toISOString()}', ${device.available}, ${device.linkQuality},
-                ${dateValue});
+      insert into hoffmation_schema."ZigbeeDeviceData" ("deviceID", "date", "available", "linkQuality", "lastUpdate")
+      values ('${device.id}', '${new Date().toISOString()}', ${device.available}, ${device.linkQuality},
+              ${dateValue});
     `);
   }
 
   /** @inheritDoc */
   public persistIlluminationSensor(device: iIlluminationSensor): void {
     this.query(`
-        insert into hoffmation_schema."IlluminationSensorDeviceData" ("deviceID", "illumination", "date")
-        values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString()}');`);
+      insert into hoffmation_schema."IlluminationSensorDeviceData" ("deviceID", "illumination", "date")
+      values ('${device.id}', ${device.currentIllumination}, '${new Date().toISOString()}');`);
   }
 
   /** @inheritDoc */
@@ -538,24 +569,24 @@ $$;`,
   /** @inheritDoc */
   public persistEnergyManager(calc: EnergyCalculation): void {
     this.query(`
-        insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
-                                                           "drawnKwH", "batteryStoredKwH", "batteryLevel")
-        values ('${new Date(calc.startMs).toISOString()}', '${new Date(calc.endMs).toISOString()}',
-                ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.batteryStoredKwH},
-                ${calc.batteryLevel});
+      insert into hoffmation_schema."EnergyCalculation" ("startDate", "endDate", "selfConsumedKwH", "injectedKwH",
+                                                         "drawnKwH", "batteryStoredKwH", "batteryLevel")
+      values ('${new Date(calc.startMs).toISOString()}', '${new Date(calc.endMs).toISOString()}',
+              ${calc.selfConsumedKwH}, ${calc.injectedKwH}, ${calc.drawnKwH}, ${calc.batteryStoredKwH},
+              ${calc.batteryLevel});
     `);
   }
 
   /** @inheritDoc */
   public persistSettings(id: string, settings: string, customName: string): void {
     this.query(`
-        insert into hoffmation_schema."Settings" (id, settings, customname, date)
-        values ('${id}', '${settings}', '${customName}', '${new Date().toISOString()}') ON CONFLICT (id, date)
+      insert into hoffmation_schema."Settings" (id, settings, customname, date)
+      values ('${id}', '${settings}', '${customName}', '${new Date().toISOString()}') ON CONFLICT (id, date)
     DO
-        UPDATE SET
-            settings = '${settings}',
-            customname = '${customName}'
-        ;
+      UPDATE SET
+        settings = '${settings}',
+        customname = '${customName}'
+      ;
     `);
   }
 
@@ -566,7 +597,7 @@ $$;`,
        from hoffmation_schema."Settings"
        WHERE "id" = '${id}'
        ORDER BY "date" DESC
-           LIMIT 1`,
+         LIMIT 1`,
     );
     if (dbResult !== null && dbResult.length > 0) {
       return dbResult[0].settings;

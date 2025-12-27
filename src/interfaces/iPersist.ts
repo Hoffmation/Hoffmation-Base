@@ -13,6 +13,7 @@ import {
   iTemperatureCollector,
   iZigbeeDevice,
 } from './baseDevices';
+import { iTemperatureMeasurement } from './iTemperatureMeasurement';
 import { iRoomBase } from './iRoomBase';
 import { ButtonPressType } from '../enums';
 import { iDesiredShutterPosition } from './IDesiredShutterPosition';
@@ -62,6 +63,15 @@ export interface iPersist {
    * @returns - The shutter calibration
    */
   getShutterCalibration(device: iShutter): Promise<iShutterCalibration>;
+
+  /**
+   * Gets temperature measurements for a device by its ID
+   * @param deviceId - The ID of the device to load temp measurements for
+   * @param startDate - Optional start date for the query (defaults to start of today)
+   * @param endDate - Optional end date for the query (defaults to end of today)
+   * @returns - The measurements
+   */
+  getTemperatureHistory(deviceId: string, startDate?: Date, endDate?: Date): Promise<iTemperatureMeasurement[]>;
 
   /**
    * Initializes the database-connection and prepares the database

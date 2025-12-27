@@ -7,6 +7,11 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Add Api endpoint to get temperature history
+
 ## 3.2.24 (2025-12-25)
 
 * (theimo1221) Adjustments for temp correction

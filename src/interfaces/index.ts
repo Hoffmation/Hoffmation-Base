@@ -53,3 +53,4 @@ export { iIOBrokerConnection } from './iIOBrokerConnection';
 export { iDeviceCluster } from './iDevicecluster';
 export { iDaytime } from './iDaytime';
 export { iBlockAutomaticHandler } from './iBlockAutomaticHandler';
+export { iTemperatureMeasurement } from './iTemperatureMeasurement';

@@ -1,5 +1,10 @@
 import { TemperatureSensorChangeAction } from '../../action';
-import { iTemperatureCollector, iTemperatureSensor, UNDEFINED_TEMP_VALUE } from '../../interfaces';
+import {
+  iTemperatureCollector,
+  iTemperatureMeasurement,
+  iTemperatureSensor,
+  UNDEFINED_TEMP_VALUE,
+} from '../../interfaces';
 import { Utils } from '../../utils';
 import { WeatherService } from '../../services/weather';
 import { Persistence } from '../../services';
@@ -96,5 +101,13 @@ export class TemperatureSensor implements iTemperatureSensor {
 
   public toJSON(): Partial<TemperatureSensor> {
     return Utils.jsonFilter(this, this.jsonOmitKeys);
+  }
+
+  /** @inheritDoc */
+  public async getTemperatureHistory(startDate?: Date, endDate?: Date): Promise<iTemperatureMeasurement[]> {
+    if (!Persistence.dbo) {
+      return [];
+    }
+    return Persistence.dbo.getTemperatureHistory(this._device.id, startDate, endDate);
   }
 }

@@ -31,6 +31,8 @@ import {
   iScene,
   iShutter,
   iSpeaker,
+  iTemperatureCollector,
+  iTemperatureMeasurement,
   iTemporaryDisableAutomatic,
 } from '../interfaces';
 import { LogObject, ServerLogService } from '../logging';
@@ -593,5 +595,28 @@ export class API {
     }
     d.log(LogLevel.Info, `API Call to press button ${position} with ${pressType}`);
     return d.pressButton(position, pressType);
+  }
+
+  /**
+   * Gets temperature history for a device
+   * @param deviceId - The ID of the device to get temperature history for
+   * @param startDate - Optional start date for the query (defaults to start of today)
+   * @param endDate - Optional end date for the query (defaults to end of today)
+   * @returns The temperature measurements or an error if the device is not found or not a temperature sensor
+   */
+  public static async getTemperatureHistory(
+    deviceId: string,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<iTemperatureMeasurement[] | Error> {
+    const d = this.getDevice(deviceId, false) as iTemperatureCollector | undefined;
+    if (d === undefined) {
+      return new Error(`Device with ID ${deviceId} not found`);
+    }
+    if (!d.deviceCapabilities.includes(DeviceCapability.temperatureSensor)) {
+      return new Error(`Device with ID ${deviceId} is no temperature sensor`);
+    }
+    ServerLogService.writeLog(LogLevel.Debug, `API Call to get temperature history for ${deviceId}`);
+    return d.temperatureSensor.getTemperatureHistory(startDate, endDate);
   }
 }
