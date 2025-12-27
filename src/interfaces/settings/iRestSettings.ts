@@ -8,6 +8,10 @@ export interface iRestSettings {
    */
   active: boolean;
   /**
+   * Whether the Web UI should be active.
+   */
+  webUi: boolean;
+  /**
    * The port the REST service should listen on.
    */
   port?: number;

@@ -17,6 +17,7 @@ export const ExampleConfig = {
   },
   restServer: {
     active: true,
+    webUi: true,
     expressPort: 4444,
   },
   roomDefault: {
