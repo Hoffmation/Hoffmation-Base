@@ -7,6 +7,11 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update iRoomBase interface
+
 ## 3.2.28 (2025-12-27)
 
 * (theimo1221) Make room position accessible

@@ -14,6 +14,7 @@ import { iRoomSettingsController } from './iRoomSettingsController';
 import { iIdHolder } from './iIdHolder';
 import { iDeviceCluster } from './iDevicecluster';
 import { ITimeCallback } from './ITimeCallback';
+import { iTrilaterationPoint } from './iTrilaterationPoint';
 
 /**
  * This interface represents a room with it's base functionality.
@@ -76,6 +77,15 @@ export interface iRoomBase extends iIdHolder {
    * The time-callback for controlling light at sunset
    */
   sonnenUntergangLichtCallback: ITimeCallback | undefined;
+
+  /**
+   * The bot-left corner of the room in 2D/3D Map
+   */
+  startPoint?: iTrilaterationPoint;
+  /**
+   * The top-right corner of the room in 2D/3D Map
+   */
+  endPoint?: iTrilaterationPoint;
 
   /**
    *
