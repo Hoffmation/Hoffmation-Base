@@ -6,8 +6,7 @@ import {
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
 import { Utils } from '../../utils';
-import { WeatherService } from '../../services/weather';
-import { Persistence } from '../../services';
+import { Persistence, WeatherService } from '../../services';
 
 export class TemperatureSensor implements iTemperatureSensor {
   /** @inheritDoc */
