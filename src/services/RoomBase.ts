@@ -40,8 +40,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
     public groupMap: Map<GroupType, BaseGroup>,
     roomName: string,
     etage: number = 99,
-    startPoint?: iTrilaterationPoint,
-    endPoint?: iTrilaterationPoint,
+    public startPoint?: iTrilaterationPoint,
+    public endPoint?: iTrilaterationPoint,
   ) {
     this.info = new RoomInfo(roomName, etage);
     this.settings = new RoomSettingsController(this);
