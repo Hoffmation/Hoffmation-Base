@@ -1,7 +1,11 @@
 import { Utils } from '../../utils';
-import { iTrilaterationPoint } from '../../interfaces';
+import { iTrilaterationCoordinate, iTrilaterationPoint } from '../../interfaces';
 
 export class TrilaterationPoint implements iTrilaterationPoint {
+  public static byCoordinate(coordinate: iTrilaterationCoordinate, roomName: string): TrilaterationPoint {
+    return new TrilaterationPoint(coordinate.x, coordinate.y, coordinate.z, roomName);
+  }
+
   public static getPointsInRange(
     a: iTrilaterationPoint,
     b: iTrilaterationPoint,
@@ -38,5 +42,13 @@ export class TrilaterationPoint implements iTrilaterationPoint {
 
   public getDot5Distance(other: iTrilaterationPoint): number {
     return Utils.roundDot5(this.getDistance(other));
+  }
+
+  public getCoordinate(): iTrilaterationCoordinate {
+    return {
+      x: this.x,
+      y: this.y,
+      z: this.z,
+    };
   }
 }

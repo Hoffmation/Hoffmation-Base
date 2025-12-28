@@ -1,7 +1,7 @@
 import { LogDebugType, LogLevel } from '../../enums';
 import { ServerLogService } from '../../logging';
-import { RoomBase } from '../../services';
 import {
+  iRoomBase,
   iTrilaterationBasePoint,
   iTrilaterationPoint,
   iTrilaterationPointDistance,
@@ -20,12 +20,14 @@ export class Trilateration {
    */
   public static possiblePoints: iTrilaterationPoint[] = [];
 
-  public static addRoom(room: RoomBase, startPoint: iTrilaterationPoint, endPoint: iTrilaterationPoint): void {
+  public static addRoom(room: iRoomBase, startPoint: iTrilaterationPoint, endPoint: iTrilaterationPoint): void {
     const points = TrilaterationPoint.getPointsInRange(startPoint, endPoint, room.roomName);
     ServerLogService.writeLog(
       LogLevel.Debug,
       `Adding ${points.length} trilateration points for room ${room.roomName} from ${startPoint.coordinateName} to ${endPoint.coordinateName}`,
     );
+    // Remove all points from this room
+    this.possiblePoints = this.possiblePoints.filter((point) => point.roomName !== room.roomName);
     this.possiblePoints.push(...points);
   }
 

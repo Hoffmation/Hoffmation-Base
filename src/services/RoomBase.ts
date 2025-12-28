@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { BaseGroup, DeviceCluster, HeatGroup, TasterGroup, Trilateration, WaterGroup } from '../devices';
+import { BaseGroup, DeviceCluster, HeatGroup, TasterGroup, WaterGroup } from '../devices';
 import {
   ActuatorSetStateCommand,
   LightGroupSwitchTimeConditionalCommand,
@@ -44,11 +44,8 @@ export class RoomBase implements iRoomBase, iIdHolder {
     public endPoint?: iTrilaterationPoint,
   ) {
     this.info = new RoomInfo(roomName, etage);
-    this.settings = new RoomSettingsController(this);
+    this.settings = new RoomSettingsController(this, startPoint, endPoint);
     RoomService.addToRoomList(this);
-    if (startPoint !== undefined && endPoint !== undefined) {
-      Trilateration.addRoom(this, startPoint, endPoint);
-    }
   }
 
   public get sonnenUntergangLichtCallback(): ITimeCallback | undefined {

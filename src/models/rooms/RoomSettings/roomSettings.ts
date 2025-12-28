@@ -1,4 +1,4 @@
-import { iRoomSettings, iTimePair } from '../../../interfaces';
+import { iRoomSettings, iTimePair, iTrilaterationCoordinate } from '../../../interfaces';
 import { SettingsService } from '../../../settings-service';
 import { ObjectSettings } from '../../../settingsObjects';
 
@@ -78,6 +78,10 @@ export class RoomSettings extends ObjectSettings implements iRoomSettings {
    */
   public includeLampsInNormalMovementLightning: boolean =
     SettingsService.settings.roomDefault.includeLampsInNormalMovementLightning;
+  /** @inheritDoc */
+  public trilaterationStartPoint?: iTrilaterationCoordinate;
+  /** @inheritDoc */
+  public trilaterationEndPoint?: iTrilaterationCoordinate;
 
   public fromPartialObject(_obj: Partial<RoomSettings>): void {
     this.ambientLightAfterSunset = _obj.ambientLightAfterSunset ?? this.ambientLightAfterSunset;
@@ -98,6 +102,8 @@ export class RoomSettings extends ObjectSettings implements iRoomSettings {
     this.sonnenUntergangRolloDelay = _obj.sonnenUntergangRolloDelay ?? this.sonnenUntergangRolloDelay;
     this.sonnenUntergangLampenDelay = _obj.sonnenUntergangLampenDelay ?? this.sonnenUntergangLampenDelay;
     this.sonnenUntergangRollos = _obj.sonnenUntergangRollos ?? this.sonnenUntergangRollos;
+    this.trilaterationEndPoint = _obj.trilaterationEndPoint ?? this.trilaterationEndPoint;
+    this.trilaterationStartPoint = _obj.trilaterationStartPoint ?? this.trilaterationStartPoint;
     this.includeLampsInNormalMovementLightning =
       _obj.includeLampsInNormalMovementLightning ?? this.includeLampsInNormalMovementLightning;
     super.fromPartialObject(_obj);

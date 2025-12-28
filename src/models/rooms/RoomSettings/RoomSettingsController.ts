@@ -1,13 +1,13 @@
 import _ from 'lodash';
-import { iRoomBase, iRoomSettingsController, iTimePair } from '../../../interfaces';
+import { iRoomBase, iRoomSettingsController, iTimePair, iTrilaterationPoint } from '../../../interfaces';
 import { SunTimeOffsets } from '../../sun-time-offsets';
 import { RoomSettings } from './roomSettings';
-import { RoomBase } from '../../../services';
-import { WeatherService } from '../../../services/weather';
+import { RoomBase, WeatherService } from '../../../services';
 import { API } from '../../../api';
 import { Utils } from '../../../utils';
 import { ServerLogService } from '../../../logging';
 import { LogLevel } from '../../../enums';
+import { Trilateration, TrilaterationPoint } from '../../../devices';
 
 export class RoomSettingsController {
   /**
@@ -24,7 +24,7 @@ export class RoomSettingsController {
   public lampOffset: SunTimeOffsets;
   private _settingsContainer: RoomSettings = new RoomSettings();
 
-  public constructor(room: RoomBase) {
+  public constructor(room: RoomBase, startPoint?: iTrilaterationPoint, endPoint?: iTrilaterationPoint) {
     this.roomName = room.roomName;
     this.rolloOffset = new SunTimeOffsets(
       this.sonnenAufgangRolloDelay,
@@ -34,6 +34,8 @@ export class RoomSettingsController {
       this.sonnenUntergangRolloMaxTime.hours,
       this.sonnenUntergangRolloMaxTime.minutes,
     );
+    this._settingsContainer.trilaterationStartPoint = startPoint?.getCoordinate();
+    this._settingsContainer.trilaterationEndPoint = endPoint?.getCoordinate();
     this.lampOffset = new SunTimeOffsets(this.sonnenAufgangLampenDelay, this.sonnenUntergangLampenDelay);
     this._settingsContainer.onChangeCb = this.onSettingChange.bind(this);
     this._settingsContainer.initializeFromDb(room);
@@ -136,6 +138,22 @@ export class RoomSettingsController {
     ServerLogService.writeLog(LogLevel.Info, `${this.roomName} RoomSettingsController.onSettingChange`);
     this.recalcLampOffset();
     this.recalcRolloOffset();
+
+    if (
+      this.room !== undefined &&
+      this._settingsContainer.trilaterationStartPoint !== undefined &&
+      this._settingsContainer.trilaterationEndPoint !== undefined
+    ) {
+      this.room.startPoint = TrilaterationPoint.byCoordinate(
+        this._settingsContainer.trilaterationStartPoint,
+        this.roomName,
+      );
+      this.room.endPoint = TrilaterationPoint.byCoordinate(
+        this._settingsContainer.trilaterationEndPoint,
+        this.roomName,
+      );
+      Trilateration.addRoom(this.room, this.room.startPoint, this.room.endPoint);
+    }
   }
 
   public recalcRolloOffset(): void {

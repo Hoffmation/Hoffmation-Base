@@ -22,4 +22,9 @@ export interface iTrilaterationPoint extends iTrilaterationCoordinate {
    *
    */
   getDot5Distance(other: iTrilaterationPoint): number;
+
+  /**
+   *
+   */
+  getCoordinate(): iTrilaterationCoordinate;
 }

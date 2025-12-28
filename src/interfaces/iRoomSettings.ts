@@ -1,5 +1,6 @@
 import { iObjectSettings } from './settings';
 import { iTimePair } from './iTimePair';
+import { iTrilaterationCoordinate } from './iTrilaterationCoordinate';
 
 /**
  *
@@ -77,6 +78,15 @@ export interface iRoomSettings extends iObjectSettings {
    *
    */
   includeLampsInNormalMovementLightning: boolean;
+
+  /**
+   * Die Startkoordinate des Raums
+   */
+  trilaterationStartPoint?: iTrilaterationCoordinate;
+  /**
+   * Die Endkoordinate des Raums
+   */
+  trilaterationEndPoint?: iTrilaterationCoordinate;
 
   /**
    *
