@@ -9,6 +9,10 @@ export abstract class ObjectSettings implements iObjectSettings {
    * Callback to be fired when the settings change
    */
   public onChangeCb?: () => void;
+  /**
+   * An optional JSON string containing custom settings, primary used for debug/prototyping.
+   */
+  public customSettingsJson?: string;
 
   public persist(holder: iIdHolder) {
     Persistence.dbo?.persistSettings(holder.id, JSON.stringify(this), holder.customName);
@@ -46,6 +50,7 @@ export abstract class ObjectSettings implements iObjectSettings {
     if (this.onChangeCb) {
       this.onChangeCb();
     }
+    this.customSettingsJson = _obj.customSettingsJson ?? this.customSettingsJson;
   }
 
   public toJSON(): Partial<ObjectSettings> {

@@ -10,6 +10,7 @@
 
 ## **WORK IN PROGRESS**
 
+* (theimo1221) Add custom settings to object settings
 * (theimo1221) Add Trilateration to room settings
 
 ## 3.2.29 (2025-12-27)
