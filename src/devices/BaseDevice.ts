@@ -17,7 +17,6 @@ export abstract class BaseDevice implements iBaseDevice {
   public readonly deviceCapabilities: DeviceCapability[] = [];
   /**
    * @inheritDoc
-   * @default undefined (no Settings)
    */
   public settings: iDeviceSettings = new DeviceSettings();
   /**
