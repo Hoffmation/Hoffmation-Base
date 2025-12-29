@@ -1,5 +1,4 @@
 import { iTemperatureCollector } from '../../interfaces';
-import { DeviceSettings } from '../../settingsObjects';
 import { DeviceCapability, DeviceType } from '../../enums';
 import { TemperatureSensor } from '../sharedFunctions';
 import { DeviceInfo } from '../DeviceInfo';
@@ -8,8 +7,6 @@ import { TemperatureSensorChangeAction } from '../../action';
 import { RoomBaseDevice } from '../RoomBaseDevice';
 
 export class DachsTemperatureSensor extends RoomBaseDevice implements iTemperatureCollector {
-  /** @inheritDoc */
-  public settings: DeviceSettings | undefined = undefined;
   /** @inheritDoc */
   public temperatureSensor: TemperatureSensor = new TemperatureSensor(this);
 

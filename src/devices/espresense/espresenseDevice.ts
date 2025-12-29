@@ -13,8 +13,6 @@ import { RoomBaseDevice } from '../RoomBaseDevice';
 export class EspresenseDevice extends RoomBaseDevice implements iBluetoothDetector {
   /** @inheritDoc */
   public readonly position: iTrilaterationBasePoint;
-  /** @inheritDoc */
-  public settings: undefined = undefined;
   /**
    * The name of this device
    */

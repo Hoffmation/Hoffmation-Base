@@ -7,6 +7,11 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Any device should have atleast basic settings
+
 ## 3.2.30 (2025-12-28)
 
 * (theimo1221) Add custom settings to object settings

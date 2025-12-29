@@ -14,8 +14,6 @@ import { BaseDevice } from '../BaseDevice';
 import { DeviceInfo } from '../DeviceInfo';
 
 export class DetectedBluetoothDevice extends BaseDevice {
-  /** @inheritDoc */
-  public settings: undefined = undefined;
   /**
    * A Map matching the distances to the trackers identified by {@link iBluetoothDetector.id}
    */

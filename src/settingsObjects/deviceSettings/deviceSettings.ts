@@ -10,7 +10,7 @@ import { ObjectSettings } from '../objectSettings';
 import { ExcessEnergyConsumerSettings } from '../excessEnergyConsumerSettings';
 import { BlockAutomaticCommand, iBaseCommand } from '../../command';
 
-export abstract class DeviceSettings extends ObjectSettings implements iDeviceSettings {
+export class DeviceSettings extends ObjectSettings implements iDeviceSettings {
   buildBlockAutomaticCommand(c: iBaseCommand): BlockAutomaticCommand | null | undefined {
     if (this.blockAutomaticSettings?.dontBlockAutomaticIfNotProvided) {
       return null;

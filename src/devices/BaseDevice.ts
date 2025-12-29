@@ -6,6 +6,7 @@ import { Persistence } from '../services';
 import { RoomBaseDevice } from './RoomBaseDevice';
 import { iBaseCommand } from '../command';
 import _ from 'lodash';
+import { DeviceSettings } from '../settingsObjects';
 
 export abstract class BaseDevice implements iBaseDevice {
   /** @inheritDoc */
@@ -18,7 +19,7 @@ export abstract class BaseDevice implements iBaseDevice {
    * @inheritDoc
    * @default undefined (no Settings)
    */
-  public settings: iDeviceSettings | undefined = undefined;
+  public settings: iDeviceSettings = new DeviceSettings();
   /**
    * The last actions this device performed
    */
