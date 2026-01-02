@@ -107,7 +107,7 @@ export class UnifiAccess implements iDisposable {
   }
 
   private initializeDevice(data: AccessDeviceConfig): void {
-    if (!UnifiAccess.ownDoors.has(data.alias)) {
+    if (!data.alias || !UnifiAccess.ownDoors.has(data.alias)) {
       ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Ignoring camera ${data.name}`);
       return;
     }

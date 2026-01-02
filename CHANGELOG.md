@@ -9,6 +9,7 @@
 -->
 ## **WORK IN PROGRESS**
 * (theimo1221) Add room setting to overwrite nightTime
+* (theimo1221) Update some packages
 ## 3.2.31 (2025-12-29)
 
 * (theimo1221) Any device should have atleast basic settings

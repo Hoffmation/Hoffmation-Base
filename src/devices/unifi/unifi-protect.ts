@@ -132,7 +132,7 @@ export class UnifiProtect implements iDisposable {
   }
 
   private initializeCamera(data: ProtectCameraConfig): void {
-    if (!UnifiProtect.ownCameras.has(data.name)) {
+    if (!data.name || !UnifiProtect.ownCameras.has(data.name)) {
       ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Ignoring camera ${data.name}`);
       return;
     }
