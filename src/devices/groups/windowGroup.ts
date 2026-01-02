@@ -135,7 +135,12 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
 
   public setRolloByWeatherStatus(c: WindowSetRolloByWeatherStatusCommand): void {
     const room: iRoomBase = this.getRoom();
-    const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
+    const timeOfDay: TimeOfDay = TimeCallbackService.dayType(
+      room.settings.rolloOffset,
+      new Date(),
+      room.settings.nightStart,
+      room.settings.nightEnd,
+    );
     const darkOutside: boolean = TimeCallbackService.darkOutsideOrNight(timeOfDay);
     this.windows.forEach((f) => {
       const shutterSettings: ShutterSettings | undefined = f.getShutter()?.settings;
@@ -245,7 +250,16 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
         },
         room.settings.rolloOffset.sunset,
       );
-      if (TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
+      if (
+        TimeCallbackService.darkOutsideOrNight(
+          TimeCallbackService.dayType(
+            room.settings.rolloOffset,
+            new Date(),
+            room.settings.nightStart,
+            room.settings.nightEnd,
+          ),
+        )
+      ) {
         Utils.guardedTimeout(
           () => {
             this.setWindowShutterBaseAutomaticLevel(0);
@@ -304,7 +318,16 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
         undefined,
         room.settings.rolloOffset,
       );
-      if (!TimeCallbackService.darkOutsideOrNight(TimeCallbackService.dayType(room.settings.rolloOffset))) {
+      if (
+        !TimeCallbackService.darkOutsideOrNight(
+          TimeCallbackService.dayType(
+            room.settings.rolloOffset,
+            new Date(),
+            room.settings.nightStart,
+            room.settings.nightEnd,
+          ),
+        )
+      ) {
         if (!this.anyShutterDown) {
           // Only set new desired position without applying it.
           this.setDesiredPosition(

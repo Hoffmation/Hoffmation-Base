@@ -118,7 +118,12 @@ export class SonosService {
       for (const deviceName in this.ownDevices) {
         const snDevice: OwnSonosDevice = this.ownDevices[deviceName];
         const room: iRoomBase = snDevice.room;
-        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(room.settings.rolloOffset);
+        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(
+          room.settings.rolloOffset,
+          new Date(),
+          room.settings.nightStart,
+          room.settings.nightEnd,
+        );
         const volume: number =
           timeOfDay == TimeOfDay.Night
             ? snDevice.settings.defaultNightAnounceVolume

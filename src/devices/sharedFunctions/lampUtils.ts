@@ -84,7 +84,12 @@ export class LampUtils {
     const newVal: boolean = device.queuedValue !== null ? !device.queuedValue : !device.actuatorOn;
 
     if (newVal && c.time === undefined && c.calculateTime && device.room !== undefined) {
-      c.time = TimeCallbackService.dayType(device.room?.settings.lampOffset);
+      c.time = TimeCallbackService.dayType(
+        device.room?.settings.lampOffset,
+        new Date(),
+        device.room?.settings.nightStart,
+        device.room?.settings.nightEnd,
+      );
     }
     if (newVal && c.time !== undefined) {
       device.setTimeBased(new LampSetTimeBasedCommand(c, c.time, '', c.isForceAction ? undefined : null));

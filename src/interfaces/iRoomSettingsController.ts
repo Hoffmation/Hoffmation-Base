@@ -64,6 +64,15 @@ export interface iRoomSettingsController extends iRoomDefaultSettings {
    *
    */
   readonly movementResetTimer: number;
+
+  /**
+   * The custom start of night for this room
+   */
+  readonly nightStart?: iTimePair;
+  /**
+   * The custom end of night for this room
+   */
+  readonly nightEnd?: iTimePair;
   /**
    *
    */

@@ -32,12 +32,17 @@ export class TimeCallbackService {
     return TimeCallbackService._nextSunSet;
   }
 
-  public static dayType(pOffset: iSunTimeOffsets, now: Date = new Date()): TimeOfDay {
+  public static dayType(
+    pOffset: iSunTimeOffsets,
+    now: Date = new Date(),
+    customNightStart?: iTimePair,
+    customNightEnd?: iTimePair,
+  ): TimeOfDay {
     const hours = now.getHours();
     const minutes = now.getMinutes();
 
-    const nightEnd: iTimePair = SettingsService.settings.timeSettings.nightEnd;
-    const nightStart: iTimePair = SettingsService.settings.timeSettings.nightStart;
+    const nightEnd: iTimePair = customNightEnd ?? SettingsService.settings.timeSettings.nightEnd;
+    const nightStart: iTimePair = customNightStart ?? SettingsService.settings.timeSettings.nightStart;
 
     if (nightStart.hours < nightEnd.hours) {
       if (

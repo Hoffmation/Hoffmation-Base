@@ -90,6 +90,14 @@ export class RoomSettingsController {
     return this._settingsContainer.movementResetTimer;
   }
 
+  public get nightStart(): iTimePair | undefined {
+    return this._settingsContainer.nightStart;
+  }
+
+  public get nightEnd(): iTimePair | undefined {
+    return this._settingsContainer.nightEnd;
+  }
+
   public get sonnenUntergangRolloDelay(): number {
     return this._settingsContainer.sonnenUntergangRolloDelay;
   }

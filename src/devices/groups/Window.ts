@@ -110,7 +110,12 @@ export class Window extends BaseGroup implements iWindow {
         this.getVibration().forEach((element) => {
           element.vibrationBlockedByHandle = true;
         });
-        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(this.getRoom().settings.rolloOffset);
+        const timeOfDay: TimeOfDay = TimeCallbackService.dayType(
+          this.getRoom().settings.rolloOffset,
+          new Date(),
+          this.getRoom().settings.nightStart,
+          this.getRoom().settings.nightEnd,
+        );
         this.getShutter()?.setLevel(
           new ShutterSetLevelCommand(
             CommandSource.Force,

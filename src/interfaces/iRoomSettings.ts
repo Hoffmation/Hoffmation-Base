@@ -35,6 +35,14 @@ export interface iRoomSettings extends iObjectSettings {
    */
   movementResetTimer: number;
   /**
+   * The custom start of night for this room
+   */
+  nightStart?: iTimePair;
+  /**
+   * The custom end of night for this room
+   */
+  nightEnd?: iTimePair;
+  /**
    *
    */
   roomIsAlwaysDark: boolean;

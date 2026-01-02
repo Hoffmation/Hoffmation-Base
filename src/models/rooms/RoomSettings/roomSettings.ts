@@ -31,6 +31,10 @@ export class RoomSettings extends ObjectSettings implements iRoomSettings {
    * Time in seconds after which detected movement is reseted
    */
   public movementResetTimer: number = SettingsService.settings.roomDefault.movementResetTimer;
+  /** @inheritDoc */
+  public nightStart?: iTimePair;
+  /** @inheritDoc */
+  public nightEnd?: iTimePair;
   /**
    * Indicates rooms, which are time independent always dark (like basement).
    * This results in lamps beeing turned on at motion regardless of windows and time.
@@ -90,6 +94,8 @@ export class RoomSettings extends ObjectSettings implements iRoomSettings {
     this.rolloHeatReduction = _obj.rolloHeatReduction ?? this.rolloHeatReduction;
     this.lampenBeiBewegung = _obj.lampenBeiBewegung ?? this.lampenBeiBewegung;
     this.lightIfNoWindows = _obj.lightIfNoWindows ?? this.lightIfNoWindows;
+    this.nightStart = _obj.nightStart ?? this.nightStart;
+    this.nightEnd = _obj.nightEnd ?? this.nightEnd;
     this.movementResetTimer = _obj.movementResetTimer ?? this.movementResetTimer;
     this.roomIsAlwaysDark = _obj.roomIsAlwaysDark ?? this.roomIsAlwaysDark;
     this.sonnenAufgangLampenDelay = _obj.sonnenAufgangLampenDelay ?? this.sonnenAufgangLampenDelay;

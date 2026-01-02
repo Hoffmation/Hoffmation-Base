@@ -181,7 +181,12 @@ export class RoomBase implements iRoomBase, iIdHolder {
     }
     let timeOfDay: TimeOfDay = this.settings.roomIsAlwaysDark
       ? TimeOfDay.Night
-      : TimeCallbackService.dayType(this.settings.lampOffset);
+      : TimeCallbackService.dayType(
+          this.settings.lampOffset,
+          new Date(),
+          this.settings.nightStart,
+          this.settings.nightEnd,
+        );
     if (
       timeOfDay === TimeOfDay.Daylight &&
       ((this.settings.lightIfNoWindows && (!this.WindowGroup || this.WindowGroup.windows.length === 0)) ||
@@ -206,7 +211,12 @@ export class RoomBase implements iRoomBase, iIdHolder {
     }
     let timeOfDay: TimeOfDay = this.settings.roomIsAlwaysDark
       ? TimeOfDay.Night
-      : TimeCallbackService.dayType(this.settings.lampOffset);
+      : TimeCallbackService.dayType(
+          this.settings.lampOffset,
+          new Date(),
+          this.settings.nightStart,
+          this.settings.nightEnd,
+        );
     if (
       timeOfDay === TimeOfDay.Daylight &&
       this.WindowGroup?.windows.some((f) => {
