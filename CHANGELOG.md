@@ -7,7 +7,9 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## 3.3.0 (2026-01-02)
+
+## **WORK IN PROGRESS**
+
 * (theimo1221) Add room setting to overwrite nightTime
 * (theimo1221) Update some packages
 
