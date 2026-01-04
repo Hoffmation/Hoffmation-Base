@@ -7,6 +7,7 @@ import {
 } from '../command';
 import {
   iIdHolder,
+  iJsonCustomPrepend,
   iLightGroup,
   iPresenceGroup,
   iRoomBase,
@@ -24,7 +25,7 @@ import { Persistence } from './dbo';
 import { TimeCallbackService } from './time-callback-service';
 import { RoomInfo, RoomSettingsController } from '../models';
 
-export class RoomBase implements iRoomBase, iIdHolder {
+export class RoomBase implements iRoomBase, iIdHolder, iJsonCustomPrepend {
   /**
    * @see RoomInfo
    */
@@ -228,6 +229,15 @@ export class RoomBase implements iRoomBase, iIdHolder {
     return TimeCallbackService.darkOutsideOrNight(timeOfDay);
   }
 
+  public customPrepend(): Partial<unknown> {
+    return {
+      sunriseShutterCallback: this.sunriseShutterCallback,
+      sunsetShutterCallback: this.sunsetShutterCallback,
+      sonnenUntergangLichtCallback: this.sonnenUntergangLichtCallback,
+      sonnenAufgangLichtCallback: this.sonnenAufgangLichtCallback,
+    };
+  }
+
   public toJSON(): Partial<
     iRoomBase & {
       /**
@@ -236,7 +246,13 @@ export class RoomBase implements iRoomBase, iIdHolder {
       groupDict?: { [p: string]: BaseGroup };
     }
   > {
-    return Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result: any = Utils.jsonFilter(_.omit(this, ['_deviceCluster']));
+    result['sunriseShutterCallback'] = this.sunriseShutterCallback;
+    result['sunsetShutterCallback'] = this.sunsetShutterCallback;
+    result['sonnenUntergangLichtCallback'] = this.sonnenUntergangLichtCallback;
+    result['sonnenAufgangLichtCallback'] = this.sonnenAufgangLichtCallback;
+    return result;
   }
 
   public log(level: LogLevel, message: string): void {

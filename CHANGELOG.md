@@ -7,6 +7,11 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Make shuttercallback accessible in json
+
 ## 3.3.1 (2026-01-02)
 
 * (theimo1221) Add room setting to overwrite nightTime

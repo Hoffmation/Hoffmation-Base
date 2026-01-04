@@ -4,6 +4,7 @@ import { TimeCallbackService } from '../services';
 import { SunTimeOffsets } from './sun-time-offsets';
 import { Utils } from '../utils';
 import { ServerLogService } from '../logging';
+import _ from 'lodash';
 
 export class TimeCallback implements ITimeCallback {
   private _calculationSunrise?: Date;
@@ -135,5 +136,9 @@ export class TimeCallback implements ITimeCallback {
     this._calculationSunrise = undefined;
     this._calculationSunset = undefined;
     this.cFunction();
+  }
+
+  public toJSON(): Partial<TimeCallback> {
+    return Utils.jsonFilter(_.omit(this, ['cFunction']));
   }
 }
