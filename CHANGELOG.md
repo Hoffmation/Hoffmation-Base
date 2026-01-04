@@ -7,8 +7,7 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-
-## **WORK IN PROGRESS**
+## 3.3.2 (2026-01-04)
 
 * (theimo1221) Make shuttercallback accessible in json
 
