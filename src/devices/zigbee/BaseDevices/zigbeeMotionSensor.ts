@@ -18,7 +18,7 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   protected _movementDetectedCallback: Array<(action: MotionSensorAction) => void> = [];
   protected _needsMovementResetFallback: boolean = true;
   protected _fallBackTimeout: NodeJS.Timeout | undefined;
-  protected _timeSinceLastMotion: number = 0;
+  protected _motionDetectedTimestamp: number = 0;
   protected readonly _occupancyStateId: string = 'occupancy';
   private _movementDetected: boolean = false;
 
@@ -65,7 +65,10 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
   // Time since last motion in seconds
   /** @inheritDoc */
   public get timeSinceLastMotion(): number {
-    return this._timeSinceLastMotion;
+    if (this._motionDetectedTimestamp === 0) {
+      return 0;
+    }
+    return (Utils.nowMS() - this._motionDetectedTimestamp) / 1000;
   }
 
   /**
@@ -93,6 +96,8 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
         this,
       );
       return;
+    } else if (newState) {
+      this._motionDetectedTimestamp = Utils.nowMS();
     }
 
     if (newState === this._movementDetected) {
@@ -140,13 +145,6 @@ export class ZigbeeMotionSensor extends ZigbeeDevice implements iMotionSensor, i
       case this._occupancyStateId:
         this.log(LogLevel.Trace, `Motion sensor: Update for motion state of ${this.info.customName}: ${state.val}`);
         this.updateMovement(state.val as boolean);
-        break;
-      case 'no_motion':
-        this.log(
-          (state.val as number) < 100 ? LogLevel.Trace : LogLevel.DeepTrace,
-          `Motion sensor: Update for time since last motion of ${this.info.customName}: ${state.val}`,
-        );
-        this._timeSinceLastMotion = state.val as number;
         break;
     }
   }
