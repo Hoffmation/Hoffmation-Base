@@ -87,11 +87,9 @@ export class TimeCallback implements ITimeCallback {
         }
         if (this.cloudOffset === undefined) {
           this.cloudOffset = 0;
-        } else {
-          this.cloudOffset = this.cloudOffset * -1;
         }
         nextCalculatedTime = new Date(
-          this.calculationSunset.getTime() + (this.minuteOffset + this.cloudOffset) * 60 * 1000,
+          this.calculationSunset.getTime() + (this.minuteOffset + this.cloudOffset * -1) * 60 * 1000,
         );
         if (this.sunTimeOffset) {
           const nextMaxSS: Date = this.sunTimeOffset.getNextMaximumSunset(now);
