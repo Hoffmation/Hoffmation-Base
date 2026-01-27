@@ -82,14 +82,16 @@ export class TimeCallback implements ITimeCallback {
         }
         break;
       case TimeCallbackType.SunSet:
-        if (this.nextToDo === undefined || this.lastDone.getDate() === this.calculationSunset.getDate()) {
+        if (
+          this._calculationSunset === undefined ||
+          this.nextToDo === undefined ||
+          this.lastDone.getDate() === this.calculationSunset.getDate()
+        ) {
           this._calculationSunset = new Date(TimeCallbackService.nextSunSet.getTime());
         }
-        if (this.cloudOffset === undefined) {
-          this.cloudOffset = 0;
-        }
+        this.cloudOffset ??= 0;
         nextCalculatedTime = new Date(
-          this.calculationSunset.getTime() + (this.minuteOffset + this.cloudOffset * -1) * 60 * 1000,
+          this.calculationSunset.getTime() + (this.minuteOffset - this.cloudOffset) * 60 * 1000,
         );
         if (this.sunTimeOffset) {
           const nextMaxSS: Date = this.sunTimeOffset.getNextMaximumSunset(now);

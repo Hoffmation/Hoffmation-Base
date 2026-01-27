@@ -11,6 +11,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Fix Cloud offset on shutter down
+* (theimo1221) Fix edge case resulting in early shutter down
 
 ## 3.3.3 (2026-01-11)
 

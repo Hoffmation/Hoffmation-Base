@@ -234,10 +234,8 @@ export class WindowGroup extends BaseGroup implements iWindowGroup {
     if (this.sunsetShutterCallback && room.settings.rolloOffset) {
       this.sunsetShutterCallback.minuteOffset = room.settings.rolloOffset.sunset;
       this.sunsetShutterCallback.sunTimeOffset = room.settings.rolloOffset;
-      if (room.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness > 0) {
-        this.sunsetShutterCallback.cloudOffset =
-          WeatherService.getCurrentCloudiness() * room.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
-      }
+      this.sunsetShutterCallback.cloudOffset =
+        WeatherService.getCurrentCloudiness() * room.settings.sonnenUntergangRolloAdditionalOffsetPerCloudiness;
       this.sunsetShutterCallback.recalcNextToDo(new Date());
     }
     if (this.sunsetShutterCallback === undefined) {
