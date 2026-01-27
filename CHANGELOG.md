@@ -7,13 +7,21 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Update pipeline to node 25
+
 ## 3.3.7 (2026-01-27)
+
 * (theimo1221) Update packages
 
 ## 3.3.6 (2026-01-27)
+
 * (theimo1221) Recommit package-lock.json
 
 ## 3.3.5 (2026-01-27)
+
 * (theimo1221) Recommit package-lock.json
 
 ## 3.3.4 (2026-01-27)
