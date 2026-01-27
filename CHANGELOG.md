@@ -7,8 +7,7 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-
-## **WORK IN PROGRESS**
+## 3.3.4 (2026-01-27)
 
 * (theimo1221) Fix Cloud offset on shutter down
 * (theimo1221) Fix edge case resulting in early shutter down
