@@ -11,6 +11,7 @@
 ## **WORK IN PROGRESS**
 
 * (theimo1221) Update Jest
+* (theimo1221) Update some Eslint packages
 
 ## 3.4.1 (2026-04-03)
 
