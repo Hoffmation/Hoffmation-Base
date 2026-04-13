@@ -7,7 +7,13 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+
+## **WORK IN PROGRESS**
+
+* (theimo1221) Correct package lock
+
 ## 3.4.3 (2026-04-13)
+
 * (theimo1221) Update packages
 
 ## 3.4.2 (2026-04-03)
