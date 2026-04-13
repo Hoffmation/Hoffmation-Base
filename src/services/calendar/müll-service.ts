@@ -89,7 +89,7 @@ export class MuellService {
             continue;
           }
 
-          if (data[k].type !== 'VEVENT') {
+          if (data[k]?.type !== 'VEVENT') {
             continue;
           }
 
@@ -105,8 +105,9 @@ export class MuellService {
             continue;
           }
 
-          this.alleTonnen.push({ name: ev.summary, date: ev.start });
-          switch (ev.summary) {
+          const name: string = typeof ev.summary === 'string' ? ev.summary : ev.summary.val;
+          this.alleTonnen.push({ name: name, date: ev.start });
+          switch (name) {
             case this.gelbeTonne.name:
               this.gelbeTonne.dates.push(ev.start);
               break;
