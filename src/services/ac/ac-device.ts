@@ -209,18 +209,45 @@ export abstract class AcDevice
 
     if (this.settings.useOwnTemperature) {
       // Device is in automatic mode so ignore energy and room temperature
+      const outdoorTemp = WeatherService.todayMaxTemp;
+
       if (this.settings.useAutomatic) {
+        // In automatic mode, check if outdoor temperature allows cooling
+        // If not and heating is allowed, prefer heating mode over automatic
+        if (!this.coolingAllowed && this.heatingAllowed) {
+          this.log(
+            LogLevel.Info,
+            `Using heating mode instead of automatic (useAutomatic=true, but outdoorTemp=${outdoorTemp}°C < minOutdoorTempForCooling=${this.settings.minOutdoorTempForCooling}°C, season not summer)`,
+          );
+          return AcMode.Heating;
+        }
+        this.log(
+          LogLevel.Info,
+          `Using automatic mode (useAutomatic=true, outdoorTemp=${outdoorTemp}°C, coolingAllowed=${this.coolingAllowed})`,
+        );
         return AcMode.Auto;
       }
 
-      if (this.heatingAllowed) {
-        return AcMode.Heating;
-      } else if (this.coolingAllowed) {
+      if (this.coolingAllowed) {
         if (this.settings.overrideCoolingTargetTemp > 0) {
           this._desiredTemperatur = this.settings.overrideCoolingTargetTemp;
         }
+        this.log(
+          LogLevel.Info,
+          `Using cooling mode (useOwnTemperature=true, outdoorTemp=${outdoorTemp}°C, minOutdoorTempForCooling=${this.settings.minOutdoorTempForCooling}°C)`,
+        );
         return AcMode.Cooling;
+      } else if (this.heatingAllowed) {
+        this.log(
+          LogLevel.Info,
+          `Using heating mode (useOwnTemperature=true, coolingAllowed=false, outdoorTemp=${outdoorTemp}°C, minOutdoorTempForCooling=${this.settings.minOutdoorTempForCooling}°C)`,
+        );
+        return AcMode.Heating;
       }
+      this.log(
+        LogLevel.Info,
+        `Turning off AC (useOwnTemperature=true, coolingAllowed=false, heatingAllowed=false, outdoorTemp=${outdoorTemp}°C)`,
+      );
       return AcMode.Off;
     }
 
@@ -250,6 +277,13 @@ export abstract class AcDevice
 
     const coolUntil: number = targetTemp + threshold;
     const heatUntil: number = targetTemp - thresholdHeating;
+
+    if (coolUntil <= heatUntil && this.coolingAllowed && this.heatingAllowed) {
+      this.log(
+        LogLevel.Warn,
+        `INVALID CONFIGURATION: coolUntil (${coolUntil}°C) <= heatUntil (${heatUntil}°C) with both cooling and heating allowed. This will cause oscillation! targetTemp: ${targetTemp}°C, threshold: ${threshold}, thresholdHeating: ${thresholdHeating}`,
+      );
+    }
 
     if (temp > coolUntil && this.coolingAllowed) {
       desiredMode = AcMode.Cooling;
