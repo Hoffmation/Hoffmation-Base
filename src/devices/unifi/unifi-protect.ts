@@ -144,8 +144,4 @@ export class UnifiProtect implements iDisposable {
 }
 
 type ProtectDeviceConfigTypes =
-  | ProtectCameraConfig
-  | ProtectChimeConfig
-  | ProtectLightConfig
-  | ProtectSensorConfig
-  | ProtectViewerConfig;
+  ProtectCameraConfig | ProtectChimeConfig | ProtectLightConfig | ProtectSensorConfig | ProtectViewerConfig;

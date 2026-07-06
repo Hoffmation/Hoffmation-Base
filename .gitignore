@@ -1,5 +1,6 @@
 # Lib
 /lib
+**/.DS_Store
 
 # Dtrack stuff
 /npm.json
