@@ -7,6 +7,9 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Add generic config passthrough methods (loadConfig/saveConfig) to API
+
 ## 3.4.5 (2026-05-15)
 * (theimo1221) Optimize AC temperature control in transitional seasons
 

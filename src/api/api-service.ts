@@ -39,6 +39,7 @@ import { LogObject, ServerLogService } from '../logging';
 import { DaikinService, RoomService } from '../services';
 import { iLedRgbCct } from '../interfaces/baseDevices/iLedRgbCct';
 import { GroupSettings } from '../settingsObjects';
+import { Persistence } from '../services/dbo/persistence';
 
 export class API {
   /**
@@ -618,5 +619,23 @@ export class API {
     }
     ServerLogService.writeLog(LogLevel.Debug, `API Call to get temperature history for ${deviceId}`);
     return d.temperatureSensor.getTemperatureHistory(startDate, endDate);
+  }
+
+  /**
+   * Generisches Laden eines Konfig-Blobs (z.B. für Express-eigene Settings). Base-agnostisch.
+   * @param id - The id of the config to load
+   * @returns The config as JSON string or undefined if not found
+   */
+  public static async loadConfig(id: string): Promise<string | undefined> {
+    return Persistence.dbo?.loadSettings(id);
+  }
+
+  /**
+   * Generisches Speichern eines Konfig-Blobs. Base-agnostisch — kennt den Inhalt nicht.
+   * @param id - The id of the config to save
+   * @param data - The config data as JSON string
+   */
+  public static saveConfig(id: string, data: string): void {
+    Persistence.dbo?.persistSettings(id, data, id);
   }
 }
