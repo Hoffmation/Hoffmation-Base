@@ -17,6 +17,9 @@
     "url": "https://github.com/theimo1221/Hoffmation-Base/issues"
   },
   "homepage": "https://github.com/theimo1221/Hoffmation-Base#readme",
+  "engines": {
+    "node": ">=24.18.0"
+  },
   "scripts": {
     "bun-build": "bun tsc",
     "bun-full-test": "bun run bun-lint-check-all && bun run bun-jest-coverage",
