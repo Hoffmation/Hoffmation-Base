@@ -82,6 +82,7 @@ export abstract class AcDevice
     super(info, deviceType);
     this.deviceCapabilities.push(DeviceCapability.ac);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
+    this.deviceCapabilities.push(DeviceCapability.excessEnergyConsumer);
     Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, false);
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.blockAutomationHandler = new BlockAutomaticHandler(
