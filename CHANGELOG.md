@@ -9,6 +9,7 @@
 -->
 ## **WORK IN PROGRESS**
 * (theimo1221) Harden Ringstorage Requests
+* (theimo1221) Protect ambient light against more automatic calls
 ## 3.4.8 (2026-07-22)
 * (theimo1221) correct ac device caps
 

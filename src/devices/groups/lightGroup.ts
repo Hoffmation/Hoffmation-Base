@@ -10,6 +10,7 @@ import {
 import { iActuator, iLamp, iLightGroup, iRoomBase } from '../../interfaces';
 import {
   ActuatorSetStateCommand,
+  iBaseCommand,
   LampSetLightCommand,
   LampSetTimeBasedCommand,
   LedSetLightCommand,
@@ -92,15 +93,34 @@ export class LightGroup extends BaseGroup implements iLightGroup {
     this.switchAll(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'LightGroup handleSunriseOff'));
   }
 
+  /**
+   * Whether a switch-off has to be skipped because ambient light owns this actuator.
+   *
+   * Ambient light has priority: while it is active, automation must not switch a
+   * participating actuator off. Only an explicit force action may.
+   *
+   * Callers pass the command that would switch the actuator off; the caller decides
+   * what "off" means, since the time based commands resolve that per device.
+   * @param a - The actuator about to be switched
+   * @param c - The command that would switch it off
+   * @returns Whether the caller has to skip this actuator
+   */
+  private isProtectedByAmbientLight(a: iActuator, c: iBaseCommand): boolean {
+    if (!this._ambientLightOn || !a.settings.includeInAmbientLight || c.isForceAction) {
+      return false;
+    }
+    a.logCommand(
+      c,
+      `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`,
+      LogDebugType.None,
+      LogLevel.Info,
+    );
+    return true;
+  }
+
   public switchAll(c: ActuatorSetStateCommand): void {
     this.getAllAsActuator().forEach((a) => {
-      if (a.settings.includeInAmbientLight && !c.isForceAction && !c.on && this._ambientLightOn) {
-        a.logCommand(
-          c,
-          `Ambient light mode is active --> Skip non force light off command in ${this.roomName}`,
-          LogDebugType.None,
-          LogLevel.Info,
-        );
+      if (!c.on && this.isProtectedByAmbientLight(a, c)) {
         return;
       }
       a.setActuator(c);
@@ -150,18 +170,30 @@ export class LightGroup extends BaseGroup implements iLightGroup {
 
   public setAllLampen(c: LampSetLightCommand): void {
     this.getLights().forEach((s) => {
+      if (!c.on && this.isProtectedByAmbientLight(s, c)) {
+        return;
+      }
       s.setLight(c);
     });
   }
 
   public setAllLampenTimeBased(c: LampSetTimeBasedCommand): void {
     this.getLights().forEach((s) => {
+      // The lamp resolves this to on or off from its own time settings, so it can turn
+      // an ambient lamp off. While ambient light is active a participating lamp is
+      // already on, so skipping can only ever drop a redundant on - never a wanted one.
+      if (this.isProtectedByAmbientLight(s, c)) {
+        return;
+      }
       s.setTimeBased(c);
     });
   }
 
   public setAllOutlets(c: ActuatorSetStateCommand): void {
     this.getOutlets().forEach((s) => {
+      if (!c.on && this.isProtectedByAmbientLight(s, c)) {
+        return;
+      }
       s.setActuator(c);
     });
   }
