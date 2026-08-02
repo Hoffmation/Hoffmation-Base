@@ -7,9 +7,10 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## **WORK IN PROGRESS**
+## 3.4.9 (2026-08-02)
 * (theimo1221) Harden Ringstorage Requests
 * (theimo1221) Protect ambient light against more automatic calls
+
 ## 3.4.8 (2026-07-22)
 * (theimo1221) correct ac device caps
 
