@@ -3,8 +3,8 @@ import { ZigbeeActuator } from './BaseDevices';
 import { iExcessEnergyConsumer } from '../../interfaces';
 import { iLoadMeter } from '../../interfaces/baseDevices/iLoadMeter';
 import { ActuatorSettings, ExcessEnergyConsumerSettings } from '../../settingsObjects';
-import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
-import { ActuatorSetStateCommand } from '../../command';
+import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { ActuatorSetStateCommand, ExcessEnergyConsumerSetStateCommand } from '../../command';
 
 export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsumer, iLoadMeter {
   /** @inheritDoc */
@@ -99,14 +99,13 @@ export class ZigbeeBlitzShp extends ZigbeeActuator implements iExcessEnergyConsu
   }
 
   /** @inheritDoc */
-  public turnOnForExcessEnergy(): void {
-    this._activatedByExcessEnergy = true;
-    this.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, true, 'Turn on for excess energy'));
-  }
-
-  /** @inheritDoc */
-  public turnOffDueToMissingEnergy(): void {
-    this.setActuator(new ActuatorSetStateCommand(CommandSource.Automatic, false, 'Turn off due to missing energy'));
+  public setExcessEnergyState(c: ExcessEnergyConsumerSetStateCommand): void {
+    if (c.on) {
+      this._activatedByExcessEnergy = true;
+    }
+    this.setActuator(
+      new ActuatorSetStateCommand(c, c.on, c.on ? 'Turn on for excess energy' : 'Turn off due to missing energy'),
+    );
   }
 
   /** @inheritDoc */

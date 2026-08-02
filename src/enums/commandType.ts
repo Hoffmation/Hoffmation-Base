@@ -1,4 +1,8 @@
 export enum CommandType {
+  AcPerformAutomaticCheckCommand = 'AcPerformAutomaticCheckCommand',
+  ExcessEnergyConsumerSetStateCommand = 'ExcessEnergyConsumerSetStateCommand',
+  AcSetStateCommand = 'AcSetStateCommand',
+  AcWriteStateToDeviceCommand = 'AcWriteStateToDeviceCommand',
   ActuatorChangeAction = 'ActuatorChangeAction',
   BatteryManagerLevelChangeAction = 'BatteryManagerLevelChangeAction',
   BlockAutomaticLiftBlockCommand = 'BlockAutomaticLiftBlockCommand',

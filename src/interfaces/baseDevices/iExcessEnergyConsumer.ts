@@ -1,5 +1,6 @@
 import { iBaseDevice } from './iBaseDevice';
 import { iExcessEnergyConsumerSettings } from '../settings';
+import { ExcessEnergyConsumerSetStateCommand } from '../../command';
 
 /**
  * This interface represents a device that can consume excess energy.
@@ -29,14 +30,13 @@ export interface iExcessEnergyConsumer extends iBaseDevice {
   isAvailableForExcessEnergy(): boolean;
 
   /**
-   * Turn on this device to consume excess energy
+   * Start or stop this device following an energy-manager decision.
+   *
+   * One entry point rather than separate turn-on/turn-off methods, so the desired state can
+   * only come from the command and cannot contradict the method that was called.
+   * @param c - The decision this results from, carrying the measurement it was based on
    */
-  turnOnForExcessEnergy(): void;
-
-  /**
-   * Turn off this device as we don't have enough excess energy to power it
-   */
-  turnOffDueToMissingEnergy(): void;
+  setExcessEnergyState(c: ExcessEnergyConsumerSetStateCommand): void;
 
   /**
    * Check if this device was activated by excess energy

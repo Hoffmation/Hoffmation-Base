@@ -1,4 +1,5 @@
 import { AcDevice } from './ac-device';
+import { AcPerformAutomaticCheckCommand, AcWriteStateToDeviceCommand } from '../../command';
 import { ControlInfo, DaikinAC, Mode, Power } from 'daikin-controller';
 import { AcDeviceType, AcMode, DeviceType, LogDebugType, LogLevel } from '../../enums';
 import { UNDEFINED_TEMP_VALUE } from '../../interfaces';
@@ -84,25 +85,25 @@ export class OwnDaikinDevice extends AcDevice {
   }
 
   /** @inheritDoc */
-  public turnOn(): void {
-    this.log(LogLevel.Info, 'Turning on');
+  public turnOn(c: AcWriteStateToDeviceCommand): void {
+    this.logCommand(c);
     this.desiredState = Power.ON;
     this.setDesiredInfo();
   }
 
   /** @inheritDoc */
-  public turnOff(): void {
-    this.log(LogLevel.Info, 'Turning off');
+  public turnOff(c: AcWriteStateToDeviceCommand): void {
+    this.logCommand(c);
     this._activatedByExcessEnergy = false;
     this.desiredState = Power.OFF;
     this._mode = AcMode.Off;
     this.setDesiredInfo();
   }
 
-  protected automaticCheck(): void {
+  protected automaticCheck(c: AcPerformAutomaticCheckCommand): void {
     // First Load Device Info, then perform check
     this.updateInfo().then((_on) => {
-      super.automaticCheck();
+      super.automaticCheck(c);
     });
   }
 

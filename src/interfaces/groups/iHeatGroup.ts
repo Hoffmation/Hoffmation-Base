@@ -2,6 +2,8 @@ import { iBaseGroup } from './iBaseGroup';
 import { iAcDevice, iHeater, iHumidityCollector, iTemperatureCollector } from '../baseDevices';
 import { iTemperatureSettings } from '../settings';
 import { iHeatGroupSettings } from './iHeatGroupSettings';
+import { CommandSource } from '../../enums';
+import { iBaseCommand } from '../../command';
 
 /**
  *
@@ -51,11 +53,10 @@ export interface iHeatGroup extends iBaseGroup {
 
   /**
    * Sets all ACs to new desired Value
-   * TODO: Migrate to new Command System
    * @param newDesiredState - The new desired (on/off) state
-   * @param force - Whether this was a manual trigger, thus blocking automatic changes for 1 hour
+   * @param source - The event this results from, so the device command can be traced back to it
    */
-  setAc(newDesiredState: boolean, force: boolean): void;
+  setAc(newDesiredState: boolean, source: CommandSource | iBaseCommand): void;
 
   /**
    *

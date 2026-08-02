@@ -111,6 +111,9 @@ export class TasterGroup extends BaseGroup {
         }
       }
 
+      // TODO: Migrate buttons to the new Command System. addCb only yields a boolean, so the
+      // press itself is not an action that could be chained - which button and whether it was
+      // short or long is therefore lost before it reaches the device.
       if (SettingsService.settings.daikin?.buttonBotRightForAc === true) {
         const heatGroup: iHeatGroup | undefined = this.getRoom().HeatGroup;
         if (heatGroup !== undefined && heatGroup.getOwnAcDevices().length > 0) {
@@ -120,7 +123,7 @@ export class TasterGroup extends BaseGroup {
               if (!pValue) {
                 return;
               }
-              heatGroup.setAc(true, false);
+              heatGroup.setAc(true, CommandSource.Manual);
             },
             'Turn Ac On',
           );
@@ -130,7 +133,7 @@ export class TasterGroup extends BaseGroup {
               if (!pValue) {
                 return;
               }
-              heatGroup.setAc(false, true);
+              heatGroup.setAc(false, CommandSource.Force);
             },
             'Turn Ac Off',
           );

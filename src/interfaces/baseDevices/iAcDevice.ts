@@ -1,12 +1,12 @@
 import { iAcSettings } from '../deviceSettings';
 import { iBaseDevice } from './iBaseDevice';
 import { AcMode } from '../../enums';
+import { AcSetStateCommand, AcWriteStateToDeviceCommand } from '../../command';
 
 /**
  * Interface for normal air-conditioning devices
  *
  * For devices with {@link DeviceCapability.ac} capability.
- * TODO: Migrate to new Command-Based System
  * TODO: Extend from iActuator
  */
 export interface iAcDevice extends iBaseDevice {
@@ -54,14 +54,22 @@ export interface iAcDevice extends iBaseDevice {
   setDesiredMode(mode: AcMode, writeToDevice: boolean): void;
 
   /**
-   * Turns the air-conditioning device on without changing the settings
+   * Performs a power write, applying any automatic block the command carries
+   * @param c - The command to execute
    */
-  turnOn(): void;
+  writeStateToDevice(c: AcWriteStateToDeviceCommand): void;
+
+  /**
+   * Turns the air-conditioning device on without changing the settings
+   * @param c - The command to execute
+   */
+  turnOn(c: AcWriteStateToDeviceCommand): void;
 
   /**
    * Turns the air-conditioning device off
+   * @param c - The command to execute
    */
-  turnOff(): void;
+  turnOff(c: AcWriteStateToDeviceCommand): void;
 
   /**
    * Calculates the desired mode based on the current settings and the room temperature
@@ -70,7 +78,10 @@ export interface iAcDevice extends iBaseDevice {
   calculateDesiredMode(): AcMode;
 
   /**
+   * Sets the state of the air-conditioning device.
    *
+   * Single entry point for every state change, so each one is recorded in the command log.
+   * @param c - The command to execute
    */
-  setState(desiredMode: AcMode, desiredTemperature: number | undefined, forceTime: number): void;
+  setAcState(c: AcSetStateCommand): void;
 }

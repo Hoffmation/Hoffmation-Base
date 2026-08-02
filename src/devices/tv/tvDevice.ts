@@ -1,4 +1,5 @@
 import { DeviceCapability, DeviceType, TvDeviceType } from '../../enums';
+import { ExcessEnergyConsumerSetStateCommand } from '../../command';
 import { iTvDevice } from '../../interfaces';
 import { TvSettings } from '../../settingsObjects';
 import { DeviceInfo } from '../DeviceInfo';
@@ -49,7 +50,11 @@ export abstract class TvDevice extends RoomBaseDevice implements iTvDevice {
 
   public abstract turnOff(): void;
 
-  public turnOffDueToMissingEnergy(): void {
+  public setExcessEnergyState(c: ExcessEnergyConsumerSetStateCommand): void {
+    // A TV is never switched on to burn surplus energy, only off when it runs short.
+    if (c.on) {
+      return;
+    }
     this.turnOff();
   }
 

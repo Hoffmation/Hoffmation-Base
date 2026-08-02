@@ -1,8 +1,23 @@
 import { AcSettings, DeviceInfo, Devices, RoomBaseDevice } from '../../devices';
 import { iAcDevice, iExcessEnergyConsumer, iTemporaryDisableAutomatic, UNDEFINED_TEMP_VALUE } from '../../interfaces';
-import { AcDeviceType, AcMode, CommandSource, DeviceCapability, DeviceType, HeatingMode, LogLevel } from '../../enums';
+import {
+  AcDeviceType,
+  AcMode,
+  CommandSource,
+  DeviceCapability,
+  DeviceType,
+  HeatingMode,
+  LogDebugType,
+  LogLevel,
+} from '../../enums';
 import { BlockAutomaticHandler } from '../blockAutomaticHandler';
-import { BlockAutomaticCommand } from '../../command';
+import {
+  AcPerformAutomaticCheckCommand,
+  AcSetStateCommand,
+  AcWriteStateToDeviceCommand,
+  ExcessEnergyConsumerSetStateCommand,
+  RestoreTargetAutomaticValueCommand,
+} from '../../command';
 import { SettingsService } from '../../settings-service';
 import { WeatherService } from '../weather';
 import { Utils } from '../../utils';
@@ -83,7 +98,12 @@ export abstract class AcDevice
     this.deviceCapabilities.push(DeviceCapability.ac);
     this.deviceCapabilities.push(DeviceCapability.blockAutomatic);
     this.deviceCapabilities.push(DeviceCapability.excessEnergyConsumer);
-    Utils.guardedInterval(this.automaticCheck, 5 * 60 * 1000, this, false);
+    Utils.guardedInterval(
+      () => this.automaticCheck(new AcPerformAutomaticCheckCommand(CommandSource.Automatic, 'Time interval check')),
+      5 * 60 * 1000,
+      this,
+      false,
+    );
     Utils.guardedInterval(this.persist, 15 * 60 * 1000, this, true);
     this.blockAutomationHandler = new BlockAutomaticHandler(
       this.restoreTargetAutomaticValue.bind(this),
@@ -135,9 +155,8 @@ export abstract class AcDevice
   }
 
   /** @inheritDoc */
-  public restoreTargetAutomaticValue(): void {
-    this.log(LogLevel.Debug, 'Restore Target Automatic value');
-    this.automaticCheck();
+  public restoreTargetAutomaticValue(c: RestoreTargetAutomaticValueCommand): void {
+    this.automaticCheck(new AcPerformAutomaticCheckCommand(c, 'Restore automatic value'));
   }
 
   /** @inheritDoc */
@@ -302,7 +321,26 @@ export abstract class AcDevice
 
   public abstract setDesiredMode(mode: AcMode, writeToDevice: boolean, temp?: number): void;
 
-  public abstract turnOn(): void;
+  /**
+   * Performs a power write, applying any automatic block the command carries.
+   *
+   * Single place where a block from a write command is honoured, so callers never have to
+   * follow up with a separate disableAutomatic call. A block is not a device setting, so it
+   * belongs on a pure power write just as much as on a state change.
+   * @param c - The command to execute
+   */
+  public writeStateToDevice(c: AcWriteStateToDeviceCommand): void {
+    if (c.disableAutomaticCommand) {
+      this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
+    }
+    if (c.on) {
+      this.turnOn(c);
+      return;
+    }
+    this.turnOff(c);
+  }
+
+  public abstract turnOn(c: AcWriteStateToDeviceCommand): void;
 
   /** @inheritDoc */
   public onTemperaturChange(newTemperatur: number): void {
@@ -320,12 +358,26 @@ export abstract class AcDevice
   }
 
   /** @inheritDoc */
-  public turnOnForExcessEnergy(): void {
+  public setExcessEnergyState(c: ExcessEnergyConsumerSetStateCommand): void {
+    if (!c.on) {
+      this.setAcState(new AcSetStateCommand(c, AcMode.Off, undefined, 'Missing excess energy'));
+      return;
+    }
     if (this.blockAutomationHandler.automaticBlockActive) {
       return;
     }
-    this._activatedByExcessEnergy = true;
     const desiredMode: AcMode = this.calculateDesiredMode();
+    if (desiredMode === AcMode.Off) {
+      // isAvailableForExcessEnergy does not cover manualDisabled or an ac-blocking energy
+      // manager, so the device can still say it wants to stay off. Leave it alone rather than
+      // forcing it on, and do not claim it was activated by excess energy.
+      this.logCommand(
+        c,
+        'Excess energy offered, but the device wants to stay off',
+        LogDebugType.SkipUnchangedActuatorCommand,
+      );
+      return;
+    }
 
     if (
       desiredMode === AcMode.Cooling &&
@@ -334,33 +386,36 @@ export abstract class AcDevice
     ) {
       return;
     }
-    this.setDesiredMode(this.calculateDesiredMode(), false);
-    this.turnOn();
+    this._activatedByExcessEnergy = true;
+    this.setAcState(new AcSetStateCommand(c, desiredMode, undefined, 'Excess energy available'));
   }
 
-  public abstract turnOff(): void;
-
-  /** @inheritDoc */
-  public turnOffDueToMissingEnergy(): void {
-    this.turnOff();
-  }
+  public abstract turnOff(c: AcWriteStateToDeviceCommand): void;
 
   /**
-   * Sets the state of the AC
-   * TODO: Migrate to new command system
-   * @param mode - The desired mode
-   * @param desiredTemp - The desired temperature (if unset it will be calculated)
-   * @param forceTime - The time in ms to force the AC to stay in this state (default 1h)
+   * Sets the state of the AC.
+   *
+   * Single entry point for every state change, so each one lands in the command log and
+   * the reason a unit switched can be reconstructed afterwards. Callers that represent an
+   * automatic decision pass no disableAutomaticCommand, so they do not block themselves.
+   * @param c - The command to execute
    */
-  public setState(mode: AcMode, desiredTemp?: number, forceTime: number = 60 * 60 * 1000): void {
-    this.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Unknown, forceTime));
-    this._mode = mode;
-    if (mode == AcMode.Off) {
-      this.turnOff();
-      return;
+  public setAcState(c: AcSetStateCommand): void {
+    this.logCommand(c);
+    if (c.disableAutomaticCommand) {
+      this.blockAutomationHandler.disableAutomatic(c.disableAutomaticCommand);
     }
-    this.setDesiredMode(mode, false, desiredTemp);
-    this.turnOn();
+    // An unset mode means "just switch it on" - which mode that is depends on season and
+    // settings, so the device resolves it rather than the caller.
+    const mode: AcMode = c.mode ?? (this.heatingAllowed ? AcMode.Heating : AcMode.Cooling);
+    this._mode = mode;
+    // The write command chains back to this one, so the device log shows both the
+    // intent and the actual power write, mirroring the actuator path.
+    const writeCommand: AcWriteStateToDeviceCommand = new AcWriteStateToDeviceCommand(c, c.on);
+    if (c.on) {
+      this.setDesiredMode(mode, false, c.desiredTemperature);
+    }
+    this.writeStateToDevice(writeCommand);
   }
 
   /** @inheritDoc */
@@ -368,7 +423,12 @@ export abstract class AcDevice
     return this._activatedByExcessEnergy;
   }
 
-  protected automaticCheck(): void {
+  /**
+   * Re-evaluates what the state should be and applies it.
+   * @param c - The command asking for the re-evaluation; the resulting device command chains
+   * from it, so the log shows what triggered the change
+   */
+  protected automaticCheck(c: AcPerformAutomaticCheckCommand): void {
     if (this.blockAutomationHandler.automaticBlockActive) {
       // We aren't allowed to turn on or off anyway --> exit
       return;
@@ -380,6 +440,8 @@ export abstract class AcDevice
       return;
     }
 
+    // Kept ahead of the branch as before: turning off still reports the mode we would
+    // otherwise have wanted, which setDesiredInfo sends alongside the power state.
     this.setDesiredMode(desiredMode, false);
 
     if (
@@ -388,19 +450,25 @@ export abstract class AcDevice
         this.settings.noCoolingOnMovement &&
         this.room?.PraesenzGroup?.anyPresent(true))
     ) {
-      this.turnOff();
+      this.setAcState(new AcSetStateCommand(c, AcMode.Off, undefined, 'No cooling wanted'));
       return;
     }
-    this.turnOn();
+    this.setAcState(new AcSetStateCommand(c, desiredMode, undefined, 'Desired mode reached'));
   }
 
-  private onRoomAnyMovement(_action: PresenceGroupFirstEnterAction): void {
+  private onRoomAnyMovement(action: PresenceGroupFirstEnterAction): void {
     if (!this.settings.noCoolingOnMovement || !this.on || this.mode === AcMode.Heating) {
       return;
     }
 
-    this.log(LogLevel.Info, 'Something moved in the room. Turning off AC');
-    this.turnOff();
+    this.setAcState(
+      new AcSetStateCommand(
+        action,
+        AcMode.Off,
+        undefined,
+        'Something moved in the room and noCoolingOnMovement is set.',
+      ),
+    );
   }
 
   private onRoomLastLeave(action: PresenceGroupLastLeftAction): void {
@@ -408,8 +476,9 @@ export abstract class AcDevice
       return;
     }
 
-    this.log(LogLevel.Info, `Last person left the room (${action.reasonTrace}). Checking if we should turn on AC`);
-    this.restoreTargetAutomaticValue();
+    this.restoreTargetAutomaticValue(
+      new RestoreTargetAutomaticValueCommand(action, 'Last person left the room, whilst noCoolingOnMovement is set'),
+    );
   }
 
   /** @inheritDoc */

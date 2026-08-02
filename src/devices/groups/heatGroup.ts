@@ -9,13 +9,13 @@ import {
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
 import { HeatGroupSettings, TemperatureSettings } from '../../settingsObjects';
-import { CommandSource, DeviceClusterType, GroupType, LogLevel } from '../../enums';
+import { AcMode, CommandSource, DeviceClusterType, GroupType, LogLevel } from '../../enums';
 import { DeviceList } from '../device-list';
 import { AcDevice } from '../../services';
 import { API } from '../../api';
 import { Utils } from '../../utils';
 import { HandleChangeAction } from '../../action';
-import { BlockAutomaticCommand } from '../../command';
+import { AcSetStateCommand, BlockAutomaticCommand, iBaseCommand } from '../../command';
 import { BaseGroup } from './base-group';
 
 export class HeatGroup extends BaseGroup implements iHeatGroup {
@@ -175,21 +175,26 @@ export class HeatGroup extends BaseGroup implements iHeatGroup {
 
   /**
    * Sets all ACs to new desired Value
-   * TODO: Migrate to new Command System
    * @param newDesiredState - The new desired (on/off) state
-   * @param force - Whether this was a manual trigger, thus blocking automatic changes for 1 hour
+   * @param source - The event this results from, so the device command can be traced back to it.
+   * Whether this counts as a force action is derived from it, which is what the former
+   * `force` flag encoded.
    */
-  public setAc(newDesiredState: boolean, force: boolean = false): void {
+  public setAc(newDesiredState: boolean, source: CommandSource | iBaseCommand): void {
     const devs: AcDevice[] = this.getOwnAcDevices();
     this.log(LogLevel.Debug, `set ${devs.length} Ac's to new State: ${newDesiredState}`);
     for (const dev of devs) {
-      if (newDesiredState) {
-        dev.turnOn();
-        continue;
-      }
-      dev.turnOff();
-      dev.blockAutomationHandler.disableAutomatic(
-        new BlockAutomaticCommand(force ? CommandSource.Force : CommandSource.Unknown, 60 * 60 * 1000),
+      dev.setAcState(
+        new AcSetStateCommand(
+          source,
+          // Undefined mode means "just switch it on"; the device resolves which mode that is.
+          newDesiredState ? undefined : AcMode.Off,
+          undefined,
+          'HeatGroup setAc',
+          // The block travels inside the command so setAcState applies it centrally. As
+          // before, only switching off pins the automatic.
+          newDesiredState ? undefined : new BlockAutomaticCommand(source, 60 * 60 * 1000),
+        ),
       );
     }
   }

@@ -6,7 +6,7 @@ import { AcDeviceType, CommandSource, LogLevel } from '../../enums';
 import { TelegramMessageCallback, TelegramService } from '../Telegram';
 import { SettingsService } from '../../settings-service';
 import { ServerLogService } from '../../logging';
-import { BlockAutomaticCommand } from '../../command';
+import { AcWriteStateToDeviceCommand, BlockAutomaticCommand } from '../../command';
 import { Router } from '../network';
 import { Utils } from '../../utils';
 import { Devices } from '../../devices';
@@ -52,7 +52,9 @@ export class DaikinService {
         /\/ac_on/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          DaikinService.setAll(true);
+          DaikinService.setAll(
+            new AcWriteStateToDeviceCommand(CommandSource.Manual, true, `Telegram /ac_on by ${m.from.id}`),
+          );
           TelegramService.sendMessage([m.chat.id], 'Command executed');
           return true;
         },
@@ -65,7 +67,10 @@ export class DaikinService {
         /\/ac_off/,
         async (m: TelegramBot.Message): Promise<boolean> => {
           if (m.from === undefined) return false;
-          DaikinService.setAll(false, true);
+          DaikinService.setAll(
+            new AcWriteStateToDeviceCommand(CommandSource.Manual, false, `Telegram /ac_off by ${m.from.id}`),
+            true,
+          );
           TelegramService.sendMessage([m.chat.id], 'Command executed');
           return true;
         },
@@ -91,21 +96,17 @@ export class DaikinService {
     });
   }
 
-  // TODO: Migrate to new command system
-  public static setAll(on: boolean, force: boolean = false): void {
+  public static setAll(c: AcWriteStateToDeviceCommand, force: boolean = false): void {
     if (!this.isInitialized) {
       return;
     }
     for (const deviceName in this._ownDevices) {
       const dev: OwnDaikinDevice = this._ownDevices[deviceName];
-      if (on) {
-        dev.turnOn();
-      } else {
-        dev.turnOff();
-      }
-      if (force) {
-        dev.blockAutomationHandler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Unknown, 180 * 60 * 1000));
-      }
+      // Contract of this method is to switch power without touching any settings, so it
+      // addresses the write layer rather than setAcState, which would resolve and apply a mode.
+      // The block is not a setting, so it travels in the command like everywhere else.
+      c.disableAutomaticCommand = force ? new BlockAutomaticCommand(c, 180 * 60 * 1000) : undefined;
+      dev.writeStateToDevice(c);
     }
   }
 

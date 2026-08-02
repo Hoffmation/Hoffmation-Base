@@ -1,14 +1,8 @@
 import { BaseGroup, Devices, DeviceSettings } from '../devices';
+import { ButtonPosition, ButtonPressType, CollisionSolving, CommandSource, DeviceCapability, LogLevel } from '../enums';
 import {
-  AcMode,
-  ButtonPosition,
-  ButtonPressType,
-  CollisionSolving,
-  CommandSource,
-  DeviceCapability,
-  LogLevel,
-} from '../enums';
-import {
+  AcSetStateCommand,
+  AcWriteStateToDeviceCommand,
   ActuatorSetStateCommand,
   BlockAutomaticCommand,
   BlockAutomaticLiftBlockCommand,
@@ -114,49 +108,29 @@ export class API {
   }
 
   /**
-   * Turns on/off one AC identified by it's id
-   * @param id - The id of the device, if wrong false will be returned
-   * @param desiredState - The desired state for the AC
-   * @param desiredMode - The desired mode for the AC
-   * @param desiredTemperature - The desired temperature for the AC in Celsius
-   * @param forceTime - The time in ms this should not change before automatic change is allowed again
-   * @returns True if the AC was found and the state was changed
+   * Changes the state of a given AC
+   * @param deviceId - The device Id of the AC
+   * @param c - The command(stack) to perform on the AC including on/off, temp and so on.
+   * @returns In case it failed the Error containing the reason
    */
-  public static setAc(
-    id: string,
-    desiredState: boolean,
-    desiredMode?: AcMode,
-    desiredTemperature?: number,
-    forceTime: number = 60 * 60 * 1000,
-  ): boolean {
-    const d = this.getAc(id);
+  public static acSetState(deviceId: string, c: AcSetStateCommand): Error | null {
+    const d = this.getAc(deviceId);
     if (!d) {
-      ServerLogService.writeLog(LogLevel.Warn, `AC Device for id ${id} not found`);
-      return false;
+      return new Error(`AC Device for id ${deviceId} not found`);
     }
     if (!d.deviceCapabilities.includes(DeviceCapability.ac)) {
-      ServerLogService.writeLog(LogLevel.Warn, `Device for id ${id} is not an ac`);
-      return false;
+      return new Error(`Device for id ${deviceId} is not an ac`);
     }
-    if (desiredMode === undefined) {
-      if (!desiredState) {
-        desiredMode = AcMode.Off;
-      } else {
-        desiredMode = d.heatingAllowed ? AcMode.Heating : AcMode.Cooling;
-      }
-    }
-    d.log(LogLevel.Info, `API Call to set AC to ${desiredState} with mode ${desiredMode} for ${forceTime}ms`);
-    d.setState(desiredMode, desiredTemperature, forceTime);
-    return true;
+    d.setAcState(c);
+    return null;
   }
 
   /**
    * Turns on/off all AC´s in the home
-   * @param desiredState - The desired state for all AC´s
+   * @param c - The command(stack) to perform, built by the caller so the origin is recorded
    */
-  public static setAllAc(desiredState: boolean): void {
-    DaikinService.setAll(desiredState, true);
-    ServerLogService.writeLog(LogLevel.Info, `API Call to set all AC´s to ${desiredState}`);
+  public static setAllAc(c: AcWriteStateToDeviceCommand): void {
+    DaikinService.setAll(c, true);
   }
 
   /**

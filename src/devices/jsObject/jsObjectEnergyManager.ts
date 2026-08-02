@@ -3,7 +3,8 @@ import { iDisposable, iEnergyManager, iExcessEnergyConsumer } from '../../interf
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../../utils';
 import { EnergyCalculation } from '../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
-import { DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel } from '../../enums';
+import { ExcessEnergyConsumerSetStateCommand } from '../../command';
 import { PhaseState } from '../models';
 
 export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergyManager, iDisposable {
@@ -211,8 +212,13 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     }
     if (result.newState) {
       this.blockDeviceChangeTime = Utils.nowMS() + result.device.energySettings.powerReactionTime;
-      result.device.log(LogLevel.Info, `Turning on, as we have ${this.excessEnergy}W to spare...`);
-      result.device.turnOnForExcessEnergy();
+      result.device.setExcessEnergyState(
+        new ExcessEnergyConsumerSetStateCommand(
+          CommandSource.Automatic,
+          true,
+          `Energy manager has ${this.excessEnergy}W to spare`,
+        ),
+      );
       this._lastDeviceChange = result;
     }
   }
@@ -225,8 +231,13 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
     }
     if (!result.newState) {
       this.blockDeviceChangeTime = Utils.nowMS() + result.device.energySettings.powerReactionTime;
-      result.device.log(LogLevel.Info, "Turning off, as we don't have energy to spare...");
-      result.device.turnOffDueToMissingEnergy();
+      result.device.setExcessEnergyState(
+        new ExcessEnergyConsumerSetStateCommand(
+          CommandSource.Automatic,
+          false,
+          `Energy manager is short of energy at ${this.excessEnergy}W`,
+        ),
+      );
       this._lastDeviceChange = result;
     }
   }

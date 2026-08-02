@@ -1,5 +1,6 @@
 import { iBatteryDevice, iEnergyManager, iExcessEnergyConsumer, iJsonOmitKeys } from '../../interfaces';
-import { DeviceCapability, DeviceType, LogLevel, TimeOfDay } from '../../enums';
+import { CommandSource, DeviceCapability, DeviceType, LogLevel, TimeOfDay } from '../../enums';
+import { ExcessEnergyConsumerSetStateCommand } from '../../command';
 import { VictronDeviceSettings } from '../../settingsObjects';
 import { Battery } from '../sharedFunctions';
 import { DeviceInfo } from '../DeviceInfo';
@@ -237,8 +238,13 @@ export class VictronDevice extends BaseDevice implements iEnergyManager, iBatter
     }
     if (result.newState) {
       this.blockDeviceChangeTime = Utils.nowMS() + result.device.energySettings.powerReactionTime;
-      result.device.log(LogLevel.Info, `Turning on, as we have ${this.excessEnergy}W to spare...`);
-      result.device.turnOnForExcessEnergy();
+      result.device.setExcessEnergyState(
+        new ExcessEnergyConsumerSetStateCommand(
+          CommandSource.Automatic,
+          true,
+          `Energy manager has ${this.excessEnergy}W to spare`,
+        ),
+      );
       this._lastDeviceChange = result;
     }
   }
@@ -251,8 +257,13 @@ export class VictronDevice extends BaseDevice implements iEnergyManager, iBatter
     }
     if (!result.newState) {
       this.blockDeviceChangeTime = Utils.nowMS() + result.device.energySettings.powerReactionTime;
-      result.device.log(LogLevel.Info, "Turning off, as we don't have energy to spare...");
-      result.device.turnOffDueToMissingEnergy();
+      result.device.setExcessEnergyState(
+        new ExcessEnergyConsumerSetStateCommand(
+          CommandSource.Automatic,
+          false,
+          `Energy manager is short of energy at ${this.excessEnergy}W`,
+        ),
+      );
       this._lastDeviceChange = result;
     }
   }
