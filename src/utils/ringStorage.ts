@@ -15,10 +15,15 @@ export class RingStorage<T> {
 
   public readAmount(amount: number): T[] {
     const result: T[] = [];
-    amount = Math.max(amount, this.maxSize);
+    // Never return more than requested, and never more than the ring holds.
+    amount = Math.min(amount, this.maxSize);
     let pos = this.pointer;
     while (amount > 0) {
-      result.push(this.storage[pos]);
+      const entry = this.storage[pos];
+      // Slots not written yet must not surface as undefined entries in a T[].
+      if (entry !== undefined) {
+        result.push(entry);
+      }
       // Um negative Modulo zu umgehen.
       pos = (((pos - 1) % this.maxSize) + this.maxSize) % this.maxSize;
       amount--;
