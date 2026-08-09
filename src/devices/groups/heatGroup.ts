@@ -15,7 +15,7 @@ import { AcDevice } from '../../services';
 import { API } from '../../api';
 import { Utils } from '../../utils';
 import { HandleChangeAction } from '../../action';
-import { AcSetStateCommand, BlockAutomaticCommand, iBaseCommand } from '../../command';
+import { AcSetStateCommand, iBaseCommand } from '../../command';
 import { BaseGroup } from './base-group';
 
 export class HeatGroup extends BaseGroup implements iHeatGroup {
@@ -184,18 +184,26 @@ export class HeatGroup extends BaseGroup implements iHeatGroup {
     const devs: AcDevice[] = this.getOwnAcDevices();
     this.log(LogLevel.Debug, `set ${devs.length} Ac's to new State: ${newDesiredState}`);
     for (const dev of devs) {
-      dev.setAcState(
-        new AcSetStateCommand(
-          source,
-          // Undefined mode means "just switch it on"; the device resolves which mode that is.
-          newDesiredState ? undefined : AcMode.Off,
-          undefined,
-          'HeatGroup setAc',
-          // The block travels inside the command so setAcState applies it centrally. As
-          // before, only switching off pins the automatic.
-          newDesiredState ? undefined : new BlockAutomaticCommand(source, 60 * 60 * 1000),
-        ),
+      const command = new AcSetStateCommand(
+        source,
+        // Undefined mode means "just switch it on"; the device resolves which mode that is.
+        newDesiredState ? undefined : AcMode.Off,
+        undefined,
+        'HeatGroup setAc',
       );
+      // As before, only switching off pins the automatic - and the block travels inside the command
+      // so setAcState applies it centrally.
+      //
+      // The duration now comes from the device's own settings, built the way every other device
+      // builds its block (see ShutterUtils.setLevel). It used to be a hard-coded hour here, which
+      // is exactly what the configured default resolves to - so nothing changes today; what changes
+      // is that a single unit can be given a shorter block without touching group code. Building it
+      // from the command rather than from `source` also puts the block into the reason chain, so the
+      // log says which switch-off set it.
+      if (!newDesiredState) {
+        command.disableAutomaticCommand = dev.settings.buildBlockAutomaticCommand(command);
+      }
+      dev.setAcState(command);
     }
   }
 

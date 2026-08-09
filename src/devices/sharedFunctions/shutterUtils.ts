@@ -73,16 +73,21 @@ export class ShutterUtils {
     device.logCommand(c);
 
     if (device.window !== undefined) {
+      // Only a manual command deserves an alert, because only then is someone waiting for a shutter
+      // that will not move. The automatic run meets an open window every evening, and an Alert is
+      // what reaches Telegram - a nightly push for an expected skip. Info keeps the decision
+      // reconstructable without waking anybody.
+      const warningLevel: LogLevel = c.isManual ? LogLevel.Alert : LogLevel.Info;
       if (device.window.griffeInPosition(WindowPosition.open) > 0 && pPosition < 100) {
         if (!c.skipOpenWarning) {
-          device.log(LogLevel.Alert, 'Not closing the shutter, as the window is open!');
+          device.log(warningLevel, 'Not closing the shutter, as the window is open!');
         }
         return;
       }
       if (device.window.griffeInPosition(WindowPosition.tilted) > 0 && pPosition < 50) {
         pPosition = 50;
         if (!c.skipOpenWarning) {
-          device.log(LogLevel.Alert, 'Not closing the shutter, as the window is half open!');
+          device.log(warningLevel, 'Not closing the shutter, as the window is half open!');
         }
       }
     }

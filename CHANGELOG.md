@@ -7,6 +7,11 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Only alert on manual shutter commands blocked by an open window
+* (theimo1221) Block the automatic while movement keeps a room occupied instead of relying on the interval check
+* (theimo1221) Take the AC block duration from the device settings instead of a hard-coded hour
+
 ## 3.5.0 (2026-08-02)
 * (theimo1221) Port Ac-Device to command structure
 

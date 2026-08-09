@@ -15,7 +15,9 @@ import {
   AcPerformAutomaticCheckCommand,
   AcSetStateCommand,
   AcWriteStateToDeviceCommand,
+  BlockAutomaticCommand,
   ExcessEnergyConsumerSetStateCommand,
+  iBaseCommand,
   RestoreTargetAutomaticValueCommand,
 } from '../../command';
 import { SettingsService } from '../../settings-service';
@@ -23,7 +25,7 @@ import { WeatherService } from '../weather';
 import { Utils } from '../../utils';
 import { Persistence } from '../dbo';
 import { ExcessEnergyConsumerSettings } from '../../settingsObjects';
-import { PresenceGroupFirstEnterAction, PresenceGroupLastLeftAction } from '../../action';
+import { PresenceGroupAnyMovementAction, PresenceGroupLastLeftAction } from '../../action';
 
 export abstract class AcDevice
   extends RoomBaseDevice
@@ -147,7 +149,6 @@ export abstract class AcDevice
       return;
     }
     Utils.guardedFunction(() => {
-      // TODO: Maybe change to any Movement
       this.room.PraesenzGroup?.addAnyMovementCallback(this.onRoomAnyMovement.bind(this));
       this.room.PraesenzGroup?.addLastLeftCallback(this.onRoomLastLeave.bind(this));
       this._movementCallbackAdded = true;
@@ -456,7 +457,7 @@ export abstract class AcDevice
     this.setAcState(new AcSetStateCommand(c, desiredMode, undefined, 'Desired mode reached'));
   }
 
-  private onRoomAnyMovement(action: PresenceGroupFirstEnterAction): void {
+  private onRoomAnyMovement(action: PresenceGroupAnyMovementAction): void {
     if (!this.settings.noCoolingOnMovement || !this.on || this.mode === AcMode.Heating) {
       return;
     }
@@ -467,8 +468,37 @@ export abstract class AcDevice
         AcMode.Off,
         undefined,
         'Something moved in the room and noCoolingOnMovement is set.',
+        this.buildMovementBlock(action),
       ),
     );
+  }
+
+  /**
+   * Keeps the unit off for as long as the room counts as occupied - renewed by every movement.
+   *
+   * Without a block, staying off depended on the five-minute interval check noticing that somebody
+   * is present, and coming back on depended on the last-leave callback arriving. The block replaces
+   * both with one timer: every movement pushes it out, and its expiry reverts to automatic by
+   * itself, so the room cools again shortly after it empties rather than at the next check.
+   *
+   * The duration is the room's own movementResetTimer - the same span that decides when the room
+   * counts as empty. Anything shorter would let the unit start up with somebody still sitting there;
+   * a separate constant would be a second answer to a question the room already answers.
+   *
+   * The collision strategy is deliberately left at its default (overrideIfGreater): a long press on
+   * the wall button sets a much longer block, and walking past the unit must not cut that short.
+   * @param c - The command the block chains from, so the log shows what triggered it
+   * @returns The block, or undefined when the device has no room to take the duration from
+   */
+  private buildMovementBlock(c: iBaseCommand): BlockAutomaticCommand | undefined {
+    const occupiedForSeconds: number | undefined = this.room?.settings?.movementResetTimer;
+    // No room means no answer to "how long does this count as occupied". Switching off without a
+    // block is what happened before this existed, and it is the honest fallback - a made-up
+    // duration would block the automatic for a span nothing chose.
+    if (occupiedForSeconds === undefined || occupiedForSeconds <= 0) {
+      return undefined;
+    }
+    return new BlockAutomaticCommand(c, occupiedForSeconds * 1000, 'noCoolingOnMovement', undefined, true);
   }
 
   private onRoomLastLeave(action: PresenceGroupLastLeftAction): void {
