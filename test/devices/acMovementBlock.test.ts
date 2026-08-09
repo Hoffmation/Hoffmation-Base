@@ -106,3 +106,53 @@ describe('AC movement block', () => {
     expect(handler.automaticBlockedUntil.getTime()).toBe(manualEnd);
   });
 });
+
+/**
+ * Which level pinned the device.
+ *
+ * The handler used to keep only the expiry date, so a rule could not tell "somebody asked for this
+ * explicitly" from "another rule asked for it". That distinction is the whole point: at the end of
+ * the day the user's choice outranks a configured automatism, and without the source there is no
+ * way to honour that.
+ */
+describe('Block source', () => {
+  it('reports a block set by hand as a user decision', () => {
+    const { handler } = harness();
+
+    handler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Force, MANUAL_BLOCK_MS, 'HeatGroup setAc'));
+
+    expect(handler.automaticBlockedByUser).toBe(true);
+  });
+
+  it('reports a block set from the app as a user decision', () => {
+    const { handler } = harness();
+
+    handler.disableAutomatic(new BlockAutomaticCommand(CommandSource.API, MANUAL_BLOCK_MS, 'Client turned it on'));
+
+    // The endpoint behind the phone app - the exact source that pinned the AC for an hour.
+    expect(handler.automaticBlockedByUser).toBe(true);
+  });
+
+  it('does not report an automatic block as a user decision', () => {
+    const { handler } = harness();
+
+    handler.disableAutomatic(movementBlock());
+
+    expect(handler.automaticBlockedByUser).toBe(false);
+  });
+
+  it('forgets the user decision once the block has expired', async () => {
+    const { handler } = harness();
+    handler.disableAutomatic(new BlockAutomaticCommand(CommandSource.Force, MOVEMENT_BLOCK_MS, 'short manual block'));
+    expect(handler.automaticBlockedByUser).toBe(true);
+
+    await wait(MOVEMENT_BLOCK_MS + 50);
+
+    // An expired pin is not a pin - otherwise the rule would stay disabled forever.
+    expect(handler.automaticBlockedByUser).toBe(false);
+  });
+
+  it('reports no user decision when nothing is blocked', () => {
+    expect(harness().handler.automaticBlockedByUser).toBe(false);
+  });
+});

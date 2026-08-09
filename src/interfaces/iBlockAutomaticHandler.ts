@@ -19,6 +19,11 @@ export interface iBlockAutomaticHandler {
   readonly automaticBlockActive: boolean;
 
   /**
+   * Whether the active block was set by a person (Manual, API or Force) rather than by a rule.
+   */
+  readonly automaticBlockedByUser: boolean;
+
+  /**
    *
    */
   disableAutomatic(c: BlockAutomaticCommand): void;

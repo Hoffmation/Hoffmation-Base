@@ -462,6 +462,18 @@ export abstract class AcDevice
       return;
     }
 
+    // Somebody asked for this unit to run and pinned it - a configured rule does not overrule that.
+    // This is the case the report was about: switching the AC on from the phone pins it for an hour,
+    // the next movement a minute later switched it off anyway, and the pin then kept the automatic
+    // from ever switching it back on. The unit stayed off for the full hour.
+    //
+    // Only a person's pin counts. The block this path sets itself is an automatic one, so a later
+    // movement can still renew it.
+    if (this.blockAutomationHandler.automaticBlockedByUser) {
+      this.log(LogLevel.Debug, 'Movement detected, but the AC was pinned by hand - leaving it alone.');
+      return;
+    }
+
     this.setAcState(
       new AcSetStateCommand(
         action,

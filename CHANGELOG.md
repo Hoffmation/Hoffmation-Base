@@ -7,6 +7,10 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Remember which level (automatic vs. user) set an automatic block
+* (theimo1221) Leave an AC alone on movement while a user pinned it on - the user's choice outranks the rule
+
 ## 3.6.0 (2026-08-09)
 * (theimo1221) Only alert on manual shutter commands blocked by an open window
 * (theimo1221) Block the automatic while movement keeps a room occupied instead of relying on the interval check
