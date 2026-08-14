@@ -154,6 +154,11 @@ export class ServerLogService {
           return false;
         }
         break;
+      case LogDebugType.UnifiLibrary:
+        if (this.settingsProvider.settings.logSettings?.debugUnifi === true) {
+          return false;
+        }
+        break;
     }
     return true;
   }

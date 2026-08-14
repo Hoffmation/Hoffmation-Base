@@ -10,4 +10,5 @@ export enum LogDebugType {
   EuroHeaterValveLogging,
   Trilateration,
   DachsUnreach,
+  UnifiLibrary,
 }

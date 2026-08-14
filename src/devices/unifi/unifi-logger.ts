@@ -1,7 +1,7 @@
 import type { ProtectLogging } from 'unifi-protect';
 import { format } from 'node:util';
 import { ServerLogService } from '../../logging';
-import { LogLevel, LogSource } from '../../enums';
+import { LogDebugType, LogLevel, LogSource } from '../../enums';
 
 export class UnifiLogger implements ProtectLogging {
   public constructor(private readonly source: LogSource) {}
@@ -9,6 +9,8 @@ export class UnifiLogger implements ProtectLogging {
   public debug(message: string, ...parameters: unknown[]): void {
     ServerLogService.writeLog(LogLevel.Debug, format(message, ...parameters), {
       source: this.source,
+      // Several per second since v5 --> opt-in via logSettings.debugUnifi.
+      debugType: LogDebugType.UnifiLibrary,
     });
   }
 

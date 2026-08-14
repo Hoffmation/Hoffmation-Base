@@ -45,6 +45,11 @@ export interface iLogSettings {
    * Whether to log debug messages for trilateration calculations
    */
   debugTrilateration?: boolean;
+  /**
+   * Whether to log debug messages of the Unifi-Protect/Access libraries.
+   * @remarks Off by default, as the libraries report every unclassified realtime packet, which is several per second.
+   */
+  debugUnifi?: boolean;
 
   /**
    * Whether to send telegram messages on "HOST Unreach" of Dachs
