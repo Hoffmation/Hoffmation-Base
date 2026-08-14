@@ -7,6 +7,8 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Update unifi-protect-package
 ## 3.6.1 (2026-08-09)
 * (theimo1221) Remember which level (automatic vs. user) set an automatic block
 * (theimo1221) Leave an AC alone on movement while a user pinned it on - the user's choice outranks the rule

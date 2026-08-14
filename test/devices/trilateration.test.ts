@@ -6,7 +6,6 @@ import {
   Utils,
 } from '../../src';
 
-jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
 jest.mock('unifi-access', () => jest.fn()); // Working now, phew
 
 describe('Trilateration', () => {

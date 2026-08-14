@@ -1,30 +1,31 @@
-import { ProtectLogging } from 'unifi-protect';
+import type { ProtectLogging } from 'unifi-protect';
+import { format } from 'node:util';
 import { ServerLogService } from '../../logging';
 import { LogLevel, LogSource } from '../../enums';
 
 export class UnifiLogger implements ProtectLogging {
   public constructor(private readonly source: LogSource) {}
 
-  public debug(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Debug, message, {
+  public debug(message: string, ...parameters: unknown[]): void {
+    ServerLogService.writeLog(LogLevel.Debug, format(message, ...parameters), {
       source: this.source,
     });
   }
 
-  public error(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Error, message, {
+  public error(message: string, ...parameters: unknown[]): void {
+    ServerLogService.writeLog(LogLevel.Error, format(message, ...parameters), {
       source: this.source,
     });
   }
 
-  public info(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Info, message, {
+  public info(message: string, ...parameters: unknown[]): void {
+    ServerLogService.writeLog(LogLevel.Info, format(message, ...parameters), {
       source: this.source,
     });
   }
 
-  public warn(message: string, ..._parameters: unknown[]): void {
-    ServerLogService.writeLog(LogLevel.Warn, message, {
+  public warn(message: string, ...parameters: unknown[]): void {
+    ServerLogService.writeLog(LogLevel.Warn, format(message, ...parameters), {
       source: this.source,
     });
   }

@@ -69,7 +69,7 @@
     "suncalc": "1.9.0",
     "sunrise-sunset-js": "^2.2.1",
     "tibber-api": "^5.5.2",
-    "unifi-protect": "^4.29.0",
+    "unifi-protect": "^5.2.0",
     "unifi-access": "^1.5.3",
     "victron-mqtt-consumer": "^0.1.15"
   },

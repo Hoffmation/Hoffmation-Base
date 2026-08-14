@@ -27,6 +27,11 @@
     "paths": {
       "": [
         "*"
+      ],
+      /* unifi-protect v5 ships only "exports" (no "main"/"types"), which "moduleResolution": "node" cannot read.
+         Point at the JS entry, not the .d.ts - runtime loaders (tsx/ts-node) honour these paths too. */
+      "unifi-protect": [
+        "../node_modules/unifi-protect/dist"
       ]
     },
     "baseUrl": "./src",

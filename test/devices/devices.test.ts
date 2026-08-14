@@ -13,7 +13,6 @@ import {
 } from '../../src';
 import ExampleDevices from './exampleDevices.json';
 
-jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
 jest.mock('unifi-access', () => jest.fn()); // Working now, phew
 
 describe('Devices', () => {

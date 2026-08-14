@@ -7,7 +7,6 @@ import {
   Utils,
 } from '../../src';
 
-jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
 jest.mock('unifi-access', () => jest.fn()); // Working now, phew
 
 // guardedTimeout - which is how the handler schedules the revert - needs the services standing.

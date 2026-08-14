@@ -1,5 +1,5 @@
 import { CameraDevice } from '../index';
-import { ProtectCameraConfig, ProtectEventAdd, ProtectEventPacket } from 'unifi-protect';
+import type { Camera, TypedEvent } from 'unifi-protect';
 import { CommandSource, LogLevel } from '../../enums';
 
 export class OwnUnifiCamera extends CameraDevice {
@@ -15,8 +15,8 @@ export class OwnUnifiCamera extends CameraDevice {
   public override rtspStreamLink: string = '';
   /** @inheritDoc */
   public override readonly currentImageLink: string = '';
-  // @ts-expect-error Config wird später verwendet
-  private _config: ProtectCameraConfig | null = null;
+  // @ts-expect-error Kamera-Projektion wird später verwendet
+  private _camera: Camera | null = null;
 
   public constructor(name: string, roomName: string, unifiCameraName: string) {
     super(name, roomName);
@@ -24,36 +24,24 @@ export class OwnUnifiCamera extends CameraDevice {
   }
 
   /**
-   * @inheritDoc
+   * Handles a realtime event the NVR attributed to this camera.
+   * @param event - The typed event as classified by the NVR client
    */
-  public update(packet: ProtectEventPacket, baseEvent?: ProtectEventAdd): void {
-    this.checkForMotionUpdate(packet, baseEvent);
+  public update(event: TypedEvent): void {
+    this.checkForMotionUpdate(event);
     this._lastUpdate = new Date();
   }
 
-  private checkForMotionUpdate(packet: ProtectEventPacket, baseEvent?: ProtectEventAdd): void {
-    const payload = packet.payload as ProtectEventAdd | ProtectCameraConfig;
-    const eventAddInfo: ProtectEventAdd = baseEvent ?? (payload as ProtectEventAdd);
-    const payloadAsEventAdd: ProtectEventAdd = payload as ProtectEventAdd;
-    if (
-      packet.header.modelKey !== 'smartDetectObject' &&
-      (packet.header.modelKey !== 'event' ||
-        !['smartDetectLine', 'smartDetectZone'].includes(eventAddInfo.type) ||
-        !(payloadAsEventAdd.smartDetectTypes ?? []).length)
-    ) {
-      // this.log(LogLevel.Debug, `Ignored event: ${JSON.stringify(packet)}`);
-      // this.log(LogLevel.Debug, `Ignored event initial Info: ${JSON.stringify(baseEvent)}`);
+  private checkForMotionUpdate(event: TypedEvent): void {
+    if (event.kind !== 'smartDetect' || !event.objectTypes.length) {
+      // this.log(LogLevel.Debug, `Ignored event: ${JSON.stringify(event)}`);
       return;
     }
-    this.log(LogLevel.Debug, `Update for "${packet.header.modelKey}" to value: ${JSON.stringify(payload)}`);
-    const detectedTypes: string[] =
-      packet.header.modelKey === 'smartDetectObject'
-        ? [payloadAsEventAdd.type]
-        : (payloadAsEventAdd?.smartDetectTypes ?? []);
-    for (const smartDetectType of detectedTypes) {
+    this.log(LogLevel.Debug, `Update for "${event.kind}" to value: ${event.objectTypes.join(', ')}`);
+    for (const smartDetectType of event.objectTypes) {
       switch (smartDetectType) {
         case 'licensePlate':
-          this.log(LogLevel.Debug, `Detected "licensePlate" Data: ${JSON.stringify(payloadAsEventAdd)}`);
+          this.log(LogLevel.Debug, `Detected "licensePlate" Data: ${JSON.stringify(event.metadata)}`);
           break;
         case 'person':
           this.onNewPersonDetectedValue(true, CommandSource.Automatic);
@@ -62,8 +50,8 @@ export class OwnUnifiCamera extends CameraDevice {
     }
   }
 
-  public initialize(data: ProtectCameraConfig): void {
-    this._config = data;
+  public initialize(camera: Camera): void {
+    this._camera = camera;
   }
 
   protected resetPersonDetectedState(): void {

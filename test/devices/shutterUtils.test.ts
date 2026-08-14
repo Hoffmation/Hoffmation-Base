@@ -1,7 +1,6 @@
 import { CommandSource, LogLevel, ShutterSetLevelCommand, ShutterUtils, WindowPosition } from '../../src';
 import { iShutter } from '../../src/interfaces';
 
-jest.mock('unifi-protect', () => jest.fn()); // Working now, phew
 jest.mock('unifi-access', () => jest.fn()); // Working now, phew
 
 interface LogCall {
