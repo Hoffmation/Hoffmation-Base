@@ -9,6 +9,7 @@
 -->
 ## **WORK IN PROGRESS**
 * (theimo1221) Reduce Unifi Log Spam
+* (theimo1221) Harden postgres table creation
 ## 3.7.1 (2026-08-14)
 * (theimo1221) Reduce JSON Payload after unifi change
 

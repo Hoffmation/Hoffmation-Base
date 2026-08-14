@@ -345,12 +345,12 @@ BEGIN
   END IF;
 
   IF (SELECT to_regclass('hoffmation_schema."AirQualitySensorDeviceData"') IS NULL) Then
+    -- Deliberately without a foreign key on "DeviceInfo": creating one needs the REFERENCES privilege on
+    -- that table, which an existing installation whose tables were created by another role may not grant.
+    -- The sibling tables only get away with it because their CREATE is skipped once they exist.
     create table if not exists hoffmation_schema."AirQualitySensorDeviceData"
     (
-        "deviceID"        varchar(60) not null
-            constraint "AirQualitySensorDeviceData_DeviceInfo_null_fk"
-                references hoffmation_schema."DeviceInfo"
-                on delete set null,
+        "deviceID"        varchar(60) not null,
         aqi               double precision,
         co2               double precision,
         nox               double precision,
