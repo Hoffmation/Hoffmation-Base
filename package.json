@@ -50,7 +50,8 @@
     "manual-test-govee": "tsc && ts-node ./manualTests/govee-test.ts",
     "manual-test-unifi": "tsc && ts-node ./manualTests/unifi-test.ts",
     "manual-test-unifi-protect": "tsc && tsx ./manualTests/unifi-protect-test.ts",
-    "manual-test-unifi-access": "tsc && tsx ./manualTests/unifi-access-test.ts"
+    "manual-test-unifi-access": "tsc && tsx ./manualTests/unifi-access-test.ts",
+    "manual-test-unifi-air-quality": "tsc && tsx ./manualTests/unifi-air-quality-test.ts"
   },
   "dependencies": {
     "@svrooij/sonos": "^2.6.0-beta.13",

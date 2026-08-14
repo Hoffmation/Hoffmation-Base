@@ -58,6 +58,7 @@ export enum DeviceType {
   TrackableDevice = 4002,
   Camera = 6001,
   Door = 6002,
+  UnifiAirQualitySensor = 6003,
   Victron = 7001,
   Dachs = 7002,
   DachsWarmWaterTemperature = 7003,

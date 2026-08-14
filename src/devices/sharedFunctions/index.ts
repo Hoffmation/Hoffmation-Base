@@ -1,3 +1,4 @@
+export * from './airQualitySensor';
 export * from './battery';
 export * from './handleSensor';
 export * from './humiditySensor';

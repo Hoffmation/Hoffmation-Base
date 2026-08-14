@@ -1,5 +1,6 @@
-import type { Camera, ProtectClient, TypedEvent } from 'unifi-protect';
+import type { Camera, ProtectClient, Sensor, TypedEvent } from 'unifi-protect';
 import { loadProtectModule } from './protect-module';
+import { OwnUnifiAirQualitySensor } from './own-unifi-air-quality-sensor';
 import { OwnUnifiCamera } from './own-unifi-camera';
 import { LogLevel, LogSource } from '../../enums';
 import { iDisposable, iUnifiProtectOptions } from '../../interfaces';
@@ -13,12 +14,21 @@ export class UnifiProtect implements iDisposable {
    * Mapping for own devices
    */
   public static readonly ownCameras: Map<string, OwnUnifiCamera> = new Map<string, OwnUnifiCamera>();
+  /**
+   * Mapping for own air quality sensors
+   */
+  public static readonly ownAirQualitySensors: Map<string, OwnUnifiAirQualitySensor> = new Map<
+    string,
+    OwnUnifiAirQualitySensor
+  >();
   private _client: ProtectClient | null = null;
   private _connecting: boolean = false;
   private _disposed: boolean = false;
   private _eventAbort: AbortController | null = null;
   private _idMap: Map<string, string> = new Map<string, string>();
   private _ignoredIds: Set<string> = new Set<string>();
+  private _sensorIdMap: Map<string, string> = new Map<string, string>();
+  private _ignoredSensorIds: Set<string> = new Set<string>();
 
   public constructor(settings: iUnifiProtectOptions) {
     this.connect(settings);
@@ -42,6 +52,8 @@ export class UnifiProtect implements iDisposable {
     this._connecting = true;
     this._idMap = new Map<string, string>();
     this._ignoredIds = new Set<string>();
+    this._sensorIdMap = new Map<string, string>();
+    this._ignoredSensorIds = new Set<string>();
     loadProtectModule()
       .then((protect) =>
         protect.ProtectClient.connect({
@@ -104,10 +116,21 @@ export class UnifiProtect implements iDisposable {
     this.ownCameras.set((camera as OwnUnifiCamera).unifiCameraName, camera);
   }
 
+  /**
+   * Registers an air quality sensor to be fed with the readings of its Unifi counterpart.
+   * @param sensor - The device to register
+   */
+  public static addAirQualitySensor(sensor: OwnUnifiAirQualitySensor): void {
+    this.ownAirQualitySensors.set(sensor.unifiSensorName, sensor);
+  }
+
   private initialize(client: ProtectClient): void {
     this.unifiLogger.info(`Unifi-Protect: Connected to "${client.controllerName}"`);
     for (const camera of client.cameras) {
       this.initializeCamera(camera);
+    }
+    for (const sensor of client.sensors) {
+      this.initializeSensor(sensor);
     }
     void this.consumeEvents(client);
   }
@@ -141,15 +164,37 @@ export class UnifiProtect implements iDisposable {
         for (const camera of client.cameras) {
           this.initializeCamera(camera);
         }
+        for (const sensor of client.sensors) {
+          this.initializeSensor(sensor);
+        }
         break;
 
       case 'deviceAdded': {
-        if (event.modelKey !== 'camera') {
+        if (event.modelKey === 'camera') {
+          const camera: Camera | undefined = client.camera(event.id);
+          if (camera !== undefined) {
+            this.initializeCamera(camera);
+          }
+        } else if (event.modelKey === 'sensor') {
+          const sensor: Sensor | undefined = client.sensor(event.id);
+          if (sensor !== undefined) {
+            this.initializeSensor(sensor);
+          }
+        }
+        break;
+      }
+
+      case 'devicePatched': {
+        if (event.modelKey !== 'sensor') {
           break;
         }
-        const camera: Camera | undefined = client.camera(event.id);
-        if (camera !== undefined) {
-          this.initializeCamera(camera);
+        // The patch carries the full airQuality block, but the projection is authoritative and always complete.
+        const ownSensor: OwnUnifiAirQualitySensor | undefined = this.ownSensorFor(event.id);
+        const sensor: Sensor | undefined = client.sensor(event.id);
+        if (ownSensor !== undefined && sensor !== undefined) {
+          Utils.guardedFunction(() => {
+            ownSensor.update(sensor.config);
+          }, this);
         }
         break;
       }
@@ -157,6 +202,8 @@ export class UnifiProtect implements iDisposable {
       case 'deviceRemoved':
         this._idMap.delete(event.id);
         this._ignoredIds.delete(event.id);
+        this._sensorIdMap.delete(event.id);
+        this._ignoredSensorIds.delete(event.id);
         break;
 
       case 'motionDetected':
@@ -178,6 +225,33 @@ export class UnifiProtect implements iDisposable {
     Utils.guardedFunction(() => {
       ownCamera.update(event);
     }, this);
+  }
+
+  private ownSensorFor(sensorId: string): OwnUnifiAirQualitySensor | undefined {
+    const ownName: string | undefined = this._sensorIdMap.get(sensorId);
+    if (!ownName) {
+      return undefined;
+    }
+    return UnifiProtect.ownAirQualitySensors.get(ownName);
+  }
+
+  private initializeSensor(sensor: Sensor): void {
+    if (this._sensorIdMap.has(sensor.id) || this._ignoredSensorIds.has(sensor.id)) {
+      // Already known --> the projection is live, so there is nothing to refresh.
+      return;
+    }
+    const name: string = sensor.name;
+    if (!name || !UnifiProtect.ownAirQualitySensors.has(name)) {
+      this._ignoredSensorIds.add(sensor.id);
+      ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Ignoring sensor ${name}`);
+      return;
+    }
+    const ownSensor: OwnUnifiAirQualitySensor = UnifiProtect.ownAirQualitySensors.get(name) as OwnUnifiAirQualitySensor;
+    this._sensorIdMap.set(sensor.id, name);
+    Utils.guardedFunction(() => {
+      ownSensor.initialize(sensor);
+    }, this);
+    ServerLogService.writeLog(LogLevel.Info, `Unifi-Protect: Sensor ${name} (re)initialized`);
   }
 
   private initializeCamera(camera: Camera): void {

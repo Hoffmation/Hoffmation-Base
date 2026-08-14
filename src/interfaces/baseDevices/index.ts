@@ -12,6 +12,8 @@ export * from './iExcessEnergyConsumer';
 export * from './iGarageDoorOpener';
 export * from './iHandle';
 export * from './iHeater';
+export * from './iAirQualityCollector';
+export * from './iAirQualitySensor';
 export * from './iHumidityCollector';
 export * from './iIlluminationSensor';
 export * from './iLamp';

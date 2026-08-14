@@ -9,6 +9,8 @@ import {
   iDimmableLamp,
   iHandle,
   iHeater,
+  iAirQualityCollector,
+  iAirQualityReadings,
   iHumidityCollector,
   iIlluminationSensor,
   iMotionSensor,
@@ -19,6 +21,7 @@ import {
   iTemperatureCollector,
   iTemperatureMeasurement,
   iZigbeeDevice,
+  UNDEFINED_AIR_QUALITY_VALUE,
   UNDEFINED_TEMP_VALUE,
 } from '../../interfaces';
 import { CountToday, DesiredShutterPosition, EnergyCalculation, idSettings } from '../../models';
@@ -338,7 +341,31 @@ BEGIN
         constraint humiditysensordevicedata_pk
             primary key ("deviceID", date)
     );
-    
+
+  END IF;
+
+  IF (SELECT to_regclass('hoffmation_schema."AirQualitySensorDeviceData"') IS NULL) Then
+    create table if not exists hoffmation_schema."AirQualitySensorDeviceData"
+    (
+        "deviceID"        varchar(60) not null
+            constraint "AirQualitySensorDeviceData_DeviceInfo_null_fk"
+                references hoffmation_schema."DeviceInfo"
+                on delete set null,
+        aqi               double precision,
+        co2               double precision,
+        nox               double precision,
+        "pm1p0"           double precision,
+        "pm2p5"           double precision,
+        "pm4p0"           double precision,
+        "pm10p0"          double precision,
+        tvoc              double precision,
+        vape              double precision,
+        voc               double precision,
+        date              timestamp   not null,
+        constraint airqualitysensordevicedata_pk
+            primary key ("deviceID", date)
+    );
+
   END IF;
 
   IF (SELECT to_regclass('hoffmation_schema."BatteryDeviceData"') IS NULL) Then  
@@ -533,6 +560,16 @@ $$;`,
     this.query(`
       insert into hoffmation_schema."HumiditySensorDeviceData" ("deviceID", "humidity", "date")
       values ('${device.id}', ${device.humidity}, '${new Date().toISOString()}');
+    `);
+  }
+
+  /** @inheritDoc */
+  public persistAirQualitySensor(device: iAirQualityCollector): void {
+    const readings: iAirQualityReadings = device.airQuality;
+    const value = (metric: number): string => (metric === UNDEFINED_AIR_QUALITY_VALUE ? 'null' : `${metric}`);
+    this.query(`
+      insert into hoffmation_schema."AirQualitySensorDeviceData" ("deviceID", "aqi", "co2", "nox", "pm1p0", "pm2p5", "pm4p0", "pm10p0", "tvoc", "vape", "voc", "date")
+      values ('${device.id}', ${value(readings.aqi)}, ${value(readings.co2)}, ${value(readings.nox)}, ${value(readings.pm1p0)}, ${value(readings.pm2p5)}, ${value(readings.pm4p0)}, ${value(readings.pm10p0)}, ${value(readings.tvoc)}, ${value(readings.vape)}, ${value(readings.voc)}, '${new Date().toISOString()}');
     `);
   }
 

@@ -1,3 +1,4 @@
+export { AirQualitySensorChangeAction } from './airQualitySensorChangeAction';
 export { BaseAction } from './baseAction';
 export { HumiditySensorChangeAction } from './humiditySensorChangeAction';
 export { MotionSensorAction } from './motionSensorAction';

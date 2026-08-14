@@ -1,6 +1,7 @@
 import {
   iAcDevice,
   iActuator,
+  iAirQualityCollector,
   iBaseDevice,
   iBatteryDevice,
   iButtonSwitch,
@@ -146,6 +147,12 @@ export interface iPersist {
    * @param device - The device to persist data for
    */
   persistHumiditySensor(device: iHumidityCollector): void;
+
+  /**
+   * Persists data of an air quality sensor
+   * @param device - The device to persist data for
+   */
+  persistAirQualitySensor(device: iAirQualityCollector): void;
 
   /**
    * Persists data of a handle sensor
