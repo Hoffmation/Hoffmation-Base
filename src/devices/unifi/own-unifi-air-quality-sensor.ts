@@ -53,6 +53,8 @@ export class OwnUnifiAirQualitySensor
     const allDevicesKey = `unifi-air-quality-${roomName}-${name}`;
     info.allDevicesKey = allDevicesKey;
     super(info, DeviceType.UnifiAirQualitySensor);
+    // The projection reaches back into the Protect client, whose object graph is self-referential.
+    this.jsonOmitKeys.push('_sensor');
     this.deviceCapabilities.push(DeviceCapability.temperatureSensor);
     this.deviceCapabilities.push(DeviceCapability.humiditySensor);
     this.deviceCapabilities.push(DeviceCapability.airQualitySensor);

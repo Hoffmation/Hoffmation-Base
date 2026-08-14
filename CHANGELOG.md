@@ -7,6 +7,8 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
+## **WORK IN PROGRESS**
+* (theimo1221) Reduce JSON Payload after unifi change
 ## 3.7.0 (2026-08-14)
 * (theimo1221) Update unifi-protect-package
 * (theimo1221) Add Unifi Air Quality Sensor Support

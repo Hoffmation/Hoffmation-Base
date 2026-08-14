@@ -20,6 +20,8 @@ export class OwnUnifiCamera extends CameraDevice {
 
   public constructor(name: string, roomName: string, unifiCameraName: string) {
     super(name, roomName);
+    // The projection reaches back into the Protect client, whose object graph is self-referential.
+    this.jsonOmitKeys.push('_camera');
     this.unifiCameraName = unifiCameraName;
   }
 
