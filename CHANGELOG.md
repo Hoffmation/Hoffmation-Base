@@ -7,9 +7,10 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## **WORK IN PROGRESS**
+## 3.7.2 (2026-08-14)
 * (theimo1221) Reduce Unifi Log Spam
 * (theimo1221) Harden postgres table creation
+
 ## 3.7.1 (2026-08-14)
 * (theimo1221) Reduce JSON Payload after unifi change
 
