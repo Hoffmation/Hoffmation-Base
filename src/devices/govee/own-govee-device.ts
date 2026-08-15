@@ -97,9 +97,14 @@ export class OwnGoveeDevice extends RoomBaseDevice implements iLedRgbCct, iTempo
 
     if (c.on) {
       // Changing the color turns the device on as well --> Only change color on turn on actions
-      const formattedColor: string | null = Utils.formatHex(c.color);
-      if (formattedColor !== null) {
-        this.setColor(c.color);
+      if (c.colorTemp > -1) {
+        // A Govee device is either in color or in white mode, so a desired color temperature replaces the color.
+        this.setColorTemp(c.colorTemp);
+      } else {
+        const formattedColor: string | null = Utils.formatHex(c.color);
+        if (formattedColor !== null) {
+          this.setColor(c.color);
+        }
       }
     }
 
@@ -205,6 +210,20 @@ export class OwnGoveeDevice extends RoomBaseDevice implements iLedRgbCct, iTempo
         this.log(LogLevel.Error, 'Govee set color resulted in error');
       } else {
         this.log(LogLevel.Debug, `Govee set color to ${color}`, LogDebugType.SetActuator);
+      }
+    });
+  }
+
+  /**
+   * Sets the white color temperature of the device. Only devices with white leds (RGBWW/RGBICWW) react to this.
+   * @param colorTemp - The desired color temperature in Kelvin (1000-9000), as that is the unit Govee devices use.
+   */
+  private setColorTemp(colorTemp: number): void {
+    GooveeService.sendCommand(this, `colortemp/${colorTemp}`).then((result) => {
+      if (!result) {
+        this.log(LogLevel.Error, 'Govee set color temperature resulted in error');
+      } else {
+        this.log(LogLevel.Debug, `Govee set color temperature to ${colorTemp}K`, LogDebugType.SetActuator);
       }
     });
   }
