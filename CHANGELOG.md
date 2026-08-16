@@ -7,7 +7,7 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## **WORK IN PROGRESS**
+## 3.8.0 (2026-08-16)
 * (theimo1221) Grade shutter heat reduction by cloudiness instead of switching it on or off
 * (theimo1221) Respect sunset and sun direction for heat reduction below `heatReductionThreshold`
 * (theimo1221) Shade a sunlit window as soon as the room exceeds its desired temperature, regardless of outside temperature
