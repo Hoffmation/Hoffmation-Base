@@ -30,6 +30,15 @@ export class ShutterSettings extends DeviceSettings implements iShutterSettings 
   /** @inheritDoc */
   public heatReductionThreshold: number = 27;
 
+  /** @inheritDoc */
+  public heatReductionDirectionTolerance: number = 50;
+
+  /** @inheritDoc */
+  public heatReductionCloudinessThreshold: number = 40;
+
+  /** @inheritDoc */
+  public heatReductionMaxCloudiness: number = 80;
+
   /**
    * Some shutter give no position feedback on their own, so by knowing the durations in either direction,
    * we can programmatically trigger the callbacks.
@@ -44,6 +53,10 @@ export class ShutterSettings extends DeviceSettings implements iShutterSettings 
     this.heatReductionPosition = data.heatReductionPosition ?? this.heatReductionPosition;
     this.heatReductionThreshold = data.heatReductionThreshold ?? this.heatReductionThreshold;
     this.heatReductionDirectionThreshold = data.heatReductionDirectionThreshold ?? this.heatReductionDirectionThreshold;
+    this.heatReductionDirectionTolerance = data.heatReductionDirectionTolerance ?? this.heatReductionDirectionTolerance;
+    this.heatReductionCloudinessThreshold =
+      data.heatReductionCloudinessThreshold ?? this.heatReductionCloudinessThreshold;
+    this.heatReductionMaxCloudiness = data.heatReductionMaxCloudiness ?? this.heatReductionMaxCloudiness;
     this.triggerPositionUpdateByTime = data.triggerPositionUpdateByTime ?? this.triggerPositionUpdateByTime;
     super.fromPartialObject(data);
   }

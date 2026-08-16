@@ -33,6 +33,11 @@ export class WeatherService {
    * The sun horizontal degree (0 is North)
    */
   public static sunDirection: number;
+  /**
+   * How many degrees a room has to exceed its desired temperature, before the sun shading
+   * triggers on the room temperature alone.
+   */
+  private static readonly roomOverheatOffset: number = 1;
   private static _dataUpdateCbs: { [name: string]: () => void } = {};
   private static _refreshInterval: NodeJS.Timeout | undefined;
   private static latitude: string;
@@ -268,37 +273,119 @@ export class WeatherService {
     logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
     shutterSettings: ShutterSettings,
   ): number {
-    let result: number = normalPos;
+    const result: number = normalPos;
     if (currentTemperatur < desiredTemperatur && currentTemperatur < shutterSettings.heatReductionDirectionThreshold) {
       logger(LogLevel.Trace, 'RolloWeatherPosition: Room needs to heat up anyways.');
       return result;
-    } else if (normalPos < shutterSettings.heatReductionPosition) {
+    }
+    if (normalPos < shutterSettings.heatReductionPosition) {
       logger(LogLevel.Trace, 'RolloWeatherPosition: Shutter should be down anyways.');
       return result;
-    } else if (this.willOutsideBeWarmer(shutterSettings.heatReductionThreshold, logger)) {
-      result = shutterSettings.heatReductionPosition;
-    } else if (this.hoursTilSunset() < 1) {
+    }
+    if (this.hoursTilSunset() < 1) {
       logger(LogLevel.Trace, "RolloWeatherPosition: It's close to or after todays sunset");
       return result;
-    } else if (
-      shutterSettings.direction !== undefined &&
-      !Utils.degreeInBetween(shutterSettings.direction - 50, shutterSettings.direction + 50, this.sunDirection)
-    ) {
-      logger(LogLevel.Trace, 'RolloWeatherPosition: Sun is facing a different direction');
-      return result;
-    } else if (this.getCurrentCloudiness() > 40) {
-      logger(LogLevel.Trace, 'RolloWeatherPosition: It´s cloudy now.');
-    } else if (this.willOutsideBeWarmer(shutterSettings.heatReductionDirectionThreshold, logger)) {
-      result = shutterSettings.heatReductionPosition;
     }
 
-    if (result !== normalPos) {
+    // How much of the full reduction is warranted right now, between 0 (none) and 1 (full).
+    let reductionShare: number;
+    if (this.willOutsideBeWarmer(shutterSettings.heatReductionThreshold, logger)) {
+      // Insulation regime: at this point the ambient heat outweighs the solar gain, so the closed
+      // shutter is worth it as additional window insulation - no matter where the sun stands.
+      reductionShare = 1;
+    } else if (
+      this.willOutsideBeWarmer(shutterSettings.heatReductionDirectionThreshold, logger) ||
+      this.isRoomOverheated(desiredTemperatur, currentTemperatur)
+    ) {
+      // Sun shading regime: only the window the sun actually shines on is worth darkening.
+      reductionShare = this.solarExposureShare(shutterSettings, logger) * this.skyClearnessShare(shutterSettings);
+    } else {
+      logger(LogLevel.Trace, "RolloWeatherPosition: It won't get warm enough today.");
+      return result;
+    }
+
+    if (reductionShare <= 0) {
+      return result;
+    }
+    const span: number = normalPos - shutterSettings.heatReductionPosition;
+    // Quantized to 10% steps, so slight weather changes don't cause constant shutter movement.
+    // A full reduction keeps the configured position verbatim, as that one is a deliberate choice.
+    const target: number =
+      reductionShare >= 1
+        ? shutterSettings.heatReductionPosition
+        : Math.min(
+            normalPos,
+            Math.max(shutterSettings.heatReductionPosition, Math.round((normalPos - span * reductionShare) / 10) * 10),
+          );
+    if (target !== normalPos) {
       logger(
         LogLevel.Info,
-        `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${result}`,
+        `weatherRolloPosition(${normalPos}, ${desiredTemperatur}, ${currentTemperatur}) --> Target: ${target} ` +
+          `(share: ${Utils.round(reductionShare, 2)}, cloudiness: ${this.getCurrentCloudiness()}%, ` +
+          `sunDirection: ${Math.round(this.sunDirection)}°, windowDirection: ${shutterSettings.direction}°)`,
       );
     }
-    return result;
+    return target;
+  }
+
+  /**
+   * Determines whether the room is already warmer than wanted.
+   *
+   * The outside temperature alone cannot answer whether a room needs shading: a low autumn sun
+   * shines deep into a south facing room and heats it up considerably while it stays cool outside.
+   * The room's own temperature is the honest measure for that, so it may trigger the shading on its own.
+   * @param desiredTemperatur - The temperature the room is supposed to have
+   * @param currentTemperatur - The temperature the room currently has
+   * @returns True if both values are known and the room exceeds the desired temperature noticeably
+   */
+  private static isRoomOverheated(desiredTemperatur: number, currentTemperatur: number): boolean {
+    if (desiredTemperatur <= UNDEFINED_TEMP_VALUE || currentTemperatur <= UNDEFINED_TEMP_VALUE) {
+      // Without a heat group we have no room temperature to judge by.
+      return false;
+    }
+    return currentTemperatur >= desiredTemperatur + WeatherService.roomOverheatOffset;
+  }
+
+  /**
+   * Determines whether the sun currently shines onto this particular window,
+   * based on the angle between sun and window direction.
+   * @param shutterSettings - The settings of the shutter in question
+   * @param logger - The logging function to use
+   * @returns 1 while the sun faces the window, 0 otherwise
+   */
+  private static solarExposureShare(
+    shutterSettings: ShutterSettings,
+    logger: (level: LogLevel, message: string, debugType?: LogDebugType) => void,
+  ): number {
+    if (shutterSettings.direction === undefined) {
+      // Without a known direction we have to assume the worst case of a fully exposed window.
+      return 1;
+    }
+    const delta: number = Utils.degreeDistance(shutterSettings.direction, this.sunDirection);
+    if (delta > shutterSettings.heatReductionDirectionTolerance) {
+      logger(LogLevel.Trace, `RolloWeatherPosition: Sun is facing a different direction (${Math.round(delta)}° off).`);
+      return 0;
+    }
+    return 1;
+  }
+
+  /**
+   * Determines how much solar gain the current sky lets through, as an overcast sky provides
+   * too little of it to justify a darkened room.
+   * @param shutterSettings - The settings of the shutter in question
+   * @returns The share of clear sky, between 0 and 1
+   */
+  private static skyClearnessShare(shutterSettings: ShutterSettings): number {
+    const cloudiness: number = this.getCurrentCloudiness();
+    const fullReductionMax: number = shutterSettings.heatReductionCloudinessThreshold;
+    const noReductionMin: number = shutterSettings.heatReductionMaxCloudiness;
+    if (cloudiness <= fullReductionMax || noReductionMin <= fullReductionMax) {
+      return 1;
+    }
+    if (cloudiness >= noReductionMin) {
+      return 0;
+    }
+    return 1 - (cloudiness - fullReductionMax) / (noReductionMin - fullReductionMax);
   }
 
   public static getCurrentCloudiness(): number {

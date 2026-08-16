@@ -237,6 +237,17 @@ export class Utils {
     return ((number % mod) + mod) % mod;
   }
 
+  /**
+   * Calculates the shortest angular distance between two degree values.
+   * @param degreeA - The first degree value
+   * @param degreeB - The second degree value
+   * @returns The distance in degrees, always between 0 and 180
+   */
+  public static degreeDistance(degreeA: number, degreeB: number): number {
+    const delta: number = this.positiveMod(degreeA - degreeB, 360);
+    return delta > 180 ? 360 - delta : delta;
+  }
+
   public static degreeInBetween(minDegree: number, maxDegree: number, degreeToCheck: number) {
     const modMin: number = this.positiveMod(minDegree, 360);
     const modMax: number = this.positiveMod(maxDegree, 360);
