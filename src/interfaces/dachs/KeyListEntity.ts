@@ -4,10 +4,3 @@ export interface KeyListEntity {
   doc: string;
   unit: (x: string) => boolean | string | number;
 }
-
-export interface KeyListEntityResponse<V> {
-  key?: KeyListEntity;
-  rawValue?: string;
-  //HTTP VALUE RESPONSE
-  value: V;
-}

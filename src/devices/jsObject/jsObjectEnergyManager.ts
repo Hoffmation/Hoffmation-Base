@@ -1,5 +1,11 @@
 import { IoBrokerBaseDevice } from '../IoBrokerBaseDevice';
-import { iDisposable, iEnergyManager, iExcessEnergyConsumer } from '../../interfaces';
+import {
+  iDisposable,
+  iEnergyHistoryOutlook,
+  iEnergyManager,
+  iExcessEnergyConsumer,
+  iMorningReserveVerdict,
+} from '../../interfaces';
 import { EnergyConsumerStateChange, EnergyManagerUtils, Utils } from '../../utils';
 import { EnergyCalculation } from '../../models';
 import { IoBrokerDeviceInfo } from '../IoBrokerDeviceInfo';
@@ -81,6 +87,27 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   /** @inheritDoc */
   public get acBlocked(): boolean {
     return this.excessEnergy < 200;
+  }
+
+  /**
+   * The same shared implementation the other energy manager delegates to - not a stub, and not a copy. This
+   * manager measures three phases and carries neither a battery nor the dials that say how a history is read,
+   * so the shared code answers nothing for it and reads nothing for it either. That is the honest answer and
+   * the one an installation on this manager already got; it is reached by running the real path rather than
+   * by declaring it here.
+   * @inheritDoc
+   */
+  public get morningOutlook(): iEnergyHistoryOutlook | undefined {
+    return EnergyManagerUtils.morningOutlook(this);
+  }
+
+  /**
+   * Delegated for the same reason {@link morningOutlook} is - and it answers nothing here for the same reason
+   * too: this manager states neither the reserve nor the sun threshold a verdict would be measured against.
+   * @inheritDoc
+   */
+  public get morningReserveVerdict(): iMorningReserveVerdict | undefined {
+    return EnergyManagerUtils.morningReserveVerdict(this, this.morningOutlook);
   }
 
   private _excessEnergyConsumerConsumption: number = 0;
@@ -179,6 +206,10 @@ export class JsObjectEnergyManager extends IoBrokerBaseDevice implements iEnergy
   }
 
   private calculateExcessEnergy() {
+    // The same call the other manager's loop makes, so whether anything is read is decided in one place
+    // rather than by which manager happens to ask. This one states no dials, so nothing is read and no
+    // request quota is spent.
+    EnergyManagerUtils.refreshEnergyHistory(this);
     const phaseProduction: number = this._currentProduction / 3.0;
     this._phaseAState = new PhaseState(this._powerValuePhaseA, phaseProduction);
     this._phaseBState = new PhaseState(this._powerValuePhaseB, phaseProduction);

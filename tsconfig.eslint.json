@@ -3,7 +3,7 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*.ts",
-    "test/**/*.test.ts",
+    "test/**/*.ts",
     "manualTests/**/*test.ts",
     ".eslintrc.js",
     "eslint.config.mjs",

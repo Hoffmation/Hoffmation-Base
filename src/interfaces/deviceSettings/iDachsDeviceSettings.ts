@@ -81,6 +81,24 @@ export interface iDachsDeviceSettings extends iActuatorSettings {
   winterMinimumPreNightHeatStorageTemp: number;
 
   /**
+   * Defines the desired maximum temperature for warm water using dachs outside of winter heating mode.
+   * Applies in place of {@link warmWaterDesiredMaxTemp} whenever the heating mode is not winter.
+   */
+  summerWarmWaterDesiredMaxTemp: number;
+
+  /**
+   * The rated electrical output of the unit in watt, used to remove its own contribution from a historical day.
+   * @default 5500
+   */
+  dachsRatedElectricalWattage: number;
+
+  /**
+   * The share of the produced electrical energy that reaches the battery.
+   * @default 0.8
+   */
+  dachsConversionFactor: number;
+
+  /**
    *
    */
   fromPartialObject(data: Partial<iDachsDeviceSettings>): void;

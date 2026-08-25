@@ -7,6 +7,7 @@ export * from './time-callback-service';
 export * from './network';
 export * from './ac';
 export * from './calendar';
+export * from './energy';
 export * from './blockAutomaticHandler';
 export * from './file-info';
 export * from './https-service';

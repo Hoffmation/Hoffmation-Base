@@ -50,6 +50,7 @@ import {
   iConfig,
   iDeviceConfig,
   iEnergyManager,
+  iFossilGeneratorSource,
   iMotionSensor,
   iRoomImportEnforcer,
   iTemperatureCollector,
@@ -132,6 +133,11 @@ export class Devices {
    * A reference to the Unifi Access device
    */
   public static unifiAccess?: UnifiAccess;
+  /**
+   * The devices already reported as announcing a fuel burning generator without stating the fields of one,
+   * so the line is written on change instead of on every read of {@link fossilGenerators}.
+   */
+  private static readonly _incompleteGeneratorsReported: Set<string> = new Set<string>();
 
   public constructor(
     pDeviceData: { [id: string]: iDeviceConfig },
@@ -184,6 +190,72 @@ export class Devices {
     ZigbeeDevice.checkMissing();
     ShellyDevice.checkMissing();
     TuyaDevice.checkMissing();
+  }
+
+  /**
+   * The fuel burning generators of the plant - every device that announced itself as one by carrying
+   * {@link DeviceCapability.fossilGenerator}.
+   *
+   * Which generators a plant has is a property of the plant, not of whoever asks about it, so it is answered
+   * here rather than handed to a service by one of its callers. Reading the device list instead of keeping a
+   * list of registrations is what makes it independent of construction order: devices are built in the order
+   * the installation's configuration lists them, and a generator built before the reader would have to hope
+   * the reader existed already.
+   *
+   * Read anew on every use for the same reason - a generator added later is simply found the next time, and
+   * the two numbers of each entry are getters onto settings that are editable at runtime.
+   *
+   * The capability announces the intent, the three fields are what the correction actually works with, and
+   * both are checked. Cast into the role unchecked, a device that carries the capability without the fields
+   * hands over `undefined`, the correction turns into `NaN` and its entry is dropped without a word - the
+   * day is then under corrected, the photovoltaic looks better than it was, and the gate suppresses a start
+   * the house needed. That is the direction without a way back, so such a device is left out and named.
+   * @returns One entry per usable generator; empty while the plant has none.
+   */
+  public static get fossilGenerators(): iFossilGeneratorSource[] {
+    const generators: iFossilGeneratorSource[] = [];
+    for (const key in Devices.alLDevices) {
+      const device: iBaseDevice = Devices.alLDevices[key];
+      if (!device.deviceCapabilities.includes(DeviceCapability.fossilGenerator)) {
+        continue;
+      }
+      const candidate: Partial<iFossilGeneratorSource> = device as unknown as Partial<iFossilGeneratorSource>;
+      // Finiteness rather than a plausible range: a negative or zero rating over corrects, which only makes
+      // the photovoltaic look worse, while an absent one poisons the whole sum of the day.
+      if (
+        typeof candidate.actuatorId !== 'string' ||
+        candidate.actuatorId === '' ||
+        !Number.isFinite(candidate.ratedElectricalWattage) ||
+        !Number.isFinite(candidate.conversionFactor)
+      ) {
+        Devices.reportIncompleteGenerator(key);
+        continue;
+      }
+      Devices._incompleteGeneratorsReported.delete(key);
+      generators.push(candidate as iFossilGeneratorSource);
+    }
+    return generators;
+  }
+
+  /**
+   * Names a device that announces itself as a fuel burning generator without stating what one has to state.
+   *
+   * Said once per device rather than once per read: this list is read on every history load, and a line per
+   * read would bury the change. The note is dropped again as soon as the device answers completely, so a
+   * field that only arrives later is not reported forever.
+   * @param key - The key the device is listed under.
+   */
+  private static reportIncompleteGenerator(key: string): void {
+    if (Devices._incompleteGeneratorsReported.has(key)) {
+      return;
+    }
+    Devices._incompleteGeneratorsReported.add(key);
+    ServerLogService.writeLog(
+      LogLevel.Error,
+      `Device '${key}' announces itself as a fuel burning generator but states no usable actuator id, rated ` +
+        'wattage and conversion factor, so nothing is subtracted for it and the photovoltaic looks better ' +
+        'than it was',
+    );
   }
 
   public static midnightReset(): void {

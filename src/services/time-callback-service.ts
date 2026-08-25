@@ -209,11 +209,26 @@ Next Sunset: ${TimeCallbackService._nextSunSet.toLocaleString('de-DE')}`,
   }
 
   public static updateSunRise(pDay: Date = new Date(), lat?: number, long?: number): void {
-    TimeCallbackService._nextSunRise = getSunrise(
+    TimeCallbackService._nextSunRise = this.getSunriseForDate(
+      pDay,
       lat ?? SettingsService.latitude,
       long ?? SettingsService.longitude,
-      pDay,
     );
+  }
+
+  /**
+   * The sunrise of a given day, as this service defines it.
+   *
+   * The counterpart of {@link getSunsetForDate}, and it exists so that a caller which needs both ends of one
+   * day gets them from one definition of the sun: two libraries put sunrise and sunset minutes apart, and a
+   * window bounded by one at each end is bounded by two different mornings.
+   * @param pDay - The day to calculate for; defaults to today.
+   * @param lat - The latitude to calculate for; defaults to the configured one.
+   * @param long - The longitude to calculate for; defaults to the configured one.
+   * @returns The moment of sunrise on that day.
+   */
+  public static getSunriseForDate(pDay: Date = new Date(), lat?: number, long?: number): Date {
+    return getSunrise(lat ?? SettingsService.latitude, long ?? SettingsService.longitude, pDay);
   }
 
   public static updateSunSet(pDay: Date = new Date(), lat?: number, long?: number): void {
@@ -229,6 +244,6 @@ Next Sunset: ${TimeCallbackService._nextSunSet.toLocaleString('de-DE')}`,
   }
 
   public static hoursTilSunset(): number {
-    return (this.nextSunSet.getTime() - Utils.nowMS()) / 1000 / 60;
+    return (this.nextSunSet.getTime() - Utils.nowMS()) / (1000 * 60 * 60);
   }
 }

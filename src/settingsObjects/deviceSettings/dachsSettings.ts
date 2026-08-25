@@ -1,6 +1,10 @@
 import { Utils } from '../../utils';
 import { iDachsDeviceSettings } from '../../interfaces';
 import { ActuatorSettings } from './actuatorSettings';
+// Shared with the energy manager's settings rather than copied: the two would otherwise drift apart on what
+// counts as an unusable share, and an installation would be answered differently depending on which device
+// happened to read the value.
+import { acceptedShare } from './victronDeviceSettings';
 
 export class DachsDeviceSettings extends ActuatorSettings implements iDachsDeviceSettings {
   /** @inheritDoc */
@@ -46,6 +50,15 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
   /** @inheritDoc */
   public winterMinimumPreNightHeatStorageTemp: number = 65;
 
+  /** @inheritDoc */
+  public summerWarmWaterDesiredMaxTemp: number = 58;
+
+  /** @inheritDoc */
+  public dachsRatedElectricalWattage: number = 5500;
+
+  /** @inheritDoc */
+  public dachsConversionFactor: number = 0.8;
+
   public fromPartialObject(data: Partial<DachsDeviceSettings>): void {
     this.disableHeatingRod = data.disableHeatingRod ?? this.disableHeatingRod;
     this.disableDachsOwnWW = data.disableDachsOwnWW ?? this.disableDachsOwnWW;
@@ -66,6 +79,13 @@ export class DachsDeviceSettings extends ActuatorSettings implements iDachsDevic
     this.winterMinimumHeatStorageTemp = data.winterMinimumHeatStorageTemp ?? this.winterMinimumHeatStorageTemp;
     this.winterMinimumPreNightHeatStorageTemp =
       data.winterMinimumPreNightHeatStorageTemp ?? this.winterMinimumPreNightHeatStorageTemp;
+    this.summerWarmWaterDesiredMaxTemp = data.summerWarmWaterDesiredMaxTemp ?? this.summerWarmWaterDesiredMaxTemp;
+    this.dachsRatedElectricalWattage = data.dachsRatedElectricalWattage ?? this.dachsRatedElectricalWattage;
+    this.dachsConversionFactor = acceptedShare(
+      'dachsConversionFactor',
+      data.dachsConversionFactor,
+      this.dachsConversionFactor,
+    );
     super.fromPartialObject(data);
   }
 

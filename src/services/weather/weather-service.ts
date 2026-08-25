@@ -440,11 +440,33 @@ export class WeatherService {
       return;
     }
     const host: string = 'api.openweathermap.org';
-    const path: string = `/data/3.0/onecall?lat=${WeatherService.latitude}&lon=${WeatherService.longitude}&appid=${WeatherService.appID}&units=metric&lang=de`;
+    // HTTPSOptions logs the path it is constructed with, so it is constructed with a redacted one and the
+    // real query - which carries key and location - is set afterwards. The repository is public and an
+    // operator runs at Debug, which is the level that log line goes out on.
+    // Do NOT collapse these two into one constructor call: that puts the key into a log line. The guard is
+    // "carries key and location in the request and in no log line" in test/services/weather-service.test.ts.
+    const options: HTTPSOptions = new HTTPSOptions(host, '/data/3.0/onecall (forecast)', {}, 'GET', 443);
+    options.path =
+      `/data/3.0/onecall?lat=${WeatherService.latitude}&lon=${WeatherService.longitude}` +
+      `&appid=${WeatherService.appID}&units=metric&lang=de`;
     ServerLogService.writeLog(LogLevel.Debug, 'Send WeatherAPi Request for data update.');
-    HTTPSService.request(new HTTPSOptions(host, path, {}, 'GET', 443), '', 5, (response: string) => {
+    HTTPSService.request(options, '', 5, (response: string, statusCode: number) => {
+      if (statusCode < 200 || statusCode >= 300) {
+        // Everything outside the successful range ends the update here, and the last forecast stays in place:
+        // an old forecast is a worse answer than a fresh one, an error page is none at all.
+        // This covers both ways a request can miss its forecast. `HTTPSService.failureStatusCode` means there
+        // was no answer to begin with, and any other code means the endpoint answered something that is not
+        // one - a refused key answers 401, an exhausted quota 429. The body cannot be what decides that:
+        // those answers are readable JSON as well, so parsing them succeeds and yields a WeatherResponse
+        // whose every field is undefined.
+        // Only the code is named: the request carries the key and the answer mirrors the coordinate back.
+        ServerLogService.writeLog(LogLevel.Warn, `WeatherAPi request answered ${statusCode} --> no forecast update`);
+        return;
+      }
       ServerLogService.writeLog(LogLevel.Debug, 'WeatherAPi Response erhalten');
-      ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response: ${response}`);
+      // The length rather than the body: the answer mirrors the coordinate of the request back, so a raw
+      // dump writes the location of the plant into the log even though it carries no key itself.
+      ServerLogService.writeLog(LogLevel.DeepTrace, `WeatherAPi Response of ${response.length} characters received`);
       Utils.guardedFunction(
         () => {
           const responseObj: WeatherResponse = JSON.parse(response);
@@ -454,7 +476,9 @@ export class WeatherService {
           }
         },
         this,
-        `Response from Weather API call at https://${host}/${path}: ${response}`,
+        // Neither the request nor the answer is named here: the first carries the key, the second mirrors
+        // the location back. The status of the call is already reported by the two lines above.
+        'WeatherService: the answer of the weather API could not be processed',
       );
     });
   }

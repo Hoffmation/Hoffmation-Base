@@ -6,8 +6,7 @@ import { Res } from '../i18n';
 import { iJsonCustomPrepend, iJsonOmitKeys, iTimePair } from '../interfaces';
 import { RGB } from './RGB';
 import { SettingsService } from '../settings-service';
-
-export const DAYMS: number = 24 * 60 * 60 * 1000;
+import { DAYMS } from './dayMs';
 
 export class Utils {
   public static get timeTilMidnight(): number {

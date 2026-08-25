@@ -21,6 +21,10 @@ import { iDesiredShutterPosition } from './IDesiredShutterPosition';
 import { iCountToday } from './iCountToday';
 import { iEnergyCalculation } from './iEnergyCalculation';
 import { iShutterCalibration } from './iShutterCalibration';
+import { iBatteryLevelSample } from './iBatteryLevelSample';
+import { iActuatorStateSample } from './iActuatorStateSample';
+import { iWeatherDaySummary } from './iWeatherDaySummary';
+import { iConsumptionWindowSample } from './iConsumptionWindowSample';
 
 /**
  * The interface to interact with the persistence layer.
@@ -73,6 +77,58 @@ export interface iPersist {
    * @returns - The measurements
    */
   getTemperatureHistory(deviceId: string, startDate?: Date, endDate?: Date): Promise<iTemperatureMeasurement[]>;
+
+  /**
+   * Gets the recorded battery levels of the house battery within the given window, in percent, dated at the
+   * end of the interval each reading closes - the same time base the consumption readings use.
+   * An absent, unreachable or empty persistence is a defined state, not a failure: the answer is then an
+   * empty list. Readings without a usable level, and levels outside the range above 0 up to 100, are dropped
+   * rather than replaced by a substitute value - which means an energy manager that does not actually record
+   * the state of charge yields no history at all instead of a history of zeroes.
+   * @param startDate - Start of the window (inclusive)
+   * @param endDate - End of the window (inclusive)
+   * @returns - The readings, newest first
+   */
+  getBatteryLevelHistory(startDate: Date, endDate: Date): Promise<iBatteryLevelSample[]>;
+
+  /**
+   * Gets the recorded state changes of one actuator within the given window.
+   * An absent, unreachable or empty persistence is a defined state, not a failure: the answer is then an
+   * empty list.
+   * @param deviceId - The ID of the device to load the state changes for
+   * @param startDate - Start of the window (inclusive)
+   * @param endDate - End of the window (inclusive)
+   * @returns - The state changes, newest first
+   */
+  getActuatorHistory(deviceId: string, startDate: Date, endDate: Date): Promise<iActuatorStateSample[]>;
+
+  /**
+   * Gets the recorded house consumption within the given window. Each reading carries the energy consumed
+   * since the preceding one and is dated at the end of the interval it closes, so readings can be added up
+   * over a window without counting an interval into the wrong one.
+   * An absent, unreachable or empty persistence is a defined state, not a failure: the answer is then an
+   * empty list. Readings without a usable value are dropped rather than replaced by a substitute value.
+   * @param startDate - Start of the window (inclusive)
+   * @param endDate - End of the window (inclusive)
+   * @returns - The readings, newest first
+   */
+  getEnergyConsumptionHistory(startDate: Date, endDate: Date): Promise<iConsumptionWindowSample[]>;
+
+  /**
+   * Gets the stored daily weather aggregates within the given window.
+   * An absent, unreachable or empty persistence is a defined state, not a failure: the answer is then an
+   * empty list. Aggregates missing a value are dropped rather than completed with a substitute value.
+   * @param startDate - Start of the window (inclusive)
+   * @param endDate - End of the window (inclusive)
+   * @returns - The aggregates, newest first
+   */
+  getWeatherDaySummaries(startDate: Date, endDate: Date): Promise<iWeatherDaySummary[]>;
+
+  /**
+   * Persists one daily weather aggregate. Writing the same day twice updates the existing record.
+   * @param summary - The aggregate to persist
+   */
+  persistWeatherDaySummary(summary: iWeatherDaySummary): void;
 
   /**
    * Initializes the database-connection and prepares the database

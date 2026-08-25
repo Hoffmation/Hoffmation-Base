@@ -23,6 +23,7 @@ export enum DeviceCapability {
   garageDoorOpener = 21,
   magnetSensor = 22,
   airQualitySensor = 23,
+  fossilGenerator = 24,
   bluetoothDetector = 101,
   trackableDevice = 102,
   scene = 103,

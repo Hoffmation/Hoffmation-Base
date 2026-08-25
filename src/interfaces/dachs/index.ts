@@ -4,3 +4,4 @@ export * from './influxDbConnectionOptions';
 export * from './IReadKeyList';
 export * from './IWriteKeyList';
 export * from './KeyListEntity';
+export * from './KeyListEntityResponse';

@@ -2,8 +2,6 @@ import { iRoomDevice } from './iRoomDevice';
 import { TemperatureSensorChangeAction } from '../../action';
 import { iTemperatureSensor } from './iTemperatureSensor';
 
-export const UNDEFINED_TEMP_VALUE = -99;
-
 /**
  * This interface represents a temperature sensor device.
  *

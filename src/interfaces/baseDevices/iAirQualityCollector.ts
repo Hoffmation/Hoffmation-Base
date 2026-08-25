@@ -1,6 +1,7 @@
 import { iRoomDevice } from './iRoomDevice';
 import { AirQualitySensorChangeAction } from '../../action';
-import { iAirQualityReadings, iAirQualitySensor } from './iAirQualitySensor';
+import { iAirQualityReadings } from './iAirQualityReadings';
+import { iAirQualitySensor } from './iAirQualitySensor';
 
 /**
  * This interface represents a device measuring air quality.

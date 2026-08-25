@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run full-test)",
+      "Bash(npm run test)",
+      "Bash(npm run lint-check-all)",
+      "Bash(npm run jest)",
+      "Bash(npm run jest-coverage)",
+      "Bash(npm run jest-dst)"
+    ]
+  }
+}

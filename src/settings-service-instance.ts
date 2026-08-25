@@ -31,7 +31,9 @@ export class SettingsServiceInstance implements iSettingsProvider {
         return lat;
       }
     }
-    return 51.529556852253826;
+    // A coarse fallback so the sun times resolve at all when no location is configured. Deliberately not a
+    // site: one decimal is roughly city scale, and this default is public.
+    return 51.0;
   }
 
   public get longitude(): number {
@@ -41,7 +43,8 @@ export class SettingsServiceInstance implements iSettingsProvider {
         return longitude;
       }
     }
-    return 7.097266042276687;
+    // Coarse for the same reason as the latitude above.
+    return 7.0;
   }
 
   public initialize(config: iConfig): void {

@@ -2,8 +2,6 @@ import { iRoomDevice } from './iRoomDevice';
 import { HumiditySensorChangeAction } from '../../action';
 import { iHumiditySensor } from './iHumiditySensor';
 
-export const UNDEFINED_HUMIDITY_VALUE = -1;
-
 /**
  * This interface represents a humidity sensor device.
  *

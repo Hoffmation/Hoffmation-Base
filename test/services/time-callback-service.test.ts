@@ -6,6 +6,7 @@ import {
   TimeCallbackService,
   TimeCallbackType,
   TimeOfDay,
+  Utils,
 } from '../../src';
 
 jest.mock('unifi-access', () => jest.fn()); // Working now, phew
@@ -254,5 +255,74 @@ describe('TimeCallbackService', () => {
     const offset: SunTimeOffsets = new SunTimeOffsets(60, -10, 6, 30, 22, 30);
     const calculatedTimeOfDay = TimeCallbackService.dayType(offset, calculationDate);
     expect(calculatedTimeOfDay).toBe(TimeOfDay.Daylight);
+  });
+
+  describe('getSunriseForDate', () => {
+    // Public city coordinates of Bielefeld, no private location.
+    const latitude: number = 52.03;
+    const longitude: number = 8.53;
+
+    it('answers with the same sunrise the service itself keeps', () => {
+      const day: Date = new Date('6/21/2026, 0:30:00 AM');
+      TimeCallbackService.updateSunRise(day, latitude, longitude);
+
+      // One definition of the sun for the whole service. A caller that needs the sunrise of a given day must
+      // not have to reach for a second library: two definitions differ by minutes, and a window bounded by
+      // one at each end is bounded by two different mornings.
+      expect(TimeCallbackService.getSunriseForDate(day, latitude, longitude).getTime()).toBe(
+        TimeCallbackService.nextSunRise.getTime(),
+      );
+    });
+
+    it('answers for the day it is asked about', () => {
+      const summerDay: Date = new Date('6/21/2026, 0:30:00 AM');
+      const winterDay: Date = new Date('12/21/2026, 0:30:00 AM');
+
+      const summerSunrise: Date = TimeCallbackService.getSunriseForDate(summerDay, latitude, longitude);
+      const winterSunrise: Date = TimeCallbackService.getSunriseForDate(winterDay, latitude, longitude);
+
+      expect(summerSunrise.getDate()).toBe(21);
+      expect(winterSunrise.getDate()).toBe(21);
+      // Hours apart at this latitude; a date that never reached the calculation would answer twice the same.
+      expect(winterSunrise.getHours() - summerSunrise.getHours()).toBeGreaterThan(2);
+    });
+  });
+
+  describe('hoursTilSunset', () => {
+    const sunSetCalcDate: Date = new Date('6/21/2026, 0:30:00 AM');
+    // Public city coordinates of Bielefeld, no private location.
+    const latitude: number = 52.03;
+    const longitude: number = 8.53;
+    const oneHourInMs: number = 60 * 60 * 1000;
+
+    /**
+     * Couples the clock to the next sunset so that exactly `remainingMs` are left until it.
+     * Steering the clock instead of the sunset keeps the real `_nextSunSet` field in play.
+     * @param remainingMs - Time left until the next sunset; negative values place sunset in the past.
+     */
+    function arrangeRemainingTimeTilSunset(remainingMs: number): void {
+      TimeCallbackService.updateSunSet(sunSetCalcDate, latitude, longitude);
+      jest.spyOn(Utils, 'nowMS').mockReturnValue(TimeCallbackService.nextSunSet.getTime() - remainingMs);
+    }
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('hoursTilSunset returns hours, not minutes', () => {
+      arrangeRemainingTimeTilSunset(3 * oneHourInMs);
+      expect(TimeCallbackService.hoursTilSunset()).toBeCloseTo(3, 2);
+    });
+
+    it('hoursTilSunset returns a fraction for less than an hour', () => {
+      arrangeRemainingTimeTilSunset(0.5 * oneHourInMs);
+      expect(TimeCallbackService.hoursTilSunset()).toBeCloseTo(0.5, 2);
+    });
+
+    it('hoursTilSunset goes negative once sunset has passed', () => {
+      arrangeRemainingTimeTilSunset(-1 * oneHourInMs);
+      // Deliberately not clamped to 0 here: clamping is the job of the demand calculation.
+      expect(TimeCallbackService.hoursTilSunset()).toBeCloseTo(-1, 2);
+    });
   });
 });
