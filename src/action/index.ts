@@ -5,6 +5,7 @@ export { MotionSensorAction } from './motionSensorAction';
 export { PresenceGroupLastLeftAction } from './presenceGroupLastLeftAction';
 export { PresenceGroupFirstEnterAction } from './presenceGroupFirstEnterAction';
 export { ShutterPositionChangedAction } from './shutterPositionChangedAction';
+export { SoilSensorChangeAction } from './soilSensorChangeAction';
 export { TemperatureSensorChangeAction } from './temperatureSensorChangeAction';
 export { ActuatorChangeAction } from './actuatorChangeAction';
 export { BatteryLevelChangeAction } from './batteryLevelChangeAction';

@@ -6,6 +6,7 @@ export * from './zigbeeLedRGBCCT';
 export * from './zigbeeMagnetContact';
 export * from './zigbeeMotionSensor';
 export * from './zigbeeShutter';
+export * from './zigbeeSoilSensor';
 export * from './zigbeeSwitch';
 export { ZigbeeLamp } from './zigbeeLamp';
 export { ZigbeeWindowHandle } from './zigbeeWindowHandle';

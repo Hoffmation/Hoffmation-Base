@@ -59,6 +59,13 @@ export class DeviceCluster implements iDeviceCluster {
         clusterTypes.push(DeviceClusterType.TemperaturSensor);
         clusterTypes.push(DeviceClusterType.HumiditySensor);
         break;
+      case DeviceType.ZigbeeCooloSoilSensor:
+        // Counts towards the room aggregates as well: this sensor sits in a pot indoors, so its air readings
+        // are readings of the room air. A sensor in a bed or a lawn would only get the soil cluster.
+        clusterTypes.push(DeviceClusterType.SoilSensor);
+        clusterTypes.push(DeviceClusterType.TemperaturSensor);
+        clusterTypes.push(DeviceClusterType.HumiditySensor);
+        break;
       case DeviceType.HmIpGriff:
         clusterTypes.push(DeviceClusterType.Handle);
         break;

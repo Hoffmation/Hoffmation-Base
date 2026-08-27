@@ -59,6 +59,7 @@ export * from './iProjectedSocBand';
 export * from './iMorningReserveVerdict';
 export * from './iDachsHistoryGateResult';
 export * from './iBatteryLevelSample';
+export * from './iSoilMoistureSample';
 export * from './iActuatorStateSample';
 export * from './iWeatherDaySummary';
 export { iShutterCalibration } from './iShutterCalibration';

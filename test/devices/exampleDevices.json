@@ -154,6 +154,29 @@
       "owner": "system.user.admin",
       "ownerGroup": "system.group.administrator"
     }
+  },
+  "zigbee.0.a4c138a09a343fab": {
+    "type": "device",
+    "common": {
+      "name": "00-Zigbee-EGZwischenf-CooloSoil-1",
+      "type": "CS-201Z",
+      "color": null,
+      "statusStates": {
+        "onlineId": "zigbee.0.a4c138a09a343fab.available"
+      }
+    },
+    "native": {
+      "id": "a4c138a09a343fab"
+    },
+    "from": "system.adapter.zigbee.0",
+    "user": "system.user.admin",
+    "ts": 1659218870308,
+    "_id": "zigbee.0.a4c138a09a343fab",
+    "acl": {
+      "object": 1636,
+      "owner": "system.user.admin",
+      "ownerGroup": "system.group.administrator"
+    }
   }
 }
 

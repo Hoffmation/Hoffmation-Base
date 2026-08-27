@@ -13,4 +13,6 @@ export type OpenWeatherDaySummary = {
   cloud_cover?: { afternoon?: unknown };
   /** Air temperatures of the day, as the endpoint reports them */
   temperature?: { min?: unknown; max?: unknown };
+  /** Precipitation of the day, as the endpoint reports it. Absent on an endpoint that does not send it */
+  precipitation?: { total?: unknown };
 };

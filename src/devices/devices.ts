@@ -36,6 +36,7 @@ import {
   ZigbeeOsramDimmer,
   ZigbeeSMaBiTMagnetContact,
   ZigbeeSodaHandle,
+  ZigbeeCooloSoilSensor,
   ZigbeeSonoffMotion,
   ZigbeeSonoffTemp,
   ZigbeeTuyaMotion,
@@ -386,6 +387,9 @@ export class Devices {
         break;
       case 'BlitzShp':
         d = new ZigbeeBlitzShp(zigbeeInfo);
+        break;
+      case 'CooloSoil':
+        d = new ZigbeeCooloSoilSensor(zigbeeInfo);
         break;
       case 'HeimanSmoke':
         d = new ZigbeeHeimanSmoke(zigbeeInfo);

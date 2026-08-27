@@ -6,6 +6,7 @@ export * from './zigbeeAqaraPresence';
 export * from './zigbeeAquaraVibra';
 export * from './zigbeeAquaraWater';
 export * from './zigbeeBlitzShp';
+export * from './zigbeeCooloSoilSensor';
 export * from './zigbeeEuroHeater';
 export * from './zigbeeHeimanSmoke';
 export * from './zigbeeIkeaSteckdose';

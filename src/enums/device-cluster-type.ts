@@ -20,4 +20,5 @@ export enum DeviceClusterType {
   WLED = 19,
   Tv = 20,
   Camera = 21,
+  SoilSensor = 22,
 }

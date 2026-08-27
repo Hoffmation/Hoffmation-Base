@@ -11,9 +11,11 @@ import {
   iIlluminationSensor,
   iMotionSensor,
   iShutter,
+  iSoilCollector,
   iTemperatureCollector,
   iZigbeeDevice,
 } from './baseDevices';
+import { iSoilMoistureSample } from './iSoilMoistureSample';
 import { iTemperatureMeasurement } from './iTemperatureMeasurement';
 import { iRoomBase } from './iRoomBase';
 import { ButtonPressType } from '../enums';
@@ -209,6 +211,24 @@ export interface iPersist {
    * @param device - The device to persist data for
    */
   persistAirQualitySensor(device: iAirQualityCollector): void;
+
+  /**
+   * Persists data of a soil sensor
+   * @param device - The device to persist data for
+   */
+  persistSoilSensor(device: iSoilCollector): void;
+
+  /**
+   * Gets the recorded soil moisture readings of one sensor within the given window, in percent.
+   * An absent, unreachable or empty persistence is a defined state, not a failure: the answer is then an
+   * empty list. Readings without a usable value are dropped rather than replaced by a substitute value - a
+   * missing reading completed with 0 would read as bone dry soil and could ask for water that is not needed.
+   * @param deviceId - The ID of the device to load the readings for
+   * @param startDate - Start of the window (inclusive)
+   * @param endDate - End of the window (inclusive)
+   * @returns - The readings, newest first
+   */
+  getSoilMoistureHistory(deviceId: string, startDate: Date, endDate: Date): Promise<iSoilMoistureSample[]>;
 
   /**
    * Persists data of a handle sensor

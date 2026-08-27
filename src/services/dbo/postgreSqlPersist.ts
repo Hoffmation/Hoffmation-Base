@@ -21,6 +21,8 @@ import {
   iRoomBase,
   iShutter,
   iShutterCalibration,
+  iSoilCollector,
+  iSoilMoistureSample,
   iTemperatureCollector,
   iTemperatureMeasurement,
   iWeatherDaySummary,
@@ -35,6 +37,7 @@ import { Utils } from '../../utils';
 import { ActuatorStateRow } from './actuator-state-row';
 import { BatteryLevelRow } from './battery-level-row';
 import { EnergyConsumptionRow } from './energy-consumption-row';
+import { SoilMoistureRow } from './soil-moisture-row';
 import { WeatherDaySummaryRow } from './weather-day-summary-row';
 
 export class PostgreSqlPersist implements iPersist {
@@ -322,7 +325,7 @@ export class PostgreSqlPersist implements iPersist {
   /** @inheritDoc */
   public async getWeatherDaySummaries(startDate: Date, endDate: Date): Promise<iWeatherDaySummary[]> {
     const dbResult: WeatherDaySummaryRow[] | null = await this.query<WeatherDaySummaryRow>(
-      `SELECT date, "cloudCover", "tempMin", "tempMax"
+      `SELECT date, "cloudCover", "tempMin", "tempMax", "precipitation"
        from hoffmation_schema."WeatherDaySummary"
        WHERE date >= '${startDate.toISOString()}'
          AND date <= '${endDate.toISOString()}'
@@ -345,7 +348,17 @@ export class PostgreSqlPersist implements iPersist {
         dropped++;
         continue;
       }
-      result.push({ date: date, cloudCover: cloudCover, tempMin: tempMin, tempMax: tempMax });
+      // Read after the completeness check and deliberately outside it, mirroring the write path: every row
+      // stored before this column existed carries a null here, and none of them may be dropped for it. An
+      // absent value stays absent rather than becoming a 0, which would read as a dry day.
+      const precipitation: number | undefined = PostgreSqlPersist.toFiniteNumber(entry.precipitation);
+      result.push({
+        date: date,
+        cloudCover: cloudCover,
+        tempMin: tempMin,
+        tempMax: tempMax,
+        precipitation: precipitation,
+      });
     }
     PostgreSqlPersist.logDroppedRows('getWeatherDaySummaries', dropped);
     return result;
@@ -361,16 +374,27 @@ export class PostgreSqlPersist implements iPersist {
     // is most easily left behind in.
     this.query(
       `
-      insert into hoffmation_schema."WeatherDaySummary" ("date", "cloudCover", "tempMin", "tempMax")
-      values ($1, $2, $3, $4) ON CONFLICT ("date")
+      insert into hoffmation_schema."WeatherDaySummary" ("date", "cloudCover", "tempMin", "tempMax", "precipitation")
+      values ($1, $2, $3, $4, $5) ON CONFLICT ("date")
     DO
       UPDATE SET
         "cloudCover" = $2,
         "tempMin" = $3,
-        "tempMax" = $4
+        "tempMax" = $4,
+        "precipitation" = COALESCE($5, hoffmation_schema."WeatherDaySummary"."precipitation")
       ;
     `,
-      [summary.date.toISOString(), summary.cloudCover, summary.tempMin, summary.tempMax],
+      [
+        summary.date.toISOString(),
+        summary.cloudCover,
+        summary.tempMin,
+        summary.tempMax,
+        // Undefined is bound as null on purpose - the column has to be able to say "not recorded", and a 0
+        // would say "it did not rain". The three columns above are overwritten unconditionally because the
+        // running day's forecast moves; this one keeps what is already stored when nothing new arrived, so a
+        // refetch that comes back without the field cannot erase a figure an earlier one delivered.
+        summary.precipitation ?? null,
+      ],
     );
   }
 
@@ -589,6 +613,21 @@ BEGIN
 
   END IF;
 
+  IF (SELECT to_regclass('hoffmation_schema."SoilSensorDeviceData"') IS NULL) Then
+    -- Deliberately without a foreign key on "DeviceInfo", for the same reason as the air quality table above:
+    -- creating one needs the REFERENCES privilege on that table, which an existing installation whose tables
+    -- were created by another role may not grant.
+    create table if not exists hoffmation_schema."SoilSensorDeviceData"
+    (
+        "deviceID"        varchar(60) not null,
+        "soilMoisture"    double precision,
+        date              timestamp   not null,
+        constraint soilsensordevicedata_pk
+            primary key ("deviceID", date)
+    );
+
+  END IF;
+
   IF (SELECT to_regclass('hoffmation_schema."BatteryDeviceData"') IS NULL) Then  
     create table if not exists hoffmation_schema."BatteryDeviceData"
     (
@@ -661,9 +700,20 @@ BEGIN
                 primary key,
         "cloudCover" double precision,
         "tempMin"    double precision,
-        "tempMax"    double precision
+        "tempMax"    double precision,
+        "precipitation" double precision
     );
 
+  END IF;
+
+  IF (SELECT COUNT(column_name) = 0
+    FROM information_schema.columns
+    WHERE table_name = 'WeatherDaySummary'
+      and column_name = 'precipitation') Then
+    -- The table predates this column, so an existing installation gets it added rather than created. Existing
+    -- rows keep a null, which is the honest answer: nothing was recorded for those days.
+    alter table hoffmation_schema."WeatherDaySummary"
+      add "precipitation" double precision;
   END IF;
 
   IF (SELECT COUNT(column_name) = 0
@@ -812,6 +862,62 @@ $$;`,
       insert into hoffmation_schema."AirQualitySensorDeviceData" ("deviceID", "aqi", "co2", "nox", "pm1p0", "pm2p5", "pm4p0", "pm10p0", "tvoc", "vape", "voc", "date")
       values ('${device.id}', ${value(readings.aqi)}, ${value(readings.co2)}, ${value(readings.nox)}, ${value(readings.pm1p0)}, ${value(readings.pm2p5)}, ${value(readings.pm4p0)}, ${value(readings.pm10p0)}, ${value(readings.tvoc)}, ${value(readings.vape)}, ${value(readings.voc)}, '${new Date().toISOString()}');
     `);
+  }
+
+  /** @inheritDoc */
+  public persistSoilSensor(device: iSoilCollector): void {
+    this.query(`
+      insert into hoffmation_schema."SoilSensorDeviceData" ("deviceID", "soilMoisture", "date")
+      values ('${device.id}', ${device.soilMoisture}, '${new Date().toISOString()}');
+    `);
+  }
+
+  /** @inheritDoc */
+  public async getSoilMoistureHistory(
+    deviceId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<iSoilMoistureSample[]> {
+    // The device id is bound rather than pasted in: it is a string this reader is handed, and a string inside
+    // quotes can close them. The dates travel the same way for consistency - bound as ISO text, which is what
+    // the naive column stores and hence the same comparison the statement makes with a literal.
+    const dbResult: SoilMoistureRow[] | null = await this.query<SoilMoistureRow>(
+      `SELECT "soilMoisture", date
+       from hoffmation_schema."SoilSensorDeviceData"
+       WHERE "deviceID" = $1
+         and date >= $2
+         AND date <= $3
+       ORDER BY DATE DESC`,
+      [deviceId, startDate.toISOString(), endDate.toISOString()],
+    );
+    if (dbResult === null || dbResult.length === 0) {
+      PostgreSqlPersist.logEmptyAnswer('getSoilMoistureHistory', dbResult, startDate, endDate);
+      return [];
+    }
+    const result: iSoilMoistureSample[] = [];
+    let dropped: number = 0;
+    for (const entry of dbResult) {
+      // An absent value read as 0 would read as bone dry soil - the one reading that makes a watering
+      // decision act. A genuine 0 % survives; only an absent or unreadable one is dropped.
+      const soilMoisture: number | undefined = PostgreSqlPersist.toFiniteNumber(entry.soilMoisture);
+      // A reading without a timestamp cannot be placed: read as a Date an absent one lands on 1970-01-01,
+      // which looks like a reading at the far edge of the window rather than like a missing one.
+      const date: Date | undefined = PostgreSqlPersist.fromNaiveTimestamp(entry.date);
+      if (soilMoisture === undefined || date === undefined) {
+        dropped++;
+        continue;
+      }
+      // Outside 0..100 this is not a soil moisture. The sentinel the sensor carries before its first reading
+      // is -1, and the write path already refuses to store it - this is the second line of defence, for rows
+      // an older version may have written.
+      if (soilMoisture < 0 || soilMoisture > 100) {
+        dropped++;
+        continue;
+      }
+      result.push({ soilMoisture: soilMoisture, date: date });
+    }
+    PostgreSqlPersist.logDroppedRows('getSoilMoistureHistory', dropped);
+    return result;
   }
 
   /** @inheritDoc */

@@ -24,6 +24,7 @@ export enum DeviceCapability {
   magnetSensor = 22,
   airQualitySensor = 23,
   fossilGenerator = 24,
+  soilSensor = 25,
   bluetoothDetector = 101,
   trackableDevice = 102,
   scene = 103,

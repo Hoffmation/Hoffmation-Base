@@ -787,6 +787,49 @@ describe('Dachs history persistence', () => {
       expect(dayKey(summary?.date as Date)).toBe('2026-06-21');
     });
 
+    it('reads the precipitation of the day when the endpoint sends it', async () => {
+      const summary: iWeatherDaySummary | undefined = await fetchWith(
+        '{"cloud_cover":{"afternoon":8},"temperature":{"min":14,"max":27.5},"precipitation":{"total":6.4}}',
+      );
+
+      expect(summary?.precipitation).toBe(6.4);
+      // A dry day is a reading, not a missing one.
+      const dry: iWeatherDaySummary | undefined = await fetchWith(
+        '{"cloud_cover":{"afternoon":8},"temperature":{"min":14,"max":27.5},"precipitation":{"total":0}}',
+      );
+      expect(dry?.precipitation).toBe(0);
+    });
+
+    it('keeps the day when the precipitation is missing', async () => {
+      // The regression this exists for. Precipitation was added to an aggregate three other decisions already
+      // read, and the completeness check above discards a day whose fields do not all arrive. Had the new
+      // field joined that check, every answer without it - an endpoint that does not send it, a plan that
+      // does not include it - would drop the whole day, and the start decision would lose its history one
+      // gradually thinning window at a time, weeks after the change.
+      const summary: iWeatherDaySummary | undefined = await fetchWith(
+        '{"cloud_cover":{"afternoon":8},"temperature":{"min":14,"max":27.5}}',
+      );
+
+      expect(summary).toBeDefined();
+      expect(summary?.cloudCover).toBe(8);
+      expect(summary?.tempMin).toBe(14);
+      expect(summary?.tempMax).toBe(27.5);
+      // Absent, not zero: a 0 would claim the day was dry.
+      expect(summary?.precipitation).toBeUndefined();
+    });
+
+    it('drops an implausible precipitation without dropping the day', async () => {
+      for (const total of ['-3', '"6.4"', 'null', '99999']) {
+        const summary: iWeatherDaySummary | undefined = await fetchWith(
+          `{"cloud_cover":{"afternoon":8},"temperature":{"min":14,"max":27.5},"precipitation":{"total":${total}}}`,
+        );
+
+        expect(summary).toBeDefined();
+        expect(summary?.cloudCover).toBe(8);
+        expect(summary?.precipitation).toBeUndefined();
+      }
+    });
+
     it('rejects a field that is not a number instead of passing it on', async () => {
       // This is the shape that matters: the answer comes from outside the installation, and its values are
       // written into the table the start decision is later read from. A field that is not a number is not a
@@ -1024,18 +1067,30 @@ describe('Dachs history persistence', () => {
       expect(block).toContain('"cloudCover" double precision');
       expect(block).toContain('"tempMin"    double precision');
       expect(block).toContain('"tempMax"    double precision');
+      expect(block).toContain('"precipitation" double precision');
 
-      // This runs against a database with three years of history: nothing may be removed, and the new table
-      // needs no migration of its own.
+      // This runs against a database with three years of history: nothing may be removed.
       // `delete` on its own also appears in the pre-existing `on delete set null` referential actions, which
       // remove nothing - only a statement that deletes or drops counts here.
       expect(ddl).not.toMatch(/\bdelete\s+from\b/i);
       expect(ddl).not.toMatch(/\btruncate\b/i);
       expect(ddl).not.toMatch(/\bdrop\b/i);
-      expect(ddl).not.toMatch(/alter\s+table[^;]*WeatherDaySummary/i);
-      // The four additive column changes that already existed before this feature - pinned, so a new one
-      // cannot slip in unnoticed.
-      expect(ddl.match(/alter table/gi)).toHaveLength(4);
+
+      // Extending a table is allowed; doing it over and over on a running installation is not. `precipitation`
+      // was added after the table already existed in the field, so a create-only block cannot reach those rows
+      // and an `alter` is the only way. What this pins is that the `alter` can fire at most once: it sits
+      // behind the same `information_schema` guard as the four that came before it, so from the second start
+      // onwards the condition is false and the statement is not reached.
+      const alterStart: number = ddl.search(/alter\s+table[^;]*WeatherDaySummary/i);
+      expect(alterStart).toBeGreaterThan(-1);
+      const guard: string = ddl.substring(ddl.lastIndexOf('IF (SELECT', alterStart), alterStart);
+      expect(guard).toContain("table_name = 'WeatherDaySummary'");
+      expect(guard).toContain("column_name = 'precipitation'");
+      expect(guard).toContain('COUNT(column_name) = 0');
+
+      // The five additive column changes - four from before this feature plus `precipitation` - pinned, so a
+      // sixth cannot slip in unnoticed.
+      expect(ddl.match(/alter table/gi)).toHaveLength(5);
     });
 
     it('round trips a weather day summary and keeps one record per day', async () => {
@@ -1100,11 +1155,22 @@ describe('Dachs history persistence', () => {
       // This is the only write path in the repository whose values come from beyond the installation. What is
       // written here is read back by the start decision, so the statement has to be fixed text and the values
       // data - the update half included, which is the half an interpolation is most easily left behind in.
-      expect(sql).toContain('values ($1, $2, $3, $4)');
+      expect(sql).toContain('values ($1, $2, $3, $4, $5)');
       expect(sql).toContain('"cloudCover" = $2');
       expect(sql).toContain('"tempMin" = $3');
       expect(sql).toContain('"tempMax" = $4');
-      expect(values).toEqual([summary.date.toISOString(), summary.cloudCover, summary.tempMin, summary.tempMax]);
+      // The fifth is bound like the others, but its update half is not a plain overwrite: an aggregate that
+      // arrives without precipitation must not erase a figure an earlier fetch of the same day delivered.
+      expect(sql).toContain('"precipitation" = COALESCE($5, hoffmation_schema."WeatherDaySummary"."precipitation")');
+      // Absent arrives as null rather than 0: the column has to be able to say "not recorded", and a 0 would
+      // say "it did not rain".
+      expect(values).toEqual([
+        summary.date.toISOString(),
+        summary.cloudCover,
+        summary.tempMin,
+        summary.tempMax,
+        summary.precipitation ?? null,
+      ]);
       // No value of the aggregate appears in the statement text at all.
       expect(sql).not.toContain(summary.date.toISOString());
       expect(sql).not.toContain(`${summary.cloudCover}`);

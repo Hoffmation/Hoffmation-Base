@@ -15,4 +15,6 @@ export type WeatherDaySummaryRow = {
   tempMin: string | number | null;
   /** Highest air temperature of that day in degrees celsius */
   tempMax: string | number | null;
+  /** Total precipitation of that day in millimetres. Null for every row written before the column existed */
+  precipitation: string | number | null;
 };

@@ -27,6 +27,12 @@ export class WeatherHistoryBackfill {
    */
   private static readonly minTemperature: number = -95;
   private static readonly maxTemperature: number = 60;
+  /**
+   * The most millimetres of precipitation a single day can carry. Wide on purpose, like the temperature band:
+   * it rejects what cannot be a daily rainfall at all, it does not second guess the weather service on a
+   * thunderstorm. The bound sits above the highest daily total ever recorded on the planet.
+   */
+  private static readonly maxPrecipitation: number = 2000;
   private static readonly host: string = 'api.openweathermap.org';
   /**
    * The past days of the window that were already fetched on the running day, and the running day that was
@@ -255,9 +261,26 @@ export class WeatherHistoryBackfill {
       ServerLogService.writeLog(LogLevel.Warn, `WeatherHistoryBackfill: incomplete day summary for ${day}`);
       return undefined;
     }
+    // Read AFTER the completeness check and deliberately outside it. The three fields above decide whether the
+    // day counts; precipitation must never be able to discard one. An endpoint that does not send the field,
+    // or a dry day it chooses to omit, would otherwise tear a hole into the history the start decision reads -
+    // a defect that would only show up as a gradually thinning window, weeks later. Absent stays absent all
+    // the way into the column; it is not filled with a 0, which would be an ordinary reading rather than a
+    // visibly missing one.
+    const precipitation: number | undefined = WeatherHistoryBackfill.plausibleReading(
+      parsed?.precipitation?.total,
+      0,
+      WeatherHistoryBackfill.maxPrecipitation,
+    );
     const dayStart: Date = new Date(date);
     dayStart.setHours(0, 0, 0, 0);
-    return { date: dayStart, cloudCover: cloudCover, tempMin: tempMin, tempMax: tempMax };
+    return {
+      date: dayStart,
+      cloudCover: cloudCover,
+      tempMin: tempMin,
+      tempMax: tempMax,
+      precipitation: precipitation,
+    };
   }
 
   /**

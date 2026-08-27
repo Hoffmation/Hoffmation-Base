@@ -29,6 +29,7 @@ export enum CommandType {
   RoomRestoreLightCommand = 'RoomRestoreLightCommand',
   RoomSetLightTimeBasedCommand = 'RoomSetLightTimeBasedCommand',
   ShutterPositionChangedAction = 'ShutterPositionChangedAction',
+  SoilSensorChangeAction = 'SoilSensorChangeAction',
   ShutterSetLevelCommand = 'ShutterSetLevelCommand',
   ShutterSunriseUpCommand = 'ShutterSunriseUpCommand',
   SunsetDownCommand = 'SunsetDownCommand',
