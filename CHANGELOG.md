@@ -7,7 +7,7 @@
   * (theimo1221) Add option to run specific ac's regardless of energy level
   * (theimo1221) Add option to disable dachs altogether
 -->
-## **WORK IN PROGRESS**
+## 4.1.0 (2026-08-27)
 * (theimo1221) **BREAKING: `iPersist` gains two mandatory members**, `persistSoilSensor` and `getSoilMoistureHistory` - an own implementation of that interface no longer compiles until it carries them. They arrive together on purpose: a table that is written and never read is a second breaking change waiting to happen, and this way an installation pays for one
 * (theimo1221) Add soil moisture as a sensor axis of its own - `DeviceCapability.soilSensor`, `iSoilCollector`, `iSoilSensor`, the `SoilSensor` shared function, `SoilSensorChangeAction` and a `SoilSensorDeviceData` table written every five minutes. Deliberately **not** a second humidity sensor: a device can measure the moisture of the soil and the humidity of the air at the same time, and those are two quantities that merely share a unit - the COOLO CS-201Z reports 15% soil against 91% air on the same message, and either would have pushed the other out of a shared slot. `SmartGardenSensor` still writes its soil reading into the ambient humidity slot and is left as it is for now; the axis it would move to now exists
 * (theimo1221) Add `ZigbeeSoilSensor` as the base type every zigbee soil sensor derives from. It carries soil moisture and battery - the states such a sensor always has - and deliberately not ambient temperature or humidity, so a sensor that only reads the soil does not claim to measure the air
